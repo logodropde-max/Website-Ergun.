@@ -341,7 +341,7 @@ body { overflow-x: clip; }
 /* Individuell: kosmische Szene – die Milchstrasse dreht langsam, der Vordergrund steht */
 .kosmos { background: #05060b; }
 .kosmos__himmel { position: absolute; left: -45%; top: -30%; width: 190%; height: auto; max-width: none; will-change: transform; transform-origin: 50% 70%; }
-.kosmos__vorn { position: absolute; left: 0; bottom: -2%; width: 100%; height: auto; will-change: transform; }
+.kosmos__vorn { position: absolute; left: 0; bottom: -5%; width: 100%; height: auto; will-change: transform; }
 .kosmos__nav { position: absolute; top: 0; left: 0; right: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; font-size: 7.5px; letter-spacing: 0.22em; color: rgba(255,255,255,0.9); }
 .kosmos__nav span:last-child { letter-spacing: 0.04em; border: 1px solid rgba(255,255,255,0.45); border-radius: 999px; padding: 2px 7px; }
 .kosmos__titel { position: absolute; left: 11px; top: 26%; z-index: 2; color: #F4EEE4; font-family: var(--serif); font-size: 22px; line-height: 0.95; text-shadow: 0 1px 12px rgba(0,0,0,0.6); }
@@ -894,6 +894,22 @@ body { overflow-x: clip; }
       .fromTo(b.querySelector('.kosmos__himmel'), { rotation: -4, xPercent: -3 }, { rotation: 4, xPercent: 3 }, 0)
       .fromTo(b.querySelector('.kosmos__vorn'), { xPercent: 0.8 }, { xPercent: -0.8 }, 0);
     nurSichtbar(b, tl);
+  });
+
+  /* Pakete: dezente Parallax in den Vorschauen – wie im Hero bewegt sich Hinteres staerker mit als Vorderes */
+  function tiefe(bereich, ebenen) {
+    var tl = gsap.timeline({ scrollTrigger: { trigger: bereich, start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
+    ebenen.forEach(function (e) { if (e[0]) tl.fromTo(e[0], { y: e[1] }, { y: e[2], ease: 'none' }, 0); });
+  }
+  gsap.utils.toArray('.demo-phone').forEach(function (ph) { tiefe(ph.parentNode, [[ph, 36, 4]]); });
+  gsap.utils.toArray('[data-demo-stapel]').forEach(function (st) {
+    tiefe(st.parentNode, [].map.call(st.querySelectorAll('.demo-seite'), function (s, i) { return [s, -i * 6, i * 6]; }));
+  });
+  gsap.utils.toArray('[data-demo-kosmos]').forEach(function (b) {
+    tiefe(b.parentNode, [[b.querySelector('.kosmos__himmel'), -20, 20], [b.querySelector('.kosmos__titel'), -10, 10], [b.querySelector('.kosmos__vorn'), -4, 4]]);
+    /* Schrift der Beispielseite blendet beim ersten Erscheinen ein */
+    gsap.from(b.querySelectorAll('.kosmos__nav, .kosmos__titel small, .kosmos__titel'), { opacity: 0, duration: 1.1, ease: 'power2.out', stagger: 0.25,
+      scrollTrigger: { trigger: b, start: 'top 85%', once: true } });
   });
 
   /* Pakete: Karten heben sich nacheinander */
