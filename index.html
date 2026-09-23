@@ -366,6 +366,13 @@ body { overflow-x: clip; }
 .contact__person img { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,140,60,0.45); padding: 3px; background: var(--bg); }
 .contact__person figcaption { font-size: 14px; color: var(--muted); }
 .contact__person strong { font-weight: 500; color: var(--text); }
+/* Online-Status wie bei WhatsApp */
+.contact__bild { position: relative; }
+.contact__bild::after { content: ""; position: absolute; right: 5px; bottom: 5px; width: 16px; height: 16px; border-radius: 50%; background: #2FD161; border: 3px solid var(--bg); }
+.online { display: inline-flex; align-items: center; gap: 7px; color: #5BE38A; }
+.online::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #2FD161; box-shadow: 0 0 0 0 rgba(47,209,97,0.5); animation: online-puls 2.4s ease-out infinite; }
+@keyframes online-puls { 0% { box-shadow: 0 0 0 0 rgba(47,209,97,0.5); } 70%, 100% { box-shadow: 0 0 0 7px rgba(47,209,97,0); } }
+@media (prefers-reduced-motion: reduce) { .online::before { animation: none; } }
 .vorschau__kopf strong { display: block; font-weight: 500; font-size: 15px; }
 .vorschau__kopf small { color: var(--muted); font-size: 12px; }
 .vorschau__chat { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; min-height: 260px; padding: 22px 16px 26px; background: radial-gradient(120% 80% at 100% 0%, rgba(255,110,40,0.08), rgba(0,0,0,0) 60%); }
@@ -624,8 +631,8 @@ body { overflow-x: clip; }
   <section class="contact" id="kontakt" aria-labelledby="kontakt-titel">
     <div class="contact__kopf">
       <figure class="contact__person reveal">
-        <img src="bilder/kontakt/emre-264.webp" width="88" height="88" alt="Porträt von Emre Ergun" loading="lazy" decoding="async">
-        <figcaption><strong>Emre Ergun</strong> · antwortet persönlich</figcaption>
+        <span class="contact__bild"><img src="bilder/kontakt/emre-264.webp" width="88" height="88" alt="Porträt von Emre Ergun" loading="lazy" decoding="async"></span>
+        <figcaption><strong>Emre Ergun</strong> · <span class="online">online</span> · antwortet persönlich</figcaption>
       </figure>
       <span class="contact__label reveal">Kontakt</span>
       <h2 class="contact__big reveal" id="kontakt-titel">Projekt anfragen</h2>
@@ -692,7 +699,7 @@ body { overflow-x: clip; }
       <aside class="vorschau reveal" aria-label="Vorschau Ihrer Nachricht">
         <div class="vorschau__kopf">
           <img class="vorschau__avatar" src="bilder/kontakt/emre-144.webp" width="40" height="40" alt="" loading="lazy" decoding="async">
-          <div><strong>Emre Ergun</strong><small>WhatsApp · Vorschau Ihrer Nachricht</small></div>
+          <div><strong>Emre Ergun</strong><small><span class="online">online</span> · Vorschau Ihrer Nachricht</small></div>
         </div>
         <div class="vorschau__chat">
           <div class="vorschau__blase" data-vorschau></div>
