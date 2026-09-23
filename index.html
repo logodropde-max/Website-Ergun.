@@ -346,7 +346,7 @@ body { overflow-x: clip; }
 .kosmos__nav span:last-child { letter-spacing: 0.04em; border: 1px solid rgba(255,255,255,0.45); border-radius: 999px; padding: 2px 7px; }
 .kosmos__titel { position: absolute; left: 11px; top: 26%; z-index: 2; color: #F4EEE4; font-family: var(--serif); font-size: 22px; line-height: 0.95; text-shadow: 0 1px 12px rgba(0,0,0,0.6); }
 .kosmos__titel small { display: block; margin-bottom: 5px; font-family: var(--sans); font-size: 7px; letter-spacing: 0.24em; text-transform: uppercase; color: #E9B872; }
-.pkg__beispiel { position: absolute; left: 10px; bottom: 10px; z-index: 6; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(242,239,232,0.75); background: rgba(14,14,12,0.72); border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px; }
+.pkg__beispiel { position: absolute; right: 10px; bottom: 10px; z-index: 6; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(242,239,232,0.75); background: rgba(14,14,12,0.72); border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px; }
 
 /* ---------- Kontakt v2: Auswahl, Live-Vorschau ---------- */
 .contact { min-height: auto; align-items: stretch; text-align: left; padding: 14svh var(--pad); }
@@ -398,17 +398,22 @@ body { overflow-x: clip; }
 .pkg__abo li { position: relative; padding-left: 16px; }
 .pkg__abo li::before { content: "+"; position: absolute; left: 0; color: var(--accent); }
 /* Wuensche: antippen = direkt in der Anfrage (WhatsApp/E-Mail) */
-.wunsch { margin-top: 40px; display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 2fr); gap: 18px 44px; align-items: start; padding: 28px 30px; border: 1px solid var(--line); border-radius: 6px; background: linear-gradient(180deg, rgba(242,239,232,0.035), rgba(242,239,232,0.01)); }
+.wunsch { margin-top: 40px; display: grid; grid-template-columns: minmax(0, 0.7fr) minmax(0, 2.3fr); gap: 18px 44px; align-items: start; padding: 28px 30px; border: 1px solid var(--line); border-radius: 6px; background: linear-gradient(180deg, rgba(242,239,232,0.035), rgba(242,239,232,0.01)); }
 .wunsch__titel { font-family: var(--serif); font-size: clamp(1.8rem, 2.6vw, 2.3rem); line-height: 1; letter-spacing: -0.01em; }
 .wunsch__kopf p { margin-top: 10px; color: var(--muted); font-size: 14.5px; max-width: 32ch; text-wrap: pretty; }
-.wunsch__liste { display: flex; flex-wrap: wrap; gap: 8px; }
-.wunsch__knopf { display: inline-flex; align-items: center; gap: 9px; min-height: 42px; padding: 8px 15px 8px 9px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--text); font: 400 14px/1 var(--sans); cursor: pointer; transition: border-color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
+.wunsch__liste { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 1100px) { .wunsch__liste { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .wunsch__liste { grid-template-columns: 1fr; } }
+.wunsch__knopf { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; text-align: left; min-height: 56px; padding: 10px 14px 10px 11px; border: 1px solid var(--line); border-radius: 10px; background: transparent; color: var(--text); font: 400 14px/1 var(--sans); cursor: pointer; transition: border-color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
 .wunsch__knopf i { width: 20px; height: 20px; flex: none; display: grid; place-items: center; border-radius: 50%; border: 1px solid rgba(242,239,232,0.28); font-style: normal; font-size: 13px; line-height: 1; color: var(--muted); transition: background-color 200ms var(--ease), border-color 200ms var(--ease), color 200ms var(--ease); }
 .wunsch__knopf i::before { content: "+"; }
 .wunsch__knopf[aria-pressed="true"] { border-color: var(--accent); background: rgba(255,90,31,0.10); }
 .wunsch__knopf[aria-pressed="true"] i { background: var(--accent); border-color: var(--accent); color: var(--bg); }
 .wunsch__knopf[aria-pressed="true"] i::before { content: ""; width: 5px; height: 9px; border: solid var(--bg); border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg); }
-.wunsch__knopf:active { transform: scale(0.97); }
+.wunsch__knopf:active { transform: scale(0.98); }
+.wunsch__text b { display: block; font-weight: 500; font-size: 14px; line-height: 1.25; }
+.wunsch__text small { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.35; color: var(--muted); }
+.wunsch__knopf em { font-style: normal; font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--text); }
 @media (hover: hover) and (pointer: fine) { .wunsch__knopf:hover { border-color: rgba(242,239,232,0.38); } .wunsch__knopf[aria-pressed="true"]:hover { border-color: var(--accent); } }
 .wunsch__stand { grid-column: 2; min-height: 1.4em; font-size: 13.5px; color: var(--muted); }
 .wunsch__stand a { color: var(--accent); border-bottom: 1px solid rgba(255,90,31,0.4); }
@@ -539,7 +544,7 @@ body { overflow-x: clip; }
         <span class="packages__kicker reveal">Pakete · Festpreis</span>
         <h2 class="packages__title reveal" id="pakete-titel">Wählen Sie<br>Ihr Paket.</h2>
       </div>
-      <p class="packages__note reveal">Einmalpreis für die Seite, danach ein kleiner Monatsbetrag für Hosting, Domain und Pflege, monatlich kündbar. Domain und E-Mail richte ich ein, die Domain bleibt Ihre.</p>
+      <p class="packages__note reveal">Feste Preise, feste Leistungen: Einmalpreis für die Seite, danach ein fester Monatsbetrag für Hosting, Domain und Pflege, monatlich kündbar. Die Domain bleibt Ihre.</p>
     </div>
     <ul class="packages__grid">
       <li class="pkg reveal">
@@ -548,23 +553,24 @@ body { overflow-x: clip; }
           <div class="demo-phone"><div class="demo-phone__screen"><img class="demo-phone__page" src="bilder/demo/onepager.webp" width="240" height="1159" alt="" loading="lazy" data-demo-scroll></div></div>
         </div>
         <div class="pkg__kopf"><h3 class="pkg__name">Onepager</h3><span class="pkg__tag">1 Seite</span></div>
-        <p class="pkg__price">ab 80 €<small>einmalig · fertig in 2 bis 3 Tagen</small></p>
+        <p class="pkg__price">80 €<small>einmalig · fertig in 3 Werktagen</small></p>
         <ul class="pkg__list">
-          <li>Individuelles Design, keine Vorlage</li>
+          <li>1 Seite mit bis zu 6 Abschnitten</li>
+          <li>Eigenes Design, keine Vorlage</li>
           <li>2 eigene Bilder passend zu Ihrer Branche</li>
           <li>Für Handy, Tablet und PC optimiert</li>
           <li>Kontakt per WhatsApp, Anruf und E-Mail</li>
-          <li>Bei Google angemeldet und auffindbar</li>
+          <li>Bei Google angemeldet (Suchkonsole, Sitemap)</li>
           <li>Impressum &amp; Datenschutz-Vorlage</li>
-          <li>Vorschau-Link vor dem Start</li>
+          <li>Vorschau-Link, 1 Korrekturrunde</li>
         </ul>
         <div class="pkg__abo">
           <div class="pkg__abo-kopf"><span class="pkg__abo-preis">+ 10 €<small> / Monat</small></span><span class="pkg__abo-titel">Hosting, Domain<br>&amp; Pflege</span></div>
           <ul>
-            <li>Hosting, https und Updates</li>
+            <li>Hosting, https-Verschlüsselung, Updates</li>
             <li>Domain (.de) inklusive, von mir verwaltet</li>
             <li>Jede Version gesichert</li>
-            <li>1 Änderungswunsch im Monat per WhatsApp</li>
+            <li>1 Textänderung pro Monat (bis 15 Minuten)</li>
           </ul>
         </div>
         <a class="btn pkg__cta" href="#kontakt" data-paket="Onepager">Onepager anfragen</a>
@@ -581,23 +587,24 @@ body { overflow-x: clip; }
           </div>
         </div>
         <div class="pkg__kopf"><h3 class="pkg__name">Business</h3><span class="pkg__tag">bis 5 Seiten</span></div>
-        <p class="pkg__price">ab 250 €<small>einmalig · fertig in ca. 1 Woche</small></p>
+        <p class="pkg__price">250 €<small>einmalig · fertig in 7 Werktagen</small></p>
         <ul class="pkg__list">
           <li>Alles aus Onepager</li>
-          <li>Eigene Bilder für jede Seite, keine Stockfotos</li>
-          <li>Animationen &amp; Scroll-Effekte</li>
-          <li>Texte schreibe ich mit Ihnen zusammen</li>
+          <li>Bis zu 5 Seiten</li>
+          <li>5 eigene Bilder (1 je Seite), keine Stockfotos</li>
+          <li>Scroll-Animationen auf jeder Seite</li>
+          <li>Texte für alle Seiten, abgestimmt in 1 Gespräch</li>
           <li>Google-Unternehmensprofil eingerichtet</li>
           <li>Anfahrt, Öffnungszeiten &amp; Karte</li>
-          <li>1 Korrekturrunde inklusive</li>
+          <li>2 Korrekturrunden</li>
         </ul>
         <div class="pkg__abo">
           <div class="pkg__abo-kopf"><span class="pkg__abo-preis">+ 20 €<small> / Monat</small></span><span class="pkg__abo-titel">Hosting, Domain<br>&amp; Pflege</span></div>
           <ul>
             <li>Alles aus der Onepager-Pflege</li>
-            <li>E-Mail-Adresse mit Ihrer Domain</li>
-            <li>Wünsche auf Abruf, bis 1 Stunde im Monat</li>
-            <li>Google-Profil aktuell gehalten</li>
+            <li>1 E-Mail-Adresse mit Ihrer Domain</li>
+            <li>Änderungen bis 60 Minuten pro Monat</li>
+            <li>Google-Profil: Zeiten &amp; Fotos 1× pro Monat aktualisiert</li>
           </ul>
         </div>
         <a class="btn btn--wa pkg__cta" href="#kontakt" data-paket="Business">Business anfragen</a>
@@ -616,22 +623,22 @@ body { overflow-x: clip; }
           </div>
         </div>
         <div class="pkg__kopf"><h3 class="pkg__name">Individuell</h3><span class="pkg__tag">bis 10 Seiten</span></div>
-        <p class="pkg__price">ab 400 €<small>einmalig · Konzept nach Wunsch</small></p>
+        <p class="pkg__price">400 €<small>einmalig · fertig in 14 Werktagen</small></p>
         <ul class="pkg__list">
           <li>Alles aus Business</li>
-          <li>Video als Blickfang</li>
-          <li>Logo &amp; Farben für Ihre Marke</li>
-          <li>Texte komplett von mir</li>
+          <li>Bis zu 10 Seiten</li>
+          <li>1 Video im Kopfbereich (bis 10 Sekunden)</li>
+          <li>10 eigene Bilder, Texte für alle Seiten von mir</li>
           <li>5 Bilder für Social Media zum Start</li>
-          <li>1 Extra nach Wunsch, z. B. Termine oder Galerie</li>
-          <li>2 Korrekturrunden</li>
+          <li>1 Extra aus der Liste unten inklusive</li>
+          <li>3 Korrekturrunden</li>
         </ul>
         <div class="pkg__abo">
           <div class="pkg__abo-kopf"><span class="pkg__abo-preis">+ 35 €<small> / Monat</small></span><span class="pkg__abo-titel">Hosting, Domain<br>&amp; Pflege</span></div>
           <ul>
             <li>Alles aus der Business-Pflege</li>
-            <li>Wünsche auf Abruf, bis 3 Stunden im Monat</li>
-            <li>Neue Bilder für Aktionen &amp; Saison</li>
+            <li>Änderungen bis 3 Stunden pro Monat</li>
+            <li>2 neue Bilder pro Monat (Aktionen, Saison)</li>
             <li>Google-Check jedes Quartal</li>
             <li>Antwort am nächsten Werktag</li>
           </ul>
@@ -642,20 +649,22 @@ body { overflow-x: clip; }
     <div class="wunsch reveal">
       <div class="wunsch__kopf">
         <h3 class="wunsch__titel">Auf Wunsch dazu</h3>
-        <p>Antippen, was Sie interessiert. Es wird direkt in Ihre Anfrage per WhatsApp oder E-Mail übernommen.</p>
+        <p>Fester Umfang, fester Preis, einmalig. Antippen, und es steht direkt in Ihrer Anfrage per WhatsApp oder E-Mail.</p>
       </div>
-      <div class="wunsch__liste" role="group" aria-label="Wünsche zur Anfrage hinzufügen">
-        <button type="button" class="wunsch__knopf" data-wunsch="Online-Termine" aria-pressed="false"><i aria-hidden="true"></i>Online-Termine</button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Speisekarte/Preisliste" aria-pressed="false"><i aria-hidden="true"></i>Speisekarte oder Preisliste</button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Bildergalerie" aria-pressed="false"><i aria-hidden="true"></i>Bildergalerie</button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Mehrsprachig" aria-pressed="false"><i aria-hidden="true"></i>Mehrsprachig</button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Video" aria-pressed="false"><i aria-hidden="true"></i>Video</button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Social-Media-Bilder" aria-pressed="false"><i aria-hidden="true"></i>Social-Media-Bilder</button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Logo" aria-pressed="false"><i aria-hidden="true"></i>Logo & Farben</button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Google-Profil" aria-pressed="false"><i aria-hidden="true"></i>Google-Profil</button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Blog" aria-pressed="false"><i aria-hidden="true"></i>Blog</button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Newsletter" aria-pressed="false"><i aria-hidden="true"></i>Newsletter</button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Datei-Upload" aria-pressed="false"><i aria-hidden="true"></i>Datei-Upload</button>
+      <div class="wunsch__liste" role="group" aria-label="Extras zur Anfrage hinzufügen">
+        <button type="button" class="wunsch__knopf" data-wunsch="Logo" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Logo erstellen</b><small>3 Entwürfe, 1 Korrekturrunde, Dateien für Web und Druck</small></span><em>80 €</em></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Online-Termine" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Online-Termine</b><small>Buchungskalender auf der Seite eingebunden</small></span><em>60 €</em></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Speisekarte/Preisliste" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Speisekarte oder Preisliste</b><small>Bis zu 30 Positionen, am Handy gut lesbar</small></span><em>30 €</em></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Bildergalerie" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Bildergalerie</b><small>Bis zu 12 Bilder mit Vergrößerung</small></span><em>30 €</em></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Anfahrt" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Anfahrt &amp; Öffnungszeiten</b><small>Karte, Route und Zeiten auf einen Blick</small></span><em>20 €</em></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Zweite Sprache" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Zweite Sprache</b><small>Ganze Seite übersetzt, Preis je Sprache</small></span><em>80 €</em></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Blog" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Blog oder Neuigkeiten</b><small>Bereich eingerichtet plus 1 Beitrag</small></span><em>60 €</em></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Google-Profil" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Google-Unternehmensprofil</b><small>Eingerichtet mit 5 Fotos und Öffnungszeiten</small></span><em>40 €</em></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Video" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Video im Kopfbereich</b><small>1 Clip bis 10 Sekunden, passend zur Seite</small></span><em>40 €</em></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Social-Media-Bilder" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Social-Media-Bilder</b><small>5 Bilder im Stil Ihrer Seite</small></span><em>40 €</em></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Newsletter" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Newsletter-Anmeldung</b><small>Formular und Anbindung an Ihren Versand</small></span><em>40 €</em></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Datei-Upload" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Datei-Upload im Formular</b><small>Kunden schicken Fotos oder Unterlagen mit</small></span><em>40 €</em></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Weitere Seite" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Weitere Seite</b><small>1 zusätzliche Unterseite mit Bild und Text</small></span><em>40 €</em></button>
       </div>
       <p class="wunsch__stand" data-wunsch-stand aria-live="polite"></p>
     </div>
@@ -682,27 +691,28 @@ body { overflow-x: clip; }
         <fieldset class="field field--chips">
           <legend>Paket</legend>
           <div class="chips">
-            <label class="chip"><input type="radio" name="paket" value="Onepager"><span>Onepager · ab 80 €</span></label>
-            <label class="chip"><input type="radio" name="paket" value="Business"><span>Business · ab 250 €</span></label>
-            <label class="chip"><input type="radio" name="paket" value="Individuell"><span>Individuell · ab 400 €</span></label>
+            <label class="chip"><input type="radio" name="paket" value="Onepager"><span>Onepager · 80 €</span></label>
+            <label class="chip"><input type="radio" name="paket" value="Business"><span>Business · 250 €</span></label>
+            <label class="chip"><input type="radio" name="paket" value="Individuell"><span>Individuell · 400 €</span></label>
             <label class="chip"><input type="radio" name="paket" value="Noch unklar" checked><span>Noch unklar</span></label>
           </div>
         </fieldset>
         <fieldset class="field field--chips">
-          <legend>Wünsche (optional, mehrere möglich)</legend>
+          <legend>Extras (optional, mehrere möglich)</legend>
           <div class="chips">
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Logo"><span>Logo erstellen</span></label>
             <label class="chip chip--klein"><input type="checkbox" name="extras" value="Online-Termine"><span>Online-Termine</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Speisekarte/Preisliste"><span>Speisekarte/Preisliste</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Speisekarte/Preisliste"><span>Speisekarte oder Preisliste</span></label>
             <label class="chip chip--klein"><input type="checkbox" name="extras" value="Bildergalerie"><span>Bildergalerie</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Video"><span>Video</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Anfahrt"><span>Anfahrt & Öffnungszeiten</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Zweite Sprache"><span>Zweite Sprache</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Blog"><span>Blog oder Neuigkeiten</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Google-Profil"><span>Google-Unternehmensprofil</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Video"><span>Video im Kopfbereich</span></label>
             <label class="chip chip--klein"><input type="checkbox" name="extras" value="Social-Media-Bilder"><span>Social-Media-Bilder</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Mehrsprachig"><span>Mehrsprachig</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Blog"><span>Blog</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Google-Profil"><span>Google-Profil</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Logo"><span>Logo</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="E-Mail-Adresse"><span>E-Mail-Adresse</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Datei-Upload"><span>Datei-Upload</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Newsletter"><span>Newsletter</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Newsletter"><span>Newsletter-Anmeldung</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Datei-Upload"><span>Datei-Upload im Formular</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Weitere Seite"><span>Weitere Seite</span></label>
           </div>
         </fieldset>
         <div class="form__row">
@@ -986,7 +996,7 @@ body { overflow-x: clip; }
     if (vorschau) { n = n || '[Ihr Name]'; x = x || '[Worum geht es?]'; m = m || '[Ihre E-Mail]'; }
     return 'Hallo, ich bin ' + n + (f ? ' von ' + f : '') + '.\n\n' +
       (p ? 'Paket: ' + p + '\n' : '') +
-      (e.length ? 'Wünsche: ' + e.join(', ') + '\n' : '') +
+      (e.length ? 'Extras: ' + e.join(', ') + '\n' : '') +
       ((p || e.length) ? '\n' : '') + x + '\n\n' +
       'E-Mail für die Antwort: ' + m + '\n' + 'Gesendet über die Website.';
   }
@@ -1025,7 +1035,7 @@ body { overflow-x: clip; }
       var c = wunschBox(k.getAttribute('data-wunsch')); var an = !!(c && c.checked);
       k.setAttribute('aria-pressed', an ? 'true' : 'false'); if (an) n++;
     });
-    if (wunschStand) wunschStand.innerHTML = n ? (n === 1 ? '1 Wunsch' : n + ' Wünsche') + ' in Ihrer Anfrage · <a href="#kontakt">Zur Anfrage</a>' : '';
+    if (wunschStand) wunschStand.innerHTML = n ? (n === 1 ? '1 Extra' : n + ' Extras') + ' in Ihrer Anfrage · <a href="#kontakt">Zur Anfrage</a>' : '';
   }
   [].forEach.call(wunschKnoepfe, function (k) {
     k.addEventListener('click', function () {

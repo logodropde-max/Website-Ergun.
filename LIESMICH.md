@@ -39,7 +39,7 @@ Keine Schein-Sonne im Intro mehr: Emre fand, dass die Sonne beim Öffnen rechts 
 
 **Parallax läuft im Browser selbst** (CSS `animation-timeline: view()`, Bereich `exit-crossing`, Eigenschaft `translate`): kein JavaScript pro Bild, kein Zittern.
 Browser ohne diese Technik (z. B. Firefox) bekommen dieselbe Bewegung per GSAP ScrollTrigger. Kein ScrollSmoother mehr – Scrollen ist nativ (Emre: „laggt zu sehr").
-**Emre (Ebene 5) seit 23.09.:** in die Szene gerechnet von Higgsfield (`4k/szene-94d2b705.png`, Körperbau nach Emres Fotos, auf 93 % verkleinert = 1,77 m), **Gesicht echt** aus drei Fotos per `4k/echtes_gesicht.py` (→ `szene-94d2b705-echt.png`), eingesetzt mit `bilder/hero/4k/einsetzen.py` (Freistellen, Boden unter den Schuhen, alle Größen). `licht.py` gilt nur noch für die alte Figur. Montagespuren an Kamm und Vordergrund: `4k/reparatur.py`.
+**Emre (Ebene 5) seit 23.09.:** in die Szene gerechnet von Higgsfield (`4k/szene-94d2b705.png`, Körperbau nach Emres Fotos, auf 93 % verkleinert = 1,77 m), **Kopf echt 1:1 aus dem Studiofoto** per `4k/kopf_echt.py` (→ `kopf-echt.png` + `.json`, von `einsetzen.py` eingesetzt; `echtes_gesicht.py` = verworfene Mischvariante), eingesetzt mit `bilder/hero/4k/einsetzen.py` (Freistellen, Boden unter den Schuhen, alle Größen). `licht.py` gilt nur noch für die alte Figur. Montagespuren an Kamm und Vordergrund: `4k/reparatur.py`.
 Handy: Bewegung × 0,6. `prefers-reduced-motion`: Standbild.
 
 ## Was am 23.09. zuletzt gemacht wurde (Claude Code)
