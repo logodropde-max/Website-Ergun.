@@ -212,7 +212,7 @@ html.intro .parallax__title { opacity: 0; }
 .marquee__star { width: 0.45em; height: 0.45em; margin: 0 1.2em; color: var(--accent); flex: none; }
 
 /* ---------- Pakete: drei gleiche Karten, kein „Bestseller"-Theater ---------- */
-.packages { padding: 10svh var(--pad) 16svh; }
+.packages { padding: 10svh var(--pad) 4svh; }
 .packages__kicker { display: block; margin-bottom: 18px; color: var(--accent); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; }
 .pkg--featured { border-color: rgba(255,90,31,0.75); }
 .pkg--featured::before {
@@ -359,7 +359,7 @@ body { overflow-x: clip; }
 .pkg__beispiel { position: absolute; right: 10px; bottom: 10px; z-index: 6; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(242,239,232,0.75); background: rgba(14,14,12,0.72); border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px; }
 
 /* ---------- Kontakt v2: Auswahl, Live-Vorschau ---------- */
-.contact { min-height: auto; align-items: stretch; text-align: left; padding: 14svh var(--pad); }
+.contact { min-height: auto; align-items: stretch; text-align: left; padding: 6svh var(--pad) 14svh; }
 .contact__kopf { display: grid; gap: 16px; justify-items: center; text-align: center; margin-bottom: 48px; }
 .contact__intro { color: var(--muted); max-width: 46ch; text-wrap: pretty; }
 .contact__raster { display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px; max-width: 680px; width: 100%; margin: 0 auto; align-items: start; }
@@ -408,30 +408,9 @@ body { overflow-x: clip; }
 .pkg__abo li { position: relative; padding-left: 16px; }
 .pkg__abo li::before { content: "+"; position: absolute; left: 0; color: var(--accent); }
 /* Wuensche: antippen = direkt in der Anfrage (WhatsApp/E-Mail) */
-.wunsch { margin-top: 40px; display: grid; grid-template-columns: minmax(0, 0.7fr) minmax(0, 2.3fr); gap: 18px 44px; align-items: start; padding: 28px 30px; border: 1px solid var(--line); border-radius: 6px; background: linear-gradient(180deg, rgba(242,239,232,0.035), rgba(242,239,232,0.01)); }
-.wunsch__titel { font-family: var(--serif); font-size: clamp(1.8rem, 2.6vw, 2.3rem); line-height: 1; letter-spacing: -0.01em; }
-.wunsch__kopf p { margin-top: 10px; color: var(--muted); font-size: 14.5px; max-width: 32ch; text-wrap: pretty; }
-.wunsch__liste { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-@media (max-width: 1100px) { .wunsch__liste { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 600px) { .wunsch__liste { grid-template-columns: 1fr; } }
-.wunsch__knopf { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 10px; text-align: left; min-height: 56px; padding: 10px 14px 10px 11px; border: 1px solid var(--line); border-radius: 10px; background: transparent; color: var(--text); font: 400 14px/1 var(--sans); cursor: pointer; transition: border-color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
-.wunsch__knopf i { width: 20px; height: 20px; flex: none; display: grid; place-items: center; border-radius: 50%; border: 1px solid rgba(242,239,232,0.28); font-style: normal; font-size: 13px; line-height: 1; color: var(--muted); transition: background-color 200ms var(--ease), border-color 200ms var(--ease), color 200ms var(--ease); }
-.wunsch__knopf i::before { content: "+"; }
-.wunsch__knopf[aria-pressed="true"] { border-color: var(--accent); background: rgba(255,90,31,0.10); }
-.wunsch__knopf[aria-pressed="true"] i { background: var(--accent); border-color: var(--accent); color: var(--bg); }
-.wunsch__knopf[aria-pressed="true"] i::before { content: ""; width: 5px; height: 9px; border: solid var(--bg); border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg); }
-.wunsch__knopf:active { transform: scale(0.98); }
-.wunsch__text b { display: block; font-weight: 500; font-size: 14px; line-height: 1.25; }
-.wunsch__text small { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.35; color: var(--muted); }
-.wunsch__knopf em { font-style: normal; font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--text); }
-@media (hover: hover) and (pointer: fine) { .wunsch__knopf:hover { border-color: rgba(242,239,232,0.38); } .wunsch__knopf[aria-pressed="true"]:hover { border-color: var(--accent); } }
-.wunsch__stand { grid-column: 2; min-height: 1.4em; font-size: 13.5px; color: var(--muted); }
-.wunsch__stand a { color: var(--accent); border-bottom: 1px solid rgba(255,90,31,0.4); }
-@media (max-width: 900px) { .wunsch { grid-template-columns: 1fr; padding: 22px 18px; } .wunsch__stand { grid-column: auto; } }
 .chip--klein span { min-height: 40px; padding: 6px 14px; font-size: 13.5px; }
 /* Auswahl-Knoepfe im Formular: normale Schreibweise (lesbarer, wie die Wunsch-Knoepfe) */
 .field--chips .chip span { text-transform: none; letter-spacing: 0.01em; }
-.wunsch__stand:empty { display: none; }
 /* Touch: Links gross genug zum Tippen (mind. 44 px), Desktop bleibt gleich */
 @media (pointer: coarse) { .nav__mark, .nav__link, .footer a, .contact__meta a { display: inline-flex; align-items: center; min-height: 44px; } .nav { padding-top: 12px; padding-bottom: 12px; } }
 
@@ -497,6 +476,27 @@ body { overflow-x: clip; }
   .parallax__hint::after { animation: none; transform: none; opacity: 1; }
   .services__cursor { display: none; }
   * { transition-duration: 0.01ms !important; }
+}
+
+/* ---------- Fragebogen (v5) ---------- */
+.contact__raster { max-width: 760px; }
+.form--bogen { gap: 14px; }
+.schritt { display: grid; gap: 16px; margin: 0; min-width: 0; padding: 26px 28px 22px; border: 1px solid var(--line); border-radius: 10px; background: linear-gradient(180deg, rgba(242,239,232,0.035), rgba(242,239,232,0.01)); transition: border-color 300ms var(--ease); }
+.schritt:focus-within { border-color: rgba(255,90,31,0.55); }
+.schritt legend, .schritt__frage { float: left; width: 100%; display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 4px; padding: 0; font-family: var(--serif); font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1.1; letter-spacing: -0.01em; text-transform: none; color: var(--text); }
+.schritt legend + *, .schritt__frage + * { clear: both; }
+.schritt__nr { font-family: var(--sans); font-size: 12px; letter-spacing: 0.14em; color: var(--accent); font-variant-numeric: tabular-nums; }
+.schritt legend small, .schritt__frage small { font-family: var(--sans); font-size: 13px; letter-spacing: 0.02em; color: var(--muted); }
+.schritt .field--chips, .schritt .field { margin: 0; }
+.form--bogen .form__actions { margin-top: 10px; }
+@media (max-width: 700px) { .schritt { padding: 20px 18px 16px; } }
+
+/* Pakete: gleiche Zeilen in allen Karten (Liste, Pflege, Knopf auf einer Hoehe) */
+@media (min-width: 901px) {
+  .packages__grid { grid-template-rows: repeat(6, auto); row-gap: 0; }
+  .pkg { display: grid; grid-row: span 6; grid-template-rows: subgrid; row-gap: 18px; }
+  .pkg__list { align-content: start; }
+  .pkg__abo { align-content: start; }
 }
 </style>
 <script>
@@ -568,11 +568,9 @@ body { overflow-x: clip; }
         <ul class="pkg__list">
           <li>Eigenes Design, keine Vorlage</li>
           <li>5 eigene Bilder für Ihre Seite</li>
-          <li>Parallax-Kopfbereich mit Tiefe</li>
-          <li>Sanfte Einblend-Animationen</li>
+          <li>Parallax-Tiefe, Scroll- &amp; Einblend-Animationen</li>
           <li>Für Handy, Tablet und PC optimiert</li>
           <li>Kontakt per WhatsApp, Anruf und E-Mail</li>
-          <li>Bei Google angemeldet</li>
           <li>Impressum &amp; Datenschutz-Vorlage</li>
           <li>1 Korrekturrunde</li>
         </ul>
@@ -603,21 +601,21 @@ body { overflow-x: clip; }
         <ul class="pkg__list">
           <li>Alles aus Onepager</li>
           <li>10 eigene Bilder, keine Stockfotos</li>
-          <li>Parallax &amp; Scroll-Animationen auf jeder Seite</li>
+          <li>Parallax-Tiefe, Scroll- &amp; Einblend-Animationen auf jeder Seite</li>
           <li>Menü und Seitenstruktur (UI/UX) für Ihre Inhalte</li>
           <li>Texte für alle Seiten</li>
           <li>Bildergalerie oder Preisliste</li>
-          <li>Google-Unternehmensprofil eingerichtet</li>
           <li>Anfahrt, Öffnungszeiten &amp; Karte</li>
           <li>2 Korrekturrunden</li>
         </ul>
         <div class="pkg__abo">
           <div class="pkg__abo-kopf"><span class="pkg__abo-preis">+ 20 €<small> / Monat</small></span><span class="pkg__abo-titel">Hosting, Domain<br>&amp; Pflege</span></div>
           <ul>
-            <li>Alles aus der Onepager-Pflege</li>
-            <li>1 E-Mail-Adresse mit Ihrer Domain</li>
+            <li>Hosting, https-Verschlüsselung, Updates</li>
+            <li>Domain (.de) inklusive, von mir verwaltet</li>
+            <li>Jede Version gesichert</li>
             <li>Änderungen an Texten, Bildern und Preisen</li>
-            <li>Google-Profil aktuell gehalten</li>
+            <li>1 E-Mail-Adresse mit Ihrer Domain</li>
           </ul>
         </div>
         <a class="btn btn--wa pkg__cta" href="#kontakt" data-paket="Business">Business anfragen</a>
@@ -640,8 +638,7 @@ body { overflow-x: clip; }
         <ul class="pkg__list">
           <li>Alles aus Business</li>
           <li>20 eigene Bilder</li>
-          <li>1 Video im Kopfbereich</li>
-          <li>Individuelle Animationen und Effekte</li>
+          <li>Video im Kopfbereich, Parallax-Tiefe &amp; eigene Effekte</li>
           <li>Komplettes Design-Konzept (UI/UX) nach Ihrer Marke</li>
           <li>Logo &amp; Farben für Ihre Marke</li>
           <li>Texte komplett von mir</li>
@@ -652,39 +649,17 @@ body { overflow-x: clip; }
         <div class="pkg__abo">
           <div class="pkg__abo-kopf"><span class="pkg__abo-preis">+ 35 €<small> / Monat</small></span><span class="pkg__abo-titel">Hosting, Domain<br>&amp; Pflege</span></div>
           <ul>
-            <li>Alles aus der Business-Pflege</li>
-            <li>Neue Inhalte und Bereiche nach Absprache</li>
-            <li>Neue Bilder für Aktionen &amp; Saison</li>
-            <li>Google-Check jedes Quartal</li>
+            <li>Hosting, https-Verschlüsselung, Updates</li>
+            <li>Domain (.de) inklusive, von mir verwaltet</li>
+            <li>Jede Version gesichert</li>
+            <li>Neue Inhalte, Bereiche und Bilder für Aktionen &amp; Saison</li>
+            <li>1 E-Mail-Adresse mit Ihrer Domain</li>
             <li>Antwort am nächsten Werktag</li>
           </ul>
         </div>
         <a class="btn pkg__cta" href="#kontakt" data-paket="Individuell">Individuell anfragen</a>
       </li>
     </ul>
-    <div class="wunsch reveal">
-      <div class="wunsch__kopf">
-        <h3 class="wunsch__titel">Für Ihr Startup</h3>
-        <p>Sie fangen gerade an? Dann entwerfe ich den Auftritt gleich mit. Antippen, was Sie brauchen, und es steht in Ihrer Anfrage.</p>
-      </div>
-      <div class="wunsch__liste" role="group" aria-label="Für Ihr Startup zur Anfrage hinzufügen">
-        <button type="button" class="wunsch__knopf" data-wunsch="Logo & Markenzeichen" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Logo &amp; Markenzeichen</b><small>Wortmarke oder Zeichen, Dateien für Web und Druck</small></span></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Farben & Schriften" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Farben &amp; Schriften</b><small>Ein Stil, der überall gleich aussieht</small></span></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Visitenkarte & Briefpapier" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Visitenkarte &amp; Briefpapier</b><small>Druckfertig im Stil Ihrer Marke</small></span></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Social-Media-Auftritt" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Social-Media-Auftritt</b><small>Profilbilder, Banner und erste Beiträge</small></span></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="E-Mail mit eigener Domain" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>E-Mail mit eigener Domain</b><small>info@ihre-firma.de auf Handy und PC</small></span></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Google-Unternehmensprofil" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Google-Unternehmensprofil</b><small>Damit man Sie findet, bevor die Seite fertig ist</small></span></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Name & Domain-Check" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Name &amp; Domain-Check</b><small>Passender Name, freie Adresse gesichert</small></span></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Präsentationsvorlage" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Präsentationsvorlage</b><small>Für Kunden, Partner und Banken</small></span></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Speisekarte, Flyer & Aushang" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Speisekarte, Flyer &amp; Aushang</b><small>Drucksachen passend zur Website</small></span></button>
-      </div>
-      <p class="wunsch__stand" data-wunsch-stand aria-live="polite"></p>
-    </div>
-    <div class="packages__trust reveal">
-      <span>Persönlich von Emre Ergun</span>
-      <span>Vorschau im Browser vor dem Start</span>
-      <span>Keine versteckten Kosten</span>
-    </div>
   </section>
 
 
@@ -694,14 +669,14 @@ body { overflow-x: clip; }
         <span class="contact__bild"><img src="bilder/kontakt/emre-264.webp" width="88" height="88" alt="Porträt von Emre Ergun" loading="lazy" decoding="async"></span>
         <figcaption><strong>Emre Ergun</strong> · <span class="online">online</span></figcaption>
       </figure>
-      <span class="contact__label reveal">Kontakt</span>
+      <span class="contact__label reveal">Fragebogen</span>
       <h2 class="contact__big reveal" id="kontakt-titel">Projekt anfragen</h2>
-      <p class="contact__intro reveal">Drei Angaben genügen, der Rest ist optional. Die Nachricht geht per WhatsApp oder E-Mail direkt an mich.</p>
+      <p class="contact__intro reveal">Vier kurze Fragen, in zwei Minuten ausgefüllt. Pflicht sind nur Name, E-Mail und ein, zwei Sätze zum Projekt. Die Nachricht geht per WhatsApp oder E-Mail direkt an mich.</p>
     </div>
     <div class="contact__raster">
-      <form class="form reveal" id="anfrage" novalidate>
-        <fieldset class="field field--chips">
-          <legend>Paket</legend>
+      <form class="form form--bogen reveal" id="anfrage" novalidate>
+        <fieldset class="schritt field--chips">
+          <legend><span class="schritt__nr">01</span>Welches Paket passt?</legend>
           <div class="chips">
             <label class="chip"><input type="radio" name="paket" value="Onepager"><span>Onepager · 80 €</span></label>
             <label class="chip"><input type="radio" name="paket" value="Business"><span>Business · 250 €</span></label>
@@ -709,44 +684,35 @@ body { overflow-x: clip; }
             <label class="chip"><input type="radio" name="paket" value="Noch unklar" checked><span>Noch unklar</span></label>
           </div>
         </fieldset>
-        <fieldset class="field field--chips">
-          <legend>Für Ihr Startup (optional, mehrere möglich)</legend>
-          <div class="chips">
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Logo & Markenzeichen"><span>Logo &amp; Markenzeichen</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Farben & Schriften"><span>Farben &amp; Schriften</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Visitenkarte & Briefpapier"><span>Visitenkarte &amp; Briefpapier</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Social-Media-Auftritt"><span>Social-Media-Auftritt</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="E-Mail mit eigener Domain"><span>E-Mail mit eigener Domain</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Google-Unternehmensprofil"><span>Google-Unternehmensprofil</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Name & Domain-Check"><span>Name &amp; Domain-Check</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Präsentationsvorlage"><span>Präsentationsvorlage</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Speisekarte, Flyer & Aushang"><span>Speisekarte, Flyer &amp; Aushang</span></label>
-          </div>
-        </fieldset>
-        <div class="form__row">
-          <div class="field">
-            <label for="f-name">Name</label>
-            <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-err">
-            <span class="field__error" id="f-name-err" aria-live="polite"></span>
+        <div class="schritt" role="group" aria-labelledby="schritt-3">
+          <p class="schritt__frage" id="schritt-3"><span class="schritt__nr">02</span>Wer sind Sie?</p>
+          <div class="form__row">
+            <div class="field">
+              <label for="f-name">Name</label>
+              <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-err">
+              <span class="field__error" id="f-name-err" aria-live="polite"></span>
+            </div>
+            <div class="field">
+              <label for="f-firma">Unternehmen (optional)</label>
+              <input id="f-firma" name="firma" type="text" autocomplete="organization">
+              <span class="field__error" aria-hidden="true"></span>
+            </div>
           </div>
           <div class="field">
-            <label for="f-firma">Unternehmen (optional)</label>
-            <input id="f-firma" name="firma" type="text" autocomplete="organization">
-            <span class="field__error" aria-hidden="true"></span>
+            <label for="f-mail">E-Mail</label>
+            <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="f-mail-err">
+            <span class="field__error" id="f-mail-err" aria-live="polite"></span>
           </div>
         </div>
-        <div class="field">
-          <label for="f-mail">E-Mail</label>
-          <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="f-mail-err">
-          <span class="field__error" id="f-mail-err" aria-live="polite"></span>
+        <div class="schritt">
+          <label class="schritt__frage" for="f-text"><span class="schritt__nr">03</span>Worum geht es?</label>
+          <div class="field">
+            <textarea id="f-text" name="text" placeholder="Was macht Ihr Unternehmen, was soll die Seite erreichen?" required aria-describedby="f-text-err"></textarea>
+            <span class="field__error" id="f-text-err" aria-live="polite"></span>
+          </div>
         </div>
-        <div class="field">
-          <label for="f-text">Worum geht es?</label>
-          <textarea id="f-text" name="text" placeholder="Was macht Ihr Unternehmen, was soll die Seite erreichen?" required aria-describedby="f-text-err"></textarea>
-          <span class="field__error" id="f-text-err" aria-live="polite"></span>
-        </div>
-        <div class="field field--datei">
-          <label for="f-datei">Dateien mitschicken (optional): Logo, Fotos, Speisekarte</label>
+        <div class="schritt field--datei">
+          <label class="schritt__frage" for="f-datei"><span class="schritt__nr">04</span>Dateien mitschicken <small>optional: Logo, Fotos, Speisekarte</small></label>
           <input id="f-datei" name="dateien" type="file" multiple accept="image/*,.pdf,.doc,.docx,.svg,.ai,.zip">
           <ul class="datei__liste" data-datei-liste aria-live="polite"></ul>
           <span class="form__hint">Die Dateien hängen Sie im nächsten Schritt in WhatsApp oder in Ihrem Mailprogramm an. Die Nachricht erinnert Sie daran.</span>
@@ -1004,7 +970,6 @@ body { overflow-x: clip; }
   }
   function paket() { var r = form.querySelector('input[name="paket"]:checked'); return r && r.value !== 'Noch unklar' ? r.value : ''; }
   function wert(k) { return form.elements[k].value.trim(); }
-  function extras() { return [].map.call(form.querySelectorAll('input[name="extras"]:checked'), function (c) { return c.value; }); }
   var dateiFeld = form.elements['dateien'], dateiListe = form.querySelector('[data-datei-liste]');
   function dateien() { return dateiFeld && dateiFeld.files ? [].map.call(dateiFeld.files, function (f) { return f.name; }) : []; }
   if (dateiFeld) dateiFeld.addEventListener('change', function () {
@@ -1019,12 +984,11 @@ body { overflow-x: clip; }
     aktualisieren();
   });
   function nachricht(vorschau) {
-    var n = wert('name'), f = wert('firma'), p = paket(), e = extras(), d = dateien(), x = wert('text'), m = wert('email');
+    var n = wert('name'), f = wert('firma'), p = paket(), d = dateien(), x = wert('text'), m = wert('email');
     if (vorschau) { n = n || '[Ihr Name]'; x = x || '[Worum geht es?]'; m = m || '[Ihre E-Mail]'; }
     return 'Hallo, ich bin ' + n + (f ? ' von ' + f : '') + '.\n\n' +
       (p ? 'Paket: ' + p + '\n' : '') +
-      (e.length ? 'Startup: ' + e.join(', ') + '\n' : '') +
-      ((p || e.length) ? '\n' : '') + x + '\n\n' +
+      (p ? '\n' : '') + x + '\n\n' +
       (d.length ? 'Dateien, die ich hier anhänge: ' + d.join(', ') + '\n\n' : '') +
       'E-Mail für die Antwort: ' + m + '\n' + 'Gesendet über die Website.';
   }
@@ -1053,25 +1017,6 @@ body { overflow-x: clip; }
       status.textContent = dateien().length ? 'Ihr Mailprogramm öffnet sich. Bitte Ihre Dateien anhängen und senden.' : 'Ihr Mailprogramm öffnet sich mit der fertigen Nachricht.';
     }
   });
-  /* Wuensche bei den Paketen: antippen = im Formular angekreuzt = steht in der WhatsApp-/Mail-Nachricht */
-  var wunschKnoepfe = document.querySelectorAll('[data-wunsch]');
-  var wunschStand = document.querySelector('[data-wunsch-stand]');
-  function wunschBox(v) { return form.querySelector('input[name="extras"][value="' + v + '"]'); }
-  function wunschAnzeigen() {
-    var n = 0;
-    [].forEach.call(wunschKnoepfe, function (k) {
-      var c = wunschBox(k.getAttribute('data-wunsch')); var an = !!(c && c.checked);
-      k.setAttribute('aria-pressed', an ? 'true' : 'false'); if (an) n++;
-    });
-    if (wunschStand) wunschStand.innerHTML = n ? (n === 1 ? '1 Punkt' : n + ' Punkte') + ' in Ihrer Anfrage · <a href="#kontakt">Zur Anfrage</a>' : '';
-  }
-  [].forEach.call(wunschKnoepfe, function (k) {
-    k.addEventListener('click', function () {
-      var c = wunschBox(k.getAttribute('data-wunsch')); if (!c) return;
-      c.checked = !c.checked; aktualisieren(); wunschAnzeigen();
-    });
-  });
-  form.addEventListener('change', wunschAnzeigen);
   /* Paket-Buttons waehlen das passende Paket im Formular */
   document.querySelectorAll('[data-paket]').forEach(function (a) {
     a.addEventListener('click', function () {
