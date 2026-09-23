@@ -368,7 +368,6 @@ body { overflow-x: clip; }
 .contact__person strong { font-weight: 500; color: var(--text); }
 /* Online-Status wie bei WhatsApp */
 .contact__bild { position: relative; }
-.contact__bild::after { content: ""; position: absolute; right: 5px; bottom: 5px; width: 16px; height: 16px; border-radius: 50%; background: #2FD161; border: 3px solid var(--bg); }
 .online { display: inline-flex; align-items: center; gap: 7px; color: #5BE38A; }
 .online::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #2FD161; box-shadow: 0 0 0 0 rgba(47,209,97,0.5); animation: online-puls 2.4s ease-out infinite; }
 @keyframes online-puls { 0% { box-shadow: 0 0 0 0 rgba(47,209,97,0.5); } 70%, 100% { box-shadow: 0 0 0 7px rgba(47,209,97,0); } }
@@ -699,7 +698,7 @@ body { overflow-x: clip; }
       <aside class="vorschau reveal" aria-label="Vorschau Ihrer Nachricht">
         <div class="vorschau__kopf">
           <img class="vorschau__avatar" src="bilder/kontakt/emre-144.webp" width="40" height="40" alt="" loading="lazy" decoding="async">
-          <div><strong>Emre Ergun</strong><small><span class="online">online</span> · Vorschau Ihrer Nachricht</small></div>
+          <div><strong>Emre Ergun</strong><small>WhatsApp · Vorschau Ihrer Nachricht</small></div>
         </div>
         <div class="vorschau__chat">
           <div class="vorschau__blase" data-vorschau></div>
