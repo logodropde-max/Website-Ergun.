@@ -67,3 +67,9 @@ Handy: Bewegung × 0,6. `prefers-reduced-motion`: Standbild.
 Nur dieser Ordner gehört ins öffentliche Repo – **nicht der ganze Vault** (Notizen, Preise, Impressum-Daten, Fotos).
 Hochladen: `index.html`, `impressum.html`, `datenschutz.html`, `favicon*`, `apple-touch-icon.png`, `js/`, `schriften/`,
 `bilder/hero/*.webp`, `bilder/og.jpg`. Ordner `bilder/hero/4k/` und alle PNG weglassen. Plan: `08 Projekte/Deployment.md`.
+
+## Pakete & Kontakt (Stand 23.09., Claude Code)
+- Jede Paketkarte hat eine lebende Vorschau (`.pkg__demo`): Handy mit `bilder/demo/onepager.webp`, Stapel aus `bilder/demo/seite-*.webp`, Mini-Parallax aus den `*-1920.webp`-Ebenen. Neu erzeugen nach Änderungen: `bilder/hero/4k/demos_rendern.py` (braucht lokalen Server auf Port 8788).
+- Kontakt: Paket-Chips (Radio), Prüfung beim Verlassen eines Feldes, Live-Vorschau der WhatsApp-Nachricht (`[data-vorschau]`).
+- Intro: Start mit „E.", Punkt = Sonne (Glut über CSS-Variablen `--glut/--glutO`), goldener Schein über die Buchstaben, dann Entfalten und Aufgang aus dem Punkt.
+- Berge: `bilder/hero/4k/berge.py` füllt den Fuß des Kamms und gleicht Kamm und Vordergrund an. Originale liegen als `*-vor-angleich.webp` in `4k/`.
