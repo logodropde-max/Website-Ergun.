@@ -285,6 +285,13 @@ html.intro .parallax__title { opacity: 0; }
 }
 .field input:focus-visible, .field textarea:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 1px 0 var(--accent); }
 .field textarea { resize: vertical; min-height: 96px; }
+.field--datei input[type="file"] { padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+.field--datei input[type="file"]::file-selector-button { margin-right: 14px; padding: 9px 16px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--text); font: 500 14px var(--sans); cursor: pointer; }
+.datei__liste { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.datei__liste:empty { display: none; }
+.datei__liste li { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px 5px 5px; }
+.datei__liste img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; }
+.datei__liste i { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,90,31,0.14); color: var(--accent); font-style: normal; font-size: 11px; font-weight: 500; }
 .field.hat-fehler input, .field.hat-fehler textarea { border-color: var(--accent); }
 .field__error { min-height: 1.2em; font-size: 13px; color: var(--accent); }
 .form__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
@@ -299,6 +306,7 @@ html.intro .parallax__title { opacity: 0; }
   color: rgba(244,238,228,0.88); text-shadow: 0 1px 14px rgba(0,0,0,0.55);
 }
 .parallax__rolle { order: -1; }   /* ueber dem Namen: dunkler Himmel statt heller Sonne */
+.parallax__claim { order: -1; margin: -4px 0 6px; font-family: var(--serif); font-style: italic; font-size: clamp(15px, 1.5vw, 21px); color: rgba(244,238,228,0.9); text-shadow: 0 1px 14px rgba(0,0,0,0.6); text-align: center; text-wrap: balance; padding: 0 var(--pad); }
 .parallax__rolle::before, .parallax__rolle::after { content: ""; width: 28px; height: 1px; background: rgba(255,176,102,0.75); }
 
 /* Navigation: beim Runterscrollen weg, beim Hochscrollen wieder da */
@@ -404,7 +412,7 @@ body { overflow-x: clip; }
 .wunsch__liste { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 @media (max-width: 1100px) { .wunsch__liste { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .wunsch__liste { grid-template-columns: 1fr; } }
-.wunsch__knopf { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; text-align: left; min-height: 56px; padding: 10px 14px 10px 11px; border: 1px solid var(--line); border-radius: 10px; background: transparent; color: var(--text); font: 400 14px/1 var(--sans); cursor: pointer; transition: border-color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
+.wunsch__knopf { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 10px; text-align: left; min-height: 56px; padding: 10px 14px 10px 11px; border: 1px solid var(--line); border-radius: 10px; background: transparent; color: var(--text); font: 400 14px/1 var(--sans); cursor: pointer; transition: border-color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
 .wunsch__knopf i { width: 20px; height: 20px; flex: none; display: grid; place-items: center; border-radius: 50%; border: 1px solid rgba(242,239,232,0.28); font-style: normal; font-size: 13px; line-height: 1; color: var(--muted); transition: background-color 200ms var(--ease), border-color 200ms var(--ease), color 200ms var(--ease); }
 .wunsch__knopf i::before { content: "+"; }
 .wunsch__knopf[aria-pressed="true"] { border-color: var(--accent); background: rgba(255,90,31,0.10); }
@@ -527,6 +535,7 @@ body { overflow-x: clip; }
         <div data-parallax-layer="3" class="parallax__layer-title">
           <h1 class="parallax__title">ERGUN<span class="dot">.</span></h1>
           <p class="parallax__rolle">Webdesigner</p>
+          <p class="parallax__claim">Über den Horizont hinaus. Faire Preise für gute Arbeit.</p>
         </div>
         <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-4-foreground-hoch.webp"><img src="bilder/hero/layer-4-foreground-1920.webp" srcset="bilder/hero/layer-4-foreground-1920.webp 1920w, bilder/hero/layer-4-foreground-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="4" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
         <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-5-person-hoch.webp"><img src="bilder/hero/layer-5-person-1920.webp" srcset="bilder/hero/layer-5-person-1920.webp 1920w, bilder/hero/layer-5-person-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="5" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
@@ -553,16 +562,17 @@ body { overflow-x: clip; }
           <div class="demo-phone"><div class="demo-phone__screen"><img class="demo-phone__page" src="bilder/demo/onepager.webp" width="240" height="1159" alt="" loading="lazy" data-demo-scroll></div></div>
         </div>
         <div class="pkg__kopf"><h3 class="pkg__name">Onepager</h3><span class="pkg__tag">1 Seite</span></div>
-        <p class="pkg__price">80 €<small>einmalig · fertig in 3 Werktagen</small></p>
+        <p class="pkg__price">80 €<small>einmalig · 1 Seite</small></p>
         <ul class="pkg__list">
-          <li>1 Seite mit bis zu 6 Abschnitten</li>
           <li>Eigenes Design, keine Vorlage</li>
-          <li>2 eigene Bilder passend zu Ihrer Branche</li>
+          <li>5 eigene Bilder für Ihre Seite</li>
+          <li>Parallax-Kopfbereich mit Tiefe</li>
+          <li>Sanfte Einblend-Animationen</li>
           <li>Für Handy, Tablet und PC optimiert</li>
           <li>Kontakt per WhatsApp, Anruf und E-Mail</li>
-          <li>Bei Google angemeldet (Suchkonsole, Sitemap)</li>
+          <li>Bei Google angemeldet</li>
           <li>Impressum &amp; Datenschutz-Vorlage</li>
-          <li>Vorschau-Link, 1 Korrekturrunde</li>
+          <li>1 Korrekturrunde</li>
         </ul>
         <div class="pkg__abo">
           <div class="pkg__abo-kopf"><span class="pkg__abo-preis">+ 10 €<small> / Monat</small></span><span class="pkg__abo-titel">Hosting, Domain<br>&amp; Pflege</span></div>
@@ -570,7 +580,7 @@ body { overflow-x: clip; }
             <li>Hosting, https-Verschlüsselung, Updates</li>
             <li>Domain (.de) inklusive, von mir verwaltet</li>
             <li>Jede Version gesichert</li>
-            <li>1 Textänderung pro Monat (bis 15 Minuten)</li>
+            <li>Kleine Textänderungen jederzeit</li>
           </ul>
         </div>
         <a class="btn pkg__cta" href="#kontakt" data-paket="Onepager">Onepager anfragen</a>
@@ -587,13 +597,14 @@ body { overflow-x: clip; }
           </div>
         </div>
         <div class="pkg__kopf"><h3 class="pkg__name">Business</h3><span class="pkg__tag">bis 5 Seiten</span></div>
-        <p class="pkg__price">250 €<small>einmalig · fertig in 7 Werktagen</small></p>
+        <p class="pkg__price">250 €<small>einmalig · bis zu 5 Seiten</small></p>
         <ul class="pkg__list">
           <li>Alles aus Onepager</li>
-          <li>Bis zu 5 Seiten</li>
-          <li>5 eigene Bilder (1 je Seite), keine Stockfotos</li>
-          <li>Scroll-Animationen auf jeder Seite</li>
-          <li>Texte für alle Seiten, abgestimmt in 1 Gespräch</li>
+          <li>10 eigene Bilder, keine Stockfotos</li>
+          <li>Parallax &amp; Scroll-Animationen auf jeder Seite</li>
+          <li>Menü und Seitenstruktur (UI/UX) für Ihre Inhalte</li>
+          <li>Texte für alle Seiten</li>
+          <li>Bildergalerie oder Preisliste</li>
           <li>Google-Unternehmensprofil eingerichtet</li>
           <li>Anfahrt, Öffnungszeiten &amp; Karte</li>
           <li>2 Korrekturrunden</li>
@@ -603,8 +614,8 @@ body { overflow-x: clip; }
           <ul>
             <li>Alles aus der Onepager-Pflege</li>
             <li>1 E-Mail-Adresse mit Ihrer Domain</li>
-            <li>Änderungen bis 60 Minuten pro Monat</li>
-            <li>Google-Profil: Zeiten &amp; Fotos 1× pro Monat aktualisiert</li>
+            <li>Änderungen an Texten, Bildern und Preisen</li>
+            <li>Google-Profil aktuell gehalten</li>
           </ul>
         </div>
         <a class="btn btn--wa pkg__cta" href="#kontakt" data-paket="Business">Business anfragen</a>
@@ -623,22 +634,25 @@ body { overflow-x: clip; }
           </div>
         </div>
         <div class="pkg__kopf"><h3 class="pkg__name">Individuell</h3><span class="pkg__tag">bis 10 Seiten</span></div>
-        <p class="pkg__price">400 €<small>einmalig · fertig in 14 Werktagen</small></p>
+        <p class="pkg__price">400 €<small>einmalig · bis zu 10 Seiten</small></p>
         <ul class="pkg__list">
           <li>Alles aus Business</li>
-          <li>Bis zu 10 Seiten</li>
-          <li>1 Video im Kopfbereich (bis 10 Sekunden)</li>
-          <li>10 eigene Bilder, Texte für alle Seiten von mir</li>
+          <li>20 eigene Bilder</li>
+          <li>1 Video im Kopfbereich</li>
+          <li>Individuelle Animationen und Effekte</li>
+          <li>Komplettes Design-Konzept (UI/UX) nach Ihrer Marke</li>
+          <li>Logo &amp; Farben für Ihre Marke</li>
+          <li>Texte komplett von mir</li>
+          <li>Online-Terminbuchung oder Newsletter-Anmeldung</li>
           <li>5 Bilder für Social Media zum Start</li>
-          <li>1 Extra aus der Liste unten inklusive</li>
           <li>3 Korrekturrunden</li>
         </ul>
         <div class="pkg__abo">
           <div class="pkg__abo-kopf"><span class="pkg__abo-preis">+ 35 €<small> / Monat</small></span><span class="pkg__abo-titel">Hosting, Domain<br>&amp; Pflege</span></div>
           <ul>
             <li>Alles aus der Business-Pflege</li>
-            <li>Änderungen bis 3 Stunden pro Monat</li>
-            <li>2 neue Bilder pro Monat (Aktionen, Saison)</li>
+            <li>Neue Inhalte und Bereiche nach Absprache</li>
+            <li>Neue Bilder für Aktionen &amp; Saison</li>
             <li>Google-Check jedes Quartal</li>
             <li>Antwort am nächsten Werktag</li>
           </ul>
@@ -648,23 +662,19 @@ body { overflow-x: clip; }
     </ul>
     <div class="wunsch reveal">
       <div class="wunsch__kopf">
-        <h3 class="wunsch__titel">Auf Wunsch dazu</h3>
-        <p>Fester Umfang, fester Preis, einmalig. Antippen, und es steht direkt in Ihrer Anfrage per WhatsApp oder E-Mail.</p>
+        <h3 class="wunsch__titel">Für Ihr Startup</h3>
+        <p>Sie fangen gerade an? Dann entwerfe ich den Auftritt gleich mit. Antippen, was Sie brauchen, und es steht in Ihrer Anfrage.</p>
       </div>
-      <div class="wunsch__liste" role="group" aria-label="Extras zur Anfrage hinzufügen">
-        <button type="button" class="wunsch__knopf" data-wunsch="Logo" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Logo erstellen</b><small>3 Entwürfe, 1 Korrekturrunde, Dateien für Web und Druck</small></span><em>80 €</em></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Online-Termine" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Online-Termine</b><small>Buchungskalender auf der Seite eingebunden</small></span><em>60 €</em></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Speisekarte/Preisliste" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Speisekarte oder Preisliste</b><small>Bis zu 30 Positionen, am Handy gut lesbar</small></span><em>30 €</em></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Bildergalerie" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Bildergalerie</b><small>Bis zu 12 Bilder mit Vergrößerung</small></span><em>30 €</em></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Anfahrt" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Anfahrt &amp; Öffnungszeiten</b><small>Karte, Route und Zeiten auf einen Blick</small></span><em>20 €</em></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Zweite Sprache" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Zweite Sprache</b><small>Ganze Seite übersetzt, Preis je Sprache</small></span><em>80 €</em></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Blog" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Blog oder Neuigkeiten</b><small>Bereich eingerichtet plus 1 Beitrag</small></span><em>60 €</em></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Google-Profil" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Google-Unternehmensprofil</b><small>Eingerichtet mit 5 Fotos und Öffnungszeiten</small></span><em>40 €</em></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Video" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Video im Kopfbereich</b><small>1 Clip bis 10 Sekunden, passend zur Seite</small></span><em>40 €</em></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Social-Media-Bilder" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Social-Media-Bilder</b><small>5 Bilder im Stil Ihrer Seite</small></span><em>40 €</em></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Newsletter" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Newsletter-Anmeldung</b><small>Formular und Anbindung an Ihren Versand</small></span><em>40 €</em></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Datei-Upload" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Datei-Upload im Formular</b><small>Kunden schicken Fotos oder Unterlagen mit</small></span><em>40 €</em></button>
-        <button type="button" class="wunsch__knopf" data-wunsch="Weitere Seite" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Weitere Seite</b><small>1 zusätzliche Unterseite mit Bild und Text</small></span><em>40 €</em></button>
+      <div class="wunsch__liste" role="group" aria-label="Für Ihr Startup zur Anfrage hinzufügen">
+        <button type="button" class="wunsch__knopf" data-wunsch="Logo & Markenzeichen" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Logo &amp; Markenzeichen</b><small>Wortmarke oder Zeichen, Dateien für Web und Druck</small></span></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Farben & Schriften" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Farben &amp; Schriften</b><small>Ein Stil, der überall gleich aussieht</small></span></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Visitenkarte & Briefpapier" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Visitenkarte &amp; Briefpapier</b><small>Druckfertig im Stil Ihrer Marke</small></span></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Social-Media-Auftritt" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Social-Media-Auftritt</b><small>Profilbilder, Banner und erste Beiträge</small></span></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="E-Mail mit eigener Domain" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>E-Mail mit eigener Domain</b><small>info@ihre-firma.de auf Handy und PC</small></span></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Google-Unternehmensprofil" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Google-Unternehmensprofil</b><small>Damit man Sie findet, bevor die Seite fertig ist</small></span></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Name & Domain-Check" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Name &amp; Domain-Check</b><small>Passender Name, freie Adresse gesichert</small></span></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Präsentationsvorlage" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Präsentationsvorlage</b><small>Für Kunden, Partner und Banken</small></span></button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Speisekarte, Flyer & Aushang" aria-pressed="false"><i aria-hidden="true"></i><span class="wunsch__text"><b>Speisekarte, Flyer &amp; Aushang</b><small>Drucksachen passend zur Website</small></span></button>
       </div>
       <p class="wunsch__stand" data-wunsch-stand aria-live="polite"></p>
     </div>
@@ -698,21 +708,17 @@ body { overflow-x: clip; }
           </div>
         </fieldset>
         <fieldset class="field field--chips">
-          <legend>Extras (optional, mehrere möglich)</legend>
+          <legend>Für Ihr Startup (optional, mehrere möglich)</legend>
           <div class="chips">
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Logo"><span>Logo erstellen</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Online-Termine"><span>Online-Termine</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Speisekarte/Preisliste"><span>Speisekarte oder Preisliste</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Bildergalerie"><span>Bildergalerie</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Anfahrt"><span>Anfahrt & Öffnungszeiten</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Zweite Sprache"><span>Zweite Sprache</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Blog"><span>Blog oder Neuigkeiten</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Google-Profil"><span>Google-Unternehmensprofil</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Video"><span>Video im Kopfbereich</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Social-Media-Bilder"><span>Social-Media-Bilder</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Newsletter"><span>Newsletter-Anmeldung</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Datei-Upload"><span>Datei-Upload im Formular</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Weitere Seite"><span>Weitere Seite</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Logo & Markenzeichen"><span>Logo &amp; Markenzeichen</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Farben & Schriften"><span>Farben &amp; Schriften</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Visitenkarte & Briefpapier"><span>Visitenkarte &amp; Briefpapier</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Social-Media-Auftritt"><span>Social-Media-Auftritt</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="E-Mail mit eigener Domain"><span>E-Mail mit eigener Domain</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Google-Unternehmensprofil"><span>Google-Unternehmensprofil</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Name & Domain-Check"><span>Name &amp; Domain-Check</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Präsentationsvorlage"><span>Präsentationsvorlage</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Speisekarte, Flyer & Aushang"><span>Speisekarte, Flyer &amp; Aushang</span></label>
           </div>
         </fieldset>
         <div class="form__row">
@@ -736,6 +742,12 @@ body { overflow-x: clip; }
           <label for="f-text">Worum geht es?</label>
           <textarea id="f-text" name="text" placeholder="Was macht Ihr Unternehmen, was soll die Seite erreichen?" required aria-describedby="f-text-err"></textarea>
           <span class="field__error" id="f-text-err" aria-live="polite"></span>
+        </div>
+        <div class="field field--datei">
+          <label for="f-datei">Dateien mitschicken (optional): Logo, Fotos, Speisekarte</label>
+          <input id="f-datei" name="dateien" type="file" multiple accept="image/*,.pdf,.doc,.docx,.svg,.ai,.zip">
+          <ul class="datei__liste" data-datei-liste aria-live="polite"></ul>
+          <span class="form__hint">Die Dateien hängen Sie im nächsten Schritt in WhatsApp oder in Ihrem Mailprogramm an. Die Nachricht erinnert Sie daran.</span>
         </div>
         <div class="form__actions">
           <button class="btn btn--wa" type="submit" name="weg" value="whatsapp">
@@ -798,7 +810,7 @@ body { overflow-x: clip; }
   var heroEinstieg = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } })
     .from('.parallax__layer-img[data-parallax-layer="2"]', { y: 16, duration: 1.1 }, 0)
     .from('.parallax__layer-img[data-parallax-layer="4"], .parallax__layer-img[data-parallax-layer="5"]', { y: 24, duration: 1.1 }, 0)
-    .from('.parallax__rolle', { opacity: 0, y: 8, duration: 0.7 }, 0.35)
+    .from('.parallax__rolle, .parallax__claim', { opacity: 0, y: 8, duration: 0.7, stagger: 0.15 }, 0.35)
     .from('.nav, .parallax__hint', { opacity: 0, duration: 0.6, ease: 'power2.out' }, 0.5);
 
   /* ===== Auftritt: "E." erscheint, der Punkt zieht nach rechts und zieht "RGUN" hinter sich her, dann blendet die Szene auf ===== */
@@ -991,13 +1003,27 @@ body { overflow-x: clip; }
   function paket() { var r = form.querySelector('input[name="paket"]:checked'); return r && r.value !== 'Noch unklar' ? r.value : ''; }
   function wert(k) { return form.elements[k].value.trim(); }
   function extras() { return [].map.call(form.querySelectorAll('input[name="extras"]:checked'), function (c) { return c.value; }); }
+  var dateiFeld = form.elements['dateien'], dateiListe = form.querySelector('[data-datei-liste]');
+  function dateien() { return dateiFeld && dateiFeld.files ? [].map.call(dateiFeld.files, function (f) { return f.name; }) : []; }
+  if (dateiFeld) dateiFeld.addEventListener('change', function () {
+    dateiListe.innerHTML = '';
+    [].forEach.call(dateiFeld.files, function (f) {
+      var li = document.createElement('li');
+      if (/^image\//.test(f.type)) { var im = document.createElement('img'); im.alt = ''; im.src = URL.createObjectURL(f); li.appendChild(im); }
+      else { var i = document.createElement('i'); i.textContent = (f.name.split('.').pop() || 'Datei').slice(0, 4).toUpperCase(); li.appendChild(i); }
+      li.appendChild(document.createTextNode(f.name + ' · ' + (f.size / 1048576).toFixed(1) + ' MB'));
+      dateiListe.appendChild(li);
+    });
+    aktualisieren();
+  });
   function nachricht(vorschau) {
-    var n = wert('name'), f = wert('firma'), p = paket(), e = extras(), x = wert('text'), m = wert('email');
+    var n = wert('name'), f = wert('firma'), p = paket(), e = extras(), d = dateien(), x = wert('text'), m = wert('email');
     if (vorschau) { n = n || '[Ihr Name]'; x = x || '[Worum geht es?]'; m = m || '[Ihre E-Mail]'; }
     return 'Hallo, ich bin ' + n + (f ? ' von ' + f : '') + '.\n\n' +
       (p ? 'Paket: ' + p + '\n' : '') +
-      (e.length ? 'Extras: ' + e.join(', ') + '\n' : '') +
+      (e.length ? 'Startup: ' + e.join(', ') + '\n' : '') +
       ((p || e.length) ? '\n' : '') + x + '\n\n' +
+      (d.length ? 'Dateien, die ich hier anhänge: ' + d.join(', ') + '\n\n' : '') +
       'E-Mail für die Antwort: ' + m + '\n' + 'Gesendet über die Website.';
   }
   function aktualisieren() {
@@ -1018,11 +1044,11 @@ body { overflow-x: clip; }
     var m = nachricht(false);
     if (weg === 'whatsapp') {
       var win = window.open('https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(m), '_blank', 'noopener');
-      status.textContent = win ? 'WhatsApp ist geöffnet. Bitte dort auf Senden tippen.' : 'WhatsApp konnte nicht geöffnet werden. Bitte Pop-ups erlauben oder per E-Mail senden.';
+      status.textContent = win ? (dateien().length ? 'WhatsApp ist geöffnet. Bitte dort Ihre Dateien anhängen und auf Senden tippen.' : 'WhatsApp ist geöffnet. Bitte dort auf Senden tippen.') : 'WhatsApp konnte nicht geöffnet werden. Bitte Pop-ups erlauben oder per E-Mail senden.';
     } else {
       var betreff = 'Projektanfrage' + (paket() ? ' ' + paket() : '') + ' über ERGUN.';
       location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent(betreff) + '&body=' + encodeURIComponent(m);
-      status.textContent = 'Ihr Mailprogramm öffnet sich mit der fertigen Nachricht.';
+      status.textContent = dateien().length ? 'Ihr Mailprogramm öffnet sich. Bitte Ihre Dateien anhängen und senden.' : 'Ihr Mailprogramm öffnet sich mit der fertigen Nachricht.';
     }
   });
   /* Wuensche bei den Paketen: antippen = im Formular angekreuzt = steht in der WhatsApp-/Mail-Nachricht */
@@ -1035,7 +1061,7 @@ body { overflow-x: clip; }
       var c = wunschBox(k.getAttribute('data-wunsch')); var an = !!(c && c.checked);
       k.setAttribute('aria-pressed', an ? 'true' : 'false'); if (an) n++;
     });
-    if (wunschStand) wunschStand.innerHTML = n ? (n === 1 ? '1 Extra' : n + ' Extras') + ' in Ihrer Anfrage · <a href="#kontakt">Zur Anfrage</a>' : '';
+    if (wunschStand) wunschStand.innerHTML = n ? (n === 1 ? '1 Punkt' : n + ' Punkte') + ' in Ihrer Anfrage · <a href="#kontakt">Zur Anfrage</a>' : '';
   }
   [].forEach.call(wunschKnoepfe, function (k) {
     k.addEventListener('click', function () {
