@@ -55,7 +55,9 @@ Handy: Bewegung × 0,6. `prefers-reduced-motion`: Standbild.
 ## Prüfung
 - Desktop 1440 und 1024: Hero gerendert (Name lesbar über dem Kopf, Sonne hinter dem Namen, Füße auf dem Fels)
 - Handy 390 (Hochformat): lädt die `-hoch`-Ebenen, Skalierung 0,94× bei 2-fach-Display – kein Weichzeichnen mehr; Screenshot geprüft
-- Anti-Slop-Scan und Motion-Audit (Tastemaker-Skripte): sauber bis auf die wachsende Hover-Unterstreichung (Fehlalarm)
+- Anti-Slop-Scan: sauber (Textverlauf im Titel entfernt) · Motion-Audit: nur die wachsende Hover-Unterstreichung (Fehlalarm)
+- Scroll-Ruhe am Handy: keine `mix-blend-mode`/`filter`-Effekte mehr auf bewegten Elementen, `normalizeScroll` + leichte Touch-Glättung in ScrollSmoother
+- Sonne: lokal nachbearbeitet (`bilder/hero/4k/sky-sonne-v2.png` ist die Quelle) – weicher Rand, heller Kern, dreistufige Glut
 - Lighthouse: noch nicht gelaufen (braucht `npx lighthouse`, Download)
 
 ## Online stellen (GitHub + Vercel)

@@ -64,6 +64,26 @@ img { display: block; max-width: 100%; height: auto; }
 .skip { position: fixed; left: var(--pad); top: 16px; z-index: 50; padding: 12px 16px; background: var(--text); color: var(--bg); border-radius: 999px; font-size: 14px; transform: translateY(-200%); transition: transform 160ms var(--ease-out); }
 .skip:focus-visible { transform: none; outline-offset: 2px; }
 
+/* ---------- Auftritt (Loader) ---------- */
+.loader { display: none; position: fixed; inset: 0; z-index: 100; align-items: center; justify-content: center; pointer-events: none; }
+html.intro .loader { display: flex; pointer-events: auto; }
+html.intro body { overflow: hidden; }
+html.intro .parallax__title { opacity: 0; }
+.loader__grund { position: absolute; inset: 0; background: var(--bg); }
+.loader__name {
+  position: relative; font-family: var(--serif);
+  font-size: min(17vw, 16rem); line-height: 0.85; letter-spacing: 0.02em;
+  text-transform: uppercase; white-space: nowrap; color: #F4EEE4;
+  text-shadow: 0 0.03em 0.2em rgba(0,0,0,0.45);
+  transform-origin: 50% 50%; will-change: transform;
+}
+.loader__name .dot { color: var(--accent); text-shadow: 0 0 0.35em rgba(255,140,60,0.7); display: inline-block; }
+.loader__maske { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.06em 0 0.1em; margin: -0.06em 0 -0.1em; }
+.loader__buchstabe { display: inline-block; will-change: transform; }
+.loader__balken { position: absolute; left: 50%; bottom: 14svh; width: min(200px, 44vw); height: 1px; background: var(--line); transform: translateX(-50%); overflow: hidden; }
+.loader__balken span { display: block; height: 100%; background: var(--accent); transform: scaleX(0); transform-origin: left; }
+@media (max-width: 700px) { .loader__name { font-size: 21vw; } }
+
 /* ---------- Navigation ---------- */
 .nav {
   position: fixed; inset: 0 0 auto 0; z-index: 20;
@@ -324,8 +344,23 @@ img { display: block; max-width: 100%; height: auto; }
   * { transition-duration: 0.01ms !important; }
 }
 </style>
+<script>
+/* Auftritt: zuerst nur der Name, dann die Seite. Bei "Bewegung reduzieren" kein Vorhang. */
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var d = document.documentElement; d.classList.add('intro');
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.__introEnde = function () { d.classList.remove('intro'); var l = document.querySelector('.loader'); if (l) l.remove(); };
+  setTimeout(window.__introEnde, 9000);
+})();
+</script>
 </head>
 <body>
+<div class="loader" aria-hidden="true">
+  <div class="loader__grund"></div>
+  <div class="loader__name" data-loader-name>ERGUN<span class="dot">.</span></div>
+  <div class="loader__balken"><span data-loader-balken></span></div>
+</div>
 
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
 
@@ -489,7 +524,7 @@ img { display: block; max-width: 100%; height: auto; }
   });
 })();
 (function () {
-  if (!window.gsap || !window.ScrollTrigger) return;
+  if (!window.gsap || !window.ScrollTrigger) { if (window.__introEnde) window.__introEnde(); return; }
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduce) return;
 
@@ -531,14 +566,76 @@ img { display: block; max-width: 100%; height: auto; }
 
   /* Einstieg beim Laden: Ebenen und Titel setzen sich nacheinander, fertig nach 1,6 s.
      Nur transform/opacity; das Scrubben oben nutzt yPercent, hier y in Pixeln. */
-  gsap.timeline({ defaults: { ease: 'expo.out' } })
-    .from('.parallax__layer-img[data-parallax-layer="1"]', { scale: 1.06, transformOrigin: '50% 100%', duration: 1.6 }, 0)
-    .from('.parallax__layer-img[data-parallax-layer="2"]', { y: 40, duration: 1.4 }, 0.05)
-    .from('.parallax__layer-img[data-parallax-layer="4"]', { y: 70, duration: 1.4 }, 0.1)
-    .from('.parallax__layer-img[data-parallax-layer="5"]', { y: 50, opacity: 0, duration: 1.3 }, 0.2)
-    .from('.parallax__title', { yPercent: 18, opacity: 0, duration: 1.3 }, 0.25)
-    .from('.nav', { opacity: 0, duration: 0.8 }, 0.6)
-    .from('.parallax__hint', { opacity: 0, duration: 0.6 }, 1.0);
+  var heroEinstieg = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } })
+    .from('.parallax__layer-img[data-parallax-layer="1"]', { scale: 1.08, transformOrigin: '50% 100%', duration: 1.8 }, 0)
+    .from('.parallax__layer-img[data-parallax-layer="2"]', { y: 60, duration: 1.6 }, 0.05)
+    .from('.parallax__layer-img[data-parallax-layer="4"]', { y: 110, duration: 1.6 }, 0.1)
+    .from('.parallax__layer-img[data-parallax-layer="5"]', { y: 80, opacity: 0, duration: 1.4 }, 0.25)
+    .from('.nav', { opacity: 0, y: -8, duration: 0.9 }, 0.7)
+    .from('.parallax__hint', { opacity: 0, duration: 0.6 }, 1.1);
+
+  /* ===== Auftritt: Name baut sich auf, wartet aufs Laden, gleitet dann an seinen Platz ===== */
+  var loader = document.querySelector('.loader');
+  var titel = document.querySelector('.parallax__title');
+  if (!loader || !document.documentElement.classList.contains('intro')) {
+    heroEinstieg.play();
+  } else {
+    if (smoother) smoother.paused(true);
+    window.scrollTo(0, 0);
+    var name = loader.querySelector('[data-loader-name]');
+    var balken = loader.querySelector('[data-loader-balken]');
+    var punkt = name.querySelector('.dot'); punkt.remove();
+    var text = name.textContent.trim(); name.textContent = '';
+    text.split('').forEach(function (z) {
+      var m = document.createElement('span'); m.className = 'loader__maske';
+      var b = document.createElement('span'); b.className = 'loader__buchstabe'; b.textContent = z;
+      m.appendChild(b); name.appendChild(m);
+    });
+    name.appendChild(punkt);
+
+    var buchstabenFertig = false, geladen = false, gestartet = false;
+    gsap.timeline({ onComplete: function () { buchstabenFertig = true; weiter(); } })
+      .from(name.querySelectorAll('.loader__buchstabe'), { yPercent: 115, duration: 1.1, ease: 'expo.out', stagger: 0.07 }, 0.15)
+      .from(punkt, { scale: 0.2, opacity: 0, duration: 0.7, ease: 'back.out(3)' }, 0.75)
+      .to({}, { duration: 0.35 });
+
+    /* Ladefortschritt: Hero-Bilder + Schriften */
+    var bilder = [].slice.call(document.querySelectorAll('.parallax__layer-img'));
+    var gesamt = bilder.length + 1, fertig = 0;
+    var balkenTo = gsap.quickTo(balken, 'scaleX', { duration: 0.5, ease: 'power2.out' });
+    function eins() { fertig++; balkenTo(Math.min(1, fertig / gesamt)); if (fertig >= gesamt) { geladen = true; weiter(); } }
+    function dekodieren(img) { return img.decode ? img.decode().catch(function () {}) : Promise.resolve(); }
+    bilder.forEach(function (img) {
+      if (img.complete && img.naturalWidth) { dekodieren(img).then(eins); }
+      else {
+        img.addEventListener('load', function () { dekodieren(img).then(eins); }, { once: true });
+        img.addEventListener('error', eins, { once: true });
+      }
+    });
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(eins);
+    setTimeout(function () { geladen = true; weiter(); }, 6000);
+
+    function weiter() {
+      if (gestartet || !buchstabenFertig || !geladen) return;
+      gestartet = true;
+      /* FLIP: Loader-Name gleitet exakt auf die Position des Hero-Titels */
+      var a = name.getBoundingClientRect(), z = titel.getBoundingClientRect();
+      var dx = (z.left + z.width / 2) - (a.left + a.width / 2);
+      var dy = (z.top + z.height / 2) - (a.top + a.height / 2);
+      var sk = z.width / a.width;
+      gsap.timeline({ onComplete: function () {
+          gsap.set(titel, { opacity: 1 });
+          document.documentElement.classList.remove('intro');
+          loader.remove();
+          if (smoother) smoother.paused(false);
+          ScrollTrigger.refresh();
+        } })
+        .to(balken.parentNode, { opacity: 0, duration: 0.3, ease: 'power1.out' }, 0)
+        .to(name, { x: dx, y: dy, scale: sk, duration: 1.15, ease: 'expo.inOut' }, 0.1)
+        .to(loader.querySelector('.loader__grund'), { opacity: 0, duration: 1.0, ease: 'power2.inOut' }, 0.45)
+        .add(function () { heroEinstieg.play(); }, 0.45);
+    }
+  }
 
   /* Statement: Wörter erscheinen nacheinander beim Scrollen (Screenreader lesen den ganzen Satz) */
   var split = document.querySelector('[data-split]');
