@@ -39,7 +39,7 @@ Keine Schein-Sonne im Intro mehr: Emre fand, dass die Sonne beim Öffnen rechts 
 
 **Parallax läuft im Browser selbst** (CSS `animation-timeline: view()`, Bereich `exit-crossing`, Eigenschaft `translate`): kein JavaScript pro Bild, kein Zittern.
 Browser ohne diese Technik (z. B. Firefox) bekommen dieselbe Bewegung per GSAP ScrollTrigger. Kein ScrollSmoother mehr – Scrollen ist nativ (Emre: „laggt zu sehr").
-Emres Licht: `bilder/hero/4k/licht.py` (Gegenlicht, Lichtsaum oben, Kontaktschatten) – bei neuem Foto einfach neu laufen lassen.
+**Emre (Ebene 5) seit 23.09.:** in die Szene gerechnet von Higgsfield (`4k/szene-1ebaaa1d.png`), eingesetzt mit `bilder/hero/4k/einsetzen.py` (Freistellen, Boden unter den Schuhen, alle Größen). `licht.py` gilt nur noch für die alte Figur. Montagespuren an Kamm und Vordergrund: `4k/reparatur.py`.
 Handy: Bewegung × 0,6. `prefers-reduced-motion`: Standbild.
 
 ## Was am 23.09. zuletzt gemacht wurde (Claude Code)
@@ -75,7 +75,7 @@ Hochladen: `index.html`, `impressum.html`, `datenschutz.html`, `favicon*`, `appl
 ## Pakete & Kontakt (Stand 23.09., Claude Code)
 - Paketvorschauen zeigen **erfundene Beispiel-Kunden** (Etikett „Beispiel · …"): Onepager = Produkt-Verkaufsseite „Ambra No. 7" (Handy scrollt, `bilder/demo/onepager.webp`), Business = Café „Morgenrot" mit 5 Unterseiten (`bilder/demo/cafe-*.webp`), Individuell = Sternwarte „Nachtblau": Milchstraße dreht und zieht langsam hinter der freigestellten Person mit Teleskop (`bilder/beispiele/kosmos-*.webp`, GSAP, nur wenn sichtbar). Neu bauen: `bilder/hero/4k/beispiele/bauen.py` (Server Port 8789). Fotos: Higgsfield GPT Image 2.5, siehe Galerie. `demos_rendern.py` ist veraltet. Dazu Scroll-Parallax pro Vorschau über `tiefe()` im Skript (Werte in px, hinten mehr als vorn).
 - Hero-Zeile heißt nur **„Webdesigner"** und steht **über** dem Namen (`.parallax__rolle { order: -1 }`); auf der Sonne war sie unlesbar. „Elmshorn" steht nur noch in der Google-Beschreibung (Meta) und im Impressum.
-- Kontakt: Paket-Chips (Radio), Prüfung beim Verlassen eines Feldes, Live-Vorschau der WhatsApp-Nachricht (`[data-vorschau]`).
+- Kontakt: Porträt mit „Emre Ergun · ● online", Paket-Chips, Wünsche zum Ankreuzen, Prüfung beim Verlassen eines Feldes. Die WhatsApp-Live-Vorschau ist seit 23.09. entfernt (das Skript fragt `[data-vorschau]` noch ab, ist aber ohne sie sicher).
 - Intro: Start mit „E.", der Punkt zieht nach rechts und jeder Buchstabe steigt auf, wenn der Punkt an ihm vorbei ist (`aufdecken()` im Intro-Skript), dann blendet die Szene auf.
 - Pakete: jede Karte hat unten `.pkg__abo` (Monatspreis für Hosting, Domain & Pflege: 15/29/49 €). Darunter `.packages__wuensche` („Auf Wunsch dazu"). Formular: Checkboxen `extras` = „Wünsche". Keine eigenen Hosting-/Extras-Abschnitte (Emre wollte es in den bestehenden Sachen). Preise: `02 Preise/Pakete & Preise.md`.
 - Porträt im Kontakt: `bilder/kontakt/emre-264.webp` / `-144.webp`, erzeugt mit `bilder/hero/4k/portrait.py` aus `03 Marke/emre-portrait-original.jpg`. Glut, Goldschein und Lichtkreis-Maske wurden am 23.09. entfernt (zu viele Effekte, ruckelte).
