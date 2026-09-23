@@ -397,9 +397,22 @@ body { overflow-x: clip; }
 .pkg__abo ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
 .pkg__abo li { position: relative; padding-left: 16px; }
 .pkg__abo li::before { content: "+"; position: absolute; left: 0; color: var(--accent); }
-.packages__wuensche { margin-top: 36px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; }
-.packages__wuensche strong { font-weight: 500; font-size: 14px; margin-right: 6px; }
-.packages__wuensche span { font-size: 13.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; }
+/* Wuensche: antippen = direkt in der Anfrage (WhatsApp/E-Mail) */
+.wunsch { margin-top: 40px; display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 2fr); gap: 18px 44px; align-items: start; padding: 28px 30px; border: 1px solid var(--line); border-radius: 6px; background: linear-gradient(180deg, rgba(242,239,232,0.035), rgba(242,239,232,0.01)); }
+.wunsch__titel { font-family: var(--serif); font-size: clamp(1.8rem, 2.6vw, 2.3rem); line-height: 1; letter-spacing: -0.01em; }
+.wunsch__kopf p { margin-top: 10px; color: var(--muted); font-size: 14.5px; max-width: 32ch; text-wrap: pretty; }
+.wunsch__liste { display: flex; flex-wrap: wrap; gap: 8px; }
+.wunsch__knopf { display: inline-flex; align-items: center; gap: 9px; min-height: 42px; padding: 8px 15px 8px 9px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--text); font: 400 14px/1 var(--sans); cursor: pointer; transition: border-color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
+.wunsch__knopf i { width: 20px; height: 20px; flex: none; display: grid; place-items: center; border-radius: 50%; border: 1px solid rgba(242,239,232,0.28); font-style: normal; font-size: 13px; line-height: 1; color: var(--muted); transition: background-color 200ms var(--ease), border-color 200ms var(--ease), color 200ms var(--ease); }
+.wunsch__knopf i::before { content: "+"; }
+.wunsch__knopf[aria-pressed="true"] { border-color: var(--accent); background: rgba(255,90,31,0.10); }
+.wunsch__knopf[aria-pressed="true"] i { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.wunsch__knopf[aria-pressed="true"] i::before { content: ""; width: 5px; height: 9px; border: solid var(--bg); border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg); }
+.wunsch__knopf:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) { .wunsch__knopf:hover { border-color: rgba(242,239,232,0.38); } .wunsch__knopf[aria-pressed="true"]:hover { border-color: var(--accent); } }
+.wunsch__stand { grid-column: 2; min-height: 1.4em; font-size: 13.5px; color: var(--muted); }
+.wunsch__stand a { color: var(--accent); border-bottom: 1px solid rgba(255,90,31,0.4); }
+@media (max-width: 900px) { .wunsch { grid-template-columns: 1fr; padding: 22px 18px; } .wunsch__stand { grid-column: auto; } }
 .chip--klein span { min-height: 40px; padding: 6px 14px; font-size: 13.5px; }
 
 /* ---------- Footer ---------- */
@@ -621,18 +634,25 @@ body { overflow-x: clip; }
         <a class="btn pkg__cta" href="#kontakt" data-paket="Individuell">Individuell anfragen</a>
       </li>
     </ul>
-    <div class="packages__wuensche reveal">
-      <strong>Auf Wunsch dazu:</strong>
-      <span>Online-Termine</span>
-      <span>Speisekarte oder Preisliste</span>
-      <span>Bildergalerie</span>
-      <span>Mehrsprachig</span>
-      <span>Video</span>
-      <span>Social-Media-Bilder</span>
-      <span>Logo</span>
-      <span>Blog</span>
-      <span>Newsletter</span>
-      <span>Datei-Upload</span>
+    <div class="wunsch reveal">
+      <div class="wunsch__kopf">
+        <h3 class="wunsch__titel">Auf Wunsch dazu</h3>
+        <p>Antippen, was Sie interessiert. Es wird direkt in Ihre Anfrage per WhatsApp oder E-Mail übernommen.</p>
+      </div>
+      <div class="wunsch__liste" role="group" aria-label="Wünsche zur Anfrage hinzufügen">
+        <button type="button" class="wunsch__knopf" data-wunsch="Online-Termine" aria-pressed="false"><i aria-hidden="true"></i>Online-Termine</button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Speisekarte/Preisliste" aria-pressed="false"><i aria-hidden="true"></i>Speisekarte oder Preisliste</button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Bildergalerie" aria-pressed="false"><i aria-hidden="true"></i>Bildergalerie</button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Mehrsprachig" aria-pressed="false"><i aria-hidden="true"></i>Mehrsprachig</button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Video" aria-pressed="false"><i aria-hidden="true"></i>Video</button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Social-Media-Bilder" aria-pressed="false"><i aria-hidden="true"></i>Social-Media-Bilder</button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Logo" aria-pressed="false"><i aria-hidden="true"></i>Logo & Farben</button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Google-Profil" aria-pressed="false"><i aria-hidden="true"></i>Google-Profil</button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Blog" aria-pressed="false"><i aria-hidden="true"></i>Blog</button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Newsletter" aria-pressed="false"><i aria-hidden="true"></i>Newsletter</button>
+        <button type="button" class="wunsch__knopf" data-wunsch="Datei-Upload" aria-pressed="false"><i aria-hidden="true"></i>Datei-Upload</button>
+      </div>
+      <p class="wunsch__stand" data-wunsch-stand aria-live="polite"></p>
     </div>
     <div class="packages__trust reveal">
       <span>Persönlich von Emre Ergun</span>
@@ -668,7 +688,7 @@ body { overflow-x: clip; }
           <div class="chips">
             <label class="chip chip--klein"><input type="checkbox" name="extras" value="Online-Termine"><span>Online-Termine</span></label>
             <label class="chip chip--klein"><input type="checkbox" name="extras" value="Speisekarte/Preisliste"><span>Speisekarte/Preisliste</span></label>
-            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Galerie"><span>Galerie</span></label>
+            <label class="chip chip--klein"><input type="checkbox" name="extras" value="Bildergalerie"><span>Bildergalerie</span></label>
             <label class="chip chip--klein"><input type="checkbox" name="extras" value="Video"><span>Video</span></label>
             <label class="chip chip--klein"><input type="checkbox" name="extras" value="Social-Media-Bilder"><span>Social-Media-Bilder</span></label>
             <label class="chip chip--klein"><input type="checkbox" name="extras" value="Mehrsprachig"><span>Mehrsprachig</span></label>
@@ -982,6 +1002,25 @@ body { overflow-x: clip; }
       status.textContent = 'Ihr Mailprogramm öffnet sich mit der fertigen Nachricht.';
     }
   });
+  /* Wuensche bei den Paketen: antippen = im Formular angekreuzt = steht in der WhatsApp-/Mail-Nachricht */
+  var wunschKnoepfe = document.querySelectorAll('[data-wunsch]');
+  var wunschStand = document.querySelector('[data-wunsch-stand]');
+  function wunschBox(v) { return form.querySelector('input[name="extras"][value="' + v + '"]'); }
+  function wunschAnzeigen() {
+    var n = 0;
+    [].forEach.call(wunschKnoepfe, function (k) {
+      var c = wunschBox(k.getAttribute('data-wunsch')); var an = !!(c && c.checked);
+      k.setAttribute('aria-pressed', an ? 'true' : 'false'); if (an) n++;
+    });
+    if (wunschStand) wunschStand.innerHTML = n ? (n === 1 ? '1 Wunsch' : n + ' Wünsche') + ' in Ihrer Anfrage · <a href="#kontakt">Zur Anfrage</a>' : '';
+  }
+  [].forEach.call(wunschKnoepfe, function (k) {
+    k.addEventListener('click', function () {
+      var c = wunschBox(k.getAttribute('data-wunsch')); if (!c) return;
+      c.checked = !c.checked; aktualisieren(); wunschAnzeigen();
+    });
+  });
+  form.addEventListener('change', wunschAnzeigen);
   /* Paket-Buttons waehlen das passende Paket im Formular */
   document.querySelectorAll('[data-paket]').forEach(function (a) {
     a.addEventListener('click', function () {
