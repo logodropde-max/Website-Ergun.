@@ -39,7 +39,7 @@ Keine Schein-Sonne im Intro mehr: Emre fand, dass die Sonne beim Öffnen rechts 
 
 **Parallax läuft im Browser selbst** (CSS `animation-timeline: view()`, Bereich `exit-crossing`, Eigenschaft `translate`): kein JavaScript pro Bild, kein Zittern.
 Browser ohne diese Technik (z. B. Firefox) bekommen dieselbe Bewegung per GSAP ScrollTrigger. Kein ScrollSmoother mehr – Scrollen ist nativ (Emre: „laggt zu sehr").
-**Emre (Ebene 5) seit 23.09.:** in die Szene gerechnet von Higgsfield (`4k/szene-94d2b705.png`, Körperbau nach Emres Fotos, auf 93 % verkleinert = 1,77 m), eingesetzt mit `bilder/hero/4k/einsetzen.py` (Freistellen, Boden unter den Schuhen, alle Größen). `licht.py` gilt nur noch für die alte Figur. Montagespuren an Kamm und Vordergrund: `4k/reparatur.py`.
+**Emre (Ebene 5) seit 23.09.:** in die Szene gerechnet von Higgsfield (`4k/szene-94d2b705.png`, Körperbau nach Emres Fotos, auf 93 % verkleinert = 1,77 m), **Gesicht echt** aus drei Fotos per `4k/echtes_gesicht.py` (→ `szene-94d2b705-echt.png`), eingesetzt mit `bilder/hero/4k/einsetzen.py` (Freistellen, Boden unter den Schuhen, alle Größen). `licht.py` gilt nur noch für die alte Figur. Montagespuren an Kamm und Vordergrund: `4k/reparatur.py`.
 Handy: Bewegung × 0,6. `prefers-reduced-motion`: Standbild.
 
 ## Was am 23.09. zuletzt gemacht wurde (Claude Code)
@@ -77,6 +77,6 @@ Hochladen: `index.html`, `impressum.html`, `datenschutz.html`, `favicon*`, `appl
 - Hero-Zeile heißt nur **„Webdesigner"** und steht **über** dem Namen (`.parallax__rolle { order: -1 }`); auf der Sonne war sie unlesbar. „Elmshorn" steht nur noch in der Google-Beschreibung (Meta) und im Impressum.
 - Kontakt: Porträt mit „Emre Ergun · ● online", Paket-Chips, Wünsche zum Ankreuzen, Prüfung beim Verlassen eines Feldes. Die WhatsApp-Live-Vorschau ist seit 23.09. entfernt (das Skript fragt `[data-vorschau]` noch ab, ist aber ohne sie sicher).
 - Intro: Start mit „E.", der Punkt zieht nach rechts und jeder Buchstabe steigt auf, wenn der Punkt an ihm vorbei ist (`aufdecken()` im Intro-Skript), dann blendet die Szene auf.
-- Pakete: jede Karte hat unten `.pkg__abo` (Monatspreis für Hosting, Domain & Pflege: 10/20/35 €). Darunter `.packages__wuensche` („Auf Wunsch dazu"). Formular: Checkboxen `extras` = „Wünsche". Keine eigenen Hosting-/Extras-Abschnitte (Emre wollte es in den bestehenden Sachen). Preise: `02 Preise/Pakete & Preise.md`.
+- Pakete: jede Karte hat unten `.pkg__abo` (Monatspreis für Hosting, Domain & Pflege: 10/20/35 €). Darunter der Kasten `.wunsch` („Auf Wunsch dazu", Knöpfe `[data-wunsch]` mit `aria-pressed`, synchron mit den Formular-Checkboxen `extras`). Formular: Checkboxen `extras` = „Wünsche". Keine eigenen Hosting-/Extras-Abschnitte (Emre wollte es in den bestehenden Sachen). Preise: `02 Preise/Pakete & Preise.md`.
 - Porträt im Kontakt: `bilder/kontakt/emre-264.webp` / `-144.webp`, erzeugt mit `bilder/hero/4k/portrait.py` aus `03 Marke/emre-portrait-original.jpg`. Glut, Goldschein und Lichtkreis-Maske wurden am 23.09. entfernt (zu viele Effekte, ruckelte).
 - Berge: `bilder/hero/4k/berge.py` füllt den Fuß des Kamms und gleicht Kamm und Vordergrund an. Originale liegen als `*-vor-angleich.webp` in `4k/`.

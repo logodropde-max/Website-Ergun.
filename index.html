@@ -346,7 +346,7 @@ body { overflow-x: clip; }
 .kosmos__nav span:last-child { letter-spacing: 0.04em; border: 1px solid rgba(255,255,255,0.45); border-radius: 999px; padding: 2px 7px; }
 .kosmos__titel { position: absolute; left: 11px; top: 26%; z-index: 2; color: #F4EEE4; font-family: var(--serif); font-size: 22px; line-height: 0.95; text-shadow: 0 1px 12px rgba(0,0,0,0.6); }
 .kosmos__titel small { display: block; margin-bottom: 5px; font-family: var(--sans); font-size: 7px; letter-spacing: 0.24em; text-transform: uppercase; color: #E9B872; }
-.pkg__beispiel { position: absolute; left: 10px; top: 10px; z-index: 6; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(242,239,232,0.75); background: rgba(14,14,12,0.72); border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px; }
+.pkg__beispiel { position: absolute; left: 10px; bottom: 10px; z-index: 6; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(242,239,232,0.75); background: rgba(14,14,12,0.72); border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px; }
 
 /* ---------- Kontakt v2: Auswahl, Live-Vorschau ---------- */
 .contact { min-height: auto; align-items: stretch; text-align: left; padding: 14svh var(--pad); }
@@ -414,6 +414,11 @@ body { overflow-x: clip; }
 .wunsch__stand a { color: var(--accent); border-bottom: 1px solid rgba(255,90,31,0.4); }
 @media (max-width: 900px) { .wunsch { grid-template-columns: 1fr; padding: 22px 18px; } .wunsch__stand { grid-column: auto; } }
 .chip--klein span { min-height: 40px; padding: 6px 14px; font-size: 13.5px; }
+/* Auswahl-Knoepfe im Formular: normale Schreibweise (lesbarer, wie die Wunsch-Knoepfe) */
+.field--chips .chip span { text-transform: none; letter-spacing: 0.01em; }
+.wunsch__stand:empty { display: none; }
+/* Touch: Links gross genug zum Tippen (mind. 44 px), Desktop bleibt gleich */
+@media (pointer: coarse) { .nav__mark, .nav__link, .footer a, .contact__meta a { display: inline-flex; align-items: center; min-height: 44px; } .nav { padding-top: 12px; padding-bottom: 12px; } }
 
 /* ---------- Footer ---------- */
 .footer {
@@ -486,7 +491,7 @@ body { overflow-x: clip; }
   var d = document.documentElement; d.classList.add('intro');
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.__introEnde = function () { d.classList.remove('intro'); var l = document.querySelector('.loader'); if (l) l.remove(); };
-  setTimeout(window.__introEnde, 5000);
+  setTimeout(function () { if (window.__introEnde) window.__introEnde(); }, 5000);
 })();
 </script>
 </head>
@@ -789,6 +794,14 @@ body { overflow-x: clip; }
   /* ===== Auftritt: "E." erscheint, der Punkt zieht nach rechts und zieht "RGUN" hinter sich her, dann blendet die Szene auf ===== */
   var loader = document.querySelector('.loader');
   var titel = document.querySelector('.parallax__title');
+  /* Notbremse (5 s, z. B. langsames Netz): Vorhang weg UND Hero komplett zeigen – nie unsichtbare Navigation/Zeile */
+  var vorhangWeg = window.__introEnde;
+  window.__introEnde = function () {
+    if (vorhangWeg) vorhangWeg();
+    gsap.set(titel, { opacity: 1 });
+    heroEinstieg.progress(1);
+    ScrollTrigger.refresh();
+  };
   if (!loader || !document.documentElement.classList.contains('intro')) {
     heroEinstieg.play();
   } else {
