@@ -687,7 +687,7 @@ body { overflow-x: clip; }
     .from('.parallax__rolle', { opacity: 0, y: 8, duration: 0.7 }, 0.35)
     .from('.nav, .parallax__hint', { opacity: 0, duration: 0.6, ease: 'power2.out' }, 0.5);
 
-  /* ===== Auftritt: "E." erscheint, entfaltet sich zu "ERGUN.", dann blendet die Szene auf ===== */
+  /* ===== Auftritt: "E." erscheint, der Punkt zieht nach rechts und zieht "RGUN" hinter sich her, dann blendet die Szene auf ===== */
   var loader = document.querySelector('.loader');
   var titel = document.querySelector('.parallax__title');
   if (!loader || !document.documentElement.classList.contains('intro')) {
@@ -741,9 +741,22 @@ body { overflow-x: clip; }
     function weiter() {
       if (gestartet || !eFertig || !geladen) return;
       gestartet = true;
+      /* Der Punkt zieht nach rechts, jeder Buchstabe steigt erst auf, wenn der Punkt an ihm vorbei ist */
+      var masken = [].slice.call(name.querySelectorAll('.loader__maske'), 1);
+      var marken = masken.map(function (m) { return m.offsetLeft + m.offsetWidth * 0.55; });
+      var naechster = 0;
+      function aufdecken(bisX) {
+        while (naechster < marken.length && bisX >= marken[naechster]) {
+          gsap.to(rest[naechster], { yPercent: 0, duration: 0.55, ease: 'expo.out' });
+          naechster++;
+        }
+      }
       gsap.timeline({ onComplete: uebergabe })
-        .to([name, punkt], { x: 0, duration: 0.7, ease: 'power3.inOut' }, 0)
-        .to(rest, { yPercent: 0, duration: 0.7, ease: 'expo.out', stagger: 0.04 }, 0.1);
+        .to(name, { x: 0, duration: 1.1, ease: 'power2.inOut' }, 0)
+        .to(punkt, { x: 0, duration: 1.1, ease: 'power2.inOut',
+          onUpdate: function () { aufdecken(punkt.offsetLeft + gsap.getProperty(punkt, 'x')); },
+          onComplete: function () { aufdecken(Infinity); } }, 0)
+        .to({}, { duration: 0.45 });
     }
     function uebergabe() {
       /* Name gleitet exakt auf den Hero-Titel, der dunkle Grund blendet aus */
