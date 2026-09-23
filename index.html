@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ERGUN. – Websites mit Tiefe</title>
+<title>ERGUN. – Webdesigner aus Elmshorn</title>
 <meta name="description" content="Websites mit Design, Bewegung und eigenen Bildern. Drei Pakete mit festem Preis, entworfen und gebaut in Elmshorn.">
 <meta name="theme-color" content="#0E0E0C">
 
 <!-- Teilen in Social Media / Messengern -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="ERGUN. – Websites mit Tiefe">
+<meta property="og:title" content="ERGUN. – Webdesigner aus Elmshorn">
 <meta property="og:description" content="Websites mit Design, Bewegung und eigenen Bildern. Drei Pakete, fester Preis, aus Elmshorn.">
 <meta property="og:image" content="https://website-ergun.vercel.app/bilder/og.jpg">
 <meta property="og:url" content="https://website-ergun.vercel.app/">
@@ -89,6 +89,29 @@ html.intro .parallax__title { opacity: 0; }
   -webkit-mask-image: radial-gradient(circle at var(--ax, 50%) var(--ay, 40%), #000 calc(var(--r, 0px) * 0.62), transparent var(--r, 0px));
           mask-image: radial-gradient(circle at var(--ax, 50%) var(--ay, 40%), #000 calc(var(--r, 0px) * 0.62), transparent var(--r, 0px));
 }
+
+/* Intro als Sonnenaufgang: der Punkt ist die Sonne, das E wird angeleuchtet */
+.loader__balken { display: none !important; }
+.loader__buchstabe {
+  background: linear-gradient(100deg, #F4EEE4 0%, #F4EEE4 36%, #FFE2B8 45%, #FFB066 50%, #FFE2B8 55%, #F4EEE4 64%, #F4EEE4 100%);
+  background-size: 300% 100%; background-position: 100% 0%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.loader__name { --glut: 0.25; --glutO: 0.3; }
+.loader__name .dot { position: relative; }
+.loader__name .dot::before {
+  content: ""; position: absolute; left: 50%; top: 72%; width: 5em; height: 5em; border-radius: 50%;
+  transform: translate(-50%, -50%) scale(var(--glut)); opacity: var(--glutO);
+  background: radial-gradient(circle, rgba(255,214,160,0.85) 0%, rgba(255,140,60,0.45) 22%, rgba(255,90,31,0.12) 48%, rgba(14,14,12,0) 70%);
+  z-index: -1; pointer-events: none;
+}
+.loader__name .dot::after {
+  content: ""; position: absolute; left: 50%; top: 72%; width: 1.2em; height: 1.2em; border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255,160,80,0.55), rgba(255,90,31,0) 70%);
+  animation: sonnenatem 2.2s ease-in-out infinite; pointer-events: none;
+}
+@keyframes sonnenatem { 0%, 100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; } 50% { transform: translate(-50%, -50%) scale(1.35); opacity: 1; } }
 
 /* ---------- Navigation ---------- */
 .nav {
@@ -306,6 +329,86 @@ html.intro .parallax__title { opacity: 0; }
 .form__status { min-height: 1.4em; font-size: 14px; color: var(--text); }
 .form__hint { color: var(--muted); font-size: 13px; text-wrap: pretty; }
 
+/* ---------- Hero: Rolle unter dem Namen ---------- */
+.parallax__layer-title { flex-direction: column; gap: clamp(10px, 1.6vw, 22px); }
+.parallax__rolle {
+  display: flex; align-items: center; gap: 14px;
+  font-family: var(--sans); font-size: clamp(12px, 1.15vw, 15px); letter-spacing: 0.32em; text-transform: uppercase;
+  color: rgba(244,238,228,0.88); text-shadow: 0 1px 14px rgba(0,0,0,0.55);
+}
+.parallax__rolle::before, .parallax__rolle::after { content: ""; width: 28px; height: 1px; background: rgba(255,176,102,0.75); }
+
+/* Navigation: beim Runterscrollen weg, beim Hochscrollen wieder da */
+.nav { transition: transform 450ms var(--ease-out); }
+.nav--weg { transform: translateY(-120%); }
+.nav:focus-within { transform: none; }
+
+/* ---------- Pakete v2: jede Karte zeigt, was man bekommt ---------- */
+.packages { position: relative; }
+.packages::before {
+  content: ""; position: absolute; left: 50%; top: 0; width: 120vmin; height: 60vmin; transform: translate(-50%, -30%);
+  background: radial-gradient(closest-side, rgba(255,110,40,0.10), rgba(14,14,12,0)); pointer-events: none;
+}
+.pkg { background: linear-gradient(180deg, rgba(242,239,232,0.035), rgba(242,239,232,0.01)); padding: 16px 20px 24px; gap: 18px; overflow: hidden; }
+@media (hover: hover) and (pointer: fine) { .pkg:hover { border-color: rgba(255,130,60,0.45); } }
+.pkg__demo {
+  position: relative; height: 210px; margin: 0 -4px; border-radius: 4px; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(120% 90% at 50% 0%, rgba(255,120,50,0.18), rgba(14,14,12,0) 70%), #141412;
+}
+.pkg__kopf { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.pkg__tag { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+.pkg__list li::before { width: 6px; height: 6px; border-radius: 50%; top: 0.5em; background: var(--accent); box-shadow: 0 0 8px rgba(255,120,50,0.6); }
+.pkg .pkg__cta { align-self: stretch; }
+
+.demo-phone { width: 106px; height: 196px; border-radius: 18px; border: 2px solid rgba(242,239,232,0.22); background: #0b0b0a; padding: 5px; box-shadow: 0 20px 40px rgba(0,0,0,0.45); transform: translateY(22px); }
+.demo-phone__screen { position: relative; width: 100%; height: 100%; border-radius: 13px; overflow: hidden; background: var(--bg); }
+.demo-phone__page { width: 100%; height: auto; display: block; will-change: transform; }
+
+.demo-stapel { position: relative; width: 74%; aspect-ratio: 16 / 10; }
+.demo-seite { position: absolute; inset: 0; border-radius: 4px; overflow: hidden; border: 1px solid rgba(242,239,232,0.18); background: #141412; box-shadow: 0 12px 30px rgba(0,0,0,0.5); transform-origin: 50% 100%; will-change: transform; }
+.demo-seite img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.demo-seite span { position: absolute; left: 8px; bottom: 8px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(14,14,12,0.78); padding: 3px 8px; border-radius: 999px; color: var(--text); }
+
+.demo-browser { position: relative; width: 82%; aspect-ratio: 16 / 10; border-radius: 6px; overflow: hidden; border: 1px solid rgba(242,239,232,0.18); background: var(--bg); box-shadow: 0 16px 36px rgba(0,0,0,0.5); }
+.demo-browser__leiste { height: 14px; background: #1a1a17; display: flex; gap: 4px; align-items: center; padding: 0 6px; }
+.demo-browser__leiste i { width: 5px; height: 5px; border-radius: 50%; background: rgba(242,239,232,0.25); }
+.demo-browser__buehne { position: absolute; inset: 14px 0 0 0; overflow: hidden; }
+.demo-browser__buehne img { position: absolute; left: 0; top: 0; width: 100%; height: 118%; object-fit: cover; object-position: 50% 100%; will-change: transform; }
+.demo-browser__buehne img[data-mini="1"] { top: -18%; height: 135%; object-position: 50% 30%; }
+.demo-browser__titel { position: absolute; left: 0; right: 0; top: 12%; text-align: center; font-family: var(--serif); font-size: 26px; letter-spacing: 0.02em; color: #F4EEE4; text-shadow: 0 1px 10px rgba(0,0,0,0.5); will-change: transform; }
+.demo-browser__titel b { font-weight: 400; color: var(--accent); }
+
+/* ---------- Kontakt v2: Auswahl, Live-Vorschau ---------- */
+.contact { min-height: auto; align-items: stretch; text-align: left; padding: 14svh var(--pad); }
+.contact__kopf { display: grid; gap: 16px; justify-items: center; text-align: center; margin-bottom: 48px; }
+.contact__intro { color: var(--muted); max-width: 46ch; text-wrap: pretty; }
+.contact__raster { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 48px; max-width: 1080px; width: 100%; margin: 0 auto; align-items: start; }
+.contact .form { width: 100%; margin: 0; }
+.contact .contact__meta { margin-top: 40px; }
+.field--chips { border: 0; padding: 0; margin: 0; min-width: 0; }
+.field--chips legend { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; padding: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { position: relative; display: inline-flex; }
+.chip input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.chip span { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 16px; border: 1px solid var(--line); border-radius: 999px; font-size: 14px; color: var(--muted); transition: border-color 200ms var(--ease), color 200ms var(--ease), background-color 200ms var(--ease); }
+.chip input:checked + span { border-color: var(--accent); color: var(--text); background: rgba(255,90,31,0.12); }
+.chip input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .chip:hover span { border-color: rgba(242,239,232,0.35); color: var(--text); } }
+.vorschau { position: sticky; top: 96px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: #12110f; box-shadow: 0 30px 60px rgba(0,0,0,0.45); }
+.vorschau__kopf { display: flex; gap: 12px; align-items: center; padding: 14px 16px; background: #1a1916; border-bottom: 1px solid var(--line); }
+.vorschau__avatar { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; flex: none; background: radial-gradient(circle at 50% 40%, #FFB066, #FF5A1F 72%); color: #0E0E0C; font-family: var(--serif); font-size: 21px; }
+.vorschau__kopf strong { display: block; font-weight: 500; font-size: 15px; }
+.vorschau__kopf small { color: var(--muted); font-size: 12px; }
+.vorschau__chat { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; min-height: 260px; padding: 22px 16px 26px; background: radial-gradient(120% 80% at 100% 0%, rgba(255,110,40,0.08), rgba(0,0,0,0) 60%); }
+.vorschau__blase { max-width: 92%; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14.5px; line-height: 1.45; padding: 10px 12px 12px; border-radius: 12px 12px 4px 12px; background: rgba(255,90,31,0.14); border: 1px solid rgba(255,90,31,0.35); }
+.vorschau__zeit { font-size: 11px; color: var(--muted); }
+.vorschau__hinweis { padding: 0 16px 16px; font-size: 12px; color: var(--muted); }
+@media (max-width: 900px) {
+  .contact__raster { grid-template-columns: 1fr; gap: 32px; }
+  .vorschau { position: static; }
+}
+
 /* ---------- Footer ---------- */
 .footer {
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px;
@@ -389,6 +492,7 @@ html.intro .parallax__title { opacity: 0; }
         <img src="bilder/hero/layer-2-ridge.webp" data-hoch="bilder/hero/layer-2-ridge-hoch.webp" srcset="bilder/hero/layer-2-ridge-1920.webp 1920w, bilder/hero/layer-2-ridge.webp 4096w" sizes="(orientation: portrait) 4096px, 100vw" width="4096" height="2323" data-parallax-layer="2" class="parallax__layer-img" alt="" fetchpriority="high">
         <div data-parallax-layer="3" class="parallax__layer-title">
           <h1 class="parallax__title">ERGUN<span class="dot">.</span></h1>
+          <p class="parallax__rolle">Webdesigner aus Elmshorn</p>
         </div>
         <img src="bilder/hero/layer-4-foreground.webp" data-hoch="bilder/hero/layer-4-foreground-hoch.webp" srcset="bilder/hero/layer-4-foreground-1920.webp 1920w, bilder/hero/layer-4-foreground.webp 4096w" sizes="(orientation: portrait) 4096px, 100vw" width="4096" height="2323" data-parallax-layer="4" class="parallax__layer-img" alt="" fetchpriority="high">
         <img src="bilder/hero/layer-5-person.webp" data-hoch="bilder/hero/layer-5-person-hoch.webp" srcset="bilder/hero/layer-5-person-1920.webp 1920w, bilder/hero/layer-5-person.webp 5459w" sizes="(orientation: portrait) 4096px, 100vw" width="5459" height="3096" data-parallax-layer="5" class="parallax__layer-img" alt="" fetchpriority="high" onerror="this.remove()">
@@ -403,27 +507,39 @@ html.intro .parallax__title { opacity: 0; }
   <section class="packages" id="pakete" aria-labelledby="pakete-titel">
     <div class="packages__head">
       <div>
-        <span class="packages__kicker reveal">Websites mit Tiefe</span>
+        <span class="packages__kicker reveal">Pakete · Festpreis</span>
         <h2 class="packages__title reveal" id="pakete-titel">Wählen Sie<br>Ihr Paket.</h2>
       </div>
-      <p class="packages__note reveal">Festpreis, einmalig, kein Abo. Sie bekommen alle Dateien: Die Seite gehört Ihnen.</p>
+      <p class="packages__note reveal">Einmalig, kein Abo. Sie sehen Ihre Seite vorab im Browser und bekommen am Ende alle Dateien.</p>
     </div>
     <ul class="packages__grid">
       <li class="pkg reveal">
-        <h3 class="pkg__name">Onepager</h3>
-        <p class="pkg__price">ab 80 €<small>eine Seite · in 2 bis 3 Tagen</small></p>
+        <div class="pkg__demo" aria-hidden="true">
+          <div class="demo-phone"><div class="demo-phone__screen"><img class="demo-phone__page" src="bilder/demo/onepager.webp" width="240" height="1500" alt="" loading="lazy" data-demo-scroll></div></div>
+        </div>
+        <div class="pkg__kopf"><h3 class="pkg__name">Onepager</h3><span class="pkg__tag">1 Seite</span></div>
+        <p class="pkg__price">ab 80 €<small>einmalig · fertig in 2 bis 3 Tagen</small></p>
         <ul class="pkg__list">
-          <li>Eine Seite mit Parallax-Hero</li>
+          <li>Eine Seite mit Parallax-Hero wie diese</li>
           <li>KI-Bild passend zu Ihrer Branche</li>
           <li>Für Handy und Desktop</li>
           <li>Kontakt per WhatsApp &amp; E-Mail</li>
           <li>Impressum &amp; Datenschutz-Vorlage</li>
         </ul>
-        <a class="btn" href="#kontakt" data-paket="Onepager">Onepager anfragen</a>
+        <a class="btn pkg__cta" href="#kontakt" data-paket="Onepager">Onepager anfragen</a>
       </li>
       <li class="pkg pkg--featured reveal">
-        <h3 class="pkg__name">Business</h3>
-        <p class="pkg__price">ab 250 €<small>bis 5 Seiten · in ca. 1 Woche</small></p>
+        <div class="pkg__demo" aria-hidden="true">
+          <div class="demo-stapel" data-demo-stapel>
+            <div class="demo-seite" style="z-index:5"><img src="bilder/demo/seite-start.webp" width="480" height="300" alt="" loading="lazy"><span>Start</span></div>
+            <div class="demo-seite" style="z-index:4"><img src="bilder/demo/seite-pakete.webp" width="480" height="300" alt="" loading="lazy"><span>Pakete</span></div>
+            <div class="demo-seite" style="z-index:3"><img src="bilder/demo/seite-kontakt.webp" width="480" height="300" alt="" loading="lazy"><span>Kontakt</span></div>
+            <div class="demo-seite" style="z-index:2"><img src="bilder/demo/seite-impressum.webp" width="480" height="300" alt="" loading="lazy"><span>Impressum</span></div>
+            <div class="demo-seite" style="z-index:1"><img src="bilder/demo/seite-datenschutz.webp" width="480" height="300" alt="" loading="lazy"><span>Datenschutz</span></div>
+          </div>
+        </div>
+        <div class="pkg__kopf"><h3 class="pkg__name">Business</h3><span class="pkg__tag">bis 5 Seiten</span></div>
+        <p class="pkg__price">ab 250 €<small>einmalig · fertig in ca. 1 Woche</small></p>
         <ul class="pkg__list">
           <li>Alles aus Onepager</li>
           <li>Eigene KI-Bilder für jede Seite</li>
@@ -432,11 +548,23 @@ html.intro .parallax__title { opacity: 0; }
           <li>Texte gemeinsam ausgearbeitet</li>
           <li>1 Korrekturrunde inklusive</li>
         </ul>
-        <a class="btn" href="#kontakt" data-paket="Business">Business anfragen</a>
+        <a class="btn btn--wa pkg__cta" href="#kontakt" data-paket="Business">Business anfragen</a>
       </li>
       <li class="pkg reveal">
-        <h3 class="pkg__name">Individuell</h3>
-        <p class="pkg__price">ab 400 €<small>Konzept nach Wunsch</small></p>
+        <div class="pkg__demo" aria-hidden="true">
+          <div class="demo-browser" data-demo-parallax>
+            <div class="demo-browser__leiste"><i></i><i></i><i></i></div>
+            <div class="demo-browser__buehne">
+              <img data-mini="1" src="bilder/hero/layer-1-sky-1920.webp" width="1920" height="1089" alt="" loading="lazy">
+              <img data-mini="2" src="bilder/hero/layer-2-ridge-1920.webp" width="1920" height="1089" alt="" loading="lazy">
+              <div data-mini="3" class="demo-browser__titel">IHR NAME<b>.</b></div>
+              <img data-mini="4" src="bilder/hero/layer-4-foreground-1920.webp" width="1920" height="1089" alt="" loading="lazy">
+              <img data-mini="5" src="bilder/hero/layer-5-person-1920.webp" width="1920" height="1089" alt="" loading="lazy">
+            </div>
+          </div>
+        </div>
+        <div class="pkg__kopf"><h3 class="pkg__name">Individuell</h3><span class="pkg__tag">bis 10 Seiten</span></div>
+        <p class="pkg__price">ab 400 €<small>einmalig · Konzept nach Wunsch</small></p>
         <ul class="pkg__list">
           <li>Alles aus Business</li>
           <li>Video-Hero &amp; eigene Effekte</li>
@@ -445,7 +573,7 @@ html.intro .parallax__title { opacity: 0; }
           <li>2 Korrekturrunden</li>
           <li>1 Monat Betreuung nach Livegang</li>
         </ul>
-        <a class="btn" href="#kontakt" data-paket="Individuell">Individuell anfragen</a>
+        <a class="btn pkg__cta" href="#kontakt" data-paket="Individuell">Individuell anfragen</a>
       </li>
     </ul>
     <div class="packages__trust reveal">
@@ -456,49 +584,66 @@ html.intro .parallax__title { opacity: 0; }
   </section>
 
   <section class="contact" id="kontakt" aria-labelledby="kontakt-titel">
-    <span class="contact__label reveal">Kontakt</span>
-    <h2 class="contact__big reveal" id="kontakt-titel">Projekt anfragen</h2>
-    <form class="form reveal" id="anfrage" novalidate>
-      <div class="form__row">
-        <div class="field">
-          <label for="f-name">Name</label>
-          <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-err">
-          <span class="field__error" id="f-name-err" aria-live="polite"></span>
+    <div class="contact__kopf">
+      <span class="contact__label reveal">Kontakt</span>
+      <h2 class="contact__big reveal" id="kontakt-titel">Projekt anfragen</h2>
+      <p class="contact__intro reveal">Drei Angaben genügen. Rechts sehen Sie live, was bei mir ankommt.</p>
+    </div>
+    <div class="contact__raster">
+      <form class="form reveal" id="anfrage" novalidate>
+        <fieldset class="field field--chips">
+          <legend>Paket</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="paket" value="Onepager"><span>Onepager · ab 80 €</span></label>
+            <label class="chip"><input type="radio" name="paket" value="Business"><span>Business · ab 250 €</span></label>
+            <label class="chip"><input type="radio" name="paket" value="Individuell"><span>Individuell · ab 400 €</span></label>
+            <label class="chip"><input type="radio" name="paket" value="Noch unklar" checked><span>Noch unklar</span></label>
+          </div>
+        </fieldset>
+        <div class="form__row">
+          <div class="field">
+            <label for="f-name">Name</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-err">
+            <span class="field__error" id="f-name-err" aria-live="polite"></span>
+          </div>
+          <div class="field">
+            <label for="f-firma">Unternehmen (optional)</label>
+            <input id="f-firma" name="firma" type="text" autocomplete="organization">
+            <span class="field__error" aria-hidden="true"></span>
+          </div>
         </div>
-        <div class="field">
-          <label for="f-firma">Unternehmen (optional)</label>
-          <input id="f-firma" name="firma" type="text" autocomplete="organization">
-          <span class="field__error" aria-hidden="true"></span>
-        </div>
-      </div>
-      <div class="form__row">
         <div class="field">
           <label for="f-mail">E-Mail</label>
           <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="f-mail-err">
           <span class="field__error" id="f-mail-err" aria-live="polite"></span>
         </div>
         <div class="field">
-          <label for="f-paket">Paket</label>
-          <input id="f-paket" name="paket" type="text" list="pakete-liste" placeholder="Noch unklar">
-          <datalist id="pakete-liste"><option value="Onepager"><option value="Business"><option value="Individuell"></datalist>
-          <span class="field__error" aria-hidden="true"></span>
+          <label for="f-text">Worum geht es?</label>
+          <textarea id="f-text" name="text" placeholder="Was macht Ihr Unternehmen, was soll die Seite erreichen?" required aria-describedby="f-text-err"></textarea>
+          <span class="field__error" id="f-text-err" aria-live="polite"></span>
         </div>
-      </div>
-      <div class="field">
-        <label for="f-text">Worum geht es?</label>
-        <textarea id="f-text" name="text" placeholder="Was macht Ihr Unternehmen, was soll die Seite erreichen?" required aria-describedby="f-text-err"></textarea>
-        <span class="field__error" id="f-text-err" aria-live="polite"></span>
-      </div>
-      <div class="form__actions">
-        <button class="btn btn--wa" type="submit" name="weg" value="whatsapp">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg>
-          Per WhatsApp senden
-        </button>
-        <button class="btn" type="submit" name="weg" value="mail">Per E-Mail senden</button>
-      </div>
-      <p class="form__status" data-status aria-live="polite"></p>
-      <p class="form__hint">Öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Kein Server, keine Datenspeicherung.</p>
-    </form>
+        <div class="form__actions">
+          <button class="btn btn--wa" type="submit" name="weg" value="whatsapp">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg>
+            Per WhatsApp senden
+          </button>
+          <button class="btn" type="submit" name="weg" value="mail">Per E-Mail senden</button>
+        </div>
+        <p class="form__status" data-status aria-live="polite"></p>
+        <p class="form__hint">Öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Kein Server, keine Datenspeicherung.</p>
+      </form>
+      <aside class="vorschau reveal" aria-label="Vorschau Ihrer Nachricht">
+        <div class="vorschau__kopf">
+          <span class="vorschau__avatar" aria-hidden="true">E</span>
+          <div><strong>Emre Ergun</strong><small>WhatsApp · Vorschau Ihrer Nachricht</small></div>
+        </div>
+        <div class="vorschau__chat">
+          <div class="vorschau__blase" data-vorschau></div>
+          <span class="vorschau__zeit" data-zeit></span>
+        </div>
+        <p class="vorschau__hinweis">So kommt Ihre Anfrage bei mir an. Gesendet wird erst, wenn Sie in WhatsApp oder im Mailprogramm auf Senden tippen.</p>
+      </aside>
+    </div>
     <div class="contact__meta reveal">
       <a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a>
       <a href="tel:+4915906344961">+49 1590 6344961</a>
@@ -577,6 +722,7 @@ html.intro .parallax__title { opacity: 0; }
     .from('.parallax__layer-img[data-parallax-layer="2"]', { y: 24, duration: 2.0, ease: 'power3.out' }, 0)
     .from('.parallax__layer-img[data-parallax-layer="4"]', { y: 40, duration: 2.0, ease: 'power3.out' }, 0)
     .from('.parallax__layer-img[data-parallax-layer="5"]', { y: 40, duration: 2.0, ease: 'power3.out' }, 0)
+    .from('.parallax__rolle', { opacity: 0, y: 12, duration: 1.0, ease: 'power3.out' }, 0.9)
     .from('.nav', { opacity: 0, duration: 0.8, ease: 'power2.out' }, 1.1)
     .from('.parallax__hint', { opacity: 0, duration: 0.6, ease: 'power2.out' }, 1.4);
 
@@ -599,17 +745,37 @@ html.intro .parallax__title { opacity: 0; }
     });
     name.appendChild(punkt);
 
-    var buchstabenFertig = false, geladen = false, gestartet = false;
-    gsap.timeline({ onComplete: function () { buchstabenFertig = true; weiter(); } })
-      .from(name.querySelectorAll('.loader__buchstabe'), { yPercent: 115, duration: 1.1, ease: 'expo.out', stagger: 0.07 }, 0.15)
-      .from(punkt, { scale: 0.2, opacity: 0, duration: 0.7, ease: 'back.out(3)' }, 0.75)
-      .to({}, { duration: 0.35 });
+    var buchstaben = name.querySelectorAll('.loader__buchstabe');
+    var erster = buchstaben[0], rest = [].slice.call(buchstaben, 1);
+    gsap.set(buchstaben, { yPercent: 115 });
+    gsap.set(punkt, { scale: 0.2, opacity: 0 });
+    var buchstabenFertig = false, geladen = false, gestartet = false, schein = null;
+
+    /* Anfang: nur "E." – Punkt rückt direkt hinter das E, die Gruppe steht mittig */
+    function messen() {
+      var n = name.getBoundingClientRect(), e = erster.parentNode.getBoundingClientRect(), pk = punkt.getBoundingClientRect();
+      var punktDx = e.right - pk.left;
+      var gruppeMitte = (e.left + e.right + pk.width) / 2;
+      return { name: (n.left + n.width / 2) - gruppeMitte, punkt: punktDx };
+    }
+    var schriftBereit = (document.fonts && document.fonts.ready)
+      ? Promise.race([document.fonts.ready, new Promise(function (r) { setTimeout(r, 800); })])
+      : Promise.resolve();
+    schriftBereit.then(function () {
+      var v = messen();
+      gsap.set(name, { x: v.name }); gsap.set(punkt, { x: v.punkt });
+      schein = gsap.fromTo(erster, { backgroundPosition: '100% 0%' }, { backgroundPosition: '0% 0%', duration: 1.8, ease: 'power2.inOut', repeat: -1, repeatDelay: 0.3, delay: 0.5 });
+      gsap.timeline({ onComplete: function () { buchstabenFertig = true; weiter(); } })
+        .to(erster, { yPercent: 0, duration: 1.0, ease: 'expo.out' }, 0.1)
+        .to(punkt, { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(3)' }, 0.55)
+        .to({}, { duration: 0.5 });
+    });
 
     /* Ladefortschritt: Hero-Bilder + Schriften */
     var bilder = [].slice.call(document.querySelectorAll('.parallax__layer-img'));
     var gesamt = bilder.length + 1, fertig = 0;
     var balkenTo = gsap.quickTo(balken, 'scaleX', { duration: 0.5, ease: 'power2.out' });
-    function eins() { fertig++; balkenTo(Math.min(1, fertig / gesamt)); if (fertig >= gesamt) { geladen = true; weiter(); } }
+    function eins() { fertig++; var q = Math.min(1, fertig / gesamt); balkenTo(q); gsap.to(name, { '--glut': 0.3 + 0.7 * q, '--glutO': 0.35 + 0.6 * q, duration: 0.8, ease: 'power2.out', overwrite: 'auto' }); if (fertig >= gesamt) { geladen = true; weiter(); } }
     function dekodieren(img) { return img.decode ? img.decode().catch(function () {}) : Promise.resolve(); }
     bilder.forEach(function (img) {
       if (img.complete && img.naturalWidth) { dekodieren(img).then(eins); }
@@ -624,6 +790,16 @@ html.intro .parallax__title { opacity: 0; }
     function weiter() {
       if (gestartet || !buchstabenFertig || !geladen) return;
       gestartet = true;
+      gsap.timeline({ onComplete: uebergabe })
+        .to(balken.parentNode, { opacity: 0, duration: 0.35, ease: 'power1.out' }, 0)
+        .to(name, { x: 0, duration: 0.95, ease: 'power3.inOut' }, 0)
+        .to(punkt, { x: 0, duration: 0.95, ease: 'power3.inOut' }, 0)
+        .add(function () { if (schein) schein.kill(); }, 0)
+        .to(rest, { yPercent: 0, duration: 0.9, ease: 'expo.out', stagger: 0.06 }, 0.2)
+        .fromTo(buchstaben, { backgroundPosition: '100% 0%' }, { backgroundPosition: '0% 0%', duration: 0.9, ease: 'power2.inOut', stagger: 0.05 }, 0.15)
+        .to({}, { duration: 0.2 });
+    }
+    function uebergabe() {
       /* FLIP: Loader-Name gleitet exakt auf die Position des Hero-Titels */
       var a = name.getBoundingClientRect(), z = titel.getBoundingClientRect();
       var dx = (z.left + z.width / 2) - (a.left + a.width / 2);
@@ -631,7 +807,7 @@ html.intro .parallax__title { opacity: 0; }
       var sk = z.width / a.width;
       /* Lichtkreis startet hinter dem Namen (dort steht die Sonne) und waechst ueber den ganzen Bildschirm */
       var wrap = document.getElementById('smooth-wrapper');
-      var ox = a.left + a.width / 2, oy = a.top + a.height / 2;
+      var pr = punkt.getBoundingClientRect(); var ox = pr.left + pr.width / 2, oy = pr.top + pr.height * 0.72;   /* der Punkt ist die Sonne */
       var maxR = Math.hypot(Math.max(ox, innerWidth - ox), Math.max(oy, innerHeight - oy)) / 0.62 + 40;
       gsap.set(wrap, { '--ax': ox + 'px', '--ay': oy + 'px', '--r': '0px' });
       document.documentElement.classList.add('aufgang');
@@ -645,6 +821,7 @@ html.intro .parallax__title { opacity: 0; }
         } })
         .to(balken.parentNode, { opacity: 0, duration: 0.35, ease: 'power1.out' }, 0)
         .set(loader.querySelector('.loader__grund'), { opacity: 0 }, 0.05)
+        .to(name, { '--glutO': 0, duration: 0.9, ease: 'power2.out' }, 0.1)
         .to(wrap, { '--r': maxR + 'px', duration: 1.6, ease: 'power2.inOut' }, 0.05)
         .add(function () { heroEinstieg.play(); }, 0.05)
         .to(name, { x: dx, y: dy, scale: sk, duration: 1.3, ease: 'power3.inOut' }, 0.35);
@@ -712,6 +889,36 @@ html.intro .parallax__title { opacity: 0; }
     window.addEventListener('blur', function () { cursor.classList.remove('ist-sichtbar'); });
   }
 
+  /* Navigation: beim Runterscrollen ausblenden, beim Hochscrollen zeigen */
+  var navEl = document.querySelector('.nav');
+  ScrollTrigger.create({ start: 0, end: 'max', onUpdate: function (self) {
+    var y = self.scroll();
+    if (y > 140 && self.direction === 1) navEl.classList.add('nav--weg');
+    else if (self.direction === -1 || y <= 140) navEl.classList.remove('nav--weg');
+  } });
+
+  /* Pakete: Vorschauen laufen nur, solange sie sichtbar sind */
+  function nurSichtbar(el, tw) {
+    ScrollTrigger.create({ trigger: el, start: 'top bottom', end: 'bottom top', onToggle: function (st) { if (st.isActive) tw.play(); else tw.pause(); } });
+  }
+  gsap.utils.toArray('[data-demo-scroll]').forEach(function (img) {
+    var screen = img.parentNode;
+    var tw = gsap.to(img, { y: function () { return -Math.max(0, img.offsetHeight - screen.offsetHeight); }, duration: 9, ease: 'sine.inOut', repeat: -1, yoyo: true, repeatDelay: 0.8, paused: true });
+    img.addEventListener('load', function () { tw.invalidate(); });
+    nurSichtbar(screen, tw);
+  });
+  gsap.utils.toArray('[data-demo-stapel]').forEach(function (st) {
+    var seiten = st.querySelectorAll('.demo-seite'), mitte = (seiten.length - 1) / 2;
+    var tl = gsap.timeline({ paused: true, repeat: -1, yoyo: true, repeatDelay: 1.4, defaults: { duration: 1.2, ease: 'power3.inOut' } });
+    seiten.forEach(function (s, i) { s.style.zIndex = seiten.length - i; tl.to(s, { xPercent: (i - mitte) * 12, yPercent: Math.abs(i - mitte) * 5, rotation: (i - mitte) * 4 }, 0); });
+    nurSichtbar(st, tl);
+  });
+  gsap.utils.toArray('[data-demo-parallax]').forEach(function (b) {
+    var tl = gsap.timeline({ paused: true, repeat: -1, yoyo: true, defaults: { duration: 3.4, ease: 'sine.inOut' } });
+    [['1', 22], ['2', 14], ['3', 18], ['4', 4], ['5', 4]].forEach(function (l) { tl.to(b.querySelector('[data-mini="' + l[0] + '"]'), { y: l[1] }, 0); });
+    nurSichtbar(b, tl);
+  });
+
   /* Pakete: Karten heben sich nacheinander */
   ScrollTrigger.batch('.pkg', { start: 'top 88%', once: true,
     onEnter: function (els) { gsap.to(els, { opacity: 1, y: 0, duration: 1, ease: 'expo.out', stagger: 0.12 }); } });
@@ -728,62 +935,76 @@ html.intro .parallax__title { opacity: 0; }
 })();
 </script>
 <script>
-/* Kontaktformular: prüft die Eingaben, baut die Nachricht und öffnet WhatsApp oder das Mailprogramm.
-   Läuft auch ohne GSAP. */
+/* Kontaktformular: Paket-Auswahl, Pruefung beim Verlassen eines Feldes, Live-Vorschau,
+   Versand per WhatsApp oder Mailprogramm (kein Server). Laeuft auch ohne GSAP. */
 (function () {
-  var WA_NUMMER = '4915906344961';   /* ohne + und ohne Leerzeichen */
+  var WA_NUMMER = '4915906344961';
   var MAIL = 'ergun.eu@gmail.com';
   var form = document.getElementById('anfrage');
   if (!form) return;
   var status = form.querySelector('[data-status]');
-
+  var blase = document.querySelector('[data-vorschau]');
+  var zeit = document.querySelector('[data-zeit]');
+  var regeln = {
+    name: function (v) { return v ? '' : 'Bitte Ihren Namen eintragen.'; },
+    email: function (v) { return !v ? 'Bitte eine E-Mail-Adresse eintragen, damit ich antworten kann.' : (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? '' : 'Das sieht nicht nach einer E-Mail-Adresse aus.'); },
+    text: function (v) { return v ? '' : 'Ein, zwei Sätze zum Projekt genügen.'; }
+  };
   function fehler(el, text) {
     var wrap = el.closest('.field'), out = wrap.querySelector('.field__error');
     wrap.classList.toggle('hat-fehler', !!text);
     if (out) out.textContent = text || '';
     el.setAttribute('aria-invalid', text ? 'true' : 'false');
   }
+  function pruefeFeld(k) { var el = form.elements[k]; var t = regeln[k](el.value.trim()); fehler(el, t); return !t; }
   function pruefen() {
-    var ok = true, erster = null;
-    var name = form.name, mail = form.email, text = form.text;
-    if (!name.value.trim()) { fehler(name, 'Bitte Ihren Namen eintragen.'); ok = false; erster = erster || name; } else fehler(name, '');
-    var m = mail.value.trim();
-    if (!m) { fehler(mail, 'Bitte eine E-Mail-Adresse eintragen, damit ich antworten kann.'); ok = false; erster = erster || mail; }
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m)) { fehler(mail, 'Das sieht nicht nach einer E-Mail-Adresse aus.'); ok = false; erster = erster || mail; }
-    else fehler(mail, '');
-    if (!text.value.trim()) { fehler(text, 'Ein, zwei Sätze zum Projekt genügen.'); ok = false; erster = erster || text; } else fehler(text, '');
+    var erster = null;
+    ['name', 'email', 'text'].forEach(function (k) { if (!pruefeFeld(k) && !erster) erster = form.elements[k]; });
     if (erster) erster.focus();
-    return ok;
+    return !erster;
   }
-  function nachricht() {
-    var n = form.name.value.trim(), f = form.firma.value.trim(), p = form.paket.value.trim(), x = form.text.value.trim(), m = form.email.value.trim();
+  function paket() { var r = form.querySelector('input[name="paket"]:checked'); return r && r.value !== 'Noch unklar' ? r.value : ''; }
+  function wert(k) { return form.elements[k].value.trim(); }
+  function nachricht(vorschau) {
+    var n = wert('name'), f = wert('firma'), p = paket(), x = wert('text'), m = wert('email');
+    if (vorschau) { n = n || '[Ihr Name]'; x = x || '[Worum geht es?]'; m = m || '[Ihre E-Mail]'; }
     return 'Hallo, ich bin ' + n + (f ? ' von ' + f : '') + '.\n\n' +
-      (p ? 'Paket: ' + p + '\n\n' : '') +
-      x + '\n\n' +
-      'E-Mail für die Antwort: ' + m + '\n' +
-      'Gesendet über die Website.';
+      (p ? 'Paket: ' + p + '\n\n' : '') + x + '\n\n' +
+      'E-Mail für die Antwort: ' + m + '\n' + 'Gesendet über die Website.';
   }
+  function aktualisieren() {
+    if (blase) blase.textContent = nachricht(true);
+    if (zeit) zeit.textContent = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+  }
+  form.addEventListener('input', aktualisieren);
+  form.addEventListener('change', aktualisieren);
   ['name', 'email', 'text'].forEach(function (k) {
-    form[k].addEventListener('input', function () { if (form[k].getAttribute('aria-invalid') === 'true') pruefen(); });
+    var el = form.elements[k];
+    el.addEventListener('blur', function () { if (el.value.trim() || el.getAttribute('aria-invalid') === 'true') pruefeFeld(k); });
+    el.addEventListener('input', function () { if (el.getAttribute('aria-invalid') === 'true') pruefeFeld(k); });
   });
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var weg = (e.submitter && e.submitter.value) || 'whatsapp';
-    if (!pruefen()) { status.textContent = ''; return; }
-    var m = nachricht();
+    if (!pruefen()) { status.textContent = 'Bitte die markierten Felder ausfüllen.'; return; }
+    var m = nachricht(false);
     if (weg === 'whatsapp') {
       var win = window.open('https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(m), '_blank', 'noopener');
       status.textContent = win ? 'WhatsApp ist geöffnet. Bitte dort auf Senden tippen.' : 'WhatsApp konnte nicht geöffnet werden. Bitte Pop-ups erlauben oder per E-Mail senden.';
     } else {
-      var betreff = 'Projektanfrage' + (form.paket.value.trim() ? ' ' + form.paket.value.trim() : '') + ' über ERGUN.';
+      var betreff = 'Projektanfrage' + (paket() ? ' ' + paket() : '') + ' über ERGUN.';
       location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent(betreff) + '&body=' + encodeURIComponent(m);
       status.textContent = 'Ihr Mailprogramm öffnet sich mit der fertigen Nachricht.';
     }
   });
-  /* Paket-Buttons tragen das Paket im Formular ein */
+  /* Paket-Buttons waehlen das passende Paket im Formular */
   document.querySelectorAll('[data-paket]').forEach(function (a) {
-    a.addEventListener('click', function () { form.paket.value = a.getAttribute('data-paket'); });
+    a.addEventListener('click', function () {
+      var r = form.querySelector('input[name="paket"][value="' + a.getAttribute('data-paket') + '"]');
+      if (r) { r.checked = true; aktualisieren(); }
+    });
   });
+  aktualisieren();
 })();
 </script>
 </body>
