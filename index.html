@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ERGUN. – Websites mit Tiefe</title>
+<meta name="description" content="Websites mit Design, Bewegung und eigenen Bildern. Drei Pakete mit festem Preis, entworfen und gebaut in Elmshorn.">
+<meta name="theme-color" content="#0E0E0C">
+
+<!-- Teilen in Social Media / Messengern (Domain eintragen, sobald sie feststeht) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="ERGUN. – Websites mit Tiefe">
+<meta property="og:description" content="Websites mit Design, Bewegung und eigenen Bildern. Drei Pakete, fester Preis, aus Elmshorn.">
+<meta property="og:image" content="https://DEINE-DOMAIN.de/bilder/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="de_DE">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<link rel="preload" href="schriften/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="schriften/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin>
+
+<style>
+/* Schriften liegen lokal (SIL Open Font License) – kein Google-Server */
+@font-face { font-family: "Instrument Serif"; src: url("schriften/InstrumentSerif-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Instrument Serif"; src: url("schriften/InstrumentSerif-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Geist"; src: url("schriften/Geist-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Geist"; src: url("schriften/Geist-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+:root {
+  --bg: #0E0E0C;
+  --text: #F2EFE8;
+  --muted: #8A867D;   /* auf --bg 5.4:1 */
+  --accent: #FF5A1F;  /* auf --bg 6.0:1 */
+  --line: rgba(242, 239, 232, 0.12);
+  --pad: clamp(20px, 4vw, 56px);
+  --serif: "Instrument Serif", Georgia, serif;
+  --sans: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+:where(a, button, input, select, textarea):focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+h1, h2, h3, p { margin: 0; font-weight: 400; }
+h2 { text-wrap: balance; }
+img { display: block; max-width: 100%; height: auto; }
+
+/* Direkt zum Inhalt (Tastatur) */
+.skip { position: fixed; left: var(--pad); top: 16px; z-index: 50; padding: 12px 16px; background: var(--text); color: var(--bg); border-radius: 999px; font-size: 14px; transform: translateY(-200%); transition: transform 160ms var(--ease-out); }
+.skip:focus-visible { transform: none; outline-offset: 2px; }
+
+/* ---------- Navigation ---------- */
+.nav {
+  position: fixed; inset: 0 0 auto 0; z-index: 20;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 22px var(--pad);
+  font-size: 14px;
+  mix-blend-mode: difference;
+}
+.nav__mark { font-family: var(--serif); font-size: 22px; letter-spacing: 0.01em; }
+.nav__links { display: flex; gap: 28px; }
+.nav__link { position: relative; padding-bottom: 2px; }
+.nav__link::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px;
+  background: currentColor; transform: scaleX(0); transform-origin: right;
+  transition: transform 300ms var(--ease);
+}
+.nav__link:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+@media (hover: hover) and (pointer: fine) { .nav__link:hover::after { transform: scaleX(1); transform-origin: left; } }
+
+/* ---------- Hero: Layer-Parallax ---------- */
+.parallax__header { position: relative; }
+.parallax__visuals { position: relative; height: 125svh; min-height: 640px; overflow: hidden; background: var(--bg); }
+.parallax__layers { position: absolute; inset: 0; }
+.parallax__layer-img {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 118%;
+  object-fit: cover; object-position: 50% 100%;
+  pointer-events: none; user-select: none;
+  will-change: transform;
+}
+.parallax__layer-title {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100svh;
+  display: flex; justify-content: center; align-items: center;
+  padding-bottom: 54svh;   /* Name sitzt oben, frei lesbar – beim Scrollen wandert er hinter die Person */
+  will-change: transform;
+}
+.parallax__title {
+  font-family: var(--serif);
+  font-size: min(17vw, 16rem);
+  line-height: 0.85;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  /* warmes Off-White, unten leicht ins Abendlicht – passt zu Glut und Felsen */
+  background: linear-gradient(180deg, #F7F3EC 0%, #F2EFE8 55%, #E9C9A8 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0.03em 0.25em rgba(0,0,0,0.45));
+}
+.parallax__title .dot, .nav__mark .dot { color: var(--accent); -webkit-text-fill-color: var(--accent); }
+.parallax__title .dot { text-shadow: 0 0 0.35em rgba(255,140,60,0.7); filter: none; }
+.nav__mark { text-transform: uppercase; letter-spacing: 0.06em; font-size: 18px; }
+.parallax__layer-img--sky { top: -26%; }
+/* Sonne/Glut hinter dem Titel – bewegt sich mit dem Himmel */
+.parallax__glow {
+  position: absolute; left: 50%; top: 4%;
+  width: 60vmin; height: 60vmin; transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(255,200,150,0.22) 0%, rgba(255,120,50,0.12) 30%, rgba(14,14,12,0) 65%);
+  pointer-events: none; will-change: transform;
+}
+.parallax__fade {
+  position: absolute; left: 0; right: 0; bottom: -2px; height: 38%;
+  background: linear-gradient(to top, var(--bg) 12%, rgba(14,14,12,0.85) 40%, rgba(14,14,12,0));
+  pointer-events: none;
+}
+.parallax__hint {
+  position: absolute; right: var(--pad); bottom: 22svh;
+  display: flex; align-items: center; gap: 12px;
+  color: var(--muted); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+}
+.parallax__hint::after { content: ""; width: 40px; height: 1px; background: currentColor; transform-origin: left; animation: atmen 2.4s var(--ease) infinite; }
+@keyframes atmen { 0%, 100% { transform: scaleX(0.3); opacity: 0.4; } 50% { transform: scaleX(1); opacity: 1; } }
+
+/* ---------- Statement ---------- */
+.statement {
+  min-height: 100svh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 40px;
+  padding: 18svh var(--pad);
+  text-align: center;
+}
+.statement__icon { width: 44px; height: 44px; color: var(--accent); }
+.statement__text {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 9vw, 8.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  max-width: 12ch;
+}
+.statement__text em { font-style: italic; color: var(--accent); }
+.word { display: inline-block; }
+.statement__sub { color: var(--muted); font-size: clamp(15px, 1.3vw, 18px); max-width: 40ch; text-wrap: pretty; }
+
+/* ---------- Leistungen ---------- */
+.services { position: relative; padding: 0 var(--pad) 18svh; }
+.services__row {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) minmax(0, 20rem);
+  align-items: baseline;
+  gap: 24px;
+  padding: clamp(20px, 3vw, 36px) 0;
+  border-top: 1px solid var(--line);
+}
+.services__row:last-child { border-bottom: 1px solid var(--line); }
+.services__nr { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; letter-spacing: 0.06em; }
+.services__name {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 10vw, 9rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  transition: color 300ms var(--ease), transform 300ms var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .services__row:hover .services__name { color: var(--accent); transform: translateX(0.08em); }
+}
+.services__desc { color: var(--muted); justify-self: end; text-align: right; max-width: 24ch; }
+.services__bild { grid-column: 1 / -1; display: none; margin: 0; }
+/* Desktop: ein Bild folgt dem Zeiger über den Zeilen */
+.services__cursor {
+  position: absolute; left: 0; top: 0; z-index: 3; margin: 0;
+  width: clamp(220px, 22vw, 340px); aspect-ratio: 4 / 3;
+  border-radius: 6px; overflow: hidden;
+  opacity: 0; transform: translate(-50%, -50%) scale(0.94);
+  pointer-events: none;
+  transition: opacity 220ms var(--ease-out), transform 280ms var(--ease-out);
+}
+.services__cursor img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 300ms var(--ease); }
+.services__cursor img.ist-aktiv { opacity: 1; }
+.services__cursor.ist-sichtbar { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+/* ---------- Laufband ---------- */
+.marquee { overflow: hidden; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 18px 0; }
+.marquee__track { display: flex; gap: 0; width: max-content; will-change: transform; }
+.marquee__item { display: inline-flex; align-items: center; font-family: var(--serif); font-size: clamp(1.6rem, 3.2vw, 2.6rem); letter-spacing: -0.01em; white-space: nowrap; padding-right: 1.2em; color: var(--muted); }
+.marquee__star { width: 0.45em; height: 0.45em; margin: 0 1.2em; color: var(--accent); flex: none; }
+
+/* ---------- Pakete: drei gleiche Karten, kein „Bestseller"-Theater ---------- */
+.packages { padding: 10svh var(--pad) 16svh; }
+.packages__kicker { display: block; margin-bottom: 18px; color: var(--accent); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; }
+.pkg--featured { border-color: rgba(255,90,31,0.75); }
+.pkg--featured::before {
+  content: "Empfehlung"; position: absolute; top: -11px; left: 28px;
+  padding: 4px 11px; background: var(--accent); color: var(--bg);
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; border-radius: 999px;
+}
+.packages__trust { display: flex; flex-wrap: wrap; gap: 10px 28px; justify-content: center; margin-top: 44px; color: var(--muted); font-size: 14px; }
+.packages__trust span { display: inline-flex; align-items: center; gap: 10px; }
+.packages__trust span::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; }
+.packages__head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 56px; }
+.packages__title { font-family: var(--serif); font-size: clamp(2.6rem, 6vw, 5rem); line-height: 0.95; letter-spacing: -0.03em; }
+.packages__note { color: var(--muted); max-width: 26ch; font-size: 15px; text-wrap: pretty; }
+.packages__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.pkg {
+  position: relative; display: flex; flex-direction: column; gap: 22px;
+  padding: 32px 28px 28px; border: 1px solid var(--line); border-radius: 6px;
+  transition: border-color 300ms var(--ease), transform 300ms var(--ease);
+}
+@media (hover: hover) and (pointer: fine) { .pkg:hover { border-color: rgba(242,239,232,0.3); transform: translateY(-4px); } }
+.pkg__name { font-family: var(--serif); font-size: clamp(2rem, 3.4vw, 2.8rem); line-height: 1; letter-spacing: -0.02em; }
+.pkg__price { font-family: var(--serif); font-size: clamp(2.4rem, 4.4vw, 3.6rem); line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.pkg__price small { display: block; margin-top: 8px; font-family: var(--sans); font-size: 13px; color: var(--muted); letter-spacing: 0.04em; }
+.pkg__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; color: var(--muted); font-size: 15px; flex: 1; }
+.pkg__list li { padding-left: 18px; position: relative; }
+.pkg__list li::before { content: ""; position: absolute; left: 0; top: 0.65em; width: 8px; height: 1px; background: var(--accent); }
+
+/* ---------- Buttons: Druck-Feedback, klare Zustände ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 48px; padding: 13px 22px; border-radius: 999px;
+  border: 1px solid var(--line); background: transparent; color: var(--text);
+  font: 500 15px/1 var(--sans); cursor: pointer;
+  transition: transform 160ms var(--ease-out), border-color 300ms var(--ease), background-color 300ms var(--ease), color 300ms var(--ease);
+}
+.btn:active { transform: scale(0.97); }
+.btn--wa { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.btn svg { width: 18px; height: 18px; }
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover { border-color: var(--text); }
+  .btn--wa:hover { border-color: var(--accent); background: #ff6d3a; }
+}
+.pkg .btn { align-self: flex-start; }
+
+/* ---------- Kontakt + Formular ---------- */
+.contact {
+  min-height: 90svh;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  gap: 28px;
+  padding: 12svh var(--pad);
+  text-align: center;
+}
+.contact__label { color: var(--muted); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; }
+.contact__big {
+  font-family: var(--serif);
+  font-size: clamp(3.2rem, 11vw, 10rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+.contact__meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 32px; color: var(--muted); font-size: 15px; }
+.contact__meta a { border-bottom: 1px solid transparent; transition: color 200ms var(--ease), border-color 200ms var(--ease); }
+@media (hover: hover) and (pointer: fine) { .contact__meta a:hover { color: var(--text); border-color: var(--line); } }
+
+.form { width: min(100%, 640px); margin-top: 8px; display: grid; gap: 16px; text-align: left; }
+.form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field { display: grid; gap: 6px; }
+.field label { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.field input, .field textarea {
+  width: 100%; background: transparent; border: 0; border-bottom: 1px solid var(--line);
+  color: var(--text); font: inherit; font-size: 17px; padding: 10px 0; border-radius: 0;
+  transition: border-color 300ms var(--ease);
+}
+.field input:focus-visible, .field textarea:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 1px 0 var(--accent); }
+.field textarea { resize: vertical; min-height: 96px; }
+.field.hat-fehler input, .field.hat-fehler textarea { border-color: var(--accent); }
+.field__error { min-height: 1.2em; font-size: 13px; color: var(--accent); }
+.form__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+.form__status { min-height: 1.4em; font-size: 14px; color: var(--text); }
+.form__hint { color: var(--muted); font-size: 13px; text-wrap: pretty; }
+
+/* ---------- Footer ---------- */
+.footer {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px;
+  padding: 40px var(--pad) 32px;
+  color: var(--muted); font-size: 13px;
+}
+.footer nav { display: flex; gap: 24px; }
+.footer a { transition: color 200ms var(--ease); }
+@media (hover: hover) and (pointer: fine) { .footer a:hover { color: var(--text); } }
+
+/* ---------- Einblenden (nur mit JS aktiv) ---------- */
+.js .reveal { opacity: 0; transform: translateY(24px); }
+
+/* ---------- Tablet ---------- */
+@media (max-width: 1024px) {
+  .services__cursor { display: none; }
+  .services__bild { display: block; width: min(100%, 420px); aspect-ratio: 4 / 3; border-radius: 6px; overflow: hidden; }
+  .services__bild img { width: 100%; height: 100%; object-fit: cover; }
+}
+@media (max-width: 900px) { .packages__grid { grid-template-columns: 1fr; } .packages__head { flex-direction: column; align-items: start; } }
+
+/* ---------- Handy ---------- */
+@media (max-width: 700px) {
+  .parallax__visuals { height: 110svh; }
+  .parallax__layer-img { object-position: 50% 100%; }
+  .parallax__layer-title { padding-bottom: 50svh; }
+  .parallax__layer-img--sky { top: -14%; }
+  .parallax__title { font-size: 21vw; }
+  .parallax__hint { display: none; }
+  .services__row { grid-template-columns: 36px minmax(0, 1fr); }
+  .services__desc { grid-column: 2; justify-self: start; text-align: left; max-width: none; }
+  .form__row { grid-template-columns: 1fr; }
+  .form__actions .btn { flex: 1 1 100%; }
+}
+
+/* ---------- Bewegung reduziert: Standbild, alles sofort da ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal { opacity: 1; transform: none; }
+  .parallax__layer-img, .parallax__layer-title, .parallax__glow { will-change: auto; }
+  .parallax__hint::after { animation: none; transform: none; opacity: 1; }
+  .services__cursor { display: none; }
+  * { transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#inhalt">Zum Inhalt springen</a>
+
+<header class="nav">
+  <a class="nav__mark" href="#top" aria-label="ERGUN – nach oben">ERGUN<span class="dot">.</span></a>
+  <nav class="nav__links" aria-label="Seitennavigation">
+    <a class="nav__link" href="#pakete">Pakete</a>
+    <a class="nav__link" href="#kontakt">Projekt anfragen</a>
+  </nav>
+</header>
+
+<div id="smooth-wrapper">
+<div id="smooth-content">
+<div class="parallax" id="top">
+  <section class="parallax__header" aria-label="Einstieg">
+    <div class="parallax__visuals">
+      <div class="parallax__layers" data-parallax-layers>
+        <img src="bilder/hero/layer-1-sky.webp" data-hoch="bilder/hero/layer-1-sky-hoch.webp" srcset="bilder/hero/layer-1-sky-1920.webp 1920w, bilder/hero/layer-1-sky.webp 4096w" sizes="(orientation: portrait) 4096px, 100vw" width="4096" height="2323" data-parallax-layer="1" class="parallax__layer-img parallax__layer-img--sky" alt="" fetchpriority="high">
+        <div data-parallax-layer="1" class="parallax__glow" aria-hidden="true"></div>
+        <img src="bilder/hero/layer-2-ridge.webp" data-hoch="bilder/hero/layer-2-ridge-hoch.webp" srcset="bilder/hero/layer-2-ridge-1920.webp 1920w, bilder/hero/layer-2-ridge.webp 4096w" sizes="(orientation: portrait) 4096px, 100vw" width="4096" height="2323" data-parallax-layer="2" class="parallax__layer-img" alt="" fetchpriority="high">
+        <div data-parallax-layer="3" class="parallax__layer-title">
+          <h1 class="parallax__title">ERGUN<span class="dot">.</span></h1>
+        </div>
+        <img src="bilder/hero/layer-4-foreground.webp" data-hoch="bilder/hero/layer-4-foreground-hoch.webp" srcset="bilder/hero/layer-4-foreground-1920.webp 1920w, bilder/hero/layer-4-foreground.webp 4096w" sizes="(orientation: portrait) 4096px, 100vw" width="4096" height="2323" data-parallax-layer="4" class="parallax__layer-img" alt="" fetchpriority="high">
+        <img src="bilder/hero/layer-5-person.webp" data-hoch="bilder/hero/layer-5-person-hoch.webp" srcset="bilder/hero/layer-5-person-1920.webp 1920w, bilder/hero/layer-5-person.webp 5459w" sizes="(orientation: portrait) 4096px, 100vw" width="5459" height="3096" data-parallax-layer="5" class="parallax__layer-img" alt="" fetchpriority="high" onerror="this.remove()">
+      </div>
+      <div class="parallax__fade"></div>
+      <p class="parallax__hint" aria-hidden="true">Scrollen</p>
+    </div>
+  </section>
+</div>
+
+<main id="inhalt" tabindex="-1">
+  <section class="packages" id="pakete" aria-labelledby="pakete-titel">
+    <div class="packages__head">
+      <div>
+        <span class="packages__kicker reveal">Websites mit Tiefe</span>
+        <h2 class="packages__title reveal" id="pakete-titel">Wählen Sie<br>Ihr Paket.</h2>
+      </div>
+      <p class="packages__note reveal">Festpreis, einmalig, kein Abo. Sie bekommen alle Dateien: Die Seite gehört Ihnen.</p>
+    </div>
+    <ul class="packages__grid">
+      <li class="pkg reveal">
+        <h3 class="pkg__name">Onepager</h3>
+        <p class="pkg__price">ab 80 €<small>eine Seite · in 2 bis 3 Tagen</small></p>
+        <ul class="pkg__list">
+          <li>Eine Seite mit Parallax-Hero</li>
+          <li>KI-Bild passend zu Ihrer Branche</li>
+          <li>Für Handy und Desktop</li>
+          <li>Kontakt per WhatsApp &amp; E-Mail</li>
+          <li>Impressum &amp; Datenschutz-Vorlage</li>
+        </ul>
+        <a class="btn" href="#kontakt" data-paket="Onepager">Onepager anfragen</a>
+      </li>
+      <li class="pkg pkg--featured reveal">
+        <h3 class="pkg__name">Business</h3>
+        <p class="pkg__price">ab 250 €<small>bis 5 Seiten · in ca. 1 Woche</small></p>
+        <ul class="pkg__list">
+          <li>Alles aus Onepager</li>
+          <li>Eigene KI-Bilder für jede Seite</li>
+          <li>Animationen &amp; Scroll-Effekte</li>
+          <li>Grundlagen für Google (SEO)</li>
+          <li>Texte gemeinsam ausgearbeitet</li>
+          <li>1 Korrekturrunde inklusive</li>
+        </ul>
+        <a class="btn" href="#kontakt" data-paket="Business">Business anfragen</a>
+      </li>
+      <li class="pkg reveal">
+        <h3 class="pkg__name">Individuell</h3>
+        <p class="pkg__price">ab 400 €<small>Konzept nach Wunsch</small></p>
+        <ul class="pkg__list">
+          <li>Alles aus Business</li>
+          <li>Video-Hero &amp; eigene Effekte</li>
+          <li>Bis zu 10 Seiten</li>
+          <li>Texte komplett inklusive</li>
+          <li>2 Korrekturrunden</li>
+          <li>1 Monat Betreuung nach Livegang</li>
+        </ul>
+        <a class="btn" href="#kontakt" data-paket="Individuell">Individuell anfragen</a>
+      </li>
+    </ul>
+    <div class="packages__trust reveal">
+      <span>Persönlich von Emre Ergun, Elmshorn</span>
+      <span>Vorschau im Browser vor dem Start</span>
+      <span>Keine versteckten Kosten</span>
+    </div>
+  </section>
+
+  <section class="contact" id="kontakt" aria-labelledby="kontakt-titel">
+    <span class="contact__label reveal">Kontakt</span>
+    <h2 class="contact__big reveal" id="kontakt-titel">Projekt anfragen</h2>
+    <form class="form reveal" id="anfrage" novalidate>
+      <div class="form__row">
+        <div class="field">
+          <label for="f-name">Name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-err">
+          <span class="field__error" id="f-name-err" aria-live="polite"></span>
+        </div>
+        <div class="field">
+          <label for="f-firma">Unternehmen (optional)</label>
+          <input id="f-firma" name="firma" type="text" autocomplete="organization">
+          <span class="field__error" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="form__row">
+        <div class="field">
+          <label for="f-mail">E-Mail</label>
+          <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="f-mail-err">
+          <span class="field__error" id="f-mail-err" aria-live="polite"></span>
+        </div>
+        <div class="field">
+          <label for="f-paket">Paket</label>
+          <input id="f-paket" name="paket" type="text" list="pakete-liste" placeholder="Noch unklar">
+          <datalist id="pakete-liste"><option value="Onepager"><option value="Business"><option value="Individuell"></datalist>
+          <span class="field__error" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="f-text">Worum geht es?</label>
+        <textarea id="f-text" name="text" placeholder="Was macht Ihr Unternehmen, was soll die Seite erreichen?" required aria-describedby="f-text-err"></textarea>
+        <span class="field__error" id="f-text-err" aria-live="polite"></span>
+      </div>
+      <div class="form__actions">
+        <button class="btn btn--wa" type="submit" name="weg" value="whatsapp">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg>
+          Per WhatsApp senden
+        </button>
+        <button class="btn" type="submit" name="weg" value="mail">Per E-Mail senden</button>
+      </div>
+      <p class="form__status" data-status aria-live="polite"></p>
+      <p class="form__hint">Öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Kein Server, keine Datenspeicherung.</p>
+    </form>
+    <div class="contact__meta reveal">
+      <a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a>
+      <a href="tel:+4915906344961">+49 1590 6344961</a>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <span>ERGUN. · Emre Ergun · Elmshorn · © 2026</span>
+  <nav aria-label="Rechtliches">
+    <a href="impressum.html">Impressum</a>
+    <a href="datenschutz.html">Datenschutz</a>
+  </nav>
+</footer>
+</div><!-- /smooth-content -->
+</div><!-- /smooth-wrapper -->
+
+<!-- GSAP liegt lokal im Ordner js/ (kein fremder Server) -->
+<script src="js/gsap.min.js"></script>
+<script src="js/ScrollTrigger.min.js"></script>
+<script src="js/ScrollSmoother.min.js"></script>
+<script>
+/* Hochkant (Handy/Tablet): mittlerer Ausschnitt in voller Hoehe statt breitem Bild */
+(function () {
+  if (!window.matchMedia('(orientation: portrait)').matches) return;
+  document.querySelectorAll('img[data-hoch]').forEach(function (img) {
+    img.removeAttribute('srcset'); img.removeAttribute('sizes');
+    img.src = img.getAttribute('data-hoch');
+  });
+})();
+(function () {
+  if (!window.gsap || !window.ScrollTrigger) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+
+  document.documentElement.classList.add('js');
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* Weiches Scrollen (ScrollSmoother, Teil von GSAP) */
+  var smoother = null;
+  if (window.ScrollSmoother) {
+    gsap.registerPlugin(ScrollSmoother);
+    smoother = ScrollSmoother.create({ wrapper: '#smooth-wrapper', content: '#smooth-content', smooth: 0.9, effects: false, normalizeScroll: false });
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var id = a.getAttribute('href');
+        if (id.length < 2) return;
+        var ziel = document.querySelector(id);
+        if (!ziel) return;
+        e.preventDefault();
+        smoother.scrollTo(id === '#top' ? 0 : ziel, true, 'top top');
+        if (id === '#inhalt') ziel.focus({ preventScroll: true });
+      });
+    });
+  }
+
+  var mobile = window.matchMedia('(max-width: 700px)').matches;
+  var f = mobile ? 0.6 : 1;
+
+  /* Hero: jede Ebene bewegt sich unterschiedlich schnell (wie Osmo-Vorlage).
+     Person und Vordergrund laufen gleich schnell, damit die Füße auf dem Fels bleiben. */
+  var layersEl = document.querySelector('[data-parallax-layers]');
+  var tl = gsap.timeline({
+    scrollTrigger: { trigger: layersEl, start: '0% 0%', end: '100% 0%', scrub: smoother ? true : 0.6 }
+  });
+  [['1', 70], ['2', 55], ['3', 52], ['4', 12], ['5', 12]].forEach(function (l, i) {
+    tl.to(layersEl.querySelectorAll('[data-parallax-layer="' + l[0] + '"]'),
+      { yPercent: l[1] * f, ease: 'none' }, i === 0 ? undefined : '<');
+  });
+
+  /* Einstieg beim Laden: Ebenen und Titel setzen sich nacheinander, fertig nach 1,6 s.
+     Nur transform/opacity; das Scrubben oben nutzt yPercent, hier y in Pixeln. */
+  gsap.timeline({ defaults: { ease: 'expo.out' } })
+    .from('.parallax__layer-img[data-parallax-layer="1"]', { scale: 1.06, transformOrigin: '50% 100%', duration: 1.6 }, 0)
+    .from('.parallax__layer-img[data-parallax-layer="2"]', { y: 40, duration: 1.4 }, 0.05)
+    .from('.parallax__layer-img[data-parallax-layer="4"]', { y: 70, duration: 1.4 }, 0.1)
+    .from('.parallax__layer-img[data-parallax-layer="5"]', { y: 50, opacity: 0, duration: 1.3 }, 0.2)
+    .from('.parallax__title', { yPercent: 18, opacity: 0, duration: 1.3 }, 0.25)
+    .from('.nav', { opacity: 0, duration: 0.8 }, 0.6)
+    .from('.parallax__hint', { opacity: 0, duration: 0.6 }, 1.0);
+
+  /* Statement: Wörter erscheinen nacheinander beim Scrollen (Screenreader lesen den ganzen Satz) */
+  var split = document.querySelector('[data-split]');
+  if (split) {
+    split.setAttribute('aria-label', split.textContent.trim());
+    var nodes = Array.prototype.slice.call(split.childNodes);
+    split.innerHTML = '';
+    nodes.forEach(function (n) {
+      var isEm = n.nodeType === 1;
+      var words = n.textContent.trim().split(/\s+/).filter(Boolean);
+      words.forEach(function (w) {
+        var s = document.createElement('span');
+        s.className = 'word'; s.setAttribute('aria-hidden', 'true');
+        if (isEm) { var em = document.createElement('em'); em.textContent = w; s.appendChild(em); }
+        else s.textContent = w;
+        split.appendChild(s);
+        split.appendChild(document.createTextNode(' '));
+      });
+    });
+    gsap.fromTo(split.querySelectorAll('.word'),
+      { opacity: 0.18, yPercent: 10 },
+      { opacity: 1, yPercent: 0, stagger: 0.15, ease: 'none',
+        scrollTrigger: { trigger: split, start: 'top 85%', end: 'bottom 45%', scrub: true } });
+  }
+
+  /* Laufband: endlos, wird beim Scrollen schneller */
+  var track = document.querySelector('[data-marquee]');
+  if (track) {
+    var w = track.children[0].getBoundingClientRect().width;
+    var loop = gsap.to(track, { x: -w, duration: 22, ease: 'none', repeat: -1 });
+    ScrollTrigger.create({ trigger: track, start: 'top bottom', end: 'bottom top',
+      onUpdate: function (self) { gsap.to(loop, { timeScale: 1 + Math.min(Math.abs(self.getVelocity()) / 600, 3), duration: 0.4, overwrite: true }); } });
+  }
+
+  /* Leistungen: große Wörter schieben sich nacheinander ins Bild */
+  gsap.utils.toArray('.services__name').forEach(function (el, i) {
+    gsap.from(el, { xPercent: -8, opacity: 0, duration: 1.2, ease: 'expo.out', delay: i * 0.08,
+      scrollTrigger: { trigger: el, start: 'top 90%', once: true } });
+  });
+
+  /* Leistungen: ein Bild folgt dem Zeiger (nur feiner Zeiger, ab 1025 px) */
+  var services = document.querySelector('[data-services]');
+  var cursor = document.querySelector('[data-cursor]');
+  if (services && cursor && window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1025px)').matches) {
+    var qx = gsap.quickTo(cursor, 'x', { duration: 0.5, ease: 'power3' });
+    var qy = gsap.quickTo(cursor, 'y', { duration: 0.5, ease: 'power3' });
+    var bilder = cursor.querySelectorAll('img');
+    services.addEventListener('mousemove', function (ev) {
+      var r = services.getBoundingClientRect();
+      qx(ev.clientX - r.left); qy(ev.clientY - r.top);
+    });
+    services.querySelectorAll('[data-row]').forEach(function (row) {
+      row.addEventListener('mouseenter', function () {
+        var name = row.getAttribute('data-row');
+        bilder.forEach(function (img) { img.classList.toggle('ist-aktiv', img.getAttribute('data-bild') === name); });
+        cursor.classList.add('ist-sichtbar');
+      });
+      row.addEventListener('mouseleave', function () { cursor.classList.remove('ist-sichtbar'); });
+    });
+    window.addEventListener('blur', function () { cursor.classList.remove('ist-sichtbar'); });
+  }
+
+  /* Pakete: Karten heben sich nacheinander */
+  ScrollTrigger.batch('.pkg', { start: 'top 88%', once: true,
+    onEnter: function (els) { gsap.to(els, { opacity: 1, y: 0, duration: 1, ease: 'expo.out', stagger: 0.12 }); } });
+
+  /* Alles mit .reveal blendet einmal sanft ein */
+  gsap.utils.toArray('.reveal:not(.pkg)').forEach(function (el) {
+    gsap.to(el, { opacity: 1, y: 0, duration: 1.0, ease: 'expo.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
+  });
+
+  /* Maße nach Schriften/Bildern neu berechnen */
+  window.addEventListener('load', function () { ScrollTrigger.refresh(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
+})();
+</script>
+<script>
+/* Kontaktformular: prüft die Eingaben, baut die Nachricht und öffnet WhatsApp oder das Mailprogramm.
+   Läuft auch ohne GSAP. */
+(function () {
+  var WA_NUMMER = '4915906344961';   /* ohne + und ohne Leerzeichen */
+  var MAIL = 'ergun.eu@gmail.com';
+  var form = document.getElementById('anfrage');
+  if (!form) return;
+  var status = form.querySelector('[data-status]');
+
+  function fehler(el, text) {
+    var wrap = el.closest('.field'), out = wrap.querySelector('.field__error');
+    wrap.classList.toggle('hat-fehler', !!text);
+    if (out) out.textContent = text || '';
+    el.setAttribute('aria-invalid', text ? 'true' : 'false');
+  }
+  function pruefen() {
+    var ok = true, erster = null;
+    var name = form.name, mail = form.email, text = form.text;
+    if (!name.value.trim()) { fehler(name, 'Bitte Ihren Namen eintragen.'); ok = false; erster = erster || name; } else fehler(name, '');
+    var m = mail.value.trim();
+    if (!m) { fehler(mail, 'Bitte eine E-Mail-Adresse eintragen, damit ich antworten kann.'); ok = false; erster = erster || mail; }
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m)) { fehler(mail, 'Das sieht nicht nach einer E-Mail-Adresse aus.'); ok = false; erster = erster || mail; }
+    else fehler(mail, '');
+    if (!text.value.trim()) { fehler(text, 'Ein, zwei Sätze zum Projekt genügen.'); ok = false; erster = erster || text; } else fehler(text, '');
+    if (erster) erster.focus();
+    return ok;
+  }
+  function nachricht() {
+    var n = form.name.value.trim(), f = form.firma.value.trim(), p = form.paket.value.trim(), x = form.text.value.trim(), m = form.email.value.trim();
+    return 'Hallo, ich bin ' + n + (f ? ' von ' + f : '') + '.\n\n' +
+      (p ? 'Paket: ' + p + '\n\n' : '') +
+      x + '\n\n' +
+      'E-Mail für die Antwort: ' + m + '\n' +
+      'Gesendet über die Website.';
+  }
+  ['name', 'email', 'text'].forEach(function (k) {
+    form[k].addEventListener('input', function () { if (form[k].getAttribute('aria-invalid') === 'true') pruefen(); });
+  });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var weg = (e.submitter && e.submitter.value) || 'whatsapp';
+    if (!pruefen()) { status.textContent = ''; return; }
+    var m = nachricht();
+    if (weg === 'whatsapp') {
+      var win = window.open('https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(m), '_blank', 'noopener');
+      status.textContent = win ? 'WhatsApp ist geöffnet. Bitte dort auf Senden tippen.' : 'WhatsApp konnte nicht geöffnet werden. Bitte Pop-ups erlauben oder per E-Mail senden.';
+    } else {
+      var betreff = 'Projektanfrage' + (form.paket.value.trim() ? ' ' + form.paket.value.trim() : '') + ' über ERGUN.';
+      location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent(betreff) + '&body=' + encodeURIComponent(m);
+      status.textContent = 'Ihr Mailprogramm öffnet sich mit der fertigen Nachricht.';
+    }
+  });
+  /* Paket-Buttons tragen das Paket im Formular ein */
+  document.querySelectorAll('[data-paket]').forEach(function (a) {
+    a.addEventListener('click', function () { form.paket.value = a.getAttribute('data-paket'); });
+  });
+})();
+</script>
+</body>
+</html>
