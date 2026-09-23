@@ -2,11 +2,13 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Datenschutz – ERGUN.</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>
+html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
 @font-face { font-family: "Instrument Serif"; src: url("schriften/InstrumentSerif-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Geist"; src: url("schriften/Geist-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 :root { --bg:#0E0E0C; --text:#F2EFE8; --muted:#8A867D; --accent:#FF5A1F; --line:rgba(242,239,232,0.14); }
@@ -63,5 +65,14 @@ a:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
   <h2>7. Stand</h2>
   <p>September 2026. Diese Erklärung wird angepasst, wenn sich die Website oder die Rechtslage ändert.</p>
 </main>
+<script>
+/* Kein Zoomen: iPhone ignoriert user-scalable=no, daher Zwei-Finger-Zoom und Doppeltippen hier sperren */
+(function () {
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (t) { document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false }); });
+  document.addEventListener('touchmove', function (e) { if (e.touches && e.touches.length > 1) e.preventDefault(); }, { passive: false });
+  var zuletzt = 0;
+  document.addEventListener('touchend', function (e) { var jetzt = Date.now(); if (jetzt - zuletzt < 300 && !e.target.closest('input, textarea, select')) e.preventDefault(); zuletzt = jetzt; }, { passive: false });
+})();
+</script>
 </body>
 </html>

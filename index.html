@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>ERGUN. – Webdesigner</title>
 <meta name="description" content="Websites mit Design, Bewegung und eigenen Bildern. Drei Pakete mit festem Preis, entworfen und gebaut in Elmshorn.">
 <meta name="theme-color" content="#0E0E0C">
@@ -27,6 +27,8 @@
 <link rel="preload" href="schriften/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
 <style>
+html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
 /* Schriften liegen lokal (SIL Open Font License) – kein Google-Server */
 @font-face { font-family: "Instrument Serif"; src: url("schriften/InstrumentSerif-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: "Instrument Serif"; src: url("schriften/InstrumentSerif-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
@@ -1078,6 +1080,15 @@ body { overflow-x: clip; }
     });
   });
   aktualisieren();
+})();
+</script>
+<script>
+/* Kein Zoomen: iPhone ignoriert user-scalable=no, daher Zwei-Finger-Zoom und Doppeltippen hier sperren */
+(function () {
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (t) { document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false }); });
+  document.addEventListener('touchmove', function (e) { if (e.touches && e.touches.length > 1) e.preventDefault(); }, { passive: false });
+  var zuletzt = 0;
+  document.addEventListener('touchend', function (e) { var jetzt = Date.now(); if (jetzt - zuletzt < 300 && !e.target.closest('input, textarea, select')) e.preventDefault(); zuletzt = jetzt; }, { passive: false });
 })();
 </script>
 </body>
