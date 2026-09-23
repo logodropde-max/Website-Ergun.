@@ -377,33 +377,18 @@ body { overflow-x: clip; }
   .vorschau { position: static; }
 }
 
-/* ---------- Hosting & Betreuung ---------- */
-.abo { position: relative; padding: 4svh var(--pad) 12svh; }
-.pkg--abo { padding: 30px 26px 26px; }
-.pkg--abo .pkg__price { font-size: clamp(2.2rem, 3.8vw, 3.2rem); }
-.pkg__satz { color: var(--muted); font-size: 15px; text-wrap: pretty; margin-top: -8px; }
-.domain { margin-top: 64px; display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 32px 56px; padding-top: 40px; border-top: 1px solid var(--line); }
-.domain__titel { font-family: var(--serif); font-size: clamp(2rem, 3.6vw, 3rem); line-height: 1; letter-spacing: -0.02em; }
-.domain__titel + p { margin-top: 14px; color: var(--muted); max-width: 34ch; text-wrap: pretty; }
-.domain__liste { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 32px; }
-.domain__liste li { padding-left: 18px; position: relative; }
-.domain__liste li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
-.domain__liste strong { display: block; font-weight: 500; margin-bottom: 2px; }
-.domain__liste span { color: var(--muted); font-size: 14.5px; }
-
-/* ---------- Extras ---------- */
-.extras { padding: 6svh var(--pad) 12svh; }
-.extras__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
-.extra { background: var(--bg); padding: 24px 22px 22px; display: grid; gap: 8px; align-content: start; transition: background-color 300ms var(--ease); }
-@media (hover: hover) and (pointer: fine) { .extra:hover { background: #151412; } }
-.extra h3 { font-family: var(--serif); font-size: 1.6rem; line-height: 1.05; letter-spacing: -0.01em; }
-.extra p { color: var(--muted); font-size: 14.5px; text-wrap: pretty; }
-.extra b { font-weight: 500; font-size: 14px; color: var(--text); font-variant-numeric: tabular-nums; }
-.extra--wunsch { background: linear-gradient(180deg, rgba(255,90,31,0.10), rgba(255,90,31,0.02)); }
-.extra--wunsch a { color: var(--accent); font-size: 14px; font-weight: 500; }
-@media (max-width: 1024px) { .extras__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 900px) { .domain { grid-template-columns: 1fr; } }
-@media (max-width: 560px) { .domain__liste { grid-template-columns: 1fr; } .extras__grid { grid-template-columns: 1fr; } .extra { padding: 16px 18px; gap: 4px; grid-template-columns: 1fr auto; } .extra h3 { font-size: 1.35rem; } .extra p { grid-column: 1 / -1; order: 3; } .extra b { align-self: center; } }
+/* ---------- Pakete: Monatspreis fuer Hosting, Domain und Pflege ---------- */
+.pkg__abo { border-top: 1px solid var(--line); padding-top: 16px; display: grid; gap: 10px; }
+.pkg__abo-kopf { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.pkg__abo-preis { font-family: var(--serif); font-size: 1.9rem; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.pkg__abo-preis small { font-family: var(--sans); font-size: 13px; color: var(--muted); letter-spacing: 0.02em; }
+.pkg__abo-titel { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-align: right; }
+.pkg__abo ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
+.pkg__abo li { position: relative; padding-left: 16px; }
+.pkg__abo li::before { content: "+"; position: absolute; left: 0; color: var(--accent); }
+.packages__wuensche { margin-top: 36px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; }
+.packages__wuensche strong { font-weight: 500; font-size: 14px; margin-right: 6px; }
+.packages__wuensche span { font-size: 13.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; }
 .chip--klein span { min-height: 40px; padding: 6px 14px; font-size: 13.5px; }
 
 /* ---------- Footer ---------- */
@@ -435,8 +420,6 @@ body { overflow-x: clip; }
   .parallax__layer-img--sky { top: -14%; }
   .parallax__title { font-size: 21vw; }
   .parallax__hint { display: none; }
-  .nav__links { gap: 16px; }
-  .nav { font-size: 13.5px; }
   .services__row { grid-template-columns: 36px minmax(0, 1fr); }
   .services__desc { grid-column: 2; justify-self: start; text-align: left; max-width: none; }
   .form__row { grid-template-columns: 1fr; }
@@ -495,7 +478,6 @@ body { overflow-x: clip; }
   <a class="nav__mark" href="#top" aria-label="ERGUN – nach oben">ERGUN<span class="dot">.</span></a>
   <nav class="nav__links" aria-label="Seitennavigation">
     <a class="nav__link" href="#pakete">Pakete</a>
-    <a class="nav__link" href="#hosting">Hosting</a>
     <a class="nav__link" href="#kontakt">Projekt anfragen</a>
   </nav>
 </header>
@@ -528,7 +510,7 @@ body { overflow-x: clip; }
         <span class="packages__kicker reveal">Pakete · Festpreis</span>
         <h2 class="packages__title reveal" id="pakete-titel">Wählen Sie<br>Ihr Paket.</h2>
       </div>
-      <p class="packages__note reveal">Einmalpreis für die Seite. Sie sehen sie vorab im Browser und bekommen am Ende alle Dateien. Hosting und Pflege gibt es auf Wunsch dazu, monatlich.</p>
+      <p class="packages__note reveal">Einmalpreis für die Seite, danach ein kleiner Monatsbetrag für Hosting, Domain und Pflege, monatlich kündbar. Domain und E-Mail richte ich ein, die Domain bleibt Ihre.</p>
     </div>
     <ul class="packages__grid">
       <li class="pkg reveal">
@@ -544,6 +526,15 @@ body { overflow-x: clip; }
           <li>Kontakt per WhatsApp &amp; E-Mail</li>
           <li>Impressum &amp; Datenschutz-Vorlage</li>
         </ul>
+        <div class="pkg__abo">
+          <div class="pkg__abo-kopf"><span class="pkg__abo-preis">+ 15 €<small> / Monat</small></span><span class="pkg__abo-titel">Hosting, Domain<br>&amp; Pflege</span></div>
+          <ul>
+            <li>Hosting, https und Updates</li>
+            <li>Domain (.de) inklusive, von mir verwaltet</li>
+            <li>Jede Version gesichert</li>
+            <li>1 kleine Änderung im Monat</li>
+          </ul>
+        </div>
         <a class="btn pkg__cta" href="#kontakt" data-paket="Onepager">Onepager anfragen</a>
       </li>
       <li class="pkg pkg--featured reveal">
@@ -566,6 +557,15 @@ body { overflow-x: clip; }
           <li>Texte gemeinsam ausgearbeitet</li>
           <li>1 Korrekturrunde inklusive</li>
         </ul>
+        <div class="pkg__abo">
+          <div class="pkg__abo-kopf"><span class="pkg__abo-preis">+ 29 €<small> / Monat</small></span><span class="pkg__abo-titel">Hosting, Domain<br>&amp; Pflege</span></div>
+          <ul>
+            <li>Alles aus der Onepager-Pflege</li>
+            <li>E-Mail-Adresse mit Ihrer Domain</li>
+            <li>Änderungen bis 1 Stunde im Monat</li>
+            <li>Google-Unternehmensprofil gepflegt</li>
+          </ul>
+        </div>
         <a class="btn btn--wa pkg__cta" href="#kontakt" data-paket="Business">Business anfragen</a>
       </li>
       <li class="pkg reveal">
@@ -589,11 +589,30 @@ body { overflow-x: clip; }
           <li>Bis zu 10 Seiten</li>
           <li>Texte komplett inklusive</li>
           <li>2 Korrekturrunden</li>
-          <li>1 Monat Betreuung nach Livegang</li>
         </ul>
+        <div class="pkg__abo">
+          <div class="pkg__abo-kopf"><span class="pkg__abo-preis">+ 49 €<small> / Monat</small></span><span class="pkg__abo-titel">Hosting, Domain<br>&amp; Pflege</span></div>
+          <ul>
+            <li>Alles aus der Business-Pflege</li>
+            <li>Änderungen bis 3 Stunden im Monat</li>
+            <li>Google-Check jedes Quartal</li>
+            <li>Antwort am nächsten Werktag</li>
+          </ul>
+        </div>
         <a class="btn pkg__cta" href="#kontakt" data-paket="Individuell">Individuell anfragen</a>
       </li>
     </ul>
+    <div class="packages__wuensche reveal">
+      <strong>Auf Wunsch dazu:</strong>
+      <span>Online-Termine</span>
+      <span>Speisekarte oder Preisliste</span>
+      <span>Bildergalerie</span>
+      <span>Mehrsprachig</span>
+      <span>Blog</span>
+      <span>Logo</span>
+      <span>Newsletter</span>
+      <span>Datei-Upload</span>
+    </div>
     <div class="packages__trust reveal">
       <span>Persönlich von Emre Ergun</span>
       <span>Vorschau im Browser vor dem Start</span>
@@ -601,99 +620,6 @@ body { overflow-x: clip; }
     </div>
   </section>
 
-  <section class="packages abo" id="hosting" aria-labelledby="hosting-titel">
-    <div class="packages__head">
-      <div>
-        <span class="packages__kicker reveal">Hosting &amp; Betreuung · monatlich</span>
-        <h2 class="packages__title reveal" id="hosting-titel">Ich kümmere mich<br>um den Rest.</h2>
-      </div>
-      <p class="packages__note reveal">Ihre Seite läuft bei mir, die Domain verwalte ich. Sie schreiben mir, wenn sich etwas ändern soll.</p>
-    </div>
-    <ul class="packages__grid">
-      <li class="pkg pkg--abo reveal">
-        <div class="pkg__kopf"><h3 class="pkg__name">Basis</h3></div>
-        <p class="pkg__price">15 €<small>pro Monat · monatlich kündbar</small></p>
-        <p class="pkg__satz">Ihre Seite ist online, sicher und schnell. Um die Technik müssen Sie sich nicht kümmern.</p>
-        <ul class="pkg__list">
-          <li>Hosting auf schnellen Servern</li>
-          <li>Domain inklusive (.de) und verwaltet</li>
-          <li>SSL-Verschlüsselung (https)</li>
-          <li>Technik-Updates und Überwachung</li>
-          <li>Jede Version gesichert</li>
-          <li>1 kleine Änderung pro Monat</li>
-        </ul>
-        <a class="btn pkg__cta" href="#kontakt" data-hosting="Basis">Basis wählen</a>
-      </li>
-      <li class="pkg pkg--abo pkg--featured reveal">
-        <div class="pkg__kopf"><h3 class="pkg__name">Plus</h3></div>
-        <p class="pkg__price">29 €<small>pro Monat · monatlich kündbar</small></p>
-        <p class="pkg__satz">Ihre Seite bleibt aktuell. Sie schicken mir Änderungen, ich setze sie um.</p>
-        <ul class="pkg__list">
-          <li>Alles aus Basis</li>
-          <li>E-Mail-Adresse mit Ihrer Domain</li>
-          <li>Änderungen bis 1 Stunde pro Monat</li>
-          <li>Öffnungszeiten, Preise und Bilder aktuell</li>
-          <li>Google-Unternehmensprofil gepflegt</li>
-          <li>Besucherzahlen ohne Cookies, monatlich</li>
-        </ul>
-        <a class="btn btn--wa pkg__cta" href="#kontakt" data-hosting="Plus">Plus wählen</a>
-      </li>
-      <li class="pkg pkg--abo reveal">
-        <div class="pkg__kopf"><h3 class="pkg__name">Pro</h3></div>
-        <p class="pkg__price">49 €<small>pro Monat · monatlich kündbar</small></p>
-        <p class="pkg__satz">Für Unternehmen, deren Seite mitwachsen soll.</p>
-        <ul class="pkg__list">
-          <li>Alles aus Plus</li>
-          <li>Änderungen bis 3 Stunden pro Monat</li>
-          <li>Aktionen und Saison-Banner</li>
-          <li>Google-Check und Verbesserungen jedes Quartal</li>
-          <li>Neue Inhalte und Bereiche nach Absprache</li>
-          <li>Antwort am nächsten Werktag</li>
-        </ul>
-        <a class="btn pkg__cta" href="#kontakt" data-hosting="Pro">Pro wählen</a>
-      </li>
-    </ul>
-    <div class="domain">
-      <div class="reveal">
-        <h3 class="domain__titel">Domain-Service,<br>in jedem Abo.</h3>
-        <p>Sie brauchen keinen eigenen Vertrag bei einem Anbieter. Ich richte alles ein und behalte es im Blick.</p>
-      </div>
-      <ul class="domain__liste reveal">
-          <li><strong>Domain finden und sichern</strong><span>Ich prüfe Ihren Wunschnamen und registriere ihn.</span></li>
-          <li><strong>Umzug Ihrer Domain</strong><span>Sie haben schon eine Adresse? Ich ziehe sie ohne Ausfall um.</span></li>
-          <li><strong>E-Mail-Adressen</strong><span>info@ihre-firma.de einrichten, auf Handy und PC.</span></li>
-          <li><strong>https automatisch</strong><span>SSL-Zertifikat wird eingerichtet und verlängert.</span></li>
-          <li><strong>Weiterleitungen</strong><span>Mit und ohne www, alte Unterseiten auf neue.</span></li>
-          <li><strong>DNS-Einträge</strong><span>Für Google, Microsoft 365, Newsletter und Co.</span></li>
-          <li><strong>Verlängerung im Blick</strong><span>Keine abgelaufene Domain, keine verpassten Fristen.</span></li>
-          <li><strong>Ihre Domain bleibt Ihre</strong><span>Wechsel zu einem anderen Anbieter jederzeit möglich.</span></li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="extras" id="extras" aria-labelledby="extras-titel">
-    <div class="packages__head">
-      <div>
-        <span class="packages__kicker reveal">Extras · einmalig</span>
-        <h2 class="packages__title reveal" id="extras-titel">Was Sie sich<br>noch wünschen.</h2>
-      </div>
-      <p class="packages__note reveal">Zu jedem Paket dazu buchbar. Kreuzen Sie im Formular einfach an, was Sie interessiert.</p>
-    </div>
-    <ul class="extras__grid reveal">
-      <li class="extra"><h3>Online-Termine</h3><p>Kunden buchen freie Zeiten direkt auf der Seite.</p><b>ab 60 €</b></li>
-      <li class="extra"><h3>Speisekarte oder Preisliste</h3><p>Übersichtlich, am Handy gut lesbar, leicht zu ändern.</p><b>ab 30 €</b></li>
-      <li class="extra"><h3>Bildergalerie</h3><p>Arbeiten, Räume oder Produkte groß in Szene gesetzt.</p><b>ab 30 €</b></li>
-      <li class="extra"><h3>Anfahrt und Öffnungszeiten</h3><p>Karte, Wegbeschreibung und Zeiten auf einen Blick.</p><b>ab 20 €</b></li>
-      <li class="extra"><h3>Mehrsprachig</h3><p>Zum Beispiel Englisch oder Türkisch, pro Sprache.</p><b>ab 80 €</b></li>
-      <li class="extra"><h3>Neuigkeiten oder Blog</h3><p>Aktuelles, Angebote und Beiträge für Google.</p><b>ab 60 €</b></li>
-      <li class="extra"><h3>Google-Unternehmensprofil</h3><p>Einrichten, Fotos, Zeiten, Verbindung zur Seite.</p><b>ab 40 €</b></li>
-      <li class="extra"><h3>Logo und Farben</h3><p>Ein klares Zeichen, das überall gleich aussieht.</p><b>ab 80 €</b></li>
-      <li class="extra"><h3>Eigene KI-Bilder und Videos</h3><p>Bilder und kurze Clips passend zu Ihrer Branche.</p><b>ab 40 €</b></li>
-      <li class="extra"><h3>Anfrage mit Datei-Upload</h3><p>Kunden schicken Fotos oder Unterlagen gleich mit.</p><b>ab 40 €</b></li>
-      <li class="extra"><h3>Newsletter-Anmeldung</h3><p>Stammkunden per E-Mail erreichen.</p><b>ab 40 €</b></li>
-      <li class="extra extra--wunsch"><h3>Ihr Wunsch fehlt?</h3><p>Schreiben Sie ihn ins Formular. Fast alles ist machbar.</p><a href="#kontakt">Wunsch schicken</a></li>
-    </ul>
-  </section>
 
   <section class="contact" id="kontakt" aria-labelledby="kontakt-titel">
     <div class="contact__kopf">
@@ -717,17 +643,7 @@ body { overflow-x: clip; }
           </div>
         </fieldset>
         <fieldset class="field field--chips">
-          <legend>Hosting &amp; Betreuung</legend>
-          <div class="chips">
-            <label class="chip"><input type="radio" name="hosting" value="Ohne"><span>Ohne</span></label>
-            <label class="chip"><input type="radio" name="hosting" value="Basis"><span>Basis · 15 €/Monat</span></label>
-            <label class="chip"><input type="radio" name="hosting" value="Plus"><span>Plus · 29 €/Monat</span></label>
-            <label class="chip"><input type="radio" name="hosting" value="Pro"><span>Pro · 49 €/Monat</span></label>
-            <label class="chip"><input type="radio" name="hosting" value="Noch unklar" checked><span>Noch unklar</span></label>
-          </div>
-        </fieldset>
-        <fieldset class="field field--chips">
-          <legend>Extras (optional, mehrere möglich)</legend>
+          <legend>Wünsche (optional, mehrere möglich)</legend>
           <div class="chips">
             <label class="chip chip--klein"><input type="checkbox" name="extras" value="Online-Termine"><span>Online-Termine</span></label>
             <label class="chip chip--klein"><input type="checkbox" name="extras" value="Speisekarte/Preisliste"><span>Speisekarte/Preisliste</span></label>
@@ -1002,16 +918,14 @@ body { overflow-x: clip; }
   }
   function paket() { var r = form.querySelector('input[name="paket"]:checked'); return r && r.value !== 'Noch unklar' ? r.value : ''; }
   function wert(k) { return form.elements[k].value.trim(); }
-  function hosting() { var r = form.querySelector('input[name="hosting"]:checked'); return r && r.value !== 'Noch unklar' ? r.value : ''; }
   function extras() { return [].map.call(form.querySelectorAll('input[name="extras"]:checked'), function (c) { return c.value; }); }
   function nachricht(vorschau) {
-    var n = wert('name'), f = wert('firma'), p = paket(), h = hosting(), e = extras(), x = wert('text'), m = wert('email');
+    var n = wert('name'), f = wert('firma'), p = paket(), e = extras(), x = wert('text'), m = wert('email');
     if (vorschau) { n = n || '[Ihr Name]'; x = x || '[Worum geht es?]'; m = m || '[Ihre E-Mail]'; }
     return 'Hallo, ich bin ' + n + (f ? ' von ' + f : '') + '.\n\n' +
       (p ? 'Paket: ' + p + '\n' : '') +
-      (h ? 'Hosting & Betreuung: ' + (h === 'Ohne' ? 'ohne' : h) + '\n' : '') +
-      (e.length ? 'Extras: ' + e.join(', ') + '\n' : '') +
-      ((p || h || e.length) ? '\n' : '') + x + '\n\n' +
+      (e.length ? 'Wünsche: ' + e.join(', ') + '\n' : '') +
+      ((p || e.length) ? '\n' : '') + x + '\n\n' +
       'E-Mail für die Antwort: ' + m + '\n' + 'Gesendet über die Website.';
   }
   function aktualisieren() {
@@ -1043,13 +957,6 @@ body { overflow-x: clip; }
   document.querySelectorAll('[data-paket]').forEach(function (a) {
     a.addEventListener('click', function () {
       var r = form.querySelector('input[name="paket"][value="' + a.getAttribute('data-paket') + '"]');
-      if (r) { r.checked = true; aktualisieren(); }
-    });
-  });
-  /* Abo-Buttons waehlen das passende Abo im Formular */
-  document.querySelectorAll('[data-hosting]').forEach(function (a) {
-    a.addEventListener('click', function () {
-      var r = form.querySelector('input[name="hosting"][value="' + a.getAttribute('data-hosting') + '"]');
       if (r) { r.checked = true; aktualisieren(); }
     });
   });

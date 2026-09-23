@@ -77,5 +77,6 @@ Hochladen: `index.html`, `impressum.html`, `datenschutz.html`, `favicon*`, `appl
 - Hero-Zeile heißt nur **„Webdesigner"** und steht **über** dem Namen (`.parallax__rolle { order: -1 }`); auf der Sonne war sie unlesbar. „Elmshorn" steht nur noch in der Google-Beschreibung (Meta) und im Impressum.
 - Kontakt: Paket-Chips (Radio), Prüfung beim Verlassen eines Feldes, Live-Vorschau der WhatsApp-Nachricht (`[data-vorschau]`).
 - Intro: Start mit „E.", der Punkt zieht nach rechts und jeder Buchstabe steigt auf, wenn der Punkt an ihm vorbei ist (`aufdecken()` im Intro-Skript), dann blendet die Szene auf.
+- Abschnitte nach den Paketen: `#hosting` (Abo-Karten `.pkg--abo`, Domain-Service `.domain`) und `#extras` (`.extras__grid`). Formular hat zusätzlich `hosting` (Radio) und `extras` (Checkboxen); Buttons mit `data-hosting` wählen das Abo vor. Preise stehen in `02 Preise/Pakete & Preise.md`.
 - Porträt im Kontakt: `bilder/kontakt/emre-264.webp` / `-144.webp`, erzeugt mit `bilder/hero/4k/portrait.py` aus `03 Marke/emre-portrait-original.jpg`. Glut, Goldschein und Lichtkreis-Maske wurden am 23.09. entfernt (zu viele Effekte, ruckelte).
 - Berge: `bilder/hero/4k/berge.py` füllt den Fuß des Kamms und gleicht Kamm und Vordergrund an. Originale liegen als `*-vor-angleich.webp` in `4k/`.
