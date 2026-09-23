@@ -3,7 +3,7 @@
 Eine HTML-Datei, kein Build, nichts von fremden Servern. Aufbau nach der Osmo-Parallax-Vorlage:
 riesiger Name „ERGUN." oben, Sonne dahinter, Emre selbst auf dem Felsgrat davor, Berge schieben sich
 beim Scrollen über den Namen. Danach direkt die Pakete, dann Kontakt mit Formular.
-**Doppelklick auf `index.html` genügt zum Ansehen.** Live-Vorschau: https://claude.ai/artifact/StgMnMKTGwnpTupKmEFNAD
+**Live: https://website-ergun.vercel.app** (Vercel, automatisch aus GitHub `logodropde-max/Website-Ergun.`). Doppelklick auf `index.html` zeigt den lokalen Stand.
 
 ## Dateien
 | Datei | Wofür |
@@ -47,8 +47,7 @@ Handy: Bewegung × 0,6. `prefers-reduced-motion`: Standbild.
 ## Das musst du noch entscheiden / prüfen
 | Was | Wo |
 |---|---|
-| Domain – Platzhalter `DEINE-DOMAIN.de` | `og:image` in `index.html` |
-| Hosting-Anbieter | `datenschutz.html`, Abschnitt 3 |
+| Eigene Domain (aktuell https://website-ergun.vercel.app) | Vercel → Domains; danach `og:image`/Canonical in `index.html` anpassen |
 | Datenschutz rechtlich prüfen lassen | `datenschutz.html` |
 | Gewerbebezeichnung im Impressum | `impressum.html` |
 | Preise (80 / 250 / 400 €) endgültig? | `index.html`, Abschnitt Pakete · `02 Preise` |

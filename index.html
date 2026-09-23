@@ -70,7 +70,8 @@ img { display: block; max-width: 100%; height: auto; }
   display: flex; justify-content: space-between; align-items: center;
   padding: 22px var(--pad);
   font-size: 14px;
-  mix-blend-mode: difference;
+  color: var(--text);
+  text-shadow: 0 1px 12px rgba(14,14,12,0.6);
 }
 .nav__mark { font-family: var(--serif); font-size: 22px; letter-spacing: 0.01em; }
 .nav__links { display: flex; gap: 28px; }
@@ -92,7 +93,7 @@ img { display: block; max-width: 100%; height: auto; }
   width: 100%; height: 118%;
   object-fit: cover; object-position: 50% 100%;
   pointer-events: none; user-select: none;
-  will-change: transform;
+  will-change: transform; backface-visibility: hidden; transform: translateZ(0);
 }
 .parallax__layer-title {
   position: absolute; top: 0; left: 0; width: 100%; height: 100svh;
@@ -107,13 +108,11 @@ img { display: block; max-width: 100%; height: auto; }
   letter-spacing: 0.02em;
   text-transform: uppercase;
   white-space: nowrap;
-  /* warmes Off-White, unten leicht ins Abendlicht – passt zu Glut und Felsen */
-  background: linear-gradient(180deg, #F7F3EC 0%, #F2EFE8 55%, #E9C9A8 100%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  filter: drop-shadow(0 0.03em 0.25em rgba(0,0,0,0.45));
+  color: #F4EEE4;
+  text-shadow: 0 0.03em 0.2em rgba(0,0,0,0.45);
 }
-.parallax__title .dot, .nav__mark .dot { color: var(--accent); -webkit-text-fill-color: var(--accent); }
-.parallax__title .dot { text-shadow: 0 0 0.35em rgba(255,140,60,0.7); filter: none; }
+.parallax__title .dot, .nav__mark .dot { color: var(--accent); }
+.parallax__title .dot { text-shadow: 0 0 0.35em rgba(255,140,60,0.7); }
 .nav__mark { text-transform: uppercase; letter-spacing: 0.06em; font-size: 18px; }
 .parallax__layer-img--sky { top: -26%; }
 /* Sonne/Glut hinter dem Titel – bewegt sich mit dem Himmel */
@@ -501,7 +500,8 @@ img { display: block; max-width: 100%; height: auto; }
   var smoother = null;
   if (window.ScrollSmoother) {
     gsap.registerPlugin(ScrollSmoother);
-    smoother = ScrollSmoother.create({ wrapper: '#smooth-wrapper', content: '#smooth-content', smooth: 0.9, effects: false, normalizeScroll: false });
+    var touch = window.matchMedia('(pointer: coarse)').matches;
+    smoother = ScrollSmoother.create({ wrapper: '#smooth-wrapper', content: '#smooth-content', smooth: 0.9, smoothTouch: 0.12, effects: false, normalizeScroll: touch, ignoreMobileResize: true });
     document.querySelectorAll('a[href^="#"]').forEach(function (a) {
       a.addEventListener('click', function (e) {
         var id = a.getAttribute('href');
@@ -522,7 +522,7 @@ img { display: block; max-width: 100%; height: auto; }
      Person und Vordergrund laufen gleich schnell, damit die Füße auf dem Fels bleiben. */
   var layersEl = document.querySelector('[data-parallax-layers]');
   var tl = gsap.timeline({
-    scrollTrigger: { trigger: layersEl, start: '0% 0%', end: '100% 0%', scrub: smoother ? true : 0.6 }
+    scrollTrigger: { trigger: layersEl, start: '0% 0%', end: '100% 0%', scrub: (smoother && !window.matchMedia('(pointer: coarse)').matches) ? true : 0.35 }
   });
   [['1', 70], ['2', 55], ['3', 52], ['4', 12], ['5', 12]].forEach(function (l, i) {
     tl.to(layersEl.querySelectorAll('[data-parallax-layer="' + l[0] + '"]'),
