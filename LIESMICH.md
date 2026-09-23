@@ -26,7 +26,7 @@ beim Scrollen über den Namen. Danach direkt die Pakete, dann Kontakt mit Formul
 ## Ebenen und Bewegung
 | Ebene | Tempo beim Scrollen | Besonderheit |
 |---|---|---|
-| 1 Himmel + Sonne | 70 | am Desktop um 26 % nach oben versetzt (`.parallax__layer-img--sky`), damit die Sonne hinter dem Namen steht; am Handy −14 % |
+| 1 Himmel + Sonne | 70 | am Desktop um 15 % nach oben versetzt (`.parallax__layer-img--sky`), damit die Sonne frei zwischen Name und Emre steht; am Handy −14 % |
 | 2 Bergkamm | 55 | |
 | 3 Name „ERGUN." | 52 | sitzt oben (`padding-bottom: 54svh`), wandert beim Scrollen hinter Person und Felsen |
 | 4 Vordergrund | 12 | |
@@ -69,7 +69,8 @@ Hochladen: `index.html`, `impressum.html`, `datenschutz.html`, `favicon*`, `appl
 `bilder/hero/*.webp`, `bilder/og.jpg`. Ordner `bilder/hero/4k/` und alle PNG weglassen. Plan: `08 Projekte/Deployment.md`.
 
 ## Pakete & Kontakt (Stand 23.09., Claude Code)
-- Jede Paketkarte hat eine lebende Vorschau (`.pkg__demo`): Handy mit `bilder/demo/onepager.webp`, Stapel aus `bilder/demo/seite-*.webp`, Mini-Parallax aus den `*-1920.webp`-Ebenen. Neu erzeugen nach Änderungen: `bilder/hero/4k/demos_rendern.py` (braucht lokalen Server auf Port 8788).
+- Jede Paketkarte hat eine lebende Vorschau (`.pkg__demo`): Handy mit `bilder/demo/onepager.webp`, Stapel aus `bilder/demo/seite-*.webp`, Mini-Parallax aus den `*-1920.webp`-Ebenen. Neu erzeugen nach Änderungen: `bilder/hero/4k/demos_rendern.py` (braucht lokalen Server auf Port 8789). Mini-Parallax: Himmel `top: -22%`, Schriftzug oben (4 %), Sonne steht frei darunter; beim Scrollen bewegen sich Sonne und Schrift kaum, damit sie sich nicht kreuzen.
+- Hero-Zeile heißt nur **„Webdesigner"** und steht **über** dem Namen (`.parallax__rolle { order: -1 }`); auf der Sonne war sie unlesbar. „Elmshorn" steht nur noch in der Google-Beschreibung (Meta) und im Impressum.
 - Kontakt: Paket-Chips (Radio), Prüfung beim Verlassen eines Feldes, Live-Vorschau der WhatsApp-Nachricht (`[data-vorschau]`).
 - Intro: Start mit „E.", Punkt = Sonne (Glut über CSS-Variablen `--glut/--glutO`), goldener Schein über die Buchstaben, dann Entfalten und Aufgang aus dem Punkt.
 - Berge: `bilder/hero/4k/berge.py` füllt den Fuß des Kamms und gleicht Kamm und Vordergrund an. Originale liegen als `*-vor-angleich.webp` in `4k/`.

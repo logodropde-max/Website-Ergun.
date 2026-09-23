@@ -77,41 +77,11 @@ html.intro .parallax__title { opacity: 0; }
   text-shadow: 0 0.03em 0.2em rgba(0,0,0,0.45);
   transform-origin: 50% 50%; will-change: transform;
 }
-.loader__name .dot { color: var(--accent); text-shadow: 0 0 0.35em rgba(255,140,60,0.7); display: inline-block; }
+.loader__name .dot { color: var(--accent); display: inline-block; }
 .loader__maske { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.06em 0 0.1em; margin: -0.06em 0 -0.1em; }
 .loader__buchstabe { display: inline-block; will-change: transform; }
-.loader__balken { position: absolute; left: 50%; bottom: 14svh; width: min(200px, 44vw); height: 1px; background: var(--line); transform: translateX(-50%); overflow: hidden; }
-.loader__balken span { display: block; height: 100%; background: var(--accent); transform: scaleX(0); transform-origin: left; }
 @media (max-width: 700px) { .loader__name { font-size: 21vw; } }
 
-/* Aufgang: die Szene oeffnet sich als weicher Lichtkreis hinter dem Namen */
-.aufgang #smooth-wrapper {
-  -webkit-mask-image: radial-gradient(circle at var(--ax, 50%) var(--ay, 40%), #000 calc(var(--r, 0px) * 0.62), transparent var(--r, 0px));
-          mask-image: radial-gradient(circle at var(--ax, 50%) var(--ay, 40%), #000 calc(var(--r, 0px) * 0.62), transparent var(--r, 0px));
-}
-
-/* Intro als Sonnenaufgang: der Punkt ist die Sonne, das E wird angeleuchtet */
-.loader__balken { display: none !important; }
-.loader__buchstabe {
-  background: linear-gradient(100deg, #F4EEE4 0%, #F4EEE4 36%, #FFE2B8 45%, #FFB066 50%, #FFE2B8 55%, #F4EEE4 64%, #F4EEE4 100%);
-  background-size: 300% 100%; background-position: 100% 0%;
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-}
-.loader__name { --glut: 0.25; --glutO: 0.3; }
-.loader__name .dot { position: relative; }
-.loader__name .dot::before {
-  content: ""; position: absolute; left: 50%; top: 72%; width: 5em; height: 5em; border-radius: 50%;
-  transform: translate(-50%, -50%) scale(var(--glut)); opacity: var(--glutO);
-  background: radial-gradient(circle, rgba(255,214,160,0.85) 0%, rgba(255,140,60,0.45) 22%, rgba(255,90,31,0.12) 48%, rgba(14,14,12,0) 70%);
-  z-index: -1; pointer-events: none;
-}
-.loader__name .dot::after {
-  content: ""; position: absolute; left: 50%; top: 72%; width: 1.2em; height: 1.2em; border-radius: 50%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(255,160,80,0.55), rgba(255,90,31,0) 70%);
-  animation: sonnenatem 2.2s ease-in-out infinite; pointer-events: none;
-}
-@keyframes sonnenatem { 0%, 100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; } 50% { transform: translate(-50%, -50%) scale(1.35); opacity: 1; } }
 
 /* ---------- Navigation ---------- */
 .nav {
@@ -161,16 +131,8 @@ html.intro .parallax__title { opacity: 0; }
   text-shadow: 0 0.03em 0.2em rgba(0,0,0,0.45);
 }
 .parallax__title .dot, .nav__mark .dot { color: var(--accent); }
-.parallax__title .dot { text-shadow: 0 0 0.35em rgba(255,140,60,0.7); }
 .nav__mark { text-transform: uppercase; letter-spacing: 0.06em; font-size: 18px; }
 .parallax__layer-img--sky { top: -15%; }
-/* Sonne/Glut hinter dem Titel – bewegt sich mit dem Himmel */
-.parallax__glow {
-  position: absolute; left: 50%; top: 4%;
-  width: 60vmin; height: 60vmin; transform: translateX(-50%);
-  background: radial-gradient(circle, rgba(255,200,150,0.22) 0%, rgba(255,120,50,0.12) 30%, rgba(14,14,12,0) 65%);
-  pointer-events: none; will-change: transform;
-}
 .parallax__fade {
   position: absolute; left: 0; right: 0; bottom: -2px; height: 38%;
   background: linear-gradient(to top, var(--bg) 12%, rgba(14,14,12,0.85) 40%, rgba(14,14,12,0));
@@ -252,7 +214,7 @@ html.intro .parallax__title { opacity: 0; }
 .packages__kicker { display: block; margin-bottom: 18px; color: var(--accent); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; }
 .pkg--featured { border-color: rgba(255,90,31,0.75); }
 .pkg--featured::before {
-  content: "Empfehlung"; position: absolute; top: -11px; left: 28px;
+  content: "Empfehlung"; position: absolute; top: 24px; right: 26px; z-index: 10;
   padding: 4px 11px; background: var(--accent); color: var(--bg);
   font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; border-radius: 999px;
 }
@@ -345,7 +307,8 @@ html.intro .parallax__title { opacity: 0; }
 .nav:focus-within { transform: none; }
 
 /* ---------- Pakete v2: jede Karte zeigt, was man bekommt ---------- */
-.packages { position: relative; }
+.packages { position: relative; overflow-x: clip; }
+body { overflow-x: clip; }
 .packages::before {
   content: ""; position: absolute; left: 50%; top: 0; width: 120vmin; height: 60vmin; transform: translate(-50%, -30%);
   background: radial-gradient(closest-side, rgba(255,110,40,0.10), rgba(14,14,12,0)); pointer-events: none;
@@ -445,10 +408,30 @@ html.intro .parallax__title { opacity: 0; }
   .form__actions .btn { flex: 1 1 100%; }
 }
 
+/* ---------- Parallax ohne JavaScript: der Browser koppelt die Ebenen direkt ans Scrollen ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+  @supports (animation-timeline: view()) {
+    .parallax__visuals { view-timeline: --held block; }
+    [data-parallax-layer] { animation: ebene linear both; animation-timeline: --held; animation-range: exit-crossing 0% exit-crossing 100%; }
+    [data-parallax-layer="1"] { --weg: 70%; }
+    [data-parallax-layer="2"] { --weg: 55%; }
+    [data-parallax-layer="3"] { --weg: 52%; }
+    [data-parallax-layer="4"], [data-parallax-layer="5"] { --weg: 12%; }
+    @media (max-width: 700px) {
+      [data-parallax-layer="1"] { --weg: 42%; }
+      [data-parallax-layer="2"] { --weg: 33%; }
+      [data-parallax-layer="3"] { --weg: 31%; }
+      [data-parallax-layer="4"], [data-parallax-layer="5"] { --weg: 7%; }
+    }
+  }
+}
+@keyframes ebene { to { translate: 0 var(--weg); } }
+
 /* ---------- Bewegung reduziert: Standbild, alles sofort da ---------- */
 @media (prefers-reduced-motion: reduce) {
   .js .reveal { opacity: 1; transform: none; }
-  .parallax__layer-img, .parallax__layer-title, .parallax__glow { will-change: auto; }
+  .parallax__layer-img, .parallax__layer-title { will-change: auto; }
   .parallax__hint::after { animation: none; transform: none; opacity: 1; }
   .services__cursor { display: none; }
   * { transition-duration: 0.01ms !important; }
@@ -461,7 +444,7 @@ html.intro .parallax__title { opacity: 0; }
   var d = document.documentElement; d.classList.add('intro');
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.__introEnde = function () { d.classList.remove('intro'); var l = document.querySelector('.loader'); if (l) l.remove(); };
-  setTimeout(window.__introEnde, 9000);
+  setTimeout(window.__introEnde, 5000);
 })();
 </script>
 </head>
@@ -469,7 +452,6 @@ html.intro .parallax__title { opacity: 0; }
 <div class="loader" aria-hidden="true">
   <div class="loader__grund"></div>
   <div class="loader__name" data-loader-name>ERGUN<span class="dot">.</span></div>
-  <div class="loader__balken"><span data-loader-balken></span></div>
 </div>
 
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
@@ -488,15 +470,14 @@ html.intro .parallax__title { opacity: 0; }
   <section class="parallax__header" aria-label="Einstieg">
     <div class="parallax__visuals">
       <div class="parallax__layers" data-parallax-layers>
-        <img src="bilder/hero/layer-1-sky.webp" data-hoch="bilder/hero/layer-1-sky-hoch.webp" srcset="bilder/hero/layer-1-sky-1920.webp 1920w, bilder/hero/layer-1-sky.webp 4096w" sizes="(orientation: portrait) 4096px, 100vw" width="4096" height="2323" data-parallax-layer="1" class="parallax__layer-img parallax__layer-img--sky" alt="" fetchpriority="high">
-        <div data-parallax-layer="1" class="parallax__glow" aria-hidden="true"></div>
-        <img src="bilder/hero/layer-2-ridge.webp" data-hoch="bilder/hero/layer-2-ridge-hoch.webp" srcset="bilder/hero/layer-2-ridge-1920.webp 1920w, bilder/hero/layer-2-ridge.webp 4096w" sizes="(orientation: portrait) 4096px, 100vw" width="4096" height="2323" data-parallax-layer="2" class="parallax__layer-img" alt="" fetchpriority="high">
+        <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-1-sky-hoch.webp"><img src="bilder/hero/layer-1-sky-1920.webp" srcset="bilder/hero/layer-1-sky-1920.webp 1920w, bilder/hero/layer-1-sky-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="1" class="parallax__layer-img parallax__layer-img--sky" alt="" fetchpriority="high"></picture>
+        <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-2-ridge-hoch.webp"><img src="bilder/hero/layer-2-ridge-1920.webp" srcset="bilder/hero/layer-2-ridge-1920.webp 1920w, bilder/hero/layer-2-ridge-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="2" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
         <div data-parallax-layer="3" class="parallax__layer-title">
           <h1 class="parallax__title">ERGUN<span class="dot">.</span></h1>
           <p class="parallax__rolle">Webdesigner</p>
         </div>
-        <img src="bilder/hero/layer-4-foreground.webp" data-hoch="bilder/hero/layer-4-foreground-hoch.webp" srcset="bilder/hero/layer-4-foreground-1920.webp 1920w, bilder/hero/layer-4-foreground.webp 4096w" sizes="(orientation: portrait) 4096px, 100vw" width="4096" height="2323" data-parallax-layer="4" class="parallax__layer-img" alt="" fetchpriority="high">
-        <img src="bilder/hero/layer-5-person.webp" data-hoch="bilder/hero/layer-5-person-hoch.webp" srcset="bilder/hero/layer-5-person-1920.webp 1920w, bilder/hero/layer-5-person.webp 5459w" sizes="(orientation: portrait) 4096px, 100vw" width="5459" height="3096" data-parallax-layer="5" class="parallax__layer-img" alt="" fetchpriority="high" onerror="this.remove()">
+        <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-4-foreground-hoch.webp"><img src="bilder/hero/layer-4-foreground-1920.webp" srcset="bilder/hero/layer-4-foreground-1920.webp 1920w, bilder/hero/layer-4-foreground-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="4" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
+        <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-5-person-hoch.webp"><img src="bilder/hero/layer-5-person-1920.webp" srcset="bilder/hero/layer-5-person-1920.webp 1920w, bilder/hero/layer-5-person-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="5" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
       </div>
       <div class="parallax__fade"></div>
       <p class="parallax__hint" aria-hidden="true">Scrollen</p>
@@ -556,11 +537,11 @@ html.intro .parallax__title { opacity: 0; }
           <div class="demo-browser" data-demo-parallax>
             <div class="demo-browser__leiste"><i></i><i></i><i></i></div>
             <div class="demo-browser__buehne">
-              <img data-mini="1" src="bilder/hero/layer-1-sky-1920.webp" width="1920" height="1089" alt="" loading="lazy">
-              <img data-mini="2" src="bilder/hero/layer-2-ridge-1920.webp" width="1920" height="1089" alt="" loading="lazy">
+              <img data-mini="1" src="bilder/hero/layer-1-sky-960.webp" width="960" height="544" alt="" loading="lazy" decoding="async">
+              <img data-mini="2" src="bilder/hero/layer-2-ridge-960.webp" width="960" height="544" alt="" loading="lazy" decoding="async">
               <div data-mini="3" class="demo-browser__titel">IHR NAME<b>.</b></div>
-              <img data-mini="4" src="bilder/hero/layer-4-foreground-1920.webp" width="1920" height="1089" alt="" loading="lazy">
-              <img data-mini="5" src="bilder/hero/layer-5-person-1920.webp" width="1920" height="1089" alt="" loading="lazy">
+              <img data-mini="4" src="bilder/hero/layer-4-foreground-960.webp" width="960" height="544" alt="" loading="lazy" decoding="async">
+              <img data-mini="5" src="bilder/hero/layer-5-person-960.webp" width="960" height="544" alt="" loading="lazy" decoding="async">
             </div>
           </div>
         </div>
@@ -665,16 +646,7 @@ html.intro .parallax__title { opacity: 0; }
 <!-- GSAP liegt lokal im Ordner js/ (kein fremder Server) -->
 <script src="js/gsap.min.js"></script>
 <script src="js/ScrollTrigger.min.js"></script>
-<script src="js/ScrollSmoother.min.js"></script>
 <script>
-/* Hochkant (Handy/Tablet): mittlerer Ausschnitt in voller Hoehe statt breitem Bild */
-(function () {
-  if (!window.matchMedia('(orientation: portrait)').matches) return;
-  document.querySelectorAll('img[data-hoch]').forEach(function (img) {
-    img.removeAttribute('srcset'); img.removeAttribute('sizes');
-    img.src = img.getAttribute('data-hoch');
-  });
-})();
 (function () {
   if (!window.gsap || !window.ScrollTrigger) { if (window.__introEnde) window.__introEnde(); return; }
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -683,60 +655,38 @@ html.intro .parallax__title { opacity: 0; }
   document.documentElement.classList.add('js');
   gsap.registerPlugin(ScrollTrigger);
 
-  /* Weiches Scrollen (ScrollSmoother, Teil von GSAP) */
-  var smoother = null;
-  if (window.ScrollSmoother) {
-    gsap.registerPlugin(ScrollSmoother);
-    var touch = window.matchMedia('(pointer: coarse)').matches;
-    smoother = ScrollSmoother.create({ wrapper: '#smooth-wrapper', content: '#smooth-content', smooth: 0.9, smoothTouch: 0.12, effects: false, normalizeScroll: touch, ignoreMobileResize: true });
-    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
-      a.addEventListener('click', function (e) {
-        var id = a.getAttribute('href');
-        if (id.length < 2) return;
-        var ziel = document.querySelector(id);
-        if (!ziel) return;
-        e.preventDefault();
-        smoother.scrollTo(id === '#top' ? 0 : ziel, true, 'top top');
-        if (id === '#inhalt') ziel.focus({ preventScroll: true });
-      });
-    });
-  }
-
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  /* Parallax: Browser mit Scroll-Animationen machen es selbst (CSS oben), sonst GSAP */
+  var cssParallax = window.CSS && CSS.supports && CSS.supports('animation-timeline: view()');
   var mobile = window.matchMedia('(max-width: 700px)').matches;
   var f = mobile ? 0.6 : 1;
 
   /* Hero: jede Ebene bewegt sich unterschiedlich schnell (wie Osmo-Vorlage).
      Person und Vordergrund laufen gleich schnell, damit die Füße auf dem Fels bleiben. */
   var layersEl = document.querySelector('[data-parallax-layers]');
-  var tl = gsap.timeline({
-    scrollTrigger: { trigger: layersEl, start: '0% 0%', end: '100% 0%', scrub: (smoother && !window.matchMedia('(pointer: coarse)').matches) ? true : 0.35 }
-  });
-  [['1', 70], ['2', 55], ['3', 52], ['4', 12], ['5', 12]].forEach(function (l, i) {
-    tl.to(layersEl.querySelectorAll('[data-parallax-layer="' + l[0] + '"]'),
-      { yPercent: l[1] * f, ease: 'none' }, i === 0 ? undefined : '<');
-  });
+  if (!cssParallax) {
+    var tl = gsap.timeline({ scrollTrigger: { trigger: layersEl, start: '0% 0%', end: '100% 0%', scrub: true } });
+    [['1', 70], ['2', 55], ['3', 52], ['4', 12], ['5', 12]].forEach(function (l, i) {
+      tl.to(layersEl.querySelectorAll('[data-parallax-layer="' + l[0] + '"]'),
+        { yPercent: l[1] * f, ease: 'none' }, i === 0 ? undefined : '<');
+    });
+  }
 
-  /* Einstieg beim Laden: Ebenen und Titel setzen sich nacheinander, fertig nach 1,6 s.
-     Nur transform/opacity; das Scrubben oben nutzt yPercent, hier y in Pixeln. */
-  var heroEinstieg = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } })
-    .from('.parallax__layer-img[data-parallax-layer="1"]', { scale: 1.05, transformOrigin: '50% 45%', duration: 2.2, ease: 'power3.out' }, 0)
-    .from('.parallax__layer-img[data-parallax-layer="2"]', { y: 24, duration: 2.0, ease: 'power3.out' }, 0)
-    .from('.parallax__layer-img[data-parallax-layer="4"]', { y: 40, duration: 2.0, ease: 'power3.out' }, 0)
-    .from('.parallax__layer-img[data-parallax-layer="5"]', { y: 40, duration: 2.0, ease: 'power3.out' }, 0)
-    .from('.parallax__rolle', { opacity: 0, y: 12, duration: 1.0, ease: 'power3.out' }, 0.9)
-    .from('.nav', { opacity: 0, duration: 0.8, ease: 'power2.out' }, 1.1)
-    .from('.parallax__hint', { opacity: 0, duration: 0.6, ease: 'power2.out' }, 1.4);
+  /* Einstieg: Berge und Emre setzen sich kurz, Zeile und Navigation blenden ein – nur transform/opacity */
+  var heroEinstieg = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } })
+    .from('.parallax__layer-img[data-parallax-layer="2"]', { y: 16, duration: 1.1 }, 0)
+    .from('.parallax__layer-img[data-parallax-layer="4"], .parallax__layer-img[data-parallax-layer="5"]', { y: 24, duration: 1.1 }, 0)
+    .from('.parallax__rolle', { opacity: 0, y: 8, duration: 0.7 }, 0.35)
+    .from('.nav, .parallax__hint', { opacity: 0, duration: 0.6, ease: 'power2.out' }, 0.5);
 
-  /* ===== Auftritt: Name baut sich auf, wartet aufs Laden, gleitet dann an seinen Platz ===== */
+  /* ===== Auftritt: "E." erscheint, entfaltet sich zu "ERGUN.", dann blendet die Szene auf ===== */
   var loader = document.querySelector('.loader');
   var titel = document.querySelector('.parallax__title');
   if (!loader || !document.documentElement.classList.contains('intro')) {
     heroEinstieg.play();
   } else {
-    if (smoother) smoother.paused(true);
     window.scrollTo(0, 0);
     var name = loader.querySelector('[data-loader-name]');
-    var balken = loader.querySelector('[data-loader-balken]');
     var punkt = name.querySelector('.dot'); punkt.remove();
     var text = name.textContent.trim(); name.textContent = '';
     text.split('').forEach(function (z) {
@@ -745,149 +695,63 @@ html.intro .parallax__title { opacity: 0; }
       m.appendChild(b); name.appendChild(m);
     });
     name.appendChild(punkt);
-
     var buchstaben = name.querySelectorAll('.loader__buchstabe');
     var erster = buchstaben[0], rest = [].slice.call(buchstaben, 1);
     gsap.set(buchstaben, { yPercent: 115 });
-    gsap.set(punkt, { scale: 0.2, opacity: 0 });
-    var buchstabenFertig = false, geladen = false, gestartet = false, schein = null;
+    gsap.set(punkt, { opacity: 0 });
+    var eFertig = false, geladen = false, gestartet = false;
 
-    /* Anfang: nur "E." – Punkt rückt direkt hinter das E, die Gruppe steht mittig */
+    /* Anfang: nur "E." – Punkt direkt hinter dem E, Gruppe mittig */
     function messen() {
       var n = name.getBoundingClientRect(), e = erster.parentNode.getBoundingClientRect(), pk = punkt.getBoundingClientRect();
-      var punktDx = e.right - pk.left;
-      var gruppeMitte = (e.left + e.right + pk.width) / 2;
-      return { name: (n.left + n.width / 2) - gruppeMitte, punkt: punktDx };
+      return { name: (n.left + n.width / 2) - (e.left + e.right + pk.width) / 2, punkt: e.right - pk.left };
     }
     var schriftBereit = (document.fonts && document.fonts.ready)
-      ? Promise.race([document.fonts.ready, new Promise(function (r) { setTimeout(r, 800); })])
+      ? Promise.race([document.fonts.ready, new Promise(function (r) { setTimeout(r, 500); })])
       : Promise.resolve();
     schriftBereit.then(function () {
       var v = messen();
       gsap.set(name, { x: v.name }); gsap.set(punkt, { x: v.punkt });
-      schein = gsap.fromTo(erster, { backgroundPosition: '100% 0%' }, { backgroundPosition: '0% 0%', duration: 1.8, ease: 'power2.inOut', repeat: -1, repeatDelay: 0.3, delay: 0.5 });
-      gsap.timeline({ onComplete: function () { buchstabenFertig = true; weiter(); } })
-        .to(erster, { yPercent: 0, duration: 1.0, ease: 'expo.out' }, 0.1)
-        .to(punkt, { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(3)' }, 0.55)
-        .to({}, { duration: 0.5 });
+      gsap.timeline({ onComplete: function () { eFertig = true; weiter(); } })
+        .to(erster, { yPercent: 0, duration: 0.7, ease: 'expo.out' }, 0.05)
+        .to(punkt, { opacity: 1, duration: 0.4, ease: 'power2.out' }, 0.35);
     });
 
-    /* Ladefortschritt: Hero-Bilder + Schriften */
-    var bilder = [].slice.call(document.querySelectorAll('.parallax__layer-img'));
-    var gesamt = bilder.length + 1, fertig = 0;
-    var balkenTo = gsap.quickTo(balken, 'scaleX', { duration: 0.5, ease: 'power2.out' });
-    function eins() { fertig++; var q = Math.min(1, fertig / gesamt); balkenTo(q); gsap.to(name, { '--glut': 0.3 + 0.7 * q, '--glutO': 0.35 + 0.6 * q, duration: 0.8, ease: 'power2.out', overwrite: 'auto' }); if (fertig >= gesamt) { geladen = true; weiter(); } }
+    /* Warten nur auf die Hero-Bilder, hoechstens 2,5 s */
+    var bilder = [].slice.call(document.querySelectorAll('.parallax__layer-img')), offen = bilder.length;
+    function eins() { if (--offen <= 0) { geladen = true; weiter(); } }
     function dekodieren(img) { return img.decode ? img.decode().catch(function () {}) : Promise.resolve(); }
     bilder.forEach(function (img) {
-      if (img.complete && img.naturalWidth) { dekodieren(img).then(eins); }
+      if (img.complete && img.naturalWidth) dekodieren(img).then(eins);
       else {
         img.addEventListener('load', function () { dekodieren(img).then(eins); }, { once: true });
         img.addEventListener('error', eins, { once: true });
       }
     });
-    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(eins);
-    setTimeout(function () { geladen = true; weiter(); }, 6000);
+    setTimeout(function () { geladen = true; weiter(); }, 2500);
 
     function weiter() {
-      if (gestartet || !buchstabenFertig || !geladen) return;
+      if (gestartet || !eFertig || !geladen) return;
       gestartet = true;
       gsap.timeline({ onComplete: uebergabe })
-        .to(balken.parentNode, { opacity: 0, duration: 0.35, ease: 'power1.out' }, 0)
-        .to(name, { x: 0, duration: 0.95, ease: 'power3.inOut' }, 0)
-        .to(punkt, { x: 0, duration: 0.95, ease: 'power3.inOut' }, 0)
-        .add(function () { if (schein) schein.kill(); }, 0)
-        .to(rest, { yPercent: 0, duration: 0.9, ease: 'expo.out', stagger: 0.06 }, 0.2)
-        .fromTo(buchstaben, { backgroundPosition: '100% 0%' }, { backgroundPosition: '0% 0%', duration: 0.9, ease: 'power2.inOut', stagger: 0.05 }, 0.15)
-        .to({}, { duration: 0.2 });
+        .to([name, punkt], { x: 0, duration: 0.7, ease: 'power3.inOut' }, 0)
+        .to(rest, { yPercent: 0, duration: 0.7, ease: 'expo.out', stagger: 0.04 }, 0.1);
     }
     function uebergabe() {
-      /* FLIP: Loader-Name gleitet exakt auf die Position des Hero-Titels */
+      /* Name gleitet exakt auf den Hero-Titel, der dunkle Grund blendet aus */
       var a = name.getBoundingClientRect(), z = titel.getBoundingClientRect();
       var dx = (z.left + z.width / 2) - (a.left + a.width / 2);
       var dy = (z.top + z.height / 2) - (a.top + a.height / 2);
-      var sk = z.width / a.width;
-      /* Lichtkreis startet hinter dem Namen (dort steht die Sonne) und waechst ueber den ganzen Bildschirm */
-      var wrap = document.getElementById('smooth-wrapper');
-      var pr = punkt.getBoundingClientRect(); var ox = pr.left + pr.width / 2, oy = pr.top + pr.height * 0.72;   /* der Punkt ist die Sonne */
-      var maxR = Math.hypot(Math.max(ox, innerWidth - ox), Math.max(oy, innerHeight - oy)) / 0.62 + 40;
-      gsap.set(wrap, { '--ax': ox + 'px', '--ay': oy + 'px', '--r': '0px' });
-      document.documentElement.classList.add('aufgang');
       gsap.timeline({ onComplete: function () {
           gsap.set(titel, { opacity: 1 });
-          document.documentElement.classList.remove('intro', 'aufgang');
-          gsap.set(wrap, { clearProps: '--ax,--ay,--r' });
+          document.documentElement.classList.remove('intro');
           loader.remove();
-          if (smoother) smoother.paused(false);
           ScrollTrigger.refresh();
         } })
-        .to(balken.parentNode, { opacity: 0, duration: 0.35, ease: 'power1.out' }, 0)
-        .set(loader.querySelector('.loader__grund'), { opacity: 0 }, 0.05)
-        .to(name, { '--glutO': 0, duration: 0.9, ease: 'power2.out' }, 0.1)
-        .to(wrap, { '--r': maxR + 'px', duration: 1.6, ease: 'power2.inOut' }, 0.05)
-        .add(function () { heroEinstieg.play(); }, 0.05)
-        .to(name, { x: dx, y: dy, scale: sk, duration: 1.3, ease: 'power3.inOut' }, 0.35);
+        .to(loader.querySelector('.loader__grund'), { opacity: 0, duration: 0.7, ease: 'power2.out' }, 0)
+        .add(function () { heroEinstieg.play(); }, 0)
+        .to(name, { x: dx, y: dy, scale: z.width / a.width, duration: 0.8, ease: 'power3.inOut' }, 0);
     }
-  }
-
-  /* Statement: Wörter erscheinen nacheinander beim Scrollen (Screenreader lesen den ganzen Satz) */
-  var split = document.querySelector('[data-split]');
-  if (split) {
-    split.setAttribute('aria-label', split.textContent.trim());
-    var nodes = Array.prototype.slice.call(split.childNodes);
-    split.innerHTML = '';
-    nodes.forEach(function (n) {
-      var isEm = n.nodeType === 1;
-      var words = n.textContent.trim().split(/\s+/).filter(Boolean);
-      words.forEach(function (w) {
-        var s = document.createElement('span');
-        s.className = 'word'; s.setAttribute('aria-hidden', 'true');
-        if (isEm) { var em = document.createElement('em'); em.textContent = w; s.appendChild(em); }
-        else s.textContent = w;
-        split.appendChild(s);
-        split.appendChild(document.createTextNode(' '));
-      });
-    });
-    gsap.fromTo(split.querySelectorAll('.word'),
-      { opacity: 0.18, yPercent: 10 },
-      { opacity: 1, yPercent: 0, stagger: 0.15, ease: 'none',
-        scrollTrigger: { trigger: split, start: 'top 85%', end: 'bottom 45%', scrub: true } });
-  }
-
-  /* Laufband: endlos, wird beim Scrollen schneller */
-  var track = document.querySelector('[data-marquee]');
-  if (track) {
-    var w = track.children[0].getBoundingClientRect().width;
-    var loop = gsap.to(track, { x: -w, duration: 22, ease: 'none', repeat: -1 });
-    ScrollTrigger.create({ trigger: track, start: 'top bottom', end: 'bottom top',
-      onUpdate: function (self) { gsap.to(loop, { timeScale: 1 + Math.min(Math.abs(self.getVelocity()) / 600, 3), duration: 0.4, overwrite: true }); } });
-  }
-
-  /* Leistungen: große Wörter schieben sich nacheinander ins Bild */
-  gsap.utils.toArray('.services__name').forEach(function (el, i) {
-    gsap.from(el, { xPercent: -8, opacity: 0, duration: 1.2, ease: 'expo.out', delay: i * 0.08,
-      scrollTrigger: { trigger: el, start: 'top 90%', once: true } });
-  });
-
-  /* Leistungen: ein Bild folgt dem Zeiger (nur feiner Zeiger, ab 1025 px) */
-  var services = document.querySelector('[data-services]');
-  var cursor = document.querySelector('[data-cursor]');
-  if (services && cursor && window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1025px)').matches) {
-    var qx = gsap.quickTo(cursor, 'x', { duration: 0.5, ease: 'power3' });
-    var qy = gsap.quickTo(cursor, 'y', { duration: 0.5, ease: 'power3' });
-    var bilder = cursor.querySelectorAll('img');
-    services.addEventListener('mousemove', function (ev) {
-      var r = services.getBoundingClientRect();
-      qx(ev.clientX - r.left); qy(ev.clientY - r.top);
-    });
-    services.querySelectorAll('[data-row]').forEach(function (row) {
-      row.addEventListener('mouseenter', function () {
-        var name = row.getAttribute('data-row');
-        bilder.forEach(function (img) { img.classList.toggle('ist-aktiv', img.getAttribute('data-bild') === name); });
-        cursor.classList.add('ist-sichtbar');
-      });
-      row.addEventListener('mouseleave', function () { cursor.classList.remove('ist-sichtbar'); });
-    });
-    window.addEventListener('blur', function () { cursor.classList.remove('ist-sichtbar'); });
   }
 
   /* Navigation: beim Runterscrollen ausblenden, beim Hochscrollen zeigen */
