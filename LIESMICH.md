@@ -11,14 +11,15 @@ beim Scrollen über den Namen. Danach direkt die Pakete, dann Kontakt mit Formul
 | `index.html` | die Startseite: Hero · Pakete · Kontaktformular · Footer (Version 3) |
 | `impressum.html` | vorausgefüllt mit ERGUN. – **prüfen** (Gewerbebezeichnung, E-Mail) |
 | `datenschutz.html` | **Entwurf** ohne Cookies/Google Fonts, mit WhatsApp-Hinweis – rechtlich prüfen lassen |
-| `js/gsap.min.js`, `ScrollTrigger.min.js`, `ScrollSmoother.min.js` | Bewegung + weiches Scrollen, lokal |
+| `js/gsap.min.js`, `ScrollTrigger.min.js` | Intro, Einblenden, Paket-Vorschauen, lokal. `ScrollSmoother.min.js` liegt noch im Ordner, wird aber **nicht mehr geladen** (natives Scrollen) |
 | `schriften/*.woff2` + Lizenzen | Instrument Serif + Geist, lokal (OFL) |
 | `bilder/hero/layer-1-sky.webp` | Himmel mit Sonne, 4K (Higgsfield 81ed3e59, Szene 24f533ae) |
 | `bilder/hero/layer-2-ridge.webp` | Bergkamm, 4K freigestellt (Higgsfield d80d7fb2) |
 | `bilder/hero/layer-4-foreground.webp` | Vordergrund-Felsen mit Tannen, 4K freigestellt (Higgsfield 158ed469) |
 | `bilder/hero/layer-5-person.webp` | **Emre**, aus Higgsfield-Job b305a018 („Emre V4", 2688×1520) lokal freigestellt; eigene Leinwand **5459×3096**, damit seine 1455 Quellpixel Höhe 1:1 bleiben; 47 % Bildhöhe, Füße bei 80 % |
-| `bilder/hero/*-1920.webp` | Querformat-Variante für kleinere Bildschirme (`srcset`) |
-| `bilder/hero/*-hoch.webp` | **Hochkant-Variante** (mittlere 50 % Breite, volle 4K-Höhe, 2048×2323) – wird per Skript geladen, sobald das Gerät im Hochformat ist; ohne sie wäre das Bild am Handy bis 3-fach hochgerechnet |
+| `bilder/hero/*-1920.webp`, `*-2560.webp` | Querformat: `srcset` 1920/2560. Die 4K-Dateien ohne Endung werden **nicht mehr geladen** (zu viel Grafikspeicher, ruckelte) |
+| `bilder/hero/*-960.webp` | kleine Ebenen für die Mini-Szene in der Paketkarte |
+| `bilder/hero/*-hoch.webp` | **Hochkant-Variante** (mittlere 50 % Breite, volle 4K-Höhe, 2048×2323) – kommt per `<picture><source media="(orientation: portrait)">`, also ohne Doppel-Download; Person seit 23.09. ebenfalls 2048×2323 (Original `4k/layer-5-person-hoch-3096.webp`); ohne sie wäre das Bild am Handy bis 3-fach hochgerechnet |
 | `bilder/hero/4k/` | Originale (PNG/WebP-Quellen), per .gitignore ausgeschlossen |
 | `bilder/og.jpg` | Vorschaubild fürs Teilen (1200×630, aus dem Hero gerendert) |
 | `favicon.svg`, `favicon-32.png`, `apple-touch-icon.png` | eigener Vierstern als Icon |
@@ -32,9 +33,12 @@ beim Scrollen über den Namen. Danach direkt die Pakete, dann Kontakt mit Formul
 | 4 Vordergrund | 12 | |
 | 5 Emre | 12 | gleiches Tempo wie der Fels, damit die Füße stehen bleiben; Position steckt im Bild selbst (kein CSS-Versatz mehr) |
 
-**Auftritt beim Laden:** Vorhang nur mit „ERGUN." – Buchstaben steigen einzeln auf, Punkt ploppt, Ladebalken zeigt echtes Laden.
-Sobald Bilder + Schriften da sind, geht die Szene als weicher Lichtkreis hinter dem Namen auf (Klasse `aufgang`, Maske mit `--r`), der Name gleitet exakt auf den Hero-Titel (FLIP) und die Ebenen setzen sich dezent
-(Himmel zoomt heraus, Kamm/Felsen fahren hoch, Emre blendet ein). Scrollen erst danach frei. Notbremse 9 s.
+**Auftritt beim Laden (ruhig, ca. 2,5 s):** Vorhang mit nur „E." (Punkt orange, kein Leuchten), sobald die Hero-Bilder da sind (höchstens 2,5 s warten)
+entfaltet es sich zu „ERGUN.", der dunkle Grund blendet aus und der Name gleitet exakt auf den Hero-Titel (FLIP). Ebenen setzen sich nur 16–24 px. Notbremse 5 s.
+Keine Schein-Sonne im Intro mehr: Emre fand, dass die Sonne beim Öffnen rechts (am Punkt) und danach mittig stand.
+
+**Parallax läuft im Browser selbst** (CSS `animation-timeline: view()`, Bereich `exit-crossing`, Eigenschaft `translate`): kein JavaScript pro Bild, kein Zittern.
+Browser ohne diese Technik (z. B. Firefox) bekommen dieselbe Bewegung per GSAP ScrollTrigger. Kein ScrollSmoother mehr – Scrollen ist nativ (Emre: „laggt zu sehr").
 Emres Licht: `bilder/hero/4k/licht.py` (Gegenlicht, Lichtsaum oben, Kontaktschatten) – bei neuem Foto einfach neu laufen lassen.
 Handy: Bewegung × 0,6. `prefers-reduced-motion`: Standbild.
 
@@ -69,8 +73,8 @@ Hochladen: `index.html`, `impressum.html`, `datenschutz.html`, `favicon*`, `appl
 `bilder/hero/*.webp`, `bilder/og.jpg`. Ordner `bilder/hero/4k/` und alle PNG weglassen. Plan: `08 Projekte/Deployment.md`.
 
 ## Pakete & Kontakt (Stand 23.09., Claude Code)
-- Jede Paketkarte hat eine lebende Vorschau (`.pkg__demo`): Handy mit `bilder/demo/onepager.webp`, Stapel aus `bilder/demo/seite-*.webp`, Mini-Parallax aus den `*-1920.webp`-Ebenen. Neu erzeugen nach Änderungen: `bilder/hero/4k/demos_rendern.py` (braucht lokalen Server auf Port 8789). Mini-Parallax: Himmel `top: -22%`, Schriftzug oben (4 %), Sonne steht frei darunter; beim Scrollen bewegen sich Sonne und Schrift kaum, damit sie sich nicht kreuzen.
+- Jede Paketkarte hat eine lebende Vorschau (`.pkg__demo`): Handy mit `bilder/demo/onepager.webp`, Stapel aus `bilder/demo/seite-*.webp`, Mini-Parallax aus den `*-960.webp`-Ebenen. Neu erzeugen nach Änderungen: `bilder/hero/4k/demos_rendern.py` (braucht lokalen Server auf Port 8789). Mini-Parallax: Himmel `top: -22%`, Schriftzug oben (4 %), Sonne steht frei darunter; beim Scrollen bewegen sich Sonne und Schrift kaum, damit sie sich nicht kreuzen.
 - Hero-Zeile heißt nur **„Webdesigner"** und steht **über** dem Namen (`.parallax__rolle { order: -1 }`); auf der Sonne war sie unlesbar. „Elmshorn" steht nur noch in der Google-Beschreibung (Meta) und im Impressum.
 - Kontakt: Paket-Chips (Radio), Prüfung beim Verlassen eines Feldes, Live-Vorschau der WhatsApp-Nachricht (`[data-vorschau]`).
-- Intro: Start mit „E.", Punkt = Sonne (Glut über CSS-Variablen `--glut/--glutO`), goldener Schein über die Buchstaben, dann Entfalten und Aufgang aus dem Punkt.
+- Intro: Start mit „E.", dann „ERGUN.", dann blendet die Szene auf. Glut, Goldschein und Lichtkreis-Maske wurden am 23.09. entfernt (zu viele Effekte, ruckelte).
 - Berge: `bilder/hero/4k/berge.py` füllt den Fuß des Kamms und gleicht Kamm und Vordergrund an. Originale liegen als `*-vor-angleich.webp` in `4k/`.
