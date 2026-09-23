@@ -32,7 +32,10 @@ beim Scrollen über den Namen. Danach direkt die Pakete, dann Kontakt mit Formul
 | 4 Vordergrund | 12 | |
 | 5 Emre | 12 | gleiches Tempo wie der Fels, damit die Füße stehen bleiben; Position steckt im Bild selbst (kein CSS-Versatz mehr) |
 
-Einstieg beim Laden ≤ 1,6 s (Himmel zoomt heraus, Kamm/Felsen fahren hoch, Emre blendet ein, Name steigt).
+**Auftritt beim Laden:** Vorhang nur mit „ERGUN." – Buchstaben steigen einzeln auf, Punkt ploppt, Ladebalken zeigt echtes Laden.
+Sobald Bilder + Schriften da sind, gleitet der Name exakt auf den Hero-Titel (FLIP), der Vorhang blendet aus und die Ebenen steigen auf
+(Himmel zoomt heraus, Kamm/Felsen fahren hoch, Emre blendet ein). Scrollen erst danach frei. Notbremse 9 s.
+Emres Licht: `bilder/hero/4k/licht.py` (Gegenlicht, Lichtsaum oben, Kontaktschatten) – bei neuem Foto einfach neu laufen lassen.
 Handy: Bewegung × 0,6. `prefers-reduced-motion`: Standbild.
 
 ## Was am 23.09. zuletzt gemacht wurde (Claude Code)
