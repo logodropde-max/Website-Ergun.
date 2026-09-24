@@ -515,6 +515,14 @@ body { overflow-x: clip; }
 /* Person farblich an die Szene angleichen */
 .parallax__layer-img[data-parallax-layer="5"] { filter: brightness(.94) contrast(1.04) saturate(.94) sepia(.06); }
 @media (max-width: 700px) { .parallax__layer-img--sky { top: -20%; } }
+
+/* ---------- Pakete nach Oberthemen (24.09.) ---------- */
+.pkg__list { gap: 14px; }
+.pkg__list li.pkg__punkt { padding-left: 0; display: grid; gap: 3px; }
+.pkg__list li.pkg__punkt::before { content: none; }
+.pkg__kat { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.pkg__text { color: var(--text); font-size: 15px; line-height: 1.45; }
+.packages__immer { display: block; margin-top: 10px; color: var(--muted); }
 </style>
 <script>
 /* Auftritt: zuerst nur der Name, dann die Seite. Bei "Bewegung reduzieren" kein Vorhang. */
@@ -572,7 +580,7 @@ body { overflow-x: clip; }
         <span class="packages__kicker reveal">Pakete · Festpreis</span>
         <h2 class="packages__title reveal" id="pakete-titel">Wählen Sie<br>Ihr Paket.</h2>
       </div>
-      <p class="packages__note reveal">Feste Preise, feste Leistungen: Einmalpreis für die Seite, danach ein fester Monatsbetrag für Hosting, Domain und Pflege, monatlich kündbar. Die Domain bleibt Ihre.</p>
+      <p class="packages__note reveal">Festpreis einmalig, danach ein Monatsbetrag für Hosting &amp; Pflege, monatlich kündbar. <span class="packages__immer">In jedem Paket: für Handy, Tablet &amp; PC · ohne Cookies · Impressum &amp; Datenschutz-Vorlage.</span></p>
     </div>
     <ul class="packages__grid">
       <li class="pkg reveal">
@@ -583,23 +591,18 @@ body { overflow-x: clip; }
         <div class="pkg__kopf"><h3 class="pkg__name">Onepager</h3><span class="pkg__tag">1 Seite</span></div>
         <p class="pkg__price">80 €<small>einmalig · 1 Seite</small></p>
         <ul class="pkg__list">
-          <li>Eigenes Design, keine Vorlage</li>
-          <li>5 eigene KI-Bilder, passend zu Ihrer Branche</li>
-          <li>Parallax-Tiefe, Scroll- &amp; Einblend-Animationen</li>
-          <li>Intro-Animation beim Öffnen der Seite</li>
-          <li>Für Handy, Tablet und PC optimiert</li>
-          <li>Schnelle Ladezeit, ohne Cookies und Tracking</li>
-          <li>Kontakt per WhatsApp, Anruf und E-Mail</li>
-          <li>Impressum &amp; Datenschutz-Vorlage</li>
-          <li>Vorschau-Link, bevor die Seite online geht</li>
-          <li>1 Korrekturrunde</li>
+          <li class="pkg__punkt"><span class="pkg__kat">Design</span><span class="pkg__text">Eigenes Design in Ihren Farben, 1 Seite</span></li>
+          <li class="pkg__punkt"><span class="pkg__kat">Bilder &amp; Videos</span><span class="pkg__text">5 eigene Bilder, extra für Sie erstellt</span></li>
+          <li class="pkg__punkt"><span class="pkg__kat">Animation</span><span class="pkg__text">Parallax, Intro &amp; Scroll-Effekte</span></li>
+          <li class="pkg__punkt"><span class="pkg__kat">Funktionen</span><span class="pkg__text">Kontakt per WhatsApp, Anruf &amp; E-Mail, Links zu Ihren Social-Media-Kanälen</span></li>
+          <li class="pkg__punkt"><span class="pkg__kat">Teilen</span><span class="pkg__text">Eigenes Vorschaubild, wenn Ihre Seite per WhatsApp oder Social Media geteilt wird</span></li>
+          <li class="pkg__punkt"><span class="pkg__kat">Service</span><span class="pkg__text">Vorschau-Link vor dem Start, 1 Korrekturrunde</span></li>
         </ul>
         <div class="pkg__abo">
           <div class="pkg__abo-kopf"><span class="pkg__abo-preis">+ 10 €<small> / Monat</small></span><span class="pkg__abo-titel">Hosting, Domain<br>&amp; Pflege</span></div>
           <ul>
-            <li>Hosting mit https-Verschlüsselung</li>
-            <li>Domain (.de) inklusive, auf Ihren Namen</li>
-            <li>Jede Version gesichert</li>
+            <li>Hosting &amp; Domain (.de) auf Ihren Namen</li>
+            <li>Sicherung jeder Version</li>
             <li>1 kleine Textänderung pro Monat</li>
           </ul>
         </div>
@@ -619,28 +622,19 @@ body { overflow-x: clip; }
         <div class="pkg__kopf"><h3 class="pkg__name">Business</h3><span class="pkg__tag">bis 5 Seiten</span></div>
         <p class="pkg__price">250 €<small>einmalig · bis zu 5 Seiten</small></p>
         <ul class="pkg__list">
-          <li>Bis zu 5 Seiten mit Menü &amp; weichen Seitenübergängen</li>
-          <li>10 eigene KI-Bilder, keine Stockfotos</li>
-          <li>1 kurzes Video (Loop) für den Kopfbereich</li>
-          <li>Parallax &amp; Animationen auf jeder Seite</li>
-          <li>Hover-Effekte &amp; Mikro-Animationen</li>
-          <li>Galerie mit Vollbild-Ansicht</li>
-          <li>Preisliste oder Speisekarte</li>
-          <li>Aufklappbare Fragen &amp; Antworten (FAQ)</li>
-          <li>Kontakt-Fragebogen für WhatsApp &amp; E-Mail</li>
-          <li>Anfahrt &amp; Öffnungszeiten</li>
-          <li>Texte für alle Seiten, mit Ihnen abgestimmt</li>
-          <li>Für Handy, Tablet und PC optimiert</li>
-          <li>Impressum &amp; Datenschutz-Vorlage</li>
-          <li>2 Korrekturrunden</li>
+          <li class="pkg__punkt"><span class="pkg__kat">Design</span><span class="pkg__text">Bis zu 5 Seiten, Menü &amp; Seitenübergänge, Ihr Logo eingebunden</span></li>
+          <li class="pkg__punkt"><span class="pkg__kat">Bilder &amp; Videos</span><span class="pkg__text">10 eigene Bilder + 1 Video-Loop, Ihre eigenen Fotos aufbereitet (Licht, Schärfe, Freistellen)</span></li>
+          <li class="pkg__punkt"><span class="pkg__kat">Animation</span><span class="pkg__text">Parallax auf jeder Seite, Hover-Effekte, animierte Zahlen &amp; Überschriften</span></li>
+          <li class="pkg__punkt"><span class="pkg__kat">Funktionen</span><span class="pkg__text">Galerie, Preisliste oder Speisekarte, FAQ, Anfrage-Fragebogen</span></li>
+          <li class="pkg__punkt"><span class="pkg__kat">Teilen</span><span class="pkg__text">Eigenes Vorschaubild für jede Seite</span></li>
+          <li class="pkg__punkt"><span class="pkg__kat">Service</span><span class="pkg__text">Texte gemeinsam erarbeitet, 2 Korrekturrunden</span></li>
         </ul>
         <div class="pkg__abo">
           <div class="pkg__abo-kopf"><span class="pkg__abo-preis">+ 20 €<small> / Monat</small></span><span class="pkg__abo-titel">Hosting, Domain<br>&amp; Pflege</span></div>
           <ul>
-            <li>Hosting mit https-Verschlüsselung</li>
-            <li>Domain (.de) inklusive, auf Ihren Namen</li>
-            <li>Jede Version gesichert</li>
-            <li>Bis zu 3 kleine Änderungen pro Monat (Texte, Bilder, Preise)</li>
+            <li>Hosting &amp; Domain (.de) auf Ihren Namen</li>
+            <li>Sicherung jeder Version</li>
+            <li>Bis zu 3 kleine Änderungen pro Monat</li>
             <li>E-Mail-Weiterleitung (info@ihre-domain.de)</li>
           </ul>
         </div>
@@ -662,30 +656,20 @@ body { overflow-x: clip; }
         <div class="pkg__kopf"><h3 class="pkg__name">Individuell</h3><span class="pkg__tag">bis 10 Seiten</span></div>
         <p class="pkg__price">400 €<small>einmalig · bis zu 10 Seiten</small></p>
         <ul class="pkg__list">
-          <li>Bis zu 10 Seiten mit Menü &amp; Seitenübergängen</li>
-          <li>20 eigene KI-Bilder</li>
-          <li>Parallax-Szene mit Ihnen oder Ihrem Produkt – wie auf dieser Seite</li>
-          <li>Video im Kopfbereich</li>
-          <li>3D-Element, z. B. Ihr Produkt zum Drehen</li>
-          <li>Scroll-Story: Ihre Inhalte entfalten sich beim Scrollen</li>
-          <li>Eigener Cursor &amp; besondere Effekte</li>
-          <li>Eigenes Design-Konzept nach Ihrer Marke</li>
-          <li>Logo-Entwurf &amp; Farben</li>
-          <li>Texte komplett von mir</li>
-          <li>Auf Wunsch zweisprachig (Deutsch &amp; Englisch)</li>
-          <li>Terminbuchung oder Newsletter (Einbindung eines Anbieters)</li>
-          <li>Impressum &amp; Datenschutz-Vorlage</li>
-          <li>3 Korrekturrunden</li>
+          <li class="pkg__punkt"><span class="pkg__kat">Design</span><span class="pkg__text">Bis zu 10 Seiten, Design-Konzept, Logo &amp; Farben, Hell- &amp; Dunkel-Modus</span></li>
+          <li class="pkg__punkt"><span class="pkg__kat">Bilder &amp; Videos</span><span class="pkg__text">20 eigene Bilder, Video im Kopfbereich, Parallax-Szene mit Ihnen oder Ihrem Produkt</span></li>
+          <li class="pkg__punkt"><span class="pkg__kat">Animation</span><span class="pkg__text">3D-Element, Scroll-Story, eigener Cursor, Lade-Animation mit Ihrem Logo</span></li>
+          <li class="pkg__punkt"><span class="pkg__kat">Funktionen</span><span class="pkg__text">Terminbuchung oder Newsletter, Vorher-Nachher-Regler, auf Wunsch zweisprachig</span></li>
+          <li class="pkg__punkt"><span class="pkg__kat">Teilen</span><span class="pkg__text">Eigenes Vorschaubild für jede Seite</span></li>
+          <li class="pkg__punkt"><span class="pkg__kat">Service</span><span class="pkg__text">Texte komplett von mir, 3 Korrekturrunden, persönliche Übergabe mit Erklärung</span></li>
         </ul>
         <div class="pkg__abo">
           <div class="pkg__abo-kopf"><span class="pkg__abo-preis">+ 35 €<small> / Monat</small></span><span class="pkg__abo-titel">Hosting, Domain<br>&amp; Pflege</span></div>
           <ul>
-            <li>Hosting mit https-Verschlüsselung</li>
-            <li>Domain (.de) inklusive, auf Ihren Namen</li>
-            <li>Jede Version gesichert</li>
-            <li>1 Update pro Monat: neue Aktion, Saison-Bild oder Bereich</li>
-            <li>E-Mail-Weiterleitung (info@ihre-domain.de)</li>
-            <li>Antwort am nächsten Werktag</li>
+            <li>Hosting &amp; Domain (.de) auf Ihren Namen</li>
+            <li>Sicherung jeder Version</li>
+            <li>1 Update pro Monat (Aktion, Saison, neuer Bereich)</li>
+            <li>E-Mail-Weiterleitung · Antwort am nächsten Werktag</li>
           </ul>
         </div>
         <a class="btn pkg__cta" href="#kontakt" data-paket="Individuell">Individuell anfragen</a>
