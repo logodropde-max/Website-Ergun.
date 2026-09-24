@@ -13,6 +13,12 @@ Der Assistent „endo" steht auf [[endo-ai|endo.ai]] ganz oben im Vordergrund. E
 5. E-Mail angeben, dann per WhatsApp oder E-Mail an Emre schicken. Die Nachricht enthält Kategorie, Look, Format, Foto-Link und E-Mail.
 6. Freie Fragen beantwortet endo jederzeit.
 
+## Aussehen (Stand 24.09. abends)
+- **Desktop:** schlankes Glas-Panel unten rechts im Hero (380 × 420 px, Rand 1 px, Hintergrund 45 % deckend, Blur 16 px). Überschrift „Zeigen Sie mir Ihr Produkt." links unten, die Kugel bleibt in der Mitte frei sichtbar.
+- **Handy:** nur eine Pille „Fragen Sie endo …" unten. Antippen lässt den Verlauf weich auffahren (höchstens 55 % der Bildschirmhöhe), mit Schließen-Knopf, Escape oder Tippen daneben. Die Tastatur verdeckt das Feld nicht. Die Pille verschwindet, wenn man vom Hero wegscrollt.
+- Nachrichten 14 px, kompakte Blasen, endo „tippt" mit drei Punkten, neue Nachrichten gleiten in 240 ms ein. Vorschläge liegen in einer Zeile zum Wischen.
+- Bei „Bewegung reduzieren" im System nur sanftes Einblenden, keine Bewegung.
+
 ## Technik
 - Seite: `ki/js/agent.js` (Chat-Ablauf), Funktion: `api/agent.js` auf [[Vercel]].
 - Freie Fragen gehen an die Claude-API von Anthropic (Modell Claude Opus 5, kurze Antworten, 1 bis 3 Sätze auf Deutsch, per Sie).
