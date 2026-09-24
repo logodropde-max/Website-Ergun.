@@ -93,8 +93,17 @@ Hochladen: `index.html`, `impressum.html`, `datenschutz.html`, `favicon*`, `appl
 - **24.09. 21:10: Fragebogen als Tabelle** – auf Emres Wunsch um 21:30 wieder zurückgenommen (Stand 4db4027 als Basis).
 - **24.09. 21:30: Fragen verbessert, übersichtlicher.** Wieder Stepper, jetzt **8 Schritte**. Neue Namen: `anliegen` (Radio, „Meine jetzige Seite erneuern“ → `[data-zeige-bei="anliegen:Meine jetzige Seite"]` Feld `alt`), `ziel`, `kunde`, `wirkung` + `vorbild` (kein Auto-Weiter), `staerke` + `besonders`, `vorhanden` (ohne „Eine Website“) + `dateien`, `gespraech`, Kontakt. Auto-Weiter nur, wenn im Schritt kein Zusatzfeld sichtbar wird. CSS-Block „Fragebogen übersichtlicher (24.09. nachts)“: `.schritt .chips` als 2-Spalten-Raster, ≤ 520 px eine Spalte.
 
+## Kontakt einfach (Stand 24.09. nachts, Claude Code)
+Der Fragebogen mit Schritten ist ersetzt durch **ein übersichtliches Formular** in einer Karte (`form#anfrage.anfrage`):
+1. Weg wählen: WhatsApp oder E-Mail (`input[name=weg]`, `.weg__option`). Der Senden-Knopf folgt der Wahl (Text, Symbol, Farbe).
+2. Name + E-Mail-Adresse (Pflicht), Land (`select#f-land`, alle 27 EU-Länder + „Anderes Land", Standard Deutschland) + Telefon (optional, Platzhalter zeigt die Vorwahl des Landes).
+3. „Wobei brauchen Sie Hilfe?": Neue Website · Website-Redesign · Onlineshop (E-Commerce) · Anderes (`input[name=hilfe]`).
+4. „Ihre Anfrage" (Textfeld), Dateien (optional, Upload wie unten), Senden.
+Darunter E-Mail/Telefon (`.contact__meta`) und der Agentur-Text (`.agentur`): „ERGUN. ist eine Premium-Digitalagentur für Websites auf Weltklasse-Niveau …".
+CSS-Block „Kontakt einfach (24.09. nachts)" am Ende des `<style>`. Die alten Fragebogen-Styles (`.schritt`, `.bogen`, `.abschluss` …) stehen noch im CSS, werden aber nicht mehr benutzt.
+
 ## Datei-Upload im Formular (Stand 24.09., Claude Code)
-WhatsApp-Links (`wa.me`) können nur Text tragen. Deshalb lädt der Fragebogen (Dateifeld `dateien`) gewählte Dateien sofort hoch und schreibt die Links in die Nachricht.
+WhatsApp-Links (`wa.me`) können nur Text tragen. Deshalb lädt das Kontaktformular (Dateifeld `dateien`) gewählte Dateien sofort hoch und schreibt die Links in die Nachricht.
 - `api/upload.js`: Vercel-Funktion, nimmt eine Datei pro Aufruf an (höchstens 4 MB; Endungen jpg, png, webp, gif, heic, svg, pdf, doc, docx, ai, zip) und legt sie öffentlich unter `anfragen/` in Vercel Blob ab.
 - Fotos über 3,5 MB verkleinert der Browser vorher auf höchstens 2560 px als JPEG.
 - Scheitert ein Upload (z. B. lokal per Doppelklick ohne Server), steht die Datei als „bitte selbst anhängen" in der Liste und nur ihr Name in der Nachricht.
