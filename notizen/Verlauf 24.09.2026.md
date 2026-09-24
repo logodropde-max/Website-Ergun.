@@ -11,5 +11,6 @@ Was Claude Code heute an der [[ERGUN Website (Übersicht)|Website]] gemacht hat.
 4. **Notizen** für Obsidian angelegt (Pull Request 3) → [[KI-Studio mit Higgsfield]]
 5. **endo.ai** Landingpage mit 3D-Kugel, Beispielbildern und Premium-Paket (Pull Request 4) → [[endo-ai|endo.ai]], [[Credit-Pakete]]
 6. **Graph-Ansicht:** alle Notizen verlinkt, Mittelpunkt ist [[ERGUN Website (Übersicht)]]
+7. **endo.ai neu:** Agent endo im Vordergrund, nur noch die Tasse als Beispiel, 14 Angebote in drei Gruppen, Paketwahl-Karte auf dem Handy → [[endo Chat-Agent]], [[endo-ai|endo.ai]]
 
 Offene Punkte: [[To-dos]]

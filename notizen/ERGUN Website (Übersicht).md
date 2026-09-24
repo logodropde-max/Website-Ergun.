@@ -12,6 +12,7 @@ Zentrale Notiz für alles rund um die Website und endo.ai. Von hier gehen alle V
 - [[Kontaktformular]]: WhatsApp oder E-Mail, EU-Länder, Anliegen
 - [[Datei-Upload (Vercel Blob)]]: Fotos als Link in der Nachricht
 - [[endo-ai|endo.ai]]: KI-Studio als zweites Einkommen
+- [[endo Chat-Agent]]: Assistent, der antwortet und zum Produktfoto einlädt
 - [[KI-Studio mit Higgsfield]]: Plan, Ideen, API erklärt
 
 ## Technik und Dienste

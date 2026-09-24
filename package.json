@@ -2,8 +2,9 @@
   "name": "website-ergun",
   "private": true,
   "type": "module",
-  "description": "Statische Seite ERGUN. mit zwei Vercel-Funktionen für Datei-Uploads aus dem Kontaktformular",
+  "description": "Statische Seite ERGUN. mit endo.ai; Vercel-Funktionen für Datei-Uploads (Vercel Blob) und den Chat-Agenten endo (Claude)",
   "dependencies": {
-    "@vercel/blob": "^2.8.0"
+    "@vercel/blob": "^2.8.0",
+    "@anthropic-ai/sdk": "^0.128.0"
   }
 }

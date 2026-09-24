@@ -7,15 +7,16 @@ Offene Punkte aus [[ERGUN Website (Übersicht)]].
 
 ## Emre
 - [ ] Neuen Higgsfield-Schlüssel erzeugen, alten löschen (wurde im Chat geteilt), nur in [[Vercel]] als `HF_KEY` eintragen → [[Higgsfield API]]
+- [ ] Bei console.anthropic.com einen API-Schlüssel erzeugen und in [[Vercel]] als `ANTHROPIC_API_KEY` eintragen, damit [[endo Chat-Agent|endo]] frei antwortet (ohne Schlüssel: eingebaute Antworten)
 - [ ] Blob-Speicher in Vercel anlegen, Zugriff „Public" → [[Datei-Upload (Vercel Blob)]]
 - [ ] Konto bei [[Lemon Squeezy]] und Store anlegen
 - [ ] Konto bei [[Supabase]] anlegen
 - [ ] In der Claude-Umgebung die Domain `d8j0ntlcm91z4.cloudfront.net` freigeben (Bilder für [[endo-ai|endo.ai]])
-- [ ] Zitat auf der endo.ai-Seite prüfen oder eigenes schicken
 - [ ] AGB und Widerruf für endo.ai → [[Datenschutz und Recht]]
 - [ ] Im Vault `git pull` ausführen, bevor lokal weitergearbeitet wird → [[GitHub]]
 
 ## Claude
-- [ ] Beispielbilder von endo.ai als WebP ins Projekt holen (nach Freigabe der Domain)
+- [ ] Tassenbild von endo.ai als WebP ins Projekt holen (nach Freigabe der Domain)
+- [ ] endo an die echte Erzeugung anschließen, sobald Login und Credits stehen → [[endo Chat-Agent]]
 - [ ] Login, Credit-Kauf und echte Erzeugung für [[endo-ai|endo.ai]] bauen (nach den Konten)
 - [ ] Credit-Verbrauch an echte Kosten anpassen → [[Credit-Pakete]]
