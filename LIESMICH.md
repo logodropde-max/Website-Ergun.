@@ -1,4 +1,4 @@
-# Agentur-Website ERGUN. – Stand 25.09.2026 (Sonnenuntergang → endo.ai, lokal fertig; live = GitHub 138c7c9 bis Emres OK)
+# Agentur-Website ERGUN. – Stand 25.09.2026, 00:22 (= GitHub `main` 00637db, live: Sonnenuntergang → endo.ai)
 
 Eine HTML-Datei, kein Build, nichts von fremden Servern. Aufbau nach der Osmo-Parallax-Vorlage:
 riesiger Name „ERGUN." oben, Sonne dahinter, Emre selbst auf dem Felsgrat davor, Berge schieben sich
@@ -21,9 +21,10 @@ in der beim Scrollen die Geschichte abläuft. Danach kommt nur noch der Footer. 
 
 **Ablauf (GSAP ScrollTrigger, `scrub: true`, Zeiten in Scroll-Pixeln, h = Bühnenhöhe):**
 - Desktop (Karte rechts neben Emre, `right: var(--pad)`, unter 1400 px Rand 24 px; 901–1100 px unter dem Namen): passt die Karte nicht ganz auf den Bildschirm, kommt der Rest 1:1 mit dem Scrollen hoch (T px) · 0,3 h Ruhe · 1,2 h Sonne sinkt (`yPercent 27`), Name wandert 18 % nach unten, Kamm 4 % hoch, blaue Stunde ab 0,3 h, Nacht ab 0,5 h, Karte blendet bei 0,95 h aus · 0,35 h Sonne aus, Glühen sammelt sich (Skalierung 0,15 → 0,67) · 0,7 h Kreis wächst (`circle(0 → R)`, Glühen wächst mit = leuchtender Rand) · 0,25 h Nachlauf. Gesamt ≈ 2,8 h.
-- Handy (≤ 900 px): Karte kommt **unter Emre** 1:1 mit dem Scrollen hoch (Ebenen rücken leicht nach oben) · 0,6 h Ruhe zum Ausfüllen · 0,3 h Karte geht · 1 h Sonne sinkt (20 %) + blaue Stunde · 0,3 h Glühen · 0,6 h Kreis · 0,2 h Nachlauf. Gesamt ≈ 3,9 h.
+- Handy (≤ 900 px): **kein Kasten** – die Seite geht unter Emre weiter: der Kopf (`--karte-kopf` = 104 px: Etikett + „Projekt anfragen“) steht schon am Start auf einem dunklen Verlauf (`.karte` mit `top: calc(100% - 104px)`, Verlauf transparent → 0,95), der Rest kommt 1:1 mit dem Scrollen hoch, bis das ganze Formular unter der Leiste steht (T = Formularhöhe − 104 px; Ebenen rücken leicht hoch, Name blendet auf 12 %) · 0,6 h Ruhe zum Ausfüllen · 0,3 h Formular geht, Name wieder da · 1 h Sonne sinkt (20 %) + blaue Stunde · 0,3 h Glühen · 0,6 h Kreis · 0,2 h Nachlauf. Gesamt ≈ 3,8 h. Kompakt: Land + Telefon nebeneinander, Antworten 2×2, Intro/Hinweis ausgeblendet – auf 390×844 passt alles auf einen Bildschirm (758 px).
 - Kreis-Mitte: Desktop 50 % / 52 %, Handy 50 % / 42 % (dort verschwindet die Sonne hinter dem Kamm).
 - Nur `transform`, `opacity`, `clip-path`. Die frühere CSS-Parallax (`animation-timeline: view()`) ist raus – eine Bewegung, ein System.
+- **Ein** ScrollTrigger (`trigger: .szene`, `start: top top`, `end: bottom bottom`), die Timeline `szeneTl` wird bei `refreshInit` nur geleert und neu befüllt (`baueSzene`). Nie killen und neu anlegen – dabei ging der Scroll-Listener verloren.
 - Während die Karte unter der Leiste liegt: `.nav--karte` (Desktop: „Projekt anfragen“ blendet aus, Handy: Leiste bekommt einen dunklen Verlauf).
 - `karte.inert` sobald sie weg ist, `endo.inert` bis der Kreis offen ist (Tastatur landet nicht in Unsichtbarem).
 
@@ -34,7 +35,7 @@ in der beim Scrollen die Geschichte abläuft. Danach kommt nur noch der Footer. 
 **Offen:** iPhone-Test (Tastatur im angehefteten Formular – Ruhe-Bereich ist 60 svh breit). `_test.html` = Testkopie ohne Intro (`?p=0…1` setzt die Szene), wird nicht veröffentlicht (`_*.html`).
 
 **Prüfen (Headless-Edge, seit 25.09.):** Edge schreibt die Datei erst nach dem Rückkehren des Befehls (warten, bis sie da ist), Python braucht `C:/…`-Pfade, Handy 390 px funktioniert mit
-`--window-size=390,844 --force-device-scale-factor=2`. Zum Scrollen NICHT `scrollTo` (Aufnahme geht schief), sondern die Testkopie mit `?p=` benutzen. WebGL-Kugel und Chat erscheinen headless nicht rechtzeitig – im echten Browser geprüft.
+`--window-size=390,844 --force-device-scale-factor=2`. Zum Scrollen NICHT `scrollTo` (Aufnahme geht schief), sondern die Testkopie mit `?p=` benutzen. WebGL-Kugel und Chat erscheinen headless nicht rechtzeitig – im echten Browser geprüft. In der Claude-Browser-Vorschau steht `requestAnimationFrame` oft still (Fenster verdeckt): dann bewegt sich beim Scrollen nichts, `ScrollTrigger.update()` zeigt trotzdem den richtigen Stand – kein Fehler der Seite.
 
 ## Dateien
 | Datei | Wofür |
