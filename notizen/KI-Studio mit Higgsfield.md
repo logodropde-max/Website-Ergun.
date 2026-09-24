@@ -54,7 +54,7 @@ Start als **„Content-Studio für kleine Unternehmen"** mit Idee 1 und 2 (nur B
 | Start | 9 € | 100 | Produktfotos, Anzeigen, Stories |
 | Pro | 29 € | 400 | wie Start |
 | Studio | 79 € | 1.200 | wie Start |
-| Premium | 199 € | 3.500 | Werbevideos, Models, Parallax-Szenen, Vorrang, 30 Min. Start mit Emre, eigener Kampagnenstil |
+| Premium | 199 € | 3.500 | alles frei: Werbevideos, UGC-Videos, 3D-Modelle, Parallax-Szenen, KI-Markengesicht, Kampagnen im eigenen Stil, Vorrang, 30 Min. Start mit Emre |
 
 Verbrauch (auf der Seite, an echte Higgsfield-Preise anpassen): Produktfoto 2 Credits · Anzeige mit Text 4 · Story/Reel als Bild 4 · Video 5 s 12 · Video 10 s 20 · Parallax-Szene 15.
 Zum Vergleich Higgsfield-App: GPT Image 2.5 in hoher Qualität, 2K, kostet 2,75 Higgsfield-Credits pro Bild. Ein Credit bringt 6,6 bis 9 Cent. Ziel: mindestens das Dreifache der Higgsfield-Kosten.
