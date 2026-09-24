@@ -1,6 +1,6 @@
 # KI-Studio mit Higgsfield (zweites Einkommen)
 
-Stand: 24.09.2026 · gepflegt von Claude Code · liegt im Repo unter `notizen/`, kommt per `git pull` in Obsidian
+Stand: 24.09.2026 abends · gepflegt von Claude Code · liegt im Repo unter `notizen/`, kommt per `git pull` in Obsidian
 
 ## Entscheidungen (Emre, 24.09.)
 - **Wo:** Unterseite der Website, z. B. `/ki`, mit Link von der Startseite.
@@ -9,7 +9,10 @@ Stand: 24.09.2026 · gepflegt von Claude Code · liegt im Repo unter `notizen/`,
 - **Login:** E-Mail-Link ohne Passwort.
 - **Preise:** Vorschlag von Claude (siehe unten), später änderbar.
 - **Obsidian:** Claude pflegt Notizen in diesem Ordner. Änderungen an der Website gehen immer direkt live (main → Vercel).
-- **Offen:** Richtung der KI (siehe Ideen), Name, Konten anlegen.
+- **Name:** endo.ai (Emre, 24.09. abends).
+- **Richtung:** starkes Marketing, E-Commerce, futuristisch und innovativ.
+- **Premium-Paket** zusätzlich zu Start, Pro und Studio.
+- **Offen:** Konten anlegen (Lemon Squeezy, Supabase), Backend bauen.
 
 ## Die Higgsfield-API, einfach erklärt
 - **Was sie ist:** Eine Schnittstelle, über die ein Programm (unsere Website) Higgsfield Aufträge geben kann, ohne dass jemand die Higgsfield-App öffnet. Zugriff auf über 50 Bild- und Video-Modelle (u. a. Higgsfield Soul, Seedream, Nano Banana, Ideogram, Recraft, Kling, Seedance, Wan, MiniMax).
@@ -40,14 +43,24 @@ Zielgruppe wie bei der Agentur: kleine Unternehmen (Café, Friseur, Handwerk, Sh
 ### Empfehlung von Claude
 Start als **„Content-Studio für kleine Unternehmen"** mit Idee 1 und 2 (nur Bilder: günstig, sofort Nutzen, geringes Risiko). Danach Idee 3 (Videos) und Idee 4 (Parallax-Szene) als Premium. Jede Seite endet mit „Komplette Website von ERGUN. anfragen", so bringt die KI auch Agentur-Kunden.
 
-## Credit-Pakete (Vorschlag)
-| Paket | Preis | Credits |
-|---|---|---|
-| Start | 9 € | 100 |
-| Pro | 29 € | 400 |
-| Studio | 79 € | 1.200 |
+## Credit-Pakete (so auf der Seite)
+| Paket | Preis | Credits | Extra |
+|---|---|---|---|
+| Start | 9 € | 100 | Produktfotos, Anzeigen, Stories |
+| Pro | 29 € | 400 | wie Start |
+| Studio | 79 € | 1.200 | wie Start |
+| Premium | 199 € | 3.500 | Werbevideos, Models, Parallax-Szenen, Vorrang, 30 Min. Start mit Emre, eigener Kampagnenstil |
 
-Verbrauch (Vorschlag, an echte Higgsfield-Preise anpassen): Bild 2 Credits · Anzeige mit Text 4 · Video 5 s 12 · Video 10 s 20 · Parallax-Szene 15. Ein Credit bringt 6,6 bis 9 Cent. Ziel: mindestens das Dreifache der Higgsfield-Kosten.
+Verbrauch (auf der Seite, an echte Higgsfield-Preise anpassen): Produktfoto 2 Credits · Anzeige mit Text 4 · Story/Reel als Bild 4 · Video 5 s 12 · Video 10 s 20 · Parallax-Szene 15.
+Zum Vergleich Higgsfield-App: GPT Image 2.5 in hoher Qualität, 2K, kostet 2,75 Higgsfield-Credits pro Bild. Ein Credit bringt 6,6 bis 9 Cent. Ziel: mindestens das Dreifache der Higgsfield-Kosten.
+
+## Landingpage endo.ai (online seit 24.09. abends)
+- Datei `ki/index.html`, Adresse `/ki/`, Link in Kopf und Fuß der Startseite.
+- Eigene Marke: nur Schrift Geist, Schwarz mit Flächen #181818/#1F1F1F, Akzent Orange #FF5A1F, Überschrift mit Verlauf Weiß → Grau.
+- Aufbau: Insel-Navigation (am Handy Burger mit Vollbild-Menü) · Hero mit Vorher/Nachher-Regler (Handyfoto → Studiofoto) · Modelle-Leiste · Tagline Wort für Wort · Werkzeuge als Bento (Produktfotos, Anzeigen, Werbevideos, Models, Stories, Parallax, Kampagnenstil) · 3 Schritte · Fakten + Zitat Emre · Preise mit Premium · FAQ · Warteliste (öffnet WhatsApp oder E-Mail) · Fuß mit Impressum/Datenschutz.
+- **Beispielbilder:** 9 Bilder aus Emres Higgsfield-Konto (GPT Image 2.5, ca. 20 Credits). Sie liegen vorerst auf dem Higgsfield-Server (CloudFront) und werden von dort geladen. **To-do:** In der Claude-Cloud-Umgebung die Domain `d8j0ntlcm91z4.cloudfront.net` freigeben, dann legt Claude die Bilder als WebP in `ki/bilder/` ab (schneller, datenschutzfreundlicher).
+- **Zitat** von Emre auf der Seite ist ein Vorschlag von Claude, bitte prüfen.
+- Zahlung und Login gibt es noch nicht. Alle Knöpfe führen zur Warteliste.
 
 ## Technik (Plan)
 - **Seite:** `ki.html` bzw. `/ki` im gleichen Design wie die Website.
@@ -56,8 +69,9 @@ Verbrauch (Vorschlag, an echte Higgsfield-Preise anpassen): Bild 2 Credits · An
 - **Geheimnisse** nur als Vercel-Umgebungsvariablen, nie im Code oder Chat: `HF_API_KEY`, `HF_API_SECRET`, `LEMONSQUEEZY_WEBHOOK_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`.
 
 ## To-do für Emre (vor dem Bau)
-- [ ] Richtung wählen (Ideen oben) und Namen festlegen (Vorschlag: „ERGUN. Studio")
-- [ ] cloud.higgsfield.ai: Konto, API-Key + Secret erzeugen, 10–20 $ Guthaben zum Testen
+- [x] Richtung und Name: endo.ai, Marketing/E-Commerce/futuristisch
+- [ ] **Higgsfield-API-Schlüssel neu erzeugen:** Der erste Schlüssel wurde am 24.09. im Chat geteilt. In cloud.higgsfield.ai löschen, neuen erzeugen und nur in Vercel eintragen (`HF_KEY` = key:secret)
+- [ ] cloud.higgsfield.ai: 10–20 $ Guthaben zum Testen
 - [ ] Lemon Squeezy: Konto und Store anlegen (Freischaltung dauert ein paar Tage, früh starten)
 - [ ] Supabase: kostenloses Konto anlegen
 - [ ] Schlüssel in Vercel eintragen: Projekt → Settings → Environment Variables (nicht in den Chat schreiben)
