@@ -556,6 +556,64 @@ body { overflow-x: clip; }
 .bogen__weiter[hidden] { display: none; }
 .ist-stepper legend:focus, .ist-stepper .schritt__frage:focus { outline: none; }
 @media (prefers-reduced-motion: reduce) { .ist-stepper [data-schritt].ist-aktiv, .ist-stepper [data-zeige-bei].ist-sichtbar { animation: none; } .bogen__balken i { transition: none; } }
+/* ---------- Fragebogen wie ein Beratungsgespräch (24.09. abends) ---------- */
+.schritt .bogen__extra { margin-top: 4px; }
+.ist-stepper [data-schritt].ist-aktiv { animation: bogenRein 380ms var(--ease-out) both; }
+@keyframes bogenRein { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: none; } }
+@keyframes bogenZurueck { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: none; } }
+/* Antwort-Knöpfe kommen kurz nacheinander herein */
+.ist-stepper [data-schritt].ist-aktiv .chip { animation: chipRein 360ms var(--ease-out) both; animation-delay: calc(80ms + var(--i, 0) * 35ms); }
+@keyframes chipRein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+/* Druck-Rückmeldung und kleines Einrasten bei der Auswahl */
+.chip span { transition: border-color 200ms var(--ease), color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
+.chip:active span { transform: scale(0.97); }
+.chip input:checked + span { animation: chipWahl 260ms var(--ease-out); }
+@keyframes chipWahl { 0% { transform: scale(0.96); } 100% { transform: scale(1); } }
+
+/* „Das nehme ich mit in unser Gespräch" */
+.mitnahme { display: grid; gap: 12px; padding: 16px 18px; border-radius: 8px; border: 1px solid rgba(255,90,31,0.28); background: rgba(255,90,31,0.05); }
+.mitnahme[hidden] { display: none; }
+.mitnahme__titel { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; color: var(--text); }
+.mitnahme__titel img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.mitnahme__liste { margin: 0; display: grid; gap: 6px; }
+.mitnahme__zeile { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 12px; font-size: 14px; line-height: 1.45; }
+.mitnahme__zeile dt { color: var(--muted); }
+.mitnahme__zeile dd { margin: 0; color: var(--text); overflow-wrap: anywhere; }
+.ist-aktiv .mitnahme__zeile { animation: chipRein 420ms var(--ease-out) both; animation-delay: calc(140ms + var(--i, 0) * 55ms); }
+@media (max-width: 520px) { .mitnahme { padding: 14px 14px; } .mitnahme__zeile { grid-template-columns: 96px minmax(0, 1fr); gap: 10px; font-size: 13.5px; } }
+
+/* Abschluss nach dem Senden: Foto, Dank, was als Nächstes passiert */
+.abschluss { display: grid; gap: 28px; padding: 30px 28px 26px; border: 1px solid var(--line); border-radius: 10px; background: linear-gradient(180deg, rgba(242,239,232,0.035), rgba(242,239,232,0.01)); }
+.abschluss[hidden] { display: none; }
+.abschluss:focus { outline: none; }
+.ist-fertig > :not(.abschluss) { display: none !important; }
+.abschluss__kopf { display: flex; align-items: center; gap: 16px; }
+.abschluss__kopf img { width: 64px; height: 64px; flex: none; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,140,60,0.45); padding: 3px; }
+.abschluss__titel { font-family: var(--serif); font-size: clamp(1.8rem, 3vw, 2.4rem); line-height: 1.05; letter-spacing: -0.01em; }
+.abschluss__sub { margin-top: 4px; color: var(--muted); font-size: 15px; text-wrap: pretty; }
+.ablauf { list-style: none; margin: 0; padding: 0; counter-reset: ablauf; }
+.ablauf li { position: relative; display: grid; gap: 2px; padding: 0 0 22px 46px; counter-increment: ablauf; }
+.ablauf li:last-child { padding-bottom: 0; }
+.ablauf li::before { content: counter(ablauf); position: absolute; left: 0; top: -3px; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line); background: var(--bg); color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.ablauf li::after { content: ""; position: absolute; left: 15px; top: 32px; bottom: 2px; width: 1px; background: var(--line); transform-origin: top; }
+.ablauf li:last-child::after { content: none; }
+.ablauf li.ist-jetzt::before { border-color: var(--accent); background: var(--accent); color: var(--bg); }
+.ablauf b { font-weight: 500; font-size: 15px; color: var(--text); }
+.ablauf span { font-size: 14px; color: var(--muted); text-wrap: pretty; }
+.abschluss__aktionen { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; }
+.abschluss.ist-da .abschluss__kopf img { animation: fotoRein 520ms var(--ease-out) both; }
+.abschluss.ist-da .abschluss__kopf > div { animation: chipRein 480ms var(--ease-out) 80ms both; }
+.abschluss.ist-da .ablauf li { animation: chipRein 460ms var(--ease-out) both; animation-delay: calc(220ms + var(--i, 0) * 110ms); }
+.abschluss.ist-da .ablauf li::after { animation: linie 520ms var(--ease-out) both; animation-delay: calc(380ms + var(--i, 0) * 110ms); }
+.abschluss.ist-da .ablauf li.ist-jetzt::before { animation: punkt 900ms var(--ease-out) 520ms both; }
+.abschluss.ist-da .abschluss__aktionen { animation: chipRein 420ms var(--ease-out) 620ms both; }
+@keyframes fotoRein { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: none; } }
+@keyframes linie { from { transform: scaleY(0); } to { transform: none; } }
+@keyframes punkt { 0% { box-shadow: 0 0 0 0 rgba(255,90,31,0.45); } 100% { box-shadow: 0 0 0 10px rgba(255,90,31,0); } }
+@media (max-width: 700px) { .abschluss { padding: 24px 18px 20px; } .abschluss__aktionen .btn { flex: 1 1 100%; } }
+@media (prefers-reduced-motion: reduce) {
+  #anfrage *, #anfrage *::before, #anfrage *::after, .abschluss { animation: none !important; }
+}
 </style>
 <script>
 /* Auftritt: zuerst nur der Name, dann die Seite. Bei "Bewegung reduzieren" kein Vorhang. */
@@ -614,7 +672,7 @@ body { overflow-x: clip; }
       </figure>
       <span class="contact__label reveal">Kostenloses Erstgespräch</span>
       <h2 class="contact__big reveal" id="kontakt-titel">Projekt anfragen</h2>
-      <p class="contact__intro reveal">Ein paar Fragen zum Antippen, dann melde ich mich für ein kostenloses, unverbindliches Erstgespräch. Dauert etwa eine Minute.</p>
+      <p class="contact__intro reveal">Sieben kurze Fragen, fast alles zum Antippen. So komme ich vorbereitet in unser kostenloses Gespräch, statt bei null anzufangen.</p>
     </div>
     <div class="contact__raster">
       <form class="form form--bogen bogen reveal" id="anfrage" novalidate>
@@ -623,76 +681,103 @@ body { overflow-x: clip; }
           <span class="bogen__balken"><i data-balken></i></span>
         </div>
 
-        <fieldset class="schritt field--chips" data-schritt>
-          <legend tabindex="-1"><span class="schritt__nr">01</span>Haben Sie schon eine Website?</legend>
+        <fieldset class="schritt field--chips" data-schritt data-auto>
+          <legend tabindex="-1"><span class="schritt__nr">01</span>Was soll ein Besucher am Ende tun? <small>das Wichtigste</small></legend>
           <div class="chips">
-            <label class="chip"><input type="radio" name="bisher" value="Nein, das wird die erste"><span>Nein, das wird die erste</span></label>
-            <label class="chip"><input type="radio" name="bisher" value="Ja, soll komplett neu"><span>Ja, soll komplett neu</span></label>
-            <label class="chip"><input type="radio" name="bisher" value="Ja, nur auffrischen"><span>Ja, nur auffrischen</span></label>
-          </div>
-          <div class="field bogen__extra" data-zeige-bei="bisher:Ja">
-            <label for="f-alt">Adresse der jetzigen Seite (optional)</label>
-            <input id="f-alt" name="alt" type="text" inputmode="url" autocomplete="url" placeholder="www.ihre-seite.de">
+            <label class="chip"><input type="radio" name="ziel" value="anrufen"><span>Anrufen</span></label>
+            <label class="chip"><input type="radio" name="ziel" value="einen Termin buchen"><span>Einen Termin buchen</span></label>
+            <label class="chip"><input type="radio" name="ziel" value="eine Anfrage schreiben"><span>Eine Anfrage schreiben</span></label>
+            <label class="chip"><input type="radio" name="ziel" value="vorbeikommen"><span>Vorbeikommen</span></label>
+            <label class="chip"><input type="radio" name="ziel" value="etwas kaufen oder bestellen"><span>Etwas kaufen oder bestellen</span></label>
+            <label class="chip"><input type="radio" name="ziel" value="Vertrauen fassen"><span>Mich kennenlernen &amp; Vertrauen fassen</span></label>
           </div>
         </fieldset>
 
         <fieldset class="schritt field--chips" data-schritt>
-          <legend tabindex="-1"><span class="schritt__nr">02</span>Was soll die Seite erreichen? <small>mehrere möglich</small></legend>
+          <legend tabindex="-1"><span class="schritt__nr">02</span>Wer ist Ihr Wunschkunde? <small>mehrere möglich</small></legend>
           <div class="chips">
-            <label class="chip"><input type="checkbox" name="ziel" value="Mehr Anfragen"><span>Mehr Anfragen</span></label>
-            <label class="chip"><input type="checkbox" name="ziel" value="Termine & Buchungen"><span>Termine & Buchungen</span></label>
-            <label class="chip"><input type="checkbox" name="ziel" value="Angebot & Preise zeigen"><span>Angebot & Preise zeigen</span></label>
-            <label class="chip"><input type="checkbox" name="ziel" value="Produkte präsentieren"><span>Produkte präsentieren</span></label>
-            <label class="chip"><input type="checkbox" name="ziel" value="Professioneller Auftritt"><span>Professioneller Auftritt</span></label>
-            <label class="chip"><input type="checkbox" name="ziel" value="Mitarbeiter finden"><span>Mitarbeiter finden</span></label>
+            <label class="chip"><input type="checkbox" name="kunde" value="Privatkunden aus der Region"><span>Privatkunden aus der Region</span></label>
+            <label class="chip"><input type="checkbox" name="kunde" value="Familien"><span>Familien</span></label>
+            <label class="chip"><input type="checkbox" name="kunde" value="Junge Leute"><span>Junge Leute</span></label>
+            <label class="chip"><input type="checkbox" name="kunde" value="Firmen & Geschäftskunden"><span>Firmen &amp; Geschäftskunden</span></label>
+            <label class="chip"><input type="checkbox" name="kunde" value="Kunden mit hohem Anspruch"><span>Kunden mit hohem Anspruch</span></label>
+            <label class="chip"><input type="checkbox" name="kunde" value="Gäste & Touristen"><span>Gäste &amp; Touristen</span></label>
           </div>
         </fieldset>
 
         <fieldset class="schritt field--chips" data-schritt data-auto>
-          <legend tabindex="-1"><span class="schritt__nr">03</span>Wie soll sie wirken?</legend>
+          <legend tabindex="-1"><span class="schritt__nr">03</span>Die ersten fünf Sekunden auf Ihrer Seite: Was sollen Besucher fühlen?</legend>
           <div class="chips">
-            <label class="chip chip--stil"><input type="radio" name="stil" value="Ruhig & edel"><span><i class="stil__farben" aria-hidden="true"><b style="background:#1c1b19"></b><b style="background:#c9b99a"></b><b style="background:#f2efe8"></b></i>Ruhig & edel</span></label>
-            <label class="chip chip--stil"><input type="radio" name="stil" value="Modern & klar"><span><i class="stil__farben" aria-hidden="true"><b style="background:#f4f4f2"></b><b style="background:#16181c"></b><b style="background:#2f6bff"></b></i>Modern & klar</span></label>
-            <label class="chip chip--stil"><input type="radio" name="stil" value="Warm & persönlich"><span><i class="stil__farben" aria-hidden="true"><b style="background:#7a3e22"></b><b style="background:#e9a46a"></b><b style="background:#f6ead8"></b></i>Warm & persönlich</span></label>
-            <label class="chip chip--stil"><input type="radio" name="stil" value="Mutig & auffällig"><span><i class="stil__farben" aria-hidden="true"><b style="background:#141414"></b><b style="background:#ff5a1f"></b><b style="background:#ffd23f"></b></i>Mutig & auffällig</span></label>
-            <label class="chip"><input type="radio" name="stil" value="Weiß ich noch nicht"><span>Weiß ich noch nicht</span></label>
+            <label class="chip chip--stil"><input type="radio" name="wirkung" value="Vertrauen & Ruhe"><span><i class="stil__farben" aria-hidden="true"><b style="background:#1c1b19"></b><b style="background:#c9b99a"></b><b style="background:#f2efe8"></b></i>Vertrauen &amp; Ruhe</span></label>
+            <label class="chip chip--stil"><input type="radio" name="wirkung" value="Klar & modern"><span><i class="stil__farben" aria-hidden="true"><b style="background:#f4f4f2"></b><b style="background:#16181c"></b><b style="background:#2f6bff"></b></i>Klar &amp; modern</span></label>
+            <label class="chip chip--stil"><input type="radio" name="wirkung" value="Warm & persönlich"><span><i class="stil__farben" aria-hidden="true"><b style="background:#7a3e22"></b><b style="background:#e9a46a"></b><b style="background:#f6ead8"></b></i>Warm &amp; persönlich</span></label>
+            <label class="chip chip--stil"><input type="radio" name="wirkung" value="Mutig & besonders"><span><i class="stil__farben" aria-hidden="true"><b style="background:#141414"></b><b style="background:#ff5a1f"></b><b style="background:#ffd23f"></b></i>Mutig &amp; besonders</span></label>
+            <label class="chip"><input type="radio" name="wirkung" value="Noch offen, lieber gemeinsam überlegen"><span>Weiß ich noch nicht</span></label>
           </div>
         </fieldset>
 
         <fieldset class="schritt field--chips" data-schritt>
-          <legend tabindex="-1"><span class="schritt__nr">04</span>Was gibt es schon? <small>mehrere möglich</small></legend>
+          <legend tabindex="-1"><span class="schritt__nr">04</span>Warum kommen Kunden zu Ihnen und nicht zur Konkurrenz? <small>mehrere möglich</small></legend>
           <div class="chips">
+            <label class="chip"><input type="checkbox" name="staerke" value="Persönlicher Service"><span>Persönlicher Service</span></label>
+            <label class="chip"><input type="checkbox" name="staerke" value="Qualität & Handwerk"><span>Qualität &amp; Handwerk</span></label>
+            <label class="chip"><input type="checkbox" name="staerke" value="Schnell & zuverlässig"><span>Schnell &amp; zuverlässig</span></label>
+            <label class="chip"><input type="checkbox" name="staerke" value="Erfahrung & Tradition"><span>Erfahrung &amp; Tradition</span></label>
+            <label class="chip"><input type="checkbox" name="staerke" value="Faire Preise"><span>Faire Preise</span></label>
+            <label class="chip"><input type="checkbox" name="staerke" value="Etwas, das es nur bei uns gibt"><span>Etwas, das es nur bei uns gibt</span></label>
+          </div>
+          <div class="field bogen__extra">
+            <label for="f-besonders">In einem Satz (optional)</label>
+            <input id="f-besonders" name="besonders" type="text" maxlength="160" autocomplete="off" placeholder="Was sagen zufriedene Kunden über Sie?">
+          </div>
+        </fieldset>
+
+        <fieldset class="schritt field--chips" data-schritt>
+          <legend tabindex="-1"><span class="schritt__nr">05</span>Was gibt es schon? <small>mehrere möglich</small></legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="vorhanden" value="Eine Website"><span>Eine Website</span></label>
             <label class="chip"><input type="checkbox" name="vorhanden" value="Logo"><span>Logo</span></label>
-            <label class="chip"><input type="checkbox" name="vorhanden" value="Farben & Schrift"><span>Farben & Schrift</span></label>
+            <label class="chip"><input type="checkbox" name="vorhanden" value="Farben & Schrift"><span>Farben &amp; Schrift</span></label>
             <label class="chip"><input type="checkbox" name="vorhanden" value="Eigene Fotos"><span>Eigene Fotos</span></label>
             <label class="chip"><input type="checkbox" name="vorhanden" value="Texte"><span>Texte</span></label>
             <label class="chip"><input type="checkbox" name="vorhanden" value="Noch nichts"><span>Noch nichts</span></label>
           </div>
-        </fieldset>
-
-        <fieldset class="schritt field--chips" data-schritt data-auto>
-          <legend tabindex="-1"><span class="schritt__nr">05</span>Wann soll die Seite online sein?</legend>
-          <div class="chips">
-            <label class="chip"><input type="radio" name="wann" value="So bald wie möglich"><span>So bald wie möglich</span></label>
-            <label class="chip"><input type="radio" name="wann" value="In 1–2 Monaten"><span>In 1–2 Monaten</span></label>
-            <label class="chip"><input type="radio" name="wann" value="Ohne Eile"><span>Ohne Eile</span></label>
+          <div class="field bogen__extra" data-zeige-bei="vorhanden:Eine Website">
+            <label for="f-alt">Adresse Ihrer jetzigen Seite (optional)</label>
+            <input id="f-alt" name="alt" type="text" inputmode="url" autocomplete="url" placeholder="www.ihre-seite.de">
+          </div>
+          <div class="field bogen__extra">
+            <label for="f-vorbild">Eine Website, die Ihnen gefällt – gern aus einer anderen Branche (optional)</label>
+            <input id="f-vorbild" name="vorbild" type="text" inputmode="url" autocomplete="off" placeholder="Link oder Name">
+          </div>
+          <div class="field field--datei">
+            <label for="f-datei">Logo oder Fotos mitschicken (optional)</label>
+            <div class="upload" data-upload>
+            <svg class="upload__symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4"/><path d="m7 9 5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+            <span class="upload__text"><b>Dateien auswählen</b><small>Antippen oder hierher ziehen · Bilder, PDF, Word, ZIP</small></span>
+            <input id="f-datei" name="dateien" type="file" multiple accept="image/*,.pdf,.doc,.docx,.svg,.ai,.zip">
+          </div>
+            <ul class="datei__liste" data-datei-liste aria-live="polite"></ul>
           </div>
         </fieldset>
 
         <fieldset class="schritt field--chips" data-schritt data-auto>
-          <legend tabindex="-1"><span class="schritt__nr">06</span>Erstgespräch – wie am liebsten? <small>kostenlos &amp; unverbindlich</small></legend>
+          <legend tabindex="-1"><span class="schritt__nr">06</span>Wie möchten Sie das Erstgespräch führen? <small>kostenlos &amp; unverbindlich</small></legend>
           <div class="chips">
             <label class="chip"><input type="radio" name="gespraech" value="Telefon"><span>Telefon</span></label>
             <label class="chip"><input type="radio" name="gespraech" value="WhatsApp-Anruf"><span>WhatsApp-Anruf</span></label>
             <label class="chip"><input type="radio" name="gespraech" value="Video-Call"><span>Video-Call</span></label>
             <label class="chip"><input type="radio" name="gespraech" value="Persönlich treffen"><span>Persönlich treffen</span></label>
-            <label class="chip"><input type="radio" name="gespraech" value="Erst mal per Nachricht"><span>Erst mal per Nachricht</span></label>
+            <label class="chip"><input type="radio" name="gespraech" value="Erst mal schreiben"><span>Erst mal schreiben</span></label>
           </div>
         </fieldset>
 
         <div class="schritt" role="group" aria-labelledby="schritt-kontakt" data-schritt>
-          <p class="schritt__frage" id="schritt-kontakt" tabindex="-1"><span class="schritt__nr">07</span>Wie erreiche ich Sie?</p>
-          <p class="bogen__antworten" data-antworten hidden></p>
+          <p class="schritt__frage" id="schritt-kontakt" tabindex="-1"><span class="schritt__nr">07</span>Wohin darf ich mich melden?</p>
+          <div class="mitnahme" data-mitnahme hidden>
+            <p class="mitnahme__titel"><img src="bilder/kontakt/emre-144.webp" width="28" height="28" alt="" loading="lazy" decoding="async">Das nehme ich mit in unser Gespräch</p>
+            <dl class="mitnahme__liste" data-mitnahme-liste></dl>
+          </div>
           <div class="form__row">
             <div class="field">
               <label for="f-name">Name</label>
@@ -717,19 +802,6 @@ body { overflow-x: clip; }
               <span class="field__error" aria-hidden="true"></span>
             </div>
           </div>
-          <div class="field">
-            <label for="f-text">Noch etwas? (optional)</label>
-            <textarea id="f-text" name="text" placeholder="Wünsche, Ideen, Seiten, die Ihnen gefallen …"></textarea>
-          </div>
-          <div class="field field--datei">
-            <label for="f-datei">Dateien (optional)</label>
-            <div class="upload" data-upload>
-            <svg class="upload__symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4"/><path d="m7 9 5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-            <span class="upload__text"><b>Dateien hochladen</b><small>Antippen oder hierher ziehen · Bilder, PDF, Word, ZIP</small></span>
-            <input id="f-datei" name="dateien" type="file" multiple accept="image/*,.pdf,.doc,.docx,.svg,.ai,.zip">
-          </div>
-            <ul class="datei__liste" data-datei-liste aria-live="polite"></ul>
-          </div>
           <div class="form__actions">
           <button class="btn btn--wa" type="submit" name="weg" value="whatsapp">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg>
@@ -744,6 +816,25 @@ body { overflow-x: clip; }
         <div class="bogen__nav" data-nav hidden>
           <button class="bogen__zurueck" type="button" data-zurueck>Zurück</button>
           <button class="btn bogen__weiter" type="button" data-weiter>Überspringen</button>
+        </div>
+
+        <div class="abschluss" data-abschluss tabindex="-1" hidden>
+          <div class="abschluss__kopf">
+            <img src="bilder/kontakt/emre-144.webp" width="64" height="64" alt="Emre Ergun" loading="lazy" decoding="async">
+            <div>
+              <p class="abschluss__titel">Danke<span data-vorname></span>.</p>
+              <p class="abschluss__sub" data-abschluss-sub aria-live="polite"></p>
+            </div>
+          </div>
+          <ol class="ablauf">
+            <li class="ist-jetzt"><b>Sie senden die Nachricht</b><span data-ablauf-1>Sie ist fertig geschrieben, ein Tipp auf Senden genügt.</span></li>
+            <li><b>Ich melde mich persönlich</b><span data-ablauf-2>Wir finden gemeinsam einen Termin, der Ihnen passt.</span></li>
+            <li><b>Wir sprechen über Ihre Seite</b><span>Kostenlos und unverbindlich. Danach bekommen Sie ein Angebot, ohne Verpflichtung.</span></li>
+          </ol>
+          <div class="abschluss__aktionen">
+            <button class="btn" type="button" data-nochmal>Nachricht erneut öffnen</button>
+            <button class="bogen__zurueck" type="button" data-aendern>Angaben ändern</button>
+          </div>
         </div>
       </form>
     </div>
@@ -968,39 +1059,56 @@ body { overflow-x: clip; }
   var status = form.querySelector('[data-status]');
   var schritte = [].slice.call(form.querySelectorAll('[data-schritt]'));
   var nav = form.querySelector('[data-nav]'), zurueck = form.querySelector('[data-zurueck]'), weiter = form.querySelector('[data-weiter]');
-  var nrEl = form.querySelector('[data-nr]'), balken = form.querySelector('[data-balken]'), antwortenEl = form.querySelector('[data-antworten]');
-  var LETZTER = schritte.length - 1, aktiv = 0, autoTimer;
+  var nrEl = form.querySelector('[data-nr]'), balken = form.querySelector('[data-balken]');
+  var mitnahme = form.querySelector('[data-mitnahme]'), mitnahmeListe = form.querySelector('[data-mitnahme-liste]');
+  var abschluss = form.querySelector('[data-abschluss]');
+  var LETZTER = schritte.length - 1, aktiv = 0, autoTimer, letzterWeg = 'whatsapp';
   var ruhig = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var TERMIN = { 'Telefon': 'ein Telefonat', 'WhatsApp-Anruf': 'einen WhatsApp-Anruf', 'Video-Call': 'einen Video-Call', 'Persönlich treffen': 'ein Treffen' };
 
   /* ---- Antworten lesen ---- */
   function gewaehlt(name) { return [].map.call(form.querySelectorAll('input[name="' + name + '"]:checked'), function (i) { return i.value; }); }
-  function wert(k) { return form.elements[k] ? form.elements[k].value.trim() : ''; }
+  function wert(k) { return form.elements[k] && form.elements[k].value ? form.elements[k].value.trim() : ''; }
+  function esc(s) { return s.replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  /* [Titel in der Zusammenfassung, Titel in der Nachricht, Wert] – Reihenfolge wie im Gespräch */
   function antworten() {
-    var bisher = gewaehlt('bisher')[0] || '', alt = wert('alt');
+    var ziel = gewaehlt('ziel')[0], satz = wert('besonders'), da = gewaehlt('vorhanden');
+    var staerke = gewaehlt('staerke').join(', ');
+    if (satz) staerke = (staerke ? staerke + ' – ' : '') + '„' + satz + '“';
     return [
-      ['Website bisher', bisher ? bisher + (alt && bisher.indexOf('Ja') === 0 ? ' (' + alt + ')' : '') : ''],
-      ['Ziel', gewaehlt('ziel').join(', ')],
-      ['Wirkung', gewaehlt('stil')[0] || ''],
-      ['Schon da', gewaehlt('vorhanden').join(', ')],
-      ['Online bis', gewaehlt('wann')[0] || ''],
-      ['Erstgespräch', gewaehlt('gespraech')[0] || '']
-    ].filter(function (z) { return z[1]; });
+      ['Ihr Ziel', 'Ziel', ziel ? 'Besucher sollen ' + ziel : ''],
+      ['Wunschkunden', 'Wunschkunden', gewaehlt('kunde').join(', ')],
+      ['Erster Eindruck', 'Erster Eindruck', gewaehlt('wirkung')[0] || ''],
+      ['Ihre Stärke', 'Unsere Stärke', staerke],
+      ['Schon da', 'Schon vorhanden', da.join(', ')],
+      ['Ihre Seite', 'Jetzige Website', da.indexOf('Eine Website') > -1 ? wert('alt') : ''],
+      ['Gefällt Ihnen', 'Gefällt mir', wert('vorbild')],
+      ['Gespräch', 'Erstgespräch', gewaehlt('gespraech')[0] || '']
+    ].filter(function (z) { return z[2]; });
   }
 
   /* ---- Schritt-Logik ---- */
   function zeigeExtras() {
     form.querySelectorAll('[data-zeige-bei]').forEach(function (el) {
-      var r = el.getAttribute('data-zeige-bei').split(':'), v = gewaehlt(r[0])[0] || '';
-      el.classList.toggle('ist-sichtbar', v.indexOf(r[1]) === 0);
+      var r = el.getAttribute('data-zeige-bei').split(':');
+      el.classList.toggle('ist-sichtbar', gewaehlt(r[0]).some(function (v) { return v.indexOf(r[1]) === 0; }));
     });
+    var g = gewaehlt('gespraech')[0], tel = form.elements['tel'];
+    if (tel) tel.placeholder = /Telefon|Anruf/.test(g || '') ? 'für den Anruf' : 'für das Erstgespräch';
   }
-  function hatAntwort(i) { return !!schritte[i].querySelector('input:checked'); }
+  function hatAntwort(i) {
+    return !!schritte[i].querySelector('input:checked') || [].some.call(schritte[i].querySelectorAll('input[type="text"]'), function (el) { return el.value.trim(); });
+  }
   function knopf() { if (weiter) weiter.textContent = hatAntwort(aktiv) ? 'Weiter' : 'Überspringen'; }
-  function zusammenfassung() {
-    if (!antwortenEl) return;
+  function zeigeMitnahme() {
+    if (!mitnahme) return;
     var a = antworten();
-    antwortenEl.hidden = !a.length;
-    antwortenEl.innerHTML = a.map(function (z) { return z[0] + ': <b>' + z[1].replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }) + '</b>'; }).join(' · ');
+    mitnahme.hidden = !a.length;
+    mitnahmeListe.innerHTML = a.map(function (z, i) { return '<div class="mitnahme__zeile" style="--i:' + i + '"><dt>' + z[0] + '</dt><dd>' + esc(z[2]) + '</dd></div>'; }).join('');
+  }
+  function nachOben() {
+    var top = form.getBoundingClientRect().top;
+    if (top < 0) window.scrollBy({ top: top - 90, behavior: ruhig ? 'auto' : 'smooth' });
   }
   function geheZu(i, fokus) {
     if (!form.classList.contains('ist-stepper')) return;
@@ -1009,42 +1117,40 @@ body { overflow-x: clip; }
     form.classList.toggle('geht-zurueck', i < aktiv);
     schritte[aktiv].classList.remove('ist-aktiv');
     aktiv = i;
+    if (aktiv === LETZTER) zeigeMitnahme();
     schritte[aktiv].classList.add('ist-aktiv');
     if (nrEl) nrEl.textContent = aktiv + 1;
     if (balken) balken.style.transform = 'scaleX(' + ((aktiv + 1) / schritte.length) + ')';
     zurueck.disabled = aktiv === 0;
     weiter.hidden = aktiv === LETZTER;
     knopf();
-    if (aktiv === LETZTER) zusammenfassung();
-    var top = form.getBoundingClientRect().top;
-    if (top < 0) window.scrollBy({ top: top - 90, behavior: ruhig ? 'auto' : 'smooth' });
+    nachOben();
     if (fokus) { var h = schritte[aktiv].querySelector('legend, .schritt__frage'); if (h) h.focus({ preventScroll: true }); }
   }
   if (schritte.length > 1 && 'classList' in form) {
     form.classList.add('ist-stepper');
     nav.hidden = false;
+    /* Reihenfolge für das gestaffelte Hereinkommen der Antwort-Knöpfe */
+    schritte.forEach(function (s) { s.querySelectorAll('.chip').forEach(function (c, n) { c.style.setProperty('--i', n); }); });
     schritte[0].classList.add('ist-aktiv');
     geheZu(0, false);
     zurueck.addEventListener('click', function () { geheZu(aktiv - 1, true); });
     weiter.addEventListener('click', function () { geheZu(aktiv + 1, true); });
-    /* Einfachauswahl springt nach kurzem Moment weiter */
+    /* Einfachauswahl springt nach kurzem Moment weiter (Auswahl bleibt sichtbar) */
     form.addEventListener('change', function (e) {
       var el = e.target, s = el.closest('[data-schritt]');
-      zeigeExtras(); knopf();
-      if (el.type === 'radio' && s && s.hasAttribute('data-auto') && schritte.indexOf(s) === aktiv) {
-        clearTimeout(autoTimer);
-        autoTimer = setTimeout(function () { geheZu(aktiv + 1, true); }, ruhig ? 0 : 320);
-      }
-      if (el.name === 'bisher' && el.value.indexOf('Nein') === 0) {
-        clearTimeout(autoTimer);
-        autoTimer = setTimeout(function () { geheZu(aktiv + 1, true); }, ruhig ? 0 : 320);
-      }
       if (el.name === 'vorhanden') {
         var nichts = form.querySelector('input[name="vorhanden"][value="Noch nichts"]');
         if (el === nichts && el.checked) form.querySelectorAll('input[name="vorhanden"]').forEach(function (i) { if (i !== nichts) i.checked = false; });
         else if (el.checked && nichts) nichts.checked = false;
       }
+      zeigeExtras(); knopf();
+      if (el.type === 'radio' && s && s.hasAttribute('data-auto') && schritte.indexOf(s) === aktiv) {
+        clearTimeout(autoTimer);
+        autoTimer = setTimeout(function () { geheZu(aktiv + 1, true); }, ruhig ? 0 : 380);
+      }
     });
+    form.addEventListener('input', function (e) { if (e.target.type === 'text') knopf(); });
     /* Enter im Textfeld eines Zwischenschritts = weiter statt absenden */
     form.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && aktiv < LETZTER && e.target.tagName === 'INPUT') { e.preventDefault(); geheZu(aktiv + 1, true); }
@@ -1096,18 +1202,14 @@ body { overflow-x: clip; }
 
   /* ---- Nachricht & Versand ---- */
   function nachricht() {
-    var n = wert('name'), f = wert('firma'), x = wert('text'), d = dateien();
-    var a = antworten().map(function (z) { return z[0] + ': ' + z[1]; }).join('\n');
-    return 'Hallo, ich bin ' + n + (f ? ' (' + f + ')' : '') + ' und interessiere mich für ein kostenloses Erstgespräch.\n\n' +
+    var n = wert('name'), f = wert('firma'), d = dateien();
+    var a = antworten().map(function (z) { return z[1] + ': ' + z[2]; }).join('\n');
+    return 'Hallo Emre, ich bin ' + n + (f ? ' (' + f + ')' : '') + ' und möchte ein kostenloses Erstgespräch.\n\n' +
       (a ? a + '\n\n' : '') +
-      (x ? x + '\n\n' : '') +
       (d.length ? 'Dateien, die ich hier anhänge: ' + d.join(', ') + '\n\n' : '') +
       'E-Mail: ' + wert('email') + '\n' + (wert('tel') ? 'Telefon: ' + wert('tel') + '\n' : '') + 'Gesendet über den Fragebogen auf der Website.';
   }
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var weg = (e.submitter && e.submitter.value) || 'whatsapp';
-    if (!pruefen()) { status.textContent = 'Bitte Name und E-Mail ausfüllen.'; return; }
+  function oeffne(weg) {
     var m = nachricht();
     if (weg === 'whatsapp') {
       /* Ohne 'noopener': sonst liefert window.open immer null. Verbindung danach per opener = null trennen. */
@@ -1115,13 +1217,43 @@ body { overflow-x: clip; }
       var win = window.open(waLink, '_blank');
       if (win) { try { win.opener = null; } catch (err) {} }
       else { location.href = waLink; }
-      status.textContent = dateien().length ? 'WhatsApp ist geöffnet. Bitte dort Ihre Dateien anhängen und auf Senden tippen.' : 'WhatsApp ist geöffnet. Bitte dort auf Senden tippen.';
     } else {
-      var betreff = 'Anfrage Erstgespräch über ERGUN.';
-      location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent(betreff) + '&body=' + encodeURIComponent(m);
-      status.textContent = dateien().length ? 'Ihr Mailprogramm öffnet sich. Bitte Ihre Dateien anhängen und senden.' : 'Ihr Mailprogramm öffnet sich mit der fertigen Nachricht.';
+      location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent('Anfrage Erstgespräch über ERGUN.') + '&body=' + encodeURIComponent(m);
+    }
+  }
+  function zeigeAbschluss(weg) {
+    if (!abschluss || !form.classList.contains('ist-stepper')) return false;
+    var vorname = wert('name').split(/\s+/)[0], g = gewaehlt('gespraech')[0], wo = weg === 'whatsapp' ? 'WhatsApp' : 'Ihrem Mailprogramm';
+    abschluss.querySelector('[data-vorname]').textContent = vorname ? ', ' + vorname : '';
+    abschluss.querySelector('[data-abschluss-sub]').textContent = 'Jetzt nur noch in ' + wo + ' auf Senden tippen.' + (dateien().length ? ' Ihre Dateien dort bitte anhängen.' : '');
+    abschluss.querySelector('[data-ablauf-2]').textContent = g === 'Erst mal schreiben' ? 'Ich antworte Ihnen persönlich, so wie Sie es möchten: schriftlich.' : 'Wir finden gemeinsam einen Termin für ' + (TERMIN[g] || 'unser Gespräch') + '.';
+    abschluss.querySelectorAll('.ablauf li').forEach(function (li, n) { li.style.setProperty('--i', n); });
+    form.classList.add('ist-fertig');
+    abschluss.hidden = false;
+    abschluss.classList.remove('ist-da'); void abschluss.offsetWidth; abschluss.classList.add('ist-da');
+    window.scrollBy({ top: abschluss.getBoundingClientRect().top - 90, behavior: ruhig ? 'auto' : 'smooth' });
+    abschluss.focus({ preventScroll: true });
+    return true;
+  }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var weg = (e.submitter && e.submitter.value) || 'whatsapp';
+    if (!pruefen()) { status.textContent = 'Bitte Name und E-Mail ausfüllen.'; return; }
+    letzterWeg = weg;
+    oeffne(weg);
+    if (!zeigeAbschluss(weg)) {
+      status.textContent = weg === 'whatsapp' ? 'WhatsApp ist geöffnet. Bitte dort auf Senden tippen.' : 'Ihr Mailprogramm öffnet sich mit der fertigen Nachricht.';
     }
   });
+  if (abschluss) {
+    abschluss.querySelector('[data-nochmal]').addEventListener('click', function () { oeffne(letzterWeg); });
+    abschluss.querySelector('[data-aendern]').addEventListener('click', function () {
+      form.classList.remove('ist-fertig');
+      abschluss.hidden = true;
+      schritte[aktiv].classList.remove('ist-aktiv');
+      aktiv = LETZTER; geheZu(LETZTER, true);
+    });
+  }
 
   zeigeExtras();
 })();
