@@ -1,19 +1,53 @@
-# Agentur-Website ERGUN. – Stand 24.09.2026 (= GitHub `main` 7982f38)
+# Agentur-Website ERGUN. – Stand 25.09.2026 (Sonnenuntergang → endo.ai, lokal fertig; live = GitHub 138c7c9 bis Emres OK)
 
 Eine HTML-Datei, kein Build, nichts von fremden Servern. Aufbau nach der Osmo-Parallax-Vorlage:
 riesiger Name „ERGUN." oben, Sonne dahinter, Emre selbst auf dem Felsgrat davor, Berge schieben sich
 beim Scrollen über den Namen. Danach direkt die Pakete, dann Kontakt mit Formular.
 **Live: https://website-ergun.vercel.app** (Vercel, automatisch aus GitHub `logodropde-max/Website-Ergun.`). Doppelklick auf `index.html` zeigt den lokalen Stand.
 
+## Sonnenuntergang → endo.ai (25.09.2026, Claude Code) – Aufbau der Startseite
+Plan: `08 Projekte/Plan Sonnenuntergang endo.md`. Die Startseite ist jetzt **eine angeheftete Szene** (`.szene` → `.buehne`, `position: sticky`, 100svh),
+in der beim Scrollen die Geschichte abläuft. Danach kommt nur noch der Footer. Der eigene Kontaktbereich unten ist weg.
+
+**Ebenen in der Bühne (von hinten nach vorn):** Himmel ohne Sonne (`layer-1-sky-ohne-sonne`) · Himmel blaue Stunde (`layer-1-sky-blaue-stunde`, `[data-blaue-stunde]`, Deckkraft 0 → 1)
+· **Sonne als eigene Ebene** (`sonne`, `[data-sonne]`, `mix-blend-mode: screen`, gleiche Geometrie wie der Himmel) · Bergkamm · Name · Vordergrund · Emre · `.parallax__fade`
+· `.nacht` (blauer Abendton, Deckkraft 0 → 1) · **Karte** `.karte#kontakt` (Glas, enthält das bekannte Formular `form#anfrage`) · `.gluehen` (Restglühen) · **`.endo#endo`** (endo.ai-Hero, `clip-path: circle()`).
+
+**Bilder:** `bilder/hero/4k/sonnenuntergang.py` erzeugt alle drei Ebenen in 4096 / 2560 / 1920 / 960 / -hoch.
+- `layer-1-sky-ohne-sonne` = bisheriger 4K-Himmel, Sonne + Halo lokal entfernt; die Füllung kommt aus Higgsfield **e513859b** (Himmel ohne Sonne, 2K, je Zeile farblich an den alten Himmel angeglichen).
+- `sonne` = so berechnet, dass **screen(ohne Sonne, Sonne) = alter Himmel** (Abweichung 0) → das Startbild ist pixelgleich wie vorher. Higgsfield **b885ddf3** (Sonne auf Schwarz) war deutlich orangener und härter als die bisherige Sonne und blieb deshalb Reserve.
+- `layer-1-sky-blaue-stunde` = Higgsfield **513be3a4** (2K) auf 4096×2323 hochgerechnet (weicher Himmel, fällt nicht auf). Die fernen Berge fehlen darin, sind aber ohnehin komplett hinter dem Bergkamm.
+- Die im Auftrag genannten „4K-Himmel d0fdbca7 + 84f2d88f“ gibt es weder im Vault noch in der Higgsfield-Historie – es gab nur die 2K-Fassungen.
+
+**Ablauf (GSAP ScrollTrigger, `scrub: true`, Zeiten in Scroll-Pixeln, h = Bühnenhöhe):**
+- Desktop (Karte rechts neben Emre, `right: var(--pad)`, unter 1400 px Rand 24 px; 901–1100 px unter dem Namen): passt die Karte nicht ganz auf den Bildschirm, kommt der Rest 1:1 mit dem Scrollen hoch (T px) · 0,3 h Ruhe · 1,2 h Sonne sinkt (`yPercent 27`), Name wandert 18 % nach unten, Kamm 4 % hoch, blaue Stunde ab 0,3 h, Nacht ab 0,5 h, Karte blendet bei 0,95 h aus · 0,35 h Sonne aus, Glühen sammelt sich (Skalierung 0,15 → 0,67) · 0,7 h Kreis wächst (`circle(0 → R)`, Glühen wächst mit = leuchtender Rand) · 0,25 h Nachlauf. Gesamt ≈ 2,8 h.
+- Handy (≤ 900 px): Karte kommt **unter Emre** 1:1 mit dem Scrollen hoch (Ebenen rücken leicht nach oben) · 0,6 h Ruhe zum Ausfüllen · 0,3 h Karte geht · 1 h Sonne sinkt (20 %) + blaue Stunde · 0,3 h Glühen · 0,6 h Kreis · 0,2 h Nachlauf. Gesamt ≈ 3,9 h.
+- Kreis-Mitte: Desktop 50 % / 52 %, Handy 50 % / 42 % (dort verschwindet die Sonne hinter dem Kamm).
+- Nur `transform`, `opacity`, `clip-path`. Die frühere CSS-Parallax (`animation-timeline: view()`) ist raus – eine Bewegung, ein System.
+- Während die Karte unter der Leiste liegt: `.nav--karte` (Desktop: „Projekt anfragen“ blendet aus, Handy: Leiste bekommt einen dunklen Verlauf).
+- `karte.inert` sobald sie weg ist, `endo.inert` bis der Kreis offen ist (Tastatur landet nicht in Unsichtbarem).
+
+**endo.ai auf der Startseite:** `ki/js/orb.js` wird 2,5 s nach dem Laden (oder ab 50 % Szene) nachgeladen; die Kugel liegt bis 55 % außerhalb (`translateY(-300vh)`), damit sie nicht unsichtbar rechnet.
+`ki/js/agent.js` läuft auf der Startseite mit `data-eigene-sichtbarkeit`: die Szene sagt ihm per Ereignis `endo:zeigen`, wann der Chat startet (Desktop) bzw. die Pille erscheint (Handy, Klasse `agent--weg`). `/ki/` bleibt unverändert erreichbar.
+**Umschalter** `ERGUN · endo.ai` in der Leiste (`[data-wechsel]`, `aria-current`): springt sanft an den Anfang bzw. ans Ende der Szene. „Projekt anfragen“ springt zur Karte und setzt den Fokus ins Namensfeld.
+**Bewegung reduziert / kein JS:** alles untereinander als Standbilder (Hero → Karte → endo), Umschalter springt per Anker; `html.hat-js` steuert den No-JS-Fall.
+**Offen:** iPhone-Test (Tastatur im angehefteten Formular – Ruhe-Bereich ist 60 svh breit). `_test.html` = Testkopie ohne Intro (`?p=0…1` setzt die Szene), wird nicht veröffentlicht (`_*.html`).
+
+**Prüfen (Headless-Edge, seit 25.09.):** Edge schreibt die Datei erst nach dem Rückkehren des Befehls (warten, bis sie da ist), Python braucht `C:/…`-Pfade, Handy 390 px funktioniert mit
+`--window-size=390,844 --force-device-scale-factor=2`. Zum Scrollen NICHT `scrollTo` (Aufnahme geht schief), sondern die Testkopie mit `?p=` benutzen. WebGL-Kugel und Chat erscheinen headless nicht rechtzeitig – im echten Browser geprüft.
+
 ## Dateien
 | Datei | Wofür |
 |---|---|
-| `index.html` | die Startseite: Hero · Pakete · Kontaktformular · Footer (Version 3) |
+| `index.html` | die Startseite: angeheftete Szene (Hero + Karte mit Formular → Sonnenuntergang → endo.ai) · Footer (seit 25.09.) |
 | `impressum.html` | vorausgefüllt mit ERGUN. – **prüfen** (Gewerbebezeichnung, E-Mail) |
 | `datenschutz.html` | **Entwurf** ohne Cookies/Google Fonts, mit WhatsApp-Hinweis – rechtlich prüfen lassen |
 | `js/gsap.min.js`, `ScrollTrigger.min.js` | Intro, Einblenden, Paket-Vorschauen, lokal. `ScrollSmoother.min.js` liegt noch im Ordner, wird aber **nicht mehr geladen** (natives Scrollen) |
 | `schriften/*.woff2` + Lizenzen | Instrument Serif + Geist, lokal (OFL) |
-| `bilder/hero/layer-1-sky.webp` | Himmel mit Sonne, 4K (Higgsfield 81ed3e59, Szene 24f533ae) |
+| `bilder/hero/layer-1-sky.webp` | Himmel mit Sonne, 4K (Higgsfield 81ed3e59, Szene 24f533ae) – seit 25.09. nur noch Quelle, nicht mehr geladen |
+| `bilder/hero/layer-1-sky-ohne-sonne*.webp` | Himmel ohne Sonne (aus layer-1-sky + Higgsfield e513859b), seit 25.09. Ebene 1 |
+| `bilder/hero/sonne*.webp` | Sonne + Halo auf Schwarz, `mix-blend-mode: screen`, sinkt beim Scrollen |
+| `bilder/hero/layer-1-sky-blaue-stunde*.webp` | Himmel blaue Stunde (Higgsfield 513be3a4), blendet beim Scrollen ein |
 | `bilder/hero/layer-2-ridge.webp` | Bergkamm, 4K freigestellt (Higgsfield d80d7fb2) |
 | `bilder/hero/layer-4-foreground.webp` | Vordergrund-Felsen mit Tannen, 4K freigestellt (Higgsfield 158ed469) |
 | `bilder/hero/layer-5-person.webp` | **Emre**, aus Higgsfield-Job b305a018 („Emre V4", 2688×1520) lokal freigestellt; eigene Leinwand **5459×3096**, damit seine 1455 Quellpixel Höhe 1:1 bleiben; 47 % Bildhöhe, Füße bei 80 % |

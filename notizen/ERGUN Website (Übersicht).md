@@ -27,6 +27,11 @@ Zentrale Notiz für alles rund um die Website und endo.ai. Von hier gehen alle V
 - [[Pakete & Preise]]: Webdesign-Pakete der Agentur
 - [[Datenschutz und Recht]]
 
+## Im Vault verknüpft
+- [[00 Start]] · [[Agentur-Website]] · [[Marke]] · [[Hero-Ebenen EE Design]] · [[Higgsfield-Galerie]]
+- [[Plan Sonnenuntergang endo]] – nächster Umbau (Sonne → endo.ai)
+- [[Verlauf]] – alle Entscheidungen, neueste oben
+
 ## Arbeit
 - [[To-dos]]: was noch offen ist
 - [[Verlauf 24.09.2026]]: was heute gebaut wurde

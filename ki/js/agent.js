@@ -10,7 +10,10 @@
   var fotoKnopf = box.querySelector('[data-foto]'), datei = box.querySelector('[data-datei]'), senden = box.querySelector('[data-senden]');
   var oben = box.querySelector('[data-oben]'), zuKnopf = box.querySelector('[data-zu]'), oeffnenKnopf = box.querySelector('[data-oeffnen]');
   var ruhig = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var handyMq = window.matchMedia ? matchMedia('(max-width: 860px)') : { matches: false };
+  /* Auf der Startseite steuert die Szene selbst, wann endo sichtbar ist (data-eigene-sichtbarkeit).
+     Bei „Bewegung reduzieren" steht das Panel dort auch am Handy offen im Fluss, also wie am Desktop. */
+  var extern = box.hasAttribute('data-eigene-sichtbarkeit');
+  var handyMq = (extern && ruhig) ? { matches: false } : (window.matchMedia ? matchMedia('(max-width: 860px)') : { matches: false });
 
   var WA_NUMMER = '4915906344961', MAIL = 'ergun.eu@gmail.com';
   var BILD_NACHHER = 'https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200307_ee98c144-5d85-4b91-8e6b-c82d664263d9.png';
@@ -332,12 +335,12 @@
   }
   if (vv) { vv.addEventListener('resize', passeAn); vv.addEventListener('scroll', passeAn); }
   window.addEventListener('resize', passeAn);
-  function wechsel() { setzeOffen(false, false); if (!handyMq.matches) beobachteSichtbar(); }
+  function wechsel() { setzeOffen(false, false); if (!handyMq.matches && (!extern || ruhig)) beobachteSichtbar(); }
   if (handyMq.addEventListener) handyMq.addEventListener('change', wechsel); else if (handyMq.addListener) handyMq.addListener(wechsel);
 
   /* Pille nur zeigen, solange der Hero im Bild ist */
-  var hero = document.getElementById('start');
-  if (hero && 'IntersectionObserver' in window) {
+  var hero = box.closest('[data-endo-hero]') || document.getElementById('start');
+  if (hero && !extern && 'IntersectionObserver' in window) {
     new IntersectionObserver(function (e) { box.classList.toggle('agent--weg', !e[0].isIntersecting); }, { rootMargin: '0px 0px -35% 0px' }).observe(hero);
   }
 
@@ -359,6 +362,7 @@
     io.observe(box);
   }
   setzeOffen(false, false);
-  if (!handyMq.matches) beobachteSichtbar();
+  if (!handyMq.matches && (!extern || ruhig)) beobachteSichtbar();
+  box.addEventListener('endo:zeigen', function () { if (!handyMq.matches) los(); });
   requestAnimationFrame(function () { box.classList.add('agent--da'); });
 })();

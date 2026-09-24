@@ -460,25 +460,8 @@ body { overflow-x: clip; }
   .form__actions .btn { flex: 1 1 100%; }
 }
 
-/* ---------- Parallax ohne JavaScript: der Browser koppelt die Ebenen direkt ans Scrollen ---------- */
-@media (prefers-reduced-motion: no-preference) {
-  html { scroll-behavior: smooth; }
-  @supports (animation-timeline: view()) {
-    .parallax__visuals { view-timeline: --held block; }
-    [data-parallax-layer] { animation: ebene linear both; animation-timeline: --held; animation-range: exit-crossing 0% exit-crossing 100%; }
-    [data-parallax-layer="1"] { --weg: 70%; }
-    [data-parallax-layer="2"] { --weg: 55%; }
-    [data-parallax-layer="3"] { --weg: 52%; }
-    [data-parallax-layer="4"], [data-parallax-layer="5"] { --weg: 12%; }
-    @media (max-width: 700px) {
-      [data-parallax-layer="1"] { --weg: 42%; }
-      [data-parallax-layer="2"] { --weg: 33%; }
-      [data-parallax-layer="3"] { --weg: 31%; }
-      [data-parallax-layer="4"], [data-parallax-layer="5"] { --weg: 7%; }
-    }
-  }
-}
-@keyframes ebene { to { translate: 0 var(--weg); } }
+/* Sanftes Springen (Umschalter, Anker) */
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 
 /* ---------- Bewegung reduziert: Standbild, alles sofort da ---------- */
 @media (prefers-reduced-motion: reduce) {
@@ -657,10 +640,233 @@ body { overflow-x: clip; }
   .anfrage .chips { grid-template-columns: minmax(0, 1fr); gap: 6px; }
   .agentur { margin-top: 44px; padding-top: 36px; }
 }
+
+/* ==================================================================================================
+   Sonnenuntergang → endo.ai (25.09.2026): angeheftete Szene, Formular offen neben Emre, Kreis-Übergang
+   Nur transform / opacity / clip-path bewegen sich. Bei „Bewegung reduzieren" und ohne JS: Standbilder.
+   ================================================================================================== */
+.szene { position: relative; }
+.buehne { position: sticky; top: 0; height: 100svh; overflow: hidden; background: var(--bg); isolation: isolate; }
+.buehne .parallax__visuals { position: absolute; left: 0; top: 0; width: 100%; height: 125svh; min-height: 640px; }
+.szene__img { position: absolute; top: 0; left: 0; width: 100%; height: 118%; object-fit: cover; object-position: 50% 100%; pointer-events: none; user-select: none; will-change: opacity; }
+[data-blaue-stunde] { opacity: 0; }
+.parallax__layer-img--sonne { mix-blend-mode: screen; }
+.nacht { position: absolute; inset: 0; opacity: 0; pointer-events: none; will-change: opacity; background: linear-gradient(to top, rgba(6, 9, 26, 0.82), rgba(10, 14, 38, 0.5) 45%, rgba(16, 20, 48, 0.28)); }
+.parallax__hint { right: auto; left: var(--pad); bottom: 30svh; }
+
+/* Navigation: Umschalter ERGUN · endo.ai in der Mitte, immer sichtbar */
+.nav { transition: none; }
+.nav--weg { transform: none; }
+.nav__wechsel { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; gap: 2px; padding: 3px; border-radius: 999px; border: 1px solid rgba(242, 239, 232, 0.16); background: rgba(14, 14, 12, 0.32); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); text-shadow: none; }
+.nav__wechsel a { display: inline-flex; align-items: center; min-height: 32px; padding: 6px 14px; border-radius: 999px; font-size: 13px; letter-spacing: 0.04em; color: rgba(242, 239, 232, 0.72); transition: color 200ms var(--ease), background-color 200ms var(--ease); }
+.nav__wechsel a[aria-current="true"] { color: var(--text); background: rgba(242, 239, 232, 0.14); }
+@media (hover: hover) and (pointer: fine) { .nav__wechsel a:hover { color: var(--text); } }
+.nav__wechsel a:focus-visible { outline-offset: 0; }
+/* Karte ist unter die Leiste gescrollt: rechts den Link ausblenden (Desktop), am Handy die Leiste leicht abdunkeln */
+.nav__links { transition: opacity 200ms var(--ease); }
+.nav--karte .nav__links { opacity: 0; pointer-events: none; }
+.nav::before { content: ""; position: absolute; inset: 0 0 -24px 0; z-index: -1; background: linear-gradient(rgba(14, 14, 12, 0.82), rgba(14, 14, 12, 0)); opacity: 0; transition: opacity 250ms var(--ease); pointer-events: none; }
+@media (max-width: 900px) { .nav--karte::before { opacity: 1; } }
+
+/* Karte: schlank, Glas, Hintergrund bleibt sichtbar */
+.karte {
+  position: absolute; z-index: 5; right: var(--pad); top: 11svh;
+  width: clamp(292px, 21vw, 360px); display: grid; gap: 14px;
+  padding: 22px 20px 18px; border-radius: 18px;
+  border: 1px solid rgba(242, 239, 232, 0.16);
+  background: linear-gradient(180deg, rgba(20, 18, 16, 0.5), rgba(14, 14, 12, 0.58));
+  -webkit-backdrop-filter: blur(18px) saturate(1.15); backdrop-filter: blur(18px) saturate(1.15);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  will-change: transform, opacity;
+}
+.karte__kopf { display: grid; gap: 6px; }
+.karte__titel { font-family: var(--serif); font-size: clamp(1.8rem, 2.1vw, 2.2rem); line-height: 1; letter-spacing: -0.02em; }
+.karte__intro { color: var(--muted); font-size: 13px; line-height: 1.45; text-wrap: pretty; }
+.karte .anfrage { gap: 10px; padding: 0; border: 0; border-radius: 0; background: none; }
+.karte .anfrage__gruppe legend { margin-bottom: 8px; }
+.karte .weg__option span { min-height: 44px; padding: 8px 10px; font-size: 14px; border-radius: 9px; }
+.karte .field { gap: 4px; }
+.karte .field label { font-size: 11px; }
+.karte .field input, .karte .field select, .karte .field textarea { font-size: 16px; padding: 7px 0; }
+.karte .field select { padding-right: 24px; }
+.karte .field textarea { min-height: 64px; }
+.karte .field__error { min-height: 0; }
+.karte .field__error:empty { display: none; }
+.karte .form__row { gap: 12px; }
+.karte .anfrage .chip span { min-height: 42px; font-size: 13.5px; border-radius: 9px; }
+.karte .upload { padding: 10px 12px; gap: 12px; border-radius: 9px; }
+.karte .upload__symbol { width: 32px; height: 32px; padding: 7px; }
+.karte .upload__text b { font-size: 14px; }
+.karte .upload__text small { font-size: 12px; margin-top: 1px; }
+.karte .anfrage__senden { min-height: 50px; font-size: 15px; margin-top: 2px; }
+.karte .form__status:empty { display: none; }
+.karte .form__hint { font-size: 12px; line-height: 1.45; }
+.karte .datei__liste li { font-size: 12px; }
+@media (max-width: 1400px) { .karte { right: 24px; } }
+@media (max-width: 1100px) and (min-width: 901px) { .karte { top: 42svh; width: clamp(292px, 34vw, 360px); } }
+
+/* Restglühen: erst kleiner Kreis am Bergkamm, dann Rand um das wachsende Fenster */
+.gluehen {
+  position: absolute; z-index: 6; left: 50%; top: 52%; width: 24svh; height: 24svh; margin: -12svh 0 0 -12svh;
+  border-radius: 50%; opacity: 0; transform: scale(0.15); pointer-events: none; will-change: transform, opacity;
+  background: radial-gradient(circle closest-side, rgba(255, 214, 150, 1) 0, rgba(255, 150, 70, 0.95) 38%, rgba(255, 96, 32, 0.55) 62%, rgba(255, 90, 31, 0) 100%);
+}
+
+/* endo.ai: eigener Bereich, liegt hinter dem Kreis */
+.endo {
+  --flaeche-3: #272727; --linie: rgba(255, 255, 255, 0.10); --leise: #9B9B9B; --akzent: #FF5A1F; --akzent-hell: #FF7A47;
+  position: absolute; inset: 0; z-index: 7; display: flex; align-items: flex-end; padding: 96px 0 40px;
+  background: #000; color: #F5F5F5; font-family: var(--sans);
+  clip-path: circle(0px at 50% 52%); will-change: clip-path;
+}
+.endo__orb { position: absolute; inset: 0; z-index: 0; opacity: 0; transform: translateY(-300vh); transition: opacity 1200ms var(--ease); }
+.endo__orb.ist-nah { transform: none; }
+.endo__orb.orb--bereit { opacity: 1; }
+.endo__orb canvas { display: block; width: 100%; height: 100%; }
+.endo__verlauf { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0) 100%); pointer-events: none; }
+.endo__inhalt { position: relative; z-index: 2; width: min(100% - 2 * var(--pad), 1200px); margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1fr) 360px; align-items: end; gap: 48px; }
+.endo__text { display: grid; gap: 14px; padding-bottom: 8px; max-width: 100%; min-width: 0; }
+.endo__label { font-size: 12px; line-height: 16px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(255, 122, 71, 0.9); }
+.endo__titel { max-width: 620px; font-size: clamp(36px, 4.2vw, 60px); line-height: 1; font-weight: 500; letter-spacing: -0.02em; background: linear-gradient(90deg, #FFFFFF, #9B9B9B); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.endo__sub { max-width: min(44ch, 100%); color: var(--leise); font-size: 15px; line-height: 1.55; text-wrap: pretty; }
+.endo__mehr { color: #F5F5F5; text-decoration: underline; text-decoration-color: rgba(255, 255, 255, 0.35); text-underline-offset: 3px; transition: text-decoration-color 200ms ease; }
+@media (hover: hover) and (pointer: fine) { .endo__mehr:hover { text-decoration-color: var(--akzent); } }
+.endo .hinweis { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* endo: Chat-Panel (wie auf /ki/, hier etwas kompakter) */
+.endo .agent {
+  --aus: cubic-bezier(0.23, 1, 0.32, 1);
+  display: flex; flex-direction: column; width: 100%; text-align: left; height: min(380px, calc(100svh - 176px)); min-height: 300px;
+  border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px;
+  background: rgba(20, 20, 20, 0.45); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35); overflow: hidden;
+  opacity: 0; transform: translateY(16px); transition: opacity 500ms var(--aus) 300ms, transform 500ms var(--aus) 300ms;
+}
+.endo .agent--da { opacity: 1; transform: none; }
+.endo .agent__oben { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.endo .agent__kopf { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.endo .agent__avatar { position: relative; flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9999px; background: #000; border: 1px solid rgba(255, 90, 31, 0.5); }
+.endo .agent__avatar::before { content: ""; width: 10px; height: 10px; border-radius: 9999px; border: 2px solid #F5F5F5; }
+.endo .agent__avatar::after { content: ""; position: absolute; right: 4px; bottom: 4px; width: 6px; height: 6px; border-radius: 9999px; background: var(--akzent); }
+.endo .agent__name { display: grid; flex: 1; min-width: 0; }
+.endo .agent__name b { font-size: 14px; line-height: 20px; font-weight: 500; }
+.endo .agent__name small { font-size: 12px; line-height: 16px; color: var(--leise); }
+.endo .agent__name a { color: inherit; text-decoration: underline; text-decoration-color: rgba(155, 155, 155, 0.5); text-underline-offset: 2px; }
+.endo .rund.agent__zu { display: none; }
+.endo .agent__verlauf { display: flex; flex-direction: column; gap: 8px; flex: 1; min-height: 0; padding: 12px 16px; overflow-y: auto; overscroll-behavior: contain; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.15) transparent; }
+.endo .blase { max-width: 85%; padding: 8px 12px; border-radius: 16px; font-size: 14px; line-height: 20px; overflow-wrap: anywhere; animation: endoRein 240ms var(--aus) both; }
+.endo .blase--endo { align-self: flex-start; background: rgba(39, 39, 39, 0.7); border-top-left-radius: 4px; }
+.endo .blase--du { align-self: flex-end; background: var(--akzent); color: #000; border-top-right-radius: 4px; }
+.endo .blase a { color: var(--akzent-hell); text-decoration: underline; text-underline-offset: 2px; }
+.endo .blase--bild { margin: 0; padding: 4px; background: rgba(39, 39, 39, 0.7); }
+.endo .blase--bild img { width: 160px; max-width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 12px; }
+.endo .blase--bild figcaption { padding: 4px 8px; font-size: 12px; line-height: 16px; color: var(--leise); }
+.endo .blase--du.blase--bild { background: rgba(39, 39, 39, 0.9); color: #F5F5F5; }
+.endo .tippt { display: inline-flex; gap: 4px; align-items: center; height: 20px; }
+.endo .tippt i { width: 5px; height: 5px; border-radius: 9999px; background: var(--leise); animation: endoTippen 1000ms ease-in-out infinite; }
+.endo .tippt i:nth-child(2) { animation-delay: 140ms; }
+.endo .tippt i:nth-child(3) { animation-delay: 280ms; }
+@keyframes endoTippen { 0%, 60%, 100% { transform: none; opacity: 0.35; } 30% { transform: translateY(-3px); opacity: 1; } }
+@keyframes endoRein { from { opacity: 0; transform: translateY(8px); } }
+.endo .agent__vorschlaege { display: flex; gap: 8px; padding: 4px 16px 8px; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+.endo .agent__vorschlaege::-webkit-scrollbar { display: none; }
+.endo .agent__vorschlaege:empty { display: none; }
+.endo .chip { position: static; flex: none; display: inline-flex; align-items: center; min-height: 36px; padding: 8px 12px; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 9999px; background: rgba(0, 0, 0, 0.2); color: #F5F5F5; font: inherit; font-size: 14px; line-height: 20px; white-space: nowrap; cursor: pointer; animation: endoRein 240ms var(--aus) both; transition: border-color 200ms ease, background-color 200ms ease, transform 160ms var(--aus); }
+.endo .chip--haupt { background: var(--akzent); border-color: var(--akzent); color: #000; font-weight: 500; }
+.endo .chip:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) { .endo .chip:hover { border-color: var(--akzent); background: rgba(255, 90, 31, 0.12); } .endo .chip--haupt:hover { background: var(--akzent-hell); } }
+.endo .agent__eingabe { position: relative; flex: none; padding: 8px; }
+.endo .agent__feld { display: flex; align-items: center; gap: 4px; height: 44px; padding: 4px; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 9999px; background: rgba(0, 0, 0, 0.35); transition: border-color 200ms ease; }
+.endo .agent__feld:focus-within { border-color: rgba(255, 90, 31, 0.7); }
+.endo .agent__feld input[type="text"], .endo .agent__feld input[type="email"] { flex: 1; min-width: 0; height: 36px; padding: 0 8px; border: 0; background: transparent; color: inherit; font: inherit; font-size: 14px; line-height: 20px; }
+.endo .agent__feld input:focus-visible { outline: none; }
+.endo .agent__feld input::placeholder { color: rgba(155, 155, 155, 0.85); }
+.endo .rund { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 9999px; background: transparent; color: var(--leise); cursor: pointer; transition: background-color 200ms ease, color 200ms ease, transform 160ms var(--aus); }
+.endo .rund svg { width: 18px; height: 18px; }
+.endo .rund--haupt { background: var(--akzent); color: #000; }
+.endo .rund:active { transform: scale(0.94); }
+.endo .rund:disabled { opacity: 0.4; cursor: default; transform: none; }
+@media (hover: hover) and (pointer: fine) { .endo .rund:hover { color: #F5F5F5; background: rgba(255, 255, 255, 0.08); } .endo .rund--haupt:hover { color: #000; background: var(--akzent-hell); } }
+.endo .agent__oeffnen { display: none; }
+
+/* Handy: Karte kommt beim Scrollen unter Emre hoch; endo-Chat als Pille unten */
+@media (max-width: 900px) {
+  .buehne .parallax__visuals { height: 110svh; min-height: 0; }
+  /* Handy: kein Kasten, sondern die Seite geht unter Emre weiter – Kopf schon am Start sichtbar, Rest kommt beim Scrollen hoch */
+  .karte { left: 0; right: 0; top: calc(100% - var(--karte-kopf, 104px)); width: auto; gap: 10px; padding: 44px var(--pad) 22px; border: 0; border-radius: 0; box-shadow: none;
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+    background: linear-gradient(to bottom, rgba(14, 14, 12, 0) 0, rgba(14, 14, 12, 0.82) 36px, rgba(14, 14, 12, 0.93) 110px, rgba(14, 14, 12, 0.95) 100%); }
+  .karte__kopf { gap: 2px; }
+  .karte__titel { font-size: 1.75rem; }
+  .karte__intro { display: none; }
+  .karte .anfrage { gap: 8px; }
+  .karte .field { gap: 2px; }
+  .karte .anfrage__gruppe legend { margin-bottom: 6px; }
+  .karte .form__hint { display: none; }
+  .karte .upload { padding: 8px 12px; }
+  .karte .form__row { grid-template-columns: 1fr 1fr; gap: 14px; }
+  .karte .anfrage .chips { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .karte .anfrage .chip span { min-height: 40px; font-size: 14px; }
+  .karte .weg__option span { min-height: 42px; }
+  .karte .field textarea { min-height: 48px; }
+  .karte .anfrage__senden { min-height: 50px; }
+  .karte .field input, .karte .field select, .karte .field textarea { font-size: 17px; }
+  .gluehen { top: 42%; }
+  .endo { clip-path: circle(0px at 50% 42%); align-items: center; padding: 96px 0 96px; }
+  .endo__inhalt { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
+  .endo__titel { font-size: 36px; line-height: 40px; }
+  .endo__agent { display: contents; }
+  .endo .agent {
+    position: fixed; z-index: 30; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px) + var(--tastatur, 0px));
+    width: auto; min-height: 0; height: var(--blatt, 55svh); border-radius: 22px;
+    background: rgba(20, 20, 20, 0.55);
+    clip-path: inset(calc(100% - 60px) 8px 8px 8px round 22px);
+    transition: clip-path 240ms var(--aus), opacity 300ms var(--aus), transform 300ms var(--aus), background-color 240ms ease;
+  }
+  .endo .agent--da { transition-delay: 0ms; }
+  .endo .agent--weg:not(.agent--offen) { opacity: 0; transform: translateY(16px); pointer-events: none; }
+  .endo .agent--offen { clip-path: inset(0 0 0 0 round 22px); background: rgba(20, 20, 20, 0.72); box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5); transition: clip-path 380ms var(--ease), opacity 300ms var(--aus), transform 300ms var(--aus), background-color 380ms ease; }
+  .endo .agent__oben { opacity: 0; transform: translateY(12px); transition: opacity 160ms ease, transform 240ms var(--aus); }
+  .endo .agent--offen .agent__oben { opacity: 1; transform: none; transition: opacity 280ms var(--aus) 80ms, transform 380ms var(--ease); }
+  .endo .rund.agent__zu { display: grid; }
+  .endo .agent__feld input[type="text"], .endo .agent__feld input[type="email"] { font-size: 16px; }
+  .endo .agent__oeffnen { display: block; position: absolute; inset: 8px; z-index: 1; border: 0; border-radius: 9999px; background: transparent; cursor: pointer; }
+  .endo .agent--offen .agent__oeffnen { display: none; }
+}
+@media (max-width: 700px) {
+  .nav__links { display: none; }
+  .nav__wechsel { left: auto; right: var(--pad); transform: translateY(-50%); }
+  .parallax__hint { display: none; }
+}
+
+/* Standbilder: Bewegung reduziert oder kein JavaScript – Szene untereinander, Umschalter springt per Anker */
+@media (prefers-reduced-motion: reduce) {
+  .szene { height: auto !important; }
+  .buehne { position: static; height: auto; overflow: visible; }
+  .buehne .parallax__visuals { position: relative; height: 100svh; }
+  .karte { position: relative; right: auto; top: auto; width: min(100% - 2 * var(--pad), 640px); margin: 24px auto 40px; transform: none !important; opacity: 1 !important; }
+  .nacht, .gluehen, [data-blaue-stunde] { display: none; }
+  .endo { position: relative; inset: auto; min-height: 100svh; clip-path: none !important; }
+  .endo__orb { transform: none; }
+  .endo .agent { position: relative; left: auto; right: auto; bottom: auto; height: min(420px, 70svh); clip-path: none; width: 100%; }
+  .endo .agent--weg:not(.agent--offen) { opacity: 1; transform: none; pointer-events: auto; }
+  .endo .agent__oben { opacity: 1; transform: none; }
+  .endo .agent__oeffnen { display: none; }
+  .endo .rund.agent__zu { display: none; }
+  .endo .agent, .endo .agent__oben, .endo .agent--offen, .endo .agent--offen .agent__oben { transition: opacity 150ms ease; transform: none; }
+  .endo .blase, .endo .chip { animation: none; }
+}
+html:not(.hat-js) .szene { height: auto !important; }
+html:not(.hat-js) .buehne { position: static; height: auto; overflow: visible; }
+html:not(.hat-js) .buehne .parallax__visuals { position: relative; height: 100svh; }
+html:not(.hat-js) .karte { position: relative; right: auto; top: auto; width: min(100% - 2 * var(--pad), 640px); margin: 24px auto 40px; }
+html:not(.hat-js) .nacht, html:not(.hat-js) .gluehen, html:not(.hat-js) [data-blaue-stunde], html:not(.hat-js) .agent { display: none; }
+html:not(.hat-js) .endo { position: relative; inset: auto; min-height: 60svh; clip-path: none; }
 </style>
 <script>
 /* Auftritt: zuerst nur der Name, dann die Seite. Bei "Bewegung reduzieren" kein Vorhang. */
 (function () {
+  document.documentElement.classList.add('hat-js');
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var d = document.documentElement; d.classList.add('intro');
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -679,47 +885,47 @@ body { overflow-x: clip; }
 
 <header class="nav">
   <a class="nav__mark" href="#top" aria-label="ERGUN – nach oben">ERGUN<span class="dot">.</span></a>
+  <nav class="nav__wechsel" aria-label="Bereich wählen" data-wechsel>
+    <a href="#top" data-ziel="ergun" aria-current="true">ERGUN</a>
+    <a href="#endo" data-ziel="endo">endo.ai</a>
+  </nav>
   <nav class="nav__links" aria-label="Seitennavigation">
-    <a class="nav__link" href="ki/">endo.ai</a>
-    <a class="nav__link" href="#kontakt">Projekt anfragen</a>
+    <a class="nav__link" href="#anfrage" data-zum-formular>Projekt anfragen</a>
   </nav>
 </header>
 
-<div id="smooth-wrapper">
-<div id="smooth-content">
-<div class="parallax" id="top">
-  <section class="parallax__header" aria-label="Einstieg">
-    <div class="parallax__visuals">
-      <div class="parallax__layers" data-parallax-layers>
-        <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-1-sky-hoch.webp"><img src="bilder/hero/layer-1-sky-1920.webp" srcset="bilder/hero/layer-1-sky-1920.webp 1920w, bilder/hero/layer-1-sky-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="1" class="parallax__layer-img parallax__layer-img--sky" alt="" fetchpriority="high"></picture>
-        <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-2-ridge-hoch.webp"><img src="bilder/hero/layer-2-ridge-1920.webp" srcset="bilder/hero/layer-2-ridge-1920.webp 1920w, bilder/hero/layer-2-ridge-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="2" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
-        <div data-parallax-layer="3" class="parallax__layer-title">
-          <h1 class="parallax__title">ERGUN<span class="dot">.</span></h1>
-          <p class="parallax__rolle">Webdesigner</p>
-          <p class="parallax__claim">Faire Preise für gute Arbeit.</p>
-        </div>
-        <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-4-foreground-hoch.webp"><img src="bilder/hero/layer-4-foreground-1920.webp" srcset="bilder/hero/layer-4-foreground-1920.webp 1920w, bilder/hero/layer-4-foreground-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="4" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
-        <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-5-person-hoch.webp"><img src="bilder/hero/layer-5-person-1920.webp" srcset="bilder/hero/layer-5-person-1920.webp 1920w, bilder/hero/layer-5-person-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="5" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
-      </div>
-      <div class="parallax__fade"></div>
-      <p class="parallax__hint" aria-hidden="true">Scrollen</p>
-    </div>
-  </section>
-</div>
-
 <main id="inhalt" tabindex="-1">
-  <section class="contact" id="kontakt" aria-labelledby="kontakt-titel">
-    <div class="contact__kopf">
-      <figure class="contact__person reveal">
-        <span class="contact__bild"><img src="bilder/kontakt/emre-264.webp" width="88" height="88" alt="Porträt von Emre Ergun" loading="lazy" decoding="async"></span>
-        <figcaption><strong>Emre Ergun</strong> · <span class="online">online</span></figcaption>
-      </figure>
-      <span class="contact__label reveal">Kostenloses Erstgespräch</span>
-      <h2 class="contact__big reveal" id="kontakt-titel">Projekt anfragen</h2>
-      <p class="contact__intro reveal">Ein paar Angaben genügen. Ich melde mich persönlich, per WhatsApp oder E-Mail, ganz wie Sie es möchten.</p>
-    </div>
-    <div class="contact__raster">
-      <form class="form anfrage reveal" id="anfrage" novalidate>
+<div class="szene" id="top" data-szene>
+  <div class="buehne" data-buehne>
+    <section class="parallax__header" aria-label="Einstieg">
+      <div class="parallax__visuals">
+        <div class="parallax__layers" data-parallax-layers>
+          <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-1-sky-ohne-sonne-hoch.webp"><img src="bilder/hero/layer-1-sky-ohne-sonne-1920.webp" srcset="bilder/hero/layer-1-sky-ohne-sonne-1920.webp 1920w, bilder/hero/layer-1-sky-ohne-sonne-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="1" class="parallax__layer-img parallax__layer-img--sky" alt="" fetchpriority="high"></picture>
+          <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-1-sky-blaue-stunde-hoch.webp"><img src="bilder/hero/layer-1-sky-blaue-stunde-1920.webp" srcset="bilder/hero/layer-1-sky-blaue-stunde-1920.webp 1920w, bilder/hero/layer-1-sky-blaue-stunde-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-blaue-stunde class="szene__img parallax__layer-img--sky" alt="" decoding="async"></picture>
+          <picture><source media="(orientation: portrait)" srcset="bilder/hero/sonne-hoch.webp"><img src="bilder/hero/sonne-1920.webp" srcset="bilder/hero/sonne-1920.webp 1920w, bilder/hero/sonne-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-sonne class="parallax__layer-img parallax__layer-img--sky parallax__layer-img--sonne" alt="" fetchpriority="high"></picture>
+          <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-2-ridge-hoch.webp"><img src="bilder/hero/layer-2-ridge-1920.webp" srcset="bilder/hero/layer-2-ridge-1920.webp 1920w, bilder/hero/layer-2-ridge-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="2" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
+          <div data-parallax-layer="3" class="parallax__layer-title">
+            <h1 class="parallax__title">ERGUN<span class="dot">.</span></h1>
+            <p class="parallax__rolle">Webdesigner</p>
+            <p class="parallax__claim">Faire Preise für gute Arbeit.</p>
+          </div>
+          <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-4-foreground-hoch.webp"><img src="bilder/hero/layer-4-foreground-1920.webp" srcset="bilder/hero/layer-4-foreground-1920.webp 1920w, bilder/hero/layer-4-foreground-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="4" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
+          <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-5-person-hoch.webp"><img src="bilder/hero/layer-5-person-1920.webp" srcset="bilder/hero/layer-5-person-1920.webp 1920w, bilder/hero/layer-5-person-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="5" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
+        </div>
+        <div class="parallax__fade"></div>
+        <div class="nacht" data-nacht aria-hidden="true"></div>
+        <p class="parallax__hint" aria-hidden="true">Scrollen</p>
+      </div>
+    </section>
+
+    <!-- Kontakt: offen neben Emre (Desktop) bzw. unter ihm (Handy) -->
+    <section class="karte" id="kontakt" aria-labelledby="kontakt-titel" data-karte>
+      <div class="karte__kopf">
+        <span class="contact__label">Kostenloses Erstgespräch</span>
+        <h2 class="karte__titel" id="kontakt-titel">Projekt anfragen</h2>
+        <p class="karte__intro">Ein paar Angaben genügen, ich melde mich persönlich.</p>
+      </div>
+      <form class="form anfrage" id="anfrage" novalidate>
         <fieldset class="anfrage__gruppe">
           <legend>Wie möchten Sie Kontakt aufnehmen?</legend>
           <div class="weg">
@@ -728,17 +934,15 @@ body { overflow-x: clip; }
           </div>
         </fieldset>
 
-        <div class="form__row">
-          <div class="field">
-            <label for="f-name">Name</label>
-            <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-err">
-            <span class="field__error" id="f-name-err" aria-live="polite"></span>
-          </div>
-          <div class="field">
-            <label for="f-mail">E-Mail-Adresse</label>
-            <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="f-mail-err">
-            <span class="field__error" id="f-mail-err" aria-live="polite"></span>
-          </div>
+        <div class="field">
+          <label for="f-name">Name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-err">
+          <span class="field__error" id="f-name-err" aria-live="polite"></span>
+        </div>
+        <div class="field">
+          <label for="f-mail">E-Mail-Adresse</label>
+          <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="f-mail-err">
+          <span class="field__error" id="f-mail-err" aria-live="polite"></span>
         </div>
         <div class="form__row">
           <div class="field">
@@ -785,25 +989,24 @@ body { overflow-x: clip; }
           <div class="chips">
             <label class="chip"><input type="radio" name="hilfe" value="Neue Website"><span>Neue Website</span></label>
             <label class="chip"><input type="radio" name="hilfe" value="Website-Redesign"><span>Website-Redesign</span></label>
-            <label class="chip"><input type="radio" name="hilfe" value="Onlineshop (E-Commerce)"><span>Onlineshop (E-Commerce)</span></label>
+            <label class="chip"><input type="radio" name="hilfe" value="Onlineshop (E-Commerce)"><span>Onlineshop</span></label>
             <label class="chip"><input type="radio" name="hilfe" value="Anderes"><span>Anderes</span></label>
           </div>
         </fieldset>
 
         <div class="field">
           <label for="f-text">Ihre Anfrage</label>
-          <textarea id="f-text" name="text" rows="4" placeholder="Worum geht es? Ein, zwei Sätze genügen."></textarea>
+          <textarea id="f-text" name="text" rows="2" placeholder="Worum geht es? Ein, zwei Sätze genügen."></textarea>
         </div>
 
         <div class="field field--datei">
-          <label for="f-datei">Logo oder Fotos mitschicken (optional)</label>
+          <label for="f-datei">Logo oder Fotos (optional)</label>
           <div class="upload" data-upload>
             <svg class="upload__symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4"/><path d="m7 9 5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-            <span class="upload__text"><b>Dateien auswählen</b><small>Antippen oder hierher ziehen · Bilder, PDF, Word, ZIP</small></span>
+            <span class="upload__text"><b>Dateien auswählen</b><small>Bilder, PDF, Word, ZIP</small></span>
             <input id="f-datei" name="dateien" type="file" multiple accept="image/*,.pdf,.doc,.docx,.svg,.ai,.zip">
           </div>
           <ul class="datei__liste" data-datei-liste aria-live="polite"></ul>
-          <span class="form__hint">Die Dateien werden beim Auswählen hochgeladen und kommen als Link in die Nachricht. Nach 30 Tagen werden sie automatisch gelöscht.</span>
         </div>
 
         <button class="btn btn--wa anfrage__senden" type="submit" data-senden>
@@ -811,34 +1014,71 @@ body { overflow-x: clip; }
           <span data-senden-text>Per WhatsApp senden</span>
         </button>
         <p class="form__status" data-status aria-live="polite"></p>
-        <p class="form__hint">Öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Ihre Angaben speichert die Website nicht, nur hochgeladene Dateien liegen bis zu 30 Tage bei Vercel.</p>
+        <p class="form__hint">Öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Die Website speichert nichts, Dateien liegen höchstens 30 Tage bei Vercel.</p>
       </form>
-    </div>
-    <div class="contact__meta reveal">
-      <a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a>
-      <a href="tel:+4915906344961">+49 1590 6344961</a>
-    </div>
-    <div class="agentur reveal">
-      <p class="agentur__marke">ERGUN<span class="dot">.</span></p>
-      <p class="agentur__text">ERGUN. ist eine Premium-Digitalagentur für Websites auf Weltklasse-Niveau. Wir gestalten Seiten, die Vertrauen schaffen, Besucher zu Kunden machen und auf jedem Gerät hervorragend aussehen.</p>
-    </div>
-  </section>
+    </section>
+
+    <!-- Restglühen: sammelt sich zum Kreis, der endo.ai freigibt -->
+    <div class="gluehen" data-gluehen aria-hidden="true"></div>
+
+    <!-- endo.ai: KI-Studio, liegt hinter dem Kreis -->
+    <section class="endo" id="endo" aria-labelledby="endo-titel" data-endo data-endo-hero>
+      <div class="endo__orb" data-orb aria-hidden="true"></div>
+      <div class="endo__verlauf" aria-hidden="true"></div>
+      <div class="endo__inhalt">
+        <div class="endo__text">
+          <span class="endo__label">endo.ai · Ihr KI-Studio</span>
+          <h2 id="endo-titel" class="endo__titel">Zeigen Sie mir<br> Ihr Produkt.</h2>
+          <p class="endo__sub">Aus einem Handyfoto werden Produktfotos, Anzeigen und Videos. <a class="endo__mehr" href="ki/">Alles über endo.ai</a></p>
+        </div>
+        <div class="endo__agent">
+          <section class="agent" data-agent data-eigene-sichtbarkeit aria-label="Chat mit endo">
+            <div class="agent__oben" data-oben>
+              <div class="agent__kopf">
+                <span class="agent__avatar" aria-hidden="true"></span>
+                <div class="agent__name"><b>endo</b><small>KI, kann sich irren · <a href="datenschutz.html">Datenschutz</a></small></div>
+                <button class="rund agent__zu" type="button" data-zu aria-label="Chat schließen">
+                  <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128 50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z"/></svg>
+                </button>
+              </div>
+              <div class="agent__verlauf" data-verlauf role="log" aria-live="polite"></div>
+              <div class="agent__vorschlaege" data-vorschlaege></div>
+            </div>
+            <form class="agent__eingabe" data-eingabe novalidate>
+              <div class="agent__feld">
+                <button class="rund" type="button" data-foto aria-label="Produktfoto hochladen">
+                  <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208 56h-27.72l-13.63-20.44A8 8 0 0 0 160 32H96a8 8 0 0 0-6.65 3.56L75.71 56H48a24 24 0 0 0-24 24v112a24 24 0 0 0 24 24h160a24 24 0 0 0 24-24V80a24 24 0 0 0-24-24Zm8 136a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V80a8 8 0 0 1 8-8h32a8 8 0 0 0 6.66-3.56L100.28 48h55.43l13.63 20.44A8 8 0 0 0 176 72h32a8 8 0 0 1 8 8ZM128 88a44 44 0 1 0 44 44 44.05 44.05 0 0 0-44-44Zm0 72a28 28 0 1 1 28-28 28 28 0 0 1-28 28Z"/></svg>
+                </button>
+                <input type="file" accept="image/*" hidden data-datei>
+                <label class="hinweis" for="endo-text">Nachricht an endo</label>
+                <input id="endo-text" type="text" maxlength="600" autocomplete="off" enterkeyhint="send" placeholder="Fragen Sie endo …" data-text>
+                <button class="rund rund--haupt" type="submit" aria-label="Senden" data-senden>
+                  <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66 117.66a8 8 0 0 1-11.32 0L136 59.31V216a8 8 0 0 1-16 0V59.31l-58.34 58.35a8 8 0 0 1-11.32-11.32l72-72a8 8 0 0 1 11.32 0l72 72a8 8 0 0 1 0 11.32Z"/></svg>
+                </button>
+              </div>
+              <button class="agent__oeffnen" type="button" data-oeffnen aria-expanded="false" aria-label="Chat mit endo öffnen"></button>
+            </form>
+          </section>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
 </main>
 
 <footer class="footer">
-  <span>ERGUN. · Emre Ergun · Webdesigner · © 2026</span>
+  <span>ERGUN. · Emre Ergun · Webdesigner · © 2026 · <a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a> · <a href="tel:+4915906344961">+49 1590 6344961</a></span>
   <nav aria-label="Rechtliches">
     <a href="ki/">endo.ai</a>
     <a href="impressum.html">Impressum</a>
     <a href="datenschutz.html">Datenschutz</a>
   </nav>
 </footer>
-</div><!-- /smooth-content -->
-</div><!-- /smooth-wrapper -->
 
 <!-- GSAP liegt lokal im Ordner js/ (kein fremder Server) -->
 <script src="js/gsap.min.js"></script>
 <script src="js/ScrollTrigger.min.js"></script>
+<script src="ki/js/agent.js" defer></script>
 <script>
 (function () {
   if (!window.gsap || !window.ScrollTrigger) { if (window.__introEnde) window.__introEnde(); return; }
@@ -849,21 +1089,8 @@ body { overflow-x: clip; }
   gsap.registerPlugin(ScrollTrigger);
 
   ScrollTrigger.config({ ignoreMobileResize: true });
-  /* Parallax: Browser mit Scroll-Animationen machen es selbst (CSS oben), sonst GSAP */
-  var cssParallax = window.CSS && CSS.supports && CSS.supports('animation-timeline: view()');
   var mobile = window.matchMedia('(max-width: 700px)').matches;
-  var f = mobile ? 0.6 : 1;
-
-  /* Hero: jede Ebene bewegt sich unterschiedlich schnell (wie Osmo-Vorlage).
-     Person und Vordergrund laufen gleich schnell, damit die Füße auf dem Fels bleiben. */
   var layersEl = document.querySelector('[data-parallax-layers]');
-  if (!cssParallax) {
-    var tl = gsap.timeline({ scrollTrigger: { trigger: layersEl, start: '0% 0%', end: '100% 0%', scrub: true } });
-    [['1', 70], ['2', 55], ['3', 52], ['4', 12], ['5', 12]].forEach(function (l, i) {
-      tl.to(layersEl.querySelectorAll('[data-parallax-layer="' + l[0] + '"]'),
-        { yPercent: l[1] * f, ease: 'none' }, i === 0 ? undefined : '<');
-    });
-  }
 
   /* Einstieg: Berge und Emre setzen sich kurz, Zeile und Navigation blenden ein – nur transform/opacity */
   var heroEinstieg = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } })
@@ -871,6 +1098,7 @@ body { overflow-x: clip; }
     .from('.parallax__layer-img[data-parallax-layer="4"], .parallax__layer-img[data-parallax-layer="5"]', { y: 24, duration: 1.1 }, 0)
     .from('.parallax__rolle, .parallax__claim', { opacity: 0, y: 8, duration: 0.7, stagger: 0.15 }, 0.35)
     .from('.nav, .parallax__hint', { opacity: 0, duration: 0.6, ease: 'power2.out' }, 0.5);
+  if (!window.matchMedia('(max-width: 900px)').matches) heroEinstieg.from('.karte', { opacity: 0, y: 10, duration: 0.9 }, 0.55);
 
   /* ===== Auftritt: "E." erscheint, der Punkt zieht nach rechts und zieht "RGUN" hinter sich her, dann blendet die Szene auf ===== */
   var loader = document.querySelector('.loader');
@@ -968,13 +1196,132 @@ body { overflow-x: clip; }
     }
   }
 
-  /* Navigation: beim Runterscrollen ausblenden, beim Hochscrollen zeigen */
+  /* ===== Szene: Sonnenuntergang → endo.ai (angeheftet, ans Scrollen gekoppelt) =====
+     Reihenfolge: Formular (Handy: kommt unter Emre hoch) → Sonne sinkt hinter den Kamm, Himmel wird blaue Stunde →
+     Restglühen sammelt sich zum Kreis → Kreis wächst (clip-path) und gibt endo.ai frei. Zurückscrollen dreht alles um. */
+  var szene = document.querySelector('[data-szene]'), buehne = document.querySelector('[data-buehne]');
+  var sonne = document.querySelector('[data-sonne]'), blau = document.querySelector('[data-blaue-stunde]'), nacht = document.querySelector('[data-nacht]');
+  var karte = document.querySelector('[data-karte]'), gluehen = document.querySelector('[data-gluehen]'), endo = document.querySelector('[data-endo]');
+  var orbEl = document.querySelector('[data-orb]'), agentEl = document.querySelector('[data-agent]');
+  var titel3 = document.querySelector('[data-parallax-layer="3"]'), kamm = document.querySelector('[data-parallax-layer="2"]');
+  var vorn = document.querySelectorAll('[data-parallax-layer="4"], [data-parallax-layer="5"]');
+  var himmel = document.querySelectorAll('.parallax__layer-img--sky');
+  var wechsel = document.querySelector('[data-wechsel]');
+  var szeneTl = gsap.timeline({ defaults: { ease: 'none' }, paused: true }), szeneEnde = 0, formularBei = 0, karteWeg = 0, endoAuf = 0, endoOffen = false, orbGeladen = false;
   var navEl = document.querySelector('.nav');
-  ScrollTrigger.create({ start: 0, end: 'max', onUpdate: function (self) {
-    var y = self.scroll();
-    if (y > 140 && self.direction === 1) navEl.classList.add('nav--weg');
-    else if (self.direction === -1 || y <= 140) navEl.classList.remove('nav--weg');
-  } });
+  var handy = window.matchMedia('(max-width: 900px)').matches;
+
+  function ladeOrb() {
+    if (orbGeladen) return; orbGeladen = true;
+    var s = document.createElement('script'); s.src = 'ki/js/orb.js'; s.defer = true; document.body.appendChild(s);
+  }
+  function endoZeigen(an) {
+    if (an === endoOffen) return; endoOffen = an;
+    endo.inert = !an;
+    if (agentEl) { agentEl.classList.toggle('agent--weg', !an); if (an) agentEl.dispatchEvent(new CustomEvent('endo:zeigen')); }
+    if (wechsel) wechsel.querySelectorAll('a').forEach(function (a) { a.setAttribute('aria-current', (a.getAttribute('data-ziel') === 'endo') === an ? 'true' : 'false'); });
+  }
+  if (agentEl) agentEl.classList.add('agent--weg');
+  endo.inert = true;
+
+  /* Timeline wird bei jedem Refresh neu befüllt (gleiches Objekt, gleicher ScrollTrigger – sonst geht der Scroll-Listener verloren) */
+  function baueSzene() {
+    handy = window.matchMedia('(max-width: 900px)').matches;
+    var h = buehne.offsetHeight, w = buehne.offsetWidth;
+    var R = Math.hypot(w, h) * 0.62;                        /* Radius, der die ganze Bühne abdeckt */
+    var glueh = h * 0.24;                                   /* Grundgröße des Glühens (24svh) */
+    var tl = szeneTl; tl.clear();
+    gsap.set([sonne, kamm, titel3, vorn, karte], { clearProps: 'transform,opacity' }); gsap.set(titel3, { opacity: 1 });
+    gsap.set(gluehen, { scale: 0.15, opacity: 0 });
+    gsap.set(blau, { opacity: 0 }); gsap.set(nacht, { opacity: 0 }); gsap.set(karte, { opacity: 1 });
+    if (handy) {
+      /* 1. Formular kommt 1:1 mit dem Scrollen unter Emre hoch, die Ebenen rücken leicht nach oben */
+      var kopf = 104; karte.style.setProperty('--karte-kopf', kopf + 'px');
+      var T = Math.max(0, Math.min(karte.offsetHeight - kopf, h * 1.6));
+      tl.to(karte, { y: -T, duration: T }, 0)
+        .to(vorn, { y: -h * 0.10, duration: T }, 0)
+        .to(kamm, { y: -h * 0.07, duration: T }, 0)
+        .to(titel3, { y: -h * 0.05, opacity: 0.12, duration: T }, 0)
+        .to(himmel, { y: -h * 0.03, duration: T }, 0);
+      formularBei = T;
+      /* 2. Ruhe zum Ausfüllen */
+      tl.to({}, { duration: h * 0.6 });
+      /* 3. Formular geht */
+      tl.to(karte, { opacity: 0, y: -T - h * 0.06, duration: h * 0.3 })
+        .to(titel3, { opacity: 1, duration: h * 0.3 }, '<');
+      karteWeg = tl.duration();
+      /* 4. Sonne sinkt, blaue Stunde */
+      var s4 = tl.duration();
+      tl.to(sonne, { yPercent: 20, duration: h }, s4)
+        .to(titel3, { y: h * 0.04, duration: h }, s4)
+        .to(blau, { opacity: 1, duration: h * 0.7 }, s4 + h * 0.25)
+        .to(nacht, { opacity: 1, duration: h * 0.6 }, s4 + h * 0.4);
+      /* 5. Restglühen sammelt sich */
+      tl.to(sonne, { opacity: 0, duration: h * 0.3 })
+        .to(gluehen, { scale: 0.67, opacity: 1, duration: h * 0.3 }, '<');
+      /* 6. Kreis öffnet endo.ai */
+      tl.fromTo(endo, { clipPath: 'circle(0px at 50% 42%)' }, { clipPath: 'circle(' + Math.round(R) + 'px at 50% 42%)', duration: h * 0.6, ease: 'power1.in' })
+        .to(gluehen, { scale: (R + h * 0.08) / (glueh / 2), duration: h * 0.6, ease: 'power1.in' }, '<')
+      endoAuf = tl.duration() - h * 0.03;
+      tl.to({}, { duration: h * 0.2 });
+    } else {
+      /* 1. Formular steht neben Emre; passt es nicht ganz auf den Bildschirm, kommt der Rest 1:1 mit dem Scrollen hoch */
+      var T = Math.max(0, Math.round(karte.offsetTop + karte.offsetHeight - h * 0.96));
+      if (T) tl.to(karte, { y: -T, duration: T }, 0);
+      formularBei = T;
+      tl.to({}, { duration: h * 0.3 });
+      /* 2. Sonne sinkt hinter den Kamm, Name wandert hinter Emre, Himmel wird blaue Stunde */
+      var s2 = tl.duration();
+      tl.to(sonne, { yPercent: 27, duration: h * 1.2 }, s2)
+        .to(titel3, { y: h * 0.18, duration: h * 1.2 }, s2)
+        .to(kamm, { y: -h * 0.04, duration: h * 1.2 }, s2)
+        .to(blau, { opacity: 1, duration: h * 0.8 }, s2 + h * 0.3)
+        .to(nacht, { opacity: 1, duration: h * 0.7 }, s2 + h * 0.5)
+        .to(karte, { opacity: 0, y: -T + h * 0.06, duration: h * 0.25 }, s2 + h * 0.95);
+      karteWeg = s2 + h * 1.2;
+      /* 3. Restglühen sammelt sich zum Kreis */
+      tl.to(sonne, { opacity: 0, duration: h * 0.35 })
+        .to(gluehen, { scale: 0.67, opacity: 1, duration: h * 0.35 }, '<');
+      /* 4. Kreis wächst und gibt endo.ai frei */
+      tl.fromTo(endo, { clipPath: 'circle(0px at 50% 52%)' }, { clipPath: 'circle(' + Math.round(R) + 'px at 50% 52%)', duration: h * 0.7, ease: 'power1.in' })
+        .to(gluehen, { scale: (R + h * 0.08) / (glueh / 2), duration: h * 0.7, ease: 'power1.in' }, '<')
+      endoAuf = tl.duration() - h * 0.03;
+      tl.to({}, { duration: h * 0.25 });
+    }
+    szeneEnde = tl.duration();
+    szene.style.height = Math.round(h + szeneEnde) + 'px';
+    szeneTl = tl;
+  }
+  baueSzene();
+  ScrollTrigger.create({
+      trigger: szene, start: 'top top', end: 'bottom bottom', scrub: true, animation: szeneTl,
+      onUpdate: function (st) {
+        var tl = szeneTl, p = st.progress, z = tl.time();
+        orbEl.classList.toggle('ist-nah', p > 0.55);
+        if (p > 0.5) ladeOrb();
+        karte.inert = z >= karteWeg;
+        navEl.classList.toggle('nav--karte', formularBei > 0 && z > formularBei * 0.3 && z < karteWeg);
+        endoZeigen(z >= endoAuf);
+      }
+  });
+  ScrollTrigger.addEventListener('refreshInit', baueSzene);
+  window.addEventListener('load', function () { setTimeout(ladeOrb, 2500); });
+
+  /* Umschalter oben und „Projekt anfragen": sanft an die passende Stelle springen */
+  function springe(y) { window.scrollTo({ top: Math.round(y), behavior: 'smooth' }); }
+  if (wechsel) wechsel.addEventListener('click', function (e) {
+    var a = e.target.closest('a'); if (!a) return;
+    e.preventDefault();
+    springe(a.getAttribute('data-ziel') === 'endo' ? szene.offsetTop + szeneEnde : 0);
+  });
+  document.querySelectorAll('[data-zum-formular], .nav__mark').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      var zumFormular = a.hasAttribute('data-zum-formular');
+      springe(zumFormular ? szene.offsetTop + formularBei + (handy ? 40 : 0) : 0);
+      if (zumFormular) setTimeout(function () { var f = document.getElementById('f-name'); if (f) f.focus({ preventScroll: true }); }, 700);
+    });
+  });
 
   /* Pakete: Vorschauen laufen nur, solange sie sichtbar sind */
   function nurSichtbar(el, tw) {
