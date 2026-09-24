@@ -1,4 +1,4 @@
-# Agentur-Website ERGUN. – Stand 23.09.2026 (Claude Code, nach der 4K-Runde)
+# Agentur-Website ERGUN. – Stand 24.09.2026 (= GitHub `main` 7982f38)
 
 Eine HTML-Datei, kein Build, nichts von fremden Servern. Aufbau nach der Osmo-Parallax-Vorlage:
 riesiger Name „ERGUN." oben, Sonne dahinter, Emre selbst auf dem Felsgrat davor, Berge schieben sich
@@ -80,3 +80,12 @@ Hochladen: `index.html`, `impressum.html`, `datenschutz.html`, `favicon*`, `appl
 - Pakete: jede Karte hat unten `.pkg__abo` (Monatspreis für Hosting, Domain & Pflege: 10/20/35 €). Pakete (24.09.): nichts mehr mit Google; Effekte als eine Zeile (Parallax-Tiefe, Scroll- & Einblend-Animationen); Pflege-Kästen gleich aufgebaut, jede Liste vollständig (kein „Alles aus …"); Karten per CSS-Subgrid auf gleiche Zeilenhöhen; Vertrauenszeile unter den Paketen entfernt. Person-Ebene: Loch am Hals (Kinnlinie links) in `layer-5-person-1920/-2560/-hoch.webp` gefüllt. Kein Startup-/Extras-Bereich mehr (Emre, 23.09.: nur Pakete und Kontaktformular). Das Formular ist ein Fragebogen mit 4 nummerierten Schritten (`.schritt`): 01 Paket · 02 Name/Firma/E-Mail · 03 Worum geht es? · 04 Dateien. Pakete: feste Inhalte, keine Fristen. Formular: Dateifeld `dateien` (Vorschau `[data-datei-liste]`, Namen in der Nachricht, kein Upload ohne Server). Hero-Claim `.parallax__claim` über dem Namen. Formular: Checkboxen `extras` = „Wünsche". Keine eigenen Hosting-/Extras-Abschnitte (Emre wollte es in den bestehenden Sachen). Preise: `02 Preise/Pakete & Preise.md`.
 - Porträt im Kontakt: `bilder/kontakt/emre-264.webp` / `-144.webp`, erzeugt mit `bilder/hero/4k/portrait.py` aus `03 Marke/emre-portrait-original.jpg`. Glut, Goldschein und Lichtkreis-Maske wurden am 23.09. entfernt (zu viele Effekte, ruckelte).
 - Berge: `bilder/hero/4k/berge.py` füllt den Fuß des Kamms und gleicht Kamm und Vordergrund an. Originale liegen als `*-vor-angleich.webp` in `4k/`.
+- Schritt 04 „Dateien": Hochladefläche `.upload` mit Symbol, echtes `input[type=file]` unsichtbar darüber, Drag-Hervorhebung `.ist-drueber`.
+
+## Änderungen 24.09. (Chat, direkt auf GitHub `main`, jetzt auch hier im Vault)
+- Hero-Claim nur noch „Faire Preise für gute Arbeit." (PR #1).
+- Sonne hinter dem Namen: `.parallax__layer-img--sky { top: -27% }` (Handy −20 %). Gegenlicht per Filter: Ebene 2 `brightness(.8) saturate(.9) contrast(1.04)`, Ebene 4 `brightness(.85) saturate(.95)`, Ebene 5 (Emre) `brightness(.94) contrast(1.04) saturate(.94) sepia(.06)`. Block „Feinschliff Hero (24.09.)" am Ende des `<style>`.
+- Pakete nach Oberthemen: `li.pkg__punkt` mit `span.pkg__kat` (Design · Bilder & Videos · Animation · Funktionen · Teilen · Service) + `span.pkg__text`. Hinweis über den Karten mit `.packages__immer` („In jedem Paket: für Handy, Tablet & PC · ohne Cookies · Impressum & Datenschutz-Vorlage"). Inhalte = `02 Preise/Pakete & Preise.md`, Abschnitt „Stand 24.09.".
+- WhatsApp-Knopf: `window.open(waLink,'_blank')` **ohne** `'noopener'` (sonst immer `null` → falsche Fehlermeldung), danach `win.opener = null`; blockiert → `location.href = waLink`.
+- Offen: PR #2 (Datei-Upload mit Vercel Blob) – später.
+- **Abends:** Kontakt = Stepper-Fragebogen (`.bogen`, `[data-schritt]`, `data-auto` = Einfachauswahl springt weiter, `[data-zeige-bei="bisher:Ja"]`, JS setzt `.ist-stepper`; ohne JS alles untereinander). 7 Schritte (keine Paket-Frage) inkl. „Erstgespräch – wie am liebsten?" und Telefon optional. Pflicht nur Name + E-Mail. CSS-Block „Fragebogen Schritt für Schritt (24.09.)".
