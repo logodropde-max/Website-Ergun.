@@ -301,6 +301,9 @@ html.intro .parallax__title { opacity: 0; }
 .datei__liste:empty { display: none; }
 .datei__liste li { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px 5px 5px; }
 .datei__liste img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; }
+.datei__stand { font-size: 12px; color: var(--muted); }
+.datei__stand.ist-ok { color: #3fb96b; }
+.datei__stand.ist-fehler { color: var(--accent); }
 .datei__liste i { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,90,31,0.14); color: var(--accent); font-style: normal; font-size: 11px; font-weight: 500; }
 .field.hat-fehler input, .field.hat-fehler textarea { border-color: var(--accent); }
 .field__error { min-height: 1.2em; font-size: 13px; color: var(--accent); }
@@ -727,7 +730,7 @@ body { overflow-x: clip; }
             <input id="f-datei" name="dateien" type="file" multiple accept="image/*,.pdf,.doc,.docx,.svg,.ai,.zip">
           </div>
           <ul class="datei__liste" data-datei-liste aria-live="polite"></ul>
-          <span class="form__hint">Die Dateien hängen Sie im nächsten Schritt in WhatsApp oder in Ihrem Mailprogramm an. Die Nachricht erinnert Sie daran.</span>
+          <span class="form__hint">Die Dateien werden beim Auswählen hochgeladen und kommen als Link in die Nachricht. Nach 30 Tagen werden sie automatisch gelöscht.</span>
         </div>
         <div class="form__actions">
           <button class="btn btn--wa" type="submit" name="weg" value="whatsapp">
@@ -737,7 +740,7 @@ body { overflow-x: clip; }
           <button class="btn" type="submit" name="weg" value="mail">Per E-Mail senden</button>
         </div>
         <p class="form__status" data-status aria-live="polite"></p>
-        <p class="form__hint">Öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Kein Server, keine Datenspeicherung.</p>
+        <p class="form__hint">Öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Ihre Angaben speichert die Website nicht, nur hochgeladene Dateien liegen bis zu 30 Tage bei Vercel.</p>
       </form>
     </div>
     <div class="contact__meta reveal">
@@ -953,7 +956,8 @@ body { overflow-x: clip; }
 </script>
 <script>
 /* Kontaktformular: Paket-Auswahl, Pruefung beim Verlassen eines Feldes, Live-Vorschau,
-   Versand per WhatsApp oder Mailprogramm (kein Server). Laeuft auch ohne GSAP. */
+   Versand per WhatsApp oder Mailprogramm. Dateien gehen beim Auswaehlen an /api/upload (Vercel Blob)
+   und landen als Link in der Nachricht; klappt das nicht, haengt man sie selbst an. Laeuft auch ohne GSAP. */
 (function () {
   var WA_NUMMER = '4915906344961';
   var MAIL = 'ergun.eu@gmail.com';
@@ -983,30 +987,71 @@ body { overflow-x: clip; }
   function paket() { var r = form.querySelector('input[name="paket"]:checked'); return r && r.value !== 'Noch unklar' ? r.value : ''; }
   function wert(k) { return form.elements[k].value.trim(); }
   var dateiFeld = form.elements['dateien'], dateiListe = form.querySelector('[data-datei-liste]');
-  function dateien() { return dateiFeld && dateiFeld.files ? [].map.call(dateiFeld.files, function (f) { return f.name; }) : []; }
+  var MAX_BYTES = 4 * 1024 * 1024;
+  var eintraege = [], runde = 0;
+  function laufend() { return eintraege.some(function (e) { return e.stand === 'laedt'; }); }
+  function standSetzen(e, stand) {
+    e.stand = stand;
+    e.anzeige.className = 'datei__stand' + (stand === 'ok' ? ' ist-ok' : stand === 'fehler' ? ' ist-fehler' : '');
+    e.anzeige.textContent = stand === 'ok' ? '✓ hochgeladen' : stand === 'fehler' ? 'bitte selbst anhängen' : 'lädt …';
+    aktualisieren();
+    if (!laufend() && status.getAttribute('data-wartet')) { status.removeAttribute('data-wartet'); status.textContent = 'Dateien sind hochgeladen. Jetzt können Sie senden.'; }
+  }
+  /* Grosse Fotos im Browser verkleinern, damit sie unter das Limit der Vercel-Funktion passen */
+  function vorbereiten(f) {
+    if (f.size <= 3.5 * 1024 * 1024 || !/^image\/(jpeg|png|webp|heic|heif)$/.test(f.type) || !window.createImageBitmap) return Promise.resolve({ daten: f, name: f.name });
+    return createImageBitmap(f).then(function (bild) {
+      var faktor = Math.min(1, 2560 / Math.max(bild.width, bild.height));
+      var c = document.createElement('canvas');
+      c.width = Math.round(bild.width * faktor); c.height = Math.round(bild.height * faktor);
+      c.getContext('2d').drawImage(bild, 0, 0, c.width, c.height);
+      function alsJpeg(q) { return new Promise(function (ok) { c.toBlob(ok, 'image/jpeg', q); }); }
+      return alsJpeg(0.85).then(function (b) { return b && b.size > MAX_BYTES ? alsJpeg(0.7) : b; }).then(function (b) {
+        return b ? { daten: b, name: f.name.replace(/\.[^.]+$/, '') + '.jpg' } : { daten: f, name: f.name };
+      });
+    }).catch(function () { return { daten: f, name: f.name }; });
+  }
+  function hochladen(e, meineRunde) {
+    return vorbereiten(e.datei).then(function (v) {
+      if (v.daten.size > MAX_BYTES) throw new Error('zu gross');
+      return fetch('/api/upload', { method: 'POST', headers: { 'content-type': 'application/octet-stream', 'x-dateiname': encodeURIComponent(v.name) }, body: v.daten });
+    }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (j) { if (meineRunde !== runde) return; if (!j || !j.url) throw new Error('kein Link'); e.url = j.url; standSetzen(e, 'ok'); })
+      .catch(function () { if (meineRunde === runde) standSetzen(e, 'fehler'); });
+  }
   var upload = form.querySelector('[data-upload]');
   if (upload) {
     ['dragenter', 'dragover'].forEach(function (t) { upload.addEventListener(t, function () { upload.classList.add('ist-drueber'); }); });
     ['dragleave', 'drop'].forEach(function (t) { upload.addEventListener(t, function () { upload.classList.remove('ist-drueber'); }); });
   }
   if (dateiFeld) dateiFeld.addEventListener('change', function () {
+    runde++;
+    var meineRunde = runde;
     dateiListe.innerHTML = '';
-    [].forEach.call(dateiFeld.files, function (f) {
+    eintraege = [].map.call(dateiFeld.files, function (f) {
       var li = document.createElement('li');
       if (/^image\//.test(f.type)) { var im = document.createElement('img'); im.alt = ''; im.src = URL.createObjectURL(f); li.appendChild(im); }
       else { var i = document.createElement('i'); i.textContent = (f.name.split('.').pop() || 'Datei').slice(0, 4).toUpperCase(); li.appendChild(i); }
       li.appendChild(document.createTextNode(f.name + ' · ' + (f.size / 1048576).toFixed(1) + ' MB'));
+      var anzeige = document.createElement('span'); li.appendChild(anzeige);
       dateiListe.appendChild(li);
+      return { datei: f, name: f.name, url: '', stand: 'laedt', anzeige: anzeige };
     });
+    eintraege.forEach(function (e) { standSetzen(e, 'laedt'); });
+    /* nacheinander hochladen, damit ein langsames Handynetz nicht alles gleichzeitig stemmen muss */
+    eintraege.reduce(function (kette, e) { return kette.then(function () { return meineRunde === runde ? hochladen(e, meineRunde) : null; }); }, Promise.resolve());
     aktualisieren();
   });
   function nachricht(vorschau) {
-    var n = wert('name'), f = wert('firma'), p = paket(), d = dateien(), x = wert('text'), m = wert('email');
+    var n = wert('name'), f = wert('firma'), p = paket(), x = wert('text'), m = wert('email');
+    var mitLink = eintraege.filter(function (e) { return e.stand === 'ok'; });
+    var ohneLink = eintraege.filter(function (e) { return e.stand !== 'ok'; }).map(function (e) { return e.name; });
     if (vorschau) { n = n || '[Ihr Name]'; x = x || '[Worum geht es?]'; m = m || '[Ihre E-Mail]'; }
     return 'Hallo, ich bin ' + n + (f ? ' von ' + f : '') + '.\n\n' +
       (p ? 'Paket: ' + p + '\n' : '') +
       (p ? '\n' : '') + x + '\n\n' +
-      (d.length ? 'Dateien, die ich hier anhänge: ' + d.join(', ') + '\n\n' : '') +
+      (mitLink.length ? 'Meine Dateien:\n' + mitLink.map(function (e) { return '• ' + e.name + ': ' + e.url; }).join('\n') + '\n\n' : '') +
+      (ohneLink.length ? 'Dateien, die ich hier anhänge: ' + ohneLink.join(', ') + '\n\n' : '') +
       'E-Mail für die Antwort: ' + m + '\n' + 'Gesendet über die Website.';
   }
   function aktualisieren() {
@@ -1024,14 +1069,16 @@ body { overflow-x: clip; }
     e.preventDefault();
     var weg = (e.submitter && e.submitter.value) || 'whatsapp';
     if (!pruefen()) { status.textContent = 'Bitte die markierten Felder ausfüllen.'; return; }
+    if (laufend()) { status.setAttribute('data-wartet', '1'); status.textContent = 'Ihre Dateien werden noch hochgeladen. Einen Moment, dann bitte erneut auf Senden tippen.'; return; }
     var m = nachricht(false);
+    var selbst = eintraege.filter(function (e) { return e.stand !== 'ok'; }).length;
     if (weg === 'whatsapp') {
       var win = window.open('https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(m), '_blank', 'noopener');
-      status.textContent = win ? (dateien().length ? 'WhatsApp ist geöffnet. Bitte dort Ihre Dateien anhängen und auf Senden tippen.' : 'WhatsApp ist geöffnet. Bitte dort auf Senden tippen.') : 'WhatsApp konnte nicht geöffnet werden. Bitte Pop-ups erlauben oder per E-Mail senden.';
+      status.textContent = win ? (selbst ? 'WhatsApp ist geöffnet. Bitte dort die Dateien anhängen, die nicht hochgeladen werden konnten, und auf Senden tippen.' : 'WhatsApp ist geöffnet. Bitte dort auf Senden tippen.') : 'WhatsApp konnte nicht geöffnet werden. Bitte Pop-ups erlauben oder per E-Mail senden.';
     } else {
       var betreff = 'Projektanfrage' + (paket() ? ' ' + paket() : '') + ' über ERGUN.';
       location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent(betreff) + '&body=' + encodeURIComponent(m);
-      status.textContent = dateien().length ? 'Ihr Mailprogramm öffnet sich. Bitte Ihre Dateien anhängen und senden.' : 'Ihr Mailprogramm öffnet sich mit der fertigen Nachricht.';
+      status.textContent = selbst ? 'Ihr Mailprogramm öffnet sich. Bitte die Dateien anhängen, die nicht hochgeladen werden konnten, und senden.' : 'Ihr Mailprogramm öffnet sich mit der fertigen Nachricht.';
     }
   });
   /* Paket-Buttons waehlen das passende Paket im Formular */

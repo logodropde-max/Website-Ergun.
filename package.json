@@ -1,0 +1,9 @@
+{
+  "name": "website-ergun",
+  "private": true,
+  "type": "module",
+  "description": "Statische Seite ERGUN. mit zwei Vercel-Funktionen für Datei-Uploads aus dem Kontaktformular",
+  "dependencies": {
+    "@vercel/blob": "^2.8.0"
+  }
+}
