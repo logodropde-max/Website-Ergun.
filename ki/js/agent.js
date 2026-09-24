@@ -8,11 +8,13 @@
   var verlauf = box.querySelector('[data-verlauf]'), vorschlaege = box.querySelector('[data-vorschlaege]');
   var eingabe = box.querySelector('[data-eingabe]'), feld = box.querySelector('[data-text]');
   var fotoKnopf = box.querySelector('[data-foto]'), datei = box.querySelector('[data-datei]'), senden = box.querySelector('[data-senden]');
+  var oben = box.querySelector('[data-oben]'), zuKnopf = box.querySelector('[data-zu]'), oeffnenKnopf = box.querySelector('[data-oeffnen]');
   var ruhig = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var handyMq = window.matchMedia ? matchMedia('(max-width: 860px)') : { matches: false };
 
   var WA_NUMMER = '4915906344961', MAIL = 'ergun.eu@gmail.com';
   var BILD_NACHHER = 'https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200307_ee98c144-5d85-4b91-8e6b-c82d664263d9.png';
-  var PLATZHALTER = 'Schreiben Sie endo, was Sie verkaufen …';
+  var PLATZHALTER = 'Fragen Sie endo …';
 
   var schritt = 'start', kiAus = false, beschaeftigt = false;
   var daten = { kategorie: '', look: '', format: '', credits: 0, premium: false, fotoName: '', fotoUrl: '', email: '' };
@@ -29,7 +31,10 @@
   ];
 
   /* ---------- Darstellung ---------- */
-  function nachUnten() { verlauf.scrollTop = verlauf.scrollHeight; }
+  function nachUnten() {
+    verlauf.scrollTop = verlauf.scrollHeight;
+    requestAnimationFrame(function () { verlauf.scrollTop = verlauf.scrollHeight; });
+  }
   function blase(wer, text) {
     var b = document.createElement('div');
     b.className = 'blase blase--' + wer;
@@ -65,6 +70,7 @@
     var c = document.createElement('figcaption'); c.textContent = unterschrift;
     f.appendChild(img); f.appendChild(c);
     img.addEventListener('load', nachUnten);
+    img.addEventListener('error', function () { f.remove(); });
     verlauf.appendChild(f); nachUnten();
   }
   function knoepfe(liste) {
@@ -78,12 +84,20 @@
       b.addEventListener('click', function () { if (!beschaeftigt) k.aktion(); });
       vorschlaege.appendChild(b);
     });
+    vorschlaege.scrollLeft = 0;
+    nachUnten();
   }
+  /* Vorschläge liegen in einer Zeile: das Mausrad scrollt sie seitwärts */
+  vorschlaege.addEventListener('wheel', function (e) {
+    if (Math.abs(e.deltaY) <= Math.abs(e.deltaX) || vorschlaege.scrollWidth <= vorschlaege.clientWidth) return;
+    e.preventDefault();
+    vorschlaege.scrollLeft += e.deltaY;
+  }, { passive: false });
   function eingabeArt(art) {
     feld.type = art === 'mail' ? 'email' : 'text';
     feld.setAttribute('inputmode', art === 'mail' ? 'email' : 'text');
     feld.setAttribute('autocomplete', art === 'mail' ? 'email' : 'off');
-    feld.placeholder = art === 'mail' ? 'name@shop.de' : (schritt === 'frei' ? 'Fragen Sie endo etwas …' : PLATZHALTER);
+    feld.placeholder = art === 'mail' ? 'name@shop.de' : PLATZHALTER;
   }
   function sperren(an) { beschaeftigt = an; senden.disabled = an; }
 
@@ -287,14 +301,64 @@
     return 'Gute Frage. Die beantwortet Emre gern persönlich. Am schnellsten geht es, wenn Sie mir zeigen, was Sie verkaufen: Dann bereite ich alles für Sie vor.';
   }
 
-  /* ---------- Start, sobald der Chat sichtbar ist ---------- */
-  document.querySelectorAll('[data-zu-endo]').forEach(function (a) {
-    a.addEventListener('click', function () { setTimeout(function () { feld.focus({ preventScroll: true }); }, 700); });
-  });
-  var gestartet = false;
+  /* ---------- Handy: Pille unten, Verlauf fährt beim Antippen auf ---------- */
+  var gestartet = false, offen = false;
   function los() { if (!gestartet) { gestartet = true; start(); } }
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { io.disconnect(); setTimeout(los, ruhig ? 0 : 600); } }, { threshold: 0.3 });
+  function setzeOffen(an, fokus) {
+    offen = an && handyMq.matches;
+    box.classList.toggle('agent--offen', offen);
+    oeffnenKnopf.setAttribute('aria-expanded', String(offen));
+    var zu = handyMq.matches && !offen;
+    oben.inert = zu;
+    if (zu) oben.setAttribute('aria-hidden', 'true'); else oben.removeAttribute('aria-hidden');
+    if (offen) { los(); nachUnten(); if (fokus) zuKnopf.focus({ preventScroll: true }); }
+    else if (fokus && handyMq.matches) { feld.blur(); oeffnenKnopf.focus({ preventScroll: true }); }
+    passeAn();
+  }
+  oeffnenKnopf.addEventListener('click', function () { setzeOffen(true, true); });
+  zuKnopf.addEventListener('click', function () { setzeOffen(false, true); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && offen) setzeOffen(false, true); });
+  document.addEventListener('pointerdown', function (e) { if (offen && !box.contains(e.target)) setzeOffen(false, false); });
+
+  /* Tastatur am Handy: Panel über der Tastatur halten und Höhe begrenzen (visualViewport) */
+  var vv = window.visualViewport;
+  function passeAn() {
+    if (!handyMq.matches) { box.style.removeProperty('--tastatur'); box.style.removeProperty('--blatt'); return; }
+    var hoehe = window.innerHeight, sicht = vv ? vv.height : hoehe, oben0 = vv ? vv.offsetTop : 0;
+    var tastatur = Math.max(0, Math.round(hoehe - sicht - oben0));
+    box.style.setProperty('--tastatur', tastatur + 'px');
+    box.style.setProperty('--blatt', Math.round(Math.max(200, Math.min(hoehe * 0.55, sicht - 108))) + 'px');
+    if (offen) nachUnten();
+  }
+  if (vv) { vv.addEventListener('resize', passeAn); vv.addEventListener('scroll', passeAn); }
+  window.addEventListener('resize', passeAn);
+  function wechsel() { setzeOffen(false, false); if (!handyMq.matches) beobachteSichtbar(); }
+  if (handyMq.addEventListener) handyMq.addEventListener('change', wechsel); else if (handyMq.addListener) handyMq.addListener(wechsel);
+
+  /* Pille nur zeigen, solange der Hero im Bild ist */
+  var hero = document.getElementById('start');
+  if (hero && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (e) { box.classList.toggle('agent--weg', !e[0].isIntersecting); }, { rootMargin: '0px 0px -35% 0px' }).observe(hero);
+  }
+
+  /* Nav „Mit endo sprechen" */
+  document.querySelectorAll('[data-zu-endo]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      if (handyMq.matches) { e.preventDefault(); setTimeout(function () { setzeOffen(true, true); }, 50); }
+      else setTimeout(function () { los(); feld.focus({ preventScroll: true }); }, 700);
+    });
+  });
+
+  /* Desktop: Gespräch startet, sobald das Panel zu sehen ist. Handy: beim ersten Öffnen. */
+  function beobachteSichtbar() {
+    if (gestartet) return;
+    if (!('IntersectionObserver' in window)) { los(); return; }
+    var io = new IntersectionObserver(function (e) {
+      if (e[0].isIntersecting && !handyMq.matches) { io.disconnect(); setTimeout(los, ruhig ? 0 : 900); }
+    }, { threshold: 0.3 });
     io.observe(box);
-  } else los();
+  }
+  setzeOffen(false, false);
+  if (!handyMq.matches) beobachteSichtbar();
+  requestAnimationFrame(function () { box.classList.add('agent--da'); });
 })();

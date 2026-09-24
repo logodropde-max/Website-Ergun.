@@ -103,61 +103,107 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .js .auf { opacity: 0; transform: translateY(64px); filter: blur(12px); transition: opacity 900ms var(--ease), transform 900ms var(--ease), filter 900ms var(--ease); }
 .js .auf.ist-da { opacity: 1; transform: none; filter: none; }
 
-/* ---------- Hero: Kugel im Hintergrund, endo im Vordergrund ---------- */
-.hero { position: relative; display: flex; align-items: center; min-height: 100svh; padding: 128px 0 64px; overflow: hidden; }
+/* ---------- Hero: Kugel im Hintergrund, endo als schwebendes Panel ---------- */
+.hero { position: relative; display: flex; align-items: flex-end; min-height: 100svh; padding: 128px 0 48px; overflow: hidden; }
 .orb { position: absolute; inset: 0; z-index: 0; opacity: 0; transition: opacity 1600ms var(--ease); }
 .orb--bereit { opacity: 1; }
 .orb canvas { display: block; width: 100%; height: 100%; }
-.hero__verlauf { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.55) 45%, rgba(0, 0, 0, 0.15) 100%); pointer-events: none; }
-.hero__inhalt { position: relative; z-index: 2; display: grid; justify-items: center; gap: 24px; text-align: center; }
+.hero__verlauf { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0) 100%); pointer-events: none; }
+.hero__inhalt { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, 1fr) 380px; align-items: end; gap: 48px; }
+.hero__text { display: grid; gap: 16px; padding-bottom: 8px; }
 .hero__label { font-size: 12px; line-height: 16px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(255, 122, 71, 0.9); }
-.hero h1 { max-width: 680px; font-size: 48px; line-height: 1; background: linear-gradient(90deg, #FFFFFF, #9B9B9B); -webkit-background-clip: text; background-clip: text; color: transparent; }
-@media (max-width: 860px) { .hero { padding: 112px 0 48px; } .hero h1 { font-size: 36px; line-height: 40px; } .hero__inhalt { gap: 16px; } }
+.hero h1 { max-width: 680px; font-size: 48px; line-height: 1; background: linear-gradient(90deg, #FFFFFF, #9B9B9B); -webkit-background-clip: text; background-clip: text; color: transparent; text-wrap: balance; }
+@media (min-width: 1200px) { .hero h1 { font-size: 60px; } }
+@media (max-width: 860px) {
+  .hero { align-items: center; padding: 112px 0 96px; }
+  .hero__inhalt { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
+  .hero h1 { font-size: 36px; line-height: 40px; }
+}
 
-/* ---------- endo: der Agent ---------- */
-.agent { width: min(100%, 640px); display: flex; flex-direction: column; text-align: left; border: 1px solid var(--linie-stark); border-radius: 24px; background: rgba(24, 24, 24, 0.66); -webkit-backdrop-filter: blur(24px) saturate(1.3); backdrop-filter: blur(24px) saturate(1.3); box-shadow: 0 24px 96px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 90, 31, 0.08); overflow: hidden; }
-.agent__kopf { display: flex; align-items: center; gap: 12px; padding: 16px 24px; border-bottom: 1px solid var(--linie); }
-.agent__avatar { position: relative; flex: none; width: 40px; height: 40px; border-radius: 9999px; background: #000; border: 1px solid rgba(255, 90, 31, 0.5); display: grid; place-items: center; }
-.agent__avatar::before { content: ""; width: 16px; height: 16px; border-radius: 9999px; border: 2px solid var(--text); }
-.agent__avatar::after { content: ""; position: absolute; right: 8px; bottom: 8px; width: 8px; height: 8px; border-radius: 9999px; background: var(--akzent); box-shadow: 0 0 12px var(--akzent); animation: puls 2400ms var(--ease) infinite; }
-@keyframes puls { 50% { box-shadow: 0 0 2px var(--akzent); } }
-.agent__name { display: grid; }
-.agent__name b { font-size: 16px; line-height: 24px; font-weight: 500; }
-.agent__name small { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; line-height: 16px; color: var(--leise); }
-.agent__name small i { width: 8px; height: 8px; border-radius: 9999px; background: #3FB96B; }
-.agent__verlauf { display: flex; flex-direction: column; gap: 12px; height: 320px; padding: 24px; overflow-y: auto; overscroll-behavior: contain; scroll-behavior: smooth; }
-.blase { max-width: 85%; padding: 12px 16px; border-radius: 16px; font-size: 16px; line-height: 24px; animation: rein 600ms var(--ease) both; overflow-wrap: anywhere; }
-.blase--endo { align-self: flex-start; background: var(--flaeche-2); border: 1px solid var(--linie); border-top-left-radius: 4px; }
+/* ---------- endo: schlankes Glas-Panel ---------- */
+.agent {
+  --aus: cubic-bezier(0.23, 1, 0.32, 1);
+  display: flex; flex-direction: column; width: 100%; text-align: left; height: min(420px, calc(100svh - 176px)); min-height: 320px;
+  border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px;
+  background: rgba(20, 20, 20, 0.45); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35); overflow: hidden;
+  opacity: 0; transform: translateY(16px); transition: opacity 500ms var(--aus) 300ms, transform 500ms var(--aus) 300ms;
+}
+.agent--da { opacity: 1; transform: none; }
+.agent__oben { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.agent__kopf { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.agent__avatar { position: relative; flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9999px; background: #000; border: 1px solid rgba(255, 90, 31, 0.5); }
+.agent__avatar::before { content: ""; width: 10px; height: 10px; border-radius: 9999px; border: 2px solid var(--text); }
+.agent__avatar::after { content: ""; position: absolute; right: 4px; bottom: 4px; width: 6px; height: 6px; border-radius: 9999px; background: var(--akzent); }
+.agent__name { display: grid; flex: 1; min-width: 0; }
+.agent__name b { font-size: 14px; line-height: 20px; font-weight: 500; }
+.agent__name small { font-size: 12px; line-height: 16px; color: var(--leise); }
+.agent__name a { color: inherit; text-decoration: underline; text-decoration-color: rgba(155, 155, 155, 0.5); text-underline-offset: 2px; }
+.rund.agent__zu { display: none; }
+.agent__verlauf { display: flex; flex-direction: column; gap: 8px; flex: 1; min-height: 0; padding: 12px 16px; overflow-y: auto; overscroll-behavior: contain; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.15) transparent; }
+.blase { max-width: 85%; padding: 8px 12px; border-radius: 16px; font-size: 14px; line-height: 20px; overflow-wrap: anywhere; animation: rein 240ms var(--aus) both; }
+.blase--endo { align-self: flex-start; background: rgba(39, 39, 39, 0.7); border-top-left-radius: 4px; }
 .blase--du { align-self: flex-end; background: var(--akzent); color: #000; border-top-right-radius: 4px; }
 .blase a { color: var(--akzent-hell); text-decoration: underline; text-underline-offset: 2px; }
-.blase--bild { margin: 0; padding: 4px; background: var(--flaeche-2); border: 1px solid var(--linie); }
-.blase--bild img { width: 200px; max-width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 12px; }
-.blase--bild figcaption { padding: 8px 8px 4px; font-size: 12px; line-height: 16px; color: var(--leise); }
-.blase--du.blase--bild { background: var(--flaeche-3); color: var(--text); }
-.tippt { display: inline-flex; gap: 4px; align-items: center; height: 24px; }
-.tippt i { width: 6px; height: 6px; border-radius: 9999px; background: var(--leise); animation: tippen 1200ms var(--ease) infinite; }
-.tippt i:nth-child(2) { animation-delay: 150ms; }
-.tippt i:nth-child(3) { animation-delay: 300ms; }
-@keyframes tippen { 0%, 60%, 100% { transform: none; opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
-@keyframes rein { from { opacity: 0; transform: translateY(12px); } }
-.agent__vorschlaege { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 24px 16px; }
+.blase--bild { margin: 0; padding: 4px; background: rgba(39, 39, 39, 0.7); }
+.blase--bild img { width: 160px; max-width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 12px; }
+.blase--bild figcaption { padding: 4px 8px; font-size: 12px; line-height: 16px; color: var(--leise); }
+.blase--du.blase--bild { background: rgba(39, 39, 39, 0.9); color: var(--text); }
+.tippt { display: inline-flex; gap: 4px; align-items: center; height: 20px; }
+.tippt i { width: 5px; height: 5px; border-radius: 9999px; background: var(--leise); animation: tippen 1000ms ease-in-out infinite; }
+.tippt i:nth-child(2) { animation-delay: 140ms; }
+.tippt i:nth-child(3) { animation-delay: 280ms; }
+@keyframes tippen { 0%, 60%, 100% { transform: none; opacity: 0.35; } 30% { transform: translateY(-3px); opacity: 1; } }
+@keyframes rein { from { opacity: 0; transform: translateY(8px); } }
+.agent__vorschlaege { display: flex; gap: 8px; padding: 4px 16px 8px; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+.agent__vorschlaege::-webkit-scrollbar { display: none; }
 .agent__vorschlaege:empty { display: none; }
-.chip { min-height: 40px; padding: 8px 16px; border: 1px solid var(--linie-stark); border-radius: 9999px; background: transparent; font-size: 14px; line-height: 20px; cursor: pointer; animation: rein 600ms var(--ease) both; transition: border-color 400ms var(--ease), background-color 400ms var(--ease), transform 400ms var(--ease); }
+.chip { flex: none; min-height: 36px; padding: 8px 12px; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 9999px; background: rgba(0, 0, 0, 0.2); font-size: 14px; line-height: 20px; white-space: nowrap; cursor: pointer; animation: rein 240ms var(--aus) both; transition: border-color 200ms ease, background-color 200ms ease, transform 160ms var(--aus); }
 .chip--haupt { background: var(--akzent); border-color: var(--akzent); color: #000; font-weight: 500; }
-.chip:active { transform: scale(0.98); }
+.chip:active { transform: scale(0.97); }
 @media (hover: hover) and (pointer: fine) { .chip:hover { border-color: var(--akzent); background: rgba(255, 90, 31, 0.12); } .chip--haupt:hover { background: var(--akzent-hell); } }
-.agent__eingabe { display: flex; align-items: center; gap: 8px; padding: 12px; border-top: 1px solid var(--linie); }
-.agent__eingabe input[type="text"], .agent__eingabe input[type="email"] { flex: 1; min-width: 0; min-height: 48px; padding: 12px 16px; border: 1px solid var(--linie); border-radius: 9999px; background: rgba(0, 0, 0, 0.4); font-size: 16px; line-height: 24px; transition: border-color 400ms var(--ease); }
-.agent__eingabe input:focus-visible { outline: none; border-color: var(--akzent); }
-.rund { flex: none; display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid var(--linie-stark); border-radius: 9999px; background: transparent; cursor: pointer; transition: background-color 400ms var(--ease), border-color 400ms var(--ease), transform 400ms var(--ease); }
-.rund svg { width: 20px; height: 20px; }
-.rund--haupt { background: var(--akzent); border-color: var(--akzent); color: #000; }
-.rund:active { transform: scale(0.96); }
-.rund:disabled { opacity: 0.4; cursor: default; }
-@media (hover: hover) and (pointer: fine) { .rund:hover { border-color: var(--akzent); } .rund--haupt:hover { background: var(--akzent-hell); } }
-.agent__fuss { padding: 0 24px 12px; font-size: 12px; line-height: 16px; color: var(--leise); text-align: center; }
-.agent__fuss a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
-@media (max-width: 860px) { .agent { border-radius: 16px; } .agent__kopf { padding: 12px 16px; } .agent__verlauf { height: 300px; padding: 16px; } .agent__vorschlaege { padding: 0 16px 12px; } .agent__fuss { padding: 0 16px 12px; } }
+.agent__eingabe { position: relative; flex: none; padding: 8px; }
+.agent__feld { display: flex; align-items: center; gap: 4px; height: 44px; padding: 4px; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 9999px; background: rgba(0, 0, 0, 0.35); transition: border-color 200ms ease; }
+.agent__feld:focus-within { border-color: rgba(255, 90, 31, 0.7); }
+.agent__feld input[type="text"], .agent__feld input[type="email"] { flex: 1; min-width: 0; height: 36px; padding: 0 8px; border: 0; background: transparent; font-size: 14px; line-height: 20px; }
+.agent__feld input:focus-visible { outline: none; }
+.agent__feld input::placeholder { color: rgba(155, 155, 155, 0.85); }
+.rund { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 9999px; background: transparent; color: var(--leise); cursor: pointer; transition: background-color 200ms ease, color 200ms ease, transform 160ms var(--aus); }
+.rund svg { width: 18px; height: 18px; }
+.rund--haupt { background: var(--akzent); color: #000; }
+.rund:active { transform: scale(0.94); }
+.rund:disabled { opacity: 0.4; cursor: default; transform: none; }
+@media (hover: hover) and (pointer: fine) { .rund:hover { color: var(--text); background: rgba(255, 255, 255, 0.08); } .rund--haupt:hover { color: #000; background: var(--akzent-hell); } }
+.agent__oeffnen { display: none; }
+
+/* Handy: kleine Pille unten, der Verlauf fährt erst beim Antippen auf */
+@media (max-width: 860px) {
+  .hero__agent { display: contents; }
+  .agent {
+    position: fixed; z-index: 30; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px) + var(--tastatur, 0px));
+    width: auto; min-height: 0; height: var(--blatt, 55svh); border-radius: 22px;
+    background: rgba(20, 20, 20, 0.55);
+    clip-path: inset(calc(100% - 60px) 8px 8px 8px round 22px);
+    transition: clip-path 240ms var(--aus), opacity 300ms var(--aus), transform 300ms var(--aus), background-color 240ms ease;
+  }
+  .agent--da { transition-delay: 0ms; }
+  .agent--weg:not(.agent--offen) { opacity: 0; transform: translateY(16px); pointer-events: none; }
+  .agent--offen { clip-path: inset(0 0 0 0 round 22px); background: rgba(20, 20, 20, 0.72); box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5); transition: clip-path 380ms var(--ease), opacity 300ms var(--aus), transform 300ms var(--aus), background-color 380ms ease; }
+  .agent__oben { opacity: 0; transform: translateY(12px); transition: opacity 160ms ease, transform 240ms var(--aus); }
+  .agent--offen .agent__oben { opacity: 1; transform: none; transition: opacity 280ms var(--aus) 80ms, transform 380ms var(--ease); }
+  .rund.agent__zu { display: grid; }
+  .agent__feld input[type="text"], .agent__feld input[type="email"] { font-size: 16px; }
+  .agent__oeffnen { display: block; position: absolute; inset: 8px; z-index: 1; border: 0; border-radius: 9999px; background: transparent; cursor: pointer; }
+  .agent--offen .agent__oeffnen { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .agent, .agent__oben, .agent--offen, .agent--offen .agent__oben { transition: opacity 150ms ease; transform: none; }
+  .blase, .chip { animation: einblenden 150ms ease both; }
+  .tippt i { animation: tippen-ruhig 1400ms ease-in-out infinite; }
+  .agent__verlauf { scroll-behavior: auto; }
+}
+@keyframes einblenden { from { opacity: 0; } }
+@keyframes tippen-ruhig { 50% { opacity: 1; } 0%, 100% { opacity: 0.35; } }
 
 /* ---------- Abschnittsköpfe ---------- */
 .abschnitt { padding: 96px 0; }
@@ -371,28 +417,39 @@ button, input, select, textarea { font: inherit; color: inherit; }
     <div class="orb" data-orb aria-hidden="true"></div>
     <div class="hero__verlauf" aria-hidden="true"></div>
     <div class="innen hero__inhalt">
-      <span class="hero__label auf">endo.ai · Ihr KI-Studio</span>
-      <h1 id="titel" class="auf">Zeigen Sie mir Ihr Produkt.</h1>
+      <div class="hero__text">
+        <span class="hero__label auf">endo.ai · Ihr KI-Studio</span>
+        <h1 id="titel" class="auf">Zeigen Sie mir<br> Ihr Produkt.</h1>
+      </div>
 
-      <div class="agent auf" data-agent aria-label="Chat mit endo">
-        <div class="agent__kopf">
-          <span class="agent__avatar" aria-hidden="true"></span>
-          <div class="agent__name"><b>endo</b><small><i aria-hidden="true"></i>online · antwortet sofort</small></div>
-        </div>
-        <div class="agent__verlauf" data-verlauf role="log" aria-live="polite"></div>
-        <div class="agent__vorschlaege" data-vorschlaege></div>
-        <form class="agent__eingabe" data-eingabe novalidate>
-          <button class="rund" type="button" data-foto aria-label="Produktfoto hochladen">
-            <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208 56h-27.72l-13.63-20.44A8 8 0 0 0 160 32H96a8 8 0 0 0-6.65 3.56L75.71 56H48a24 24 0 0 0-24 24v112a24 24 0 0 0 24 24h160a24 24 0 0 0 24-24V80a24 24 0 0 0-24-24Zm8 136a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V80a8 8 0 0 1 8-8h32a8 8 0 0 0 6.66-3.56L100.28 48h55.43l13.63 20.44A8 8 0 0 0 176 72h32a8 8 0 0 1 8 8ZM128 88a44 44 0 1 0 44 44 44.05 44.05 0 0 0-44-44Zm0 72a28 28 0 1 1 28-28 28 28 0 0 1-28 28Z"/></svg>
-          </button>
-          <input type="file" accept="image/*" hidden data-datei>
-          <label class="hinweis" for="endo-text">Nachricht an endo</label>
-          <input id="endo-text" type="text" maxlength="600" autocomplete="off" placeholder="Schreiben Sie endo, was Sie verkaufen …" data-text>
-          <button class="rund rund--haupt" type="submit" aria-label="Senden" data-senden>
-            <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M221.66 133.66l-72 72a8 8 0 0 1-11.32-11.32L196.69 136H40a8 8 0 0 1 0-16h156.69l-58.35-58.34a8 8 0 0 1 11.32-11.32l72 72a8 8 0 0 1 0 11.32Z"/></svg>
-          </button>
-        </form>
-        <p class="agent__fuss">endo ist eine KI und kann sich irren. Freie Fragen beantwortet Claude von Anthropic, siehe <a href="../datenschutz.html">Datenschutz</a>.</p>
+      <div class="hero__agent">
+        <section class="agent" data-agent aria-label="Chat mit endo">
+          <div class="agent__oben" data-oben>
+            <div class="agent__kopf">
+              <span class="agent__avatar" aria-hidden="true"></span>
+              <div class="agent__name"><b>endo</b><small>KI, kann sich irren · <a href="../datenschutz.html">Datenschutz</a></small></div>
+              <button class="rund agent__zu" type="button" data-zu aria-label="Chat schließen">
+                <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128 50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z"/></svg>
+              </button>
+            </div>
+            <div class="agent__verlauf" data-verlauf role="log" aria-live="polite"></div>
+            <div class="agent__vorschlaege" data-vorschlaege></div>
+          </div>
+          <form class="agent__eingabe" data-eingabe novalidate>
+            <div class="agent__feld">
+              <button class="rund" type="button" data-foto aria-label="Produktfoto hochladen">
+                <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208 56h-27.72l-13.63-20.44A8 8 0 0 0 160 32H96a8 8 0 0 0-6.65 3.56L75.71 56H48a24 24 0 0 0-24 24v112a24 24 0 0 0 24 24h160a24 24 0 0 0 24-24V80a24 24 0 0 0-24-24Zm8 136a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V80a8 8 0 0 1 8-8h32a8 8 0 0 0 6.66-3.56L100.28 48h55.43l13.63 20.44A8 8 0 0 0 176 72h32a8 8 0 0 1 8 8ZM128 88a44 44 0 1 0 44 44 44.05 44.05 0 0 0-44-44Zm0 72a28 28 0 1 1 28-28 28 28 0 0 1-28 28Z"/></svg>
+              </button>
+              <input type="file" accept="image/*" hidden data-datei>
+              <label class="hinweis" for="endo-text">Nachricht an endo</label>
+              <input id="endo-text" type="text" maxlength="600" autocomplete="off" enterkeyhint="send" placeholder="Fragen Sie endo …" data-text>
+              <button class="rund rund--haupt" type="submit" aria-label="Senden" data-senden>
+                <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66 117.66a8 8 0 0 1-11.32 0L136 59.31V216a8 8 0 0 1-16 0V59.31l-58.34 58.35a8 8 0 0 1-11.32-11.32l72-72a8 8 0 0 1 11.32 0l72 72a8 8 0 0 1 0 11.32Z"/></svg>
+              </button>
+            </div>
+            <button class="agent__oeffnen" type="button" data-oeffnen aria-expanded="false" aria-label="Chat mit endo öffnen"></button>
+          </form>
+        </section>
       </div>
     </div>
   </section>

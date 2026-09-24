@@ -13,4 +13,6 @@ Was Claude Code heute an der [[ERGUN Website (Übersicht)|Website]] gemacht hat.
 6. **Graph-Ansicht:** alle Notizen verlinkt, Mittelpunkt ist [[ERGUN Website (Übersicht)]]
 7. **endo.ai neu:** Agent endo im Vordergrund, nur noch die Tasse als Beispiel, 14 Angebote in drei Gruppen, Paketwahl-Karte auf dem Handy → [[endo Chat-Agent]], [[endo-ai|endo.ai]]
 
+8. **endo kompakter:** schlankes Panel auf dem Desktop, Pille mit Aufklapp-Verlauf auf dem Handy → [[endo Chat-Agent]]
+
 Offene Punkte: [[To-dos]]
