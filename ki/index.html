@@ -282,7 +282,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 @media (max-width: 860px) { .fakten { grid-template-columns: minmax(0, 1fr); } .fakt b { font-size: 36px; line-height: 40px; } }
 
 /* ---------- Preise ---------- */
-.preise { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+.preise { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
 .paket { display: flex; flex-direction: column; gap: 24px; padding: 32px 24px 24px; border: 1px solid var(--linie); border-radius: 24px; background: var(--flaeche); }
 .paket--premium { border-color: var(--akzent); background: var(--flaeche-2); }
 .paket__kopf { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -302,7 +302,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .verbrauch dt { color: var(--leise); }
 .verbrauch dd { margin: 0; font-variant-numeric: tabular-nums; }
 .sicher { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 24px; margin-top: 24px; font-size: 14px; line-height: 20px; color: var(--leise); }
-@media (max-width: 1100px) { .preise { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 860px) { .preise { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 640px) { .preise { grid-template-columns: minmax(0, 1fr); } .verbrauch dl { grid-template-columns: minmax(0, 1fr); } }
 @media (min-width: 641px) and (max-width: 1100px) { .verbrauch dl { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
@@ -397,6 +397,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
     <li><a href="#ablauf" data-nav-link>So geht's</a></li>
     <li><a href="#preise" data-nav-link>Preise</a></li>
     <li><a href="#fragen" data-nav-link>Fragen</a></li>
+    <li><a href="../">ERGUN.</a></li>
   </ul>
   <a class="knopf knopf--haupt nav__cta" href="#start" data-zu-endo>Mit endo sprechen</a>
   <button class="burger" type="button" aria-expanded="false" aria-controls="menue" data-burger><span class="hinweis">Menü öffnen</span><i></i><i></i></button>
@@ -408,6 +409,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
     <li><a href="#preise">Preise</a></li>
     <li><a href="#fragen">Fragen</a></li>
     <li><a href="#start" class="akzent" data-zu-endo>Mit endo sprechen</a></li>
+    <li><a href="../">Zurück zu ERGUN.</a></li>
   </ul>
 </div>
 
@@ -560,42 +562,28 @@ button, input, select, textarea { font: inherit; color: inherit; }
       <div class="preise">
         <article class="paket auf">
           <div class="paket__kopf"><h3 class="paket__name">Start</h3></div>
-          <p class="paket__preis">9 €<small>100 Credits · 9 Cent pro Credit</small></p>
+          <p class="paket__preis">9 €<small>100 Credits</small></p>
           <ul>
             <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Rund <b>50 Produktfotos</b></span></li>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Alle Bild-Werkzeuge und Stories</span></li>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Kommerzielle Nutzung</span></li>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Alle Bild-Werkzeuge</span></li>
           </ul>
           <a class="knopf knopf--leise" href="#zugang" data-paket="Start">Start vormerken</a>
         </article>
         <article class="paket auf">
           <div class="paket__kopf"><h3 class="paket__name">Pro</h3></div>
-          <p class="paket__preis">29 €<small>400 Credits · 7,3 Cent pro Credit</small></p>
+          <p class="paket__preis">29 €<small>400 Credits</small></p>
           <ul>
             <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Rund <b>200 Produktfotos</b></span></li>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Bild-Werkzeuge, Stories und Stimme</span></li>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Kommerzielle Nutzung</span></li>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Dazu Stories und Stimme</span></li>
           </ul>
           <a class="knopf knopf--leise" href="#zugang" data-paket="Pro">Pro vormerken</a>
         </article>
-        <article class="paket auf">
-          <div class="paket__kopf"><h3 class="paket__name">Studio</h3></div>
-          <p class="paket__preis">79 €<small>1.200 Credits · 6,6 Cent pro Credit</small></p>
-          <ul>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Rund <b>600 Produktfotos</b></span></li>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Bild-Werkzeuge, Stories und Stimme</span></li>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Kommerzielle Nutzung</span></li>
-          </ul>
-          <a class="knopf knopf--leise" href="#zugang" data-paket="Studio">Studio vormerken</a>
-        </article>
         <article class="paket paket--premium auf">
           <div class="paket__kopf"><h3 class="paket__name">Premium</h3><span class="paket__band">Alles freigeschaltet</span></div>
-          <p class="paket__preis">199 €<small>3.500 Credits · 5,7 Cent pro Credit</small></p>
+          <p class="paket__preis">199 €<small>3.500 Credits</small></p>
           <ul>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span><b>Videos, UGC und 3D-Modelle</b>, Parallax und KI-Markengesicht</span></li>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Kampagnen im eigenen Markenstil</span></li>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Vorrang: Ihre Aufträge laufen zuerst</span></li>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Persönlicher Start mit Emre, 30 Minuten</span></li>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span><b>Videos, UGC und 3D</b></span></li>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Vorrang und Start mit Emre</span></li>
           </ul>
           <a class="knopf knopf--haupt" href="#zugang" data-paket="Premium">Premium vormerken</a>
         </article>
@@ -609,7 +597,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
           <div class="abo__optionen" role="radiogroup" aria-label="Paket">
             <label class="abo__option"><input type="radio" name="abo" value="Start"><span class="abo__kreis"><i></i></span><b>9 €</b><small>100 Credits</small></label>
             <label class="abo__option"><input type="radio" name="abo" value="Pro"><span class="abo__kreis"><i></i></span><b>29 €</b><small>400 Credits</small></label>
-            <label class="abo__option"><input type="radio" name="abo" value="Studio"><span class="abo__kreis"><i></i></span><b>79 €</b><small>1.200 Credits</small></label>
             <label class="abo__option"><input type="radio" name="abo" value="Premium" checked><span class="abo__kreis"><i></i></span><b>199 €</b><small>3.500 Credits</small><span class="abo__band">Alles frei</span></label>
           </div>
           <a class="knopf knopf--haupt abo__knopf" href="#zugang" data-paket="Premium" data-abo-knopf>Premium vormerken</a>
@@ -677,7 +664,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
               <option value="Noch offen">Noch offen</option>
               <option value="Start">Start · 9 €</option>
               <option value="Pro">Pro · 29 €</option>
-              <option value="Studio">Studio · 79 €</option>
               <option value="Premium">Premium · 199 €</option>
             </select>
           </div>
@@ -780,10 +766,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
   if (abo) {
     var HAKEN = '<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M173.66 98.34a8 8 0 0 1 0 11.32l-56 56a8 8 0 0 1-11.32 0l-24-24a8 8 0 0 1 11.32-11.32L112 148.69l50.34-50.35a8 8 0 0 1 11.32 0ZM232 128A104 104 0 1 1 128 24a104.11 104.11 0 0 1 104 104Zm-16 0a88 88 0 1 0-88 88 88.1 88.1 0 0 0 88-88Z"/></svg>';
     var VORTEILE = {
-      Start: ['100 Credits, rund 50 Produktfotos', 'Alle Bild-Werkzeuge und Stories', 'Kommerzielle Nutzung', 'Kein Abo, keine Laufzeit'],
-      Pro: ['400 Credits, rund 200 Produktfotos', 'Bild-Werkzeuge, Stories und Stimme', 'Kommerzielle Nutzung', '7,3 Cent pro Credit'],
-      Studio: ['1.200 Credits, rund 600 Produktfotos', 'Bild-Werkzeuge, Stories und Stimme', 'Kommerzielle Nutzung', '6,6 Cent pro Credit'],
-      Premium: ['3.500 Credits, alles freigeschaltet', 'Videos, UGC und 3D-Modelle', 'Parallax und KI-Markengesicht', 'Vorrang und Start mit Emre']
+      Start: ['Rund 50 Produktfotos', 'Alle Bild-Werkzeuge'],
+      Pro: ['Rund 200 Produktfotos', 'Dazu Stories und Stimme'],
+      Premium: ['Videos, UGC und 3D', 'Vorrang und Start mit Emre']
     };
     var liste = abo.querySelector('[data-abo-vorteile]'), planName = abo.querySelector('[data-abo-plan]'), aboKnopf = abo.querySelector('[data-abo-knopf]');
     function zeigePlan(plan, sofort) {
@@ -842,5 +827,27 @@ button, input, select, textarea { font: inherit; color: inherit; }
 </script>
 <script src="js/agent.js" defer></script>
 <script src="js/orb.js" defer></script>
+<script>
+/* Direkt auf /ki/ geöffnet: nach rechts wischen führt zurück zu ERGUN. (eingebettet übernimmt das die Startseite) */
+(function () {
+  if (window.parent !== window) return;
+  var x0 = null, y0 = 0;
+  document.addEventListener('touchstart', function (e) {
+    x0 = null;
+    if (e.touches.length !== 1 || e.target.closest('input[type="range"], textarea, .agent__vorschlaege')) return;
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0; x0 = null;
+    if (dx > Math.min(120, window.innerWidth * 0.3) && dx > Math.abs(dy) * 1.3) location.href = '../';
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowLeft' || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    if (e.target.closest && e.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+    location.href = '../';
+  });
+})();
+</script>
 </body>
 </html>

@@ -1,11 +1,22 @@
-# Agentur-Website ERGUN. – Stand 25.09.2026, 00:22 (= GitHub `main` 00637db, live: Sonnenuntergang → endo.ai)
+# Agentur-Website ERGUN. – Stand 25.09.2026, 00:28 (= GitHub `main` b2139d5)
+
+> **Aktuell live:** die Seite von 138c7c9 (Hero mit Parallax → Kontaktformular → Footer), plus **endo.ai als Pille oben rechts** (`.nav__pille`, CSS-Block am Ende des `<style>`).
+> Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
+> Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
+
+## Hero als Fläche im endo-Stil (25.09.2026, 01:20, Claude Code)
+CSS-Block „Hero als ruhige Fläche im endo-Stil (25.09.)“ am Ende des `<style>`: `--bg: #000`, `--rahmen` (clamp 24–40 px, Handy 12 px), `--pille-zone` (Platz für die Pille im ersten Bildschirm).
+`.parallax__header` hat den Rand als Innenabstand, `.parallax__visuals` ist `calc(100svh - Rand - Pillen-Zone)` hoch, `border-radius: 24px` (Handy 20 px), `isolation: isolate`.
+`.parallax__layers` bleibt 125svh (Handy 110svh) hoch – die Fläche schneidet nur ab, die Abstimmung Sonne/Name/Emre bleibt gleich.
+`.parallax__fade` und `.parallax__hint` ausgeblendet. Nav sitzt innerhalb der Fläche. `.nav__pille` ist aus dem HTML entfernt (CSS noch da, ohne Wirkung);
+neu `a.hero-endo` „Mit endo.ai sprechen“ unter der Fläche, blendet im Einstieg mit der Nav ein. `_test-hero.html` = Testkopie ohne Intro (wird nicht veröffentlicht).
 
 Eine HTML-Datei, kein Build, nichts von fremden Servern. Aufbau nach der Osmo-Parallax-Vorlage:
 riesiger Name „ERGUN." oben, Sonne dahinter, Emre selbst auf dem Felsgrat davor, Berge schieben sich
 beim Scrollen über den Namen. Danach direkt die Pakete, dann Kontakt mit Formular.
 **Live: https://website-ergun.vercel.app** (Vercel, automatisch aus GitHub `logodropde-max/Website-Ergun.`). Doppelklick auf `index.html` zeigt den lokalen Stand.
 
-## Sonnenuntergang → endo.ai (25.09.2026, Claude Code) – Aufbau der Startseite
+## Sonnenuntergang → endo.ai (25.09.2026, Claude Code) – ZURÜCKGENOMMEN, Beschreibung der archivierten Fassung
 Plan: `08 Projekte/Plan Sonnenuntergang endo.md`. Die Startseite ist jetzt **eine angeheftete Szene** (`.szene` → `.buehne`, `position: sticky`, 100svh),
 in der beim Scrollen die Geschichte abläuft. Danach kommt nur noch der Footer. Der eigene Kontaktbereich unten ist weg.
 
@@ -40,13 +51,13 @@ in der beim Scrollen die Geschichte abläuft. Danach kommt nur noch der Footer. 
 ## Dateien
 | Datei | Wofür |
 |---|---|
-| `index.html` | die Startseite: angeheftete Szene (Hero + Karte mit Formular → Sonnenuntergang → endo.ai) · Footer (seit 25.09.) |
+| `index.html` | die Startseite: Hero (Parallax) · Kontaktformular · Footer; endo.ai-Pille oben rechts (seit 25.09. 00:28) |
 | `impressum.html` | vorausgefüllt mit ERGUN. – **prüfen** (Gewerbebezeichnung, E-Mail) |
 | `datenschutz.html` | **Entwurf** ohne Cookies/Google Fonts, mit WhatsApp-Hinweis – rechtlich prüfen lassen |
 | `js/gsap.min.js`, `ScrollTrigger.min.js` | Intro, Einblenden, Paket-Vorschauen, lokal. `ScrollSmoother.min.js` liegt noch im Ordner, wird aber **nicht mehr geladen** (natives Scrollen) |
 | `schriften/*.woff2` + Lizenzen | Instrument Serif + Geist, lokal (OFL) |
-| `bilder/hero/layer-1-sky.webp` | Himmel mit Sonne, 4K (Higgsfield 81ed3e59, Szene 24f533ae) – seit 25.09. nur noch Quelle, nicht mehr geladen |
-| `bilder/hero/layer-1-sky-ohne-sonne*.webp` | Himmel ohne Sonne (aus layer-1-sky + Higgsfield e513859b), seit 25.09. Ebene 1 |
+| `bilder/hero/layer-1-sky.webp` | Himmel mit Sonne, 4K (Higgsfield 81ed3e59, Szene 24f533ae) – wieder Ebene 1 |
+| `bilder/hero/layer-1-sky-ohne-sonne*.webp` | Himmel ohne Sonne (aus layer-1-sky + Higgsfield e513859b) – nur für die archivierte Szene |
 | `bilder/hero/sonne*.webp` | Sonne + Halo auf Schwarz, `mix-blend-mode: screen`, sinkt beim Scrollen |
 | `bilder/hero/layer-1-sky-blaue-stunde*.webp` | Himmel blaue Stunde (Higgsfield 513be3a4), blendet beim Scrollen ein |
 | `bilder/hero/layer-2-ridge.webp` | Bergkamm, 4K freigestellt (Higgsfield d80d7fb2) |
