@@ -1,0 +1,33 @@
+---
+tags: [website, uebersicht]
+---
+# ERGUN Website (Übersicht)
+
+Zentrale Notiz für alles rund um die Website und endo.ai. Von hier gehen alle Verbindungen in der Graph-Ansicht aus.
+
+**Live:** https://website-ergun.vercel.app · **endo.ai:** https://website-ergun.vercel.app/ki/
+
+## Bereiche
+- [[Startseite]]: Hero mit Parallax, Slogan, Aufbau
+- [[Kontaktformular]]: WhatsApp oder E-Mail, EU-Länder, Anliegen
+- [[Datei-Upload (Vercel Blob)]]: Fotos als Link in der Nachricht
+- [[endo-ai|endo.ai]]: KI-Studio als zweites Einkommen
+- [[KI-Studio mit Higgsfield]]: Plan, Ideen, API erklärt
+
+## Technik und Dienste
+- [[Vercel]]: Hosting, veröffentlicht automatisch
+- [[GitHub]]: Code, Branches, Pull Requests
+- [[Higgsfield API]]: Bilder und Videos für endo.ai
+- [[Lemon Squeezy]]: Bezahlung der Credits
+- [[Supabase]]: Login und Credit-Datenbank
+
+## Geld und Recht
+- [[Credit-Pakete]]: Preise von endo.ai
+- [[Pakete & Preise]]: Webdesign-Pakete der Agentur
+- [[Datenschutz und Recht]]
+
+## Arbeit
+- [[To-dos]]: was noch offen ist
+- [[Verlauf 24.09.2026]]: was heute gebaut wurde
+- [[Deployment]]: Plan zum Online-Stellen
+- [[LIESMICH]]: technische Details zur Website

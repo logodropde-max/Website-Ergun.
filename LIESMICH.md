@@ -112,6 +112,7 @@ WhatsApp-Links (`wa.me`) können nur Text tragen. Deshalb lädt das Kontaktformu
 - Datenschutz: Abschnitt 6 in `datenschutz.html` beschreibt den Upload.
 
 ## Notizen für Obsidian (ab 24.09.)
+- Übersicht mit allen Verbindungen für die Graph-Ansicht: [[ERGUN Website (Übersicht)]]
 - Claude Code pflegt Projekt-Notizen im Ordner `notizen/` (z. B. „KI-Studio mit Higgsfield"). Per `git pull` landen sie im Vault.
 - `.vercelignore` hält `notizen/` und diese LIESMICH von der Live-Website fern. Achtung: Das GitHub-Repo selbst ist öffentlich.
 - Absprache: Änderungen von Claude gehen immer direkt auf `main`, Vercel veröffentlicht sie automatisch.

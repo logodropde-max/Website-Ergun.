@@ -1,4 +1,9 @@
+---
+tags: [endo-ai]
+---
 # KI-Studio mit Higgsfield (zweites Einkommen)
+
+Gehört zu [[endo-ai|endo.ai]] und [[ERGUN Website (Übersicht)]]. Verwandt: [[Higgsfield API]] · [[Credit-Pakete]] · [[Lemon Squeezy]] · [[Supabase]] · [[Vercel]] · [[To-dos]]
 
 Stand: 24.09.2026 abends · gepflegt von Claude Code · liegt im Repo unter `notizen/`, kommt per `git pull` in Obsidian
 
