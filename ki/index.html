@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>endo.ai · KI-Studio für Produktfotos, Anzeigen und Werbevideos</title>
+<meta name="description" content="endo.ai macht aus einem Handyfoto ein Studiobild, eine fertige Anzeige oder ein kurzes Werbevideo. Für Onlineshops und Marken. Kein Abo, bezahlt wird mit Credits.">
+<meta name="theme-color" content="#000000">
+<link rel="canonical" href="https://website-ergun.vercel.app/ki/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="endo.ai · Produktfotos, die verkaufen">
+<meta property="og:description" content="Studiobilder, Anzeigen und Werbevideos aus einem Handyfoto. Für Onlineshops und Marken.">
+<meta property="og:url" content="https://website-ergun.vercel.app/ki/">
+<meta property="og:image" content="https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200401_e4ff62d4-4623-4645-89f7-4c1e4b532905.png">
+<meta property="og:locale" content="de_DE">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<!-- Beispielbilder liegen vorerst bei Higgsfield (CloudFront). Sobald die Domain in der Cloud-Umgebung freigegeben ist, lokal als WebP ablegen. -->
+<link rel="preconnect" href="https://d8j0ntlcm91z4.cloudfront.net" crossorigin>
+<link rel="preload" href="../schriften/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../schriften/Geist-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face { font-family: "Geist"; src: url("../schriften/Geist-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Geist"; src: url("../schriften/Geist-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+
+/* ---------- Grundwerte: nur Geist, flache Flächen, Abstände aus der Skala 4/8/12/16/24/32/40/48/64/80/96 ---------- */
+:root {
+  --bg: #000000;
+  --flaeche: #181818;
+  --flaeche-2: #1F1F1F;
+  --flaeche-3: #272727;
+  --linie: rgba(255, 255, 255, 0.10);
+  --linie-stark: rgba(255, 255, 255, 0.22);
+  --text: #F5F5F5;
+  --leise: #9B9B9B;
+  --akzent: #FF5A1F;
+  --akzent-hell: #FF7A47;
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --rand: 24px;
+  --breite: 1200px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 96px; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 16px; line-height: 24px; -webkit-font-smoothing: antialiased; overflow-x: clip; }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { font-weight: 500; text-wrap: balance; letter-spacing: -0.02em; }
+p { text-wrap: pretty; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--akzent); outline-offset: 4px; border-radius: 8px; }
+.skip { position: fixed; left: 16px; top: 16px; z-index: 60; padding: 8px 12px; border-radius: 9999px; background: var(--text); color: var(--bg); font-size: 14px; line-height: 20px; transform: translateY(-200%); transition: transform 400ms var(--ease); }
+.skip:focus-visible { transform: none; }
+.hinweis { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.innen { width: min(100% - 2 * var(--rand), var(--breite)); margin-inline: auto; }
+.akzent { color: var(--akzent); }
+
+/* ---------- Knöpfe ---------- */
+.knopf { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 8px 24px; border-radius: 9999px; border: 1px solid transparent; font-size: 16px; line-height: 24px; font-weight: 500; cursor: pointer; transition: transform 500ms var(--ease), background-color 500ms var(--ease), border-color 500ms var(--ease), color 500ms var(--ease); }
+.knopf:active { transform: scale(0.98); }
+.knopf--haupt { background: var(--akzent); color: #000; }
+.knopf--leise { border-color: var(--linie-stark); color: var(--text); background: transparent; }
+.knopf svg { width: 20px; height: 20px; }
+@media (hover: hover) and (pointer: fine) {
+  .knopf--haupt:hover { background: var(--akzent-hell); transform: translateY(-2px); }
+  .knopf--leise:hover { border-color: var(--text); transform: translateY(-2px); }
+}
+
+/* ---------- Insel-Navigation ---------- */
+.nav { position: fixed; top: 24px; left: 50%; z-index: 50; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; width: max-content; max-width: calc(100% - 32px); padding: 8px 8px 8px 24px; border: 1px solid var(--linie); border-radius: 9999px; background: rgba(24, 24, 24, 0.72); -webkit-backdrop-filter: blur(24px) saturate(1.4); backdrop-filter: blur(24px) saturate(1.4); }
+.marke { font-size: 18px; line-height: 28px; font-weight: 500; letter-spacing: -0.02em; margin-right: 16px; }
+.marke span { color: var(--akzent); }
+.nav__links { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
+.nav__links a { display: inline-flex; align-items: center; min-height: 40px; padding: 8px 12px; border-radius: 9999px; font-size: 14px; line-height: 20px; color: var(--leise); transition: color 500ms var(--ease), background-color 500ms var(--ease); }
+.nav__links a[aria-current="true"] { color: var(--text); background: var(--flaeche-3); }
+@media (hover: hover) and (pointer: fine) { .nav__links a:hover { color: var(--text); } }
+.nav__cta { min-height: 40px; padding: 8px 16px; font-size: 14px; line-height: 20px; }
+.burger { display: none; position: relative; width: 40px; height: 40px; border: 0; border-radius: 9999px; background: var(--flaeche-3); cursor: pointer; }
+.burger i { position: absolute; left: 12px; width: 16px; height: 2px; border-radius: 2px; background: var(--text); transition: transform 700ms var(--ease), top 700ms var(--ease); }
+.burger i:nth-of-type(1) { top: 15px; }
+.burger i:nth-of-type(2) { top: 23px; }
+.ist-offen .burger i:nth-of-type(1) { top: 19px; transform: rotate(45deg); }
+.ist-offen .burger i:nth-of-type(2) { top: 19px; transform: rotate(-45deg); }
+.menue { position: fixed; inset: 0; z-index: 40; display: grid; align-content: center; padding: 96px 32px 48px; background: rgba(0, 0, 0, 0.8); -webkit-backdrop-filter: blur(64px); backdrop-filter: blur(64px); opacity: 0; visibility: hidden; transition: opacity 700ms var(--ease), visibility 0s linear 700ms; }
+.ist-offen .menue { opacity: 1; visibility: visible; transition: opacity 700ms var(--ease), visibility 0s; }
+.menue ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.menue li { overflow: hidden; }
+.menue a { display: block; padding: 8px 0; font-size: 36px; line-height: 40px; font-weight: 500; letter-spacing: -0.02em; transform: translateY(48px); opacity: 0; transition: transform 700ms var(--ease), opacity 700ms var(--ease); }
+.ist-offen .menue a { transform: none; opacity: 1; }
+.menue li:nth-child(1) a { transition-delay: 100ms; }
+.menue li:nth-child(2) a { transition-delay: 150ms; }
+.menue li:nth-child(3) a { transition-delay: 200ms; }
+.menue li:nth-child(4) a { transition-delay: 250ms; }
+.menue li:nth-child(5) a { transition-delay: 300ms; }
+@media (max-width: 860px) {
+  .nav { padding-left: 16px; }
+  .nav__links, .nav__cta { display: none; }
+  .burger { display: block; }
+  .marke { margin-right: 96px; }
+}
+
+/* ---------- Einblenden beim Scrollen ---------- */
+.js .auf { opacity: 0; transform: translateY(64px); filter: blur(12px); transition: opacity 900ms var(--ease), transform 900ms var(--ease), filter 900ms var(--ease); }
+.js .auf.ist-da { opacity: 1; transform: none; filter: none; }
+
+/* ---------- Hero: lebendige Drahtgitter-Kugel (three.js), Text mittig unten ---------- */
+.hero { position: relative; display: flex; align-items: flex-end; min-height: 100svh; padding: 160px 0 96px; overflow: hidden; }
+.orb { position: absolute; inset: 0; z-index: 0; opacity: 0; transition: opacity 1600ms var(--ease); }
+.orb--bereit { opacity: 1; }
+.orb canvas { display: block; width: 100%; height: 100%; }
+.hero__verlauf { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.7) 40%, rgba(0, 0, 0, 0) 100%); pointer-events: none; }
+.hero__inhalt { position: relative; z-index: 2; display: grid; justify-items: center; text-align: center; }
+.hero__label { text-wrap: balance; font-size: 12px; line-height: 16px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(255, 122, 71, 0.9); }
+.hero h1 { max-width: 680px; margin-top: 16px; font-size: 48px; line-height: 1; background: linear-gradient(90deg, #FFFFFF, #9B9B9B); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero__sub { max-width: 580px; margin-top: 24px; font-size: 18px; line-height: 28px; color: var(--leise); }
+.hero__cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 40px; }
+.beleg { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 24px; margin: 32px 0 0; padding: 0; list-style: none; font-size: 14px; line-height: 20px; color: var(--leise); }
+.beleg li { display: inline-flex; align-items: center; gap: 8px; }
+.beleg svg { width: 16px; height: 16px; color: var(--akzent); }
+@media (max-width: 1024px) { .hero h1 { font-size: 48px; } }
+@media (max-width: 860px) { .hero { padding: 128px 0 64px; } .hero h1 { font-size: 36px; line-height: 40px; } .hero__sub { font-size: 16px; line-height: 24px; } }
+
+/* Vorher/Nachher als eigener Abschnitt */
+.vorher__raster { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; align-items: center; }
+.vorher .kopf { margin-bottom: 0; }
+.vorher .vergleich { max-width: 520px; justify-self: end; width: 100%; }
+@media (max-width: 860px) { .vorher__raster { grid-template-columns: minmax(0, 1fr); gap: 32px; } .vorher .vergleich { justify-self: stretch; max-width: none; } }
+
+/* Vorher/Nachher-Regler */
+.vergleich { position: relative; margin: 0; padding: 8px; border: 1px solid var(--linie); border-radius: 24px; background: var(--flaeche); }
+.vergleich__bild { position: relative; overflow: hidden; border-radius: 16px; aspect-ratio: 4 / 5; background: var(--flaeche-2); --pos: 50%; }
+.vergleich__bild img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.vergleich__vorher { clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+.vergleich__linie { position: absolute; top: 0; bottom: 0; left: var(--pos); width: 2px; margin-left: -1px; background: var(--text); pointer-events: none; }
+.vergleich__griff { position: absolute; top: 50%; left: var(--pos); display: grid; place-items: center; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 9999px; background: var(--text); color: #000; pointer-events: none; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); }
+.vergleich__griff svg { width: 24px; height: 24px; }
+.vergleich input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; }
+.vergleich input:focus-visible ~ .vergleich__griff { outline: 2px solid var(--akzent); outline-offset: 4px; }
+.vergleich__marke { position: absolute; top: 16px; padding: 4px 12px; border-radius: 9999px; background: rgba(0, 0, 0, 0.6); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); font-size: 12px; line-height: 16px; pointer-events: none; }
+.vergleich__marke--links { left: 16px; }
+.vergleich__marke--rechts { right: 16px; color: #000; background: var(--akzent); }
+.vergleich figcaption { display: flex; justify-content: space-between; gap: 16px; padding: 12px 8px 4px; font-size: 14px; line-height: 20px; color: var(--leise); }
+
+/* Modelle-Leiste */
+.modelle { padding: 32px 0; border-block: 1px solid var(--linie); }
+.modelle__innen { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 40px; font-size: 14px; line-height: 20px; color: var(--leise); }
+.modelle__innen b { font-weight: 500; color: var(--text); }
+
+/* ---------- Tagline ---------- */
+.tagline { padding: 96px 0; }
+.tagline p { max-width: 900px; margin-inline: auto; text-align: center; font-size: 60px; line-height: 1; font-weight: 500; letter-spacing: -0.03em; text-wrap: balance; }
+.tagline .wort { color: rgba(245, 245, 245, 0.28); transition: color 900ms var(--ease); }
+.tagline .wort.ist-an { color: var(--text); }
+.tagline .wort.ist-an.akzent { color: var(--akzent); }
+@media (max-width: 860px) { .tagline { padding: 64px 0; } .tagline p { font-size: 36px; line-height: 40px; } }
+
+/* ---------- Abschnittsköpfe ---------- */
+.abschnitt { padding: 96px 0; }
+.kopf { display: grid; gap: 16px; max-width: 680px; margin-bottom: 48px; }
+.kopf__label { font-size: 14px; line-height: 20px; color: var(--akzent); font-weight: 500; }
+.kopf h2 { font-size: 48px; line-height: 1; }
+.kopf p { font-size: 18px; line-height: 28px; color: var(--leise); }
+@media (max-width: 860px) { .abschnitt { padding: 64px 0; } .kopf { margin-bottom: 32px; } .kopf h2 { font-size: 36px; line-height: 40px; } .kopf p { font-size: 16px; line-height: 24px; } }
+
+/* ---------- Werkzeuge (Bento) ---------- */
+.bento { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+.karte { position: relative; display: flex; flex-direction: column; gap: 16px; padding: 8px 8px 24px; border: 1px solid var(--linie); border-radius: 24px; background: var(--flaeche); overflow: hidden; transition: border-color 700ms var(--ease), transform 700ms var(--ease); }
+@media (hover: hover) and (pointer: fine) { .karte:hover { border-color: var(--linie-stark); transform: translateY(-4px); } .karte:hover .karte__bild img { transform: scale(1.04); } }
+.karte__bild { position: relative; overflow: hidden; border-radius: 16px; background: var(--flaeche-2); aspect-ratio: 4 / 3; }
+.karte__bild img { width: 100%; height: 100%; object-fit: cover; transition: transform 1200ms var(--ease); }
+.karte__text { display: grid; gap: 8px; padding: 0 16px; }
+.karte h3 { font-size: 20px; line-height: 28px; }
+.karte p { font-size: 14px; line-height: 20px; color: var(--leise); }
+.karte__tag { position: absolute; top: 16px; left: 16px; z-index: 2; padding: 4px 12px; border-radius: 9999px; background: rgba(0, 0, 0, 0.6); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); font-size: 12px; line-height: 16px; }
+.karte__tag--premium { background: var(--akzent); color: #000; }
+.b-gross { grid-column: span 7; }
+.b-gross .karte__bild { aspect-ratio: 16 / 11; }
+.b-mittel { grid-column: span 5; }
+.b-mittel .karte__bild { aspect-ratio: 5 / 5.4; }
+.b-drittel { grid-column: span 4; }
+.b-drittel .karte__bild { aspect-ratio: 4 / 5; }
+.b-hoch .karte__bild { aspect-ratio: 9 / 13; }
+.karte__bild--oben img { object-position: center 20%; }
+/* Parallax-Szene aus den eigenen Ebenen der Website */
+.szene { position: absolute; inset: 0; }
+.szene img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1200ms var(--ease); }
+.szene .szene__person { object-fit: contain; object-position: 50% 92%; height: 70%; top: auto; bottom: 0; }
+@media (hover: hover) and (pointer: fine) { .karte:hover .szene__himmel { transform: scale(1.08) translateY(-8px); } .karte:hover .szene__person { transform: translateY(-4px) scale(1.02); } }
+@media (max-width: 1024px) { .b-gross, .b-mittel { grid-column: span 12; } .b-drittel { grid-column: span 6; } }
+@media (max-width: 640px) { .b-drittel { grid-column: span 12; } .karte__text { padding: 0 8px; } }
+
+/* ---------- So geht's ---------- */
+.schritte { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; counter-reset: schritt; list-style: none; margin: 0; padding: 0; }
+.schritt { display: grid; align-content: start; gap: 16px; padding: 24px; border: 1px solid var(--linie); border-radius: 24px; background: var(--flaeche); }
+.schritt__nr { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 9999px; background: var(--flaeche-3); font-size: 14px; line-height: 20px; font-weight: 500; }
+.schritt h3 { font-size: 20px; line-height: 28px; }
+.schritt p { font-size: 14px; line-height: 20px; color: var(--leise); }
+.schritt__vorschau { overflow: hidden; border-radius: 12px; background: var(--flaeche-2); aspect-ratio: 16 / 10; }
+.schritt__vorschau img { width: 100%; height: 100%; object-fit: cover; }
+.stile { display: flex; flex-wrap: wrap; align-content: center; justify-content: center; gap: 8px; padding: 16px; height: 100%; }
+.stile span { padding: 8px 12px; border: 1px solid var(--linie-stark); border-radius: 9999px; font-size: 14px; line-height: 20px; color: var(--leise); }
+.stile span.ist-gewaehlt { border-color: var(--akzent); color: var(--text); background: rgba(255, 90, 31, 0.14); }
+@media (max-width: 860px) { .schritte { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Fakten + Stimme ---------- */
+.fakten { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.fakt { display: grid; gap: 8px; padding: 32px 24px; border: 1px solid var(--linie); border-radius: 24px; background: var(--flaeche); }
+.fakt b { font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -0.03em; }
+.fakt span { font-size: 14px; line-height: 20px; color: var(--leise); }
+.stimme { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 24px; align-items: center; margin-top: 16px; padding: 32px; border: 1px solid var(--linie); border-radius: 24px; background: var(--flaeche); }
+.stimme img { width: 64px; height: 64px; border-radius: 9999px; object-fit: cover; }
+.stimme blockquote { margin: 0; font-size: 20px; line-height: 28px; }
+.stimme cite { display: block; margin-top: 8px; font-style: normal; font-size: 14px; line-height: 20px; color: var(--leise); }
+@media (max-width: 860px) { .fakten { grid-template-columns: minmax(0, 1fr); } .fakt b { font-size: 36px; line-height: 40px; } .stimme { grid-template-columns: minmax(0, 1fr); padding: 24px; } .stimme blockquote { font-size: 18px; line-height: 28px; } }
+
+/* ---------- Preise ---------- */
+.preise { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+.paket { display: flex; flex-direction: column; gap: 24px; padding: 32px 24px 24px; border: 1px solid var(--linie); border-radius: 24px; background: var(--flaeche); }
+.paket--premium { border-color: var(--akzent); background: var(--flaeche-2); }
+.paket__kopf { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.paket__name { font-size: 18px; line-height: 28px; font-weight: 500; }
+.paket__band { padding: 2px 8px; border-radius: 9999px; background: var(--akzent); color: #000; font-size: 12px; line-height: 16px; font-weight: 500; }
+.paket__preis { font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.paket__preis small { display: block; margin-top: 8px; font-size: 14px; line-height: 20px; font-weight: 400; letter-spacing: 0; color: var(--leise); }
+.paket ul { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 20px; color: var(--leise); flex: 1; }
+.paket li { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 8px; }
+.paket li svg { width: 16px; height: 20px; color: var(--akzent); }
+.paket li b { color: var(--text); font-weight: 500; }
+.paket .knopf { width: 100%; }
+.verbrauch { margin-top: 16px; padding: 24px; border: 1px solid var(--linie); border-radius: 24px; background: var(--flaeche); }
+.verbrauch h3 { font-size: 18px; line-height: 28px; margin-bottom: 16px; }
+.verbrauch dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 32px; margin: 0; }
+.verbrauch div { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--linie); font-size: 14px; line-height: 20px; }
+.verbrauch dt { color: var(--leise); }
+.verbrauch dd { margin: 0; font-variant-numeric: tabular-nums; }
+.sicher { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 24px; margin-top: 24px; font-size: 14px; line-height: 20px; color: var(--leise); }
+@media (max-width: 1100px) { .preise { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .preise { grid-template-columns: minmax(0, 1fr); } .verbrauch dl { grid-template-columns: minmax(0, 1fr); } }
+@media (min-width: 641px) and (max-width: 1100px) { .verbrauch dl { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---------- FAQ ---------- */
+.faq { display: grid; gap: 8px; max-width: 800px; }
+.faq details { border: 1px solid var(--linie); border-radius: 16px; background: var(--flaeche); transition: border-color 500ms var(--ease); }
+.faq details[open] { border-color: var(--linie-stark); }
+.faq summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 24px; min-height: 64px; font-size: 16px; line-height: 24px; font-weight: 500; cursor: pointer; list-style: none; border-radius: 16px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary svg { flex: none; width: 20px; height: 20px; color: var(--leise); transition: transform 500ms var(--ease); }
+.faq details[open] summary svg { transform: rotate(45deg); color: var(--akzent); }
+.faq .antwort { padding: 0 24px 24px; font-size: 16px; line-height: 24px; color: var(--leise); }
+
+/* ---------- Warteliste ---------- */
+.zugang { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; padding: 48px; border: 1px solid var(--linie); border-radius: 24px; background: var(--flaeche); }
+.zugang h2 { font-size: 48px; line-height: 1; background: linear-gradient(90deg, #FFFFFF, #9B9B9B); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.zugang__text { display: grid; align-content: start; gap: 16px; }
+.zugang__text p { font-size: 18px; line-height: 28px; color: var(--leise); }
+.formular { display: grid; gap: 16px; }
+.feld { display: grid; gap: 8px; }
+.feld label { font-size: 14px; line-height: 20px; color: var(--leise); }
+.feld input, .feld select { width: 100%; min-height: 48px; padding: 12px 16px; border: 1px solid var(--linie-stark); border-radius: 12px; background: var(--flaeche-2); font-size: 16px; line-height: 24px; transition: border-color 500ms var(--ease); }
+.feld select { -webkit-appearance: none; appearance: none; color-scheme: dark; padding-right: 40px; background: var(--flaeche-2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath fill='%239B9B9B' d='M213.66 101.66l-80 80a8 8 0 0 1-11.32 0l-80-80a8 8 0 0 1 11.32-11.32L128 164.69l74.34-74.35a8 8 0 0 1 11.32 11.32Z'/%3E%3C/svg%3E") no-repeat right 16px center / 16px; cursor: pointer; }
+.feld input:focus-visible, .feld select:focus-visible { outline: none; border-color: var(--akzent); }
+.feld.hat-fehler input { border-color: var(--akzent); }
+.feld__fehler { min-height: 20px; font-size: 14px; line-height: 20px; color: var(--akzent-hell); }
+.formular__knoepfe { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; margin-top: 8px; }
+.formular__status { min-height: 20px; font-size: 14px; line-height: 20px; }
+.formular__hinweis { font-size: 12px; line-height: 16px; color: var(--leise); }
+@media (max-width: 860px) { .zugang { grid-template-columns: minmax(0, 1fr); gap: 32px; padding: 24px; } .zugang h2 { font-size: 36px; line-height: 40px; } .zugang__text p { font-size: 16px; line-height: 24px; } }
+@media (max-width: 480px) { .formular__knoepfe { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Fuß ---------- */
+.fuss { padding: 48px 0 64px; border-top: 1px solid var(--linie); margin-top: 96px; }
+.fuss__innen { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; font-size: 14px; line-height: 20px; color: var(--leise); }
+.fuss nav { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+.fuss a { display: inline-flex; align-items: center; min-height: 40px; transition: color 500ms var(--ease); }
+@media (hover: hover) and (pointer: fine) { .fuss a:hover { color: var(--text); } }
+
+/* ---------- Bewegung reduziert ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 1ms !important; animation: none !important; }
+  .js .auf { opacity: 1; transform: none; filter: none; }
+  .tagline .wort { color: var(--text); }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#inhalt">Zum Inhalt springen</a>
+
+<header class="nav" data-nav>
+  <a class="marke" href="#start" aria-label="endo.ai, nach oben">endo<span>.ai</span></a>
+  <ul class="nav__links">
+    <li><a href="#werkzeuge" data-nav-link>Werkzeuge</a></li>
+    <li><a href="#ablauf" data-nav-link>So geht's</a></li>
+    <li><a href="#preise" data-nav-link>Preise</a></li>
+    <li><a href="#fragen" data-nav-link>Fragen</a></li>
+  </ul>
+  <a class="knopf knopf--haupt nav__cta" href="#zugang">Vormerken</a>
+  <button class="burger" type="button" aria-expanded="false" aria-controls="menue" data-burger><span class="hinweis">Menü öffnen</span><i></i><i></i></button>
+</header>
+<div class="menue" id="menue" data-menue>
+  <ul>
+    <li><a href="#werkzeuge">Werkzeuge</a></li>
+    <li><a href="#ablauf">So geht's</a></li>
+    <li><a href="#preise">Preise</a></li>
+    <li><a href="#fragen">Fragen</a></li>
+    <li><a href="#zugang" class="akzent">Kostenlos vormerken</a></li>
+  </ul>
+</div>
+
+<main id="inhalt" tabindex="-1">
+  <!-- Hero -->
+  <section class="hero" id="start" aria-labelledby="titel">
+    <div class="orb" data-orb aria-hidden="true"></div>
+    <div class="hero__verlauf" aria-hidden="true"></div>
+    <div class="innen hero__inhalt">
+      <span class="hero__label auf">KI-Studio für Shops und Marken</span>
+      <h1 id="titel" class="auf">Produktfotos, die verkaufen.<br>In Sekunden statt Tagen.</h1>
+      <p class="hero__sub auf">endo.ai macht aus einem einfachen Handyfoto ein Studiobild, eine fertige Anzeige oder ein kurzes Werbevideo. Ohne Fotograf, ohne Studio, ohne Abo.</p>
+        <div class="hero__cta auf">
+          <a class="knopf knopf--haupt" href="#zugang">Kostenlos vormerken
+            <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M221.66 133.66l-72 72a8 8 0 0 1-11.32-11.32L196.69 136H40a8 8 0 0 1 0-16h156.69l-58.35-58.34a8 8 0 0 1 11.32-11.32l72 72a8 8 0 0 1 0 11.32Z"/></svg>
+          </a>
+        </div>
+        <ul class="beleg auf">
+          <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg>Über 50 KI-Modelle für Bild und Video</li>
+          <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg>Kommerzielle Nutzung erlaubt</li>
+          <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg>Kein Abo</li>
+        </ul>
+    </div>
+  </section>
+
+  <div class="modelle">
+    <p class="innen modelle__innen"><span>Mit den stärksten Modellen:</span><b>Higgsfield Soul</b><b>Kling</b><b>Seedance</b><b>Seedream</b><b>Nano Banana</b><b>Ideogram</b></p>
+  </div>
+
+  <!-- Vorher / Nachher -->
+  <section class="abschnitt vorher" aria-labelledby="vorher-titel">
+    <div class="innen vorher__raster">
+      <div class="kopf auf">
+        <span class="kopf__label">Vorher, nachher</span>
+        <h2 id="vorher-titel">Vom Küchentisch ins Fotostudio</h2>
+        <p>Links das Handyfoto, rechts das Ergebnis von endo.ai. Gleiche Tasse, gleiche Form, neues Licht und neue Bühne. Ziehen Sie den Regler.</p>
+      </div>
+      <figure class="vergleich auf" data-vergleich>
+        <div class="vergleich__bild">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200307_ee98c144-5d85-4b91-8e6b-c82d664263d9.png" width="1024" height="1280" alt="Dieselbe Keramiktasse als Studiofoto auf Travertin, weiches Morgenlicht" loading="lazy">
+          <img class="vergleich__vorher" src="https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200217_e4e67bd0-1d3a-4bcc-a3d8-888fa92d60d5.png" width="1024" height="1280" alt="Handyfoto einer grünen Keramiktasse auf einer unaufgeräumten Küchenarbeitsplatte" loading="lazy">
+          <span class="vergleich__marke vergleich__marke--links">Handyfoto</span>
+          <span class="vergleich__marke vergleich__marke--rechts">endo.ai</span>
+          <input type="range" min="0" max="100" value="50" aria-label="Vorher und nachher vergleichen" data-regler>
+          <span class="vergleich__linie" aria-hidden="true"></span>
+          <span class="vergleich__griff" aria-hidden="true"><svg viewBox="0 0 256 256" fill="currentColor"><path d="M136 40v176a8 8 0 0 1-16 0V40a8 8 0 0 1 16 0ZM96 120H35.31l18.35-18.34a8 8 0 0 0-11.32-11.32l-32 32a8 8 0 0 0 0 11.32l32 32a8 8 0 0 0 11.32-11.32L35.31 136H96a8 8 0 0 0 0-16Zm149.66 2.34l-32-32a8 8 0 0 0-11.32 11.32L220.69 120H160a8 8 0 0 0 0 16h60.69l-18.35 18.34a8 8 0 0 0 11.32 11.32l32-32a8 8 0 0 0 0-11.32Z"/></svg></span>
+        </div>
+        <figcaption><span>Regler ziehen: vorher und nachher</span><span>erstellt mit Higgsfield</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Tagline -->
+  <section class="tagline" aria-label="Kernaussage">
+    <p class="innen" data-tagline>Ihr Produkt ist stark. Jetzt sieht es auch so aus. Auf jedem Kanal, in jedem Format.</p>
+  </section>
+
+  <!-- Werkzeuge -->
+  <section class="abschnitt" id="werkzeuge" aria-labelledby="werkzeuge-titel">
+    <div class="innen">
+      <div class="kopf auf">
+        <span class="kopf__label">Werkzeuge</span>
+        <h2 id="werkzeuge-titel">Alles, was Ihr Shop an Bildern braucht</h2>
+        <p>Ein Foto hochladen, Stil wählen, fertig. Jedes Ergebnis ist sofort bereit für Shop, Instagram, TikTok und Werbeanzeigen.</p>
+      </div>
+      <div class="bento">
+        <article class="karte b-gross auf">
+          <div class="karte__bild"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200401_ab9fc7d5-8dc0-42bc-a746-e04d88271c32.png" width="1024" height="1280" alt="Schwarze Kopfhörer schweben über einem Glassockel vor einem orangen Lichtring" loading="lazy"></div>
+          <div class="karte__text"><h3>Produktfoto-Studio</h3><p>Aus dem Handyfoto wird ein Studiobild mit neuem Hintergrund, Licht und Schatten. Perfekt für Produktseiten und Marktplätze.</p></div>
+        </article>
+        <article class="karte b-mittel auf">
+          <div class="karte__bild"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200401_e4ff62d4-4623-4645-89f7-4c1e4b532905.png" width="1024" height="1280" alt="Anzeige für einen weißen Laufschuh mit orangefarbener Sohle über schwarzem Spiegelboden" loading="lazy"></div>
+          <div class="karte__text"><h3>Werbeanzeigen</h3><p>Fertige Anzeigen mit Überschrift im Bild, in allen Formaten von 1:1 bis 9:16. Mehrere Varianten zum Testen.</p></div>
+        </article>
+        <article class="karte b-drittel b-hoch auf">
+          <span class="karte__tag karte__tag--premium">Premium</span>
+          <div class="karte__bild"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200400_1128f866-867e-414d-9e19-9311bdd90c45.png" width="1024" height="1820" alt="Schwarze Getränkedose bricht durch eine leuchtend orange Flüssigkeit" loading="lazy"></div>
+          <div class="karte__text"><h3>Werbevideos</h3><p>Aus einem Bild wird ein Clip mit fünf bis zehn Sekunden für Reels, TikTok und Shorts.</p></div>
+        </article>
+        <article class="karte b-drittel b-hoch auf">
+          <span class="karte__tag karte__tag--premium">Premium</span>
+          <div class="karte__bild karte__bild--oben"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200400_8a531992-5104-44ee-9a1b-a404eae2200e.png" width="1024" height="1280" alt="Model in glänzender oranger Pufferjacke in einem hellen Studio mit Chromwänden" loading="lazy"></div>
+          <div class="karte__text"><h3>Models und Lookbooks</h3><p>Ihre Mode am Model, in jeder Umgebung. Ohne Shooting, ohne Location.</p></div>
+        </article>
+        <article class="karte b-drittel b-hoch auf">
+          <div class="karte__bild"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200400_078cd665-ae47-4aa2-9277-6f33ce7bcb2e.png" width="1024" height="1820" alt="Story-Anzeige für eine Smartwatch aus Titan mit orangem Leuchten" loading="lazy"></div>
+          <div class="karte__text"><h3>Stories und Reels</h3><p>Hochformat mit Text und Knopf, bereit zum Hochladen in Instagram und TikTok.</p></div>
+        </article>
+        <article class="karte b-gross auf">
+          <span class="karte__tag karte__tag--premium">Premium</span>
+          <div class="karte__bild">
+            <div class="szene" aria-hidden="true">
+              <img class="szene__himmel" src="../bilder/hero/layer-1-sky-1920.webp" alt="" loading="lazy">
+              <img src="../bilder/hero/layer-2-ridge-1920.webp" alt="" loading="lazy">
+              <img src="../bilder/hero/layer-4-foreground-1920.webp" alt="" loading="lazy">
+            </div>
+          </div>
+          <div class="karte__text"><h3>Parallax-Szenen für Ihre Website</h3><p>Räumliche Bilder in Ebenen, die sich beim Scrollen bewegen. Genau wie auf der Website von ERGUN.</p></div>
+        </article>
+        <article class="karte b-mittel auf">
+          <div class="karte__bild"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200216_13292aae-7de0-4d1c-ad47-60bf42c5c837.png" width="1024" height="1024" alt="Bernsteinfarbene Serumflasche steht in flachem Wasser auf dunklem Schiefer" loading="lazy"></div>
+          <div class="karte__text"><h3>Kampagnen im eigenen Stil</h3><p>Einmal den Look festlegen, dann jedes Produkt im gleichen Licht und in derselben Stimmung.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- So geht's -->
+  <section class="abschnitt" id="ablauf" aria-labelledby="ablauf-titel">
+    <div class="innen">
+      <div class="kopf auf">
+        <span class="kopf__label">So geht's</span>
+        <h2 id="ablauf-titel">Drei Schritte bis zum fertigen Motiv</h2>
+        <p>Kein Fachwissen, kein Programm zum Installieren. Alles läuft im Browser, auch am Handy.</p>
+      </div>
+      <ol class="schritte">
+        <li class="schritt auf">
+          <span class="schritt__nr">1</span>
+          <div class="schritt__vorschau"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200217_e4e67bd0-1d3a-4bcc-a3d8-888fa92d60d5.png" alt="Beispiel für ein hochgeladenes Handyfoto" loading="lazy"></div>
+          <h3>Foto hochladen</h3>
+          <p>Ein Handyfoto reicht. Das Produkt muss nur gut zu erkennen sein.</p>
+        </li>
+        <li class="schritt auf">
+          <span class="schritt__nr">2</span>
+          <div class="schritt__vorschau"><div class="stile"><span>Studio hell</span><span class="ist-gewaehlt">Travertin, Morgenlicht</span><span>Neon Nacht</span><span>Natur</span><span>Luxus dunkel</span></div></div>
+          <h3>Stil und Format wählen</h3>
+          <p>Stil antippen oder in einem Satz beschreiben. Format für Shop, Feed oder Story wählen.</p>
+        </li>
+        <li class="schritt auf">
+          <span class="schritt__nr">3</span>
+          <div class="schritt__vorschau"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200307_ee98c144-5d85-4b91-8e6b-c82d664263d9.png" alt="Fertiges Studiofoto der Tasse" loading="lazy"></div>
+          <h3>Herunterladen und verkaufen</h3>
+          <p>Ergebnis in voller Auflösung laden und direkt im Shop oder in der Anzeige nutzen.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Fakten -->
+  <section class="abschnitt" aria-labelledby="fakten-titel">
+    <div class="innen">
+      <div class="kopf auf">
+        <span class="kopf__label">Warum endo.ai</span>
+        <h2 id="fakten-titel">Profiqualität, bezahlt nur pro Ergebnis</h2>
+      </div>
+      <div class="fakten">
+        <div class="fakt auf"><b>50+</b><span>KI-Modelle für Bild und Video unter einer Oberfläche</span></div>
+        <div class="fakt auf"><b>&lt; 1 Min.</b><span>bis zum fertigen Produktfoto, meist deutlich schneller</span></div>
+        <div class="fakt auf"><b>0 €</b><span>Grundgebühr. Sie zahlen nur die Credits, die Sie nutzen</span></div>
+      </div>
+      <figure class="stimme auf">
+        <img src="../bilder/kontakt/emre-144.webp" width="64" height="64" alt="Porträt von Emre Ergun" loading="lazy">
+        <div>
+          <blockquote>„Mit derselben Technik entstehen die Bilder für meine Kundenseiten. Mit endo.ai bekommt jeder Shop diese Qualität, ohne auf einen Fotografen zu warten.“</blockquote>
+          <cite>Emre Ergun, Gründer von endo.ai und ERGUN.</cite>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Preise -->
+  <section class="abschnitt" id="preise" aria-labelledby="preise-titel">
+    <div class="innen">
+      <div class="kopf auf">
+        <span class="kopf__label">Preise</span>
+        <h2 id="preise-titel">Credits kaufen, wenn Sie sie brauchen</h2>
+        <p>Kein Abo, keine Laufzeit. Jedes Ergebnis kostet eine feste Zahl an Credits, Sie sehen den Preis vor dem Start.</p>
+      </div>
+      <div class="preise">
+        <article class="paket auf">
+          <div class="paket__kopf"><h3 class="paket__name">Start</h3></div>
+          <p class="paket__preis">9 €<small>100 Credits · 9 Cent pro Credit</small></p>
+          <ul>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Rund <b>50 Produktfotos</b></span></li>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Anzeigen, Stories und Kampagnen</span></li>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Kommerzielle Nutzung</span></li>
+          </ul>
+          <a class="knopf knopf--leise" href="#zugang" data-paket="Start">Start vormerken</a>
+        </article>
+        <article class="paket auf">
+          <div class="paket__kopf"><h3 class="paket__name">Pro</h3></div>
+          <p class="paket__preis">29 €<small>400 Credits · 7,3 Cent pro Credit</small></p>
+          <ul>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Rund <b>200 Produktfotos</b></span></li>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Anzeigen, Stories und Kampagnen</span></li>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Kommerzielle Nutzung</span></li>
+          </ul>
+          <a class="knopf knopf--leise" href="#zugang" data-paket="Pro">Pro vormerken</a>
+        </article>
+        <article class="paket auf">
+          <div class="paket__kopf"><h3 class="paket__name">Studio</h3></div>
+          <p class="paket__preis">79 €<small>1.200 Credits · 6,6 Cent pro Credit</small></p>
+          <ul>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Rund <b>600 Produktfotos</b></span></li>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Anzeigen, Stories und Kampagnen</span></li>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Kommerzielle Nutzung</span></li>
+          </ul>
+          <a class="knopf knopf--leise" href="#zugang" data-paket="Studio">Studio vormerken</a>
+        </article>
+        <article class="paket paket--premium auf">
+          <div class="paket__kopf"><h3 class="paket__name">Premium</h3><span class="paket__band">Alle Werkzeuge</span></div>
+          <p class="paket__preis">199 €<small>3.500 Credits · 5,7 Cent pro Credit</small></p>
+          <ul>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span><b>Werbevideos</b>, Models und Parallax-Szenen</span></li>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Vorrang: Ihre Aufträge laufen zuerst</span></li>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Persönlicher Start mit Emre, 30 Minuten</span></li>
+            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Eigener Kampagnenstil für Ihre Marke</span></li>
+          </ul>
+          <a class="knopf knopf--haupt" href="#zugang" data-paket="Premium">Premium vormerken</a>
+        </article>
+      </div>
+      <div class="verbrauch auf">
+        <h3>So viele Credits kostet ein Ergebnis</h3>
+        <dl>
+          <div><dt>Produktfoto</dt><dd>2 Credits</dd></div>
+          <div><dt>Anzeige mit Text</dt><dd>4 Credits</dd></div>
+          <div><dt>Story oder Reel als Bild</dt><dd>4 Credits</dd></div>
+          <div><dt>Werbevideo, 5 Sekunden</dt><dd>12 Credits</dd></div>
+          <div><dt>Werbevideo, 10 Sekunden</dt><dd>20 Credits</dd></div>
+          <div><dt>Parallax-Szene</dt><dd>15 Credits</dd></div>
+        </dl>
+      </div>
+      <p class="sicher auf"><span>Kein Abo, keine Laufzeit</span><span>Fehlgeschlagene Aufträge kosten keine Credits</span><span>Bezahlung sicher über Lemon Squeezy</span></p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="abschnitt" id="fragen" aria-labelledby="fragen-titel">
+    <div class="innen">
+      <div class="kopf auf">
+        <span class="kopf__label">Fragen</span>
+        <h2 id="fragen-titel">Gut zu wissen</h2>
+      </div>
+      <div class="faq auf">
+        <details><summary>Was genau ist endo.ai?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Ein KI-Studio im Browser. Sie laden ein Produktfoto hoch und bekommen Studiobilder, Anzeigen, Stories oder kurze Werbevideos. Im Hintergrund arbeiten die Modelle von Higgsfield.</p></details>
+        <details><summary>Brauche ich Vorkenntnisse?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Nein. Sie wählen einen Stil per Antippen oder beschreiben ihn in einem Satz. Alles andere erledigt endo.ai.</p></details>
+        <details><summary>Darf ich die Bilder für Werbung nutzen?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Ja. Die Ergebnisse dürfen Sie kommerziell nutzen, zum Beispiel im Shop, in Anzeigen und auf Social Media.</p></details>
+        <details><summary>Wie funktionieren die Credits?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Sie kaufen ein Paket und erhalten Credits. Jedes Ergebnis kostet eine feste Zahl, ein Produktfoto zum Beispiel 2 Credits. Sie sehen die Kosten immer vor dem Start.</p></details>
+        <details><summary>Gibt es ein Abo?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Nein. Sie kaufen Credits nur dann, wenn Sie welche brauchen. Es gibt keine Laufzeit und nichts zu kündigen.</p></details>
+        <details><summary>Was ist im Premium-Paket anders?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Premium schaltet Werbevideos, Models und Parallax-Szenen frei. Ihre Aufträge laufen mit Vorrang, und Sie starten mit einem persönlichen Gespräch mit Emre, in dem wir Ihren Kampagnenstil festlegen.</p></details>
+        <details><summary>Was passiert mit meinen Fotos?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Ihre Fotos werden nur für Ihre Aufträge verarbeitet und nicht zum Training von KI-Modellen verwendet. Sie können Ihre Daten jederzeit löschen lassen.</p></details>
+        <details><summary>Wann startet endo.ai?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">In Kürze. Wer sich jetzt vormerkt, erfährt es als Erstes und bekommt den Zugang vor allen anderen.</p></details>
+        <details><summary>Bekomme ich auch eine komplette Website?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Ja, über ERGUN. Emre baut Websites mit Bewegung und eigenen Bildern. <a class="akzent" href="../#kontakt">Kostenloses Erstgespräch anfragen</a>.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Warteliste -->
+  <section class="abschnitt" id="zugang" aria-labelledby="zugang-titel">
+    <div class="innen">
+      <div class="zugang auf">
+        <div class="zugang__text">
+          <span class="kopf__label">Früher Zugang</span>
+          <h2 id="zugang-titel">Seien Sie beim Start dabei</h2>
+          <p>Tragen Sie sich ein und erfahren Sie als Erste, wann endo.ai startet. Unverbindlich und kostenlos.</p>
+        </div>
+        <form class="formular" id="vormerken" novalidate>
+          <div class="feld">
+            <label for="v-mail">E-Mail-Adresse</label>
+            <input id="v-mail" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="v-mail-fehler" placeholder="name@shop.de">
+            <span class="feld__fehler" id="v-mail-fehler" aria-live="polite"></span>
+          </div>
+          <div class="feld">
+            <label for="v-was">Was verkaufen Sie? (optional)</label>
+            <input id="v-was" name="was" type="text" autocomplete="off" placeholder="z. B. Mode, Kosmetik, Elektronik">
+          </div>
+          <div class="feld">
+            <label for="v-paket">Interessantes Paket</label>
+            <select id="v-paket" name="paket">
+              <option value="Noch offen">Noch offen</option>
+              <option value="Start">Start · 9 €</option>
+              <option value="Pro">Pro · 29 €</option>
+              <option value="Studio">Studio · 79 €</option>
+              <option value="Premium">Premium · 199 €</option>
+            </select>
+          </div>
+          <div class="formular__knoepfe">
+            <button class="knopf knopf--haupt" type="submit" value="whatsapp">
+              <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M187.58 144.84l-32-16a8 8 0 0 0-8 .5l-14.69 9.8a40.55 40.55 0 0 1-16-16l9.8-14.69a8 8 0 0 0 .5-8l-16-32A8 8 0 0 0 104 64a40 40 0 0 0-40 40 88.1 88.1 0 0 0 88 88 40 40 0 0 0 40-40 8 8 0 0 0-4.42-7.16ZM152 176a72.08 72.08 0 0 1-72-72 24 24 0 0 1 19.29-23.54l11.48 23L101 118a8 8 0 0 0-.73 7.51 56.47 56.47 0 0 0 30.15 30.15A8 8 0 0 0 138 155l14.61-9.74 23 11.48A24 24 0 0 1 152 176ZM128 24a104 104 0 0 0-91.82 152.88l-11.35 34.05a16 16 0 0 0 20.24 20.24l34.05-11.35A104 104 0 1 0 128 24Zm0 192a87.87 87.87 0 0 1-44.06-11.81 8 8 0 0 0-6.54-.67L40 216l12.47-37.4a8 8 0 0 0-.66-6.54A88 88 0 1 1 128 216Z"/></svg>
+              Per WhatsApp
+            </button>
+            <button class="knopf knopf--leise" type="submit" value="mail">Per E-Mail</button>
+          </div>
+          <p class="formular__status" data-status aria-live="polite"></p>
+          <p class="formular__hinweis">Öffnet WhatsApp oder Ihr Mailprogramm mit einer fertigen Nachricht. Diese Seite speichert nichts.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="fuss">
+  <div class="innen fuss__innen">
+    <span><span class="marke" style="margin:0;font-size:16px;line-height:24px">endo<span>.ai</span></span> · ein Angebot von ERGUN. · Emre Ergun · © 2026</span>
+    <nav aria-label="Weitere Seiten">
+      <a href="../">Webdesign von ERGUN.</a>
+      <a href="../impressum.html">Impressum</a>
+      <a href="../datenschutz.html">Datenschutz</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function () {
+  document.documentElement.classList.add('js');
+  var ruhig = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Navigation: Burger mit Vollbild-Menü ---- */
+  var nav = document.querySelector('[data-nav]'), burger = document.querySelector('[data-burger]'), menue = document.querySelector('[data-menue]');
+  function menueZu() { document.body.classList.remove('ist-offen'); burger.setAttribute('aria-expanded', 'false'); burger.querySelector('.hinweis').textContent = 'Menü öffnen'; }
+  burger.addEventListener('click', function () {
+    var offen = document.body.classList.toggle('ist-offen');
+    burger.setAttribute('aria-expanded', offen ? 'true' : 'false');
+    burger.querySelector('.hinweis').textContent = offen ? 'Menü schließen' : 'Menü öffnen';
+  });
+  menue.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', menueZu); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') menueZu(); });
+
+  /* ---- Einblenden beim Scrollen (IntersectionObserver, kein Scroll-Listener) ---- */
+  var auf = [].slice.call(document.querySelectorAll('.auf'));
+  if (ruhig || !('IntersectionObserver' in window)) { auf.forEach(function (el) { el.classList.add('ist-da'); }); }
+  else {
+    var io = new IntersectionObserver(function (eintraege) {
+      eintraege.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('ist-da'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    auf.forEach(function (el, i) { el.style.transitionDelay = (el.parentNode.children.length > 1 ? Math.min([].indexOf.call(el.parentNode.children, el), 4) * 80 : 0) + 'ms'; io.observe(el); });
+  }
+
+  /* ---- Tagline: Wort für Wort aufleuchten ---- */
+  var tag = document.querySelector('[data-tagline]');
+  if (tag) {
+    var woerter = tag.textContent.trim().split(/\s+/);
+    tag.textContent = '';
+    woerter.forEach(function (w, i) {
+      var s = document.createElement('span');
+      s.className = 'wort' + (/^(stark\.|Kanal,|Format\.)$/.test(w) ? ' akzent' : '');
+      s.textContent = w;
+      tag.appendChild(s);
+      if (i < woerter.length - 1) tag.appendChild(document.createTextNode(' '));
+    });
+    var spans = [].slice.call(tag.querySelectorAll('.wort'));
+    if (ruhig || !('IntersectionObserver' in window)) spans.forEach(function (s) { s.classList.add('ist-an'); });
+    else {
+      var wio = new IntersectionObserver(function (eintraege) {
+        eintraege.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('ist-an'); wio.unobserve(e.target); } });
+      }, { rootMargin: '0px 0px -38% 0px' });
+      spans.forEach(function (s) { wio.observe(s); });
+    }
+  }
+
+  /* ---- Vorher/Nachher-Regler ---- */
+  var vergleich = document.querySelector('[data-vergleich] .vergleich__bild'), regler = document.querySelector('[data-regler]');
+  if (vergleich && regler) regler.addEventListener('input', function () { vergleich.style.setProperty('--pos', regler.value + '%'); });
+
+  /* ---- Aktueller Bereich in der Navigation ---- */
+  var links = [].slice.call(document.querySelectorAll('[data-nav-link]'));
+  if ('IntersectionObserver' in window) {
+    var sio = new IntersectionObserver(function (eintraege) {
+      eintraege.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        links.forEach(function (a) { a.setAttribute('aria-current', a.getAttribute('href') === '#' + e.target.id ? 'true' : 'false'); });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    links.forEach(function (a) { var z = document.querySelector(a.getAttribute('href')); if (z) sio.observe(z); });
+  }
+
+  /* ---- Warteliste: Nachricht per WhatsApp oder E-Mail ---- */
+  var WA_NUMMER = '4915906344961', MAIL = 'ergun.eu@gmail.com';
+  var form = document.getElementById('vormerken'), status = form.querySelector('[data-status]');
+  var mail = form.elements['email'], paket = form.elements['paket'];
+  document.querySelectorAll('[data-paket]').forEach(function (a) { a.addEventListener('click', function () { paket.value = a.getAttribute('data-paket'); }); });
+  function pruefe() {
+    var v = mail.value.trim(), f = !v ? 'Bitte eine E-Mail-Adresse eintragen.' : (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? '' : 'Diese E-Mail-Adresse sieht unvollständig aus.');
+    mail.closest('.feld').classList.toggle('hat-fehler', !!f);
+    mail.setAttribute('aria-invalid', f ? 'true' : 'false');
+    document.getElementById('v-mail-fehler').textContent = f;
+    return !f;
+  }
+  mail.addEventListener('blur', function () { if (mail.value.trim()) pruefe(); });
+  mail.addEventListener('input', function () { if (mail.getAttribute('aria-invalid') === 'true') pruefe(); });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!pruefe()) { mail.focus(); status.textContent = 'Bitte prüfen Sie Ihre E-Mail-Adresse.'; return; }
+    var weg = (e.submitter && e.submitter.value) || 'whatsapp';
+    var was = form.elements['was'].value.trim();
+    var text = 'Hallo Emre, ich möchte beim Start von endo.ai dabei sein.\n\n' +
+      'E-Mail: ' + mail.value.trim() + '\n' + (was ? 'Ich verkaufe: ' + was + '\n' : '') + 'Paket: ' + paket.value + '\n\nGesendet über endo.ai';
+    if (weg === 'whatsapp') {
+      var link = 'https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(text);
+      var win = window.open(link, '_blank');
+      if (win) { try { win.opener = null; } catch (err) {} } else { location.href = link; }
+      status.textContent = 'WhatsApp ist geöffnet. Bitte dort nur noch auf Senden tippen.';
+    } else {
+      location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent('endo.ai: Früher Zugang') + '&body=' + encodeURIComponent(text);
+      status.textContent = 'Ihr Mailprogramm öffnet sich mit der fertigen Nachricht.';
+    }
+  });
+})();
+</script>
+<script src="js/orb.js" defer></script>
+</body>
+</html>
