@@ -506,6 +506,15 @@ body { overflow-x: clip; }
   .pkg__list { align-content: start; }
   .pkg__abo { align-content: start; }
 }
+
+/* ---------- Feinschliff Hero (24.09.): Sonne hinter den Namen, Licht einheitlich ---------- */
+.parallax__layer-img--sky { top: -27%; }
+/* Gegenlicht: Bergkamm und Fels etwas dunkler und wärmer, damit sie zur Sonne dahinter passen */
+.parallax__layer-img[data-parallax-layer="2"] { filter: brightness(.8) saturate(.9) contrast(1.04); }
+.parallax__layer-img[data-parallax-layer="4"] { filter: brightness(.85) saturate(.95); }
+/* Person farblich an die Szene angleichen */
+.parallax__layer-img[data-parallax-layer="5"] { filter: brightness(.94) contrast(1.04) saturate(.94) sepia(.06); }
+@media (max-width: 700px) { .parallax__layer-img--sky { top: -20%; } }
 </style>
 <script>
 /* Auftritt: zuerst nur der Name, dann die Seite. Bei "Bewegung reduzieren" kein Vorhang. */
@@ -575,20 +584,23 @@ body { overflow-x: clip; }
         <p class="pkg__price">80 €<small>einmalig · 1 Seite</small></p>
         <ul class="pkg__list">
           <li>Eigenes Design, keine Vorlage</li>
-          <li>5 eigene Bilder für Ihre Seite</li>
+          <li>5 eigene KI-Bilder, passend zu Ihrer Branche</li>
           <li>Parallax-Tiefe, Scroll- &amp; Einblend-Animationen</li>
+          <li>Intro-Animation beim Öffnen der Seite</li>
           <li>Für Handy, Tablet und PC optimiert</li>
+          <li>Schnelle Ladezeit, ohne Cookies und Tracking</li>
           <li>Kontakt per WhatsApp, Anruf und E-Mail</li>
           <li>Impressum &amp; Datenschutz-Vorlage</li>
+          <li>Vorschau-Link, bevor die Seite online geht</li>
           <li>1 Korrekturrunde</li>
         </ul>
         <div class="pkg__abo">
           <div class="pkg__abo-kopf"><span class="pkg__abo-preis">+ 10 €<small> / Monat</small></span><span class="pkg__abo-titel">Hosting, Domain<br>&amp; Pflege</span></div>
           <ul>
-            <li>Hosting, https-Verschlüsselung, Updates</li>
-            <li>Domain (.de) inklusive, von mir verwaltet</li>
+            <li>Hosting mit https-Verschlüsselung</li>
+            <li>Domain (.de) inklusive, auf Ihren Namen</li>
             <li>Jede Version gesichert</li>
-            <li>Kleine Textänderungen jederzeit</li>
+            <li>1 kleine Textänderung pro Monat</li>
           </ul>
         </div>
         <a class="btn pkg__cta" href="#kontakt" data-paket="Onepager">Onepager anfragen</a>
@@ -607,23 +619,29 @@ body { overflow-x: clip; }
         <div class="pkg__kopf"><h3 class="pkg__name">Business</h3><span class="pkg__tag">bis 5 Seiten</span></div>
         <p class="pkg__price">250 €<small>einmalig · bis zu 5 Seiten</small></p>
         <ul class="pkg__list">
-          <li>Alles aus Onepager</li>
-          <li>10 eigene Bilder, keine Stockfotos</li>
-          <li>Parallax-Tiefe, Scroll- &amp; Einblend-Animationen auf jeder Seite</li>
-          <li>Menü und Seitenstruktur (UI/UX) für Ihre Inhalte</li>
-          <li>Texte für alle Seiten</li>
-          <li>Bildergalerie oder Preisliste</li>
-          <li>Anfahrt, Öffnungszeiten &amp; Karte</li>
+          <li>Bis zu 5 Seiten mit Menü &amp; weichen Seitenübergängen</li>
+          <li>10 eigene KI-Bilder, keine Stockfotos</li>
+          <li>1 kurzes Video (Loop) für den Kopfbereich</li>
+          <li>Parallax &amp; Animationen auf jeder Seite</li>
+          <li>Hover-Effekte &amp; Mikro-Animationen</li>
+          <li>Galerie mit Vollbild-Ansicht</li>
+          <li>Preisliste oder Speisekarte</li>
+          <li>Aufklappbare Fragen &amp; Antworten (FAQ)</li>
+          <li>Kontakt-Fragebogen für WhatsApp &amp; E-Mail</li>
+          <li>Anfahrt &amp; Öffnungszeiten</li>
+          <li>Texte für alle Seiten, mit Ihnen abgestimmt</li>
+          <li>Für Handy, Tablet und PC optimiert</li>
+          <li>Impressum &amp; Datenschutz-Vorlage</li>
           <li>2 Korrekturrunden</li>
         </ul>
         <div class="pkg__abo">
           <div class="pkg__abo-kopf"><span class="pkg__abo-preis">+ 20 €<small> / Monat</small></span><span class="pkg__abo-titel">Hosting, Domain<br>&amp; Pflege</span></div>
           <ul>
-            <li>Hosting, https-Verschlüsselung, Updates</li>
-            <li>Domain (.de) inklusive, von mir verwaltet</li>
+            <li>Hosting mit https-Verschlüsselung</li>
+            <li>Domain (.de) inklusive, auf Ihren Namen</li>
             <li>Jede Version gesichert</li>
-            <li>Änderungen an Texten, Bildern und Preisen</li>
-            <li>1 E-Mail-Adresse mit Ihrer Domain</li>
+            <li>Bis zu 3 kleine Änderungen pro Monat (Texte, Bilder, Preise)</li>
+            <li>E-Mail-Weiterleitung (info@ihre-domain.de)</li>
           </ul>
         </div>
         <a class="btn btn--wa pkg__cta" href="#kontakt" data-paket="Business">Business anfragen</a>
@@ -644,24 +662,29 @@ body { overflow-x: clip; }
         <div class="pkg__kopf"><h3 class="pkg__name">Individuell</h3><span class="pkg__tag">bis 10 Seiten</span></div>
         <p class="pkg__price">400 €<small>einmalig · bis zu 10 Seiten</small></p>
         <ul class="pkg__list">
-          <li>Alles aus Business</li>
-          <li>20 eigene Bilder</li>
-          <li>Video im Kopfbereich, Parallax-Tiefe &amp; eigene Effekte</li>
-          <li>Komplettes Design-Konzept (UI/UX) nach Ihrer Marke</li>
-          <li>Logo &amp; Farben für Ihre Marke</li>
+          <li>Bis zu 10 Seiten mit Menü &amp; Seitenübergängen</li>
+          <li>20 eigene KI-Bilder</li>
+          <li>Parallax-Szene mit Ihnen oder Ihrem Produkt – wie auf dieser Seite</li>
+          <li>Video im Kopfbereich</li>
+          <li>3D-Element, z. B. Ihr Produkt zum Drehen</li>
+          <li>Scroll-Story: Ihre Inhalte entfalten sich beim Scrollen</li>
+          <li>Eigener Cursor &amp; besondere Effekte</li>
+          <li>Eigenes Design-Konzept nach Ihrer Marke</li>
+          <li>Logo-Entwurf &amp; Farben</li>
           <li>Texte komplett von mir</li>
-          <li>Online-Terminbuchung oder Newsletter-Anmeldung</li>
-          <li>5 Bilder für Social Media zum Start</li>
+          <li>Auf Wunsch zweisprachig (Deutsch &amp; Englisch)</li>
+          <li>Terminbuchung oder Newsletter (Einbindung eines Anbieters)</li>
+          <li>Impressum &amp; Datenschutz-Vorlage</li>
           <li>3 Korrekturrunden</li>
         </ul>
         <div class="pkg__abo">
           <div class="pkg__abo-kopf"><span class="pkg__abo-preis">+ 35 €<small> / Monat</small></span><span class="pkg__abo-titel">Hosting, Domain<br>&amp; Pflege</span></div>
           <ul>
-            <li>Hosting, https-Verschlüsselung, Updates</li>
-            <li>Domain (.de) inklusive, von mir verwaltet</li>
+            <li>Hosting mit https-Verschlüsselung</li>
+            <li>Domain (.de) inklusive, auf Ihren Namen</li>
             <li>Jede Version gesichert</li>
-            <li>Neue Inhalte, Bereiche und Bilder für Aktionen &amp; Saison</li>
-            <li>1 E-Mail-Adresse mit Ihrer Domain</li>
+            <li>1 Update pro Monat: neue Aktion, Saison-Bild oder Bereich</li>
+            <li>E-Mail-Weiterleitung (info@ihre-domain.de)</li>
             <li>Antwort am nächsten Werktag</li>
           </ul>
         </div>
@@ -1026,8 +1049,13 @@ body { overflow-x: clip; }
     if (!pruefen()) { status.textContent = 'Bitte die markierten Felder ausfüllen.'; return; }
     var m = nachricht(false);
     if (weg === 'whatsapp') {
-      var win = window.open('https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(m), '_blank', 'noopener');
-      status.textContent = win ? (dateien().length ? 'WhatsApp ist geöffnet. Bitte dort Ihre Dateien anhängen und auf Senden tippen.' : 'WhatsApp ist geöffnet. Bitte dort auf Senden tippen.') : 'WhatsApp konnte nicht geöffnet werden. Bitte Pop-ups erlauben oder per E-Mail senden.';
+      /* Ohne 'noopener' im dritten Argument: sonst liefert window.open immer null und die Seite meldet fälschlich einen Fehler.
+         Danach wird die Verbindung per win.opener = null getrennt. Blockiert der Browser das Fenster, öffnet WhatsApp im selben Tab. */
+      var waLink = 'https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(m);
+      var win = window.open(waLink, '_blank');
+      if (win) { try { win.opener = null; } catch (err) {} }
+      else { location.href = waLink; }
+      status.textContent = dateien().length ? 'WhatsApp ist geöffnet. Bitte dort Ihre Dateien anhängen und auf Senden tippen.' : 'WhatsApp ist geöffnet. Bitte dort auf Senden tippen.';
     } else {
       var betreff = 'Projektanfrage' + (paket() ? ' ' + paket() : '') + ' über ERGUN.';
       location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent(betreff) + '&body=' + encodeURIComponent(m);
