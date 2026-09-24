@@ -57,10 +57,13 @@ Zum Vergleich Higgsfield-App: GPT Image 2.5 in hoher Qualität, 2K, kostet 2,75 
 ## Landingpage endo.ai (online seit 24.09. abends)
 - Datei `ki/index.html`, Adresse `/ki/`, Link in Kopf und Fuß der Startseite.
 - Eigene Marke: nur Schrift Geist, Schwarz mit Flächen #181818/#1F1F1F, Akzent Orange #FF5A1F, Überschrift mit Verlauf Weiß → Grau.
-- Aufbau: Insel-Navigation (am Handy Burger mit Vollbild-Menü) · Hero mit Vorher/Nachher-Regler (Handyfoto → Studiofoto) · Modelle-Leiste · Tagline Wort für Wort · Werkzeuge als Bento (Produktfotos, Anzeigen, Werbevideos, Models, Stories, Parallax, Kampagnenstil) · 3 Schritte · Fakten + Zitat Emre · Preise mit Premium · FAQ · Warteliste (öffnet WhatsApp oder E-Mail) · Fuß mit Impressum/Datenschutz.
+- Aufbau: Insel-Navigation (am Handy Burger mit Vollbild-Menü) · Hero nach Emres Vorlage „Anomalous Matter": lebendige orange Drahtgitter-Kugel (three.js, Licht folgt der Maus) mit Text mittig unten · Vorher/Nachher-Regler (Handyfoto → Studiofoto) · Modelle-Leiste · Tagline Wort für Wort · Werkzeuge als Bento (Produktfotos, Anzeigen, Werbevideos, Models, Stories, Parallax, Kampagnenstil) · 3 Schritte · Fakten + Zitat Emre · Preise mit Premium · FAQ · Warteliste (öffnet WhatsApp oder E-Mail) · Fuß mit Impressum/Datenschutz.
 - **Beispielbilder:** 9 Bilder aus Emres Higgsfield-Konto (GPT Image 2.5, ca. 20 Credits). Sie liegen vorerst auf dem Higgsfield-Server (CloudFront) und werden von dort geladen. **To-do:** In der Claude-Cloud-Umgebung die Domain `d8j0ntlcm91z4.cloudfront.net` freigeben, dann legt Claude die Bilder als WebP in `ki/bilder/` ab (schneller, datenschutzfreundlicher).
 - **Zitat** von Emre auf der Seite ist ein Vorschlag von Claude, bitte prüfen.
 - Zahlung und Login gibt es noch nicht. Alle Knöpfe führen zur Warteliste.
+
+- **3D-Kugel:** Quelle `ki/js/orb.quelle.js`, gebaut zu `ki/js/orb.js` (three.js 0.186.1, mit esbuild gebündelt, rund 130 KB übertragen). Rechnet nur, solange der Hero sichtbar ist. Bei „Bewegung reduzieren" ein Standbild, ohne WebGL einfach schwarz.
+  Neu bauen: `npm i --no-save three@0.186.1 esbuild` und dann `npx esbuild ki/js/orb.quelle.js --bundle --minify --format=iife --target=es2018 --outfile=ki/js/orb.js`
 
 ## Technik (Plan)
 - **Seite:** `ki.html` bzw. `/ki` im gleichen Design wie die Website.
