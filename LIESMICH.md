@@ -110,3 +110,8 @@ WhatsApp-Links (`wa.me`) können nur Text tragen. Deshalb lädt das Kontaktformu
 - `api/aufraeumen.js`: täglicher Vercel-Cron (`vercel.json`, 3 Uhr UTC) löscht Dateien, die älter als 30 Tage sind.
 - **Einrichtung einmalig in Vercel:** Projekt → Storage → Create → Blob, Zugriff **Public**, mit dem Projekt verbinden. Dadurch entsteht `BLOB_READ_WRITE_TOKEN`. Danach einmal neu deployen. Optional `CRON_SECRET` als Umgebungsvariable setzen.
 - Datenschutz: Abschnitt 6 in `datenschutz.html` beschreibt den Upload.
+
+## Notizen für Obsidian (ab 24.09.)
+- Claude Code pflegt Projekt-Notizen im Ordner `notizen/` (z. B. „KI-Studio mit Higgsfield"). Per `git pull` landen sie im Vault.
+- `.vercelignore` hält `notizen/` und diese LIESMICH von der Live-Website fern. Achtung: Das GitHub-Repo selbst ist öffentlich.
+- Absprache: Änderungen von Claude gehen immer direkt auf `main`, Vercel veröffentlicht sie automatisch.
