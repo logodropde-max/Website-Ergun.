@@ -264,19 +264,26 @@ img { display: block; max-width: 100%; height: auto; }
   background: linear-gradient(180deg, #070B16 0, #070B16 36svh, #04060D 60svh, #000 98svh); }
 /* Nachtnebel aus dem Tal des Titelbilds zieht weiter: drei Lagen, langsam im Wind, nach unten verlöschend.
    Links oben ein weicher Mondschein-Hof (dort steht der Mond). Nur transform, pausiert außerhalb des Bildes. */
-.endo__nebel { position: absolute; z-index: -2; left: 0; right: 0; top: 0; height: 100svh; overflow: hidden; pointer-events: none;
-  -webkit-mask-image: linear-gradient(transparent 0, transparent 34svh, #000 50svh, #000 62%, transparent); mask-image: linear-gradient(transparent 0, transparent 34svh, #000 50svh, #000 62%, transparent); }
+.endo__nebel { position: absolute; z-index: -2; left: 0; right: 0; top: 0; bottom: 0; overflow: hidden; pointer-events: none;
+  -webkit-mask-image: linear-gradient(transparent 0, transparent 30svh, #000 46svh, #000 88%, transparent 100%); mask-image: linear-gradient(transparent 0, transparent 30svh, #000 46svh, #000 88%, transparent 100%); }
 .endo__nebel::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 40% at 20% 44svh, rgba(150, 170, 220, 0.12), rgba(150, 170, 220, 0) 70%); }
 .nebel { position: absolute; left: 0; width: 200%; background-repeat: repeat-x; background-size: 50% 100%; will-change: transform; }
-.nebel--1 { top: 34svh; height: 34svh; opacity: 0.55; background-image: var(--nebel-1); }
-.nebel--2 { top: 42svh; height: 28svh; opacity: 0.4; background-image: var(--nebel-2); }
-.nebel--3 { top: 54svh; height: 24svh; opacity: 0.26; background-image: var(--nebel-3); }
+.nebel--1 { top: 34svh; height: 36svh; opacity: 0.62; background-image: var(--nebel-1); }
+.nebel--2 { top: 48svh; height: 32svh; opacity: 0.5; background-image: var(--nebel-2); }
+.nebel--3 { top: 62svh; height: 28svh; opacity: 0.4; background-image: var(--nebel-3); }
 @media (prefers-reduced-motion: no-preference) {
   .nebel--1 { animation: nebel-zieht 110s linear infinite; }
   .nebel--2 { animation: nebel-zieht 160s linear infinite reverse; }
   .nebel--3 { animation: nebel-zieht 220s linear infinite; }
   .endo:not(.endo--sichtbar) .nebel { animation-play-state: paused; }
 }
+.nebel--4 { top: 58%; height: 34svh; opacity: 0.42; background-image: var(--nebel-2); }
+.nebel--5 { top: 78%; height: 30svh; opacity: 0.34; background-image: var(--nebel-1); }
+@media (prefers-reduced-motion: no-preference) {
+  .nebel--4 { animation: nebel-zieht 190s linear infinite reverse; }
+  .nebel--5 { animation: nebel-zieht 250s linear infinite; }
+}
+.endo-chat .nebel { animation-play-state: paused !important; }
 @keyframes nebel-zieht { to { transform: translate3d(-50%, 0, 0); } }
 .endo__orb { position: relative; z-index: -1; width: min(460px, 74vw); aspect-ratio: 1; margin: clamp(-72px, -6svh, -24px) auto clamp(-72px, -7svh, -40px); opacity: 0; pointer-events: none;
   -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent); mask-image: radial-gradient(closest-side, #000 62%, transparent); transition: opacity 1400ms var(--ease), transform 1600ms var(--ease); transform: translateY(14svh) scale(0.86); }
@@ -396,6 +403,30 @@ img { display: block; max-width: 100%; height: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .endo .blase, .endo .agent__vorschlaege .chip { animation: none; } .endo .tippt i { animation: none; opacity: 0.7; } }
 
+/* ---------- Chat im Stil der Seite (25.09. abends, Emre: „mehr im Einklang, nicht so generiert“) ----------
+   Keine bunten Blasen und kein Avatar: endo schreibt wie ein Text mit feiner Linie links, eigene Nachrichten
+   stehen rechts in einer Haarlinie. Feste Höhe, sobald der Chat läuft – nur der Verlauf scrollt, sonst bewegt sich nichts. */
+.endo .agent__avatar { display: none; }
+.endo .agent__kopf { gap: 10px; padding: 10px 14px 12px; }
+.endo .agent__name { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.endo .agent__name b { font-family: "Instrument Serif", Georgia, serif; font-size: 22px; font-weight: 400; line-height: 1; letter-spacing: 0.01em; }
+.endo .agent__name small { font-size: 12px; }
+.endo-chat .endo .agent { padding: 6px 6px 8px; border: 1px solid rgba(226, 230, 236, 0.14); background: rgba(9, 11, 17, 0.62); box-shadow: none; }
+.endo-chat .endo .agent__verlauf { height: min(46svh, 420px, calc(var(--sicht, 100svh) - 220px)); max-height: none; padding: 18px 14px; gap: 14px; }
+.endo .blase { font-size: 15.5px; line-height: 1.6; animation-duration: 360ms; }
+.endo .blase--endo { max-width: 90%; padding: 0 0 0 14px; background: none; border-radius: 0; border-left: 1px solid rgba(226, 230, 236, 0.3); color: #EEF0F3; }
+.endo .blase--du { max-width: 80%; padding: 8px 14px; background: none; border: 1px solid rgba(226, 230, 236, 0.24); border-radius: 16px; color: #EEF0F3; }
+.endo .blase--bild { border-left: 0; padding: 0; }
+.endo .blase--du.blase--bild { border: 0; background: none; }
+.endo .blase--bild img { border-radius: 10px; border: 1px solid rgba(226, 230, 236, 0.18); }
+.endo .blase--endo:has(.tippt) { padding: 4px 0 4px 14px; }
+.endo .agent__vorschlaege { gap: 6px; padding: 0 14px 12px; }
+.endo .agent__vorschlaege .chip { min-height: 34px; padding: 6px 13px; font-size: 13.5px; color: rgba(238, 240, 243, 0.82); border-color: rgba(226, 230, 236, 0.16); background: transparent; }
+.endo .agent__vorschlaege .chip--haupt { color: #0A0B0D; border-color: transparent; background: linear-gradient(180deg, #FBFCFD 0%, #DCE0E6 44%, #AAB1BB 52%, #E8EBEF 100%); }
+.endo .agent__feld { background: rgba(9, 11, 17, 0.4); border: 1px solid rgba(226, 230, 236, 0.18); }
+.endo-chat .endo .agent__feld { background: transparent; border-color: rgba(226, 230, 236, 0.12); }
+@media (prefers-reduced-motion: reduce) { .endo .blase { animation: none; } }
+
 /* Kostenloses Erstgespräch: drei Wege der Zusammenarbeit, darunter eine Karte mit allen Feldern */
 .wege { list-style: none; margin: 8px 0 0; padding: 0; width: min(100%, 980px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); text-align: left; }
 .wege li { display: grid; gap: 6px; align-content: start; padding: 22px 22px 4px 0; }
@@ -468,7 +499,7 @@ img { display: block; max-width: 100%; height: auto; }
 <main id="inhalt" tabindex="-1">
   <!-- endo Studio (früher endo.ai): zweiter Bereich, direkt unter dem Titelbild. Ausführlich mit Funktionen und Paketen: ki/ -->
   <section class="endo" id="endo" aria-labelledby="endo-titel">
-    <div class="endo__nebel" data-nebel aria-hidden="true"><div class="nebel nebel--1"></div><div class="nebel nebel--2"></div><div class="nebel nebel--3"></div></div>
+    <div class="endo__nebel" data-nebel aria-hidden="true"><div class="nebel nebel--1"></div><div class="nebel nebel--2"></div><div class="nebel nebel--3"></div><div class="nebel nebel--4"></div><div class="nebel nebel--5"></div></div>
     <div class="endo__orb" data-orb aria-hidden="true"></div>
     <div class="endo__innen">
       <div class="endo__kopf reveal">
@@ -842,7 +873,7 @@ img { display: block; max-width: 100%; height: auto; }
   var geladen = false;
   function laden() {
     if (geladen) return; geladen = true;
-    var s = document.createElement('script'); s.src = 'ki/js/orb.js?v=6'; s.async = true; document.body.appendChild(s);
+    var s = document.createElement('script'); s.src = 'ki/js/orb.js?v=7'; s.async = true; document.body.appendChild(s);
   }
   if (!('IntersectionObserver' in window)) { window.addEventListener('load', laden); return; }
   /* erst nach dem Laden der Seite beobachten – der Start bleibt frei von der 500-KB-Kugel */
@@ -879,7 +910,7 @@ img { display: block; max-width: 100%; height: auto; }
   if (location.hash === '#pakete') oeffnen(true);
 })();
 </script>
-<script src="ki/js/agent.js?v=9"></script>
+<script src="ki/js/agent.js?v=10"></script>
 <script>
 /* Kein Zoomen: Zwei-Finger-Zoom (Safari-Gesten) sperren. Doppeltippen und Pinch sperrt CSS (touch-action).
    Früher lagen hier auch touchmove/touchend-Sperren – die haben auf dem iPhone das Scrollen gebremst

@@ -71,6 +71,7 @@ button { font: inherit; color: inherit; }
   .nebel-feld .nebel--2 { animation: nebel-zieht 170s linear infinite reverse; }
   .nebel-feld .nebel--3 { animation: nebel-zieht 230s linear infinite; }
 }
+.endo-chat .nebel-feld .nebel { animation-play-state: paused !important; }
 @keyframes nebel-zieht { to { transform: translate3d(-50%, 0, 0); } }
 body { isolation: isolate; }
 
@@ -158,6 +159,30 @@ body { isolation: isolate; }
 @media (hover: hover) and (pointer: fine) { .rund:not(.rund--haupt):hover { color: var(--text); background: rgba(226, 230, 236, 0.08); } }
 .agent__hinweis { margin-top: 12px; text-align: center; font-size: 12px; color: var(--leise); }
 .endo-chat .agent__hinweis { display: none; }
+
+/* ---------- Chat im Stil der Seite (25.09. abends, Emre: „mehr im Einklang, nicht so generiert“) ----------
+   Keine bunten Blasen und kein Avatar: endo schreibt wie ein Text mit feiner Linie links, eigene Nachrichten
+   stehen rechts in einer Haarlinie. Feste Höhe, sobald der Chat läuft – nur der Verlauf scrollt, sonst bewegt sich nichts. */
+.agent__avatar { display: none; }
+.agent__kopf { gap: 10px; padding: 10px 14px 12px; }
+.agent__name { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.agent__name b { font-family: "Instrument Serif", Georgia, serif; font-size: 22px; font-weight: 400; line-height: 1; letter-spacing: 0.01em; }
+.agent__name small { font-size: 12px; }
+.endo-chat .agent { padding: 6px 6px 8px; border: 1px solid rgba(226, 230, 236, 0.14); background: rgba(9, 11, 17, 0.62); box-shadow: none; }
+.endo-chat .agent__verlauf { height: min(46svh, 420px, calc(var(--sicht, 100svh) - 220px)); max-height: none; padding: 18px 14px; gap: 14px; }
+.blase { font-size: 15.5px; line-height: 1.6; animation-duration: 360ms; }
+.blase--endo { max-width: 90%; padding: 0 0 0 14px; background: none; border-radius: 0; border-left: 1px solid rgba(226, 230, 236, 0.3); color: #EEF0F3; }
+.blase--du { max-width: 80%; padding: 8px 14px; background: none; border: 1px solid rgba(226, 230, 236, 0.24); border-radius: 16px; color: #EEF0F3; }
+.blase--bild { border-left: 0; padding: 0; }
+.blase--du.blase--bild { border: 0; background: none; }
+.blase--bild img { border-radius: 10px; border: 1px solid rgba(226, 230, 236, 0.18); }
+.blase--endo:has(.tippt) { padding: 4px 0 4px 14px; }
+.agent__vorschlaege { gap: 6px; padding: 0 14px 12px; }
+.agent__vorschlaege .chip { min-height: 34px; padding: 6px 13px; font-size: 13.5px; color: rgba(238, 240, 243, 0.82); border-color: rgba(226, 230, 236, 0.16); background: transparent; }
+.agent__vorschlaege .chip--haupt { color: #0A0B0D; border-color: transparent; background: linear-gradient(180deg, #FBFCFD 0%, #DCE0E6 44%, #AAB1BB 52%, #E8EBEF 100%); }
+.agent__feld { background: rgba(9, 11, 17, 0.4); border: 1px solid rgba(226, 230, 236, 0.18); }
+.endo-chat .agent__feld { background: transparent; border-color: rgba(226, 230, 236, 0.12); }
+@media (prefers-reduced-motion: reduce) { .blase { animation: none; } }
 
 /* ---------- Abschnitte ---------- */
 .abschnitt { padding: clamp(72px, 12svh, 128px) 0; border-top: 1px solid var(--linie); }
@@ -381,12 +406,12 @@ body { isolation: isolate; }
 })();
 </script>
 <script src="js/pakete.js?v=3"></script>
-<script src="js/agent.js?v=9" defer></script>
+<script src="js/agent.js?v=10" defer></script>
 <script src="js/nebel.js?v=1" defer></script>
 <script>
 /* Kugel (three.js) erst nach dem Laden der Seite – der Start bleibt flüssig, die Kugel blendet weich ein */
 (function () {
-  function laden() { var s = document.createElement('script'); s.src = 'js/orb.js?v=6'; s.async = true; document.body.appendChild(s); }
+  function laden() { var s = document.createElement('script'); s.src = 'js/orb.js?v=7'; s.async = true; document.body.appendChild(s); }
   function spaeter() { if (window.requestIdleCallback) requestIdleCallback(laden, { timeout: 1200 }); else setTimeout(laden, 300); }
   if (document.readyState === 'complete') spaeter(); else window.addEventListener('load', spaeter);
 })();

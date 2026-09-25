@@ -6,6 +6,12 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Chat ruhig und im Stil der Seite, mehr Nebel (25.09.2026, 21:40, Claude Code)
+- Emre (iPhone-Video, iOS 26.6): im Chat soll sich der Hintergrund nicht bewegen; Chatfenster „mehr im Einklang, nicht so generiert“; mehr Nebel im Hintergrund der Studio-Sektion.
+- `ki/js/agent.js`: kein Mitscrollen der Seite mehr (`mittig()`/`eingabeImBild()` entfernt); beim Start des Chats `orb:halt` an alle `[data-orb]` → Kugel steht (neuer Haken in `orb.js`/`orb.quelle.js`: `data-halt`, Ereignisse `orb:halt`/`orb:weiter`). Nebel pausiert per `.endo-chat .nebel`.
+- Chat-Aussehen (Startseite + /ki/): kein Avatar, „endo“ in Instrument Serif, endo-Nachrichten ohne Blase mit feiner Linie links, eigene Nachrichten in Haarlinie, Vorschläge als feine Pillen (Hauptvorschlag Chrom). Feste Verlaufshöhe `min(46svh, 420px)` sobald der Chat läuft – nur der Verlauf scrollt.
+- Startseite: `.endo__nebel` über die ganze Studio-Sektion, 5 Lagen (neu `nebel--4/5`), kräftiger.
+
 ## Parallaxe wieder im Browser (25.09.2026, 21:05, Claude Code)
 - Emre: auf dem iPhone ruckelt es oben weiterhin. Wahrscheinliche Ursache: Safari scrollt auf eigenem Weg, die per JavaScript verschobenen Ebenen kamen ein Bild zu spät (Zittern).
 - Neu: `.szene { view-timeline: --szene }`, jede `.szene__ebene` läuft per `animation: ebene-weg` mit `animation-range: exit 0% exit 100%` bis `--weg` (vom Skript je Ebene gesetzt = Bildhöhe × Tiefe). Das Skript verschiebt nur noch, wenn der Browser keine Scroll-Animationen kann (`cssParallaxe`). Licht-Variablen werden nur geschrieben, wenn sie sich ändern (`wert()`).

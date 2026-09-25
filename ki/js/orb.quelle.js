@@ -135,7 +135,7 @@ function start(el) {
     renderer.render(scene, camera);
     if (laeuft) frameId = requestAnimationFrame(bild);
   }
-  function an() { if (laeuft || ruhig) return; laeuft = true; frameId = requestAnimationFrame(bild); }
+  function an() { if (laeuft || ruhig || el.hasAttribute('data-halt')) return; laeuft = true; frameId = requestAnimationFrame(bild); }
   function aus() { laeuft = false; cancelAnimationFrame(frameId); }
 
   if (ruhig) { material.uniforms.time.value = 1.3; renderer.render(scene, camera); }
@@ -144,6 +144,9 @@ function start(el) {
     new IntersectionObserver((e) => { e[0].isIntersecting ? an() : aus(); }).observe(el);
   } else an();
   document.addEventListener('visibilitychange', () => { document.hidden ? aus() : (el.getBoundingClientRect().bottom > 0 && an()); });
+  /* Chat aktiv: Kugel hält still (Emre, 25.09.: Hintergrund soll sich im Chat nicht bewegen) */
+  el.addEventListener('orb:halt', () => { el.setAttribute('data-halt', ''); aus(); });
+  el.addEventListener('orb:weiter', () => { el.removeAttribute('data-halt'); if (el.getBoundingClientRect().bottom > 0) an(); });
 
   let rt;
   window.addEventListener('resize', () => {

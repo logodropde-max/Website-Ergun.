@@ -40,21 +40,7 @@
   var aufStartseite = !!box.closest('.endo');
   function nachUnten() {
     verlauf.scrollTop = verlauf.scrollHeight;
-    requestAnimationFrame(function () { verlauf.scrollTop = verlauf.scrollHeight; eingabeImBild(); });
-  }
-  /* Startseite: wächst der Verlauf, rutscht die Eingabe nach unten – die Seite scrollt so weit mit, dass sie sichtbar bleibt */
-  function eingabeImBild() {
-    if (!aufStartseite || !box.contains(document.activeElement) && !beschaeftigt) return;
-    var vvH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-    var unten = eingabe.getBoundingClientRect().bottom + 16;
-    if (unten > vvH) window.scrollBy({ top: unten - vvH, behavior: ruhig ? 'auto' : 'smooth' });
-  }
-  /* Startseite: beim ersten Antippen rückt der Chat in die Bildschirmmitte */
-  function mittig() {
-    if (!aufStartseite) return;
-    var r = box.getBoundingClientRect(), vvH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-    var ziel = r.top + r.height / 2 - vvH / 2;
-    if (Math.abs(ziel) > 24) window.scrollBy({ top: ziel, behavior: ruhig ? 'auto' : 'smooth' });
+    requestAnimationFrame(function () { verlauf.scrollTop = verlauf.scrollHeight; });
   }
   /* Antworten von endo lesbar setzen: Absätze, Listen, Code, **fett**, Links. Alles über DOM-Knoten,
      nie innerHTML mit fremdem Text. */
@@ -361,7 +347,14 @@
 
   /* ---------- Handy: Pille unten, Verlauf fährt beim Antippen auf ---------- */
   var gestartet = false, offen = false;
-  function los() { if (!gestartet) { gestartet = true; document.documentElement.classList.add('endo-chat'); start(); setTimeout(mittig, 60); } }
+  /* Im Chat bewegt sich nichts außer den Nachrichten: keine Sprünge der Seite, Kugel und Nebel halten still (Emre, 25.09.) */
+  function los() {
+    if (gestartet) return;
+    gestartet = true;
+    document.documentElement.classList.add('endo-chat');
+    document.querySelectorAll('[data-orb]').forEach(function (o) { o.dispatchEvent(new Event('orb:halt')); });
+    start();
+  }
   function setzeOffen(an, fokus) {
     offen = an && handyMq.matches;
     box.classList.toggle('agent--offen', offen);
@@ -375,7 +368,6 @@
   }
   oeffnenKnopf.addEventListener('click', function () { setzeOffen(true, true); });
   feld.addEventListener('focus', los);
-  feld.addEventListener('focus', function () { if (aufStartseite) setTimeout(eingabeImBild, 350); });
   feld.addEventListener('pointerdown', los);
   zuKnopf.addEventListener('click', function () { setzeOffen(false, true); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && offen) setzeOffen(false, true); });
@@ -384,10 +376,7 @@
   /* Tastatur am Handy: Panel über der Tastatur halten und Höhe begrenzen (visualViewport) */
   var vv = window.visualViewport;
   function passeAn() {
-    if (aufStartseite && vv) {
-      box.style.setProperty('--sicht', Math.round(vv.height) + 'px');
-      if (document.activeElement === feld) eingabeImBild();
-    }
+    if (vv) box.style.setProperty('--sicht', Math.round(vv.height) + 'px');
     if (!handyMq.matches) { box.style.removeProperty('--tastatur'); box.style.removeProperty('--blatt'); return; }
     var hoehe = window.innerHeight, sicht = vv ? vv.height : hoehe, oben0 = vv ? vv.offsetTop : 0;
     var tastatur = Math.max(0, Math.round(hoehe - sicht - oben0));
