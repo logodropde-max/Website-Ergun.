@@ -270,13 +270,25 @@ img { display: block; max-width: 100%; height: auto; }
 .endo .agent__name small { font-size: 12px; line-height: 16px; color: var(--muted); }
 .endo .agent__name a, .endo .agent__hinweis a { text-decoration: underline; text-decoration-color: rgba(138, 134, 125, 0.6); text-underline-offset: 2px; }
 .endo .rund.agent__zu, .endo .agent__oeffnen { display: none; }
-.endo .agent__verlauf { display: flex; flex-direction: column; gap: 10px; max-height: min(52svh, 480px); overflow-y: auto; overscroll-behavior: contain; padding: 0 12px;
+.endo .agent__verlauf { display: flex; flex-direction: column; gap: 10px; max-height: min(52svh, 480px, calc(var(--sicht, 100svh) - 200px)); overflow-y: auto; overscroll-behavior: contain; padding: 0 12px;
   scrollbar-width: thin; scrollbar-color: rgba(242, 239, 232, 0.16) transparent; }
 .endo .agent__verlauf:not(:empty) { padding: 16px 12px; }
+@media (prefers-reduced-motion: no-preference) { .endo .agent__verlauf { scroll-behavior: smooth; } }
+.endo .agent { scroll-margin: 24px; }
 .endo .blase { max-width: 82%; margin: 0; padding: 10px 14px; border-radius: 18px; font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; animation: blase-rein 280ms var(--ease-out) both; }
 .endo .blase--endo { align-self: flex-start; background: rgba(242, 239, 232, 0.07); color: var(--text); border-top-left-radius: 6px; }
 .endo .blase--du { align-self: flex-end; background: var(--text); color: #0E0E0C; border-top-right-radius: 6px; }
 .endo .blase a { text-decoration: underline; text-underline-offset: 2px; }
+/* Formatierung in Antworten: Absätze, Listen, Code */
+.endo .blase p { margin: 0; }
+.endo .blase p + p, .endo .blase p + ul, .endo .blase p + ol, .endo .blase ul + p, .endo .blase ol + p, .endo .blase pre + p, .endo .blase p + pre { margin-top: 8px; }
+.endo .blase ul, .endo .blase ol { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+.endo .blase li::marker { color: var(--muted); }
+.endo .blase strong { font-weight: 500; }
+.endo .blase code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 0.88em; padding: 1px 5px; border-radius: 6px; background: rgba(242, 239, 232, 0.1); }
+.endo .blase pre { margin: 0; padding: 10px 12px; border-radius: 10px; background: rgba(0, 0, 0, 0.45); overflow-x: auto; }
+.endo .blase pre code { padding: 0; background: none; font-size: 13px; line-height: 1.5; }
+.endo .blase--endo:has(.tippt) { padding: 12px 16px; }
 .endo .blase--bild { padding: 6px; }
 .endo .blase--du.blase--bild { background: rgba(242, 239, 232, 0.12); color: var(--text); }
 .endo .blase--bild img { width: 180px; max-width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 12px; }
@@ -884,7 +896,7 @@ img { display: block; max-width: 100%; height: auto; }
 })();
 </script>
 <script src="ki/js/endo-daten.js?v=1"></script>
-<script src="ki/js/agent.js?v=6"></script>
+<script src="ki/js/agent.js?v=7"></script>
 <script>
 /* Kein Zoomen: iPhone ignoriert user-scalable=no, daher Zwei-Finger-Zoom und Doppeltippen hier sperren */
 (function () {

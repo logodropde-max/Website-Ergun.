@@ -13,7 +13,11 @@ Der Assistent „endo" steht auf [[endo-ai|endo.ai]] ganz oben im Vordergrund. E
 5. E-Mail angeben, dann per WhatsApp oder E-Mail an Emre schicken. Die Nachricht enthält Kategorie, Look, Format, Foto-Link und E-Mail.
 6. Freie Fragen beantwortet endo jederzeit.
 
-## Aussehen (Stand 25.09. nachts)
+## Aussehen (Stand 25.09. nachmittags)
+- endo steht jetzt auch **auf der Startseite** direkt unter dem Titelbild (Bereich endo.ai, gleiches Skript). Ruhend nur die Eingabe, ab der ersten Nachricht ein ruhiges Fenster mit Blasen (endo links, eigene rechts), das nach unten wächst.
+- Antworten werden formatiert: Absätze, Listen, Code, fett, Links.
+
+## Aussehen (Stand 25.09. nachts, /ki/)
 - Kein Kasten mehr: ruhend nur eine feine Zeile mit Linie, mittig unter der Überschrift. Das Gespräch beginnt beim Antippen.
 - Nachrichten schweben direkt über dem Hintergrund (weicher Schatten statt Blasen), höchstens drei sind zu sehen, ältere verblassen nach oben. Die Überschrift weicht aus, die Kugel wird dunkler.
 - Handy: die Zeile steht unten über der Tastatur, sonst gleich. „Bewegung reduzieren“: nur Einblenden.

@@ -637,6 +637,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .endo-chat .agent__verlauf { height: min(46svh, 360px); }
   .endo-chat .hero__text { opacity: 0; }
 }
+/* Formatierung in Antworten (25.09.): Absätze, Listen, Code */
+.blase p { margin: 0; } .blase p + p, .blase p + ul, .blase p + ol, .blase ul + p, .blase ol + p { margin-top: 8px; }
+.blase ul, .blase ol { margin: 0; padding-left: 20px; display: grid; gap: 4px; } .blase strong { font-weight: 500; }
+.blase code { font-family: ui-monospace, Consolas, monospace; font-size: 0.88em; padding: 1px 5px; border-radius: 6px; background: rgba(255, 255, 255, 0.1); }
+.blase pre { margin: 0; padding: 10px 12px; border-radius: 10px; background: rgba(0, 0, 0, 0.45); overflow-x: auto; } .blase pre code { padding: 0; background: none; }
 </style>
 <script src="js/endo-daten.js?v=1"></script>
 </head>
@@ -1097,7 +1102,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   });
 })();
 </script>
-<script src="js/agent.js?v=5" defer></script>
+<script src="js/agent.js?v=7" defer></script>
 <script src="js/orb.js?v=6" defer></script>
 <script>
 /* Direkt auf /ki/ geöffnet: nach rechts wischen führt zurück zu ERGUN. (eingebettet übernimmt das die Startseite) */
