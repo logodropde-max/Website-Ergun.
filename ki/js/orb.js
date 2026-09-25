@@ -4281,8 +4281,8 @@ void main() {
         float diffuse = max(dot(normal, lightDir), 0.0);
         float fresnel = 1.0 - dot(normal, vec3(0.0, 0.0, 1.0));
         fresnel = pow(fresnel, 2.0);
-        vec3 neon = vec3(1.0, 0.36, 0.06);
-        vec3 finalColor = neon * (0.22 + diffuse * 0.78) + vec3(1.0, 0.6, 0.25) * fresnel * 0.55;
+        vec3 neon = vec3(0.80, 0.82, 0.88);
+        vec3 finalColor = neon * (0.24 + diffuse * 0.82) + vec3(1.0, 1.0, 1.0) * fresnel * 0.6;
         gl_FragColor = vec4(finalColor, 1.0);
       }`,wireframe:!0}),l=new Ne(o,c);s.add(l);let u=new F(0,0,5),p=c.uniforms.pointLightPosition.value;function h(y,S){let M=y/window.innerWidth*2-1,C=-(S/window.innerHeight)*2+1,E=new F(M,C,.5).unproject(r).sub(r.position).normalize(),R=-r.position.z/E.z;u.copy(r.position).add(E.multiplyScalar(R)),u.z=2.5}n&&window.addEventListener("pointermove",y=>h(y.clientX,y.clientY),{passive:!0});let g=0,v=!1,T=performance.now();function m(y){let S=y-T;c.uniforms.time.value=S*3e-4,l.rotation.y+=5e-4*4,l.rotation.x+=2e-4*4,n||u.set(Math.sin(S*4e-4)*2.2,Math.cos(S*3e-4)*1.4,2.5),p.lerp(u,.06),a.render(s,r),v&&(g=requestAnimationFrame(m))}function d(){v||t||(v=!0,g=requestAnimationFrame(m))}function b(){v=!1,cancelAnimationFrame(g)}t&&(c.uniforms.time.value=1.3,a.render(s,r)),"IntersectionObserver"in window?new IntersectionObserver(y=>{y[0].isIntersecting?d():b()}).observe(i):d(),document.addEventListener("visibilitychange",()=>{document.hidden?b():i.getBoundingClientRect().bottom>0&&d()});let w;window.addEventListener("resize",()=>{clearTimeout(w),w=setTimeout(()=>{r.aspect=i.clientWidth/i.clientHeight,r.position.z=Math.max(3.9,1.45/(.46*.7673*Math.min(1,i.clientWidth/i.clientHeight))),r.updateProjectionMatrix(),a.setSize(i.clientWidth,i.clientHeight),t&&a.render(s,r)},120)}),i.classList.add("orb--bereit")}})();
 /*! Bundled license information:

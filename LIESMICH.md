@@ -4,6 +4,13 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## endo.ai ruhig + Umschalter (25.09.2026, 04:00, Claude Code)
+- `ki/index.html`: `window.ENDO` im Kopf = einzige Stelle für Pakete (`credits: null` bis Emre die Higgsfield-Kosten nennt), Werkzeuge, Premium-Liste. Skript vor dem Fuß rendert Funktionen (`[data-funktionen-wahl]`, `[data-funktionen-detail]`), Premium-Ordner, Pakete (`[data-preise]`), Verbrauch und Credit-Fenster (`dialog[data-credit-fenster]`, Knopf `[data-credits-auf]`, Anker `#credits`).
+- CSS-Block „Ruhig: Orange nur für Premium“ ersetzt den Neon-Block: `--akzent` ist jetzt Weiß, `--premium` #FF6A1A.
+- Chat (`ki/js/agent.js?v=3`): kein Panel mehr (`handyMq` immer aus), höchstens 3 Nachrichten (`SICHTBAR`), ältere `.blase--alt`; Start bei Fokus/Antippen, setzt `html.endo-chat`.
+- Kugel `ki/js/orb.js?v=5`: silberweiß.
+- Startseite: Umschalter `[data-umschalter]` statt Pille; Klick wartet auf das geladene iframe (höchstens 1,2 s), Übergang 440 ms ohne Schatten. Wisch-Hinweis ohne localStorage.
+
 ## Tag → Nacht im Startbild (25.09.2026, 03:10, Claude Code)
 - `html.nacht-an` (setzt das Skript „Tag → Nacht“ vor dem Kontaktformular-Skript): `.parallax__header` 250svh (Handy 230svh), `.parallax__visuals` sticky. Ein Wert p (0–1, GSAP ScrollTrigger scrub 0,6 über die angeheftete Strecke) steuert: Sonne `[data-sonne]` Bogen 40° → −14° (p 0,02–0,5), `--abend` (roter Schein), Nachtbilder `.parallax__nacht` Deckkraft (p 0,2–0,55), Mond `[data-mond]` Bogen 196° → 138° (p 0,42–0,8), Sterne (p 0,42–0,7), Sternschnuppen ab p 0,55, `.jault` ab p 0,74.
 - Bogen: Mitte = Bildmitte, unten = Horizont (Lage der alten Sonne auf der Leinwand, über `messen()` aus object-fit/object-position gerechnet), Radius 34 % (Handy 36 %) der Breite.

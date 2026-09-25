@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>endo.ai · Ihr KI-Studio für Produktfotos, Anzeigen und Videos</title>
-<meta name="description" content="endo ist Ihr KI-Assistent für Produktfotos, Werbeanzeigen, Videos und 3D. Zeigen Sie endo Ihr Produkt, den Rest macht die KI. Kein Abo, bezahlt wird mit Credits.">
+<title>endo.ai · Profi-Produktfotos aus Ihrem Handyfoto</title>
+<meta name="description" content="endo macht aus Ihrem Handyfoto ein Profi-Produktfoto, ein freigestelltes Shop-Bild in 4K oder ein kurzes Werbevideo. Kein Abo, bezahlt wird mit Credits.">
 <meta name="theme-color" content="#000000">
 <link rel="canonical" href="https://website-ergun.vercel.app/ki/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="endo.ai · Zeigen Sie mir Ihr Produkt">
-<meta property="og:description" content="Der KI-Assistent für Produktfotos, Anzeigen, Videos und 3D. Für Onlineshops und Marken.">
+<meta property="og:description" content="Profi-Produktfotos, Shop-Bilder in 4K und kurze Werbevideos aus einem Handyfoto. Für Onlineshops und Marken.">
 <meta property="og:url" content="https://website-ergun.vercel.app/ki/">
 <meta property="og:image" content="https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200307_ee98c144-5d85-4b91-8e6b-c82d664263d9.png">
 <meta property="og:locale" content="de_DE">
@@ -386,32 +386,207 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .tagline .wort { color: var(--text); }
 }
 
-/* ---------- Neon-Orange (25.09. nachts, Emre: „alles Orange ähnlich neon und aufleuchten“) ---------- */
-/* Ein Orange für alles, heller und mit Leuchten. Schrift leuchtet per text-shadow, Flächen per box-shadow,
-   Symbole per drop-shadow. Das „Atmen“ läuft nur über opacity eines Schein-Elements. */
-:root {
-  --akzent: #FF6A1A; --akzent-hell: #FF8A3D;
-  --neon-text: 0 0 4px rgba(255, 138, 61, 0.9), 0 0 14px rgba(255, 106, 26, 0.7), 0 0 34px rgba(255, 90, 20, 0.45);
-  --neon-flaeche: 0 0 0 1px rgba(255, 138, 61, 0.35), 0 0 18px rgba(255, 106, 26, 0.55), 0 0 48px rgba(255, 90, 20, 0.3);
+/* ---------- Ruhig: Orange nur für Premium (25.09. nachts, ersetzt das Neon für alles) ---------- */
+/* Alles andere ist Weiß/Grau. Pro leuchtet dezent weiß, Premium orange. */
+:root { --akzent: #F5F5F5; --akzent-hell: #FFFFFF; --premium: #FF6A1A; --premium-hell: #FF8A3D;
+  --premium-schein: 0 0 0 1px rgba(255, 138, 61, 0.45), 0 0 22px rgba(255, 106, 26, 0.45), 0 0 60px rgba(255, 90, 20, 0.22); }
+:focus-visible { outline-color: var(--text); }
+.marke span, .kopf__label, .hero__label { color: var(--leise); text-shadow: none; }
+.akzent { color: var(--text); text-shadow: none; }
+.knopf--haupt { background: var(--text); color: #000; }
+@media (hover: hover) and (pointer: fine) { .knopf--haupt:hover { background: #FFFFFF; } }
+.glyphe, .paket li svg, .abo__vorteile svg, .faq details[open] summary svg { filter: none; color: var(--text); }
+.tagline .wort.ist-an.akzent { color: var(--text); text-shadow: none; }
+.vergleich__marke--rechts { background: var(--text); color: #000; }
+
+/* ---------- Umschalter ERGUN. | endo.ai ---------- */
+.umschalter { position: relative; display: inline-flex; padding: 3px; margin-right: 4px; border-radius: 9999px; background: var(--flaeche-3); }
+.umschalter::before { content: ""; position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: 9999px; background: var(--text); transform: translateX(100%); transition: transform 360ms var(--ease); }
+.umschalter--ergun::before { transform: none; }
+.umschalter a { position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; min-width: 72px; min-height: 34px; padding: 4px 12px; border-radius: 9999px; font-size: 13px; line-height: 20px; font-weight: 500; color: var(--leise); transition: color 200ms var(--ease); }
+.umschalter a[aria-current="page"] { color: #000; }
+.umschalter--ergun a[aria-current="page"] { color: var(--leise); }
+.umschalter--ergun a[href="../"] { color: #000; }
+@media (hover: hover) and (pointer: fine) { .umschalter a:not([aria-current]):hover { color: var(--text); } }
+.credits-knopf { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 8px 14px; border: 1px solid var(--linie-stark); border-radius: 9999px; background: transparent; font-size: 14px; line-height: 20px; color: var(--text); cursor: pointer; transition: border-color 300ms var(--ease), transform 160ms var(--ease); }
+.credits-knopf b { font-weight: 500; font-variant-numeric: tabular-nums; color: var(--leise); }
+.credits-knopf:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) { .credits-knopf:hover { border-color: var(--text); } }
+@media (max-width: 860px) {
+  .nav { gap: 6px; padding-right: 6px; }
+  .marke { margin-right: 4px; }
+  .umschalter a { min-width: 60px; padding: 4px 10px; font-size: 12.5px; min-height: 32px; }
+  .nav .credits-knopf { display: none; }
 }
-.akzent, .marke span, .kopf__label, .hero__label, .abo__titel span, .tag--premium, .feld__fehler, .blase a { color: var(--akzent); text-shadow: var(--neon-text); }
-.hero__label { color: var(--akzent-hell); }
-.tagline .wort { transition: color 900ms var(--ease), text-shadow 1200ms var(--ease); }
-.tagline .wort.ist-an.akzent { text-shadow: var(--neon-text); }
-.knopf--haupt, .chip--haupt, .rund--haupt, .tag--neu, .paket__band, .abo__band, .vergleich__marke--rechts, .blase--du { box-shadow: var(--neon-flaeche); }
-.knopf--haupt { position: relative; }
-.knopf--haupt::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: 0 0 28px 4px rgba(255, 106, 26, 0.55); opacity: 0; pointer-events: none; }
-@media (prefers-reduced-motion: no-preference) { .knopf--haupt::after { animation: neon-atmen 3.6s ease-in-out infinite; } }
-@keyframes neon-atmen { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
-.glyphe, .paket li svg, .abo__vorteile svg, .faq details[open] summary svg { filter: drop-shadow(0 0 6px rgba(255, 106, 26, 0.75)); }
-@media (hover: hover) and (pointer: fine) { .kachel:hover .glyphe { filter: drop-shadow(0 0 14px rgba(255, 106, 26, 0.95)); } }
-.paket--premium, .abo__option:has(input:checked) { box-shadow: 0 0 24px rgba(255, 106, 26, 0.22), inset 0 0 0 1px rgba(255, 138, 61, 0.2); }
-.agent__avatar { border-color: rgba(255, 138, 61, 0.8); box-shadow: 0 0 12px rgba(255, 106, 26, 0.5); }
-.agent__avatar::after, .abo__kreis i { box-shadow: 0 0 8px rgba(255, 106, 26, 0.9); }
-.kachel::before { box-shadow: 0 0 10px rgba(255, 106, 26, 0.9); }
-/* Schein hinter der Kugel, damit sie wie Neon wirkt (statisch, kein Rechnen pro Bild) */
-.orb::before { content: ""; position: absolute; left: 50%; top: 50%; width: min(70vmin, 720px); aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 106, 26, 0.22), rgba(255, 90, 20, 0.08) 55%, rgba(255, 90, 20, 0) 100%); pointer-events: none; }
+.nav__links a[href="#start"] { display: none; }
+
+/* ---------- Hero: alles mittig, der Chat schwebt ohne Kasten ---------- */
+.hero { align-items: center; padding: 128px 0 64px; }
+.hero__inhalt { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; gap: 32px; }
+.hero__text { justify-items: center; }
+.hero h1 { background: none; color: var(--text); text-shadow: 0 2px 24px rgba(0, 0, 0, 0.6); }
+.hero__agent { width: min(100%, 600px); }
+.hero__verlauf { background: radial-gradient(ellipse at 50% 70%, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0) 60%), linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 45%); }
+.agent { height: auto; min-height: 0; border: 0; border-radius: 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; overflow: visible; }
+.agent__kopf { display: none; }
+.agent__verlauf { justify-content: flex-end; gap: 14px; height: 208px; flex: none; padding: 0 4px 8px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 42%); mask-image: linear-gradient(to bottom, transparent 0%, #000 42%); }
+.agent__verlauf:empty { height: 0; }
+.blase { max-width: 100%; padding: 0; border-radius: 0; background: none; font-size: 16px; line-height: 24px; text-align: left; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 24px rgba(0, 0, 0, 0.85); transition: opacity 700ms var(--ease), transform 700ms var(--ease), filter 700ms var(--ease); animation: schweben 520ms var(--aus) both; }
+.blase--endo { align-self: flex-start; background: none; color: var(--text); }
+.blase--du { align-self: flex-end; background: none; color: var(--leise); text-align: right; box-shadow: none; }
+.blase--alt { opacity: 0; transform: translateY(-16px); filter: blur(4px); }
+.blase a { color: var(--text); text-shadow: none; }
+.blase--bild { padding: 0; background: none; }
+.blase--bild img { width: 120px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); }
+.blase--bild figcaption { padding: 6px 0 0; }
+.blase--du.blase--bild { background: none; }
+@keyframes schweben { from { opacity: 0; transform: translateY(12px); filter: blur(6px); } }
+.agent__vorschlaege { justify-content: center; flex-wrap: wrap; padding: 4px 0 12px; overflow: visible; }
+.chip { background: rgba(0, 0, 0, 0.3); border-color: rgba(255, 255, 255, 0.2); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: none; }
+.chip--haupt { background: var(--text); border-color: var(--text); color: #000; box-shadow: none; }
+@media (hover: hover) and (pointer: fine) { .chip:hover { border-color: var(--text); background: rgba(255, 255, 255, 0.08); } .chip--haupt:hover { background: #FFF; } }
+.agent__eingabe { padding: 0; }
+.agent__feld { height: 52px; padding: 0 2px; border: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.28); border-radius: 0; background: transparent; }
+.agent__feld:focus-within { border-color: var(--text); }
+.agent__feld input[type="text"], .agent__feld input[type="email"] { font-size: 16px; text-align: center; }
+.rund--haupt { background: transparent; color: var(--text); box-shadow: none; }
+@media (hover: hover) and (pointer: fine) { .rund--haupt:hover { color: #000; background: var(--text); } }
+.agent__hinweis { margin-top: 8px; text-align: center; font-size: 12px; line-height: 16px; color: rgba(155, 155, 155, 0.8); }
+.agent__hinweis a { text-decoration: underline; text-underline-offset: 2px; }
+@media (max-width: 860px) {
+  .hero__agent { display: block; }
+  .agent { position: fixed; left: 16px; right: 16px; bottom: calc(12px + env(safe-area-inset-bottom, 0px) + var(--tastatur, 0px)); width: auto; height: auto; clip-path: none; background: transparent; transition: opacity 300ms var(--aus), transform 300ms var(--aus); }
+  .agent--offen { clip-path: none; background: transparent; box-shadow: none; }
+  .agent__oben, .agent--offen .agent__oben { opacity: 1; transform: none; }
+  .agent__verlauf { height: min(38svh, 260px); }
+  .agent__oeffnen, .rund.agent__zu { display: none !important; }
+  .agent__hinweis { display: none; }
+  .hero { padding-bottom: 160px; }
+}
+@media (prefers-reduced-motion: reduce) { .blase { animation: einblenden 150ms ease both; } .blase--alt { transform: none; filter: none; } }
+
+/* Verlauf schwebt über der Zeile; sobald man schreibt, weicht die Überschrift nach oben aus */
+.agent { position: relative; }
+.agent__oben { position: absolute; left: 0; right: 0; bottom: 100%; }
+.hero__text { transition: opacity 600ms var(--ease), transform 600ms var(--ease); }
+.endo-chat .hero__text { opacity: 0; transform: translateY(-24px); pointer-events: none; }
+.orb--bereit { transition: opacity 900ms var(--ease); }
+.endo-chat .orb--bereit { opacity: 0.32; }
+@media (max-width: 860px) { .agent { position: fixed; } }
+@media (prefers-reduced-motion: reduce) { .endo-chat .hero__text { transform: none; } }
+
+/* ---------- Funktionen: drei Werkzeuge, Credits sofort sichtbar ---------- */
+.funktionen { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px; align-items: stretch; }
+.funktionen__wahl { display: grid; gap: 8px; align-content: start; }
+.funktion { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; align-items: center; gap: 16px; width: 100%; padding: 16px; border: 1px solid var(--linie); border-radius: 20px; background: var(--flaeche); color: var(--text); text-align: left; cursor: pointer; transition: border-color 300ms var(--ease), background-color 300ms var(--ease), transform 160ms var(--ease); }
+.funktion:active { transform: scale(0.99); }
+.funktion svg { width: 40px; height: 40px; padding: 8px; border-radius: 12px; background: var(--flaeche-3); }
+.funktion svg * { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.funktion b { display: block; font-size: 16px; line-height: 24px; font-weight: 500; }
+.funktion small { display: block; font-size: 14px; line-height: 20px; color: var(--leise); }
+.funktion__credits { font-size: 14px; line-height: 20px; color: var(--leise); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.funktion[aria-pressed="true"] { border-color: var(--text); background: var(--flaeche-2); }
+@media (hover: hover) and (pointer: fine) { .funktion:hover { border-color: var(--linie-stark); } }
+.funktionen__detail { display: grid; align-content: start; gap: 24px; padding: 32px; border: 1px solid var(--linie); border-radius: 24px; background: var(--flaeche); }
+.funktionen__detail h3 { font-size: 28px; line-height: 32px; }
+.funktionen__detail p { font-size: 16px; line-height: 24px; color: var(--leise); }
+.funktionen__zahl { display: flex; align-items: baseline; gap: 8px; }
+.funktionen__zahl b { font-size: 56px; line-height: 1; font-weight: 500; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.funktionen__zahl span { font-size: 14px; line-height: 20px; color: var(--leise); }
+.funktionen__pakete { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.funktionen__pakete li { display: grid; gap: 4px; padding: 12px; border: 1px solid var(--linie); border-radius: 14px; font-size: 14px; line-height: 20px; }
+.funktionen__pakete li span { color: var(--leise); }
+.funktionen__pakete li b { font-weight: 500; font-variant-numeric: tabular-nums; }
+.funktionen__pakete li.ist-aus { opacity: 0.45; }
+.funktionen__pakete li.ist-premium { border-color: rgba(255, 106, 26, 0.55); }
+.funktionen__detail.ist-neu > * { animation: schweben 420ms var(--ease) both; }
+@media (max-width: 860px) { .funktionen { grid-template-columns: minmax(0, 1fr); } .funktionen__detail { padding: 24px; } .funktionen__zahl b { font-size: 44px; } }
+@media (max-width: 420px) { .funktionen__pakete { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Premium-Ordner: nur hier leuchtet Orange ---------- */
+.premium-ordner { margin-top: 16px; border: 1px solid rgba(255, 106, 26, 0.55); border-radius: 24px; background: radial-gradient(120% 140% at 0% 0%, rgba(255, 106, 26, 0.12), rgba(255, 106, 26, 0) 55%), var(--flaeche); box-shadow: var(--premium-schein); }
+.premium-ordner summary { display: flex; align-items: center; gap: 16px; padding: 24px; cursor: pointer; list-style: none; border-radius: 24px; }
+.premium-ordner summary::-webkit-details-marker { display: none; }
+.premium-ordner__zeichen { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 14px; background: var(--premium); color: #000; box-shadow: 0 0 24px rgba(255, 106, 26, 0.6); }
+.premium-ordner__zeichen svg { width: 22px; height: 22px; }
+.premium-ordner summary b { display: block; font-size: 20px; line-height: 28px; font-weight: 500; color: var(--premium-hell); text-shadow: 0 0 18px rgba(255, 106, 26, 0.55); }
+.premium-ordner summary small { display: block; font-size: 14px; line-height: 20px; color: var(--leise); }
+.premium-ordner__pfeil { margin-left: auto; width: 20px; height: 20px; color: var(--premium-hell); transition: transform 400ms var(--ease); }
+.premium-ordner[open] .premium-ordner__pfeil { transform: rotate(180deg); }
+.premium-ordner ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0 24px 24px; list-style: none; }
+.premium-ordner li { display: grid; gap: 4px; padding: 16px; border: 1px solid rgba(255, 106, 26, 0.28); border-radius: 16px; background: rgba(0, 0, 0, 0.25); }
+.premium-ordner li b { font-size: 16px; line-height: 24px; font-weight: 500; }
+.premium-ordner li span { font-size: 14px; line-height: 20px; color: var(--leise); }
+.premium-ordner[open] li { animation: schweben 480ms var(--ease) both; }
+.premium-ordner[open] li:nth-child(2) { animation-delay: 60ms; } .premium-ordner[open] li:nth-child(3) { animation-delay: 120ms; }
+.premium-ordner[open] li:nth-child(4) { animation-delay: 180ms; } .premium-ordner[open] li:nth-child(5) { animation-delay: 240ms; }
+.premium-ordner .knopf { margin: 0 24px 24px; }
+@media (max-width: 640px) { .premium-ordner ul { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Pakete: Start ruhig, Pro dezent weiß, Premium orange ---------- */
+.paket--pro { border-color: rgba(255, 255, 255, 0.45); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 0 32px rgba(255, 255, 255, 0.08); }
+.paket--premium { border-color: var(--premium); background: var(--flaeche-2); box-shadow: var(--premium-schein); }
+.paket--premium .paket__name { color: var(--premium-hell); text-shadow: 0 0 16px rgba(255, 106, 26, 0.5); }
+.paket__band { background: var(--premium); color: #000; box-shadow: 0 0 16px rgba(255, 106, 26, 0.5); }
+.paket--premium .knopf--haupt, .knopf--premium { background: var(--premium); color: #000; box-shadow: 0 0 24px rgba(255, 106, 26, 0.45); }
+@media (hover: hover) and (pointer: fine) { .paket--premium .knopf--haupt:hover, .knopf--premium:hover { background: var(--premium-hell); } }
+.paket--premium li svg { color: var(--premium-hell); }
+.tag--premium { border-color: var(--premium); color: var(--premium-hell); }
+.abo__titel span, .abo__band { color: var(--premium-hell); }
+.abo__band { background: var(--premium); color: #000; }
+.abo__kopfbild { color: var(--text); filter: none; }
+.abo__kopfbild .punkt { fill: var(--premium); }
+.abo__option:has(input:checked) { border-color: var(--text); background: rgba(255, 255, 255, 0.06); box-shadow: none; }
+.abo__option:has(input[value="Premium"]:checked) { border-color: var(--premium); background: rgba(255, 106, 26, 0.1); box-shadow: 0 0 24px rgba(255, 106, 26, 0.25); }
+.abo__kreis i { background: var(--text); box-shadow: none; }
+.abo__option:has(input:checked) .abo__kreis { border-color: var(--text); }
+.bald { display: block; margin-top: 8px; font-size: 12px; line-height: 16px; color: var(--leise); text-align: center; }
+
+/* ---------- Credit-Fenster ---------- */
+.credit-fenster { width: min(100% - 32px, 440px); max-height: min(100svh - 48px, 720px); margin: auto; padding: 0; border: 1px solid var(--linie-stark); border-radius: 24px; background: rgba(20, 20, 20, 0.92); color: var(--text); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6); overflow: auto; }
+.credit-fenster::backdrop { background: rgba(0, 0, 0, 0.55); }
+.credit-fenster[open] { animation: fenster 360ms var(--ease) both; }
+@keyframes fenster { from { opacity: 0; transform: translateY(12px) scale(0.98); } }
+.credit-fenster__innen { display: grid; gap: 20px; padding: 24px; }
+.credit-fenster__kopf { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.credit-fenster__kopf h2 { font-size: 20px; line-height: 28px; }
+.credit-fenster__stand { display: grid; gap: 4px; padding: 20px; border: 1px solid var(--linie); border-radius: 16px; background: var(--flaeche); }
+.credit-fenster__stand b { font-size: 44px; line-height: 1; font-weight: 500; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.credit-fenster__stand span { font-size: 14px; line-height: 20px; color: var(--leise); }
+.credit-fenster h3 { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--leise); }
+.credit-fenster dl { display: grid; gap: 0; margin: 0; }
+.credit-fenster dl div { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--linie); font-size: 14px; line-height: 20px; }
+.credit-fenster dt { color: var(--leise); }
+.credit-fenster dd { margin: 0; font-variant-numeric: tabular-nums; }
+.credit-fenster .premium-zeile dt, .credit-fenster .premium-zeile dd { color: var(--premium-hell); }
+@media (prefers-reduced-motion: reduce) { .credit-fenster[open] { animation: einblenden 150ms ease both; } }
 </style>
+<script>
+/* endo.ai: Preise und Werkzeuge an EINER Stelle (Seite, Chat, Credit-Fenster lesen von hier).
+   Credits pro Ergebnis = echte Higgsfield-Kosten, aufgerundet (Stand 25.09.2026):
+   Produktfoto GPT Image 2.5 2K 2,75 · Freistellen 1 + 4K-Hochrechnung 2 · Video Kling 3.0 5 s 7,5 / 10 s 15.
+   credits der Pakete: erst eintragen, wenn Emres Higgsfield-Kosten pro Credit bekannt sind (Ziel: mindestens 3-fache Marge). */
+window.ENDO = {
+  pakete: [
+    { name: 'Start', preis: 5, credits: null, kann: ['foto', 'shop'] },
+    { name: 'Pro', preis: 20, credits: null, kann: ['foto', 'shop', 'video'] },
+    { name: 'Premium', preis: 100, credits: null, kann: ['foto', 'shop', 'video', 'video10'] }
+  ],
+  funktionen: [
+    { id: 'foto', name: 'Produkt in Szene', kurz: 'Profi-Produktfoto aus dem Handyfoto', text: 'Ihr Handyfoto wird ein Profi-Produktfoto: Studiolicht, neue Bühne, echte Schatten. Ihr Produkt bleibt, wie es ist.', credits: 3 },
+    { id: 'shop', name: 'Freistellen + 4K', kurz: 'Shop-Bild, sauber und gestochen scharf', text: 'Sauber freigestellt auf Weiß oder transparent und in 4K hochgerechnet, fertig für Shop und Marktplatz.', credits: 3 },
+    { id: 'video', name: 'Werbevideo 5 s', kurz: 'Kurzer Clip aus Ihrem Produktfoto', text: 'Aus Ihrem Produktfoto wird ein Clip mit fünf Sekunden Bewegung, für Reels, Stories und Anzeigen.', credits: 8 }
+  ],
+  premium: [
+    { id: 'video10', name: 'Werbevideo 10 s', text: 'Längere Clips mit mehr Bewegung.', credits: 15 },
+    { id: '3d', name: '3D-Modell Ihres Produkts', text: 'Aus einem Foto entsteht ein 3D-Modell, das man auf Ihrer Website drehen kann.' },
+    { id: 'parallax', name: 'Parallax-Szene', text: 'Ihr Produkt in einer Szene aus Ebenen, die sich beim Scrollen bewegen.' },
+    { id: 'vorrang', name: 'Vorrang', text: 'Ihre Aufträge werden zuerst erzeugt.' },
+    { id: 'emre', name: 'Persönliche Abstimmung', text: 'Look und Wünsche stimmen Sie direkt mit Emre ab.' }
+  ]
+};
+</script>
 </head>
 <body>
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
@@ -419,22 +594,23 @@ button, input, select, textarea { font: inherit; color: inherit; }
 <header class="nav">
   <a class="marke" href="#start" aria-label="endo.ai, nach oben">endo<span>.ai</span></a>
   <ul class="nav__links">
-    <li><a href="#moeglichkeiten" data-nav-link>Möglichkeiten</a></li>
+    <li><a href="#funktionen" data-nav-link>Funktionen</a></li>
     <li><a href="#ablauf" data-nav-link>So geht's</a></li>
     <li><a href="#preise" data-nav-link>Preise</a></li>
     <li><a href="#fragen" data-nav-link>Fragen</a></li>
-    <li><a href="../">ERGUN.</a></li>
   </ul>
-  <a class="knopf knopf--haupt nav__cta" href="#start" data-zu-endo>Mit endo sprechen</a>
+  <button class="credits-knopf" type="button" data-credits-auf aria-haspopup="dialog">Credits <b data-credits-stand>–</b></button>
+  <div class="umschalter" role="group" aria-label="Seite wechseln" data-umschalter><a href="../">ERGUN.</a><a href="#start" aria-current="page">endo.ai</a></div>
   <button class="burger" type="button" aria-expanded="false" aria-controls="menue" data-burger><span class="hinweis">Menü öffnen</span><i></i><i></i></button>
 </header>
 <div class="menue" id="menue" data-menue>
   <ul>
-    <li><a href="#moeglichkeiten">Möglichkeiten</a></li>
+    <li><a href="#funktionen">Funktionen</a></li>
     <li><a href="#ablauf">So geht's</a></li>
     <li><a href="#preise">Preise</a></li>
     <li><a href="#fragen">Fragen</a></li>
-    <li><a href="#start" class="akzent" data-zu-endo>Mit endo sprechen</a></li>
+    <li><a href="#start" data-zu-endo>Mit endo sprechen</a></li>
+    <li><a href="#credits" data-credits-auf>Meine Credits</a></li>
     <li><a href="../">Zurück zu ERGUN.</a></li>
   </ul>
 </div>
@@ -446,7 +622,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
     <div class="hero__verlauf" aria-hidden="true"></div>
     <div class="innen hero__inhalt">
       <div class="hero__text">
-        <span class="hero__label auf">endo.ai · Ihr KI-Studio</span>
+        <span class="hero__label auf">endo.ai</span>
         <h1 id="titel" class="auf">Zeigen Sie mir<br> Ihr Produkt.</h1>
       </div>
 
@@ -476,6 +652,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
               </button>
             </div>
             <button class="agent__oeffnen" type="button" data-oeffnen aria-expanded="false" aria-label="Chat mit endo öffnen"></button>
+            <p class="agent__hinweis">endo ist eine KI und kann sich irren · <a href="../datenschutz.html">Datenschutz</a></p>
           </form>
         </section>
       </div>
@@ -505,52 +682,33 @@ button, input, select, textarea { font: inherit; color: inherit; }
     </div>
   </section>
 
-  <!-- Möglichkeiten -->
-  <section class="abschnitt" id="moeglichkeiten" aria-labelledby="moeglich-titel">
+  <!-- Funktionen: drei Werkzeuge, Credits sofort sichtbar -->
+  <section class="abschnitt" id="funktionen" aria-labelledby="funktionen-titel">
     <div class="innen">
       <div class="kopf auf">
-        <span class="kopf__label">Möglichkeiten</span>
-        <h2 id="moeglich-titel">Alles, was Ihre Marke sichtbar macht</h2>
-        <p>Vom einzelnen Produktfoto bis zur ganzen Kampagne. endo verbindet über 50 KI-Modelle für Bild, Video, Audio und 3D in einem Gespräch.</p>
+        <span class="kopf__label">Funktionen</span>
+        <h2 id="funktionen-titel">Wählen Sie, was Sie brauchen</h2>
+        <p>Drei Werkzeuge, auf Produktfotos spezialisiert. Tippen Sie eines an und Sie sehen sofort, was es kostet und in welchem Paket es enthalten ist.</p>
       </div>
-
-      <div class="gruppe">
-        <p class="gruppe__titel">Bild</p>
-        <ul class="kacheln">
-          <li class="kachel auf"><svg class="glyphe" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><h3>Produktfotos</h3><p>Studiolicht, neue Bühne, echte Schatten. Aus jedem Handyfoto.</p><div class="kachel__tags"><span class="tag">2 Credits</span></div></li>
-          <li class="kachel auf"><svg class="glyphe" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10v4h3l7 4V6l-7 4z"/><path d="M17 9a4 4 0 0 1 0 6"/></svg><h3>Werbeanzeigen</h3><p>Fertige Anzeigen mit Überschrift im Bild, in jedem Format.</p><div class="kachel__tags"><span class="tag">4 Credits</span></div></li>
-          <li class="kachel auf"><svg class="glyphe" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m3 17 5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.5"/></svg><h3>Lifestyle-Szenen</h3><p>Ihr Produkt im Café, am Strand oder im Loft. Jede Welt, die Sie wollen.</p><div class="kachel__tags"><span class="tag">2 Credits</span></div></li>
-          <li class="kachel auf"><svg class="glyphe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><path d="M8 7.5 20 18M8 16.5 20 6"/></svg><h3>Freisteller</h3><p>Sauber ausgeschnitten auf Weiß oder transparent, bereit für jeden Marktplatz.</p><div class="kachel__tags"><span class="tag">Bild</span></div></li>
-          <li class="kachel auf"><svg class="glyphe" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M8 10v9"/></svg><h3>Shop-Banner</h3><p>Titelbilder für Shopify, Etsy und Amazon im Stil Ihrer Marke.</p><div class="kachel__tags"><span class="tag">Bild</span></div></li>
-          <li class="kachel auf"><svg class="glyphe" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6"/></svg><h3>4K-Hochrechnung</h3><p>Alte oder kleine Fotos gestochen scharf für Druck und Plakat.</p><div class="kachel__tags"><span class="tag">Bild</span></div></li>
-          <li class="kachel kachel--breit auf"><svg class="glyphe" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 12h10M4 19h7"/><path d="m17 15 2 2 3-4"/></svg><h3>Kampagnen im eigenen Stil</h3><p>Einmal den Look Ihrer Marke festlegen, dann jedes Produkt im gleichen Licht, in derselben Stimmung.</p><div class="kachel__tags"><span class="tag tag--premium">Premium</span></div></li>
-        </ul>
+      <div class="funktionen auf">
+        <div class="funktionen__wahl" role="group" aria-label="Funktion wählen" data-funktionen-wahl></div>
+        <div class="funktionen__detail" aria-live="polite" data-funktionen-detail></div>
       </div>
-
-      <div class="gruppe">
-        <p class="gruppe__titel">Video und Audio</p>
-        <ul class="kacheln">
-          <li class="kachel auf"><svg class="glyphe" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg><h3>Werbevideos</h3><p>Aus einem Bild wird ein Clip mit fünf bis zehn Sekunden.</p><div class="kachel__tags"><span class="tag">ab 12 Credits</span><span class="tag tag--premium">Premium</span></div></li>
-          <li class="kachel auf"><svg class="glyphe" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg><h3>Stories und Reels</h3><p>Hochformat mit Text und Knopf für Instagram und TikTok.</p><div class="kachel__tags"><span class="tag">4 Credits</span></div></li>
-          <li class="kachel auf"><svg class="glyphe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="m17 9 4-2v8l-4-2z"/></svg><h3>UGC-Videos</h3><p>Ein KI-Creator stellt Ihr Produkt vor, wie echte Kundenvideos.</p><div class="kachel__tags"><span class="tag tag--premium">Premium</span></div></li>
-          <li class="kachel auf"><svg class="glyphe" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M8 7v10M4 10v4M16 7v10M20 10v4"/></svg><h3>Stimme für Anzeigen</h3><p>Sprecher und Sound für Ihre Clips, auf Deutsch und Englisch.</p><div class="kachel__tags"><span class="tag">Audio</span></div></li>
-        </ul>
-      </div>
-
-      <div class="gruppe">
-        <p class="gruppe__titel">Zukunft</p>
-        <ul class="kacheln">
-          <li class="kachel kachel--breit auf"><svg class="glyphe" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 9 5v10l-9 5-9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg><h3>3D-Modell Ihres Produkts</h3><p>Aus einem Foto wird ein drehbares 3D-Modell für Shop, AR und Präsentationen.</p><div class="kachel__tags"><span class="tag tag--neu">Neu</span><span class="tag tag--premium">Premium</span></div></li>
-          <li class="kachel auf"><svg class="glyphe" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg><h3>Parallax-Szenen</h3><p>Räumliche Bilder in Ebenen, die sich beim Scrollen bewegen.</p><div class="kachel__tags"><span class="tag">15 Credits</span><span class="tag tag--premium">Premium</span></div></li>
-          <li class="kachel auf"><svg class="glyphe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/><path d="M19 2v4M17 4h4"/></svg><h3>KI-Markengesicht</h3><p>Ein wiederkehrendes Gesicht für Ihre Marke, in jeder Kampagne gleich.</p><div class="kachel__tags"><span class="tag tag--premium">Premium</span></div></li>
-        </ul>
-      </div>
+      <details class="premium-ordner auf" data-premium-ordner>
+        <summary>
+          <span class="premium-ordner__zeichen" aria-hidden="true"><svg viewBox="0 0 256 256" fill="currentColor"><path d="M232 96a8 8 0 0 0-5.27-7.52l-72-26.18-26.23-72a8 8 0 0 0-15 0l-26.18 72-72 26.18a8 8 0 0 0 0 15l72 26.18 26.18 72a8 8 0 0 0 15 0l26.18-72 72-26.18A8 8 0 0 0 232 96Z" transform="translate(0 32) scale(.86)"/></svg></span>
+          <span><b>Premium-Ordner</b><small>Was es nur im Premium-Paket gibt</small></span>
+          <svg class="premium-ordner__pfeil" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66 101.66l-80 80a8 8 0 0 1-11.32 0l-80-80a8 8 0 0 1 11.32-11.32L128 164.69l74.34-74.35a8 8 0 0 1 11.32 11.32Z"/></svg>
+        </summary>
+        <ul data-premium-liste></ul>
+        <a class="knopf knopf--premium" href="#zugang" data-paket="Premium">Premium vormerken</a>
+      </details>
     </div>
   </section>
 
   <!-- Tagline -->
   <section class="tagline" aria-label="Kernaussage">
-    <p class="innen" data-tagline>Ein Foto. Jedes Format. Jede Welt, die Sie sich vorstellen können.</p>
+    <p class="innen" data-tagline>Ein Handyfoto genügt. Den Rest macht endo.</p>
   </section>
 
   <!-- So geht's -->
@@ -571,7 +729,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   <!-- Fakten -->
   <section class="abschnitt" aria-label="Fakten">
     <div class="innen fakten">
-      <div class="fakt auf"><b>50+</b><span>KI-Modelle für Bild, Video, Audio und 3D in einem Gespräch</span></div>
+      <div class="fakt auf"><b>3</b><span>Werkzeuge, ganz auf Produktfotos ausgerichtet</span></div>
       <div class="fakt auf"><b>&lt; 1 Min.</b><span>bis zum fertigen Produktfoto, meist deutlich schneller</span></div>
       <div class="fakt auf"><b>0 €</b><span>Grundgebühr. Sie zahlen nur die Credits, die Sie nutzen</span></div>
     </div>
@@ -585,35 +743,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
         <h2 id="preise-titel">Credits kaufen, wenn Sie sie brauchen</h2>
         <p>Kein Abo, keine Laufzeit. Sie sehen die Kosten immer vor dem Start.</p>
       </div>
-      <div class="preise">
-        <article class="paket auf">
-          <div class="paket__kopf"><h3 class="paket__name">Start</h3></div>
-          <p class="paket__preis">9 €<small>100 Credits</small></p>
-          <ul>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Rund <b>50 Produktfotos</b></span></li>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Alle Bild-Werkzeuge</span></li>
-          </ul>
-          <a class="knopf knopf--leise" href="#zugang" data-paket="Start">Start vormerken</a>
-        </article>
-        <article class="paket auf">
-          <div class="paket__kopf"><h3 class="paket__name">Pro</h3></div>
-          <p class="paket__preis">29 €<small>400 Credits</small></p>
-          <ul>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Rund <b>200 Produktfotos</b></span></li>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Dazu Stories und Stimme</span></li>
-          </ul>
-          <a class="knopf knopf--leise" href="#zugang" data-paket="Pro">Pro vormerken</a>
-        </article>
-        <article class="paket paket--premium auf">
-          <div class="paket__kopf"><h3 class="paket__name">Premium</h3><span class="paket__band">Alles freigeschaltet</span></div>
-          <p class="paket__preis">199 €<small>3.500 Credits</small></p>
-          <ul>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span><b>Videos, UGC und 3D</b></span></li>
-            <li><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg><span>Vorrang und Start mit Emre</span></li>
-          </ul>
-          <a class="knopf knopf--haupt" href="#zugang" data-paket="Premium">Premium vormerken</a>
-        </article>
-      </div>
+      <div class="preise" data-preise></div>
       <div class="abo" data-abo role="group" aria-label="Paket wählen">
         <img class="abo__hintergrund" onerror="this.remove()" src="https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200307_ee98c144-5d85-4b91-8e6b-c82d664263d9.png" alt="" loading="lazy">
         <div class="abo__inhalt">
@@ -621,26 +751,19 @@ button, input, select, textarea { font: inherit; color: inherit; }
           <h3 class="abo__titel">endo.ai <span data-abo-plan>Premium</span></h3>
           <ul class="abo__vorteile" data-abo-vorteile></ul>
           <div class="abo__optionen" role="radiogroup" aria-label="Paket">
-            <label class="abo__option"><input type="radio" name="abo" value="Start"><span class="abo__kreis"><i></i></span><b>9 €</b><small>100 Credits</small></label>
-            <label class="abo__option"><input type="radio" name="abo" value="Pro"><span class="abo__kreis"><i></i></span><b>29 €</b><small>400 Credits</small></label>
-            <label class="abo__option"><input type="radio" name="abo" value="Premium" checked><span class="abo__kreis"><i></i></span><b>199 €</b><small>3.500 Credits</small><span class="abo__band">Alles frei</span></label>
+            <label class="abo__option"><input type="radio" name="abo" value="Start"><span class="abo__kreis"><i></i></span><b data-preis="Start"></b><small data-credits="Start"></small></label>
+            <label class="abo__option"><input type="radio" name="abo" value="Pro"><span class="abo__kreis"><i></i></span><b data-preis="Pro"></b><small data-credits="Pro"></small></label>
+            <label class="abo__option"><input type="radio" name="abo" value="Premium" checked><span class="abo__kreis"><i></i></span><b data-preis="Premium"></b><small data-credits="Premium"></small><span class="abo__band">Alles frei</span></label>
           </div>
           <a class="knopf knopf--haupt abo__knopf" href="#zugang" data-paket="Premium" data-abo-knopf>Premium vormerken</a>
-          <p class="abo__fuss">Kein Abo, keine Laufzeit. Bezahlung sicher über Lemon Squeezy.</p>
+          <p class="abo__fuss">Kein Abo, keine Laufzeit. Kauf startet in Kürze, jetzt vormerken.</p>
         </div>
       </div>
       <div class="verbrauch auf">
         <h3>So viele Credits kostet ein Ergebnis</h3>
-        <dl>
-          <div><dt>Produktfoto oder Lifestyle-Szene</dt><dd>2 Credits</dd></div>
-          <div><dt>Anzeige mit Text</dt><dd>4 Credits</dd></div>
-          <div><dt>Story oder Reel als Bild</dt><dd>4 Credits</dd></div>
-          <div><dt>Werbevideo, 5 Sekunden</dt><dd>12 Credits</dd></div>
-          <div><dt>Werbevideo, 10 Sekunden</dt><dd>20 Credits</dd></div>
-          <div><dt>Parallax-Szene</dt><dd>15 Credits</dd></div>
-        </dl>
+        <dl data-verbrauch></dl>
       </div>
-      <p class="sicher auf"><span>Kein Abo, keine Laufzeit</span><span>Fehlgeschlagene Aufträge kosten keine Credits</span><span>Bezahlung sicher über Lemon Squeezy</span></p>
+      <p class="sicher auf"><span>Kein Abo, keine Laufzeit</span><span>Fehlgeschlagene Aufträge kosten keine Credits</span><span>Kauf und Anmeldung starten in Kürze</span></p>
     </div>
   </section>
 
@@ -653,11 +776,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
         <p>Noch etwas offen? Fragen Sie einfach endo oben im Chat.</p>
       </div>
       <div class="faq auf">
-        <details><summary>Wer ist endo?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">endo ist Ihr KI-Assistent im Browser. Sie zeigen endo Ihr Produkt und sagen, was Sie brauchen. Im Hintergrund arbeiten über 50 Modelle von Higgsfield für Bild, Video, Audio und 3D.</p></details>
+        <details><summary>Wer ist endo?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">endo ist Ihr KI-Assistent im Browser. Sie zeigen endo Ihr Produkt und wählen eines von drei Werkzeugen: Produkt in Szene, Freistellen + 4K oder Werbevideo mit fünf Sekunden. Im Hintergrund arbeiten Modelle von Higgsfield.</p></details>
         <details><summary>Brauche ich Vorkenntnisse?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Nein. Sie schreiben mit endo wie mit einem Menschen oder tippen einfach auf die Vorschläge.</p></details>
         <details><summary>Darf ich die Ergebnisse für Werbung nutzen?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Ja. Sie dürfen die Ergebnisse kommerziell nutzen, im Shop, in Anzeigen und auf Social Media.</p></details>
-        <details><summary>Wie funktionieren die Credits?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Sie kaufen ein Paket und erhalten Credits. Jedes Ergebnis kostet eine feste Zahl, ein Produktfoto zum Beispiel 2 Credits. Es gibt kein Abo und nichts zu kündigen.</p></details>
-        <details><summary>Was ist im Premium-Paket anders?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Premium schaltet Videos, UGC-Videos, 3D-Modelle, Parallax-Szenen und das KI-Markengesicht frei. Ihre Aufträge laufen mit Vorrang, und Sie starten mit einem persönlichen Gespräch mit Emre.</p></details>
+        <details><summary>Wie funktionieren die Credits?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Sie kaufen ein Paket und erhalten Credits. Jedes Ergebnis kostet eine feste Zahl, ein Produktfoto zum Beispiel 3 Credits. Es gibt kein Abo und nichts zu kündigen. Ihr Guthaben sehen Sie oben unter „Credits“, sobald die Anmeldung startet.</p></details>
+        <details><summary>Was ist im Premium-Paket anders?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Premium schaltet dazu Videos mit zehn Sekunden, 3D-Modelle Ihres Produkts und Parallax-Szenen frei. Ihre Aufträge laufen mit Vorrang, und Look und Wünsche stimmen Sie persönlich mit Emre ab.</p></details>
         <details><summary>Was passiert mit meinen Fotos?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Ihre Fotos werden nur für Ihre Aufträge verarbeitet und nicht zum Training von KI-Modellen verwendet. Sie können Ihre Daten jederzeit löschen lassen.</p></details>
         <details><summary>Wann startet endo.ai?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">In Kürze. Wer sich jetzt vormerkt, bekommt den Zugang als Erstes.</p></details>
         <details><summary>Bekomme ich auch eine komplette Website?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Ja, über ERGUN. Emre baut Websites mit Bewegung und eigenen Bildern. <a class="akzent" href="../#kontakt">Kostenloses Erstgespräch anfragen</a>.</p></details>
@@ -688,9 +811,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
             <label for="v-paket">Interessantes Paket</label>
             <select id="v-paket" name="paket">
               <option value="Noch offen">Noch offen</option>
-              <option value="Start">Start · 9 €</option>
-              <option value="Pro">Pro · 29 €</option>
-              <option value="Premium">Premium · 199 €</option>
+              <option value="Start">Start · 5 €</option>
+              <option value="Pro">Pro · 20 €</option>
+              <option value="Premium">Premium · 100 €</option>
             </select>
           </div>
           <div class="formular__knoepfe">
@@ -708,6 +831,88 @@ button, input, select, textarea { font: inherit; color: inherit; }
   </section>
 </main>
 
+<dialog class="credit-fenster" id="credits" aria-labelledby="credits-titel" data-credit-fenster>
+  <div class="credit-fenster__innen">
+    <div class="credit-fenster__kopf">
+      <h2 id="credits-titel">Ihre Credits</h2>
+      <button class="rund" type="button" data-credits-zu aria-label="Schließen"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128 50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z"/></svg></button>
+    </div>
+    <div class="credit-fenster__stand"><b>–</b><span>Anmeldung und Kauf starten in Kürze. Dann sehen Sie hier Ihr Guthaben und was Sie damit noch erstellen können.</span></div>
+    <div><h3>Kosten pro Ergebnis</h3><dl data-credit-kosten></dl></div>
+    <a class="knopf knopf--haupt" href="#zugang" data-credits-zu>Zum Start vormerken</a>
+  </div>
+</dialog>
+
+<script>
+/* Funktionen, Pakete, Verbrauch und Credit-Fenster aus window.ENDO */
+(function () {
+  var E = window.ENDO; if (!E) return;
+  var HAKEN = '<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66 77.66l-128 128a8 8 0 0 1-11.32 0l-56-56a8 8 0 0 1 11.32-11.32L96 188.69 218.34 66.34a8 8 0 0 1 11.32 11.32Z"/></svg>';
+  function credits(p) { return p.credits ? p.credits.toLocaleString('de-DE') + ' Credits' : 'Credits folgen'; }
+  function paket(n) { return E.pakete.filter(function (p) { return p.name === n; })[0]; }
+  var ICON = {
+    foto: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
+    shop: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6"/><circle cx="12" cy="12" r="3"/></svg>',
+    video: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>'
+  };
+
+  /* Funktionen wählen: Credits und Pakete sofort sehen */
+  var wahl = document.querySelector('[data-funktionen-wahl]'), detail = document.querySelector('[data-funktionen-detail]');
+  function zeige(f, neu) {
+    wahl.querySelectorAll('.funktion').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.id === f.id)); });
+    var zeilen = E.pakete.map(function (p) {
+      var an = p.kann.indexOf(f.id) >= 0;
+      var menge = an ? (p.credits ? 'rund ' + Math.floor(p.credits / f.credits).toLocaleString('de-DE') + '×' : 'enthalten') : 'nicht enthalten';
+      return '<li class="' + (an ? '' : 'ist-aus ') + (p.name === 'Premium' ? 'ist-premium' : '') + '"><span>' + p.name + ' · ' + p.preis + ' €</span><b>' + menge + '</b></li>';
+    }).join('');
+    detail.innerHTML = '<h3>' + f.name + '</h3><p>' + f.text + '</p><div class="funktionen__zahl"><b>' + f.credits + '</b><span>Credits pro Ergebnis</span></div><ul class="funktionen__pakete">' + zeilen + '</ul>';
+    if (neu) { detail.classList.remove('ist-neu'); void detail.offsetWidth; detail.classList.add('ist-neu'); }
+  }
+  if (wahl && detail) {
+    E.funktionen.forEach(function (f, i) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'funktion'; b.dataset.id = f.id;
+      b.innerHTML = ICON[f.id] + '<span><b>' + f.name + '</b><small>' + f.kurz + '</small></span><span class="funktion__credits">' + f.credits + ' Credits</span>';
+      b.addEventListener('click', function () { zeige(f, true); });
+      wahl.appendChild(b);
+    });
+    zeige(E.funktionen[0], false);
+  }
+  var liste = document.querySelector('[data-premium-liste]');
+  if (liste) liste.innerHTML = E.premium.map(function (p) { return '<li><b>' + p.name + (p.credits ? ' · ' + p.credits + ' Credits' : '') + '</b><span>' + p.text + '</span></li>'; }).join('');
+
+  /* Pakete */
+  var TEXTE = { Start: ['Produkt in Szene', 'Freistellen + 4K'], Pro: ['Alles aus Start', 'Dazu Werbevideo 5 s'], Premium: ['Alles aus Pro', 'Dazu der Premium-Ordner'] };
+  var preise = document.querySelector('[data-preise]');
+  if (preise) preise.innerHTML = E.pakete.map(function (p) {
+    var art = p.name === 'Premium' ? ' paket--premium' : (p.name === 'Pro' ? ' paket--pro' : '');
+    return '<article class="paket' + art + ' auf"><div class="paket__kopf"><h3 class="paket__name">' + p.name + '</h3>' + (p.name === 'Premium' ? '<span class="paket__band">Alles freigeschaltet</span>' : '') + '</div>' +
+      '<p class="paket__preis">' + p.preis + ' €<small>' + credits(p) + '</small></p><ul>' + TEXTE[p.name].map(function (t) { return '<li>' + HAKEN + '<span>' + t + '</span></li>'; }).join('') + '</ul>' +
+      '<a class="knopf ' + (p.name === 'Start' ? 'knopf--leise' : 'knopf--haupt') + '" href="#zugang" data-paket="' + p.name + '">' + p.name + ' vormerken</a><span class="bald">Kauf startet in Kürze</span></article>';
+  }).join('');
+  document.querySelectorAll('[data-preis]').forEach(function (el) { el.textContent = paket(el.dataset.preis).preis + ' €'; });
+  document.querySelectorAll('[data-credits]').forEach(function (el) { el.textContent = credits(paket(el.dataset.credits)); });
+
+  /* Verbrauch (Seite und Credit-Fenster) */
+  var zeilen = E.funktionen.map(function (f) { return '<div><dt>' + f.name + '</dt><dd>' + f.credits + ' Credits</dd></div>'; }).join('') +
+    E.premium.filter(function (p) { return p.credits; }).map(function (p) { return '<div class="premium-zeile"><dt>' + p.name + ' · Premium</dt><dd>' + p.credits + ' Credits</dd></div>'; }).join('');
+  document.querySelectorAll('[data-verbrauch], [data-credit-kosten]').forEach(function (dl) { dl.innerHTML = zeilen; });
+
+  /* Credit-Fenster */
+  var fenster = document.querySelector('[data-credit-fenster]');
+  function auf(e) { if (e) e.preventDefault(); if (!fenster) return; document.body.classList.remove('ist-offen'); if (fenster.showModal) fenster.showModal(); else fenster.setAttribute('open', ''); }
+  function zu() { if (fenster.close) fenster.close(); else fenster.removeAttribute('open'); }
+  document.querySelectorAll('[data-credits-auf]').forEach(function (b) { b.addEventListener('click', auf); });
+  if (fenster) {
+    fenster.querySelectorAll('[data-credits-zu]').forEach(function (b) { b.addEventListener('click', zu); });
+    fenster.addEventListener('click', function (e) { if (e.target === fenster) zu(); });
+  }
+  if (location.hash === '#credits') auf();
+
+  /* Umschalter: helle Marke gleitet zu ERGUN., dann Seitenwechsel */
+  var um = document.querySelector('[data-umschalter]');
+  if (um) um.querySelector('a[href="../"]').addEventListener('click', function () { um.classList.add('umschalter--ergun'); setTimeout(function () { um.classList.remove('umschalter--ergun'); }, 900); });
+})();
+</script>
 <footer class="fuss">
   <div class="innen fuss__innen">
     <span><span class="marke" style="margin:0;font-size:16px;line-height:24px">endo<span>.ai</span></span> · ein Angebot von ERGUN. · Emre Ergun · © 2026</span>
@@ -792,9 +997,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
   if (abo) {
     var HAKEN = '<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M173.66 98.34a8 8 0 0 1 0 11.32l-56 56a8 8 0 0 1-11.32 0l-24-24a8 8 0 0 1 11.32-11.32L112 148.69l50.34-50.35a8 8 0 0 1 11.32 0ZM232 128A104 104 0 1 1 128 24a104.11 104.11 0 0 1 104 104Zm-16 0a88 88 0 1 0-88 88 88.1 88.1 0 0 0 88-88Z"/></svg>';
     var VORTEILE = {
-      Start: ['Rund 50 Produktfotos', 'Alle Bild-Werkzeuge'],
-      Pro: ['Rund 200 Produktfotos', 'Dazu Stories und Stimme'],
-      Premium: ['Videos, UGC und 3D', 'Vorrang und Start mit Emre']
+      Start: ['Produkt in Szene', 'Freistellen + 4K'],
+      Pro: ['Alles aus Start', 'Dazu Werbevideo 5 s'],
+      Premium: ['Video 10 s, 3D-Modell, Parallax-Szene', 'Vorrang und Abstimmung mit Emre']
     };
     var liste = abo.querySelector('[data-abo-vorteile]'), planName = abo.querySelector('[data-abo-plan]'), aboKnopf = abo.querySelector('[data-abo-knopf]');
     function zeigePlan(plan, sofort) {
@@ -851,8 +1056,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
   });
 })();
 </script>
-<script src="js/agent.js" defer></script>
-<script src="js/orb.js?v=3" defer></script>
+<script src="js/agent.js?v=3" defer></script>
+<script src="js/orb.js?v=5" defer></script>
 <script>
 /* Direkt auf /ki/ geöffnet: nach rechts wischen führt zurück zu ERGUN. (eingebettet übernimmt das die Startseite) */
 (function () {

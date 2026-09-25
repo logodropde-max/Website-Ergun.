@@ -1,5 +1,7 @@
 /* endo: der Chat-Agent auf /ki/.
-   Führt durch vier Schritte (Produkt, Look, Format, Foto) und lädt zur Warteliste ein.
+   Führt durch vier Schritte (Produkt, Look, Werkzeug, Foto) und lädt zur Warteliste ein.
+   Seit 25.09. nachts ohne Kasten: die Nachrichten schweben über dem Hintergrund, höchstens drei sind zu sehen,
+   ältere lösen sich nach oben auf. Das Gespräch startet beim ersten Antippen der Zeile.
    Freie Fragen gehen an /api/agent (Claude). Ist dort kein Schlüssel hinterlegt oder schlägt der
    Aufruf fehl, antwortet endo mit den eingebauten Antworten unten. */
 (function () {
@@ -13,7 +15,9 @@
   /* Auf der Startseite steuert die Szene selbst, wann endo sichtbar ist (data-eigene-sichtbarkeit).
      Bei „Bewegung reduzieren" steht das Panel dort auch am Handy offen im Fluss, also wie am Desktop. */
   var extern = box.hasAttribute('data-eigene-sichtbarkeit');
-  var handyMq = (extern && ruhig) ? { matches: false } : (window.matchMedia ? matchMedia('(max-width: 860px)') : { matches: false });
+  /* Kein aufklappendes Panel mehr – auch am Handy nicht. Die Breite steuert nur noch das CSS. */
+  var handyMq = { matches: false };
+  var SICHTBAR = 3;
 
   var WA_NUMMER = '4915906344961', MAIL = 'ergun.eu@gmail.com';
   var BILD_NACHHER = 'https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200307_ee98c144-5d85-4b91-8e6b-c82d664263d9.png';
@@ -25,18 +29,20 @@
 
   var KATEGORIEN = ['Mode', 'Kosmetik', 'Elektronik', 'Essen und Getränke', 'Möbel und Deko', 'Etwas anderes'];
   var LOOKS = ['Studio hell', 'Luxus dunkel', 'Natur und Licht', 'Neon Future'];
-  var FORMATE = [
-    { name: 'Shopfoto', credits: 2 },
-    { name: 'Instagram-Anzeige', credits: 4 },
-    { name: 'Story oder Reel', credits: 4 },
-    { name: 'Werbevideo', credits: 12, premium: true },
-    { name: '3D-Modell', credits: 0, premium: true }
-  ];
+  /* Werkzeuge und Preise kommen aus window.ENDO (ki/index.html) */
+  var E = window.ENDO || { funktionen: [], premium: [], pakete: [] };
+  var FORMATE = E.funktionen.map(function (f) { return { name: f.name, credits: f.credits, ab: paketAb(f.id) }; })
+    .concat(E.premium.filter(function (f) { return f.credits; }).map(function (f) { return { name: f.name, credits: f.credits, premium: true }; }));
+  function paketAb(id) { for (var i = 0; i < E.pakete.length; i++) if (E.pakete[i].kann.indexOf(id) >= 0) return E.pakete[i].name; return 'Premium'; }
+  function paketListe() { return E.pakete.map(function (p) { return p.name + ' ' + p.preis + ' €' + (p.credits ? ' für ' + p.credits.toLocaleString('de-DE') + ' Credits' : ''); }).join(', '); }
 
   /* ---------- Darstellung ---------- */
   function nachUnten() {
-    verlauf.scrollTop = verlauf.scrollHeight;
-    requestAnimationFrame(function () { verlauf.scrollTop = verlauf.scrollHeight; });
+    var alle = [].slice.call(verlauf.children).filter(function (el) { return !el.classList.contains('blase--alt'); });
+    alle.slice(0, Math.max(0, alle.length - SICHTBAR)).forEach(function (el) {
+      el.classList.add('blase--alt'); el.setAttribute('aria-hidden', 'true');
+      setTimeout(function () { el.remove(); }, ruhig ? 0 : 720);
+    });
   }
   function blase(wer, text) {
     var b = document.createElement('div');
@@ -108,7 +114,7 @@
   function start() {
     schritt = 'kategorie';
     sperren(true);
-    endo('Hallo, ich bin endo. Ich mache aus Ihrem Handyfoto ein Profi-Produktfoto, eine Anzeige oder sogar ein Video.')
+    endo('Hallo, ich bin endo. Aus Ihrem Handyfoto mache ich ein Profi-Produktfoto, ein freigestelltes Shop-Bild in 4K oder ein kurzes Video.')
       .then(function () { return endo('Was verkaufen Sie?'); })
       .then(function () { sperren(false); zeigeSchritt(); });
   }
@@ -116,7 +122,7 @@
     eingabeArt(schritt === 'mail' ? 'mail' : 'text');
     if (schritt === 'kategorie') knoepfe(KATEGORIEN.map(function (k) { return { text: k, aktion: function () { kategorie(k); } }; }));
     else if (schritt === 'look') knoepfe(LOOKS.map(function (l) { return { text: l, aktion: function () { look(l); } }; }).concat([{ text: 'Ich beschreibe es selbst', aktion: selbstBeschreiben }]));
-    else if (schritt === 'format') knoepfe(FORMATE.map(function (f) { return { text: f.name + (f.premium ? ' · Premium' : ' · ' + f.credits + ' Credits'), aktion: function () { format(f); } }; }));
+    else if (schritt === 'format') knoepfe(FORMATE.map(function (f) { return { text: f.name + ' · ' + f.credits + ' Credits' + (f.premium ? ' · Premium' : ''), aktion: function () { format(f); } }; }));
     else if (schritt === 'foto') knoepfe([
       { text: 'Foto hochladen', haupt: true, aktion: function () { datei.click(); } },
       { text: 'Ohne Foto weiter', aktion: function () { du('Ohne Foto weiter'); frageMail(); } },
@@ -148,13 +154,11 @@
   }
   function look(l) {
     knoepfe([]); du(l); daten.look = l; schritt = 'format'; sperren(true);
-    endo('Schöne Wahl. Und wofür brauchen Sie das Ergebnis?').then(function () { sperren(false); zeigeSchritt(); });
+    endo('Schöne Wahl. Welches Werkzeug brauchen Sie?').then(function () { sperren(false); zeigeSchritt(); });
   }
   function format(f) {
     knoepfe([]); du(f.name); daten.format = f.name; daten.credits = f.credits; daten.premium = !!f.premium; schritt = 'foto'; sperren(true);
-    var kosten = f.premium
-      ? 'Das gehört zum Premium-Paket, dort ist alles freigeschaltet.'
-      : 'Das kostet ' + f.credits + ' Credits, im Start-Paket also rund ' + String(Math.round(f.credits * 9)) + ' Cent.';
+    var kosten = 'Das kostet ' + f.credits + ' Credits pro Ergebnis' + (f.premium ? ' und gehört zum Premium-Paket.' : (f.ab && f.ab !== 'Start' ? ', enthalten ab dem Paket ' + f.ab + '.' : ', schon im Start-Paket enthalten.'));
     endo('Perfekt: ' + (daten.kategorie || 'Ihr Produkt') + ', Look „' + daten.look + '", als ' + f.name + '. ' + kosten)
       .then(function () { return endo('Zeigen Sie mir jetzt Ihr Produkt. Ein Handyfoto genügt.'); })
       .then(function () { sperren(false); zeigeSchritt(); });
@@ -186,7 +190,7 @@
     daten.fotoName = f.name;
     hochladen(f);
     sperren(true);
-    endo('Starkes Motiv. Genau so etwas setze ich ins Studio, in eine Anzeige oder in ein Video.')
+    endo('Starkes Motiv. Genau so etwas setze ich ins Studio, stelle es frei oder mache ein kurzes Video daraus.')
       .then(function () { sperren(false); if (!daten.email) frageMail(); else { schritt = 'senden'; zeigeSchritt(); } });
   });
   /* Upload über dieselbe Funktion wie das Kontaktformular (Vercel Blob). Klappt es nicht, bleibt der Dateiname. */
@@ -288,17 +292,17 @@
   /* Eingebaute Antworten, wenn die KI nicht erreichbar ist */
   function lokaleAntwort(t) {
     var s = t.toLowerCase();
-    if (/premium/.test(s)) return 'Premium kostet 199 € für 3.500 Credits und schaltet alles frei: Werbevideos, UGC-Videos, 3D-Modelle, Parallax-Szenen und das KI-Markengesicht. Dazu Vorrang und ein persönlicher Start mit Emre.';
-    if (/preis|kost|teuer|günstig|euro|€|paket/.test(s)) return 'Es gibt vier Pakete: Start 9 € für 100 Credits, Pro 29 € für 400, Studio 79 € für 1.200 und Premium 199 € für 3.500. Ein Produktfoto kostet 2 Credits, also rund 18 Cent.';
-    if (/credit/.test(s)) return 'Credits sind Ihr Guthaben. Jedes Ergebnis kostet eine feste Zahl: Produktfoto 2, Anzeige 4, Video ab 12. Sie sehen die Kosten immer vor dem Start.';
+    if (/premium/.test(s)) return 'Premium kostet 100 € und schaltet zusätzlich Videos mit zehn Sekunden, 3D-Modelle Ihres Produkts und Parallax-Szenen frei. Dazu Vorrang und die persönliche Abstimmung mit Emre.';
+    if (/preis|kost|teuer|günstig|euro|€|paket/.test(s)) return 'Es gibt drei Pakete: ' + paketListe() + '. Ein Produktfoto kostet 3 Credits, ein Video mit fünf Sekunden 8.';
+    if (/credit/.test(s)) return 'Credits sind Ihr Guthaben. Jedes Ergebnis kostet eine feste Zahl: Produkt in Szene 3, Freistellen + 4K 3, Werbevideo 5 s 8. Ihr Guthaben sehen Sie oben unter „Credits“, sobald die Anmeldung startet.';
     if (/abo|kündig|laufzeit|monat/.test(s)) return 'Es gibt kein Abo und keine Laufzeit. Sie kaufen Credits nur, wenn Sie welche brauchen.';
-    if (/video|reel|tiktok|clip/.test(s)) return 'Ja, aus einem Bild mache ich Clips mit fünf bis zehn Sekunden, auch UGC-Videos mit einem KI-Creator. Videos gehören zum Premium-Paket.';
+    if (/video|reel|tiktok|clip/.test(s)) return 'Ja, aus Ihrem Produktfoto mache ich einen Clip mit fünf Sekunden, ab dem Paket Pro. Zehn Sekunden gibt es im Premium-Paket.';
     if (/3d|ar\b|drehbar/.test(s)) return 'Aus einem Foto erstelle ich ein drehbares 3D-Modell Ihres Produkts, zum Beispiel für Shop und AR. Das ist Teil von Premium.';
     if (/recht|kommerz|werbung|lizenz|nutzen|verwenden/.test(s)) return 'Ja, Sie dürfen alle Ergebnisse kommerziell nutzen, im Shop, in Anzeigen und auf Social Media.';
     if (/wann|start|verfügbar|live|bald|los/.test(s)) return 'endo.ai startet in Kürze. Wenn Sie sich jetzt vormerken, bekommen Sie den Zugang als Erstes.';
     if (/daten|datenschutz|training|speicher|sicher/.test(s)) return 'Ihre Fotos werden nur für Ihre Aufträge verarbeitet und nicht zum Training verwendet. Dieser Chat speichert nichts.';
     if (/website|homepage|webseite|seite bauen/.test(s)) return 'Eine komplette Website baut Emre über ERGUN., mit Bewegung und eigenen Bildern. Das Erstgespräch ist kostenlos.';
-    if (/higgsfield|modell|kling|seedance|welche ki|wie funktioniert/.test(s)) return 'Im Hintergrund arbeiten über 50 KI-Modelle von Higgsfield für Bild, Video, Audio und 3D. Ich wähle für Ihren Wunsch das passende aus.';
+    if (/higgsfield|modell|kling|seedance|welche ki|wie funktioniert/.test(s)) return 'Im Hintergrund arbeiten Modelle von Higgsfield. Ich nutze drei Werkzeuge: Produkt in Szene, Freistellen + 4K und Werbevideo mit fünf Sekunden.';
     if (/hallo|hi\b|hey|guten|servus|moin/.test(s)) return 'Hallo! Schön, dass Sie da sind. Erzählen Sie mir, was Sie verkaufen, dann zeige ich Ihnen, was möglich ist.';
     if (/emre|kontakt|mensch|anruf|telefon/.test(s)) return 'Emre erreichen Sie per WhatsApp unter +49 1590 6344961 oder per E-Mail an ergun.eu@gmail.com.';
     return 'Gute Frage. Die beantwortet Emre gern persönlich. Am schnellsten geht es, wenn Sie mir zeigen, was Sie verkaufen: Dann bereite ich alles für Sie vor.';
@@ -306,7 +310,7 @@
 
   /* ---------- Handy: Pille unten, Verlauf fährt beim Antippen auf ---------- */
   var gestartet = false, offen = false;
-  function los() { if (!gestartet) { gestartet = true; start(); } }
+  function los() { if (!gestartet) { gestartet = true; document.documentElement.classList.add('endo-chat'); start(); } }
   function setzeOffen(an, fokus) {
     offen = an && handyMq.matches;
     box.classList.toggle('agent--offen', offen);
@@ -319,6 +323,8 @@
     passeAn();
   }
   oeffnenKnopf.addEventListener('click', function () { setzeOffen(true, true); });
+  feld.addEventListener('focus', los);
+  feld.addEventListener('pointerdown', los);
   zuKnopf.addEventListener('click', function () { setzeOffen(false, true); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && offen) setzeOffen(false, true); });
   document.addEventListener('pointerdown', function (e) { if (offen && !box.contains(e.target)) setzeOffen(false, false); });
@@ -347,8 +353,7 @@
   /* Nav „Mit endo sprechen" */
   document.querySelectorAll('[data-zu-endo]').forEach(function (a) {
     a.addEventListener('click', function (e) {
-      if (handyMq.matches) { e.preventDefault(); setTimeout(function () { setzeOffen(true, true); }, 50); }
-      else setTimeout(function () { los(); feld.focus({ preventScroll: true }); }, 700);
+      setTimeout(function () { los(); feld.focus({ preventScroll: true }); }, 700);
     });
   });
 
@@ -362,7 +367,7 @@
     io.observe(box);
   }
   setzeOffen(false, false);
-  if (!handyMq.matches && (!extern || ruhig)) beobachteSichtbar();
+  /* Ruhend steht nur die Zeile da; das Gespräch beginnt beim Antippen (siehe feld focus). */
   box.addEventListener('endo:zeigen', function () { if (!handyMq.matches) los(); });
   requestAnimationFrame(function () { box.classList.add('agent--da'); });
 })();

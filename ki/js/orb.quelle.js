@@ -102,8 +102,8 @@ function start(el) {
         float diffuse = max(dot(normal, lightDir), 0.0);
         float fresnel = 1.0 - dot(normal, vec3(0.0, 0.0, 1.0));
         fresnel = pow(fresnel, 2.0);
-        vec3 neon = vec3(1.0, 0.36, 0.06);   /* Neon-Orange, auch im Schatten hell */
-        vec3 finalColor = neon * (0.22 + diffuse * 0.78) + vec3(1.0, 0.6, 0.25) * fresnel * 0.55;
+        vec3 neon = vec3(0.80, 0.82, 0.88);   /* ruhiges Silberweiß (25.09. nachts: Orange nur noch für Premium) */
+        vec3 finalColor = neon * (0.24 + diffuse * 0.82) + vec3(1.0, 1.0, 1.0) * fresnel * 0.6;
         gl_FragColor = vec4(finalColor, 1.0);
       }`,
     wireframe: true

@@ -3,15 +3,24 @@ tags: [endo-ai, preise]
 ---
 # Credit-Pakete
 
-Preise von [[endo-ai|endo.ai]], bezahlt über [[Lemon Squeezy]]. Für die Webdesign-Pakete siehe [[Pakete & Preise]].
+Preise von [[endo-ai|endo.ai]] (Stand 25.09.2026 nachts, Emre). Für die Webdesign-Pakete siehe [[Pakete & Preise]].
+Die Zahlen stehen im Code an einer Stelle: `window.ENDO` in `ki/index.html` (Seite, Chat und Credit-Fenster lesen von dort).
 
-| Paket | Preis | Credits | pro Credit | Extra |
-|---|---|---|---|---|
-| Start | 9 € | 100 | 9 ct | alle Bild-Werkzeuge, Anzeigen, Stories |
-| Pro | 29 € | 400 | 7,3 ct | wie Start |
-| Studio | 79 € | 1.200 | 6,6 ct | wie Start |
-| Premium | 199 € | 3.500 | 5,7 ct | alles frei: Werbevideos, UGC-Videos, 3D-Modelle, Parallax-Szenen, KI-Markengesicht, Kampagnen im eigenen Stil, Vorrang, 30 Min. Start mit Emre |
+| Paket | Preis | Credits | Enthalten |
+|---|---|---|---|
+| Start | 5 € | **offen** | Produkt in Szene, Freistellen + 4K |
+| Pro | 20 € | **offen** | dazu Werbevideo 5 s |
+| Premium | 100 € | **offen** | alles, dazu der Premium-Ordner: Video 10 s, 3D-Modell, Parallax-Szene, Vorrang, Abstimmung mit Emre |
 
-**Verbrauch:** Produktfoto 2 · Anzeige mit Text 4 · Story/Reel als Bild 4 · Video 5 s 12 · Video 10 s 20 · Parallax-Szene 15.
-Auf dem Handy werden die Pakete als Paketwahl-Karte gezeigt, siehe [[endo-ai|endo.ai]]. Der [[endo Chat-Agent]] kennt diese Preise.
-Anpassen, sobald die echten Kosten der [[Higgsfield API]] bekannt sind. Ziel: mindestens das Dreifache der Kosten.
+**Credits pro Ergebnis** (= echte Higgsfield-Kosten, aufgerundet; geprüft 25.09. per Kostenvorschau):
+| Werkzeug | endo-Credits | Higgsfield-Credits | Modell |
+|---|---|---|---|
+| Produkt in Szene | 3 | 2,75 | GPT Image 2.5, 2K, high |
+| Freistellen + 4K | 3 | 1 + 2 | Background Remover + Upscale 4K |
+| Werbevideo 5 s | 8 | 7,5 | Kling 3.0 std, ohne Ton |
+| Werbevideo 10 s (Premium) | 15 | 15 | Kling 3.0 std, ohne Ton |
+
+**Offen:** Was kostet Emres Higgsfield-Plan pro Credit? Dann: Paket-Credits = Preis ÷ (3 × Kosten pro Higgsfield-Credit), abgerundet (mindestens 3-fache Marge). Bis dahin zeigt die Seite „Credits folgen“.
+Achtung: 4K-Bilder mit GPT Image 2.5 kosten 4,25 Credits je Bild (die Kostenvorschau gilt pro Bild, nicht pro Auftrag).
+
+Früher (bis 25.09.): Start 9 € / 100, Pro 29 € / 400, Studio 79 € / 1.200, Premium 199 € / 3.500.

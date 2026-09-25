@@ -8,16 +8,16 @@ Der Assistent „endo" steht auf [[endo-ai|endo.ai]] ganz oben im Vordergrund. E
 ## Ablauf im Chat
 1. endo fragt, was verkauft wird (Mode, Kosmetik, Elektronik, Essen und Getränke, Möbel und Deko, Anderes) und zeigt das Tassen-Beispiel.
 2. Look wählen oder selbst beschreiben.
-3. Format wählen: Shopfoto 2 Credits, Instagram-Anzeige 4, Story oder Reel 4, Werbevideo und 3D-Modell (Premium).
+3. Werkzeug wählen: Produkt in Szene 3 Credits, Freistellen + 4K 3, Werbevideo 5 s 8, Werbevideo 10 s 15 (Premium).
 4. Foto hochladen (landet über den [[Datei-Upload (Vercel Blob)]] als Link).
 5. E-Mail angeben, dann per WhatsApp oder E-Mail an Emre schicken. Die Nachricht enthält Kategorie, Look, Format, Foto-Link und E-Mail.
 6. Freie Fragen beantwortet endo jederzeit.
 
-## Aussehen (Stand 24.09. abends)
-- **Desktop:** schlankes Glas-Panel unten rechts im Hero (380 × 420 px, Rand 1 px, Hintergrund 45 % deckend, Blur 16 px). Überschrift „Zeigen Sie mir Ihr Produkt." links unten, die Kugel bleibt in der Mitte frei sichtbar.
-- **Handy:** nur eine Pille „Fragen Sie endo …" unten. Antippen lässt den Verlauf weich auffahren (höchstens 55 % der Bildschirmhöhe), mit Schließen-Knopf, Escape oder Tippen daneben. Die Tastatur verdeckt das Feld nicht. Die Pille verschwindet, wenn man vom Hero wegscrollt.
-- Nachrichten 14 px, kompakte Blasen, endo „tippt" mit drei Punkten, neue Nachrichten gleiten in 240 ms ein. Vorschläge liegen in einer Zeile zum Wischen.
-- Bei „Bewegung reduzieren" im System nur sanftes Einblenden, keine Bewegung.
+## Aussehen (Stand 25.09. nachts)
+- Kein Kasten mehr: ruhend nur eine feine Zeile mit Linie, mittig unter der Überschrift. Das Gespräch beginnt beim Antippen.
+- Nachrichten schweben direkt über dem Hintergrund (weicher Schatten statt Blasen), höchstens drei sind zu sehen, ältere verblassen nach oben. Die Überschrift weicht aus, die Kugel wird dunkler.
+- Handy: die Zeile steht unten über der Tastatur, sonst gleich. „Bewegung reduzieren“: nur Einblenden.
+- Werkzeuge im Chat kommen aus `window.ENDO` (3 Werkzeuge + Video 10 s Premium), mit Credits.
 
 ## Technik
 - Seite: `ki/js/agent.js` (Chat-Ablauf), Funktion: `api/agent.js` auf [[Vercel]].

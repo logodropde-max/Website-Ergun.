@@ -8,18 +8,15 @@ Emres KI-Studio als zweites Einkommen. Seite: https://website-ergun.vercel.app/k
 - **Idee und Plan:** [[KI-Studio mit Higgsfield]]
 - **Im Vordergrund:** der Assistent [[endo Chat-Agent|endo]], der antwortet und zum Produktfoto einlädt.
 - **Technik dahinter:** [[Higgsfield API]] erzeugt Bilder und Videos, [[Supabase]] für Login und Credits, [[Lemon Squeezy]] für die Bezahlung, [[Vercel]] für Hosting und Funktionen.
-- **Preise:** [[Credit-Pakete]] (Start, Pro, Studio, Premium)
-- **Richtung:** visionär, starkes Marketing, E-Commerce, futuristisch. Wenig Text am Anfang, viele Angebote.
+- **Preise:** [[Credit-Pakete]] (Start 5 €, Pro 20 €, Premium 100 €)
+- **Richtung (seit 25.09. nachts):** ruhig, Weiß/Grau, Orange nur für Premium. Nur was lieferbar ist: Fotos im Fokus, Video als Zusatz, drei Werkzeuge.
 
-## Aufbau der Seite
-1. **Hero:** orange Drahtgitter-Kugel (three.js) nach Emres Vorlage „Anomalous Matter", Überschrift „Zeigen Sie mir Ihr Produkt." und der Chat mit endo.
-2. **Vorher/nachher:** nur noch die Tasse. Die anderen Beispielbilder sind entfernt (Wunsch von Emre).
-3. **Möglichkeiten:** 14 Kacheln mit animierten Symbolen in drei Gruppen
-   - Bild: Produktfotos, Werbeanzeigen, Lifestyle-Szenen, Freisteller, Shop-Banner, 4K, Kampagnen im eigenen Stil
-   - Video und Audio: Werbevideos, Stories und Reels, UGC-Videos, Stimme
-   - Zukunft: 3D-Modell (neu), Parallax-Szenen, KI-Markengesicht
-4. Leitsatz Wort für Wort: „Ein Foto. Jedes Format. Jede Welt, die Sie sich vorstellen können."
-5. So funktioniert es (3 Schritte), Pakete, Verbrauch, Fragen, Warteliste.
+## Aufbau der Seite (Stand 25.09. nachts)
+1. **Hero:** silberweiße Drahtgitter-Kugel, „Zeigen Sie mir Ihr Produkt.“, darunter nur die Zeile „Fragen Sie endo …“ (schwebender Chat, siehe [[endo Chat-Agent]]).
+2. **Vorher/nachher:** die Tasse.
+3. **Funktionen:** drei Werkzeuge zum Antippen (Produkt in Szene, Freistellen + 4K, Werbevideo 5 s); daneben sieht man sofort Credits pro Ergebnis und in welchem Paket es enthalten ist. Darunter der orange **Premium-Ordner** zum Aufklappen.
+4. Leitsatz „Ein Handyfoto genügt. Den Rest macht endo.“, So geht's, Fakten, Pakete (Start ruhig, Pro weiß, Premium orange), Verbrauch, Fragen, Warteliste.
+5. Oben: Knopf **Credits** (Credit-Fenster, noch ohne Guthaben) und Umschalter **ERGUN. | endo.ai**.
 
 ## Handy
 Auf dem Handy ersetzt eine **Paketwahl-Karte** die vier Preiskarten (nach Emres Vorlage „SubscriptionScreen", ohne React nachgebaut): Tassenbild oben, Blatt fährt hoch, Kugel-Grafik, Vorteile je Paket, Auswahl Start bis Premium, Knopf „… vormerken" füllt die Warteliste vor.
