@@ -79,7 +79,7 @@ img { display: block; max-width: 100%; height: auto; }
 /* Jede Ebene liegt in drei Lichtstimmungen übereinander (Tag, Gold, Nacht); das Skript setzt nur
    --gold, --nacht usw. und verschiebt die Ebenen. Nur transform/opacity, keine Filter. */
 .szene { position: relative; z-index: 1; --gold: 0; --blau: 0; --nacht: 0; --himmel-nacht: 0; --sterne: 0; --tief: 0; --mond: 0; }
-.szene__buehne { position: relative; height: 100svh; min-height: 560px; overflow: hidden; background: #BFD6EA; isolation: isolate; }
+.szene__buehne { position: relative; height: 100svh; min-height: 560px; overflow: hidden; background: #070B16; isolation: isolate; }
 /* weicher Übergang ohne Maske (Masken über bewegten Ebenen flackern in Safari): unten ein Verlauf genau
    in der Farbe, mit der die Studio-Sektion beginnt */
 .szene__ebene { position: absolute; inset: 0; pointer-events: none; will-change: transform; }
@@ -104,11 +104,13 @@ img { display: block; max-width: 100%; height: auto; }
 .sonne, .mond { will-change: transform, opacity; }
 
 /* Himmel: Farbverlauf hängt an der Sonnenhöhe – Tag, Goldene Stunde, blaue Stunde, Nacht */
-.himmel { position: absolute; inset: 0; }
-.himmel--tag { background: linear-gradient(180deg, #2D69B0 0%, #4F89C9 28%, #8DB7DD 50%, #C6DDEE 62%, #E2ECF2 72%); }
-.himmel--gold { opacity: var(--gold); background: linear-gradient(180deg, #27365D 0%, #5A5680 22%, #B8767A 42%, #F09A66 54%, #FFC37A 62%, #FFE3AE 70%); }
-.himmel--blau { opacity: var(--blau); background: linear-gradient(180deg, #0C1633 0%, #1D3062 30%, #435A93 50%, #8C87AE 62%, #C79A97 70%); }
-.himmel--nacht { opacity: var(--himmel-nacht); background: linear-gradient(180deg, #02040A 0%, #060C1A 30%, #0D1830 52%, #182A48 64%, #1E3150 72%); }
+/* Himmel reicht 60 % über den oberen Rand hinaus (gleiche Farbe wie ganz oben) – beim Scrollen auf dem iPhone
+   entsteht oben hinter der Navigation sonst eine Lücke, durch die die Grundfarbe schien (Emre, 25.09.) */
+.himmel { position: absolute; inset: -60% 0 0 0; }
+.himmel--tag { background: linear-gradient(180deg, #2D69B0 0%, #2D69B0 37.5%, #4F89C9 55%, #8DB7DD 68.75%, #C6DDEE 76.25%, #E2ECF2 82.5%); }
+.himmel--gold { opacity: var(--gold); background: linear-gradient(180deg, #27365D 0%, #27365D 37.5%, #5A5680 51.25%, #B8767A 63.75%, #F09A66 71.25%, #FFC37A 76.25%, #FFE3AE 81.25%); }
+.himmel--blau { opacity: var(--blau); background: linear-gradient(180deg, #0C1633 0%, #0C1633 37.5%, #1D3062 56.25%, #435A93 68.75%, #8C87AE 76.25%, #C79A97 81.25%); }
+.himmel--nacht { opacity: var(--himmel-nacht); background: linear-gradient(180deg, #02040A 0%, #02040A 37.5%, #060C1A 56.25%, #0D1830 70%, #182A48 77.5%, #1E3150 82.5%); }
 
 /* Sonne: weicher Kern, Hof und Glut – kein harter Rand. Wird tiefer, wärmer und größer im Hof. */
 .sonne, .mond { position: absolute; left: 0; top: 0; width: 0; height: 0; will-change: transform; }
