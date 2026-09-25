@@ -118,6 +118,9 @@
   /* Tiefe: hinten viel Weg (fast stehend), vorne wenig – so entsteht beim Scrollen die Parallaxe */
   /* bis hierhin (Anteil des Startbilds) ist die Sonne hinter dem Sattel – ca. 10 % mehr Strecke als vorher */
   var SONNE_BIS = 0.31;
+  /* ganzer Tag → Nacht auf 60 % der Strecke (Emre, 25.09. abends): volle Nacht und jaulender Hund,
+     solange das Titelbild noch gut zu sehen ist. Alle Werte unten gelten für die ungestauchte Strecke. */
+  var ZEIT = 0.6;
   var TIEFE = { himmel: 0.84, weit: 0.8, fern: 0.74, mitte: 0.62, titel: 0.52, huegel: 0.48, wald: 0.33, wiese: 0.17, gras: 0 };
 
   var m = {};           /* Maße */
@@ -694,9 +697,9 @@
     /* Sonne startet mittig oben, sinkt senkrecht und verschwindet hinter dem Sattel in der Mitte */
     m.sonneR = Math.max(26, Math.min(44, m.W * 0.026));
     m.sonneStart = m.H * (m.hoch ? 0.13 : 0.1);
-    m.sonneEnde = ky('fern', m.W / 2) + (TIEFE.himmel - TIEFE.fern * m.f) * SONNE_BIS * 0.9 * m.H + m.sonneR * 1.4;
+    m.sonneEnde = ky('fern', m.W / 2) + (TIEFE.himmel - TIEFE.fern * m.f) * SONNE_BIS * ZEIT * 0.9 * m.H + m.sonneR * 1.4;
     m.mondX = m.W * (m.hoch ? 0.22 : 0.24);
-    m.mondStart = ky('fern', m.mondX) + (TIEFE.himmel - TIEFE.fern * m.f) * 0.3 * m.H + m.sonneR;
+    m.mondStart = ky('fern', m.mondX) + (TIEFE.himmel - TIEFE.fern * m.f) * 0.3 * ZEIT * m.H + m.sonneR;
     m.mondEnde = m.H * (m.hoch ? 0.12 : 0.11);
     held.style.setProperty('--sonne-r', m.sonneR + 'px');
     held.style.setProperty('--titel-oben', (m.H * (m.hoch ? 0.24 : 0.2)) + 'px');
@@ -740,6 +743,7 @@
     if (laeuft) requestAnimationFrame(nachfuehren);
   }
   function licht(p) {
+    p = p / ZEIT;
     var gold = sanft(0.05, 0.19, p), nacht = sanft(0.22, 0.42, p);
     held.style.setProperty('--gold', (nacht > 0.995 ? 0 : gold).toFixed(3));
     held.style.setProperty('--nacht', nacht.toFixed(3));
