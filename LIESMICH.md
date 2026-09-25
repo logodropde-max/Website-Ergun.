@@ -15,7 +15,7 @@
 
 
 ## Figuren: Licht zur Laufzeit (26.09.2026, 05:30, Claude Code)
-- `figuren.py` schreibt jetzt `bilder/hero/figuren/<name>.webp` (Bild 0, neutral) und `<name>-folge.webp` (Raster, neutral, `figuren_stil.neutral`: nur Glätten + Korn); die alten `-tag/-gold/-nacht` sind gelöscht. `mitte`/`breite` stehen direkt im json. Weiße Bewegungsränder nur noch außerhalb eines 9-px-Innenrands und bei mn > 175 / Sättigung < 0,12.
+- `figuren.py` schreibt jetzt `bilder/hero/figuren/<name>.webp` (Bild 0, neutral) und `<name>-folge.webp` (Raster, neutral, `figuren_stil.neutral`: nur Glätten + Korn); die alten `-tag/-gold/-nacht` sind gelöscht. `mitte`/`breite` stehen direkt im json. Weiße Bewegungsränder (außerhalb 9-px-Innenrand, mn > 175, Sättigung < 0,12) und das 3-px-Kantenband werden per `cv2.inpaint` mit der Haut gefüllt statt aus der Maske entfernt. `szene.js?v=24`, Figuren `?v=5`.
 - `js/szene.js` (`?v=23`, Figuren `?v=4`): `FIGLICHT` (tag/gold/blau/nacht: `mul` multiplikativ, `lift` additiv, `rim` + `ra`), `figurLicht()` mischt sequentiell mit `lichtGold`, `lichtBlau` (= sanft 0,18–0,3), `lichtNacht` aus `licht()`. `figurZeichnen()`: Hilfsleinwände `lwA/lwB/lwC` – Bild (Zwischenbilder additiv) → Umriss merken → multiply + lighter + destination-in → Saum = Umriss minus versetzter Umriss (source-in Saumfarbe) mit Alpha `ra`. Cache-Schlüssel enthält die drei Lichtwerte (2 Stellen). `stand` 0,148 H (hoch 0,124).
 
 ## Teil 6: echtes Gesicht, Winken 2, Himmel (26.09.2026, 04:40, Claude Code)

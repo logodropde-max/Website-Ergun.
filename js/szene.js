@@ -522,12 +522,12 @@
      je Figur ein Tag- und ein Abendbild und für die Nacht die Bildfolge – der Hund hebt den Kopf und jault, Emre winkt
      („Tschüss“). Beides startet gemeinsam, sobald es Nacht ist und man weiterscrollt, und läuft dann in eigener Zeit ab
      (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
-  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 298, h: 720, anzahl: 30, spalten: 6, fuss: 0.9957, oben: 0.0311, mitte: 0.5810, breite: 0.7673 } };
+  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 297, h: 720, anzahl: 30, spalten: 6, fuss: 0.9958, oben: 0.0364, mitte: 0.5801, breite: 0.7662 } };
   var fig = { phase: 0, ziel: 0, laeuft: false, t: 0 }, FIG_DAUER = 3.6, lichtGold = 0, lichtBlau = 0, lichtNacht = 0;
   function figurLaden(name, folge) {
     var f = FIGUREN[name], b = new Image(); b.decoding = 'async';
     b.onload = function () { f[folge ? 'folge' : 'bild'] = b; f.zuletzt = ''; figurenZeichnen(); };
-    b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=4';
+    b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=5';
   }
   Object.keys(FIGUREN).forEach(function (k) { FIGUREN[k].zuletzt = ''; figurLaden(k, false); });
   /* die Bildfolgen (groß) erst nach dem Laden der Seite */
