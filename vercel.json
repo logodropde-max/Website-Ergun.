@@ -1,5 +1,20 @@
 {
   "crons": [
-    { "path": "/api/aufraeumen", "schedule": "0 3 * * *" }
+    {
+      "path": "/api/aufraeumen",
+      "schedule": "0 3 * * *"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/studio",
+      "destination": "/ki/",
+      "permanent": false
+    },
+    {
+      "source": "/studio/",
+      "destination": "/ki/",
+      "permanent": false
+    }
   ]
 }

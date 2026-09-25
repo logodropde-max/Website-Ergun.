@@ -5,7 +5,7 @@ tags: [endo-ai, preise]
 
 Preise von [[endo-ai|endo.ai]], festgelegt von Emre am 25.09.2026. Für die Webdesign-Pakete siehe [[Pakete & Preise]].
 Die Zahlen stehen im Code an einer Stelle: `window.ENDO` in `ki/index.html` (Seite, Chat und Credit-Fenster lesen von dort).
-Login und Bezahlung sind noch nicht fertig: alle Knöpfe heißen „… vormerken“.
+Login und Bezahlung sind noch nicht fertig: alle Knöpfe heißen „… vormerken“. **Kauf-Links von Lemon Squeezy** kommen in `ki/js/endo-daten.js` ins Feld `kaufen` des jeweiligen Pakets – dann heißen die Knöpfe automatisch „… kaufen“ (seit 25.09., Bereich heißt jetzt ERGUN. Studio).
 
 ## Pakete
 | Paket | Preis | Credits | Enthalten |

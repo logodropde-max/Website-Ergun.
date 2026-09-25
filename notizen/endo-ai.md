@@ -1,7 +1,9 @@
 ---
 tags: [endo-ai]
 ---
-# endo.ai
+# ERGUN. Studio (früher endo.ai)
+
+> **Seit 25.09.2026 heißt der Bereich „ERGUN. Studio“** (Emre). Der Chat-Assistent heißt weiter endo. Seite `/ki/` (Kurzadresse `/studio`), neu in Chrom-Silber mit Funktionswahl und Paketen – Details: `_code/ee-design-website/LIESMICH.md`.
 
 Emres KI-Studio als zweites Einkommen. Seite: https://website-ergun.vercel.app/ki/ (Datei `ki/index.html`). Teil von [[ERGUN Website (Übersicht)]].
 

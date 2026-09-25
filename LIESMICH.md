@@ -6,6 +6,13 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Teil 2 · Schritte 3–6: ERGUN. Studio in Chrom-Silber, Funktionswahl, Pakete (25.09.2026, 17:15, Claude Code)
+- **Umbenannt (Emre): endo.ai → „ERGUN. Studio“.** Der Chat-Assistent heißt weiter **endo**. Adresse bleibt `/ki/`, dazu Weiterleitung `/studio` → `/ki/` (`vercel.json`, `redirects`).
+- `ki/index.html` neu (alte Fassung: `_code/archiv/ki-index-vor-chrom-2026-09-25.html`): dunkel, Chrom-Verläufe (`--chrom`, `--chrom-kante`), Serifen-Überschriften, Orange nur als Premium-Punkt. Aufbau: Hero mit Kugel, 1 Satz + Chat → Vorher/nachher → **Funktionen wählen** (`#auswahl`) → **Pakete** (`#pakete`) → Vormerken → Fragen → Fuß. Credit-Fenster bleibt.
+- Funktionswahl: Kacheln aus `window.ENDO` (antippen = an/aus, − / + = Menge), Bilanzleiste (sticky) rechnet Credits und das kleinste passende Paket (Premium-Funktion → Premium), die Paketkarte wird markiert und die Auswahl geht in die Vormerk-Nachricht.
+- `ki/js/endo-daten.js`: Shop-Bild ist jetzt eine eigene Funktion (`shop`, 5 Credits), Abstimmung mit Emre gehört zu Premium (`kann`), **neues Feld `kaufen` je Paket** = Lemon-Squeezy-Checkout-Link. Leer → Knopf „… vormerken“; gesetzt → „… kaufen“ und Hinweis „Sicherer Kauf über Lemon Squeezy“.
+- Startseite: Navigation „Studio“, Titelzeile „Digitalstudio für Webdesign, Produktfotos & Videos“, Studio-Sektion mit Chrom-Schrift, Link „Funktionen und Pakete“ → `ki/#auswahl`. Chat-Texte (`ki/js/agent.js`), Wissen des Assistenten (`api/agent.js`) und Datenschutz Abschnitt 7 auf „ERGUN. Studio“ umgestellt.
+
 ## Teil 2 · Schritt 2: weicher Übergang Titelbild → endo (25.09.2026, 16:30, Claude Code)
 - `.szene__buehne` hat eine Maske (ab 70 % Höhe weich auslaufend) – keine harte Unterkante mehr, egal wie weit gescrollt ist. `.szene` liegt über der endo-Sektion (z-index 1).
 - `.endo` schiebt sich 22svh unter die Szene (`margin-top: -22svh`, Hintergrund `#070B16` → Schwarz), `scroll-margin-top: -16svh` für den Link „endo.ai“.
