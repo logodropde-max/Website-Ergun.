@@ -6,6 +6,9 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Nebel über der Unterkante des Titelbilds (25.09.2026, 22:40, Claude Code)
+- Emre (iPhone-Screenshot): flache dunkle Fläche mit Kante zwischen Titelbild und Nebel. Lösung: `.endo` liegt jetzt mit `z-index: 2` über dem Titelbild, oben durchsichtig (Hintergrund erst ab 34svh), `pointer-events: none` außer `.endo__innen`/`.endo__pakete`. Der Nebel beginnt 12svh unter der Oberkante der Sektion und zieht damit schon über die versinkende Wiese (Lagen 1–3 höher gesetzt).
+
 ## Abstieg zur Erde + Abstand zu endo Studio (25.09.2026, 22:20, Claude Code)
 - Emre: sauberer Übergang, endo Studio nicht direkt am Titelbild, passende Animation „zur Erde runter“.
 - Neu `.szene__erde` (Verlauf in #070B16, steigt per Scroll-Animation `erde-steigt` von unten auf, exit 30–92 %). Gras (`gras-nah`, bis scale 1.6), Wiese mit Hund (`wiese-nah`, 1.28) und Wald (`wald-nah`, 1.1) kommen näher, der Titel blendet aus (`titel-aus`, exit 32–62 %). Nur bei CSS-Scroll-Animationen und ohne „Bewegung reduzieren“.
