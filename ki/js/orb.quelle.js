@@ -20,7 +20,9 @@ function start(el) {
 
   const scene = new Scene();
   const camera = new PerspectiveCamera(75, el.clientWidth / el.clientHeight, 0.1, 1000);
-  camera.position.z = klein ? 3.6 : 3;
+  /* Kugel (Radius 1,2 + 0,2 Ausschlag) füllt höchstens 46 % der kleineren Seite, damit sie immer ganz zu sehen ist */
+  const abstand = () => Math.max(3.9, 1.45 / (0.46 * Math.tan(37.5 * Math.PI / 180) * Math.min(1, el.clientWidth / el.clientHeight)));
+  camera.position.z = abstand();
 
   const renderer = new WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
@@ -100,7 +102,8 @@ function start(el) {
         float diffuse = max(dot(normal, lightDir), 0.0);
         float fresnel = 1.0 - dot(normal, vec3(0.0, 0.0, 1.0));
         fresnel = pow(fresnel, 2.0);
-        vec3 finalColor = color * diffuse + color * fresnel * 0.5;
+        vec3 neon = vec3(1.0, 0.36, 0.06);   /* Neon-Orange, auch im Schatten hell */
+        vec3 finalColor = neon * (0.22 + diffuse * 0.78) + vec3(1.0, 0.6, 0.25) * fresnel * 0.55;
         gl_FragColor = vec4(finalColor, 1.0);
       }`,
     wireframe: true
@@ -147,6 +150,7 @@ function start(el) {
     clearTimeout(rt);
     rt = setTimeout(() => {
       camera.aspect = el.clientWidth / el.clientHeight;
+      camera.position.z = abstand();
       camera.updateProjectionMatrix();
       renderer.setSize(el.clientWidth, el.clientHeight);
       if (ruhig) renderer.render(scene, camera);

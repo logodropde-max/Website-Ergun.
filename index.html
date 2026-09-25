@@ -466,15 +466,21 @@ body { overflow-x: clip; }
   @supports (animation-timeline: view()) {
     .parallax__visuals { view-timeline: --held block; }
     [data-parallax-layer] { animation: ebene linear both; animation-timeline: --held; animation-range: exit-crossing 0% exit-crossing 100%; }
-    [data-parallax-layer="1"] { --weg: 70%; }
-    [data-parallax-layer="2"] { --weg: 55%; }
-    [data-parallax-layer="3"] { --weg: 52%; }
-    [data-parallax-layer="4"], [data-parallax-layer="5"] { --weg: 12%; }
+    /* Szene 2 (25.09.): hinten viel, vorne wenig Weg – je größer der Unterschied, desto mehr Tiefe */
+    [data-parallax-layer="himmel"] { --weg: 78%; }
+    [data-parallax-layer="fern"] { --weg: 66%; }
+    [data-parallax-layer="mitte"] { --weg: 52%; }
+    [data-parallax-layer="titel"] { --weg: 58svh; }   /* Titel ist niedrig: Weg in Fensterhöhe statt in % */
+    [data-parallax-layer="wald"] { --weg: 34%; }
+    [data-parallax-layer="wiese"] { --weg: 14%; }
+    [data-parallax-layer="gras"] { --weg: 0%; }
     @media (max-width: 700px) {
-      [data-parallax-layer="1"] { --weg: 42%; }
-      [data-parallax-layer="2"] { --weg: 33%; }
-      [data-parallax-layer="3"] { --weg: 31%; }
-      [data-parallax-layer="4"], [data-parallax-layer="5"] { --weg: 7%; }
+      [data-parallax-layer="himmel"] { --weg: 64%; }
+      [data-parallax-layer="fern"] { --weg: 54%; }
+      [data-parallax-layer="mitte"] { --weg: 42%; }
+      [data-parallax-layer="titel"] { --weg: 48svh; }
+      [data-parallax-layer="wald"] { --weg: 28%; }
+      [data-parallax-layer="wiese"] { --weg: 10%; }
     }
   }
 }
@@ -666,7 +672,7 @@ body { overflow-x: clip; }
 /* ---------- Hero als ruhige Fläche im endo-Stil (25.09.) ---------- */
 /* Tiefschwarzer Grund wie endo.ai, die Szene liegt als abgerundete Fläche mit Rand darauf.
    Die Ebenen behalten ihre alte Höhe (125svh), damit Sonne, Name und Emre wie abgestimmt zueinander stehen. */
-:root { --bg: #000000; --rahmen: clamp(24px, 2.4vw, 40px); --pille-zone: 92px; }
+:root { --bg: #000000; --rahmen: 0px; --pille-zone: 0px; }
 .parallax__header { display: flex; flex-direction: column; align-items: center; padding: var(--rahmen) var(--rahmen) 0; }
 .parallax__visuals {
   align-self: stretch; height: calc(100svh - var(--rahmen) - var(--pille-zone)); min-height: 520px;
@@ -689,7 +695,7 @@ body { overflow-x: clip; }
 .hero-endo:focus-visible { outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) { .hero-endo:hover { background: #262622; } }
 @media (max-width: 700px) {
-  :root { --rahmen: 12px; --pille-zone: 88px; }
+  :root { --rahmen: 0px; --pille-zone: 0px; }
   .parallax__visuals { border-radius: 20px; min-height: 480px; }
   .parallax__layers { height: 110svh; }
   .nav { padding: calc(var(--rahmen) + 8px) calc(var(--rahmen) + 16px) 8px; }
@@ -700,6 +706,50 @@ body { overflow-x: clip; }
 :root { --verschub: calc(25svh + var(--rahmen) + var(--pille-zone)); }
 .parallax__layer-img[data-parallax-layer="2"], .parallax__layer-img[data-parallax-layer="4"], .parallax__layer-img[data-parallax-layer="5"] { top: calc(-1 * var(--verschub)); }
 @media (max-width: 700px) { :root { --verschub: calc(10svh + var(--rahmen) + var(--pille-zone)); } }
+/* ---------- Szene 2: Bergwiese mit Schäferhund, randlos (25.09. nachts) ---------- */
+/* Sieben Ebenen aus einer Higgsfield-Szene (bilder/hero/4k/szene2/ebenen.py). Alle Bilder haben dieselbe Leinwand
+   (3840 × 3024, oben 40 % Himmel-Überstand) und stehen unten bündig; jede Ebene ist nach unten komplett gefüllt.
+   Die Sonne steht auf der Leinwand bei 43,4 % Höhe; --sonne-y rechnet ihre Lage im Fenster aus, dort steht der Name. */
+:root { --rahmen: 0px; --pille-zone: 0px; --verschub: 0px; }
+.parallax__header { padding: 0; }
+.parallax__visuals { height: 100svh; min-height: 560px; border-radius: 0; box-shadow: none; isolation: isolate;
+  --bild-y: 100%; --sonne-y: min(calc(100svh - 46.34vw), 43.4svh); }
+/* breite Fenster: unten mehr abschneiden, damit die Sonne bei knapp 30 % Höhe bleibt */
+@media (min-aspect-ratio: 17/10) { .parallax__visuals { --bild-y: 73%; --sonne-y: calc(35.56vw - 0.73 * (81.9vw - 100svh)); } }
+@media (min-aspect-ratio: 2/1) { .parallax__visuals { --bild-y: 61%; --sonne-y: calc(35.56vw - 0.61 * (81.9vw - 100svh)); } }
+.parallax__layers { inset: 0; height: auto; min-height: 0; }
+.parallax__layer-img, .parallax__layer-img[data-parallax-layer] { top: auto; bottom: 0; left: -2%; width: 104%; max-width: none; height: 100%; object-fit: cover; object-position: 50% var(--bild-y); filter: none; transform-origin: 50% 100%; }
+.parallax__layer-title { top: var(--sonne-y); height: auto; padding: 0; transform: translateY(-55%); }
+.parallax__title { font-size: min(15vw, 13.5rem); }
+.parallax__title { text-shadow: 0 0.02em 0.25em rgba(40, 20, 0, 0.35); }
+.parallax__rolle, .parallax__claim { color: #FFF8EE; text-shadow: 0 1px 2px rgba(50, 26, 8, 0.45), 0 0 22px rgba(50, 26, 8, 0.4); }
+.parallax__rolle { font-weight: 500; }
+/* oben ein Hauch Dunkel für die Leiste, unten ein langer Übergang ins Schwarz der Seite: keine Kante */
+.parallax__visuals::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 32%; z-index: 2; pointer-events: none; background: linear-gradient(rgba(8, 14, 30, 0.42), rgba(8, 14, 30, 0.12) 55%, rgba(8, 14, 30, 0)); }
+.parallax__fade { display: block; z-index: 2; bottom: -1px; height: 26%; background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.72) 30%, rgba(0, 0, 0, 0.22) 68%, rgba(0, 0, 0, 0) 100%); pointer-events: none; }
+@media (orientation: portrait) {
+  .parallax__visuals { --bild-y: 100%; --sonne-y: min(calc(100svh - 92.66vw), 43.4svh); }
+}
+@media (max-width: 700px) {
+  .parallax__visuals { min-height: 520px; }
+  .parallax__title { font-size: 22vw; }
+  .parallax__layer-title { transform: translateY(-58%); }
+}
+@media (prefers-reduced-motion: reduce) { .parallax__layer-img { will-change: auto; } }
+/* ---------- endo-Pille oben rechts mit Wisch-Hinweis (25.09. nachts) ---------- */
+/* Solange der Einstieg im Bild ist, zieht die Pille alle paar Sekunden kurz nach links: hier kann man wischen.
+   Nach dem ersten Wechsel zu endo ist der Hinweis weg. Nur transform/opacity. */
+.nav__pille { gap: 8px; padding: 6px 14px 6px 12px; font-weight: 500; letter-spacing: 0.02em; }
+.nav__pille-punkt { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; }
+.nav__pille-pfeil { flex: none; margin-right: -2px; opacity: 0.55; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.endo-bekannt) .nav:not(.nav--unten) .nav__pille { animation: endo-zupfen 5.2s cubic-bezier(0.32, 0.72, 0, 1) 3.2s infinite; }
+  html:not(.endo-bekannt) .nav:not(.nav--unten) .nav__pille-pfeil { animation: endo-pfeil 5.2s cubic-bezier(0.32, 0.72, 0, 1) 3.2s infinite; }
+}
+@keyframes endo-zupfen { 0%, 72%, 100% { transform: translate3d(0, 0, 0); } 80% { transform: translate3d(-10px, 0, 0); } 90% { transform: translate3d(0, 0, 0); } }
+@keyframes endo-pfeil { 0%, 72%, 100% { transform: translate3d(0, 0, 0); opacity: 0.55; } 80% { transform: translate3d(-3px, 0, 0); opacity: 1; } 90% { transform: translate3d(0, 0, 0); opacity: 0.55; } }
+.endo-bekannt .nav__pille-pfeil { display: none; }
+@media (max-width: 700px) { .nav__pille { min-height: 32px; padding: 5px 12px 5px 10px; font-size: 13px; } }
 /* ---------- Wischen zwischen ERGUN. und endo.ai (25.09.) ---------- */
 /* endo liegt als eigene Seite (iframe) rechts neben ERGUN. und gleitet herein. Nur transform/opacity. */
 .endo-schatten { position: fixed; inset: 0; z-index: 90; background: #000; opacity: 0; pointer-events: none; visibility: hidden; }
@@ -736,6 +786,7 @@ body { overflow-x: clip; }
   <a class="nav__mark" href="#top" aria-label="ERGUN – nach oben">ERGUN<span class="dot">.</span></a>
   <nav class="nav__links" aria-label="Seitennavigation">
     <a class="nav__link" href="#kontakt">Projekt anfragen</a>
+    <a class="nav__pille" href="ki/" data-endo-pille><svg class="nav__pille-pfeil" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="nav__pille-punkt" aria-hidden="true"></span>endo.ai</a>
   </nav>
 </header>
 
@@ -745,20 +796,21 @@ body { overflow-x: clip; }
   <section class="parallax__header" aria-label="Einstieg">
     <div class="parallax__visuals">
       <div class="parallax__layers" data-parallax-layers>
-        <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-1-sky-hoch.webp"><img src="bilder/hero/layer-1-sky-1920.webp" srcset="bilder/hero/layer-1-sky-1920.webp 1920w, bilder/hero/layer-1-sky-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="1" class="parallax__layer-img parallax__layer-img--sky" alt="" fetchpriority="high"></picture>
-        <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-2-ridge-hoch.webp"><img src="bilder/hero/layer-2-ridge-1920.webp" srcset="bilder/hero/layer-2-ridge-1920.webp 1920w, bilder/hero/layer-2-ridge-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="2" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
-        <div data-parallax-layer="3" class="parallax__layer-title">
+        <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-himmel-hoch.webp"><img src="bilder/hero/szene-himmel-1920.webp" srcset="bilder/hero/szene-himmel-1920.webp 1920w, bilder/hero/szene-himmel-2560.webp 2560w" sizes="104vw" width="2560" height="2016" data-parallax-layer="himmel" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
+        <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-fern-hoch.webp"><img src="bilder/hero/szene-fern-1920.webp" srcset="bilder/hero/szene-fern-1920.webp 1920w, bilder/hero/szene-fern-2560.webp 2560w" sizes="104vw" width="2560" height="2016" data-parallax-layer="fern" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
+        <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-mitte-hoch.webp"><img src="bilder/hero/szene-mitte-1920.webp" srcset="bilder/hero/szene-mitte-1920.webp 1920w, bilder/hero/szene-mitte-2560.webp 2560w" sizes="104vw" width="2560" height="2016" data-parallax-layer="mitte" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
+        <div data-parallax-layer="titel" class="parallax__layer-title">
           <h1 class="parallax__title">ERGUN<span class="dot">.</span></h1>
           <p class="parallax__rolle">Webdesigner</p>
           <p class="parallax__claim">Faire Preise für gute Arbeit.</p>
         </div>
-        <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-4-foreground-hoch.webp"><img src="bilder/hero/layer-4-foreground-1920.webp" srcset="bilder/hero/layer-4-foreground-1920.webp 1920w, bilder/hero/layer-4-foreground-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="4" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
-        <picture><source media="(orientation: portrait)" srcset="bilder/hero/layer-5-person-hoch.webp"><img src="bilder/hero/layer-5-person-1920.webp" srcset="bilder/hero/layer-5-person-1920.webp 1920w, bilder/hero/layer-5-person-2560.webp 2560w" sizes="100vw" width="2560" height="1452" data-parallax-layer="5" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
+        <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-wald-hoch.webp"><img src="bilder/hero/szene-wald-1920.webp" srcset="bilder/hero/szene-wald-1920.webp 1920w, bilder/hero/szene-wald-2560.webp 2560w" sizes="104vw" width="2560" height="2016" data-parallax-layer="wald" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
+        <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-wiese-hoch.webp"><img src="bilder/hero/szene-wiese-1920.webp" srcset="bilder/hero/szene-wiese-1920.webp 1920w, bilder/hero/szene-wiese-2560.webp 2560w" sizes="104vw" width="2560" height="2016" data-parallax-layer="wiese" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
+        <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-gras-hoch.webp"><img src="bilder/hero/szene-gras-1920.webp" srcset="bilder/hero/szene-gras-1920.webp 1920w, bilder/hero/szene-gras-2560.webp 2560w" sizes="104vw" width="2560" height="2016" data-parallax-layer="gras" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
       </div>
       <div class="parallax__fade"></div>
       <p class="parallax__hint" aria-hidden="true">Scrollen</p>
     </div>
-    <a class="hero-endo" href="ki/">Mit endo.ai sprechen</a>
   </section>
 </div>
 
@@ -913,25 +965,30 @@ body { overflow-x: clip; }
   /* Parallax: Browser mit Scroll-Animationen machen es selbst (CSS oben), sonst GSAP */
   var cssParallax = window.CSS && CSS.supports && CSS.supports('animation-timeline: view()');
   var mobile = window.matchMedia('(max-width: 700px)').matches;
-  var f = mobile ? 0.6 : 1;
+  var f = mobile ? 0.78 : 1;
 
   /* Hero: jede Ebene bewegt sich unterschiedlich schnell (wie Osmo-Vorlage).
      Person und Vordergrund laufen gleich schnell, damit die Füße auf dem Fels bleiben. */
   var layersEl = document.querySelector('[data-parallax-layers]');
   if (!cssParallax) {
     var tl = gsap.timeline({ scrollTrigger: { trigger: layersEl, start: '0% 0%', end: '100% 0%', scrub: true } });
-    [['1', 70], ['2', 55], ['3', 52], ['4', 12], ['5', 12]].forEach(function (l, i) {
-      tl.to(layersEl.querySelectorAll('[data-parallax-layer="' + l[0] + '"]'),
-        { yPercent: l[1] * f, ease: 'none' }, i === 0 ? undefined : '<');
+    [['himmel', 78], ['fern', 66], ['mitte', 52], ['titel', 58], ['wald', 34], ['wiese', 14]].forEach(function (l, i) {
+      var ziel = l[0] === 'titel' ? { y: function () { return window.innerHeight * l[1] * f / 100; }, ease: 'none' } : { yPercent: l[1] * f, ease: 'none' };
+      tl.to(layersEl.querySelectorAll('[data-parallax-layer="' + l[0] + '"]'), ziel, i === 0 ? undefined : '<');
     });
   }
 
   /* Einstieg: Berge und Emre setzen sich kurz, Zeile und Navigation blenden ein – nur transform/opacity */
   var heroEinstieg = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } })
-    .from('.parallax__layer-img[data-parallax-layer="2"]', { y: 16, duration: 1.1 }, 0)
-    .from('.parallax__layer-img[data-parallax-layer="4"], .parallax__layer-img[data-parallax-layer="5"]', { y: 24, duration: 1.1 }, 0)
+    /* Kamerafahrt zurück: vorne mehr vergrößert als hinten, alles setzt sich zur Mitte unten – verdeckt nie etwas */
+    .from('[data-parallax-layer="himmel"]', { scale: 1.05, duration: 1.8, ease: 'expo.out' }, 0)
+    .from('[data-parallax-layer="fern"]', { scale: 1.03, duration: 1.8, ease: 'expo.out' }, 0)
+    .from('[data-parallax-layer="mitte"]', { scale: 1.05, duration: 1.8, ease: 'expo.out' }, 0)
+    .from('[data-parallax-layer="wald"]', { scale: 1.08, duration: 1.8, ease: 'expo.out' }, 0)
+    .from('[data-parallax-layer="wiese"]', { scale: 1.12, duration: 1.8, ease: 'expo.out' }, 0)
+    .from('[data-parallax-layer="gras"]', { scale: 1.18, duration: 1.8, ease: 'expo.out' }, 0)
     .from('.parallax__rolle, .parallax__claim', { opacity: 0, y: 8, duration: 0.7, stagger: 0.15 }, 0.35)
-    .from('.nav, .parallax__hint, .hero-endo', { opacity: 0, duration: 0.6, ease: 'power2.out' }, 0.5);
+    .from('.nav', { opacity: 0, duration: 0.6, ease: 'power2.out' }, 0.5);
 
   /* ===== Auftritt: "E." erscheint, der Punkt zieht nach rechts und zieht "RGUN" hinter sich her, dann blendet die Szene auf ===== */
   var loader = document.querySelector('.loader');
@@ -1273,8 +1330,16 @@ body { overflow-x: clip; }
   function verstecken() { ebene.classList.remove('ist-sichtbar'); schatten.classList.remove('ist-sichtbar'); }
   ebene.addEventListener('transitionend', function (e) { if (e.target === ebene && !offen) verstecken(); });
 
+  /* Wischen (und Pfeiltaste) nur, solange der Einstieg im Bild ist – nicht im Formular */
+  var hero = document.querySelector('.parallax__visuals'), navEl = document.querySelector('.nav');
+  function imHero() { return !hero || hero.getBoundingClientRect().bottom > window.innerHeight * 0.45; }
+  function merkeHero() { if (navEl) navEl.classList.toggle('nav--unten', !imHero()); }
+  window.addEventListener('scroll', merkeHero, { passive: true }); merkeHero();
+  try { if (localStorage.getItem('endo-bekannt')) document.documentElement.classList.add('endo-bekannt'); } catch (e) {}
+  function bekannt() { document.documentElement.classList.add('endo-bekannt'); try { localStorage.setItem('endo-bekannt', '1'); } catch (e) {} }
+
   function oeffnen(o) {
-    o = o || {}; laden(); zeigen();
+    o = o || {}; laden(); zeigen(); bekannt();
     if (!offen) {
       offen = true; letzterFokus = document.activeElement; ergunY = window.scrollY;
       ebene.inert = false; ebene.setAttribute('aria-hidden', 'false');
@@ -1322,7 +1387,7 @@ body { overflow-x: clip; }
     var x0 = null, y0 = 0, achse = null, dx = 0, lx = 0, lt = 0, v = 0;
     doc.addEventListener('touchstart', function (e) {
       achse = null; x0 = null;
-      if (e.touches.length !== 1 || vonEndo !== offen || ausgenommen(e.target)) return;
+      if (e.touches.length !== 1 || vonEndo !== offen || ausgenommen(e.target) || (!vonEndo && !imHero())) return;
       x0 = lx = e.touches[0].clientX; y0 = e.touches[0].clientY; lt = e.timeStamp; dx = 0; v = 0;
       if (!vonEndo) laden();
     }, { passive: true });
@@ -1354,7 +1419,7 @@ body { overflow-x: clip; }
     doc.addEventListener('keydown', function (e) {
       if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || e.defaultPrevented) return;
       var z = e.target; if (z && z.closest && z.closest('input, textarea, select, [contenteditable="true"]')) return;
-      if (!vonEndo && !offen && e.key === 'ArrowRight') { e.preventDefault(); oeffnen(); }
+      if (!vonEndo && !offen && e.key === 'ArrowRight' && imHero()) { e.preventDefault(); oeffnen(); }
       if (vonEndo && offen && e.key === 'ArrowLeft') { e.preventDefault(); schliessen(); }
     });
   }

@@ -1,8 +1,24 @@
-# Agentur-Website ERGUN. – Stand 25.09.2026, 00:28 (= GitHub `main` b2139d5)
+# Agentur-Website ERGUN. – Stand 25.09.2026, 02:30
 
 > **Aktuell live:** die Seite von 138c7c9 (Hero mit Parallax → Kontaktformular → Footer), plus **endo.ai als Pille oben rechts** (`.nav__pille`, CSS-Block am Ende des `<style>`).
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
+
+## Hero-Szene 2: Bergwiese mit Schäferhund, randlos (25.09.2026, 02:30, Claude Code)
+- **Ebenen** (von hinten): `szene-himmel` · `szene-fern` · `szene-mitte` · Name (`data-parallax-layer="titel"`) · `szene-wald` · `szene-wiese` (mit Hund) · `szene-gras`. Je `-1920`, `-2560`, `-hoch` (Hochformat: mittlere Hälfte, Hund dort mittig).
+- **Leinwand** aller Ebenen: 3840 × 3024 (Szene 3840 × 2160 unten, darüber 864 px Himmel-Überstand). Unten bündig (`object-position: 50% var(--bild-y)`), Breite 104 % (links −2 %). Jede Ebene ist unter ihrer Kante komplett gefüllt (Inpainting der eigenen Farben).
+- **Name vor der Sonne:** `--sonne-y` in `.parallax__visuals` rechnet aus, wo die Sonne im Fenster steht (Sonne bei 43,4 % der Leinwand). Breite Fenster (≥ 17:10, ≥ 2:1) schneiden unten mehr ab (`--bild-y` 73 % / 61 %).
+- **Parallax** (CSS `animation-timeline`, GSAP-Rückfall): Himmel 78 %, fern 66 %, mitte 52 %, Name 58svh, Wald 34 %, Wiese 14 %, Gras 0 (Handy etwas weniger). Einstieg: `scale` von vorne 1,18 bis hinten 1,03 → 1 (Ursprung unten Mitte).
+- **Neu bauen:** `python bilder/hero/4k/szene2/ebenen.py` (braucht `~/.depth/da2s.onnx`, Depth Anything V2 small, und `a-depth.npy`). Grundlage Higgsfield b9cde240 (Szene ohne Hund), Hund aus 7b1ea6d7 (`hund-frei-crop.png`, rembg birefnet). Grenzen: fern 0,02 · mitte 0,3 · wald 0,55 · wiese 1,45 · gras 4,9.
+- CSS-Block „Szene 2: Bergwiese mit Schäferhund, randlos“ am Ende des `<style>`. Die alten Ebenen `layer-*` und `--verschub`/`--rahmen` sind ohne Wirkung (Dateien bleiben liegen).
+- **Wischen** nur im Einstieg (`imHero()`: Unterkante des Heros unter 45 % Fensterhöhe). endo-Pille oben rechts `[data-endo-pille]` mit Hinweis-Animation `endo-zupfen` (aus bei `html.endo-bekannt`, gemerkt in `localStorage`, und bei `.nav--unten`).
+- **endo.ai (`ki/`):** CSS-Block „Neon-Orange“ am Ende; Kugel in `ki/js/orb.js` (und `orb.quelle.js`): Farbe im Shader fest neon, Kameraabstand nach Fenstergröße (`abstand()`), Aufruf `js/orb.js?v=3`.
+
+## Wischen, endo-Pakete, Schäferhund (25.09.2026, 01:37, Claude Code)
+- **Wischen:** `.endo-ebene` (fixed, z-index 95) mit `<iframe data-src="ki/">`, dazu `.endo-schatten`. Skript am Ende von `index.html` („Wischen zwischen ERGUN. und endo.ai“): lädt das iframe 2,5 s nach `load` (oder beim Berühren der Pille), hängt nach dem Laden dieselben Wisch-/Pfeil-Handler ins iframe-Dokument, fängt Links `../` und `../#…` in endo ab (schließt die Ebene), `ki/`-Links auf der Startseite öffnen die Ebene. Adresse `#endo` per `pushState`, `popstate` synchronisiert. Ausgenommen vom Wischen: Regler, Textfelder, seitlich scrollende Leisten, `[data-kein-wischen]`.
+- **endo (`ki/index.html`):** 3 Pakete (Start, Pro, Premium), Raster 3 Spalten (≤ 860 px eine), Handy-Paketwahl 3 Optionen; Nav + Menü mit Link `../` („ERGUN.“); direkt geöffnet: Wischen nach rechts / Pfeil links → `../`.
+- **Ebene 5 = Schäferhund:** `layer-5-person*.webp` (Dateinamen und Maße unverändert) aus `4k/hund/hund_ebene.py` (Quelle `4k/hund/frei-013c9d1f.png`, Higgsfield 013c9d1f, rembg birefnet-general). Höhe 0,5 × Emre, Pfoten bei y 1905 / Mitte x 2090 (4096er Raster). Emres Ebene: `4k/emre-ebene/`.
+- **`--verschub`** (Block „Schäferhund auf dem Fels“): Ebenen 2, 4, 5 bekommen `top: calc(-1 * var(--verschub))` (Desktop 25svh + Rand + Pillen-Zone, Handy 10svh + …), damit Fels und Hund in der Fläche stehen.
 
 ## Hero als Fläche im endo-Stil (25.09.2026, 01:20, Claude Code)
 CSS-Block „Hero als ruhige Fläche im endo-Stil (25.09.)“ am Ende des `<style>`: `--bg: #000`, `--rahmen` (clamp 24–40 px, Handy 12 px), `--pille-zone` (Platz für die Pille im ersten Bildschirm).

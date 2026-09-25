@@ -385,6 +385,32 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .js .kachel.auf .glyphe * { stroke-dashoffset: 0; }
   .tagline .wort { color: var(--text); }
 }
+
+/* ---------- Neon-Orange (25.09. nachts, Emre: „alles Orange ähnlich neon und aufleuchten“) ---------- */
+/* Ein Orange für alles, heller und mit Leuchten. Schrift leuchtet per text-shadow, Flächen per box-shadow,
+   Symbole per drop-shadow. Das „Atmen“ läuft nur über opacity eines Schein-Elements. */
+:root {
+  --akzent: #FF6A1A; --akzent-hell: #FF8A3D;
+  --neon-text: 0 0 4px rgba(255, 138, 61, 0.9), 0 0 14px rgba(255, 106, 26, 0.7), 0 0 34px rgba(255, 90, 20, 0.45);
+  --neon-flaeche: 0 0 0 1px rgba(255, 138, 61, 0.35), 0 0 18px rgba(255, 106, 26, 0.55), 0 0 48px rgba(255, 90, 20, 0.3);
+}
+.akzent, .marke span, .kopf__label, .hero__label, .abo__titel span, .tag--premium, .feld__fehler, .blase a { color: var(--akzent); text-shadow: var(--neon-text); }
+.hero__label { color: var(--akzent-hell); }
+.tagline .wort { transition: color 900ms var(--ease), text-shadow 1200ms var(--ease); }
+.tagline .wort.ist-an.akzent { text-shadow: var(--neon-text); }
+.knopf--haupt, .chip--haupt, .rund--haupt, .tag--neu, .paket__band, .abo__band, .vergleich__marke--rechts, .blase--du { box-shadow: var(--neon-flaeche); }
+.knopf--haupt { position: relative; }
+.knopf--haupt::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: 0 0 28px 4px rgba(255, 106, 26, 0.55); opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) { .knopf--haupt::after { animation: neon-atmen 3.6s ease-in-out infinite; } }
+@keyframes neon-atmen { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+.glyphe, .paket li svg, .abo__vorteile svg, .faq details[open] summary svg { filter: drop-shadow(0 0 6px rgba(255, 106, 26, 0.75)); }
+@media (hover: hover) and (pointer: fine) { .kachel:hover .glyphe { filter: drop-shadow(0 0 14px rgba(255, 106, 26, 0.95)); } }
+.paket--premium, .abo__option:has(input:checked) { box-shadow: 0 0 24px rgba(255, 106, 26, 0.22), inset 0 0 0 1px rgba(255, 138, 61, 0.2); }
+.agent__avatar { border-color: rgba(255, 138, 61, 0.8); box-shadow: 0 0 12px rgba(255, 106, 26, 0.5); }
+.agent__avatar::after, .abo__kreis i { box-shadow: 0 0 8px rgba(255, 106, 26, 0.9); }
+.kachel::before { box-shadow: 0 0 10px rgba(255, 106, 26, 0.9); }
+/* Schein hinter der Kugel, damit sie wie Neon wirkt (statisch, kein Rechnen pro Bild) */
+.orb::before { content: ""; position: absolute; left: 50%; top: 50%; width: min(70vmin, 720px); aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 106, 26, 0.22), rgba(255, 90, 20, 0.08) 55%, rgba(255, 90, 20, 0) 100%); pointer-events: none; }
 </style>
 </head>
 <body>
@@ -826,7 +852,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 })();
 </script>
 <script src="js/agent.js" defer></script>
-<script src="js/orb.js" defer></script>
+<script src="js/orb.js?v=3" defer></script>
 <script>
 /* Direkt auf /ki/ geöffnet: nach rechts wischen führt zurück zu ERGUN. (eingebettet übernimmt das die Startseite) */
 (function () {
