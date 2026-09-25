@@ -6,6 +6,12 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Teil 3 · Schritte 3+4: Pakete übersichtlich, auf der Startseite (25.09.2026, 18:45, Claude Code)
+- Gemeinsames Modul `ki/js/pakete.js` + `ki/pakete.css` (Startseite `#pakete` in der Studio-Sektion, /ki/ `#pakete`). Einbinden: `<div data-studio-pakete data-kontakt="#kontakt">` nach `endo-daten.js`.
+- Karten: Name, Preis, Credits, „Damit bekommen Sie zum Beispiel“ (ausgerechnet: Credits ÷ Kosten für Produktfoto, Werbevideo 5 s, Website-Titelbild; Mehrzahl-Namen in `endo-daten.js` → `mehrzahl`), Start/Pro „Enthalten“ als eine Zeile, Premium mit Extras (Premium-Punkt). Ein Hauptknopf (Pro, bzw. das gewählte Paket).
+- Kosten pro Ergebnis einmal aufklappbar („So viele Credits braucht ein Ergebnis“). Vormerken öffnet sich unter den Karten (Paketwahl, E-Mail, WhatsApp/E-Mail). Unten „Kostenloses Erstgespräch“ → Kontakt.
+- Die Funktionswahl mit +/− auf /ki/ ist entfernt (Emre: nicht für jedes Foto Credits sehen). /ki/-Hero: „Pakete ansehen“ + „Kostenloses Erstgespräch“ (`../#kontakt`); Navigation ohne „Funktionen“. Startseite: Navigation „Studio · Pakete · Erstgespräch“.
+
 ## Teil 3 · Schritt 2: Nebel statt Sterne im Studio-Bereich (25.09.2026, 18:15, Claude Code)
 - `.endo__sterne` + Skript entfernt (Sterne unten ergaben keinen Sinn). Neu `.endo__nebel` mit drei Lagen `.nebel--1/2/3`: Streifen werden einmal per Canvas gerechnet (`nebelBild()`, nahtlos wiederholbar, als `--nebel-1..3` gesetzt) und ziehen per CSS (`nebel-zieht`, 110/160/220 s, eine Lage gegenläufig). Mondschein-Hof links oben (`::before`). Pausiert außerhalb des Bildes (`.endo--sichtbar`), bei „Bewegung reduzieren" still.
 

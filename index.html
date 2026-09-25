@@ -26,6 +26,7 @@
 <link rel="preload" href="schriften/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="schriften/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <script>document.documentElement.classList.add('js');</script>
+<link rel="stylesheet" href="ki/pakete.css?v=2">
 
 <style>
 html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
@@ -364,9 +365,7 @@ img { display: block; max-width: 100%; height: auto; }
 .endo__bereiche li + li { padding-left: 20px; border-left: 1px solid var(--line); }
 .endo__bereiche b { font-family: var(--serif); font-size: 24px; line-height: 1.1; font-weight: 400; }
 .endo__bereiche span { color: var(--muted); font-size: 14px; line-height: 1.5; text-wrap: pretty; }
-.endo__mehr { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 15px; border-bottom: 1px solid var(--line); transition: border-color 200ms var(--ease); }
-.endo__mehr span { transition: transform 200ms var(--ease-out); }
-@media (hover: hover) and (pointer: fine) { .endo__mehr:hover { border-color: var(--text); } .endo__mehr:hover span { transform: translateX(3px); } }
+.endo__pakete { position: relative; width: min(100%, 1120px); margin: clamp(80px, 12svh, 128px) auto 0; padding-top: clamp(56px, 8svh, 88px); border-top: 1px solid var(--line); }
 @media (max-width: 700px) {
   .endo__innen { gap: 28px; }
   .endo__bereiche { grid-template-columns: minmax(0, 1fr); }
@@ -435,6 +434,7 @@ img { display: block; max-width: 100%; height: auto; }
   <a class="nav__mark" href="#top" aria-label="ERGUN – nach oben">ERGUN<span class="dot">.</span></a>
   <nav class="nav__links" aria-label="Seitennavigation">
     <a class="nav__link" href="#endo">Studio</a>
+    <a class="nav__link" href="#pakete">Pakete</a>
     <a class="nav__link" href="#kontakt">Erstgespräch</a>
   </nav>
 </header>
@@ -514,8 +514,9 @@ img { display: block; max-width: 100%; height: auto; }
         <li><b>Werbevideos</b><span>Kurze Clips aus Ihrem Produktfoto, für Reels, Stories und Anzeigen.</span></li>
         <li><b>Website-Bilder</b><span>Ein großes Titelbild, passend zu Ihrer Marke und Ihrem Produkt.</span></li>
       </ul>
-      <a class="endo__mehr reveal" href="ki/#auswahl">Funktionen und Pakete <span aria-hidden="true">→</span></a>
     </div>
+    <!-- Pakete direkt hier (gleiches Modul wie auf ki/), damit niemand die Seite wechseln muss -->
+    <div class="endo__pakete reveal" id="pakete" data-studio-pakete data-kontakt="#kontakt"></div>
   </section>
 
   <!-- Kostenloses Erstgespräch: Fragebogen in vier Schritten. Ohne JavaScript stehen alle Schritte untereinander. -->
@@ -954,7 +955,8 @@ img { display: block; max-width: 100%; height: auto; }
   io.observe(buehne);
 })();
 </script>
-<script src="ki/js/endo-daten.js?v=1"></script>
+<script src="ki/js/endo-daten.js?v=3"></script>
+<script src="ki/js/pakete.js?v=2"></script>
 <script src="ki/js/agent.js?v=8"></script>
 <script>
 /* Kein Zoomen: iPhone ignoriert user-scalable=no, daher Zwei-Finger-Zoom und Doppeltippen hier sperren */

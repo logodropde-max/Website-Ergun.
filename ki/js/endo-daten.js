@@ -10,15 +10,15 @@ window.ENDO = {
     { name: 'Premium', preis: 100, credits: 1000, kann: ['foto', 'shop', 'video', 'web', 'video10', '3d', 'parallax', 'emre'], kaufen: '' }
   ],
   funktionen: [
-    { id: 'foto', name: 'Produktfoto', kurz: 'Ihr Produkt im Studiolicht, auf neuer Bühne', text: 'Aus Ihrem Handyfoto wird ein Profi-Produktfoto: Studiolicht, neue Bühne, echte Schatten.', credits: 5 },
-    { id: 'shop', name: 'Shop-Bild', kurz: 'Freigestellt und in 4K, für jeden Shop', text: 'Ihr Produkt sauber freigestellt und auf 4K vergrößert, bereit für Shop und Marktplatz.', credits: 5 },
-    { id: 'video', name: 'Werbevideo 5 s', kurz: 'Kurzer Clip aus Ihrem Produktfoto', text: 'Aus Ihrem Produktfoto wird ein Clip mit fünf Sekunden Bewegung, für Reels, Stories und Anzeigen.', credits: 20 },
-    { id: 'web', name: 'Website-Titelbild', kurz: 'Großes Bild für Ihre eigene Website', text: 'Ein großes Titelbild für Ihre Website, passend zu Ihrer Marke und Ihrem Produkt.', credits: 10 }
+    { id: 'foto', name: 'Produktfoto', mehrzahl: 'Produktfotos', kurz: 'Ihr Produkt im Studiolicht, auf neuer Bühne', text: 'Aus Ihrem Handyfoto wird ein Profi-Produktfoto: Studiolicht, neue Bühne, echte Schatten.', credits: 5 },
+    { id: 'shop', name: 'Shop-Bild', mehrzahl: 'Shop-Bilder', kurz: 'Freigestellt und in 4K, für jeden Shop', text: 'Ihr Produkt sauber freigestellt und auf 4K vergrößert, bereit für Shop und Marktplatz.', credits: 5 },
+    { id: 'video', name: 'Werbevideo 5 s', mehrzahl: 'Werbevideos mit 5 s', kurz: 'Kurzer Clip aus Ihrem Produktfoto', text: 'Aus Ihrem Produktfoto wird ein Clip mit fünf Sekunden Bewegung, für Reels, Stories und Anzeigen.', credits: 20 },
+    { id: 'web', name: 'Website-Titelbild', mehrzahl: 'Website-Titelbilder', kurz: 'Großes Bild für Ihre eigene Website', text: 'Ein großes Titelbild für Ihre Website, passend zu Ihrer Marke und Ihrem Produkt.', credits: 10 }
   ],
   premium: [
-    { id: 'video10', name: 'Werbevideo 10 s', kurz: 'Längere Clips mit mehr Bewegung', text: 'Längere Clips mit mehr Bewegung.', credits: 40 },
-    { id: '3d', name: '3D-Produkt', kurz: 'Drehbar auf Ihrer Website', text: 'Aus einem Foto entsteht ein 3D-Modell mit Textur, das man auf Ihrer Website drehen kann.', credits: 50 },
-    { id: 'parallax', name: 'Parallax-Szene', kurz: 'Szene in Ebenen, bewegt beim Scrollen', text: 'Eine komplette Szene in Ebenen, die sich beim Scrollen bewegt.', credits: 30 },
+    { id: 'video10', name: 'Werbevideo 10 s', mehrzahl: 'Werbevideos mit 10 s', kurz: 'Längere Clips mit mehr Bewegung', text: 'Längere Clips mit mehr Bewegung.', credits: 40 },
+    { id: '3d', name: '3D-Produkt', mehrzahl: '3D-Produkte', kurz: 'Drehbar auf Ihrer Website', text: 'Aus einem Foto entsteht ein 3D-Modell mit Textur, das man auf Ihrer Website drehen kann.', credits: 50 },
+    { id: 'parallax', name: 'Parallax-Szene', mehrzahl: 'Parallax-Szenen', kurz: 'Szene in Ebenen, bewegt beim Scrollen', text: 'Eine komplette Szene in Ebenen, die sich beim Scrollen bewegt.', credits: 30 },
     { id: 'emre', name: 'Abstimmung mit Emre', kurz: 'Look und Wünsche persönlich besprechen', text: 'Look und Wünsche stimmen Sie direkt mit Emre ab.' }
   ]
 };

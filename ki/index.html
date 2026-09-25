@@ -20,6 +20,7 @@
 <link rel="preload" href="../schriften/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../schriften/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <script>document.documentElement.classList.add('js');</script>
+<link rel="stylesheet" href="pakete.css?v=2">
 <style>
 @font-face { font-family: "Instrument Serif"; src: url("../schriften/InstrumentSerif-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Geist"; src: url("../schriften/Geist-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
@@ -164,68 +165,6 @@ button { font: inherit; color: inherit; }
 .vergleich__marke--links { left: 14px; } .vergleich__marke--rechts { right: 14px; color: #0A0B0D; background: linear-gradient(180deg, #FBFCFD, #C9CED6); }
 .vergleich figcaption { padding: 10px 6px 2px; font-size: 12px; color: var(--leise); }
 
-/* Funktionen wählen */
-.gruppe { margin: 0 0 28px; padding: 0; border: 0; min-width: 0; }
-.gruppe legend { margin-bottom: 12px; padding: 0; font-size: 12px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--leise); }
-.gruppe legend i { font-style: normal; color: var(--premium); }
-.kacheln { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
-.kachel { position: relative; display: grid; grid-template-rows: auto 1fr auto; gap: 10px; padding: 18px; border-radius: 18px; border: 1px solid var(--linie); background: var(--flaeche); transition: border-color 250ms var(--ease), background-color 250ms var(--ease); }
-.kachel.ist-gewaehlt { border-color: transparent; background: linear-gradient(#111317, #111317) padding-box, var(--chrom-kante) border-box; }
-.kachel__wahl { position: absolute; inset: 0; z-index: 1; border: 0; border-radius: inherit; background: transparent; cursor: pointer; }
-.kachel__kopf { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-.kachel__kopf b { font-weight: 500; font-size: 16px; }
-.kachel__kopf span { font-size: 13px; color: var(--leise); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.kachel p { font-size: 14px; color: var(--leise); }
-.menge { position: relative; z-index: 2; display: flex; align-items: center; gap: 4px; justify-self: start; padding: 3px; border-radius: 999px; border: 1px solid var(--linie); }
-.menge button { width: 36px; height: 36px; border: 0; border-radius: 50%; background: transparent; font-size: 18px; line-height: 1; cursor: pointer; }
-.menge button:hover { background: rgba(226, 230, 236, 0.08); }
-.menge output { min-width: 28px; text-align: center; font-variant-numeric: tabular-nums; font-weight: 500; }
-.kachel:not(.ist-gewaehlt) .menge { opacity: 0.55; }
-.kachel__haken { justify-self: start; font-size: 13px; color: var(--leise); }
-.ist-gewaehlt .kachel__haken { color: var(--text); }
-.bilanz { position: sticky; bottom: 16px; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 12px; padding: 14px 14px 14px 22px; border-radius: 22px; border: 1px solid transparent;
-  background: linear-gradient(rgba(12, 14, 17, 0.95), rgba(12, 14, 17, 0.95)) padding-box, var(--chrom-kante) border-box; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55); }
-.bilanz__text { flex: 1 1 260px; font-size: 15px; color: var(--leise); }
-.bilanz__text b { color: var(--text); font-weight: 500; font-variant-numeric: tabular-nums; }
-.bilanz .knopf { flex: none; }
-
-/* Pakete */
-.pakete { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
-.paket { position: relative; display: grid; grid-template-rows: auto auto auto 1fr auto; gap: 14px; padding: 26px 24px 24px; border-radius: 24px; border: 1px solid transparent;
-  background: linear-gradient(180deg, #111317, #0A0B0E) padding-box, var(--chrom-kante) border-box; transition: box-shadow 300ms var(--ease); }
-.paket.ist-empfohlen { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35), 0 24px 80px rgba(190, 200, 215, 0.14); }
-.paket__hinweis { position: absolute; top: -12px; left: 24px; padding: 4px 12px; border-radius: 999px; color: #0A0B0D; background: linear-gradient(180deg, #FBFCFD, #C9CED6); font-size: 12px; font-weight: 500; opacity: 0; transform: translateY(4px); transition: opacity 250ms var(--ease), transform 250ms var(--ease); }
-.ist-empfohlen .paket__hinweis { opacity: 1; transform: none; }
-.paket__name { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; letter-spacing: 0.02em; }
-.paket--premium .paket__name::after { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--premium); }
-.paket__preis { font-family: var(--serif); font-size: clamp(3rem, 5vw, 4rem); line-height: 1; background: var(--chrom); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.paket__credits { font-size: 14px; color: var(--leise); }
-.paket__credits b { color: var(--text); font-weight: 500; }
-.paket ul { display: grid; gap: 8px; margin: 6px 0 0; padding: 0; list-style: none; font-size: 14px; color: var(--leise); align-content: start; }
-.paket li { display: flex; gap: 10px; }
-.paket li::before { content: ""; flex: none; width: 14px; height: 1px; margin-top: 11px; background: rgba(226, 230, 236, 0.5); }
-.paket li.plus { color: var(--text); }
-.paket li.plus::before { background: var(--premium); }
-.paket .knopf { width: 100%; margin-top: 8px; }
-.pakete__notiz { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 13px; color: var(--leise); }
-
-/* Vormerken */
-.vormerken { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(24px, 5vw, 64px); margin-top: 48px; padding: clamp(24px, 4vw, 40px); border-radius: 24px; border: 1px solid var(--linie); background: var(--flaeche); scroll-margin-top: 90px; }
-.vormerken[hidden] { display: none; }
-.vormerken h3 { font-family: var(--serif); font-size: clamp(1.8rem, 3vw, 2.4rem); line-height: 1.05; }
-.vormerken__text { display: grid; gap: 12px; align-content: start; color: var(--leise); }
-.vormerken__auswahl { color: var(--text); font-size: 14px; white-space: pre-line; }
-.formular { display: grid; gap: 16px; }
-.feld { display: grid; gap: 6px; }
-.feld label { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--leise); }
-.feld input, .feld select { width: 100%; min-height: 48px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--linie); background: #0A0B0E; color: var(--text); font: inherit; font-size: 16px; color-scheme: dark; }
-.feld input:focus-visible, .feld select:focus-visible { outline: none; border-color: rgba(226, 230, 236, 0.5); }
-.feld.hat-fehler input { border-color: #FF8A6A; }
-.feld__fehler { min-height: 1.2em; font-size: 13px; color: #FF9A7E; }
-.formular__knoepfe { display: flex; flex-wrap: wrap; gap: 10px; }
-.formular__status { min-height: 1.4em; font-size: 14px; }
-.formular__hinweis { font-size: 13px; color: var(--leise); }
-
 /* Fragen */
 .faq { display: grid; border-top: 1px solid var(--linie); }
 .faq details { border-bottom: 1px solid var(--linie); }
@@ -259,11 +198,7 @@ button { font: inherit; color: inherit; }
 .js .auf.ist-da { opacity: 1; transform: none; }
 
 @media (max-width: 860px) {
-  .vorher__raster, .vormerken { grid-template-columns: minmax(0, 1fr); }
-  .pakete { grid-template-columns: minmax(0, 1fr); gap: 24px; }
-  .kacheln { grid-template-columns: minmax(0, 1fr); }
-  .bilanz { bottom: 10px; padding: 12px 12px 12px 16px; border-radius: 18px; }
-  .bilanz .knopf { width: 100%; }
+  .vorher__raster { grid-template-columns: minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) {
   .js .auf { opacity: 1; transform: none; transition: none; }
@@ -272,7 +207,7 @@ button { font: inherit; color: inherit; }
   *, *::before, *::after { transition-duration: 0.01ms !important; }
 }
 </style>
-<script src="js/endo-daten.js?v=2"></script>
+<script src="js/endo-daten.js?v=3"></script>
 </head>
 <body>
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
@@ -280,7 +215,6 @@ button { font: inherit; color: inherit; }
 <header class="nav">
   <a class="marke" href="#start" aria-label="ERGUN. Studio, nach oben"><b>ERGUN<i>.</i></b><span>Studio</span></a>
   <ul class="nav__links">
-    <li class="nur-breit"><a href="#auswahl">Funktionen</a></li>
     <li><a href="#pakete">Pakete</a></li>
     <li class="nur-breit"><a href="#fragen">Fragen</a></li>
     <li class="nur-breit"><a href="../">Webdesign</a></li>
@@ -325,8 +259,8 @@ button { font: inherit; color: inherit; }
         </form>
       </section>
       <div class="hero__knoepfe">
-        <a class="knopf knopf--chrom" href="#auswahl">Funktionen wählen</a>
-        <a class="knopf knopf--rand" href="#pakete">Pakete ansehen</a>
+        <a class="knopf knopf--chrom" href="#pakete">Pakete ansehen</a>
+        <a class="knopf knopf--rand" href="../#kontakt">Kostenloses Erstgespräch</a>
       </div>
     </div>
   </section>
@@ -353,55 +287,9 @@ button { font: inherit; color: inherit; }
     </div>
   </section>
 
-  <section class="abschnitt" id="auswahl" aria-labelledby="auswahl-titel">
+  <section class="abschnitt" id="pakete" aria-label="Pakete">
     <div class="innen">
-      <div class="kopf auf">
-        <span class="kopf__label">Funktionen</span>
-        <h2 id="auswahl-titel" class="chrom">Was brauchen Sie?</h2>
-        <p>Tippen Sie an, was Sie nutzen möchten, und stellen Sie die Menge ein. Sie sehen sofort, wie viele Credits das sind und welches Paket passt.</p>
-      </div>
-      <div data-auswahl></div>
-      <div class="bilanz" data-bilanz>
-        <p class="bilanz__text" aria-live="polite" data-bilanz-text>Wählen Sie oben mindestens eine Funktion.</p>
-        <a class="knopf knopf--chrom" href="#pakete" data-zum-paket>Zu den Paketen</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="abschnitt" id="pakete" aria-labelledby="pakete-titel">
-    <div class="innen">
-      <div class="kopf auf">
-        <span class="kopf__label">Pakete</span>
-        <h2 id="pakete-titel" class="chrom">Credits kaufen, wenn Sie sie brauchen</h2>
-        <p>Kein Abo, keine Laufzeit. Jedes Ergebnis kostet eine feste Zahl an Credits.</p>
-      </div>
-      <div class="pakete" data-pakete></div>
-      <p class="pakete__notiz"><span>Kein Abo, keine Laufzeit</span><span>Fehlgeschlagene Aufträge kosten keine Credits</span><span data-kauf-hinweis>Kauf und Anmeldung starten in Kürze, bis dahin können Sie Ihr Paket vormerken</span></p>
-
-      <div class="vormerken" id="vormerken-bereich">
-        <div class="vormerken__text">
-          <h3>Paket vormerken</h3>
-          <p>Sie bekommen den Zugang als Erste, sobald der Kauf startet. Unverbindlich und kostenlos.</p>
-          <p class="vormerken__auswahl" data-vormerken-auswahl></p>
-        </div>
-        <form class="formular" id="vormerken" novalidate>
-          <div class="feld">
-            <label for="v-mail">E-Mail-Adresse</label>
-            <input id="v-mail" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="v-mail-fehler" placeholder="name@shop.de">
-            <span class="feld__fehler" id="v-mail-fehler" aria-live="polite"></span>
-          </div>
-          <div class="feld">
-            <label for="v-paket">Paket</label>
-            <select id="v-paket" name="paket" data-paket-wahl></select>
-          </div>
-          <div class="formular__knoepfe">
-            <button class="knopf knopf--chrom" type="submit" value="whatsapp">Per WhatsApp vormerken</button>
-            <button class="knopf knopf--rand" type="submit" value="mail">Per E-Mail</button>
-          </div>
-          <p class="formular__status" data-status aria-live="polite"></p>
-          <p class="formular__hinweis">Öffnet WhatsApp oder Ihr Mailprogramm mit einer fertigen Nachricht. Diese Seite speichert nichts.</p>
-        </form>
-      </div>
+      <div data-studio-pakete data-kontakt="../#kontakt"></div>
     </div>
   </section>
 
@@ -451,139 +339,20 @@ button { font: inherit; color: inherit; }
 <script>
 (function () {
   var E = window.ENDO, ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var WA_NUMMER = '4915906344961', MAIL = 'ergun.eu@gmail.com';
-  var ALLE = E.funktionen.map(function (f) { return Object.assign({ premium: false }, f); }).concat(E.premium.map(function (f) { return Object.assign({ premium: true }, f); }));
-  var menge = {};
-  function zahl(n) { return n.toLocaleString('de-DE'); }
-
   /* ---- Vorher/Nachher ---- */
   var vergleich = document.querySelector('[data-vergleich] .vergleich__bild'), regler = document.querySelector('[data-regler]');
   if (vergleich && regler) regler.addEventListener('input', function () { vergleich.style.setProperty('--pos', regler.value + '%'); });
-
   /* ---- Credit-Fenster ---- */
   var fenster = document.querySelector('[data-credit-fenster]'), kosten = fenster.querySelector('[data-credit-kosten]');
-  ALLE.filter(function (f) { return f.credits; }).forEach(function (f) {
+  E.funktionen.concat(E.premium).filter(function (f) { return f.credits; }).forEach(function (f) {
     var dt = document.createElement('dt'), dd = document.createElement('dd');
-    dt.textContent = f.name + (f.premium ? ' (Premium)' : ''); dd.textContent = f.credits + ' Credits';
+    dt.textContent = f.name + (E.premium.indexOf(f) >= 0 ? ' (Premium)' : ''); dd.textContent = f.credits + ' Credits';
     kosten.appendChild(dt); kosten.appendChild(dd);
   });
   function zu() { if (fenster.close) fenster.close(); else fenster.removeAttribute('open'); }
   document.querySelectorAll('[data-credits-auf]').forEach(function (b) { b.addEventListener('click', function () { if (fenster.showModal) fenster.showModal(); else fenster.setAttribute('open', ''); }); });
   fenster.querySelectorAll('[data-credits-zu]').forEach(function (b) { b.addEventListener('click', zu); });
   fenster.addEventListener('click', function (e) { if (e.target === fenster) zu(); });
-
-  /* ---- Funktionen wählen: Kachel antippen = an/aus, − / + = Menge ---- */
-  var box = document.querySelector('[data-auswahl]');
-  [[false, 'In allen Paketen'], [true, 'Nur im Premium-Paket']].forEach(function (gr) {
-    var fs = document.createElement('fieldset'); fs.className = 'gruppe';
-    var lg = document.createElement('legend'); lg.textContent = gr[1] + ' ';
-    if (gr[0]) { var punkt = document.createElement('i'); punkt.setAttribute('aria-hidden', 'true'); punkt.textContent = '●'; lg.appendChild(punkt); }
-    fs.appendChild(lg);
-    var raster = document.createElement('div'); raster.className = 'kacheln'; fs.appendChild(raster);
-    ALLE.filter(function (f) { return f.premium === gr[0]; }).forEach(function (f) {
-      menge[f.id] = 0;
-      var k = document.createElement('div'); k.className = 'kachel'; k.setAttribute('data-id', f.id);
-      k.innerHTML = '<button class="kachel__wahl" type="button" aria-pressed="false"><span class="hinweis-versteckt"></span></button>' +
-        '<div class="kachel__kopf"><b></b><span></span></div><p></p>' +
-        (f.credits ? '<div class="menge" role="group"><button type="button" data-minus>−</button><output>0</output><button type="button" data-plus>+</button></div>'
-                   : '<span class="kachel__haken">Nicht gewählt</span>');
-      k.querySelector('b').textContent = f.name;
-      k.querySelector('.kachel__kopf span').textContent = f.credits ? f.credits + ' Credits' : 'inklusive';
-      k.querySelector('p').textContent = f.kurz || f.text;
-      k.querySelector('.kachel__wahl .hinweis-versteckt').textContent = f.name + ' auswählen';
-      if (f.credits) {
-        k.querySelector('.menge').setAttribute('aria-label', 'Menge ' + f.name);
-        k.querySelector('[data-minus]').setAttribute('aria-label', 'Eins weniger: ' + f.name);
-        k.querySelector('[data-plus]').setAttribute('aria-label', 'Eins mehr: ' + f.name);
-        k.querySelector('[data-minus]').addEventListener('click', function () { setze(f.id, menge[f.id] - 1); });
-        k.querySelector('[data-plus]').addEventListener('click', function () { setze(f.id, menge[f.id] + 1); });
-      }
-      k.querySelector('.kachel__wahl').addEventListener('click', function () { setze(f.id, menge[f.id] ? 0 : 1); });
-      raster.appendChild(k);
-    });
-    box.appendChild(fs);
-  });
-  function setze(id, n) {
-    menge[id] = Math.max(0, Math.min(99, n));
-    var k = box.querySelector('[data-id="' + id + '"]');
-    k.classList.toggle('ist-gewaehlt', menge[id] > 0);
-    k.querySelector('.kachel__wahl').setAttribute('aria-pressed', String(menge[id] > 0));
-    var out = k.querySelector('output'); if (out) out.textContent = menge[id];
-    var h = k.querySelector('.kachel__haken'); if (h) h.textContent = menge[id] ? '✓ Gewählt' : 'Nicht gewählt';
-    rechnen();
-  }
-
-  /* kleinstes Paket, das alle gewählten Funktionen enthält und genug Credits hat */
-  var empfohlen = null;
-  function rechnen() {
-    var gewaehlt = ALLE.filter(function (f) { return menge[f.id] > 0; });
-    var credits = gewaehlt.reduce(function (s, f) { return s + (f.credits || 0) * menge[f.id]; }, 0);
-    var stueck = gewaehlt.reduce(function (s, f) { return s + (f.credits ? menge[f.id] : 0); }, 0);
-    var text = document.querySelector('[data-bilanz-text]');
-    empfohlen = null;
-    if (!gewaehlt.length) { text.textContent = 'Wählen Sie oben mindestens eine Funktion.'; markiere(); vormerkText(); return; }
-    var passend = E.pakete.filter(function (p) { return gewaehlt.every(function (f) { return p.kann.indexOf(f.id) >= 0; }); });
-    empfohlen = passend.filter(function (p) { return p.credits >= credits; })[0] || passend[passend.length - 1];
-    var rest = empfohlen.credits - credits;
-    text.textContent = '';
-    function t(s, fett) { var el; if (fett) { el = document.createElement('b'); el.textContent = s; } else el = document.createTextNode(s); text.appendChild(el); }
-    t(zahl(credits) + ' Credits', true); t(stueck ? ' für ' + stueck + (stueck === 1 ? ' Ergebnis' : ' Ergebnisse') + '. ' : '. ');
-    t('Passend: '); t(empfohlen.name + ' · ' + empfohlen.preis + ' €', true);
-    t(rest >= 0 ? ' (' + zahl(empfohlen.credits) + ' Credits, ' + zahl(rest) + ' bleiben übrig)' : ' (' + zahl(empfohlen.credits) + ' Credits, für mehr einfach nachkaufen)');
-    markiere(); vormerkText();
-  }
-  document.querySelector('[data-zum-paket]').addEventListener('click', function () {
-    if (!empfohlen) return;
-    setTimeout(function () { var k = document.querySelector('[data-paket-karte="' + empfohlen.name + '"] .knopf'); if (k) k.focus({ preventScroll: true }); }, ruhig ? 0 : 700);
-  });
-
-  /* ---- Pakete ---- */
-  var pakete = document.querySelector('[data-pakete]'), wahl = document.querySelector('[data-paket-wahl]');
-  var namen = {}; ALLE.forEach(function (f) { namen[f.id] = f; });
-  var irgendeinKauf = E.pakete.some(function (p) { return p.kaufen; });
-  if (irgendeinKauf) document.querySelector('[data-kauf-hinweis]').textContent = 'Sicherer Kauf über Lemon Squeezy';
-  E.pakete.forEach(function (p, i) {
-    var premium = p.name === 'Premium', k = document.createElement('article');
-    k.className = 'paket' + (premium ? ' paket--premium' : ''); k.setAttribute('data-paket-karte', p.name);
-    k.innerHTML = '<span class="paket__hinweis">Passt zu Ihrer Auswahl</span><h3 class="paket__name"></h3><p class="paket__preis"></p><p class="paket__credits"></p><ul></ul>';
-    k.querySelector('.paket__name').textContent = p.name;
-    k.querySelector('.paket__preis').textContent = p.preis + ' €';
-    var cr = k.querySelector('.paket__credits'), b = document.createElement('b'); b.textContent = zahl(p.credits) + ' Credits';
-    cr.appendChild(b); cr.appendChild(document.createTextNode(' · reicht für ' + zahl(Math.floor(p.credits / 5)) + ' Produktfotos'));
-    var ul = k.querySelector('ul');
-    p.kann.forEach(function (id) { var f = namen[id]; if (!f) return; var li = document.createElement('li'); li.textContent = f.name; if (f.premium) li.className = 'plus'; ul.appendChild(li); });
-    var knopf = document.createElement('a');
-    /* nur das empfohlene Paket bekommt den Chrom-Knopf (ohne Auswahl: Pro) */
-    knopf.className = 'knopf ' + (i === 1 ? 'knopf--chrom' : 'knopf--rand');
-    if (p.kaufen) { knopf.href = p.kaufen; knopf.textContent = p.name + ' kaufen'; knopf.rel = 'noopener'; }
-    else {
-      knopf.href = '#vormerken-bereich'; knopf.textContent = p.name + ' vormerken';
-      knopf.addEventListener('click', function () { wahl.value = p.name; vormerkText(); setTimeout(function () { document.getElementById('v-mail').focus({ preventScroll: true }); }, ruhig ? 0 : 600); });
-    }
-    k.appendChild(knopf);
-    pakete.appendChild(k);
-    var o = document.createElement('option'); o.value = p.name; o.textContent = p.name + ' · ' + p.preis + ' € · ' + zahl(p.credits) + ' Credits'; wahl.appendChild(o);
-  });
-  if (E.pakete.every(function (p) { return p.kaufen; })) document.getElementById('vormerken-bereich').hidden = true;
-  wahl.addEventListener('change', vormerkText);
-  function markiere() {
-    var ziel = empfohlen ? empfohlen.name : 'Pro';
-    pakete.querySelectorAll('.paket').forEach(function (k) {
-      var n = k.getAttribute('data-paket-karte'), b = k.querySelector('.knopf');
-      k.classList.toggle('ist-empfohlen', !!empfohlen && n === empfohlen.name);
-      if (b) { b.classList.toggle('knopf--chrom', n === ziel); b.classList.toggle('knopf--rand', n !== ziel); }
-    });
-    if (empfohlen) wahl.value = empfohlen.name;
-  }
-  function auswahlText() {
-    return ALLE.filter(function (f) { return menge[f.id] > 0; }).map(function (f) { return (f.credits ? menge[f.id] + ' × ' : '') + f.name; }).join('\n');
-  }
-  function vormerkText() {
-    var a = auswahlText();
-    document.querySelector('[data-vormerken-auswahl]').textContent = a ? 'Ihre Auswahl:\n' + a : '';
-  }
-  rechnen();
-
   /* ---- Einblenden ---- */
   var auf = [].slice.call(document.querySelectorAll('.auf'));
   if (ruhig || !('IntersectionObserver' in window)) auf.forEach(function (el) { el.classList.add('ist-da'); });
@@ -591,34 +360,9 @@ button { font: inherit; color: inherit; }
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('ist-da'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
     auf.forEach(function (el) { io.observe(el); });
   }
-
-  /* ---- Vormerken per WhatsApp oder E-Mail ---- */
-  var form = document.getElementById('vormerken'), status = form.querySelector('[data-status]'), mail = form.elements['email'];
-  function pruefe() {
-    var v = mail.value.trim(), f = !v ? 'Bitte eine E-Mail-Adresse eintragen.' : (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? '' : 'Diese E-Mail-Adresse sieht unvollständig aus.');
-    mail.closest('.feld').classList.toggle('hat-fehler', !!f);
-    mail.setAttribute('aria-invalid', f ? 'true' : 'false');
-    document.getElementById('v-mail-fehler').textContent = f;
-    return !f;
-  }
-  mail.addEventListener('blur', function () { if (mail.value.trim()) pruefe(); });
-  mail.addEventListener('input', function () { if (mail.getAttribute('aria-invalid') === 'true') pruefe(); });
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    if (!pruefe()) { mail.focus(); status.textContent = 'Bitte prüfen Sie Ihre E-Mail-Adresse.'; return; }
-    var weg = (e.submitter && e.submitter.value) || 'whatsapp', a = auswahlText();
-    var text = 'Hallo Emre, ich möchte bei ERGUN. Studio ein Paket vormerken.\n\nPaket: ' + wahl.value + '\n' + (a ? 'Das möchte ich nutzen:\n' + a + '\n' : '') + 'E-Mail: ' + mail.value.trim() + '\n\nGesendet über ERGUN. Studio';
-    if (weg === 'whatsapp') {
-      var link = 'https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(text), win = window.open(link, '_blank');
-      if (win) { try { win.opener = null; } catch (err) {} } else location.href = link;
-      status.textContent = 'WhatsApp ist geöffnet. Bitte dort nur noch auf Senden tippen.';
-    } else {
-      location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent('ERGUN. Studio: Paket ' + wahl.value + ' vormerken') + '&body=' + encodeURIComponent(text);
-      status.textContent = 'Ihr Mailprogramm öffnet sich mit der fertigen Nachricht.';
-    }
-  });
 })();
 </script>
+<script src="js/pakete.js?v=2"></script>
 <script src="js/agent.js?v=8" defer></script>
 <script src="js/orb.js?v=6" defer></script>
 </body>

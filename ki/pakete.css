@@ -1,0 +1,87 @@
+/* ERGUN. Studio – Pakete (ki/js/pakete.js). Gleich auf Startseite und /ki/.
+   Chrom-Silber auf Dunkel, ein Hauptknopf, Orange nur als Premium-Punkt. */
+.sp {
+  --sp-text: #EEF0F3; --sp-leise: #9CA2AA; --sp-linie: rgba(226, 230, 236, 0.12); --sp-premium: #FF7A3D; --sp-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --sp-chrom: linear-gradient(180deg, #FFFFFF 0%, #E6E9EE 26%, #A3AAB4 48%, #F4F6F8 62%, #B9BFC8 82%, #ECEEF1 100%);
+  --sp-kante: linear-gradient(150deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.08) 28%, rgba(255, 255, 255, 0.28) 52%, rgba(255, 255, 255, 0.05) 78%, rgba(255, 255, 255, 0.38));
+  display: grid; gap: 28px; width: 100%; text-align: left; color: var(--sp-text); scroll-margin-top: 80px;
+}
+.sp h3, .sp h4, .sp p { margin: 0; font-weight: 400; }
+.sp ul { margin: 0; padding: 0; list-style: none; }
+.sp__kopf { display: grid; gap: 12px; max-width: 620px; }
+.sp__label { font-size: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--sp-leise); }
+.sp__titel { font-family: "Instrument Serif", Georgia, serif; font-size: clamp(2.2rem, 4.6vw, 3.4rem); line-height: 1; letter-spacing: -0.015em; text-wrap: balance; background: var(--sp-chrom); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.sp__satz { color: var(--sp-leise); font-size: 16px; line-height: 1.55; text-wrap: pretty; }
+
+/* Karten */
+.sp__karten { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.sp-karte { display: grid; grid-template-rows: auto auto 1fr auto; gap: 22px; padding: 26px 24px 24px; border-radius: 24px; border: 1px solid transparent;
+  background: linear-gradient(180deg, #111317, #0A0B0E) padding-box, var(--sp-kante) border-box; }
+.sp-karte__oben { display: grid; gap: 6px; padding-bottom: 20px; border-bottom: 1px solid var(--sp-linie); }
+.sp-karte__name { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; letter-spacing: 0.02em; }
+.sp-karte--premium .sp-karte__name::after { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--sp-premium); }
+.sp-karte__preis { font-family: "Instrument Serif", Georgia, serif; font-size: clamp(3rem, 5vw, 4rem); line-height: 1; background: var(--sp-chrom); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.sp-karte__credits { font-size: 14px; color: var(--sp-leise); }
+.sp-karte__klein { margin-bottom: 10px !important; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sp-leise); }
+.sp-karte__mengen { display: grid; gap: 6px; font-size: 15px; color: var(--sp-leise); }
+.sp-karte__mengen b { color: var(--sp-text); font-weight: 500; font-variant-numeric: tabular-nums; }
+.sp-karte__zeile { font-size: 14px; line-height: 1.6; color: var(--sp-leise); }
+.sp-karte__liste { display: grid; gap: 7px; font-size: 14px; color: var(--sp-leise); }
+.sp-karte__liste li { display: flex; gap: 10px; }
+.sp-karte__liste li::before { content: ""; flex: none; width: 12px; height: 1px; margin-top: 10px; background: rgba(226, 230, 236, 0.5); }
+.sp-karte__liste li.ist-plus { color: var(--sp-text); }
+.sp-karte__liste li.ist-plus::before { background: var(--sp-premium); }
+
+/* Knöpfe: Rand in Chrom, der Hauptknopf voll Chrom */
+.sp-knopf { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 12px 22px; border-radius: 999px; border: 1px solid transparent; color: var(--sp-text); font: inherit; font-size: 15px; font-weight: 500; line-height: 1; text-align: center; cursor: pointer;
+  background: linear-gradient(#0B0C0F, #0B0C0F) padding-box, var(--sp-kante) border-box; transition: transform 160ms var(--sp-ease), filter 200ms var(--sp-ease), background 200ms var(--sp-ease); }
+.sp-knopf:active { transform: scale(0.97); }
+.sp-knopf--haupt { color: #0A0B0D; background: linear-gradient(180deg, #FBFCFD 0%, #DCE0E6 44%, #AAB1BB 52%, #E8EBEF 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(0, 0, 0, 0.22), 0 10px 28px rgba(0, 0, 0, 0.45); }
+@media (hover: hover) and (pointer: fine) { .sp-knopf:hover { filter: brightness(1.12); } }
+.sp-knopf:focus-visible { outline: 2px solid #DDE3EA; outline-offset: 3px; }
+.sp-karte .sp-knopf { width: 100%; }
+
+/* Hinweise und Kosten */
+.sp__fuss { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px 32px; }
+.sp__notiz { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 13px; color: var(--sp-leise); }
+.sp__kosten { min-width: min(100%, 320px); font-size: 14px; }
+.sp__kosten summary { cursor: pointer; color: var(--sp-text); list-style: none; display: flex; align-items: center; gap: 10px; }
+.sp__kosten summary::-webkit-details-marker { display: none; }
+.sp__kosten summary::after { content: "+"; color: var(--sp-leise); transition: transform 250ms var(--sp-ease); }
+.sp__kosten[open] summary::after { transform: rotate(45deg); }
+.sp__kosten dl { display: grid; grid-template-columns: 1fr auto; gap: 6px 20px; margin: 12px 0 0; color: var(--sp-leise); }
+.sp__kosten dd { margin: 0; color: var(--sp-text); font-variant-numeric: tabular-nums; }
+
+/* Vormerken */
+.sp__vormerken { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(20px, 4vw, 56px); padding: clamp(22px, 3.5vw, 36px); border-radius: 24px; border: 1px solid var(--sp-linie); background: rgba(13, 15, 18, 0.9); }
+.sp__vormerken[hidden] { display: none; }
+.sp__vm-text { display: grid; gap: 10px; align-content: start; color: var(--sp-leise); }
+.sp__vm-titel { font-family: "Instrument Serif", Georgia, serif; font-size: clamp(1.8rem, 3vw, 2.3rem); line-height: 1.05; color: var(--sp-text); }
+.sp__vm-titel:focus { outline: none; }
+.sp__vm-felder { display: grid; gap: 14px; }
+.sp__vm-wahl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.sp__vm-option { position: relative; display: flex; }
+.sp__vm-option input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.sp__vm-option span { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 10px; border-radius: 12px; border: 1px solid var(--sp-linie); font-size: 14px; text-align: center; transition: border-color 200ms var(--sp-ease), background-color 200ms var(--sp-ease); }
+.sp__vm-option input:checked + span { border-color: rgba(238, 240, 243, 0.7); background: rgba(226, 230, 236, 0.08); }
+.sp__vm-option input:focus-visible + span { outline: 2px solid #DDE3EA; outline-offset: 2px; }
+.sp__vm-feld { display: grid; gap: 6px; }
+.sp__vm-feld label { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sp-leise); }
+.sp__vm-feld input { width: 100%; min-height: 48px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--sp-linie); background: #0A0B0E; color: var(--sp-text); font: inherit; font-size: 16px; }
+.sp__vm-feld input:focus-visible { outline: none; border-color: rgba(226, 230, 236, 0.55); }
+.sp__vm-feld.hat-fehler input { border-color: #FF8A6A; }
+.sp__vm-fehler { min-height: 1.2em; font-size: 13px; color: #FF9A7E; }
+.sp__vm-knoepfe { display: flex; flex-wrap: wrap; gap: 10px; }
+.sp__vm-status { min-height: 1.4em; font-size: 14px; }
+.sp__vm-hinweis { font-size: 13px; color: var(--sp-leise); }
+
+/* Weg zum Gespräch */
+.sp__weiter { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px 24px; padding-top: 24px; border-top: 1px solid var(--sp-linie); color: var(--sp-leise); }
+
+@media (max-width: 860px) {
+  .sp__karten { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .sp__vormerken { grid-template-columns: minmax(0, 1fr); }
+  .sp__weiter .sp-knopf { width: 100%; }
+}
+@media (max-width: 420px) { .sp__vm-wahl { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .sp-knopf, .sp__vm-option span, .sp__kosten summary::after { transition: none; } }
