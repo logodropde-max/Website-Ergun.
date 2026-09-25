@@ -6,6 +6,11 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Teil 2 · Schritt 2: weicher Übergang Titelbild → endo (25.09.2026, 16:30, Claude Code)
+- `.szene__buehne` hat eine Maske (ab 70 % Höhe weich auslaufend) – keine harte Unterkante mehr, egal wie weit gescrollt ist. `.szene` liegt über der endo-Sektion (z-index 1).
+- `.endo` schiebt sich 22svh unter die Szene (`margin-top: -22svh`, Hintergrund `#070B16` → Schwarz), `scroll-margin-top: -16svh` für den Link „endo.ai“.
+- `.endo__sterne`: einmal gezeichneter Sternenhimmel, der nach unten verblasst. Kugel steigt beim Hereinscrollen auf (`animation-timeline: view()`, Rückfall: Klasse `.endo--da`).
+
 ## Teil 2 · Schritt 1: Titelbild detailreicher (25.09.2026, 16:10, Claude Code)
 - Neue Ebene `weit` (sehr ferne, blasse Kette, Tiefe 0,8), zeigt sich in den Lücken der fernen Kette.
 - `berg()` hat neue Optionen: `rippen` (Felsrippen/Rinnen schräg vom Grat, Schatten- + Lichtlinie, teils Schnee), `baender` (Felsbänder), `geroell` (Punkte am Fuß); `nebel()` legt flache Nebelschwaden über den Talboden jeder Kette.
