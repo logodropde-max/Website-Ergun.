@@ -4,6 +4,13 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Tag → Nacht im Startbild (25.09.2026, 03:10, Claude Code)
+- `html.nacht-an` (setzt das Skript „Tag → Nacht“ vor dem Kontaktformular-Skript): `.parallax__header` 250svh (Handy 230svh), `.parallax__visuals` sticky. Ein Wert p (0–1, GSAP ScrollTrigger scrub 0,6 über die angeheftete Strecke) steuert: Sonne `[data-sonne]` Bogen 40° → −14° (p 0,02–0,5), `--abend` (roter Schein), Nachtbilder `.parallax__nacht` Deckkraft (p 0,2–0,55), Mond `[data-mond]` Bogen 196° → 138° (p 0,42–0,8), Sterne (p 0,42–0,7), Sternschnuppen ab p 0,55, `.jault` ab p 0,74.
+- Bogen: Mitte = Bildmitte, unten = Horizont (Lage der alten Sonne auf der Leinwand, über `messen()` aus object-fit/object-position gerechnet), Radius 34 % (Handy 36 %) der Breite.
+- Parallax beim Wegscrollen: CSS `view-timeline` jetzt auf `.parallax__header`, Bereich `exit 0% exit 100%`.
+- Bilder: `szene-<ebene>-nacht-*`, `szene-hund-*`, `szene-hund-jault-nacht-*`. Neu bauen: `ebenen.py` und danach `sonne_weg.py` (Reihenfolge wichtig: `ebenen.py` schreibt den Himmel mit Sonne).
+- Intro aus (Kopfskript kehrt sofort zurück, `.loader` entfernt). `h1` ist jetzt `.parallax__claim`.
+
 ## Hero-Szene 2: Bergwiese mit Schäferhund, randlos (25.09.2026, 02:30, Claude Code)
 - **Ebenen** (von hinten): `szene-himmel` · `szene-fern` · `szene-mitte` · Name (`data-parallax-layer="titel"`) · `szene-wald` · `szene-wiese` (mit Hund) · `szene-gras`. Je `-1920`, `-2560`, `-hoch` (Hochformat: mittlere Hälfte, Hund dort mittig).
 - **Leinwand** aller Ebenen: 3840 × 3024 (Szene 3840 × 2160 unten, darüber 864 px Himmel-Überstand). Unten bündig (`object-position: 50% var(--bild-y)`), Breite 104 % (links −2 %). Jede Ebene ist unter ihrer Kante komplett gefüllt (Inpainting der eigenen Farben).
