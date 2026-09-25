@@ -71,6 +71,8 @@
       gold: { koerper: '#7E6485', unten: '#FFB88A', a: 0.46 },
       nacht: { koerper: '#18213A', unten: '#5E7098', a: 0.42 }
     },
+    /* Lichtsaum der Sonnenwolken: Farbe, Stärke */
+    wolkeSaum: { tag: ['#FFFFFF', 0.7], gold: ['#FFD9A6', 0.95], nacht: ['#8FA4D0', 0.35] },
     fern: {
       tag: { grund: '#90A9C4', dunst: '#C9DAEA', hell: '#B9CCE0', schatten: '#7A91AE', kante: '#FFFFFF', kanteA: 0.35, schneeH: '#F4F7FB', schneeS: '#C6D3E4', schicht: '#6E86A3' },
       gold: { grund: '#9B7D95', dunst: '#E8AE8C', hell: '#EDB896', schatten: '#7C6583', kante: '#FFD9A2', kanteA: 0.9, schneeH: '#FFE3C6', schneeS: '#B598B3', schicht: '#7C627F' },
@@ -520,12 +522,12 @@
      je Figur ein Tag- und ein Abendbild und für die Nacht die Bildfolge – der Hund hebt den Kopf und jault, Emre winkt
      („Tschüss“). Beides startet gemeinsam, sobald es Nacht ist und man weiterscrollt, und läuft dann in eigener Zeit ab
      (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
-  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4198, breite: 0.7704 }, emre: { b: 268, h: 560, anzahl: 30, spalten: 6, fuss: 0.9914, oben: 0.0574, mitte: 0.5821, breite: 0.7687 } };
+  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4198, breite: 0.7704 }, emre: { b: 298, h: 720, anzahl: 30, spalten: 6, fuss: 0.9957, oben: 0.0305, mitte: 0.5805, breite: 0.7651 } };
   var fig = { phase: 0, ziel: 0, laeuft: false, t: 0 }, FIG_DAUER = 3.6, lichtGold = 0, lichtNacht = 0;
   function figurLaden(name, licht) {
     var f = FIGUREN[name], b = new Image(); b.decoding = 'async';
     b.onload = function () { f.bilder[licht] = b; f.zuletzt = ''; figurenZeichnen(); };
-    b.src = 'bilder/hero/figuren/' + name + '-' + licht + '.webp?v=2';
+    b.src = 'bilder/hero/figuren/' + name + '-' + licht + '.webp?v=3';
   }
   Object.keys(FIGUREN).forEach(function (k) { FIGUREN[k].bilder = {}; FIGUREN[k].zuletzt = ''; figurLaden(k, 'tag'); figurLaden(k, 'gold'); });
   /* die Nacht-Bildfolgen (größer) erst nach dem Laden der Seite */
@@ -643,6 +645,10 @@
       feld.push({ x: x, y: y, w: m.W * (0.06 + wz() * 0.12), h: m.H * (0.012 + wz() * 0.02) });
     }
     for (i = 0; i < 5; i++) feld.push({ x: m.W * (0.1 + wz() * 0.8), y: hoehe * (0.8 + wz() * 0.12), w: m.W * (0.12 + wz() * 0.2), h: m.H * (0.008 + wz() * 0.01) });
+    /* 26.09. (Emre): Wolken bei der Sonne – dünne Schleier auf der Sonnenbahn, liegen VOR der Sonne, tagsüber weiß mit
+       heller Oberkante, abends von unten orange angestrahlt, nachts dunkle Schleier mit Mondsaum */
+    var sonnig = [];
+    for (i = 0; i < 4; i++) sonnig.push({ x: m.W * (0.36 + wz() * 0.28), y: hoehe * (0.2 + i * 0.09 + wz() * 0.06), w: m.W * (0.09 + wz() * 0.12), h: m.H * (0.008 + wz() * 0.012) });
     AKTIV.forEach(function (licht) {
       var c = document.createElement('canvas');
       c.width = Math.ceil(m.W * q); c.height = Math.ceil(hoehe * q);
@@ -660,6 +666,24 @@
         }
       });
       ebene.insertBefore(c, ebene.querySelector('.sonne'));
+      /* die Sonnenwolken vor der Sonne (hinter dem Mond) */
+      var v = document.createElement('canvas');
+      v.width = c.width; v.height = c.height;
+      v.className = 'szene__bild szene__wolken szene__wolken--vorn'; v.setAttribute('data-licht', licht); v.style.top = '0px'; v.style.height = hoehe + 'px';
+      var vg = v.getContext('2d'), saum = F.wolkeSaum[licht]; vg.setTransform(q, 0, 0, q, 0, 0);
+      sonnig.forEach(function (w, k) {
+        var r = zufall(1200 + k);
+        for (var j = 0; j < 12; j++) {
+          var bx = w.x + (r() - 0.5) * w.w, by = w.y + (r() - 0.5) * w.h, rx = w.w * (0.12 + r() * 0.2), ry = w.h * (0.35 + r() * 0.45);
+          /* Körper, dann der Lichtsaum: tagsüber oben (Sonne hoch), abends unten (Sonne tief), nachts oben links (Mond) */
+          [[p.koerper, 0, p.a * 0.8], [saum[0], licht === 'gold' ? ry * 0.45 : -ry * 0.4, saum[1]]].forEach(function (z, zi) {
+            vg.save(); vg.translate(bx + (licht === 'nacht' && zi ? -rx * 0.2 : 0), by + z[1]); vg.scale(1, ry / rx);
+            var gr = vg.createRadialGradient(0, 0, 0, 0, 0, rx * (zi ? 0.8 : 1)); gr.addColorStop(0, rgba(z[0], z[2] * 0.5)); gr.addColorStop(1, rgba(z[0], 0));
+            vg.fillStyle = gr; vg.fillRect(-rx, -rx, rx * 2, rx * 2); vg.restore();
+          });
+        }
+      });
+      ebene.insertBefore(v, ebene.querySelector('.mond'));
     });
   }
 
@@ -682,13 +706,13 @@
       var t = (r() - 0.5) * mw * 1.6, d = (r() + r() + r() - 1.5) * mh * 0.07;
       var x = cx + t * ca - d * sa, y = cy + t * sa + d * ca, rr = 6 + r() * 14;
       var gr = mg.createRadialGradient(x, y, 0, x, y, rr);
-      gr.addColorStop(0, 'rgba(210,218,255,' + (0.025 + r() * 0.025) + ')'); gr.addColorStop(1, 'rgba(210,218,255,0)');
+      gr.addColorStop(0, 'rgba(210,218,255,' + (0.035 + r() * 0.035) + ')'); gr.addColorStop(1, 'rgba(210,218,255,0)');
       mg.fillStyle = gr; mg.fillRect(x - rr, y - rr, rr * 2, rr * 2);
     }
     for (i = 0; i < 5200; i++) {
       t = (r() - 0.5) * mw * 1.6; d = (r() + r() + r() + r() - 2) * mh * 0.06;
       x = cx + t * ca - d * sa; y = cy + t * sa + d * ca;
-      mg.fillStyle = 'rgba(235,238,255,' + (0.08 + r() * 0.3) + ')'; mg.fillRect(x, y, r() < 0.85 ? 0.7 : 1.2, r() < 0.85 ? 0.7 : 1.2);
+      mg.fillStyle = 'rgba(235,238,255,' + (0.12 + r() * 0.38) + ')'; mg.fillRect(x, y, r() < 0.85 ? 0.7 : 1.2, r() < 0.85 ? 0.7 : 1.2);
     }
     /* dunkle Staubbahnen */
     mg.globalCompositeOperation = 'destination-out';
@@ -700,7 +724,8 @@
     }
     box.appendChild(mc);
     /* zwei Leinwände: schwache und mittlere Sterne */
-    [['3', 1 / 1400, 0.28, 0.55], ['2', 1 / 9000, 0.55, 0.9]].forEach(function (st) {
+    /* 26.09. (Emre): Nachthimmel leuchtender – dichter, heller, weicherer Schein um die mittleren Sterne */
+    [['3', 1 / 950, 0.32, 0.62], ['2', 1 / 5200, 0.6, 1.05]].forEach(function (st) {
       var c = document.createElement('canvas'); c.width = Math.ceil(m.W * q); c.height = Math.ceil(hoehe * q);
       c.className = 'sterne__feld'; c.setAttribute('data-stufe', st[0]);
       var g = c.getContext('2d'); g.setTransform(q, 0, 0, q, 0, 0);
@@ -714,11 +739,11 @@
           if (y2 < 0 || y2 > hoehe) continue;
         }
         var ra = st[2] + r() * (st[3] - st[2]), f = STERNFARBEN[Math.floor(r() * STERNFARBEN.length)];
-        g.globalAlpha = (0.35 + r() * 0.65) * (1 - Math.pow(y2 / hoehe, 3) * 0.6);
+        g.globalAlpha = (0.45 + r() * 0.55) * (1 - Math.pow(y2 / hoehe, 3) * 0.55);
         if (st[0] === '2') {
-          var gg = g.createRadialGradient(x2, y2, 0, x2, y2, ra * 4);
-          gg.addColorStop(0, rgba(f, 0.35)); gg.addColorStop(1, rgba(f, 0));
-          g.fillStyle = gg; g.fillRect(x2 - ra * 4, y2 - ra * 4, ra * 8, ra * 8);
+          var gg = g.createRadialGradient(x2, y2, 0, x2, y2, ra * 5);
+          gg.addColorStop(0, rgba(f, 0.45)); gg.addColorStop(1, rgba(f, 0));
+          g.fillStyle = gg; g.fillRect(x2 - ra * 5, y2 - ra * 5, ra * 10, ra * 10);
         }
         g.fillStyle = f; g.beginPath(); g.arc(x2, y2, ra, 0, Math.PI * 2); g.fill();
       }
@@ -726,9 +751,9 @@
     });
     /* die hellsten: eigene Elemente, jeder mit eigenem, unregelmäßigem Takt */
     var hell = document.createElement('div'); hell.className = 'sterne__hell';
-    var anzahl = Math.round(Math.min(46, Math.max(18, m.W / 34)));
+    var anzahl = Math.round(Math.min(70, Math.max(26, m.W / 22)));
     for (var j = 0; j < anzahl; j++) {
-      var sp = document.createElement('i'), gr2 = 1.4 + Math.pow(r(), 2.2) * 2.6;
+      var sp = document.createElement('i'), gr2 = 1.6 + Math.pow(r(), 2) * 3;
       sp.style.left = (r() * 100).toFixed(2) + '%';
       sp.style.top = (Math.pow(r(), 1.4) * 88).toFixed(2) + '%';
       sp.style.setProperty('--g', gr2.toFixed(2) + 'px');

@@ -12,6 +12,11 @@
 
 
 
+
+## Teil 6: echtes Gesicht, Winken 2, Himmel (26.09.2026, 04:40, Claude Code)
+- Video-Startbild `bilder/hero/4k/szene2/video/start-emre-echt.png` (1080×1920, `emre-ausschnitt.png` auf Weiß, 86 % Höhe). `figuren.py winken video/winken2-v1-4c32d096.mp4 0.4 4.9`: Kopfausrichtung sucht den Maßstab jetzt um Personenhöhe ± 6 %; Video-Kopfumriss wird mit 7 % Kopfhöhe dilatiert ausgeschlossen (kein Haar-Bogen); Emre-Zellen 720 px (`emre-nacht.webp` 692 KB). `figuren_stil.py`: Nacht belicht 0,3/saett 0,45, Stufung 10 %, Saum nachts 0,62 und dünner.
+- `js/szene.js` (`?v=21`, Figuren `?v=3`): `FIGUREN.emre` = 298×720, 30 Bilder. Sterne: Dichte 1/950 und 1/5200, Alpha 0,45–1, Hof ×5, bis 70 helle; Milchstraße heller (`.milchstrasse` opacity = `--milch`). Wolken: `sonnig` (4 Schleier bei u 0,36–0,64) auf eigener Leinwand `.szene__wolken--vorn` zwischen Sonne und Mond, Lichtsaum aus `F.wolkeSaum` (tag oben, gold unten, nacht oben links). `index.html`: `.mond__hof` 18 × r, neu `.mond__schein` 4,6 × r.
+
 ## Figuren: echter Kopf, Licht, Stand, Überblendung (26.09.2026, 03:30, Claude Code)
 - `figuren.py winken`: Kopf aus `bilder/hero/4k/emre-ausschnitt.png` (Studiokopf), per Körperumriss auf Bild 0 gesetzt (Maßstab mit bester Deckung), dann Kopfbewegung des Videos Bild 0 → i per SIFT (Ähnlichkeit). In der Kopfzone gilt nur der echte Umriss; Hand = Videobild außerhalb des Video-Kopfumrisses links vom Kopf. Masken-Zwischenspeicher `video/winken-masken-*.npz`.
 - `figuren_stil.py`: neue Lichtwerte (Tag 0,86 · Abend 0,5 Gegenlicht · Nacht 0,24). Bilder `?v=2`.

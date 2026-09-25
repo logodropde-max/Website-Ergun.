@@ -1,11 +1,11 @@
 {
- "b": 268,
- "h": 560,
+ "b": 298,
+ "h": 720,
  "anzahl": 30,
  "spalten": 6,
- "fuss": 0.9914,
- "oben": 0.0574,
- "quelle": "winken-v2-ca4f3250.mp4",
- "mitte": 0.5821,
- "breite": 0.7687
+ "fuss": 0.9957,
+ "oben": 0.0305,
+ "quelle": "winken2-v1-4c32d096.mp4",
+ "mitte": 0.5805,
+ "breite": 0.7651
 }

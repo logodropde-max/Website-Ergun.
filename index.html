@@ -144,19 +144,21 @@ img { display: block; max-width: 100%; height: auto; }
 .sonne__kern { width: calc(var(--sonne-r) * 2); height: calc(var(--sonne-r) * 2); background: radial-gradient(circle, #FFFFFA 0 50%, #FFF6D8 62%, rgba(255, 240, 200, 0) 71%); }
 .sonne__kern--abend { background: radial-gradient(circle, #FFF1C8 0 38%, #FFC06A 56%, rgba(255, 150, 70, 0) 71%); opacity: var(--tief); }
 .mond { opacity: var(--mond); }
-.mond__hof { width: calc(var(--sonne-r) * 9); height: calc(var(--sonne-r) * 9); background: radial-gradient(closest-side, rgba(200, 215, 255, 0.3), rgba(170, 190, 245, 0.08) 45%, rgba(160, 180, 240, 0) 100%); }
+/* 26.09. (Emre): Mond leuchtender – weiter, weicher Schein, dazu ein enger heller Hof */
+.mond__hof { width: calc(var(--sonne-r) * 18); height: calc(var(--sonne-r) * 18); background: radial-gradient(closest-side, rgba(205, 220, 255, 0.34), rgba(175, 195, 248, 0.14) 30%, rgba(165, 185, 242, 0.05) 60%, rgba(160, 180, 240, 0) 100%); }
+.mond__schein { width: calc(var(--sonne-r) * 4.6); height: calc(var(--sonne-r) * 4.6); background: radial-gradient(closest-side, rgba(235, 242, 255, 0.55), rgba(215, 228, 255, 0.22) 45%, rgba(200, 215, 255, 0) 100%); }
 .mond__kern { width: calc(var(--sonne-r) * 1.5); height: calc(var(--sonne-r) * 1.5);
   background: radial-gradient(circle at 36% 40%, rgba(170, 170, 160, 0.35) 0 9%, transparent 10%), radial-gradient(circle at 60% 62%, rgba(170, 170, 160, 0.28) 0 12%, transparent 13%), radial-gradient(circle at 62% 30%, rgba(170, 170, 160, 0.22) 0 6%, transparent 7%), radial-gradient(circle at 44% 44%, #FDFBF3 0 40%, #E9E5D8 60%, #D5D0C3 68%, rgba(210, 205, 190, 0) 71%); }
 
 /* Sterne: drei Stufen, die hellsten funkeln einzeln (eigener Takt), Milchstraße zurückhaltend */
 .sterne { position: absolute; left: 0; top: 0; width: 100%; pointer-events: none; }
 .sterne canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.milchstrasse { opacity: calc(var(--milch, 0) * 0.7); }
+.milchstrasse { opacity: var(--milch, 0); }
 .sterne__feld[data-stufe="3"] { opacity: var(--sterne3, 0); }
 .sterne__feld[data-stufe="2"] { opacity: var(--sterne2, 0); }
 .sterne__hell { position: absolute; inset: 0; opacity: var(--sterne, 0); }
 .sterne__hell i { position: absolute; width: calc(var(--g) * 5); height: calc(var(--g) * 5); margin: calc(var(--g) * -2.5) 0 0 calc(var(--g) * -2.5); border-radius: 50%;
-  background: radial-gradient(circle, var(--f) 0 calc(var(--g) * 0.5), rgba(235, 240, 255, 0.28) calc(var(--g) * 0.9), rgba(235, 240, 255, 0) calc(var(--g) * 2.5)); }
+  background: radial-gradient(circle, var(--f) 0 calc(var(--g) * 0.5), rgba(235, 240, 255, 0.36) calc(var(--g) * 0.9), rgba(235, 240, 255, 0) calc(var(--g) * 2.5)); }
 @media (prefers-reduced-motion: no-preference) {
   .szene--sterne .sterne__hell i { animation: funkeln 4s ease-in-out infinite; }
   .szene--sterne .sterne__hell i.anders { animation-name: funkeln-b; }
@@ -495,7 +497,7 @@ img { display: block; max-width: 100%; height: auto; }
       <div class="himmel himmel--nacht"></div>
       <div class="sterne"></div>
       <div class="sonne"><b class="sonne__glut"></b><b class="sonne__hof"></b><i class="sonne__kern"></i><i class="sonne__kern sonne__kern--abend"></i></div>
-      <div class="mond"><b class="mond__hof"></b><i class="mond__kern"></i></div>
+      <div class="mond"><b class="mond__hof"></b><b class="mond__schein"></b><i class="mond__kern"></i></div>
     </div>
     <div class="szene__ebene" data-ebene="weit" aria-hidden="true"></div>
     <div class="szene__ebene" data-ebene="fern" aria-hidden="true"></div>
@@ -701,7 +703,7 @@ img { display: block; max-width: 100%; height: auto; }
   </nav>
 </footer>
 
-<script src="js/szene.js?v=19"></script>
+<script src="js/szene.js?v=21"></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {
