@@ -6,6 +6,13 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Scrollen oben auf dem iPhone (25.09.2026, 20:05, Claude Code)
+- Emre: „ganz oben buggt es beim Scrollen“. Behoben (auf dem echten iPhone noch zu bestätigen):
+  1. Zoom-Sperre: `touchmove`- und `touchend`-Sperren (nicht-passiv) entfernt – sie bremsten jedes Scrollen und brachen schnelles Nachwischen ab (Doppeltipp-Sperre). Jetzt nur Safari-Gesten + CSS `touch-action: pan-x pan-y` auf html und body.
+  2. Maske über `.szene__buehne` entfernt (Safari flackert bei Masken über bewegten Ebenen); `.szene__fade` ist jetzt ein 36 % hoher Verlauf in `#070B16`, der Farbe, mit der die Studio-Sektion beginnt.
+  3. Nebel der Studio-Sektion beginnt erst unter dem Titelbild (Maske ab 34svh), damit keine Linie entsteht.
+- **Regel:** keine nicht-passiven `touchmove`/`touchend`-Listener auf `document` und keine `mask-image` über den Szene-Ebenen.
+
 ## Teil 4: Tageswechsel kürzer, „endo Studio“, Kontakt ohne Schritte (25.09.2026, 19:45, Claude Code)
 - `js/szene.js`: `ZEIT = 0.6` – `licht(p)` rechnet mit `p / ZEIT`, der ganze Ablauf (Gold, Untergang, Nacht, Mond, Sterne, Hund) passiert auf 60 % der Strecke; volle Nacht und jaulender Hund, solange das Titelbild noch gut zu sehen ist. Sonnenende/Mondstart berücksichtigen `ZEIT`.
 - **Name: „endo Studio“** (vorher kurz „ERGUN. Studio“, davor „endo.ai“) – Startseite, /ki/, `pakete.js`, `agent.js`, `api/agent.js`, `endo-daten.js` (`marke`), Datenschutz. Wortmarke: „endo“ (Serif) + „Studio“ (Chrom).
