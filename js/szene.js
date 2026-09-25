@@ -522,47 +522,77 @@
      je Figur ein Tag- und ein Abendbild und für die Nacht die Bildfolge – der Hund hebt den Kopf und jault, Emre winkt
      („Tschüss“). Beides startet gemeinsam, sobald es Nacht ist und man weiterscrollt, und läuft dann in eigener Zeit ab
      (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
-  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4198, breite: 0.7704 }, emre: { b: 298, h: 720, anzahl: 30, spalten: 6, fuss: 0.9957, oben: 0.0305, mitte: 0.5805, breite: 0.7651 } };
-  var fig = { phase: 0, ziel: 0, laeuft: false, t: 0 }, FIG_DAUER = 3.6, lichtGold = 0, lichtNacht = 0;
-  function figurLaden(name, licht) {
+  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 298, h: 720, anzahl: 30, spalten: 6, fuss: 0.9957, oben: 0.0311, mitte: 0.5810, breite: 0.7673 } };
+  var fig = { phase: 0, ziel: 0, laeuft: false, t: 0 }, FIG_DAUER = 3.6, lichtGold = 0, lichtBlau = 0, lichtNacht = 0;
+  function figurLaden(name, folge) {
     var f = FIGUREN[name], b = new Image(); b.decoding = 'async';
-    b.onload = function () { f.bilder[licht] = b; f.zuletzt = ''; figurenZeichnen(); };
-    b.src = 'bilder/hero/figuren/' + name + '-' + licht + '.webp?v=3';
+    b.onload = function () { f[folge ? 'folge' : 'bild'] = b; f.zuletzt = ''; figurenZeichnen(); };
+    b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=4';
   }
-  Object.keys(FIGUREN).forEach(function (k) { FIGUREN[k].bilder = {}; FIGUREN[k].zuletzt = ''; figurLaden(k, 'tag'); figurLaden(k, 'gold'); });
-  /* die Nacht-Bildfolgen (größer) erst nach dem Laden der Seite */
-  function nachtLaden() { Object.keys(FIGUREN).forEach(function (k) { figurLaden(k, 'nacht'); }); }
-  if (document.readyState === 'complete') setTimeout(nachtLaden, 200); else window.addEventListener('load', function () { setTimeout(nachtLaden, 200); });
+  Object.keys(FIGUREN).forEach(function (k) { FIGUREN[k].zuletzt = ''; figurLaden(k, false); });
+  /* die Bildfolgen (groß) erst nach dem Laden der Seite */
+  function folgenLaden() { if (!ruhig) Object.keys(FIGUREN).forEach(function (k) { figurLaden(k, true); }); }
+  if (document.readyState === 'complete') setTimeout(folgenLaden, 200); else window.addEventListener('load', function () { setTimeout(folgenLaden, 200); });
+  /* Licht auf den Figuren, live aus denselben Werten wie die Landschaft (26.09., Emre: „der Realität entsprechen, Stück für Stück“):
+     Tag → Abend (gold) → blaue Stunde (blau) → Nacht, in beide Richtungen. mul = Belichtung und Farbe (multiplikativ),
+     lift = Aufhellung der Schatten durch Himmels- bzw. Mondlicht, rim = Lichtsaum links oben (Sonne bzw. Mond stehen links). */
+  var FIGLICHT = {
+    tag:   { mul: [0.9, 0.91, 0.93], lift: [0, 0, 0], rim: [255, 246, 216], ra: 0.32 },
+    gold:  { mul: [0.6, 0.46, 0.4], lift: [0.04, 0.02, 0.03], rim: [255, 182, 100], ra: 0.9 },
+    blau:  { mul: [0.3, 0.34, 0.44], lift: [0.02, 0.03, 0.06], rim: [176, 196, 240], ra: 0.35 },
+    nacht: { mul: [0.2, 0.25, 0.37], lift: [0.03, 0.045, 0.08], rim: [170, 196, 255], ra: 0.6 }
+  };
+  function figurLicht() {
+    var l = { mul: [0, 0, 0], lift: [0, 0, 0], rim: [0, 0, 0], ra: 0 };
+    ['mul', 'lift', 'rim'].forEach(function (k) {
+      for (var i = 0; i < 3; i++) {
+        var v = FIGLICHT.tag[k][i];
+        v = mix(v, FIGLICHT.gold[k][i], lichtGold); v = mix(v, FIGLICHT.blau[k][i], lichtBlau); v = mix(v, FIGLICHT.nacht[k][i], lichtNacht);
+        l[k][i] = v;
+      }
+    });
+    l.ra = mix(mix(mix(FIGLICHT.tag.ra, FIGLICHT.gold.ra, lichtGold), FIGLICHT.blau.ra, lichtBlau), FIGLICHT.nacht.ra, lichtNacht);
+    return l;
+  }
+  function rgbStr(a, s) { return 'rgb(' + Math.round(a[0] * s) + ',' + Math.round(a[1] * s) + ',' + Math.round(a[2] * s) + ')'; }
+  function hilfsLeinwand(f, name, w, h) { var c = f[name] || (f[name] = document.createElement('canvas')); if (c.width !== w || c.height !== h) { c.width = w; c.height = h; } return c; }
   /* nr darf gebrochen sein: zwischen zwei Einzelbildern wird weich überblendet (additiv, dadurch ohne Geisterbild) */
-  function figurZeichnen(f, nr) {
-    var c = f.leinwand; if (!c || !f.bilder.tag) return;
-    if (!f.bilder.nacht) nr = 0;
+  function figurZeichnen(f, nr, l) {
+    var c = f.leinwand; if (!c || !f.bild) return;
+    if (!f.folge) nr = 0;
     var n0 = Math.floor(nr), t = Math.round((nr - n0) * 12) / 12, n1 = Math.min(f.anzahl - 1, n0 + 1);
-    var gold = f.bilder.gold ? lichtGold : 0;
-    /* läuft die Bewegung, gilt für die Figuren das Nachtlicht (die Bildfolge gibt es nur nachts) – weich angehoben */
-    var nacht = f.bilder.nacht ? Math.max(lichtNacht, sanft(0, 0.12, fig.phase)) : 0;
-    var schluessel = n0 + '|' + t + '|' + gold.toFixed(2) + '|' + nacht.toFixed(2);
+    var schluessel = n0 + '|' + t + '|' + lichtGold.toFixed(2) + '|' + lichtBlau.toFixed(2) + '|' + lichtNacht.toFixed(2);
     if (schluessel === f.zuletzt) return;
     f.zuletzt = schluessel;
-    var g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, c.width, c.height); g.globalAlpha = 1;
-    if (nacht < 0.999) {
-      g.drawImage(f.bilder.tag, 0, 0, c.width, c.height);
-      if (gold > 0.002) { g.globalAlpha = gold; g.drawImage(f.bilder.gold, 0, 0, c.width, c.height); }
+    var W = c.width, H = c.height;
+    var A = hilfsLeinwand(f, 'lwA', W, H), B = hilfsLeinwand(f, 'lwB', W, H), C = hilfsLeinwand(f, 'lwC', W, H);
+    var ga = A.getContext('2d'), gb = B.getContext('2d'), gc = C.getContext('2d');
+    /* 1. Bild */
+    ga.globalCompositeOperation = 'source-over'; ga.globalAlpha = 1; ga.clearRect(0, 0, W, H);
+    if (f.folge) {
+      ga.globalAlpha = 1 - t; ga.drawImage(f.folge, (n0 % f.spalten) * f.b, Math.floor(n0 / f.spalten) * f.h, f.b, f.h, 0, 0, W, H);
+      if (t > 0) { ga.globalCompositeOperation = 'lighter'; ga.globalAlpha = t; ga.drawImage(f.folge, (n1 % f.spalten) * f.b, Math.floor(n1 / f.spalten) * f.h, f.b, f.h, 0, 0, W, H); }
+    } else ga.drawImage(f.bild, 0, 0, W, H);
+    ga.globalCompositeOperation = 'source-over'; ga.globalAlpha = 1;
+    /* 2. Umriss merken */
+    gb.globalCompositeOperation = 'source-over'; gb.globalAlpha = 1; gb.clearRect(0, 0, W, H); gb.drawImage(A, 0, 0);
+    /* 3. Belichtung und Farbe, Schatten aufhellen, Umriss wiederherstellen */
+    ga.globalCompositeOperation = 'multiply'; ga.fillStyle = rgbStr(l.mul, 255); ga.fillRect(0, 0, W, H);
+    ga.globalCompositeOperation = 'lighter'; ga.fillStyle = rgbStr(l.lift, 255); ga.fillRect(0, 0, W, H);
+    ga.globalCompositeOperation = 'destination-in'; ga.drawImage(B, 0, 0);
+    /* 4. Lichtsaum: Umriss minus nach rechts unten versetzter Umriss = schmaler Streifen links oben, in Saumfarbe */
+    if (l.ra > 0.02) {
+      var d = Math.max(1, H * 0.0045);
+      gc.globalCompositeOperation = 'source-over'; gc.globalAlpha = 1; gc.clearRect(0, 0, W, H); gc.drawImage(B, d, d * 0.45);
+      gb.globalCompositeOperation = 'destination-out'; gb.drawImage(C, 0, 0);
+      gb.globalCompositeOperation = 'source-in'; gb.fillStyle = rgbStr(l.rim, 1); gb.fillRect(0, 0, W, H);
+      ga.globalCompositeOperation = 'source-over'; ga.globalAlpha = l.ra; ga.drawImage(B, 0, 0); ga.globalAlpha = 1;
     }
-    if (nacht > 0.002) {
-      var z = f.zwischen || (f.zwischen = document.createElement('canvas'));
-      if (z.width !== c.width || z.height !== c.height) { z.width = c.width; z.height = c.height; }
-      var zg = z.getContext('2d'); zg.globalCompositeOperation = 'source-over'; zg.globalAlpha = 1; zg.clearRect(0, 0, z.width, z.height);
-      zg.globalAlpha = 1 - t; zg.drawImage(f.bilder.nacht, (n0 % f.spalten) * f.b, Math.floor(n0 / f.spalten) * f.h, f.b, f.h, 0, 0, z.width, z.height);
-      if (t > 0) { zg.globalCompositeOperation = 'lighter'; zg.globalAlpha = t; zg.drawImage(f.bilder.nacht, (n1 % f.spalten) * f.b, Math.floor(n1 / f.spalten) * f.h, f.b, f.h, 0, 0, z.width, z.height); }
-      g.globalAlpha = nacht; g.drawImage(z, 0, 0);
-    }
-    g.globalAlpha = 1;
+    var g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H); g.drawImage(A, 0, 0);
   }
   function figurenZeichnen() {
-    /* sanft anfahren und auslaufen, wie eine echte Bewegung */
-    var e = fig.phase * fig.phase * (3 - 2 * fig.phase);
-    Object.keys(FIGUREN).forEach(function (k) { var f = FIGUREN[k]; figurZeichnen(f, e * (f.anzahl - 1)); });
+    var l = figurLicht(), e = fig.phase * fig.phase * (3 - 2 * fig.phase);
+    Object.keys(FIGUREN).forEach(function (k) { var f = FIGUREN[k]; figurZeichnen(f, e * (f.anzahl - 1), l); });
   }
   function figStart(z) {
     if (fig.ziel === z) return;
@@ -581,7 +611,7 @@
   function figurenStellen(ebene) {
     var huelle = ebene.querySelector('.szene__figuren');
     if (!huelle) { huelle = document.createElement('div'); huelle.className = 'szene__figuren'; ebene.appendChild(huelle); }
-    var H = FIGUREN.hund, E = FIGUREN.emre, stand = m.H * (m.hoch ? 0.112 : 0.132);
+    var H = FIGUREN.hund, E = FIGUREN.emre, stand = m.H * (m.hoch ? 0.124 : 0.148);
     var hh = stand / (H.fuss - H.oben), hw = hh * H.b / H.h;
     var eh = stand * 1.95 / (E.fuss - E.oben), ew = eh * E.b / E.h;
     var hx = xVon(m.hundU), abstand = stand * 0.1;
@@ -904,7 +934,7 @@
     mond.style.transform = 'translate3d(' + m.mondX.toFixed(2) + 'px,' + ym.toFixed(2) + 'px,0)';
     wert('--mond', sanft(0.27, 0.4, p).toFixed(3));
     /* Emre und der Hund: Tag-, Abend- und Nachtbild überblenden mit dem Licht */
-    lichtGold = nacht > 0.995 ? 0 : gold; lichtNacht = nacht;
+    lichtGold = gold; lichtBlau = sanft(0.18, 0.3, p); lichtNacht = nacht;
     figurenZeichnen();
   }
   function anfordern() { if (!geplant) { geplant = true; requestAnimationFrame(function () { zeichne(false); }); } }

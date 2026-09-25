@@ -13,6 +13,11 @@
 
 
 
+
+## Figuren: Licht zur Laufzeit (26.09.2026, 05:30, Claude Code)
+- `figuren.py` schreibt jetzt `bilder/hero/figuren/<name>.webp` (Bild 0, neutral) und `<name>-folge.webp` (Raster, neutral, `figuren_stil.neutral`: nur Glätten + Korn); die alten `-tag/-gold/-nacht` sind gelöscht. `mitte`/`breite` stehen direkt im json. Weiße Bewegungsränder nur noch außerhalb eines 9-px-Innenrands und bei mn > 175 / Sättigung < 0,12.
+- `js/szene.js` (`?v=23`, Figuren `?v=4`): `FIGLICHT` (tag/gold/blau/nacht: `mul` multiplikativ, `lift` additiv, `rim` + `ra`), `figurLicht()` mischt sequentiell mit `lichtGold`, `lichtBlau` (= sanft 0,18–0,3), `lichtNacht` aus `licht()`. `figurZeichnen()`: Hilfsleinwände `lwA/lwB/lwC` – Bild (Zwischenbilder additiv) → Umriss merken → multiply + lighter + destination-in → Saum = Umriss minus versetzter Umriss (source-in Saumfarbe) mit Alpha `ra`. Cache-Schlüssel enthält die drei Lichtwerte (2 Stellen). `stand` 0,148 H (hoch 0,124).
+
 ## Teil 6: echtes Gesicht, Winken 2, Himmel (26.09.2026, 04:40, Claude Code)
 - Video-Startbild `bilder/hero/4k/szene2/video/start-emre-echt.png` (1080×1920, `emre-ausschnitt.png` auf Weiß, 86 % Höhe). `figuren.py winken video/winken2-v1-4c32d096.mp4 0.4 4.9`: Kopfausrichtung sucht den Maßstab jetzt um Personenhöhe ± 6 %; Video-Kopfumriss wird mit 7 % Kopfhöhe dilatiert ausgeschlossen (kein Haar-Bogen); Emre-Zellen 720 px (`emre-nacht.webp` 692 KB). `figuren_stil.py`: Nacht belicht 0,3/saett 0,45, Stufung 10 %, Saum nachts 0,62 und dünner.
 - `js/szene.js` (`?v=21`, Figuren `?v=3`): `FIGUREN.emre` = 298×720, 30 Bilder. Sterne: Dichte 1/950 und 1/5200, Alpha 0,45–1, Hof ×5, bis 70 helle; Milchstraße heller (`.milchstrasse` opacity = `--milch`). Wolken: `sonnig` (4 Schleier bei u 0,36–0,64) auf eigener Leinwand `.szene__wolken--vorn` zwischen Sonne und Mond, Lichtsaum aus `F.wolkeSaum` (tag oben, gold unten, nacht oben links). `index.html`: `.mond__hof` 18 × r, neu `.mond__schein` 4,6 × r.
