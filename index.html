@@ -289,10 +289,10 @@ img { display: block; max-width: 100%; height: auto; }
 .endo__innen, .endo__pakete { pointer-events: auto; }
 /* Schlichter Übergang (26.09., Emre: Wurzeln waren „zu doll“, bis eine Vorlage kommt): aus dem Dunkel der Erde
    läuft beim Scrollen ein einzelner feiner Lichtfaden nach unten bis in die Kugel; ab und zu wandert ein Lichtpunkt hinab.
-   Länge = Abstand von der Unterkante des Titelbilds bis zur Kugelmitte (gleiche Maße wie .endo__orb). */
+   Er endet weich kurz über dem sichtbaren Rand der Kugel (Emre: nicht in die Kugel hinein), gleiche Maße wie .endo__orb. */
 .endo__faden { position: absolute; z-index: -2; left: 50%; top: 30svh; width: 1px; margin-left: -0.5px; pointer-events: none; transform-origin: 50% 0;
-  --faden-h: calc(4svh + clamp(240px, 44svh, 440px) + clamp(-72px, -6svh, -24px) + min(460px, 74vw) / 2); height: var(--faden-h);
-  background: linear-gradient(rgba(214, 226, 245, 0), rgba(214, 226, 245, 0.28) 30%, rgba(226, 234, 248, 0.6)); }
+  --faden-h: calc(4svh + clamp(240px, 44svh, 440px) + clamp(-72px, -6svh, -24px) + min(460px, 74vw) * 0.08); height: var(--faden-h);
+  background: linear-gradient(rgba(214, 226, 245, 0), rgba(214, 226, 245, 0.28) 30%, rgba(226, 234, 248, 0.55) 82%, rgba(226, 234, 248, 0)); }
 .endo__faden::after { content: ""; position: absolute; left: -2px; top: 0; width: 5px; height: 36px; border-radius: 3px; opacity: 0;
   background: radial-gradient(closest-side, rgba(240, 245, 255, 0.95), rgba(200, 216, 245, 0)); }
 @supports (animation-timeline: view()) {
@@ -305,7 +305,7 @@ img { display: block; max-width: 100%; height: auto; }
   .endo:not(.endo--sichtbar) .endo__faden::after, .endo-chat .endo__faden::after { animation-play-state: paused; }
 }
 @keyframes faden-waechst { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-@keyframes faden-punkt { 0% { opacity: 0; transform: translate3d(0, 0, 0); } 8% { opacity: 1; } 42% { opacity: 1; } 50% { opacity: 0; transform: translate3d(0, calc(var(--faden-h) - 36px), 0); } 100% { opacity: 0; transform: translate3d(0, calc(var(--faden-h) - 36px), 0); } }
+@keyframes faden-punkt { 0% { opacity: 0; transform: translate3d(0, 0, 0); } 8% { opacity: 1; } 36% { opacity: 1; } 48% { opacity: 0; transform: translate3d(0, calc(var(--faden-h) - 36px), 0); } 100% { opacity: 0; transform: translate3d(0, calc(var(--faden-h) - 36px), 0); } }
 .endo__orb { position: relative; z-index: -1; width: min(460px, 74vw); aspect-ratio: 1; margin: clamp(-72px, -6svh, -24px) auto clamp(-72px, -7svh, -40px); opacity: 0; pointer-events: none;
   -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent); mask-image: radial-gradient(closest-side, #000 62%, transparent); transition: opacity 1400ms var(--ease), transform 1600ms var(--ease); transform: translateY(14svh) scale(0.86); }
 .endo--da .endo__orb { transform: none; }

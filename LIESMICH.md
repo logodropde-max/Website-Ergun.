@@ -11,7 +11,7 @@
 
 ## Wurzeln zurückgenommen → Lichtfaden (26.09.2026, 00:30, Claude Code)
 - `js/szene.js` wieder auf dem Stand von 8912bd2 (ohne `wurzeln()`), `?v=16`. In `index.html`: `.szene__grund`/`.szene__wurzeln` entfernt, `erde-steigt` läuft wieder, `.szene__fade` wieder 36 %, `.endo` hat wieder seinen Verlauf.
-- Neu `.endo__faden`: 1 px Linie in der Mitte von 30svh bis zur Kugelmitte (`--faden-h`, gleiche Maße wie `.endo__orb`), wächst per `animation-timeline: view()` (scaleY), Lichtpunkt `::after` alle 7 s; im Chat/außerhalb still, „Bewegung reduzieren“ = statisch.
+- Neu `.endo__faden`: 1 px Linie in der Mitte ab 30svh, endet weich bei Kugelmitte − 0,42 × Kugelbreite, also über dem sichtbaren Rand (seit 00:45; `--faden-h`, gleiche Maße wie `.endo__orb`), wächst per `animation-timeline: view()` (scaleY), Lichtpunkt `::after` alle 7 s; im Chat/außerhalb still, „Bewegung reduzieren“ = statisch.
 - Wurzel-Version zum Nachschlagen: Commit 0327880.
 
 ## Wurzeln aus dem Gras (26.09.2026, 00:10, Claude Code)
