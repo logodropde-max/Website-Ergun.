@@ -6,6 +6,10 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Linie am Übergang + Pakete auf Knopfdruck (25.09.2026, 19:10, Claude Code)
+- Emre (iPhone-Screenshot): sichtbare Linie zwischen Titelbild und Studio. Ursache: In der ausblendenden Zone des Titelbilds (Maske ab 70 %) lag über der Studio-Sektion noch Seiten-Schwarz, darunter schon deren Blau – plus Mondschein-Hof mit voller Helligkeit an der Oberkante. Lösung: `.endo` schiebt sich jetzt 34svh unter das Titelbild (deckt die ganze Ausblend-Zone), Nebel und Mondschein blenden oben weich ein (Maske ab 10svh).
+- Pakete auf der Startseite sind zu (`#pakete[hidden]`), bis man „Pakete ansehen“ (Knopf unter den drei Bereichen) oder oben „Pakete“ antippt; dann klappen sie auf und die Seite springt hin. Zweiter Druck: „Pakete schließen“. Adresse `#pakete` öffnet sie direkt.
+
 ## Teil 3 · Schritte 3+4: Pakete übersichtlich, auf der Startseite (25.09.2026, 18:45, Claude Code)
 - Gemeinsames Modul `ki/js/pakete.js` + `ki/pakete.css` (Startseite `#pakete` in der Studio-Sektion, /ki/ `#pakete`). Einbinden: `<div data-studio-pakete data-kontakt="#kontakt">` nach `endo-daten.js`.
 - Karten: Name, Preis, Credits, „Damit bekommen Sie zum Beispiel“ (ausgerechnet: Credits ÷ Kosten für Produktfoto, Werbevideo 5 s, Website-Titelbild; Mehrzahl-Namen in `endo-daten.js` → `mehrzahl`), Start/Pro „Enthalten“ als eine Zeile, Premium mit Extras (Premium-Punkt). Ein Hauptknopf (Pro, bzw. das gewählte Paket).
