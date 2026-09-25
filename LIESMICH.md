@@ -9,6 +9,12 @@
 
 
 
+
+## Emre + Hund, Tageswechsel, Details (26.09.2026, 01:20, Claude Code)
+- `bilder/hero/emre-silhouette.webp` (226×640, nur Alpha aus `bilder/hero/4k/emre-cut.png`, 11 KB). `js/szene.js`: `emre`-Objekt + `emreZeichnen()` (wie `hundZeichnen`, Farbe/Saum aus `F.hund`), Leinwand `.szene__hund.szene__emre` in der Wiesen-Ebene vor dem Hund eingefügt (Hund liegt davor). Größe `hh × 1,8`, x = Hund + 0,88 × Hundebreite (sonst links, falls kein Platz), Füße auf `ky('wiese')`.
+- `ZEIT = 0.75` (vorher 0.6); `nachfuehren()`: Zeitkonstante 0,9 s + Höchsttempo 0,2/s.
+- Details: `berg()`-Parameter (weit rippen 0,9/baender 20; fern schichten 4, rippen 1,7, baender 75, geroell 1000; mitte schichten 7, rippen 1,9, baender 120, geroell 1500), Wiese 1,5 × W Halme / 0,2 × W Blüten, Gras 0,85/0,55 × W, mehr Ähren. `szene.js?v=17`.
+
 ## Wurzeln zurückgenommen → Lichtfaden (26.09.2026, 00:30, Claude Code)
 - `js/szene.js` wieder auf dem Stand von 8912bd2 (ohne `wurzeln()`), `?v=16`. In `index.html`: `.szene__grund`/`.szene__wurzeln` entfernt, `erde-steigt` läuft wieder, `.szene__fade` wieder 36 %, `.endo` hat wieder seinen Verlauf.
 - Neu `.endo__faden`: 1 px Linie in der Mitte ab 30svh, endet weich bei Kugelmitte − 0,42 × Kugelbreite, also über dem sichtbaren Rand (seit 00:45; `--faden-h`, gleiche Maße wie `.endo__orb`), wächst per `animation-timeline: view()` (scaleY), Lichtpunkt `::after` alle 7 s; im Chat/außerhalb still, „Bewegung reduzieren“ = statisch.

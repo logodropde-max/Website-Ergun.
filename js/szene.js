@@ -122,7 +122,8 @@
   var SONNE_BIS = 0.31;
   /* ganzer Tag → Nacht auf 60 % der Strecke (Emre, 25.09. abends): volle Nacht und jaulender Hund,
      solange das Titelbild noch gut zu sehen ist. Alle Werte unten gelten für die ungestauchte Strecke. */
-  var ZEIT = 0.6;
+  /* 26.09. (Emre): Sonnenuntergang → Mond etwas langsamer, auf 75 % der Strecke (vorher 60 %) */
+  var ZEIT = 0.75;
   var TIEFE = { himmel: 0.84, weit: 0.8, fern: 0.74, mitte: 0.62, titel: 0.52, huegel: 0.48, wald: 0.33, wiese: 0.17, gras: 0 };
 
   var m = {};           /* Maße */
@@ -437,11 +438,11 @@
   function wiese(ebene, unten, hundEbene) {
     var oben = Math.max(0, hoechster('wiese') - m.H * 0.02);
     var r0 = zufall(71), halme = [];
-    for (var i = 0, n = Math.round(m.W * 0.9); i < n; i++) halme.push({ x: r0() * m.W, t: r0(), h: m.H * (0.008 + r0() * 0.02), neig: (r0() - 0.5) * 0.9, f: Math.floor(r0() * 4) });
+    for (var i = 0, n = Math.round(m.W * 1.5); i < n; i++) halme.push({ x: r0() * m.W, t: r0(), h: m.H * (0.008 + r0() * 0.02), neig: (r0() - 0.5) * 0.9, f: Math.floor(r0() * 4) });
     var steine = [], bluemchen = [], hx0 = xVon(m.hundU);
     for (i = 0; i < Math.round(9 * m.W / 1440) + 3; i++) { var sx = r0() * m.W; if (Math.abs(sx - hx0) < m.H * 0.09) continue; steine.push({ x: sx, t: r0(), w: m.H * (0.012 + r0() * 0.03), hv: 0.45 + r0() * 0.3, saat: Math.floor(r0() * 1e9) }); }
     steine.sort(function (a, b) { return a.t - b.t; });
-    for (i = 0; i < Math.round(m.W * 0.12); i++) bluemchen.push({ x: r0() * m.W, t: r0(), h: m.H * (0.006 + r0() * 0.012), f: Math.floor(r0() * 3) });
+    for (i = 0; i < Math.round(m.W * 0.2); i++) bluemchen.push({ x: r0() * m.W, t: r0(), h: m.H * (0.006 + r0() * 0.012), f: Math.floor(r0() * 3) });
     AKTIV.forEach(function (licht) {
       var p = F.wiese[licht], g = leinwand(ebene, oben, unten, licht);
       g.beginPath(); g.moveTo(-2, unten + 2);
@@ -477,6 +478,18 @@
     c.className = 'szene__hund'; c.width = Math.ceil(hw * m.q); c.height = Math.ceil(hh * m.q);
     c.style.left = hund.x + 'px'; c.style.top = hund.y + 'px'; c.style.width = hw + 'px'; c.style.height = hh + 'px';
     hundEbene.appendChild(c); hund.leinwand = c; hund.zuletzt = '';
+    /* Emre (26.09.): seine echte Kontur aus dem Foto als Silhouette, im selben Stil wie der Hund (Farbe und Lichtsaum
+       folgen dem Licht). Knapp doppelt so groß wie der Hund, steht einen Schritt hinter ihm auf der Kuppe, Füße im Gras. */
+    /* einen Schritt hinter dem Hund (etwas kleiner, Füße etwas höher), halb hinter seinem Rücken */
+    var eh = hh * 1.8, ew = eh * EMRE_B / EMRE_H;
+    var ex = hund.x + hw * 0.88 + ew * 0.12;
+    if (ex + ew * 0.5 > m.W - 10) ex = hund.x + hw * 0.12 - ew * 0.12;
+    var ey = ky('wiese', ex) + eh * 0.005;
+    emre.x = ex - ew * 0.5; emre.y = ey - eh; emre.w = ew; emre.h = eh;
+    var e = emre.leinwand || document.createElement('canvas');
+    e.className = 'szene__hund szene__emre'; e.width = Math.ceil(ew * m.q); e.height = Math.ceil(eh * m.q);
+    e.style.left = emre.x + 'px'; e.style.top = emre.y + 'px'; e.style.width = ew + 'px'; e.style.height = eh + 'px';
+    hundEbene.insertBefore(e, c); emre.leinwand = e; emre.zuletzt = '';
   }
 
   var GRAS_GRUPPEN = 2, windHuellen = [];
@@ -490,10 +503,10 @@
         wind.className = 'szene__wind szene__wind--' + gr; wind.style.top = oben + 'px'; wind.style.height = (unten - oben) + 'px';
         ebene.appendChild(wind); windHuellen[gr] = wind;
       }
-      var r = zufall(900 + gr), halme = [], n = Math.round(m.W * (gr ? 0.42 : 0.6));
+      var r = zufall(900 + gr), halme = [], n = Math.round(m.W * (gr ? 0.55 : 0.85));
       for (var i = 0; i < n; i++) {
         var x = r() * (m.W + 40) - 20, t = r();
-        halme.push({ x: x, y: m.H - t * m.H * (gr ? 0.03 : 0.07) + 4, h: m.H * (gr ? 0.06 + r() * 0.1 : 0.035 + r() * 0.07) * (1 - t * 0.3), neig: (r() - 0.45) * (gr ? 0.5 : 0.7), b: gr ? 1.6 + r() * 2.2 : 1 + r() * 1.4, f: Math.floor(r() * 5), aehre: r() < (gr ? 0.06 : 0.03) });
+        halme.push({ x: x, y: m.H - t * m.H * (gr ? 0.03 : 0.07) + 4, h: m.H * (gr ? 0.06 + r() * 0.1 : 0.035 + r() * 0.07) * (1 - t * 0.3), neig: (r() - 0.45) * (gr ? 0.5 : 0.7), b: gr ? 1.6 + r() * 2.2 : 1 + r() * 1.4, f: Math.floor(r() * 5), aehre: r() < (gr ? 0.08 : 0.045) });
       }
       halme.sort(function (a, b) { return a.y - b.y; });
       AKTIV.forEach(function (licht) {
@@ -516,6 +529,28 @@
         wind.appendChild(c);
       });
     }
+  }
+
+  /* ---------- Emre: Silhouette aus seinem Foto (bilder/hero/emre-silhouette.webp, nur Umriss, weiß auf transparent) ---------- */
+  var EMRE_B = 226, EMRE_H = 640, emre = { bild: null, leinwand: null, zuletzt: '', x: 0, y: 0, w: 0, h: 0 };
+  (function () { var b = new Image(); b.decoding = 'async'; b.onload = function () { emre.bild = b; emre.zuletzt = ''; zeichne(true); }; b.src = 'bilder/hero/emre-silhouette.webp'; })();
+  function emreZeichnen(farbe, kantenFarbe, kantenA, lx) {
+    var c = emre.leinwand; if (!c || !emre.bild) return;
+    var schluessel = farbe + kantenA.toFixed(2);
+    if (schluessel === emre.zuletzt) return;
+    emre.zuletzt = schluessel;
+    var g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, c.width, c.height);
+    var d = Math.max(1, c.width * 0.035);
+    if (kantenA > 0.03) {
+      g.globalAlpha = kantenA; g.drawImage(emre.bild, lx * d, -d * 0.35, c.width, c.height);
+      g.globalAlpha = 1; g.globalCompositeOperation = 'source-in'; g.fillStyle = kantenFarbe; g.fillRect(0, 0, c.width, c.height);
+      g.globalCompositeOperation = 'source-over';
+    }
+    var t = emre.tmp || (emre.tmp = document.createElement('canvas'));
+    t.width = c.width; t.height = c.height;
+    var tg = t.getContext('2d'); tg.drawImage(emre.bild, 0, 0, t.width, t.height);
+    tg.globalCompositeOperation = 'source-in'; tg.fillStyle = farbe; tg.fillRect(0, 0, t.width, t.height);
+    g.drawImage(t, 0, 0);
   }
 
   /* ---------- Hund (Bildfolge aus dem Kling-Video als Silhouette, 36 Bilder) ---------- */
@@ -692,9 +727,9 @@
   /* zeichnet alle Ebenen in den Lichtstimmungen aus AKTIV */
   function landschaft() {
     wolken(ebenen.himmel);
-    berg('weit', ebenen.weit, tiefster('fern') + 2, { saat: 3, schnee: 0.62, tiefe: 0.8, rippen: 0.5 });
-    berg('fern', ebenen.fern, tiefster('mitte') + 2, { saat: 5, schnee: 0.64, schichten: 3, tiefe: 1, rippen: 1, baender: 40, geroell: 600 });
-    berg('mitte', ebenen.mitte, tiefster('huegel') + 2, { saat: 9, schichten: 6, tiefe: 1.1, rippen: 1.2, baender: 70, geroell: 900 });
+    berg('weit', ebenen.weit, tiefster('fern') + 2, { saat: 3, schnee: 0.62, tiefe: 0.8, rippen: 0.9, baender: 20 });
+    berg('fern', ebenen.fern, tiefster('mitte') + 2, { saat: 5, schnee: 0.64, schichten: 4, tiefe: 1, rippen: 1.7, baender: 75, geroell: 1000 });
+    berg('mitte', ebenen.mitte, tiefster('huegel') + 2, { saat: 9, schichten: 7, tiefe: 1.1, rippen: 1.9, baender: 120, geroell: 1500 });
     huegel(ebenen.huegel, tiefster('wald') + m.H * 0.03 + 2);
     wald(ebenen.wald, tiefster('wiese') + 2);
     wiese(ebenen.wiese, m.H * 1.15, ebenen.wiese);
@@ -761,7 +796,10 @@
   var ziel = 0, weich = 0, laeuft = false, zuletztT = 0;
   function nachfuehren(t) {
     var dt = Math.min(0.05, Math.max(0, (t - zuletztT) / 1000)); zuletztT = t;
-    weich += (ziel - weich) * (1 - Math.exp(-dt / 0.2));
+    /* ruhig nachgleiten statt direkt am Finger (Emre, 26.09.): weich mit 0,9 s, und höchstens 0,2 Bildhöhen je Sekunde –
+       auch bei schnellem Wischen dauert der Wechsel von Sonne zu Mond mindestens gut 1,5 Sekunden */
+    var schritt = (ziel - weich) * (1 - Math.exp(-dt / 0.9)), grenze = 0.2 * dt;
+    weich += Math.max(-grenze, Math.min(grenze, schritt));
     if (Math.abs(ziel - weich) < 0.0003) { weich = ziel; laeuft = false; }
     licht(weich);
     if (laeuft) requestAnimationFrame(nachfuehren);
@@ -799,6 +837,7 @@
     var ka = mix(mix(0.45, 0.85, gold), 0.6, nacht);
     /* Sonne und Mond stehen beide links vom Hund: der Saum liegt links */
     hundZeichnen(bildNr, farbe, kf, ka, -1);
+    emreZeichnen(farbe, kf, ka, -1);
   }
   function anfordern() { if (!geplant) { geplant = true; requestAnimationFrame(function () { zeichne(false); }); } }
 
