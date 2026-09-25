@@ -1,4 +1,4 @@
-/* ERGUN. Studio: Pakete übersichtlich – gleiches Modul auf der Startseite (#pakete) und auf /ki/.
+/* endo Studio: Pakete übersichtlich – gleiches Modul auf der Startseite (#pakete) und auf /ki/.
    Einbinden: <div data-studio-pakete data-kontakt="#kontakt"></div>, vorher ki/js/endo-daten.js laden.
    Alle Zahlen kommen aus window.ENDO. Hat ein Paket einen Kauf-Link (kaufen), heißt der Knopf „kaufen“,
    sonst „vormerken“ und darunter öffnet sich das Vormerken (WhatsApp oder E-Mail). Die Seite speichert nichts. */
@@ -134,13 +134,13 @@
       e.preventDefault();
       if (!pruefe()) { inp.focus(); status.textContent = 'Bitte prüfen Sie Ihre E-Mail-Adresse.'; return; }
       var weg = (e.submitter && e.submitter.value) || 'whatsapp', paket = gewaehlt(), p = E.pakete.filter(function (x) { return x.name === paket; })[0];
-      var text = 'Hallo Emre, ich möchte bei ERGUN. Studio ein Paket vormerken.\n\nPaket: ' + paket + ' (' + p.preis + ' €, ' + zahl(p.credits) + ' Credits)\nE-Mail: ' + inp.value.trim() + '\n\nGesendet über ERGUN. Studio';
+      var text = 'Hallo Emre, ich möchte bei endo Studio ein Paket vormerken.\n\nPaket: ' + paket + ' (' + p.preis + ' €, ' + zahl(p.credits) + ' Credits)\nE-Mail: ' + inp.value.trim() + '\n\nGesendet über endo Studio';
       if (weg === 'whatsapp') {
         var link = 'https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(text), win = window.open(link, '_blank');
         if (win) { try { win.opener = null; } catch (err) {} } else location.href = link;
         status.textContent = 'WhatsApp ist geöffnet. Bitte dort nur noch auf Senden tippen.';
       } else {
-        location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent('ERGUN. Studio: Paket ' + paket + ' vormerken') + '&body=' + encodeURIComponent(text);
+        location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent('endo Studio: Paket ' + paket + ' vormerken') + '&body=' + encodeURIComponent(text);
         status.textContent = 'Ihr Mailprogramm öffnet sich mit der fertigen Nachricht.';
       }
     });

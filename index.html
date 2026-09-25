@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>ERGUN. – Digitalstudio für Webdesign, Produktfotos und Videos</title>
-<meta name="description" content="ERGUN. ist ein Digitalstudio mit zwei Bereichen: Websites mit Design, Bewegung und eigenen Bildern, und ERGUN. Studio für Produktfotos und Werbevideos. Kostenloses Erstgespräch, aus Elmshorn.">
+<meta name="description" content="ERGUN. ist ein Digitalstudio mit zwei Bereichen: Websites mit Design, Bewegung und eigenen Bildern, und endo Studio für Produktfotos und Werbevideos. Kostenloses Erstgespräch, aus Elmshorn.">
 <meta name="theme-color" content="#000000">
 
 <!-- Teilen in Social Media / Messengern -->
@@ -385,54 +385,31 @@ img { display: block; max-width: 100%; height: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .endo .blase, .endo .agent__vorschlaege .chip { animation: none; } .endo .tippt i { animation: none; opacity: 0.7; } }
 
-/* Kostenloses Erstgespräch: vier Schritte in einer Karte */
-.bogen { width: min(100%, 640px); display: grid; gap: 24px; text-align: left; padding: 28px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(180deg, rgba(242, 239, 232, 0.035), rgba(242, 239, 232, 0.01)); }
-.bogen .schritt, .bogen .unterfrage { display: grid; gap: 18px; margin: 0; padding: 0; min-width: 0; border: 0; border-radius: 0; background: none; }
-.bogen .schritt:focus-within { border-color: transparent; }
-.bogen .schritt + .schritt { padding-top: 24px; border-top: 1px solid var(--line); }
-.bogen .schritt > legend, .bogen .schritt__frage { float: none; display: block; width: auto; margin: 0 0 2px; padding: 0; font-family: var(--serif); font-size: clamp(1.7rem, 3vw, 2.3rem); line-height: 1.1; letter-spacing: -0.01em; color: var(--text); }
-.bogen .schritt > legend + * { clear: none; }
-.bogen .unterfrage { gap: 10px; }
-.bogen .unterfrage > legend { float: none; margin: 0 0 10px; padding: 0; font-family: var(--sans); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-.bogen small { font-size: 12px; letter-spacing: 0.02em; text-transform: none; color: var(--muted); }
+/* Kostenloses Erstgespräch: drei Wege der Zusammenarbeit, darunter eine Karte mit allen Feldern */
+.wege { list-style: none; margin: 8px 0 0; padding: 0; width: min(100%, 980px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); text-align: left; }
+.wege li { display: grid; gap: 6px; align-content: start; padding: 22px 22px 4px 0; }
+.wege li + li { padding-left: 22px; border-left: 1px solid var(--line); }
+.wege b { font-family: var(--serif); font-size: 26px; line-height: 1.1; font-weight: 400; }
+.wege span { color: var(--muted); font-size: 15px; line-height: 1.5; text-wrap: pretty; }
+.wege a { color: var(--text); border-bottom: 1px solid rgba(242, 239, 232, 0.4); }
+.anfrage { width: min(100%, 680px); display: grid; gap: 22px; margin-top: 16px; padding: 30px; text-align: left; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(180deg, rgba(242, 239, 232, 0.035), rgba(242, 239, 232, 0.01)); }
+.anfrage__gruppe { margin: 0; padding: 0; min-width: 0; border: 0; }
+.anfrage__gruppe legend { margin-bottom: 10px; padding: 0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.field small { font-size: 12px; letter-spacing: 0.02em; text-transform: none; color: var(--muted); }
 .wahl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.wahl--klein { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .wahl__option { position: relative; display: flex; min-width: 0; }
 .wahl__option input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
-.wahl__option span { flex: 1; display: flex; align-items: center; min-height: 56px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; font-size: 15px; line-height: 1.3; color: var(--text);
-  transition: border-color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
-.wahl--klein .wahl__option span { min-height: 46px; padding: 10px 12px; justify-content: center; text-align: center; font-size: 14px; }
+.wahl__option span { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 52px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; font-size: 15px; line-height: 1.3; text-align: center; color: var(--text); transition: border-color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
 .wahl__option input:checked + span { border-color: var(--accent); background: rgba(255, 90, 31, 0.12); }
 .wahl__option input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
 .wahl__option:active span { transform: scale(0.98); }
 @media (hover: hover) and (pointer: fine) { .wahl__option:hover span { border-color: rgba(242, 239, 232, 0.32); } .wahl__option input:checked + span { border-color: var(--accent); } }
-.uebersicht { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 10px 16px; margin: 0; font-size: 15px; line-height: 1.45; }
-.uebersicht dt { color: var(--muted); }
-.uebersicht dd { margin: 0; overflow-wrap: anywhere; white-space: pre-line; }
-.bogen__kopf { display: none; align-items: center; gap: 16px; }
-.ist-stepper .bogen__kopf { display: flex; }
-.bogen__zaehler { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.bogen__zaehler b { color: var(--text); font-weight: 500; }
-.bogen__balken { position: relative; flex: 1; height: 2px; border-radius: 2px; background: var(--line); overflow: hidden; }
-.bogen__balken i { position: absolute; inset: 0; background: var(--accent); transform-origin: left; transform: scaleX(0.25); transition: transform 500ms var(--ease); }
-.ist-stepper [data-schritt] { display: none; }
-.ist-stepper [data-schritt].ist-aktiv { display: grid; animation: bogenRein 360ms var(--ease-out) both; }
-.ist-stepper.geht-zurueck [data-schritt].ist-aktiv { animation-name: bogenZurueck; }
-.ist-stepper .schritt + .schritt { padding-top: 0; border-top: 0; }
-.bogen__nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.bogen__nav[hidden], .bogen__weiter[hidden] { display: none; }
-.bogen__zurueck { min-height: 44px; padding: 8px 4px; border: 0; background: none; color: var(--muted); font: inherit; font-size: 15px; cursor: pointer; transition: color 200ms var(--ease); }
-.bogen__zurueck:hover, .bogen__zurueck:focus-visible { color: var(--text); }
-.bogen__zurueck[disabled] { visibility: hidden; }
-.bogen__weiter { min-width: 140px; }
-.bogen legend:focus, .bogen .schritt__frage:focus { outline: none; }
 @media (max-width: 700px) {
-  .bogen { padding: 22px 16px; gap: 20px; border-radius: 16px; }
-  .wahl { grid-template-columns: minmax(0, 1fr); gap: 6px; }
-  .wahl--klein { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .uebersicht { grid-template-columns: 96px minmax(0, 1fr); font-size: 14px; }
+  .wege { grid-template-columns: minmax(0, 1fr); }
+  .wege li, .wege li + li { padding: 16px 0; border-left: 0; }
+  .wege li + li { border-top: 1px solid var(--line); }
+  .anfrage { padding: 22px 16px; gap: 20px; border-radius: 16px; }
 }
-@media (prefers-reduced-motion: reduce) { .ist-stepper [data-schritt].ist-aktiv { animation: none; } .bogen__balken i { transition: none; } }
 </style>
 </head>
 <body>
@@ -478,15 +455,15 @@ img { display: block; max-width: 100%; height: auto; }
 </div>
 
 <main id="inhalt" tabindex="-1">
-  <!-- ERGUN. Studio (früher endo.ai): zweiter Bereich, direkt unter dem Titelbild. Ausführlich mit Funktionen und Paketen: ki/ -->
+  <!-- endo Studio (früher endo.ai): zweiter Bereich, direkt unter dem Titelbild. Ausführlich mit Funktionen und Paketen: ki/ -->
   <section class="endo" id="endo" aria-labelledby="endo-titel">
     <div class="endo__nebel" aria-hidden="true"><div class="nebel nebel--1"></div><div class="nebel nebel--2"></div><div class="nebel nebel--3"></div></div>
     <div class="endo__orb" data-orb aria-hidden="true"></div>
     <div class="endo__innen">
       <div class="endo__kopf reveal">
-        <p class="endo__marke">ERGUN<i>.</i> <span>Studio</span></p>
+        <p class="endo__marke">endo <span>Studio</span></p>
         <h2 class="endo__titel" id="endo-titel">Zeigen Sie mir Ihr Produkt.</h2>
-        <p class="endo__intro">ERGUN. Studio macht aus Ihrem Handyfoto Produktfotos, Werbevideos und Bilder für Ihre Website. Fragen Sie endo, unseren Assistenten, was möglich ist.</p>
+        <p class="endo__intro">endo Studio macht aus Ihrem Handyfoto Produktfotos, Werbevideos und Bilder für Ihre Website. Fragen Sie endo, unseren Assistenten, was möglich ist.</p>
       </div>
 
       <section class="agent" data-agent aria-label="Chat mit endo">
@@ -518,7 +495,7 @@ img { display: block; max-width: 100%; height: auto; }
         </form>
       </section>
 
-      <ul class="endo__bereiche reveal" aria-label="Was ERGUN. Studio kann">
+      <ul class="endo__bereiche reveal" aria-label="Was endo Studio kann">
         <li><b>Produktfotos</b><span>Ihr Produkt im Studiolicht, auf Wunsch freigestellt als Shop-Bild.</span></li>
         <li><b>Werbevideos</b><span>Kurze Clips aus Ihrem Produktfoto, für Reels, Stories und Anzeigen.</span></li>
         <li><b>Website-Bilder</b><span>Ein großes Titelbild, passend zu Ihrer Marke und Ihrem Produkt.</span></li>
@@ -529,7 +506,7 @@ img { display: block; max-width: 100%; height: auto; }
     <div class="endo__pakete" id="pakete" data-studio-pakete data-kontakt="#kontakt" hidden></div>
   </section>
 
-  <!-- Kostenloses Erstgespräch: Fragebogen in vier Schritten. Ohne JavaScript stehen alle Schritte untereinander. -->
+  <!-- Kostenloses Erstgespräch: drei Wege der Zusammenarbeit, darunter ein übersichtliches Formular -->
   <section class="contact" id="kontakt" aria-labelledby="kontakt-titel">
     <div class="contact__kopf">
       <figure class="contact__person reveal">
@@ -537,73 +514,43 @@ img { display: block; max-width: 100%; height: auto; }
         <figcaption><strong>Emre Ergun</strong> · <span class="online">online</span></figcaption>
       </figure>
       <h2 class="contact__big reveal" id="kontakt-titel">Kostenloses Erstgespräch</h2>
-      <p class="contact__intro reveal">Vier kurze Schritte. Ich melde mich persönlich, per WhatsApp oder E-Mail, ganz wie Sie es möchten.</p>
+      <p class="contact__intro reveal">Erzählen Sie kurz, worum es geht. Ich melde mich persönlich, per WhatsApp oder E-Mail.</p>
     </div>
 
-    <form class="bogen reveal" id="anfrage" novalidate>
-      <div class="bogen__kopf" aria-hidden="true">
-        <span class="bogen__zaehler">Schritt <b data-nr>1</b> von <span data-von>4</span></span>
-        <span class="bogen__balken"><i data-balken></i></span>
-      </div>
-      <p class="hinweis-versteckt" aria-live="polite" data-ansage></p>
+    <ul class="wege reveal" aria-label="So arbeiten wir zusammen">
+      <li><b>Neue Website</b><span>Von Grund auf geplant, gestaltet und gebaut, mit Bewegung und eigenen Bildern.</span></li>
+      <li><b>Bestehende Website</b><span>Überarbeiten, modernisieren oder um neue Bereiche erweitern.</span></li>
+      <li><b>Selbst mitarbeiten</b><span>Produktfotos, Videos und Website-Bilder selbst erstellen, mit <a href="#endo">endo Studio</a>.</span></li>
+    </ul>
 
-      <fieldset class="schritt" data-schritt data-auto>
-        <legend tabindex="-1">Worum geht es?</legend>
+    <!-- Eine Karte, alles auf einen Blick (Emre, 25.09. abends: keine Schritte) -->
+    <form class="anfrage reveal" id="anfrage" novalidate>
+      <fieldset class="anfrage__gruppe">
+        <legend>Worum geht es?</legend>
         <div class="wahl">
           <label class="wahl__option"><input type="radio" name="hilfe" value="Neue Website"><span>Neue Website</span></label>
-          <label class="wahl__option"><input type="radio" name="hilfe" value="Website-Redesign"><span>Website-Redesign</span></label>
+          <label class="wahl__option"><input type="radio" name="hilfe" value="Website überarbeiten"><span>Website überarbeiten</span></label>
           <label class="wahl__option"><input type="radio" name="hilfe" value="Onlineshop"><span>Onlineshop</span></label>
           <label class="wahl__option"><input type="radio" name="hilfe" value="Etwas anderes"><span>Etwas anderes</span></label>
         </div>
       </fieldset>
 
-      <fieldset class="schritt" data-schritt>
-        <legend tabindex="-1">Erzählen Sie kurz davon</legend>
+      <div class="form__row">
         <div class="field">
-          <label for="f-text">Ihr Vorhaben <small>(optional)</small></label>
-          <textarea id="f-text" name="text" rows="4" placeholder="Was machen Sie, und was soll die Website können? Ein, zwei Sätze genügen."></textarea>
+          <label for="f-name">Name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-err">
+          <span class="field__error" id="f-name-err" aria-live="polite"></span>
         </div>
-        <fieldset class="unterfrage">
-          <legend>Was gibt es schon? <small>(mehrere möglich)</small></legend>
-          <div class="wahl wahl--klein">
-            <label class="wahl__option"><input type="checkbox" name="vorhanden" value="Logo"><span>Logo</span></label>
-            <label class="wahl__option"><input type="checkbox" name="vorhanden" value="Fotos"><span>Fotos</span></label>
-            <label class="wahl__option"><input type="checkbox" name="vorhanden" value="Texte"><span>Texte</span></label>
-            <label class="wahl__option"><input type="checkbox" name="vorhanden" value="Domain"><span>Domain</span></label>
-            <label class="wahl__option"><input type="checkbox" name="vorhanden" value="Alte Website"><span>Alte Website</span></label>
-            <label class="wahl__option"><input type="checkbox" name="vorhanden" value="Noch nichts"><span>Noch nichts</span></label>
-          </div>
-        </fieldset>
-        <div class="field field--datei">
-          <label for="f-datei">Logo oder Fotos mitschicken <small>(optional)</small></label>
-          <div class="upload" data-upload>
-            <svg class="upload__symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4"/><path d="m7 9 5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-            <span class="upload__text"><b>Dateien auswählen</b><small>Antippen oder hierher ziehen · Bilder, PDF, Word, ZIP</small></span>
-            <input id="f-datei" name="dateien" type="file" multiple accept="image/*,.pdf,.doc,.docx,.svg,.ai,.zip">
-          </div>
-          <ul class="datei__liste" data-datei-liste aria-live="polite"></ul>
-          <span class="form__hint">Die Dateien werden beim Auswählen hochgeladen und kommen als Link in die Nachricht. Nach 30 Tagen werden sie automatisch gelöscht.</span>
+        <div class="field">
+          <label for="f-mail">E-Mail-Adresse</label>
+          <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="f-mail-err">
+          <span class="field__error" id="f-mail-err" aria-live="polite"></span>
         </div>
-      </fieldset>
-
-      <fieldset class="schritt" data-schritt>
-        <legend tabindex="-1">Wie erreiche ich Sie?</legend>
-        <div class="form__row">
-          <div class="field">
-            <label for="f-name">Name</label>
-            <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-err">
-            <span class="field__error" id="f-name-err" aria-live="polite"></span>
-          </div>
-          <div class="field">
-            <label for="f-mail">E-Mail-Adresse</label>
-            <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="f-mail-err">
-            <span class="field__error" id="f-mail-err" aria-live="polite"></span>
-          </div>
-        </div>
-        <div class="form__row">
-          <div class="field">
-            <label for="f-land">Land</label>
-            <select id="f-land" name="land" autocomplete="country-name">
+      </div>
+      <div class="form__row">
+        <div class="field">
+          <label for="f-land">Land</label>
+          <select id="f-land" name="land" autocomplete="country-name">
               <option value="Belgien" data-vorwahl="+32">Belgien</option>
               <option value="Bulgarien" data-vorwahl="+359">Bulgarien</option>
               <option value="Dänemark" data-vorwahl="+45">Dänemark</option>
@@ -632,37 +579,44 @@ img { display: block; max-width: 100%; height: auto; }
               <option value="Ungarn" data-vorwahl="+36">Ungarn</option>
               <option value="Zypern" data-vorwahl="+357">Zypern</option>
               <option value="Anderes Land" data-vorwahl="">Anderes Land</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="f-tel">Telefon <small>(optional)</small></label>
-            <input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel">
-          </div>
+          </select>
         </div>
-        <fieldset class="unterfrage">
-          <legend>Wie möchten Sie Kontakt aufnehmen?</legend>
-          <div class="weg">
-            <label class="weg__option"><input type="radio" name="weg" value="whatsapp" checked><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg> WhatsApp</span></label>
-            <label class="weg__option"><input type="radio" name="weg" value="mail"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg> E-Mail</span></label>
+        <div class="field">
+          <label for="f-tel">Telefon <small>(optional)</small></label>
+          <input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="f-text">Ihre Nachricht <small>(optional)</small></label>
+        <textarea id="f-text" name="text" rows="4" placeholder="Was machen Sie, und was soll die Website können? Ein, zwei Sätze genügen."></textarea>
+      </div>
+
+      <div class="field field--datei">
+          <label for="f-datei">Logo oder Fotos mitschicken <small>(optional)</small></label>
+          <div class="upload" data-upload>
+            <svg class="upload__symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4"/><path d="m7 9 5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+            <span class="upload__text"><b>Dateien auswählen</b><small>Antippen oder hierher ziehen · Bilder, PDF, Word, ZIP</small></span>
+            <input id="f-datei" name="dateien" type="file" multiple accept="image/*,.pdf,.doc,.docx,.svg,.ai,.zip">
           </div>
-        </fieldset>
+          <ul class="datei__liste" data-datei-liste aria-live="polite"></ul>
+          <span class="form__hint">Die Dateien werden beim Auswählen hochgeladen und kommen als Link in die Nachricht. Nach 30 Tagen werden sie automatisch gelöscht.</span>
+        </div>
+
+      <fieldset class="anfrage__gruppe">
+        <legend>Antwort per</legend>
+        <div class="weg">
+          <label class="weg__option"><input type="radio" name="weg" value="whatsapp" checked><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg> WhatsApp</span></label>
+          <label class="weg__option"><input type="radio" name="weg" value="mail"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg> E-Mail</span></label>
+        </div>
       </fieldset>
 
-      <div class="schritt" role="group" aria-labelledby="schritt-pruefen" data-schritt>
-        <h3 class="schritt__frage" id="schritt-pruefen" tabindex="-1">Alles richtig?</h3>
-        <dl class="uebersicht" data-uebersicht></dl>
-        <button class="btn btn--wa anfrage__senden" type="submit" data-senden>
-          <span class="anfrage__icon" data-icon-wa><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg></span><span class="anfrage__icon" data-icon-mail hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg></span>
-          <span data-senden-text>Per WhatsApp senden</span>
-        </button>
-        <p class="form__status" data-status aria-live="polite"></p>
-        <p class="form__hint">Öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Ihre Angaben speichert die Website nicht, nur hochgeladene Dateien liegen bis zu 30 Tage bei Vercel.</p>
-      </div>
-
-      <div class="bogen__nav" data-bogen-nav hidden>
-        <button class="bogen__zurueck" type="button" data-zurueck>Zurück</button>
-        <button class="btn bogen__weiter" type="button" data-weiter>Weiter</button>
-      </div>
+      <button class="btn btn--wa anfrage__senden" type="submit" data-senden>
+        <span class="anfrage__icon" data-icon-wa><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg></span><span class="anfrage__icon" data-icon-mail hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg></span>
+        <span data-senden-text>Per WhatsApp senden</span>
+      </button>
+      <p class="form__status" data-status aria-live="polite"></p>
+      <p class="form__hint">Öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Ihre Angaben speichert die Website nicht, nur hochgeladene Dateien liegen bis zu 30 Tage bei Vercel.</p>
     </form>
 
     <div class="contact__meta reveal">
@@ -671,7 +625,7 @@ img { display: block; max-width: 100%; height: auto; }
     </div>
     <div class="agentur reveal">
       <p class="agentur__marke">ERGUN<span class="dot">.</span></p>
-      <p class="agentur__text">ERGUN. ist ein Digitalstudio mit zwei Bereichen: Webdesign mit Bewegung und eigenen Bildern, und ERGUN. Studio für Produktfotos und Werbevideos. Entwurf und Umsetzung aus einer Hand.</p>
+      <p class="agentur__text">ERGUN. ist ein Digitalstudio mit zwei Bereichen: Webdesign mit Bewegung und eigenen Bildern, und endo Studio für Produktfotos und Werbevideos. Entwurf und Umsetzung aus einer Hand.</p>
     </div>
   </section>
 </main>
@@ -679,7 +633,7 @@ img { display: block; max-width: 100%; height: auto; }
 <footer class="footer">
   <span>ERGUN. · Emre Ergun · Digitalstudio · © 2026</span>
   <nav aria-label="Rechtliches">
-    <a href="ki/">ERGUN. Studio</a>
+    <a href="ki/">endo Studio</a>
     <a href="impressum.html">Impressum</a>
     <a href="datenschutz.html">Datenschutz</a>
   </nav>
@@ -707,10 +661,10 @@ img { display: block; max-width: 100%; height: auto; }
 })();
 </script>
 <script>
-/* Kostenloses Erstgespräch: Fragebogen in vier Schritten (Worum geht es? · Vorhaben · Kontakt · Prüfen).
+/* Kostenloses Erstgespräch: eine Karte mit allen Feldern (seit 25.09. abends keine Schritte mehr).
    Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)
    und landen als Link in der Nachricht; klappt das nicht, hängt man sie selbst an.
-   Ohne JavaScript stehen alle Schritte untereinander und das Formular tut nichts Falsches. */
+   Ohne JavaScript bleibt das Formular sichtbar und tut nichts Falsches. */
 (function () {
   var WA_NUMMER = '4915906344961';
   var MAIL = 'ergun.eu@gmail.com';
@@ -831,77 +785,14 @@ img { display: block; max-width: 100%; height: auto; }
     eintraege.reduce(function (kette, e) { return kette.then(function () { return meineRunde === runde ? hochladen(e, meineRunde) : null; }); }, Promise.resolve());
   });
 
-  /* ---- Schritt für Schritt ---- */
-  var schritte = [].slice.call(form.querySelectorAll('[data-schritt]'));
-  var nav = form.querySelector('[data-bogen-nav]'), zurueck = form.querySelector('[data-zurueck]'), weiter = form.querySelector('[data-weiter]');
-  var nrEl = form.querySelector('[data-nr]'), balken = form.querySelector('[data-balken]'), ansage = form.querySelector('[data-ansage]');
-  var jetzt = 0;
-  form.classList.add('ist-stepper');
-  nav.hidden = false;
-  form.querySelector('[data-von]').textContent = schritte.length;
-
-  function titel(s) { return s.querySelector('legend, .schritt__frage'); }
-  function zeige(i, fokus) {
-    form.classList.toggle('geht-zurueck', i < jetzt);
-    jetzt = Math.max(0, Math.min(schritte.length - 1, i));
-    schritte.forEach(function (s, k) { s.classList.toggle('ist-aktiv', k === jetzt); });
-    nrEl.textContent = jetzt + 1;
-    balken.style.transform = 'scaleX(' + ((jetzt + 1) / schritte.length) + ')';
-    zurueck.disabled = jetzt === 0;
-    weiter.hidden = jetzt === schritte.length - 1;
-    if (jetzt === schritte.length - 1) uebersicht();
-    ansage.textContent = 'Schritt ' + (jetzt + 1) + ' von ' + schritte.length + ': ' + titel(schritte[jetzt]).textContent.trim();
-    if (fokus) {
-      var t = titel(schritte[jetzt]);
-      t.focus({ preventScroll: true });
-      var oben = form.getBoundingClientRect().top;
-      if (oben < 0 || oben > window.innerHeight * 0.4) form.scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
-    }
-  }
-  function schrittOk() {
-    if (schritte[jetzt].contains(form.elements['name'])) return pruefen();
-    return true;
-  }
-  weiter.addEventListener('click', function () { if (schrittOk()) zeige(jetzt + 1, true); });
-  zurueck.addEventListener('click', function () { zeige(jetzt - 1, true); });
-  /* Eine Antwort genügt: bei „Worum geht es?" geht es nach kurzer Pause allein weiter */
-  schritte.forEach(function (s, k) {
-    if (!s.hasAttribute('data-auto')) return;
-    s.addEventListener('change', function (e) { if (e.target.type === 'radio') setTimeout(function () { if (jetzt === k) zeige(k + 1, true); }, ruhig ? 0 : 260); });
-  });
-  /* Enter in einem Textfeld = Weiter (außer im letzten Schritt und in der Textfläche) */
-  form.addEventListener('keydown', function (e) {
-    if (e.key !== 'Enter' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON' || jetzt === schritte.length - 1) return;
-    if (e.target.tagName === 'INPUT' && e.target.type !== 'radio' && e.target.type !== 'checkbox' && e.target.type !== 'file') { e.preventDefault(); weiter.click(); }
-  });
-
-  function uebersicht() {
-    var dl = form.querySelector('[data-uebersicht]'), zeilen = [
-      ['Anliegen', gewaehlt('hilfe') || '–'],
-      ['Vorhaben', wert('text') || '–'],
-      ['Schon da', alleGewaehlt('vorhanden').join(', ') || '–'],
-      ['Dateien', eintraege.length ? eintraege.map(function (e) { return e.name; }).join(', ') : '–'],
-      ['Name', wert('name')],
-      ['Kontakt', wert('email') + (wert('tel') ? '\n' + wert('tel') : '') + '\n' + wert('land')],
-      ['Antwort per', weg() === 'whatsapp' ? 'WhatsApp' : 'E-Mail']
-    ];
-    dl.innerHTML = '';
-    zeilen.forEach(function (z) {
-      var dt = document.createElement('dt'), dd = document.createElement('dd');
-      dt.textContent = z[0]; dd.textContent = z[1]; dl.appendChild(dt); dl.appendChild(dd);
-    });
-  }
-  zeige(0, false);
-
   /* ---- Nachricht & Versand ---- */
   function nachricht() {
-    var hilfe = gewaehlt('hilfe'), text = wert('text'), da = alleGewaehlt('vorhanden');
+    var hilfe = gewaehlt('hilfe'), text = wert('text');
     var mitLink = eintraege.filter(function (e) { return e.stand === 'ok'; });
     var ohneLink = selbstAnhaengen().map(function (e) { return e.name; });
     return 'Hallo Emre, ich bin ' + wert('name') + ' und möchte ein kostenloses Erstgespräch.\n\n' +
       (hilfe ? 'Es geht um: ' + hilfe + '\n\n' : '') +
       (text ? text + '\n\n' : '') +
-      (da.length ? 'Schon vorhanden: ' + da.join(', ') + '\n\n' : '') +
       (mitLink.length ? 'Meine Dateien:\n' + mitLink.map(function (e) { return '• ' + e.name + ': ' + e.url; }).join('\n') + '\n\n' : '') +
       (ohneLink.length ? 'Dateien, die ich hier anhänge: ' + ohneLink.join(', ') + '\n\n' : '') +
       'E-Mail: ' + wert('email') + '\n' +
@@ -911,8 +802,7 @@ img { display: block; max-width: 100%; height: auto; }
   }
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    if (jetzt !== schritte.length - 1) { weiter.click(); return; }
-    if (!pruefen()) { zeige(schritte.indexOf(form.elements['name'].closest('[data-schritt]')), false); pruefen(); status.textContent = 'Bitte Name und E-Mail ausfüllen.'; return; }
+    if (!pruefen()) { status.textContent = 'Bitte Name und E-Mail ausfüllen.'; return; }
     if (laufend()) { status.setAttribute('data-wartet', '1'); status.textContent = 'Ihre Dateien werden noch hochgeladen. Einen Moment, dann bitte erneut auf Senden tippen.'; return; }
     var m = nachricht(), selbst = selbstAnhaengen().length ? ' Bitte die Dateien, die nicht hochgeladen werden konnten, dort anhängen.' : '';
     if (weg() === 'whatsapp') {
@@ -965,8 +855,8 @@ img { display: block; max-width: 100%; height: auto; }
   io.observe(buehne);
 })();
 </script>
-<script src="ki/js/endo-daten.js?v=3"></script>
-<script src="ki/js/pakete.js?v=2"></script>
+<script src="ki/js/endo-daten.js?v=4"></script>
+<script src="ki/js/pakete.js?v=3"></script>
 <script>
 /* Pakete bleiben zu, bis man „Pakete ansehen“ (oder oben „Pakete“) antippt */
 (function () {
@@ -990,7 +880,7 @@ img { display: block; max-width: 100%; height: auto; }
   if (location.hash === '#pakete') oeffnen(true);
 })();
 </script>
-<script src="ki/js/agent.js?v=8"></script>
+<script src="ki/js/agent.js?v=9"></script>
 <script>
 /* Kein Zoomen: iPhone ignoriert user-scalable=no, daher Zwei-Finger-Zoom und Doppeltippen hier sperren */
 (function () {

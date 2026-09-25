@@ -1,9 +1,9 @@
-/* ERGUN. Studio (früher endo.ai): Preise, Funktionen und Kauf-Links an EINER Stelle.
+/* endo Studio (früher endo.ai, kurz endo Studio): Preise, Funktionen und Kauf-Links an EINER Stelle.
    Lesen von hier: die Studio-Seite (/ki/), der Chat mit endo (Startseite und /ki/) und das Credit-Fenster.
    Preise von Emre (25.09.2026), Rechnung mit mindestens 35 % Gewinn: siehe Vault „Credit-Pakete.md“.
    kaufen: Checkout-Link von Lemon Squeezy je Paket. Leer = Knopf heißt „Vormerken“ (Kauf startet in Kürze). */
 window.ENDO = {
-  marke: 'ERGUN. Studio',
+  marke: 'endo Studio',
   pakete: [
     { name: 'Start', preis: 5, credits: 40, kann: ['foto', 'shop', 'video', 'web'], kaufen: '' },
     { name: 'Pro', preis: 20, credits: 200, kann: ['foto', 'shop', 'video', 'web'], kaufen: '' },

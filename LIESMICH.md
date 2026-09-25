@@ -6,6 +6,11 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Teil 4: Tageswechsel kürzer, „endo Studio“, Kontakt ohne Schritte (25.09.2026, 19:45, Claude Code)
+- `js/szene.js`: `ZEIT = 0.6` – `licht(p)` rechnet mit `p / ZEIT`, der ganze Ablauf (Gold, Untergang, Nacht, Mond, Sterne, Hund) passiert auf 60 % der Strecke; volle Nacht und jaulender Hund, solange das Titelbild noch gut zu sehen ist. Sonnenende/Mondstart berücksichtigen `ZEIT`.
+- **Name: „endo Studio“** (vorher kurz „ERGUN. Studio“, davor „endo.ai“) – Startseite, /ki/, `pakete.js`, `agent.js`, `api/agent.js`, `endo-daten.js` (`marke`), Datenschutz. Wortmarke: „endo“ (Serif) + „Studio“ (Chrom).
+- Kontakt: Stepper entfernt. Neu `.wege` (Neue Website · Bestehende Website · Selbst mitarbeiten mit endo Studio → `#endo`) und darunter **eine** Karte `.anfrage`: Worum geht es? · Name · E-Mail · Land · Telefon · Nachricht · Dateien · Antwort per WhatsApp/E-Mail · Senden. Versand/Upload unverändert, Pflicht: Name + E-Mail.
+
 ## Linie am Übergang + Pakete auf Knopfdruck (25.09.2026, 19:10, Claude Code)
 - Emre (iPhone-Screenshot): sichtbare Linie zwischen Titelbild und Studio. Ursache: In der ausblendenden Zone des Titelbilds (Maske ab 70 %) lag über der Studio-Sektion noch Seiten-Schwarz, darunter schon deren Blau – plus Mondschein-Hof mit voller Helligkeit an der Oberkante. Lösung: `.endo` schiebt sich jetzt 34svh unter das Titelbild (deckt die ganze Ausblend-Zone), Nebel und Mondschein blenden oben weich ein (Maske ab 10svh).
 - Pakete auf der Startseite sind zu (`#pakete[hidden]`), bis man „Pakete ansehen“ (Knopf unter den drei Bereichen) oder oben „Pakete“ antippt; dann klappen sie auf und die Seite springt hin. Zweiter Druck: „Pakete schließen“. Adresse `#pakete` öffnet sie direkt.

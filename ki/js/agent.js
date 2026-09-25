@@ -1,4 +1,4 @@
-/* endo: der Chat-Assistent von ERGUN. Studio (Startseite und /ki/).
+/* endo: der Chat-Assistent von endo Studio (Startseite und /ki/).
    Führt durch vier Schritte (Produkt, Look, Werkzeug, Foto) und lädt zur Warteliste ein.
    Seit 25.09. nachts ohne Kasten: die Nachrichten schweben über dem Hintergrund, höchstens drei sind zu sehen,
    ältere lösen sich nach oben auf. Das Gespräch startet beim ersten Antippen der Zeile.
@@ -216,11 +216,11 @@
   }
   function frage() {
     knoepfe([]); du('Ich habe eine Frage'); sperren(true);
-    endo('Gern, fragen Sie mich alles zu ERGUN. Studio, zu Preisen oder zu den Möglichkeiten.').then(function () { sperren(false); feld.focus(); });
+    endo('Gern, fragen Sie mich alles zu endo Studio, zu Preisen oder zu den Möglichkeiten.').then(function () { sperren(false); feld.focus(); });
   }
   function frageMail() {
     knoepfe([]); schritt = 'mail'; sperren(true);
-    endo('ERGUN. Studio startet in Kürze. Wohin darf ich Ihnen den Startzugang schicken? Ihre E-Mail-Adresse genügt.')
+    endo('endo Studio startet in Kürze. Wohin darf ich Ihnen den Startzugang schicken? Ihre E-Mail-Adresse genügt.')
       .then(function () { sperren(false); zeigeSchritt(); feld.focus(); });
   }
   function neuesProdukt() {
@@ -266,7 +266,7 @@
 
   /* ---------- Warteliste ---------- */
   function vormerken(weg) {
-    var text = 'Hallo Emre, ich möchte beim Start von ERGUN. Studio dabei sein.\n\n' +
+    var text = 'Hallo Emre, ich möchte beim Start von endo Studio dabei sein.\n\n' +
       (daten.kategorie ? 'Ich verkaufe: ' + daten.kategorie + '\n' : '') +
       (daten.look ? 'Look: ' + daten.look + '\n' : '') +
       (daten.format ? 'Wofür: ' + daten.format + '\n' : '') +
@@ -278,7 +278,7 @@
       var win = window.open(link, '_blank');
       if (win) { try { win.opener = null; } catch (e) {} } else { location.href = link; }
     } else {
-      location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent('ERGUN. Studio: Früher Zugang') + '&body=' + encodeURIComponent(text);
+      location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent('endo Studio: Früher Zugang') + '&body=' + encodeURIComponent(text);
     }
     schritt = 'frei'; knoepfe([]); sperren(true);
     var extra = daten.fotoName && !daten.fotoUrl ? ' Hängen Sie dort bitte noch Ihr Foto an.' : '';
@@ -350,7 +350,7 @@
     if (/video|reel|tiktok|clip/.test(s)) return 'Ja, aus Ihrem Produktfoto mache ich einen Clip mit fünf Sekunden für 20 Credits. Zehn Sekunden gibt es im Premium-Paket.';
     if (/3d|ar\b|drehbar/.test(s)) return 'Aus einem Foto erstelle ich ein drehbares 3D-Modell Ihres Produkts, zum Beispiel für Shop und AR. Das ist Teil von Premium.';
     if (/recht|kommerz|werbung|lizenz|nutzen|verwenden/.test(s)) return 'Ja, Sie dürfen alle Ergebnisse kommerziell nutzen, im Shop, in Anzeigen und auf Social Media.';
-    if (/wann|start|verfügbar|live|bald|los/.test(s)) return 'ERGUN. Studio startet in Kürze. Wenn Sie Ihr Paket jetzt vormerken, bekommen Sie den Zugang als Erstes.';
+    if (/wann|start|verfügbar|live|bald|los/.test(s)) return 'endo Studio startet in Kürze. Wenn Sie Ihr Paket jetzt vormerken, bekommen Sie den Zugang als Erstes.';
     if (/daten|datenschutz|training|speicher|sicher/.test(s)) return 'Ihre Fotos werden nur für Ihre Aufträge verarbeitet und nicht zum Training verwendet. Dieser Chat speichert nichts.';
     if (/website|homepage|webseite|seite bauen/.test(s)) return 'Eine komplette Website baut Emre über ERGUN., mit Bewegung und eigenen Bildern. Das Erstgespräch ist kostenlos.';
     if (/higgsfield|modell|kling|seedance|welche ki|wie funktioniert/.test(s)) return 'Im Hintergrund arbeiten Modelle von Higgsfield. Ich biete drei Bereiche: Produktfotos, Werbevideos mit fünf Sekunden und Bilder für Ihre Website.';

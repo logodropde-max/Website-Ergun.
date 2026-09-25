@@ -13,3 +13,6 @@ Teil der [[Startseite]]. Seit 24.09. abends ein übersichtliches Formular in ein
 6. Darunter E-Mail/Telefon und der Agentur-Text „ERGUN. ist eine Premium-Digitalagentur …"
 
 Die Nachricht wird fertig in WhatsApp oder im Mailprogramm geöffnet. Die Website speichert keine Angaben, siehe [[Datenschutz und Recht]].
+
+## Stand 25.09.2026 abends
+Wieder **eine Karte ohne Schritte** (Emre): Worum geht es? (Neue Website · Website überarbeiten · Onlineshop · Etwas anderes) · Name · E-Mail · Land · Telefon · Nachricht · Dateien · Antwort per WhatsApp/E-Mail. Darüber drei Wege: neue Website, bestehende überarbeiten, selbst mitarbeiten mit endo Studio.
