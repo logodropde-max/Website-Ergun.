@@ -10,6 +10,11 @@
 
 
 
+
+## Emre + Hund als echte Figuren, Winken (26.09.2026, 02:30, Claude Code)
+- `bilder/hero/4k/szene2/figuren.py` (+ `figuren_stil.py`): erzeugt `bilder/hero/figuren/{hund,emre}-{tag,gold}.webp` (Bild 0) und `-nacht.webp` (Raster 6 Spalten: Hund 36 Bilder 318×360, Emre 30 Bilder 268×560) + `.json` (Zelle, Fußlinie `fuss`, Kopflinie `oben`, `mitte`, `breite`). Hund: Farbbilder aus `video/v1-9493b609.mp4` + Masken aus `hund-film/`. Emre: `python figuren.py winken video/winken-v2-ca4f3250.mp4 0.4 3.9` – isnet-Freistellung, echter Kopf aus b305a018 per SIFT (nur Ähnlichkeitstransformation), Hand bleibt davor, weiße Bewegungsränder raus.
+- `js/szene.js` (`?v=18`): `FIGUREN` (Werte aus den json), `figurenStellen()` (nebeneinander auf `ky('wiese')`, Emre = 1,95 × Hundehöhe), `fussgras()` (Schatten + Halme je Licht), `figurZeichnen()` (Tag/Abend/Nacht überblenden, Nachtbild = Bildnummer), `figStart()/figLauf()` (Phase 0–1 in 3,2 s, Start bei p/ZEIT > 0,38, zurück < 0,3; mit `?p=` gescrubbt). Hülle `.szene__figuren` (z-index 1) über den Wiesen-Fassungen. Alte Silhouetten (`hund-steht/-silhouette.webp`, `emre-silhouette.webp`) nicht mehr benutzt.
+
 ## Emre + Hund, Tageswechsel, Details (26.09.2026, 01:20, Claude Code)
 - `bilder/hero/emre-silhouette.webp` (226×640, nur Alpha aus `bilder/hero/4k/emre-cut.png`, 11 KB). `js/szene.js`: `emre`-Objekt + `emreZeichnen()` (wie `hundZeichnen`, Farbe/Saum aus `F.hund`), Leinwand `.szene__hund.szene__emre` in der Wiesen-Ebene vor dem Hund eingefügt (Hund liegt davor). Größe `hh × 1,8`, x = Hund + 0,88 × Hundebreite (sonst links, falls kein Platz), Füße auf `ky('wiese')`.
 - `ZEIT = 0.75` (vorher 0.6); `nachfuehren()`: Zeitkonstante 0,9 s + Höchsttempo 0,2/s.

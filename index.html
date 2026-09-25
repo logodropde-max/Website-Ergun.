@@ -120,6 +120,8 @@ img { display: block; max-width: 100%; height: auto; }
 .szene--bereit .szene__bild[data-licht="gold"] { opacity: var(--gold); }
 .szene--bereit .szene__bild[data-licht="nacht"] { opacity: var(--nacht); }
 .szene__hund { position: absolute; display: block; }
+/* Emre und der Hund liegen in einer eigenen Hülle über allen Fassungen der Wiese (Füße, Schatten und Halme davor) */
+.szene__figuren { position: absolute; inset: 0; z-index: 1; }
 /* alles, was beim Scrollen überblendet wird, auf eigene Grafikebene – sonst malt das Handy den Himmel jedes Bild neu */
 .szene__bild[data-licht="gold"], .szene__bild[data-licht="nacht"], .himmel--gold, .himmel--blau, .himmel--nacht, .sonne__glut, .sonne__hof, .sonne__kern--abend, .sonne, .mond, .sterne canvas, .sterne__hell { will-change: opacity; }
 .sonne, .mond { will-change: transform, opacity; }
@@ -699,7 +701,7 @@ img { display: block; max-width: 100%; height: auto; }
   </nav>
 </footer>
 
-<script src="js/szene.js?v=17"></script>
+<script src="js/szene.js?v=18"></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {

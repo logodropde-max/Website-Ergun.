@@ -437,9 +437,10 @@
 
   function wiese(ebene, unten, hundEbene) {
     var oben = Math.max(0, hoechster('wiese') - m.H * 0.02);
+    var huelle = figurenStellen(hundEbene);
     var r0 = zufall(71), halme = [];
     for (var i = 0, n = Math.round(m.W * 1.5); i < n; i++) halme.push({ x: r0() * m.W, t: r0(), h: m.H * (0.008 + r0() * 0.02), neig: (r0() - 0.5) * 0.9, f: Math.floor(r0() * 4) });
-    var steine = [], bluemchen = [], hx0 = xVon(m.hundU);
+    var steine = [], bluemchen = [], hx0 = (FIGUREN.hund.fussX + FIGUREN.emre.fussX) / 2;
     for (i = 0; i < Math.round(9 * m.W / 1440) + 3; i++) { var sx = r0() * m.W; if (Math.abs(sx - hx0) < m.H * 0.09) continue; steine.push({ x: sx, t: r0(), w: m.H * (0.012 + r0() * 0.03), hv: 0.45 + r0() * 0.3, saat: Math.floor(r0() * 1e9) }); }
     steine.sort(function (a, b) { return a.t - b.t; });
     for (i = 0; i < Math.round(m.W * 0.2); i++) bluemchen.push({ x: r0() * m.W, t: r0(), h: m.H * (0.006 + r0() * 0.012), f: Math.floor(r0() * 3) });
@@ -469,27 +470,10 @@
         g.fillStyle = rgba(F.bluete[licht][b.f], licht === 'nacht' ? 0.35 : 0.85); g.beginPath(); g.arc(b.x, y - b.h, 0.9 + b.t * 1.1, 0, Math.PI * 2); g.fill();
       });
       kornAuf(g, oben, unten, 0.06);
+      fussgras(huelle, licht);
     });
     if (AKTIV.indexOf('tag') < 0) return;
-    /* Hund: steht auf der Kuppe, Füße im Gras */
-    var hx = xVon(m.hundU), hh = m.H * (m.hoch ? 0.13 : 0.155), hw = hh * 315 / 360;
-    hund.x = hx - hw * 0.5; hund.y = ky('wiese', hx) - hh * 0.97; hund.w = hw; hund.h = hh;
-    var c = hund.leinwand || document.createElement('canvas');
-    c.className = 'szene__hund'; c.width = Math.ceil(hw * m.q); c.height = Math.ceil(hh * m.q);
-    c.style.left = hund.x + 'px'; c.style.top = hund.y + 'px'; c.style.width = hw + 'px'; c.style.height = hh + 'px';
-    hundEbene.appendChild(c); hund.leinwand = c; hund.zuletzt = '';
-    /* Emre (26.09.): seine echte Kontur aus dem Foto als Silhouette, im selben Stil wie der Hund (Farbe und Lichtsaum
-       folgen dem Licht). Knapp doppelt so groß wie der Hund, steht einen Schritt hinter ihm auf der Kuppe, Füße im Gras. */
-    /* einen Schritt hinter dem Hund (etwas kleiner, Füße etwas höher), halb hinter seinem Rücken */
-    var eh = hh * 1.8, ew = eh * EMRE_B / EMRE_H;
-    var ex = hund.x + hw * 0.88 + ew * 0.12;
-    if (ex + ew * 0.5 > m.W - 10) ex = hund.x + hw * 0.12 - ew * 0.12;
-    var ey = ky('wiese', ex) + eh * 0.005;
-    emre.x = ex - ew * 0.5; emre.y = ey - eh; emre.w = ew; emre.h = eh;
-    var e = emre.leinwand || document.createElement('canvas');
-    e.className = 'szene__hund szene__emre'; e.width = Math.ceil(ew * m.q); e.height = Math.ceil(eh * m.q);
-    e.style.left = emre.x + 'px'; e.style.top = emre.y + 'px'; e.style.width = ew + 'px'; e.style.height = eh + 'px';
-    hundEbene.insertBefore(e, c); emre.leinwand = e; emre.zuletzt = '';
+    figurenZeichnen();
   }
 
   var GRAS_GRUPPEN = 2, windHuellen = [];
@@ -531,61 +515,98 @@
     }
   }
 
-  /* ---------- Emre: Silhouette aus seinem Foto (bilder/hero/emre-silhouette.webp, nur Umriss, weiß auf transparent) ---------- */
-  var EMRE_B = 226, EMRE_H = 640, emre = { bild: null, leinwand: null, zuletzt: '', x: 0, y: 0, w: 0, h: 0 };
-  (function () { var b = new Image(); b.decoding = 'async'; b.onload = function () { emre.bild = b; emre.zuletzt = ''; zeichne(true); }; b.src = 'bilder/hero/emre-silhouette.webp'; })();
-  function emreZeichnen(farbe, kantenFarbe, kantenA, lx) {
-    var c = emre.leinwand; if (!c || !emre.bild) return;
-    var schluessel = farbe + kantenA.toFixed(2);
-    if (schluessel === emre.zuletzt) return;
-    emre.zuletzt = schluessel;
-    var g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, c.width, c.height);
-    var d = Math.max(1, c.width * 0.035);
-    if (kantenA > 0.03) {
-      g.globalAlpha = kantenA; g.drawImage(emre.bild, lx * d, -d * 0.35, c.width, c.height);
-      g.globalAlpha = 1; g.globalCompositeOperation = 'source-in'; g.fillStyle = kantenFarbe; g.fillRect(0, 0, c.width, c.height);
-      g.globalCompositeOperation = 'source-over';
-    }
-    var t = emre.tmp || (emre.tmp = document.createElement('canvas'));
-    t.width = c.width; t.height = c.height;
-    var tg = t.getContext('2d'); tg.drawImage(emre.bild, 0, 0, t.width, t.height);
-    tg.globalCompositeOperation = 'source-in'; tg.fillStyle = farbe; tg.fillRect(0, 0, t.width, t.height);
-    g.drawImage(t, 0, 0);
+  /* ---------- Emre und sein Hund (26.09.2026, Emre: „erkennbar, im Stil der Seite, richtig stehen“) ----------
+     Echte Freistellungen im Licht der Szene (bilder/hero/figuren/, erstellt mit bilder/hero/4k/szene2/figuren.py):
+     je Figur ein Tag- und ein Abendbild und für die Nacht die Bildfolge – der Hund hebt den Kopf und jault, Emre winkt
+     („Tschüss“). Beides startet gemeinsam, sobald es Nacht ist und man weiterscrollt, und läuft dann in eigener Zeit ab
+     (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
+  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4198, breite: 0.7704 }, emre: { b: 268, h: 560, anzahl: 30, spalten: 6, fuss: 0.9914, oben: 0.0416, mitte: 0.5821, breite: 0.7687 } };
+  var fig = { phase: 0, ziel: 0, laeuft: false, t: 0 }, FIG_DAUER = 3.2, lichtGold = 0, lichtNacht = 0;
+  function figurLaden(name, licht) {
+    var f = FIGUREN[name], b = new Image(); b.decoding = 'async';
+    b.onload = function () { f.bilder[licht] = b; f.zuletzt = ''; figurenZeichnen(); };
+    b.src = 'bilder/hero/figuren/' + name + '-' + licht + '.webp?v=1';
   }
-
-  /* ---------- Hund (Bildfolge aus dem Kling-Video als Silhouette, 36 Bilder) ---------- */
-  var hund = { bild: null, blatt: null, x: 0, y: 0, w: 0, h: 0, leinwand: null, zuletzt: '' };
-  /* erst nur der stehende Hund (klein), die ganze Bildfolge (190 KB) nach dem Laden der Seite */
-  function hundLaden(src, feld) {
-    var b = new Image(); b.decoding = 'async';
-    b.onload = function () { hund[feld] = b; hund.zuletzt = ''; zeichne(true); };
-    b.src = src;
-  }
-  hundLaden('bilder/hero/hund-steht.webp', 'bild');
-  function blattLaden() { if (!ruhig) hundLaden('bilder/hero/hund-silhouette.webp', 'blatt'); }
-  if (document.readyState === 'complete') setTimeout(blattLaden, 300); else window.addEventListener('load', function () { setTimeout(blattLaden, 300); });
-  var HB = 315, HH = 360;
-  function hundZeichnen(bildNr, farbe, kantenFarbe, kantenA, lx) {
-    var c = hund.leinwand; if (!c || !hund.bild) return;
-    var schluessel = (hund.blatt ? bildNr : 0) + farbe + kantenA.toFixed(2) + lx.toFixed(1);
-    if (schluessel === hund.zuletzt) return;
-    hund.zuletzt = schluessel;
-    var quelle = hund.blatt || hund.bild;
-    if (!hund.blatt) bildNr = 0;
-    var g = c.getContext('2d'), sx = (bildNr % 6) * HB, sy = Math.floor(bildNr / 6) * HH;
-    g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, c.width, c.height);
-    var d = Math.max(1, c.width * 0.012);
-    if (kantenA > 0.03) {
-      g.globalAlpha = kantenA; g.drawImage(quelle, sx, sy, HB, HH, lx * d, -d * 0.8, c.width, c.height);
-      g.globalAlpha = 1; g.globalCompositeOperation = 'source-in'; g.fillStyle = kantenFarbe; g.fillRect(0, 0, c.width, c.height);
-      g.globalCompositeOperation = 'source-over';
+  Object.keys(FIGUREN).forEach(function (k) { FIGUREN[k].bilder = {}; FIGUREN[k].zuletzt = ''; figurLaden(k, 'tag'); figurLaden(k, 'gold'); });
+  /* die Nacht-Bildfolgen (größer) erst nach dem Laden der Seite */
+  function nachtLaden() { Object.keys(FIGUREN).forEach(function (k) { figurLaden(k, 'nacht'); }); }
+  if (document.readyState === 'complete') setTimeout(nachtLaden, 200); else window.addEventListener('load', function () { setTimeout(nachtLaden, 200); });
+  function figurZeichnen(f, nr) {
+    var c = f.leinwand; if (!c || !f.bilder.tag) return;
+    if (!f.bilder.nacht) nr = 0;
+    var gold = f.bilder.gold ? lichtGold : 0, nacht = f.bilder.nacht ? (nr > 0 ? 1 : lichtNacht) : 0;
+    var schluessel = nr + '|' + gold.toFixed(2) + '|' + nacht.toFixed(2);
+    if (schluessel === f.zuletzt) return;
+    f.zuletzt = schluessel;
+    var g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, c.width, c.height); g.globalAlpha = 1;
+    if (nacht < 0.999) {
+      g.drawImage(f.bilder.tag, 0, 0, c.width, c.height);
+      if (gold > 0.002) { g.globalAlpha = gold; g.drawImage(f.bilder.gold, 0, 0, c.width, c.height); }
     }
-    /* Körper in eigener Farbe darüber (über Zwischenleinwand, damit der Saum erhalten bleibt) */
-    var t = hund.tmp || (hund.tmp = document.createElement('canvas'));
-    t.width = c.width; t.height = c.height;
-    var tg = t.getContext('2d'); tg.drawImage(quelle, sx, sy, HB, HH, 0, 0, t.width, t.height);
-    tg.globalCompositeOperation = 'source-in'; tg.fillStyle = farbe; tg.fillRect(0, 0, t.width, t.height);
-    g.drawImage(t, 0, 0);
+    if (nacht > 0.002) {
+      g.globalAlpha = nacht;
+      g.drawImage(f.bilder.nacht, (nr % f.spalten) * f.b, Math.floor(nr / f.spalten) * f.h, f.b, f.h, 0, 0, c.width, c.height);
+    }
+    g.globalAlpha = 1;
+  }
+  function figurenZeichnen() {
+    Object.keys(FIGUREN).forEach(function (k) { var f = FIGUREN[k]; figurZeichnen(f, Math.round(fig.phase * (f.anzahl - 1))); });
+  }
+  function figStart(z) {
+    if (fig.ziel === z) return;
+    fig.ziel = z;
+    if (!fig.laeuft) { fig.laeuft = true; fig.t = performance.now(); requestAnimationFrame(figLauf); }
+  }
+  function figLauf(t) {
+    var dt = Math.min(0.1, Math.max(0, (t - fig.t) / 1000)), r = fig.ziel > fig.phase ? 1 : -1; fig.t = t;
+    fig.phase = Math.max(0, Math.min(1, fig.phase + r * dt / FIG_DAUER));
+    if ((r > 0 && fig.phase >= fig.ziel) || (r < 0 && fig.phase <= fig.ziel)) { fig.phase = fig.ziel; fig.laeuft = false; }
+    figurenZeichnen();
+    if (fig.laeuft) requestAnimationFrame(figLauf);
+  }
+  /* Emre und der Hund stehen nebeneinander auf der Kuppe – gleiche Entfernung, beide Füße auf dem Boden.
+     Hund bis zu den Ohren ca. 0,9 m, Emre ca. 1,8 m → Emre knapp doppelt so hoch wie der stehende Hund. */
+  function figurenStellen(ebene) {
+    var huelle = ebene.querySelector('.szene__figuren');
+    if (!huelle) { huelle = document.createElement('div'); huelle.className = 'szene__figuren'; ebene.appendChild(huelle); }
+    var H = FIGUREN.hund, E = FIGUREN.emre, stand = m.H * (m.hoch ? 0.112 : 0.132);
+    var hh = stand / (H.fuss - H.oben), hw = hh * H.b / H.h;
+    var eh = stand * 1.95 / (E.fuss - E.oben), ew = eh * E.b / E.h;
+    var hx = xVon(m.hundU), abstand = stand * 0.1;
+    var ex = hx + hw * H.breite * 0.5 + abstand + ew * E.breite * 0.5;
+    if (ex + ew * E.breite * 0.5 > m.W - 8) ex = hx - hw * H.breite * 0.5 - abstand - ew * E.breite * 0.5;
+    var sinken = stand * 0.03;   /* Füße stehen ein wenig im Gras */
+    [[H, hx, hw, hh], [E, ex, ew, eh]].forEach(function (z) {
+      var f = z[0], x = z[1] - z[2] * f.mitte, y = ky('wiese', z[1]) + sinken - z[3] * f.fuss;
+      var c = f.leinwand || document.createElement('canvas');
+      c.className = 'szene__hund'; c.width = Math.ceil(z[2] * m.q); c.height = Math.ceil(z[3] * m.q);
+      c.style.left = x + 'px'; c.style.top = y + 'px'; c.style.width = z[2] + 'px'; c.style.height = z[3] + 'px';
+      if (f === E) huelle.insertBefore(c, huelle.firstChild); else huelle.appendChild(c);
+      f.leinwand = c; f.zuletzt = '';
+      f.fussX = z[1]; f.fussB = z[2] * f.breite; f.fussY = ky('wiese', z[1]) + sinken;
+    });
+    return huelle;
+  }
+  /* vor den Füßen: weicher Kontaktschatten und ein paar Halme in den Farben der Wiese */
+  function fussgras(huelle, licht) {
+    var p = F.wiese[licht], r = zufall(4242), oben = m.H, unten = 0;
+    Object.keys(FIGUREN).forEach(function (k) { var f = FIGUREN[k]; oben = Math.min(oben, f.fussY - m.H * 0.05); unten = Math.max(unten, f.fussY + m.H * 0.02); });
+    var c = document.createElement('canvas'), q = m.q;
+    c.width = Math.ceil(m.W * q); c.height = Math.ceil((unten - oben) * q);
+    c.style.top = oben + 'px'; c.style.height = (unten - oben) + 'px'; c.className = 'szene__bild'; c.setAttribute('data-licht', licht);
+    var g = c.getContext('2d'); g.setTransform(q, 0, 0, q, 0, -oben * q);
+    Object.keys(FIGUREN).forEach(function (k) {
+      var f = FIGUREN[k], w = f.fussB;
+      var sg = g.createRadialGradient(f.fussX, f.fussY, 0, f.fussX, f.fussY, w * 0.62);
+      sg.addColorStop(0, 'rgba(0,0,0,' + (licht === 'nacht' ? 0.45 : 0.32) + ')'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      g.save(); g.translate(f.fussX, f.fussY); g.scale(1, 0.22); g.translate(-f.fussX, -f.fussY);
+      g.fillStyle = sg; g.fillRect(f.fussX - w, f.fussY - w, w * 2, w * 2); g.restore();
+      for (var i = 0; i < 26; i++) {
+        var x = f.fussX + (r() - 0.5) * w * 1.25, h = m.H * (0.008 + r() * 0.016);
+        halm(g, x, f.fussY + r() * m.H * 0.006, h, (r() - 0.5) * 0.8, 1.1, p.halm[Math.floor(r() * 4)], p.kante, p.kanteA * naehe(licht, x) * (licht === 'tag' ? 0.5 : 1));
+      }
+    });
+    huelle.appendChild(c);
   }
 
   /* ---------- Wolken: zurückhaltende Schleier, weg von Sonnenbahn und Mond ---------- */
@@ -788,6 +809,11 @@
     var s = isNaN(festP) ? p * m.H : 0;
     /* Parallaxe: direkt am Scrollen, sonst schwimmt die Landschaft gegen die Seite */
     if (!(cssParallaxe && isNaN(festP))) Object.keys(ebenen).forEach(function (k) { setze(ebenen[k], s * TIEFE[k] * (k === 'himmel' ? 1 : m.f)); });
+    /* Jaulen und Winken: starten, sobald es Nacht wird und man weiterscrollt (am echten Scrollwert, ohne Nachlauf) */
+    var pz = p / ZEIT;
+    if (!isNaN(festP)) { fig.phase = sanft(0.4, 0.58, pz); figurenZeichnen(); }
+    else if (ruhig) { fig.phase = pz > 0.42 ? 1 : 0; }
+    else if (pz > 0.38) figStart(1); else if (pz < 0.3) figStart(0);
     /* Sonne, Mond, Licht und Hund folgen einem weich nachgeführten Wert – keine Sprünge bei Mausrad-Schritten */
     ziel = p;
     if (immer || ruhig || !isNaN(festP)) { weich = p; licht(weich); }
@@ -830,14 +856,9 @@
     var pm = sanft(0.27, 0.62, p), ym = mix(m.mondStart, m.mondEnde, pm);
     mond.style.transform = 'translate3d(' + m.mondX.toFixed(2) + 'px,' + ym.toFixed(2) + 'px,0)';
     wert('--mond', sanft(0.27, 0.4, p).toFixed(3));
-    /* Hund: Farbe folgt dem Licht, nachts hebt er den Kopf */
-    var bildNr = Math.round(sanft(0.4, 0.58, p) * 35);
-    var farbe = mixHex(mixHex(F.hund.tag, F.hund.gold, gold), F.hund.nacht, nacht);
-    var kf = mixHex(mixHex(F.hund.kanteTag, F.hund.kanteGold, gold), F.hund.kanteNacht, nacht);
-    var ka = mix(mix(0.45, 0.85, gold), 0.6, nacht);
-    /* Sonne und Mond stehen beide links vom Hund: der Saum liegt links */
-    hundZeichnen(bildNr, farbe, kf, ka, -1);
-    emreZeichnen(farbe, kf, ka, -1);
+    /* Emre und der Hund: Tag-, Abend- und Nachtbild überblenden mit dem Licht */
+    lichtGold = nacht > 0.995 ? 0 : gold; lichtNacht = nacht;
+    figurenZeichnen();
   }
   function anfordern() { if (!geplant) { geplant = true; requestAnimationFrame(function () { zeichne(false); }); } }
 
