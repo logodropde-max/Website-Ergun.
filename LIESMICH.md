@@ -6,6 +6,9 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Teil 3 · Schritt 2: Nebel statt Sterne im Studio-Bereich (25.09.2026, 18:15, Claude Code)
+- `.endo__sterne` + Skript entfernt (Sterne unten ergaben keinen Sinn). Neu `.endo__nebel` mit drei Lagen `.nebel--1/2/3`: Streifen werden einmal per Canvas gerechnet (`nebelBild()`, nahtlos wiederholbar, als `--nebel-1..3` gesetzt) und ziehen per CSS (`nebel-zieht`, 110/160/220 s, eine Lage gegenläufig). Mondschein-Hof links oben (`::before`). Pausiert außerhalb des Bildes (`.endo--sichtbar`), bei „Bewegung reduzieren" still.
+
 ## Teil 3 · Schritt 1: Sonne und Mond flüssig (25.09.2026, 18:00, Claude Code)
 - `zeichne()` setzt nur noch die Parallaxe direkt; Licht, Sonne, Mond, Sterne und Hund laufen in `licht(p)` über einen weich nachgeführten Wert (`nachfuehren()`, eigene rAF-Schleife, Zeitkonstante 0,2 s) – keine Sprünge mehr bei Mausrad-Schritten.
 - Sonne: `SONNE_BIS = 0.31` (vorher 0,28), gleichmäßige Bahn mit sanftem Anfang/Ende; Mond 0,27–0,62, gleichmäßig. Transforms mit 2 Nachkommastellen.
