@@ -114,7 +114,7 @@
   function start() {
     schritt = 'kategorie';
     sperren(true);
-    endo('Hallo, ich bin endo. Aus Ihrem Handyfoto mache ich ein Profi-Produktfoto, ein freigestelltes Shop-Bild in 4K oder ein kurzes Video.')
+    endo('Hallo, ich bin endo. Aus Ihrem Handyfoto mache ich ein Profi-Produktfoto, ein kurzes Werbevideo oder ein Titelbild für Ihre Website.')
       .then(function () { return endo('Was verkaufen Sie?'); })
       .then(function () { sperren(false); zeigeSchritt(); });
   }
@@ -190,7 +190,7 @@
     daten.fotoName = f.name;
     hochladen(f);
     sperren(true);
-    endo('Starkes Motiv. Genau so etwas setze ich ins Studio, stelle es frei oder mache ein kurzes Video daraus.')
+    endo('Starkes Motiv. Genau so etwas setze ich ins Studio, mache ein kurzes Video daraus oder ein Titelbild für Ihre Website.')
       .then(function () { sperren(false); if (!daten.email) frageMail(); else { schritt = 'senden'; zeigeSchritt(); } });
   });
   /* Upload über dieselbe Funktion wie das Kontaktformular (Vercel Blob). Klappt es nicht, bleibt der Dateiname. */
@@ -292,17 +292,17 @@
   /* Eingebaute Antworten, wenn die KI nicht erreichbar ist */
   function lokaleAntwort(t) {
     var s = t.toLowerCase();
-    if (/premium/.test(s)) return 'Premium kostet 100 € und schaltet zusätzlich Videos mit zehn Sekunden, 3D-Modelle Ihres Produkts und Parallax-Szenen frei. Dazu Vorrang und die persönliche Abstimmung mit Emre.';
-    if (/preis|kost|teuer|günstig|euro|€|paket/.test(s)) return 'Es gibt drei Pakete: ' + paketListe() + '. Ein Produktfoto kostet 3 Credits, ein Video mit fünf Sekunden 8.';
-    if (/credit/.test(s)) return 'Credits sind Ihr Guthaben. Jedes Ergebnis kostet eine feste Zahl: Produkt in Szene 3, Freistellen + 4K 3, Werbevideo 5 s 8. Ihr Guthaben sehen Sie oben unter „Credits“, sobald die Anmeldung startet.';
+    if (/premium/.test(s)) return 'Premium kostet 100 € für 1.000 Credits und schaltet zusätzlich Videos mit zehn Sekunden, drehbare 3D-Produkte und Parallax-Szenen frei. Dazu die persönliche Abstimmung mit Emre.';
+    if (/preis|kost|teuer|günstig|euro|€|paket/.test(s)) return 'Es gibt drei Pakete: ' + paketListe() + '. Ein Produktfoto kostet 5 Credits, ein Video mit fünf Sekunden 20.';
+    if (/credit/.test(s)) return 'Credits sind Ihr Guthaben. Jedes Ergebnis kostet eine feste Zahl: Produktfoto 5, Shop-Bild 5, Werbevideo 5 s 20, Website-Titelbild 10. Ihr Guthaben sehen Sie oben unter „Credits“, sobald die Anmeldung startet.';
     if (/abo|kündig|laufzeit|monat/.test(s)) return 'Es gibt kein Abo und keine Laufzeit. Sie kaufen Credits nur, wenn Sie welche brauchen.';
-    if (/video|reel|tiktok|clip/.test(s)) return 'Ja, aus Ihrem Produktfoto mache ich einen Clip mit fünf Sekunden, ab dem Paket Pro. Zehn Sekunden gibt es im Premium-Paket.';
+    if (/video|reel|tiktok|clip/.test(s)) return 'Ja, aus Ihrem Produktfoto mache ich einen Clip mit fünf Sekunden für 20 Credits. Zehn Sekunden gibt es im Premium-Paket.';
     if (/3d|ar\b|drehbar/.test(s)) return 'Aus einem Foto erstelle ich ein drehbares 3D-Modell Ihres Produkts, zum Beispiel für Shop und AR. Das ist Teil von Premium.';
     if (/recht|kommerz|werbung|lizenz|nutzen|verwenden/.test(s)) return 'Ja, Sie dürfen alle Ergebnisse kommerziell nutzen, im Shop, in Anzeigen und auf Social Media.';
     if (/wann|start|verfügbar|live|bald|los/.test(s)) return 'endo.ai startet in Kürze. Wenn Sie sich jetzt vormerken, bekommen Sie den Zugang als Erstes.';
     if (/daten|datenschutz|training|speicher|sicher/.test(s)) return 'Ihre Fotos werden nur für Ihre Aufträge verarbeitet und nicht zum Training verwendet. Dieser Chat speichert nichts.';
     if (/website|homepage|webseite|seite bauen/.test(s)) return 'Eine komplette Website baut Emre über ERGUN., mit Bewegung und eigenen Bildern. Das Erstgespräch ist kostenlos.';
-    if (/higgsfield|modell|kling|seedance|welche ki|wie funktioniert/.test(s)) return 'Im Hintergrund arbeiten Modelle von Higgsfield. Ich nutze drei Werkzeuge: Produkt in Szene, Freistellen + 4K und Werbevideo mit fünf Sekunden.';
+    if (/higgsfield|modell|kling|seedance|welche ki|wie funktioniert/.test(s)) return 'Im Hintergrund arbeiten Modelle von Higgsfield. Ich biete drei Bereiche: Produktfotos, Werbevideos mit fünf Sekunden und Bilder für Ihre Website.';
     if (/hallo|hi\b|hey|guten|servus|moin/.test(s)) return 'Hallo! Schön, dass Sie da sind. Erzählen Sie mir, was Sie verkaufen, dann zeige ich Ihnen, was möglich ist.';
     if (/emre|kontakt|mensch|anruf|telefon/.test(s)) return 'Emre erreichen Sie per WhatsApp unter +49 1590 6344961 oder per E-Mail an ergun.eu@gmail.com.';
     return 'Gute Frage. Die beantwortet Emre gern persönlich. Am schnellsten geht es, wenn Sie mir zeigen, was Sie verkaufen: Dann bereite ich alles für Sie vor.';

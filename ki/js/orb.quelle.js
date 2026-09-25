@@ -20,8 +20,8 @@ function start(el) {
 
   const scene = new Scene();
   const camera = new PerspectiveCamera(75, el.clientWidth / el.clientHeight, 0.1, 1000);
-  /* Kugel (Radius 1,2 + 0,2 Ausschlag) füllt höchstens 46 % der kleineren Seite, damit sie immer ganz zu sehen ist */
-  const abstand = () => Math.max(3.9, 1.45 / (0.46 * Math.tan(37.5 * Math.PI / 180) * Math.min(1, el.clientWidth / el.clientHeight)));
+  /* Kugel (Radius 1,2 + 0,2 Ausschlag) füllt höchstens 66 % der kleineren Seite, damit sie immer ganz zu sehen ist */
+  const abstand = () => Math.max(2.6, 1.45 / (0.66 * Math.tan(37.5 * Math.PI / 180) * Math.min(1, el.clientWidth / el.clientHeight)));
   camera.position.z = abstand();
 
   const renderer = new WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });

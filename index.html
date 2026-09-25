@@ -799,6 +799,28 @@ html.nacht-an .parallax__visuals { position: sticky; top: 0; }
 @keyframes endo-pfeil { 0%, 72%, 100% { transform: translate3d(0, 0, 0); opacity: 0.55; } 80% { transform: translate3d(-3px, 0, 0); opacity: 1; } 90% { transform: translate3d(0, 0, 0); opacity: 0.55; } }
 .endo-bekannt .nav__pille-pfeil { display: none; }
 @media (max-width: 700px) { .nav__pille { min-height: 32px; padding: 5px 12px 5px 10px; font-size: 13px; } }
+/* ---------- Pfeil zu endo.ai statt Umschalter (25.09., Emre) ---------- */
+/* Mittig am rechten Rand, fixed – wandert beim Scrollen mit. Feine Linie zieht sich, kleiner Hinweis. Nur transform/opacity. */
+.seitenpfeil { position: fixed; top: 50%; right: 16px; z-index: 30; display: flex; align-items: center; gap: 12px; padding: 8px; transform: translateY(-50%); color: #F2EFE8; -webkit-tap-highlight-color: transparent; transition: opacity 300ms var(--ease); }
+.seitenpfeil__kreis { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 999px; border: 1px solid rgba(242, 239, 232, 0.28); background: rgba(14, 14, 12, 0.4); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: transform 400ms cubic-bezier(0.32, 0.72, 0, 1), border-color 300ms var(--ease), background-color 300ms var(--ease); }
+.seitenpfeil__kreis svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.seitenpfeil__text { display: flex; align-items: center; gap: 10px; font-size: 12px; line-height: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(242, 239, 232, 0.8); text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6); }
+.seitenpfeil__linie { display: block; width: 40px; height: 1px; background: currentColor; transform-origin: 0 50%; }
+@media (prefers-reduced-motion: no-preference) {
+  .seitenpfeil__linie { animation: linie-ziehen 2.8s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+  .seitenpfeil__kreis svg { animation: pfeil-rechts 2.8s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+}
+@keyframes linie-ziehen { 0% { transform: scaleX(0); opacity: 0; } 30% { opacity: 1; } 60%, 100% { transform: scaleX(1); opacity: 0; } }
+@keyframes pfeil-rechts { 0%, 50%, 100% { transform: none; } 25% { transform: translateX(3px); } }
+@media (hover: hover) and (pointer: fine) { .seitenpfeil:hover .seitenpfeil__kreis { border-color: #F2EFE8; background: rgba(40, 40, 36, 0.6); transform: translateX(4px); } .seitenpfeil:hover .seitenpfeil__text { color: #F2EFE8; } }
+.seitenpfeil:active .seitenpfeil__kreis { transform: scale(0.94); }
+.seitenpfeil:focus-visible { outline: none; } .seitenpfeil:focus-visible .seitenpfeil__kreis { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (max-width: 700px) {
+  .seitenpfeil { right: 0; padding: 8px 0 8px 8px; }
+  .seitenpfeil__kreis { width: 40px; height: 56px; border-radius: 999px 0 0 999px; border-right: 0; }
+  .seitenpfeil__text { display: none; }
+}
+.endo-bekannt .seitenpfeil__linie { animation: none; opacity: 0; }
 /* ---------- Umschalter ERGUN. | endo.ai (25.09. nachts) ---------- */
 /* Ein Klick wechselt die Seite. Die helle Marke gleitet zur gewählten Seite, dann kommt endo herein. */
 .umschalter { position: relative; display: inline-flex; padding: 3px; border-radius: 999px; border: 1px solid rgba(242, 239, 232, 0.16); background: rgba(14, 14, 12, 0.36); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); text-shadow: none; }
@@ -851,13 +873,15 @@ html.nacht-an .parallax__visuals { position: sticky; top: 0; }
   <a class="nav__mark" href="#top" aria-label="ERGUN – nach oben">ERGUN<span class="dot">.</span></a>
   <nav class="nav__links" aria-label="Seitennavigation">
     <a class="nav__link" href="#kontakt">Projekt anfragen</a>
-    <div class="umschalter" role="group" aria-label="Seite wechseln" data-umschalter>
-      <a href="#top" aria-current="page">ERGUN.</a>
-      <a href="ki/" data-endo-pille><svg class="nav__pille-pfeil" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>endo.ai</a>
-    </div>
+
   </nav>
 </header>
 
+<!-- Pfeil zu endo.ai: mittig am rechten Rand, bleibt beim Scrollen stehen -->
+<a class="seitenpfeil" href="ki/" aria-label="endo.ai entdecken" data-endo-pille>
+  <span class="seitenpfeil__text" aria-hidden="true"><span>endo entdecken</span><i class="seitenpfeil__linie"></i></span>
+  <span class="seitenpfeil__kreis" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></svg></span>
+</a>
 <div id="smooth-wrapper">
 <div id="smooth-content">
 <div class="parallax" id="top">

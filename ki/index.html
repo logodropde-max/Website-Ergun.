@@ -561,28 +561,73 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .credit-fenster dd { margin: 0; font-variant-numeric: tabular-nums; }
 .credit-fenster .premium-zeile dt, .credit-fenster .premium-zeile dd { color: var(--premium-hell); }
 @media (prefers-reduced-motion: reduce) { .credit-fenster[open] { animation: einblenden 150ms ease both; } }
+
+/* ---------- Überarbeitung 25.09. (2): Hero-Text unter der Kugel, Chat als feste Pille, Pfeil zu ERGUN., Pakete ohne Handy-Ansicht ---------- */
+.orb { inset: 0 0 auto 0; height: 58%; }
+.hero { align-items: flex-end; padding: 96px 0 80px; }
+.hero__inhalt { gap: 24px; }
+.hero__text { gap: 12px; }
+.hero h1 { font-size: clamp(44px, 6vw, 80px); line-height: 1; letter-spacing: -0.03em; }
+.hero__label { font-size: 13px; letter-spacing: 0.24em; }
+.hero__verlauf { background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.55) 38%, rgba(0, 0, 0, 0) 62%); }
+.endo-chat .orb--bereit { opacity: 0.45; }
+/* Chat-Zeile: geschlossene Pille */
+.agent__feld { height: 56px; padding: 6px; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 9999px; background: rgba(24, 24, 24, 0.78); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45); transition: border-color 300ms var(--ease), box-shadow 300ms var(--ease); }
+.agent__feld:focus-within { border-color: rgba(255, 255, 255, 0.4); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 0 4px rgba(255, 255, 255, 0.06); }
+.agent__feld input[type="text"], .agent__feld input[type="email"] { text-align: left; padding: 0 12px; }
+.rund--haupt { width: 44px; height: 44px; background: var(--text); color: #000; }
+@media (hover: hover) and (pointer: fine) { .rund--haupt:hover { background: #FFF; color: #000; } }
+.rund--haupt svg { width: 20px; height: 20px; }
+.agent__verlauf { padding: 0 20px 12px; }
+.agent__vorschlaege { padding: 0 8px 12px; }
+@media (max-width: 860px) {
+  .orb { height: 52%; }
+  .hero { align-items: center; padding: 88px 0 140px; }
+  .hero__inhalt { margin-top: 26svh; }
+}
+/* Pakete: normale Ansicht auf jeder Breite */
+.abo { display: none !important; }
+@media (max-width: 640px) { .preise { display: grid !important; } }
+/* Pfeil zur anderen Seite: mittig am Rand, wandert beim Scrollen mit (fixed) */
+.umschalter { display: none; }
+.seitenpfeil { position: fixed; top: 50%; z-index: 45; display: flex; align-items: center; gap: 12px; padding: 8px; transform: translateY(-50%); color: var(--text); -webkit-tap-highlight-color: transparent; }
+.seitenpfeil--links { left: 16px; flex-direction: row; }
+.seitenpfeil__kreis { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 9999px; border: 1px solid rgba(255, 255, 255, 0.22); background: rgba(20, 20, 20, 0.55); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: transform 400ms var(--ease), border-color 300ms var(--ease), background-color 300ms var(--ease); }
+.seitenpfeil__kreis svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.seitenpfeil__text { display: flex; align-items: center; gap: 10px; font-size: 12px; line-height: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--leise); }
+.seitenpfeil__linie { display: block; width: 40px; height: 1px; background: currentColor; transform-origin: 0 50%; }
+@media (prefers-reduced-motion: no-preference) {
+  .seitenpfeil__linie { animation: linie-ziehen 2.8s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+  .seitenpfeil--links .seitenpfeil__kreis svg { animation: pfeil-links 2.8s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+}
+@keyframes linie-ziehen { 0% { transform: scaleX(0); opacity: 0; } 30% { opacity: 1; } 60%, 100% { transform: scaleX(1); opacity: 0; } }
+@keyframes pfeil-links { 0%, 50%, 100% { transform: none; } 25% { transform: translateX(-3px); } }
+@media (hover: hover) and (pointer: fine) { .seitenpfeil:hover .seitenpfeil__kreis { border-color: var(--text); background: rgba(40, 40, 40, 0.7); transform: translateX(-4px); } .seitenpfeil:hover .seitenpfeil__text { color: var(--text); } }
+.seitenpfeil:active .seitenpfeil__kreis { transform: scale(0.94); }
+@media (max-width: 860px) {
+  .seitenpfeil--links { left: 0; padding: 8px 8px 8px 0; }
+  .seitenpfeil__kreis { width: 40px; height: 56px; border-radius: 0 9999px 9999px 0; border-left: 0; }
+  .seitenpfeil__text { display: none; }
+}
 </style>
 <script>
 /* endo.ai: Preise und Werkzeuge an EINER Stelle (Seite, Chat, Credit-Fenster lesen von hier).
-   Credits pro Ergebnis = echte Higgsfield-Kosten, aufgerundet (Stand 25.09.2026):
-   Produktfoto GPT Image 2.5 2K 2,75 · Freistellen 1 + 4K-Hochrechnung 2 · Video Kling 3.0 5 s 7,5 / 10 s 15.
-   credits der Pakete: erst eintragen, wenn Emres Higgsfield-Kosten pro Credit bekannt sind (Ziel: mindestens 3-fache Marge). */
+   Preise von Emre (25.09.2026), Rechnung mit mindestens 35 % Gewinn: siehe Vault „Credit-Pakete.md“. */
 window.ENDO = {
   pakete: [
-    { name: 'Start', preis: 5, credits: null, kann: ['foto', 'shop'] },
-    { name: 'Pro', preis: 20, credits: null, kann: ['foto', 'shop', 'video'] },
-    { name: 'Premium', preis: 100, credits: null, kann: ['foto', 'shop', 'video', 'video10'] }
+    { name: 'Start', preis: 5, credits: 40, kann: ['foto', 'video', 'web'] },
+    { name: 'Pro', preis: 20, credits: 200, kann: ['foto', 'video', 'web'] },
+    { name: 'Premium', preis: 100, credits: 1000, kann: ['foto', 'video', 'web', 'video10', '3d', 'parallax'] }
   ],
   funktionen: [
-    { id: 'foto', name: 'Produkt in Szene', kurz: 'Profi-Produktfoto aus dem Handyfoto', text: 'Ihr Handyfoto wird ein Profi-Produktfoto: Studiolicht, neue Bühne, echte Schatten. Ihr Produkt bleibt, wie es ist.', credits: 3 },
-    { id: 'shop', name: 'Freistellen + 4K', kurz: 'Shop-Bild, sauber und gestochen scharf', text: 'Sauber freigestellt auf Weiß oder transparent und in 4K hochgerechnet, fertig für Shop und Marktplatz.', credits: 3 },
-    { id: 'video', name: 'Werbevideo 5 s', kurz: 'Kurzer Clip aus Ihrem Produktfoto', text: 'Aus Ihrem Produktfoto wird ein Clip mit fünf Sekunden Bewegung, für Reels, Stories und Anzeigen.', credits: 8 }
+    { id: 'foto', name: 'Produktfotos', kurz: 'Ihr Produkt in Szene, auf Wunsch als Shop-Bild', text: 'Aus Ihrem Handyfoto wird ein Profi-Produktfoto: Studiolicht, neue Bühne, echte Schatten. Auf Wunsch zusätzlich freigestellt und in 4K als Shop-Bild.', credits: 5, extra: 'Shop-Bild (freigestellt + 4K): 5 Credits' },
+    { id: 'video', name: 'Werbevideo 5 s', kurz: 'Kurzer Clip aus Ihrem Produktfoto', text: 'Aus Ihrem Produktfoto wird ein Clip mit fünf Sekunden Bewegung, für Reels, Stories und Anzeigen.', credits: 20 },
+    { id: 'web', name: 'Website-Bilder', kurz: 'Titelbild für Ihre eigene Website', text: 'Ein großes Titelbild für Ihre Website, passend zu Ihrer Marke und Ihrem Produkt.', credits: 10 }
   ],
   premium: [
-    { id: 'video10', name: 'Werbevideo 10 s', text: 'Längere Clips mit mehr Bewegung.', credits: 15 },
-    { id: '3d', name: '3D-Modell Ihres Produkts', text: 'Aus einem Foto entsteht ein 3D-Modell, das man auf Ihrer Website drehen kann.' },
-    { id: 'parallax', name: 'Parallax-Szene', text: 'Ihr Produkt in einer Szene aus Ebenen, die sich beim Scrollen bewegen.' },
-    { id: 'vorrang', name: 'Vorrang', text: 'Ihre Aufträge werden zuerst erzeugt.' },
+    { id: 'video10', name: 'Werbevideo 10 s', text: 'Längere Clips mit mehr Bewegung.', credits: 40 },
+    { id: '3d', name: '3D-Produkt', text: 'Aus einem Foto entsteht ein 3D-Modell mit Textur, das man auf Ihrer Website drehen kann.', credits: 50 },
+    { id: 'parallax', name: 'Parallax-Szene', text: 'Eine komplette Szene in Ebenen, die sich beim Scrollen bewegt.', credits: 30 },
     { id: 'emre', name: 'Persönliche Abstimmung', text: 'Look und Wünsche stimmen Sie direkt mit Emre ab.' }
   ]
 };
@@ -600,9 +645,13 @@ window.ENDO = {
     <li><a href="#fragen" data-nav-link>Fragen</a></li>
   </ul>
   <button class="credits-knopf" type="button" data-credits-auf aria-haspopup="dialog">Credits <b data-credits-stand>–</b></button>
-  <div class="umschalter" role="group" aria-label="Seite wechseln" data-umschalter><a href="../">ERGUN.</a><a href="#start" aria-current="page">endo.ai</a></div>
+
   <button class="burger" type="button" aria-expanded="false" aria-controls="menue" data-burger><span class="hinweis">Menü öffnen</span><i></i><i></i></button>
 </header>
+<a class="seitenpfeil seitenpfeil--links" href="../" aria-label="Zu ERGUN. wechseln" data-seitenpfeil>
+  <span class="seitenpfeil__kreis" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.5 6 8.5 12l6 6"/></svg></span>
+  <span class="seitenpfeil__text" aria-hidden="true"><i class="seitenpfeil__linie"></i><span>ERGUN.</span></span>
+</a>
 <div class="menue" id="menue" data-menue>
   <ul>
     <li><a href="#funktionen">Funktionen</a></li>
@@ -688,7 +737,7 @@ window.ENDO = {
       <div class="kopf auf">
         <span class="kopf__label">Funktionen</span>
         <h2 id="funktionen-titel">Wählen Sie, was Sie brauchen</h2>
-        <p>Drei Werkzeuge, auf Produktfotos spezialisiert. Tippen Sie eines an und Sie sehen sofort, was es kostet und in welchem Paket es enthalten ist.</p>
+        <p>Drei Bereiche, ganz auf Ihr Produkt ausgerichtet. Tippen Sie einen an und Sie sehen sofort, was er kostet und wie oft Sie ihn mit jedem Paket nutzen können.</p>
       </div>
       <div class="funktionen auf">
         <div class="funktionen__wahl" role="group" aria-label="Funktion wählen" data-funktionen-wahl></div>
@@ -729,7 +778,7 @@ window.ENDO = {
   <!-- Fakten -->
   <section class="abschnitt" aria-label="Fakten">
     <div class="innen fakten">
-      <div class="fakt auf"><b>3</b><span>Werkzeuge, ganz auf Produktfotos ausgerichtet</span></div>
+      <div class="fakt auf"><b>3</b><span>Bereiche: Produktfotos, Werbevideos und Bilder für Ihre Website</span></div>
       <div class="fakt auf"><b>&lt; 1 Min.</b><span>bis zum fertigen Produktfoto, meist deutlich schneller</span></div>
       <div class="fakt auf"><b>0 €</b><span>Grundgebühr. Sie zahlen nur die Credits, die Sie nutzen</span></div>
     </div>
@@ -744,21 +793,6 @@ window.ENDO = {
         <p>Kein Abo, keine Laufzeit. Sie sehen die Kosten immer vor dem Start.</p>
       </div>
       <div class="preise" data-preise></div>
-      <div class="abo" data-abo role="group" aria-label="Paket wählen">
-        <img class="abo__hintergrund" onerror="this.remove()" src="https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200307_ee98c144-5d85-4b91-8e6b-c82d664263d9.png" alt="" loading="lazy">
-        <div class="abo__inhalt">
-          <svg class="abo__kopfbild" viewBox="0 0 128 128" aria-hidden="true"><g><circle cx="64" cy="64" r="52"/><ellipse cx="64" cy="64" rx="52" ry="18"/><ellipse cx="64" cy="64" rx="52" ry="36"/><ellipse cx="64" cy="64" rx="18" ry="52"/><ellipse cx="64" cy="64" rx="36" ry="52"/><path d="M12 64h104M64 12v104"/></g><circle class="punkt" cx="101" cy="101" r="7"/></svg>
-          <h3 class="abo__titel">endo.ai <span data-abo-plan>Premium</span></h3>
-          <ul class="abo__vorteile" data-abo-vorteile></ul>
-          <div class="abo__optionen" role="radiogroup" aria-label="Paket">
-            <label class="abo__option"><input type="radio" name="abo" value="Start"><span class="abo__kreis"><i></i></span><b data-preis="Start"></b><small data-credits="Start"></small></label>
-            <label class="abo__option"><input type="radio" name="abo" value="Pro"><span class="abo__kreis"><i></i></span><b data-preis="Pro"></b><small data-credits="Pro"></small></label>
-            <label class="abo__option"><input type="radio" name="abo" value="Premium" checked><span class="abo__kreis"><i></i></span><b data-preis="Premium"></b><small data-credits="Premium"></small><span class="abo__band">Alles frei</span></label>
-          </div>
-          <a class="knopf knopf--haupt abo__knopf" href="#zugang" data-paket="Premium" data-abo-knopf>Premium vormerken</a>
-          <p class="abo__fuss">Kein Abo, keine Laufzeit. Kauf startet in Kürze, jetzt vormerken.</p>
-        </div>
-      </div>
       <div class="verbrauch auf">
         <h3>So viele Credits kostet ein Ergebnis</h3>
         <dl data-verbrauch></dl>
@@ -776,11 +810,11 @@ window.ENDO = {
         <p>Noch etwas offen? Fragen Sie einfach endo oben im Chat.</p>
       </div>
       <div class="faq auf">
-        <details><summary>Wer ist endo?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">endo ist Ihr KI-Assistent im Browser. Sie zeigen endo Ihr Produkt und wählen eines von drei Werkzeugen: Produkt in Szene, Freistellen + 4K oder Werbevideo mit fünf Sekunden. Im Hintergrund arbeiten Modelle von Higgsfield.</p></details>
+        <details><summary>Wer ist endo?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">endo ist Ihr KI-Assistent im Browser. Sie zeigen endo Ihr Produkt und wählen einen von drei Bereichen: Produktfotos (auf Wunsch als freigestelltes Shop-Bild in 4K), Werbevideos mit fünf Sekunden oder Bilder für Ihre Website. Im Hintergrund arbeiten Modelle von Higgsfield.</p></details>
         <details><summary>Brauche ich Vorkenntnisse?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Nein. Sie schreiben mit endo wie mit einem Menschen oder tippen einfach auf die Vorschläge.</p></details>
         <details><summary>Darf ich die Ergebnisse für Werbung nutzen?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Ja. Sie dürfen die Ergebnisse kommerziell nutzen, im Shop, in Anzeigen und auf Social Media.</p></details>
-        <details><summary>Wie funktionieren die Credits?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Sie kaufen ein Paket und erhalten Credits. Jedes Ergebnis kostet eine feste Zahl, ein Produktfoto zum Beispiel 3 Credits. Es gibt kein Abo und nichts zu kündigen. Ihr Guthaben sehen Sie oben unter „Credits“, sobald die Anmeldung startet.</p></details>
-        <details><summary>Was ist im Premium-Paket anders?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Premium schaltet dazu Videos mit zehn Sekunden, 3D-Modelle Ihres Produkts und Parallax-Szenen frei. Ihre Aufträge laufen mit Vorrang, und Look und Wünsche stimmen Sie persönlich mit Emre ab.</p></details>
+        <details><summary>Wie funktionieren die Credits?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Sie kaufen ein Paket und erhalten Credits. Jedes Ergebnis kostet eine feste Zahl, ein Produktfoto zum Beispiel 5 Credits. Es gibt kein Abo und nichts zu kündigen. Ihr Guthaben sehen Sie oben unter „Credits“, sobald die Anmeldung startet.</p></details>
+        <details><summary>Was ist im Premium-Paket anders?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Premium bringt 1.000 Credits und schaltet dazu Videos mit zehn Sekunden, drehbare 3D-Produkte und Parallax-Szenen frei. Look und Wünsche stimmen Sie persönlich mit Emre ab.</p></details>
         <details><summary>Was passiert mit meinen Fotos?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Ihre Fotos werden nur für Ihre Aufträge verarbeitet und nicht zum Training von KI-Modellen verwendet. Sie können Ihre Daten jederzeit löschen lassen.</p></details>
         <details><summary>Wann startet endo.ai?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">In Kürze. Wer sich jetzt vormerkt, bekommt den Zugang als Erstes.</p></details>
         <details><summary>Bekomme ich auch eine komplette Website?<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg></summary><p class="antwort">Ja, über ERGUN. Emre baut Websites mit Bewegung und eigenen Bildern. <a class="akzent" href="../#kontakt">Kostenloses Erstgespräch anfragen</a>.</p></details>
@@ -852,7 +886,7 @@ window.ENDO = {
   function paket(n) { return E.pakete.filter(function (p) { return p.name === n; })[0]; }
   var ICON = {
     foto: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
-    shop: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6"/><circle cx="12" cy="12" r="3"/></svg>',
+    web: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 8h18"/><path d="m6 17 4-4 3 3 2-2 3 3"/></svg>',
     video: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>'
   };
 
@@ -865,7 +899,7 @@ window.ENDO = {
       var menge = an ? (p.credits ? 'rund ' + Math.floor(p.credits / f.credits).toLocaleString('de-DE') + '×' : 'enthalten') : 'nicht enthalten';
       return '<li class="' + (an ? '' : 'ist-aus ') + (p.name === 'Premium' ? 'ist-premium' : '') + '"><span>' + p.name + ' · ' + p.preis + ' €</span><b>' + menge + '</b></li>';
     }).join('');
-    detail.innerHTML = '<h3>' + f.name + '</h3><p>' + f.text + '</p><div class="funktionen__zahl"><b>' + f.credits + '</b><span>Credits pro Ergebnis</span></div><ul class="funktionen__pakete">' + zeilen + '</ul>';
+    detail.innerHTML = '<h3>' + f.name + '</h3><p>' + f.text + '</p><div class="funktionen__zahl"><b>' + f.credits + '</b><span>Credits pro Ergebnis' + (f.extra ? '<br>' + f.extra : '') + '</span></div><ul class="funktionen__pakete">' + zeilen + '</ul>';
     if (neu) { detail.classList.remove('ist-neu'); void detail.offsetWidth; detail.classList.add('ist-neu'); }
   }
   if (wahl && detail) {
@@ -881,7 +915,7 @@ window.ENDO = {
   if (liste) liste.innerHTML = E.premium.map(function (p) { return '<li><b>' + p.name + (p.credits ? ' · ' + p.credits + ' Credits' : '') + '</b><span>' + p.text + '</span></li>'; }).join('');
 
   /* Pakete */
-  var TEXTE = { Start: ['Produkt in Szene', 'Freistellen + 4K'], Pro: ['Alles aus Start', 'Dazu Werbevideo 5 s'], Premium: ['Alles aus Pro', 'Dazu der Premium-Ordner'] };
+  var TEXTE = { Start: ['Rund 8 Produktfotos', 'Alle drei Bereiche'], Pro: ['Rund 40 Produktfotos oder 10 Videos', 'Alle drei Bereiche'], Premium: ['Rund 200 Produktfotos oder 50 Videos', 'Dazu der Premium-Ordner'] };
   var preise = document.querySelector('[data-preise]');
   if (preise) preise.innerHTML = E.pakete.map(function (p) {
     var art = p.name === 'Premium' ? ' paket--premium' : (p.name === 'Pro' ? ' paket--pro' : '');
@@ -1056,8 +1090,8 @@ window.ENDO = {
   });
 })();
 </script>
-<script src="js/agent.js?v=3" defer></script>
-<script src="js/orb.js?v=5" defer></script>
+<script src="js/agent.js?v=4" defer></script>
+<script src="js/orb.js?v=6" defer></script>
 <script>
 /* Direkt auf /ki/ geöffnet: nach rechts wischen führt zurück zu ERGUN. (eingebettet übernimmt das die Startseite) */
 (function () {

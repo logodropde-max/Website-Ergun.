@@ -3,24 +3,42 @@ tags: [endo-ai, preise]
 ---
 # Credit-Pakete
 
-Preise von [[endo-ai|endo.ai]] (Stand 25.09.2026 nachts, Emre). Für die Webdesign-Pakete siehe [[Pakete & Preise]].
+Preise von [[endo-ai|endo.ai]], festgelegt von Emre am 25.09.2026. Für die Webdesign-Pakete siehe [[Pakete & Preise]].
 Die Zahlen stehen im Code an einer Stelle: `window.ENDO` in `ki/index.html` (Seite, Chat und Credit-Fenster lesen von dort).
+Login und Bezahlung sind noch nicht fertig: alle Knöpfe heißen „… vormerken“.
 
+## Pakete
 | Paket | Preis | Credits | Enthalten |
 |---|---|---|---|
-| Start | 5 € | **offen** | Produkt in Szene, Freistellen + 4K |
-| Pro | 20 € | **offen** | dazu Werbevideo 5 s |
-| Premium | 100 € | **offen** | alles, dazu der Premium-Ordner: Video 10 s, 3D-Modell, Parallax-Szene, Vorrang, Abstimmung mit Emre |
+| Start | 5 € | 40 | alle drei Bereiche |
+| Pro | 20 € | 200 | alle drei Bereiche |
+| Premium | 100 € | 1.000 | alle drei Bereiche + Premium-Ordner |
 
-**Credits pro Ergebnis** (= echte Higgsfield-Kosten, aufgerundet; geprüft 25.09. per Kostenvorschau):
-| Werkzeug | endo-Credits | Higgsfield-Credits | Modell |
+## Verbrauch (endo-Credits pro Ergebnis)
+| Bereich | Credits | Higgsfield-Kosten | Modell |
 |---|---|---|---|
-| Produkt in Szene | 3 | 2,75 | GPT Image 2.5, 2K, high |
-| Freistellen + 4K | 3 | 1 + 2 | Background Remover + Upscale 4K |
-| Werbevideo 5 s | 8 | 7,5 | Kling 3.0 std, ohne Ton |
-| Werbevideo 10 s (Premium) | 15 | 15 | Kling 3.0 std, ohne Ton |
+| Produktfoto (Produkt in Szene) | 5 | 2 | marketing_studio_image |
+| Shop-Bild (freigestellt + 4K) | 5 | 1 + 2 | remove_background + upscale 4K |
+| Werbevideo 5 s | 20 | 10 | kling3_0 |
+| Website-Titelbild | 10 | ca. 4,25 | GPT Image 2.5, 4K (Annahme Claude) |
+| **Premium:** Werbevideo 10 s | 40 | 20 | kling3_0 |
+| **Premium:** 3D-Produkt drehbar | 50 | 30 | image_to_3d mit Textur |
+| **Premium:** Parallax-Szene | 30 | ca. 17 | 4 Bilder à 4,25 (Annahme Claude) |
+| **Premium:** persönliche Abstimmung mit Emre | – | – | – |
 
-**Offen:** Was kostet Emres Higgsfield-Plan pro Credit? Dann: Paket-Credits = Preis ÷ (3 × Kosten pro Higgsfield-Credit), abgerundet (mindestens 3-fache Marge). Bis dahin zeigt die Seite „Credits folgen“.
-Achtung: 4K-Bilder mit GPT Image 2.5 kosten 4,25 Credits je Bild (die Kostenvorschau gilt pro Bild, nicht pro Auftrag).
+## So gerechnet (Emre, 25.09.)
+- Worst Case 0,052 € pro Higgsfield-Credit (Nachkauf 500 Credits für 26 €), dazu 30 % Fehlversuche.
+- Vom Preis gehen 19 % MwSt und bei Lemon Squeezy ca. 5 % + 0,50 € ab. Netto: Start 3,45 € · Pro 15,31 € · Premium 78,53 €.
+- Schlechtester Fall = das ganze Paket wird für das Werkzeug mit den höchsten Kosten je Credit verbraucht:
 
-Früher (bis 25.09.): Start 9 € / 100, Pro 29 € / 400, Studio 79 € / 1.200, Premium 199 € / 3.500.
+| Paket | teuerster Fall | Kosten | Gewinn | Anteil am Netto |
+|---|---|---|---|---|
+| Start | 8 Shop-Bilder | 1,62 € | 1,83 € | 53 % |
+| Pro | 40 Shop-Bilder | 8,11 € | 7,19 € | 47 % |
+| Premium | 200 Shop-Bilder oder 20 3D-Produkte | 40,56 € | 37,97 € | 48 % |
+
+→ Überall mindestens 35 % Gewinn (Ziel erfüllt). Produktfotos allein bringen 65–69 %.
+- Annahmen zum Prüfen: Kosten für Website-Titelbild und Parallax-Szene hat Emre nicht genannt, oben geschätzt.
+- Achtung: 4K-Bilder mit GPT Image 2.5 kosten 4,25 Credits je Bild (Kostenvorschau gilt pro Bild).
+
+Früher: 25.09. nachts kurz Start 5 € / Pro 20 € / Premium 100 € ohne Credit-Zahl; bis 25.09. Start 9 € / 100, Pro 29 € / 400, Studio 79 € / 1.200, Premium 199 € / 3.500.
