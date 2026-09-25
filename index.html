@@ -782,6 +782,9 @@ html.nacht-an .parallax__visuals { position: sticky; top: 0; }
   color: transparent; background: linear-gradient(180deg, #FFFFFF 10%, #FFF4E8 52%, #F9CFAE 100%); -webkit-background-clip: text; background-clip: text; text-shadow: none;
   filter: drop-shadow(0 0 16px rgba(255, 240, 226, 0.35)) drop-shadow(0 8px 26px rgba(80, 36, 12, 0.35)); }
 @media (max-width: 700px) { .parallax__layer-title { transform: translateY(calc(-100% - 5svh)); } .parallax__claim { font-size: clamp(2.2rem, 11vw, 3rem); } }
+/* Emre, 25.09. nachts: auch „Faire Preise …“ weg – im Himmel steht nur noch leise „Webdesigner“ (h1, davor unsichtbar „ERGUN.“) */
+.parallax__rolle { margin: 0; font-size: clamp(13px, 1.2vw, 16px); }
+.hinweis-versteckt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 /* ---------- endo-Pille oben rechts mit Wisch-Hinweis (25.09. nachts) ---------- */
 /* Solange der Einstieg im Bild ist, zieht die Pille alle paar Sekunden kurz nach links: hier kann man wischen.
    Nach dem ersten Wechsel zu endo ist der Hinweis weg. Nur transform/opacity. */
@@ -849,8 +852,7 @@ html.nacht-an .parallax__visuals { position: sticky; top: 0; }
         <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-mitte-hoch.webp"><img src="bilder/hero/szene-mitte-1920.webp" srcset="bilder/hero/szene-mitte-1920.webp 1920w, bilder/hero/szene-mitte-2560.webp 2560w" sizes="104vw" width="2560" height="2016" data-parallax-layer="mitte" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
         <picture><source media="(orientation: portrait)" data-srcset="bilder/hero/szene-mitte-nacht-hoch.webp"><img data-src="bilder/hero/szene-mitte-nacht-1920.webp" data-srcset="bilder/hero/szene-mitte-nacht-1920.webp 1920w, bilder/hero/szene-mitte-nacht-2560.webp 2560w" sizes="104vw" width="2560" height="2016" data-parallax-layer="mitte" class="parallax__layer-img parallax__nacht" alt="" decoding="async"></picture>
         <div data-parallax-layer="titel" class="parallax__layer-title">
-          <p class="parallax__rolle">Webdesigner</p>
-          <h1 class="parallax__claim">Faire Preise für gute Arbeit.</h1>
+          <h1 class="parallax__rolle"><span class="hinweis-versteckt">ERGUN. </span>Webdesigner</h1>
         </div>
         <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-wald-hoch.webp"><img src="bilder/hero/szene-wald-1920.webp" srcset="bilder/hero/szene-wald-1920.webp 1920w, bilder/hero/szene-wald-2560.webp 2560w" sizes="104vw" width="2560" height="2016" data-parallax-layer="wald" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
         <picture><source media="(orientation: portrait)" data-srcset="bilder/hero/szene-wald-nacht-hoch.webp"><img data-src="bilder/hero/szene-wald-nacht-1920.webp" data-srcset="bilder/hero/szene-wald-nacht-1920.webp 1920w, bilder/hero/szene-wald-nacht-2560.webp 2560w" sizes="104vw" width="2560" height="2016" data-parallax-layer="wald" class="parallax__layer-img parallax__nacht" alt="" decoding="async"></picture>
@@ -1042,7 +1044,7 @@ html.nacht-an .parallax__visuals { position: sticky; top: 0; }
     .from('[data-parallax-layer="wald"]', { scale: 1.08, duration: 1.8, ease: 'expo.out' }, 0)
     .from('[data-parallax-layer="wiese"]', { scale: 1.12, duration: 1.8, ease: 'expo.out' }, 0)
     .from('[data-parallax-layer="gras"]', { scale: 1.18, duration: 1.8, ease: 'expo.out' }, 0)
-    .from('.parallax__rolle, .parallax__claim', { opacity: 0, y: 8, duration: 0.7, stagger: 0.15 }, 0.35)
+    .from('.parallax__rolle', { opacity: 0, y: 8, duration: 0.7 }, 0.35)
     .from('.nav', { opacity: 0, duration: 0.6, ease: 'power2.out' }, 0.5);
 
   /* ===== Auftritt: "E." erscheint, der Punkt zieht nach rechts und zieht "RGUN" hinter sich her, dann blendet die Szene auf ===== */
@@ -1278,12 +1280,12 @@ html.nacht-an .parallax__visuals { position: sticky; top: 0; }
   function render() {
     if (!m.sonne) return;
     var p = st.p;
-    var s = bahn(40 - 54 * zw(0.02, 0.5, p));            /* oben rechts → hinter die Berge rechts */
+    var s = bahn(24 - 40 * zw(0.02, 0.5, p));            /* rechts neben der Überschrift → hinter die Berge rechts */
     gsap.set(sonne, { x: s[0], y: s[1] });
     vis.style.setProperty('--abend', zw(0.12, 0.42, p).toFixed(3));
     var n = zw(0.2, 0.55, p);
     nachtBilder.forEach(function (img) { img.style.opacity = n; img.style.visibility = n > 0.001 ? 'visible' : 'hidden'; });
-    var mo = bahn(196 - 58 * zw(0.42, 0.8, p));           /* links hinter den Bergen hervor, im Bogen nach oben */
+    var mo = bahn(196 - 44 * zw(0.42, 0.8, p));           /* links hinter den Bergen hervor, im Bogen nach oben */
     gsap.set(mond, { x: mo[0], y: mo[1], opacity: zw(0.4, 0.5, p) });
     sterne.style.opacity = zw(0.42, 0.7, p);
     nacht = p > 0.55;
