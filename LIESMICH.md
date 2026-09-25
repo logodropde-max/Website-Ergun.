@@ -6,6 +6,12 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Hund-Bildfolge statt Bildwechsel (25.09.2026, 07:10, Claude Code)
+- Dateien: `bilder/hero/hund-film/NN.webp` (36 Bilder, 676×768, Leinwand-Position in `info.json`: x 1831, y 1894 im 3840×3024-Raster). Neu bauen: `python bilder/hero/4k/szene2/hund_video.py video/v1-9493b609.mp4 0.9 3.4 36` (braucht ffmpeg + rembg, ca. 45 min auf der CPU).
+- `<canvas data-hund-film>` in `.hund-film[data-parallax-layer="wiese"]`. `filmLaden()` nach dem Seitenaufbau, `filmLage()` in `messen()` (gleiche Umrechnung wie Sonne/Mond), `zeigeBild(i)` in `render()`: Bild = (p − 0,46) / 0,18. Klasse `.film-an` blendet Tages-, Nacht- und Jaul-Standbild aus (Selektor mit `.parallax__visuals`, sonst gewinnt `.jault`).
+- Hund am Handy jetzt an derselben Stelle wie am Desktop (2150 im 3840er Raster), damit eine Bildfolge für beide reicht.
+- Tag/Nacht: Nachtbilder `opacity = min(1, n·1,25)`, Tagbilder blenden bei n 0,8–1 aus (sonst Lichtlinie an den Kanten), Tagbilder erst ausblenden, wenn alle Nachtbilder geladen sind.
+
 ## Pfeil statt Umschalter, endo mit 3 Bereichen (25.09.2026, 04:40, Claude Code)
 - Startseite: `a.seitenpfeil[data-endo-pille]` (fixed, rechts mittig, „endo entdecken“, Linie `.seitenpfeil__linie` mit `linie-ziehen`), Handy: Lasche am Rand ohne Text. Klick → `oeffnen({ klick: true })` (wartet auf das iframe). Umschalter-HTML entfernt (CSS/JS dafür ohne Wirkung).
 - endo: `a.seitenpfeil--links` → `../` (im iframe schließt der Klick die Ebene). `.orb` nur noch obere 58 % (Handy 52 %), Kugel füllt bis 66 % davon (`orb.js?v=6`). Hero-Text darunter, `clamp(44px, 6vw, 80px)`. Chat-Feld = Pille (Rand, Glas, weißer Senden-Knopf). `.abo` (Handy-Paketwahl) ausgeblendet und aus dem HTML entfernt, `.preise` auf jeder Breite.

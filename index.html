@@ -756,7 +756,12 @@ body { overflow-x: clip; }
 @keyframes funkeln { from { opacity: 0.35; } to { opacity: 1; } }
 .schnuppe { position: absolute; width: 180px; height: 1.5px; border-radius: 2px; background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(235, 242, 255, 0.95)); transform-origin: 100% 50%; opacity: 0; animation: schnuppe 1100ms cubic-bezier(0.2, 0.6, 0.3, 1) forwards; }
 @keyframes schnuppe { 0% { opacity: 0; transform: rotate(var(--winkel)) translateX(0) scaleX(0.3); } 15% { opacity: 1; } 100% { opacity: 0; transform: rotate(var(--winkel)) translateX(var(--weg-x)) scaleX(1); } }
-/* Hund: stehend (Tag/Nacht) → jaulend, weicher Wechsel */
+/* Hund hebt den Kopf als Bildfolge aus einem Higgsfield-Video (Kling 3.0), ans Scrollen gekoppelt */
+.hund-film { position: absolute; inset: 0; pointer-events: none; }
+.hund-film canvas { position: absolute; left: 0; top: 0; visibility: hidden; }
+.film-an .hund-film canvas { visibility: visible; }
+.parallax__visuals.film-an [data-hund-nacht], .parallax__visuals.film-an [data-hund-jault], .parallax__visuals.film-an [data-hund-tag] { visibility: hidden !important; }
+/* Hund: stehend (Tag/Nacht) → jaulend, weicher Wechsel (Rückfall, solange die Bildfolge lädt) */
 [data-hund-jault] { transition: opacity 320ms cubic-bezier(0.32, 0.72, 0, 1), visibility 0s linear 320ms; }
 .jault [data-hund-jault] { opacity: 1 !important; visibility: visible !important; transition: opacity 320ms cubic-bezier(0.32, 0.72, 0, 1); }
 .jault [data-hund-nacht], .jault [data-hund-tag] { opacity: 0 !important; transition: opacity 320ms cubic-bezier(0.32, 0.72, 0, 1); }
@@ -905,6 +910,7 @@ body { overflow-x: clip; }
         <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-hund-hoch.webp"><img src="bilder/hero/szene-hund-1920.webp" data-hund-tag srcset="bilder/hero/szene-hund-1920.webp 1920w, bilder/hero/szene-hund-2560.webp 2560w" sizes="104vw" width="2560" height="2016" data-parallax-layer="wiese" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
         <picture><source media="(orientation: portrait)" data-srcset="bilder/hero/szene-hund-nacht-hoch.webp"><img data-src="bilder/hero/szene-hund-nacht-1920.webp" data-srcset="bilder/hero/szene-hund-nacht-1920.webp 1920w" sizes="104vw" width="2560" height="2016" data-parallax-layer="wiese" class="parallax__layer-img parallax__nacht" alt="" decoding="async" data-hund-nacht></picture>
         <picture><source media="(orientation: portrait)" data-srcset="bilder/hero/szene-hund-jault-nacht-hoch.webp"><img data-src="bilder/hero/szene-hund-jault-nacht-1920.webp" data-srcset="bilder/hero/szene-hund-jault-nacht-1920.webp 1920w" sizes="104vw" width="2560" height="2016" data-parallax-layer="wiese" class="parallax__layer-img parallax__nacht" alt="" decoding="async" data-hund-jault></picture>
+        <div class="hund-film" data-parallax-layer="wiese" aria-hidden="true"><canvas data-hund-film></canvas></div>
         <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-gras-hoch.webp"><img src="bilder/hero/szene-gras-1920.webp" srcset="bilder/hero/szene-gras-1920.webp 1920w, bilder/hero/szene-gras-2560.webp 2560w" sizes="104vw" width="2560" height="2016" data-parallax-layer="gras" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
         <picture><source media="(orientation: portrait)" data-srcset="bilder/hero/szene-gras-nacht-hoch.webp"><img data-src="bilder/hero/szene-gras-nacht-1920.webp" data-srcset="bilder/hero/szene-gras-nacht-1920.webp 1920w" sizes="104vw" width="2560" height="2016" data-parallax-layer="gras" class="parallax__layer-img parallax__nacht" alt="" decoding="async"></picture>
       </div>
@@ -1272,7 +1278,8 @@ body { overflow-x: clip; }
       if (img.getAttribute('data-src')) img.src = img.getAttribute('data-src');
     });
   }
-  if (document.readyState === 'complete') setTimeout(nachladen, 400); else window.addEventListener('load', function () { setTimeout(nachladen, 400); });
+  function spaeter() { nachladen(); filmLaden(); }
+  if (document.readyState === 'complete') setTimeout(spaeter, 400); else window.addEventListener('load', function () { setTimeout(spaeter, 400); });
 
   function punkt(x, y) { return [m.ox + x * m.s, m.oy + y * m.s]; }
   /* Punkt der Leinwand → Pixel in der Szene (ohne die Scroll-Verschiebung der Ebenen) */
@@ -1289,6 +1296,7 @@ body { overflow-x: clip; }
     m.r = Math.max(28, Math.min(46, m.w * 0.026));
     vis.style.setProperty('--scheibe', m.r + 'px');
     zeichneSterne();
+    filmLage();
     render();
   }
 
@@ -1311,7 +1319,7 @@ body { overflow-x: clip; }
     });
   }
 
-  var st = { p: 0 }, jault = false, nacht = false, tagAus = false;
+  var st = { p: 0 }, jault = false, nacht = false, tagWert = 1;
   var tagBilder = [].slice.call(document.querySelectorAll('.parallax__layer-img:not(.parallax__nacht)'));
   function zw(a, b, p) { var t = Math.min(1, Math.max(0, (p - a) / (b - a))); return t * t * (3 - 2 * t); }
   /* Halbkreis um die Bildmitte, unten der Horizont (Höhe der alten Sonne) */
@@ -1327,21 +1335,56 @@ body { overflow-x: clip; }
     gsap.set(sonne, { x: s[0], y: s[1] });
     vis.style.setProperty('--abend', zw(0.08, 0.36, p).toFixed(3));
     var n = zw(0.14, 0.46, p);
-    nachtBilder.forEach(function (img) { img.style.opacity = n; img.style.visibility = n > 0.001 ? 'visible' : 'hidden'; });
+    var nOp = Math.min(1, n * 1.25);   /* Nachtbilder sind schon ganz deckend, bevor die Tagbilder gehen */
+    nachtBilder.forEach(function (img) { img.style.opacity = nOp; img.style.visibility = nOp > 0.001 ? 'visible' : 'hidden'; });
     /* volle Nacht: Tagbilder ganz weg (spart Grafikspeicher, nichts scheint durch) */
-    var tagWeg = n > 0.999 && nachtBilder.every(function (img) { return img.complete && img.naturalWidth > 0; });
-    if (tagWeg !== tagAus) { tagAus = tagWeg; tagBilder.forEach(function (img) { img.style.visibility = tagWeg ? 'hidden' : ''; }); }
+    var nachtDa = nachtBilder.every(function (img) { return img.complete && img.naturalWidth > 0; });
+    /* Kurz vor voller Nacht blenden die Tagbilder aus – sonst leuchten ihre Kanten unter den Nachtkanten als feine Linie durch */
+    var tag = nachtDa ? Math.min(1, (1 - n) / 0.2) : 1;
+    if (Math.abs(tag - tagWert) > 0.001) { tagWert = tag; tagBilder.forEach(function (img) { img.style.opacity = tag; img.style.visibility = tag < 0.001 ? 'hidden' : ''; }); }
     var mo = bahn(196 - 44 * zw(0.3, 0.66, p));           /* links hinter den Bergen hervor, im Bogen nach oben */
     gsap.set(mond, { x: mo[0], y: mo[1], opacity: zw(0.28, 0.38, p) });
     sterne.style.opacity = zw(0.3, 0.56, p);
     nacht = p > 0.4 && p < 0.95;
     var j = p > 0.5;
     if (j !== jault) { jault = j; vis.classList.toggle('jault', j); }
+    /* Bildfolge: ab voller Nacht, Kopf hebt sich zwischen p 0,46 und 0,64 */
+    var an = film.bereit && p >= 0.46;
+    if (an !== film.an) { film.an = an; vis.classList.toggle('film-an', an); }
+    if (an) zeigeBild(Math.round(Math.min(1, (p - 0.46) / 0.18) * (film.bilder.length - 1)));
+  }
+
+  /* ---------- Bildfolge des Hundes (bilder/hero/hund-film/) ---------- */
+  var film = { bilder: [], bereit: false, an: false, jetzt: -1, info: null, cv: document.querySelector('[data-hund-film]') };
+  function zeigeBild(i) {
+    if (i === film.jetzt || !film.bilder[i]) return;
+    film.jetzt = i;
+    var g = film.cv.getContext('2d'); g.clearRect(0, 0, film.cv.width, film.cv.height); g.drawImage(film.bilder[i], 0, 0);
+  }
+  function filmLage() {
+    var f = film.info; if (!f || !m.s) return;
+    var x = m.h ? (f.x - 960) * 0.75 : f.x * 2560 / 3840, y = m.h ? f.y * 0.75 : f.y * 2560 / 3840;
+    var k = m.h ? 0.75 : 2560 / 3840, a = punkt(x, y);
+    film.cv.style.left = a[0] + 'px'; film.cv.style.top = a[1] + 'px';
+    film.cv.style.width = (f.b * k * m.s) + 'px'; film.cv.style.height = (f.h * k * m.s) + 'px';
+  }
+  function filmLaden() {
+    if (!film.cv || !window.fetch) return;
+    fetch('bilder/hero/hund-film/info.json').then(function (r) { return r.json(); }).then(function (f) {
+      film.info = f; film.cv.width = f.b; film.cv.height = f.h; filmLage();
+      var offen = f.anzahl;
+      for (var i = 0; i < f.anzahl; i++) {
+        var im = new Image(); im.decoding = 'async';
+        im.onload = function () { if (--offen === 0) { film.bereit = true; film.jetzt = -1; render(); } };
+        im.src = 'bilder/hero/hund-film/' + (i < 10 ? '0' : '') + i + '.webp';
+        film.bilder.push(im);
+      }
+    }).catch(function () {});
   }
 
   /* Zum Prüfen: ?nacht=0.8 stellt den Ablauf fest ein */
   var test = /[?&]nacht=([\d.]+)/.exec(location.search);
-  if (test) { st.p = parseFloat(test[1]); nachladen(); window.addEventListener('load', function () { setTimeout(function () { nachladen(); messen(); }, 300); }); }
+  if (test) { st.p = parseFloat(test[1]); nachladen(); filmLaden(); window.addEventListener('load', function () { setTimeout(function () { nachladen(); messen(); }, 300); }); }
   else gsap.to(st, { p: 1, ease: 'none', onUpdate: render,
     scrollTrigger: { trigger: held, start: 'top top', end: 'bottom top', scrub: 0.35, onRefresh: messen } });
   window.addEventListener('resize', function () { clearTimeout(window.__nachtRt); window.__nachtRt = setTimeout(messen, 150); });
