@@ -83,6 +83,14 @@ img { display: block; max-width: 100%; height: auto; }
 /* weicher Übergang ohne Maske (Masken über bewegten Ebenen flackern in Safari): unten ein Verlauf genau
    in der Farbe, mit der die Studio-Sektion beginnt */
 .szene__ebene { position: absolute; inset: 0; pointer-events: none; will-change: transform; }
+/* Parallaxe im Browser selbst (Scroll-Animation): Himmel fast stehend, vorne wenig Weg – ohne JavaScript-Nachlauf */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .szene { view-timeline: --szene block; }
+    .szene--css .szene__ebene { animation: ebene-weg linear both; animation-timeline: --szene; animation-range: exit 0% exit 100%; }
+  }
+}
+@keyframes ebene-weg { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, var(--weg, 0px), 0); } }
 /* Start: Himmel und Titel stehen sofort, die gezeichnete Landschaft blendet einmal weich ein */
 .szene__ebene[data-ebene]:not([data-ebene="himmel"]):not([data-ebene="titel"]) { transition: opacity 500ms var(--ease); }
 .szene:not(.szene--bereit) .szene__ebene[data-ebene]:not([data-ebene="himmel"]):not([data-ebene="titel"]) { opacity: 0; }
@@ -642,7 +650,7 @@ img { display: block; max-width: 100%; height: auto; }
   </nav>
 </footer>
 
-<script src="js/szene.js?v=13"></script>
+<script src="js/szene.js?v=14"></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {

@@ -6,6 +6,11 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Parallaxe wieder im Browser (25.09.2026, 21:05, Claude Code)
+- Emre: auf dem iPhone ruckelt es oben weiterhin. Wahrscheinliche Ursache: Safari scrollt auf eigenem Weg, die per JavaScript verschobenen Ebenen kamen ein Bild zu spät (Zittern).
+- Neu: `.szene { view-timeline: --szene }`, jede `.szene__ebene` läuft per `animation: ebene-weg` mit `animation-range: exit 0% exit 100%` bis `--weg` (vom Skript je Ebene gesetzt = Bildhöhe × Tiefe). Das Skript verschiebt nur noch, wenn der Browser keine Scroll-Animationen kann (`cssParallaxe`). Licht-Variablen werden nur geschrieben, wenn sie sich ändern (`wert()`).
+- Braucht Safari 26 (iOS 26) für die flüssige Variante; ältere iPhones nutzen weiter den Skript-Weg.
+
 ## Start ohne Ruckeln + Nebel auf der ganzen Studio-Seite (25.09.2026, 20:40, Claude Code)
 - `js/szene.js` zeichnet in Stufen: `landschaft()` mit `AKTIV = ['tag']` sofort (Aufbau 18 ms statt ca. 108 ms), danach per `requestIdleCallback` Gold, Nacht und zuletzt die Sterne. Gras-Windhüllen werden wiederverwendet (gleicher Takt), der Hund nur im ersten Durchgang angelegt. Die Landschaft blendet beim Start einmal weich ein (500 ms), Himmel und Titel stehen sofort.
 - Nebel liegt jetzt in `ki/js/nebel.js` (für alle `[data-nebel]`, gerechnet erst nach dem Laden). Startseite: `.endo__nebel[data-nebel]`. /ki/: `.nebel-feld` fest hinter der ganzen Seite (drei Lagen, 120/170/230 s).

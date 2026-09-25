@@ -685,6 +685,9 @@
 
   /* ---------- Aufbau ---------- */
   var ebenen = {}, sonne, mond, bereit = false, bauzeit = 0, bauNr = 0;
+  /* Parallaxe: kann der Browser Scroll-Animationen (Chrome, Edge, Safari 26), verschiebt er die Ebenen selbst –
+     synchron zum Scrollen, ohne dass JavaScript ein Bild hinterherläuft (das zitterte auf dem iPhone). Sonst JavaScript. */
+  var cssParallaxe = !ruhig && !!(window.CSS && CSS.supports && CSS.supports('animation-timeline: view()'));
   function spaeter(fn) { if (window.requestIdleCallback) requestIdleCallback(fn, { timeout: 500 }); else setTimeout(fn, 60); }
   /* zeichnet alle Ebenen in den Lichtstimmungen aus AKTIV */
   function landschaft() {
@@ -701,6 +704,10 @@
     var t0 = performance.now();
     messen();
     held.style.setProperty('--szene-h', m.H + 'px');
+    if (cssParallaxe && isNaN(festP)) {
+      Object.keys(ebenen).forEach(function (k) { ebenen[k].style.removeProperty('transform'); ebenen[k].style.setProperty('--weg', (m.H * TIEFE[k] * (k === 'himmel' ? 1 : m.f)).toFixed(1) + 'px'); });
+      held.classList.add('szene--css');
+    }
     ['weit', 'fern', 'mitte', 'huegel', 'wald', 'wiese', 'gras'].forEach(function (k) { var e = ebenen[k]; e.querySelectorAll('canvas:not(.szene__hund), .szene__wind').forEach(function (c) { c.remove(); }); });
     ebenen.himmel.querySelectorAll('.szene__wolken').forEach(function (c) { c.remove(); });
     windHuellen = [];
@@ -745,7 +752,7 @@
     letztesP = p;
     var s = isNaN(festP) ? p * m.H : 0;
     /* Parallaxe: direkt am Scrollen, sonst schwimmt die Landschaft gegen die Seite */
-    Object.keys(ebenen).forEach(function (k) { setze(ebenen[k], s * TIEFE[k] * (k === 'himmel' ? 1 : m.f)); });
+    if (!(cssParallaxe && isNaN(festP))) Object.keys(ebenen).forEach(function (k) { setze(ebenen[k], s * TIEFE[k] * (k === 'himmel' ? 1 : m.f)); });
     /* Sonne, Mond, Licht und Hund folgen einem weich nachgeführten Wert – keine Sprünge bei Mausrad-Schritten */
     ziel = p;
     if (immer || ruhig || !isNaN(festP)) { weich = p; licht(weich); }
@@ -759,30 +766,32 @@
     licht(weich);
     if (laeuft) requestAnimationFrame(nachfuehren);
   }
+  var gesetzt = {};
+  function wert(name, v) { if (gesetzt[name] !== v) { gesetzt[name] = v; held.style.setProperty(name, v); } }
   function licht(p) {
     p = p / ZEIT;
     var gold = sanft(0.05, 0.19, p), nacht = sanft(0.22, 0.42, p);
-    held.style.setProperty('--gold', (nacht > 0.995 ? 0 : gold).toFixed(3));
-    held.style.setProperty('--nacht', nacht.toFixed(3));
+    wert('--gold', (nacht > 0.995 ? 0 : gold).toFixed(3));
+    wert('--nacht', nacht.toFixed(3));
     /* ist eine Stimmung ganz erreicht, verschwinden die Fassungen darunter (sonst schimmern ihre Kanten an dünnen Halmen durch) */
-    held.style.setProperty('--tag', (gold > 0.995 || nacht > 0.995) ? '0' : '1');
-    held.style.setProperty('--blau', sanft(0.18, 0.3, p).toFixed(3));
-    held.style.setProperty('--himmel-nacht', sanft(0.28, 0.46, p).toFixed(3));
+    wert('--tag', (gold > 0.995 || nacht > 0.995) ? '0' : '1');
+    wert('--blau', sanft(0.18, 0.3, p).toFixed(3));
+    wert('--himmel-nacht', sanft(0.28, 0.46, p).toFixed(3));
     /* Sterne: zuerst die hellsten, dann mehr; Milchstraße erst in tiefer Nacht */
     var s1 = sanft(0.26, 0.36, p);
-    held.style.setProperty('--sterne', s1.toFixed(3));
-    held.style.setProperty('--sterne2', sanft(0.32, 0.44, p).toFixed(3));
-    held.style.setProperty('--sterne3', sanft(0.38, 0.52, p).toFixed(3));
-    held.style.setProperty('--milch', sanft(0.42, 0.6, p).toFixed(3));
+    wert('--sterne', s1.toFixed(3));
+    wert('--sterne2', sanft(0.32, 0.44, p).toFixed(3));
+    wert('--sterne3', sanft(0.38, 0.52, p).toFixed(3));
+    wert('--milch', sanft(0.42, 0.6, p).toFixed(3));
     held.classList.toggle('szene--sterne', s1 > 0.01);
     /* Sonne: senkrecht, gleichmäßig mit sanftem Anfang und Ende */
     var ps = sanft(0, SONNE_BIS, p), ys = mix(m.sonneStart, m.sonneEnde, ps);
     sonne.style.transform = 'translate3d(' + (m.W / 2).toFixed(2) + 'px,' + ys.toFixed(2) + 'px,0)';
-    held.style.setProperty('--tief', sanft(0.04, 0.24, p).toFixed(3));
+    wert('--tief', sanft(0.04, 0.24, p).toFixed(3));
     /* Mond steigt links auf */
     var pm = sanft(0.27, 0.62, p), ym = mix(m.mondStart, m.mondEnde, pm);
     mond.style.transform = 'translate3d(' + m.mondX.toFixed(2) + 'px,' + ym.toFixed(2) + 'px,0)';
-    held.style.setProperty('--mond', sanft(0.27, 0.4, p).toFixed(3));
+    wert('--mond', sanft(0.27, 0.4, p).toFixed(3));
     /* Hund: Farbe folgt dem Licht, nachts hebt er den Kopf */
     var bildNr = Math.round(sanft(0.4, 0.58, p) * 35);
     var farbe = mixHex(mixHex(F.hund.tag, F.hund.gold, gold), F.hund.nacht, nacht);
