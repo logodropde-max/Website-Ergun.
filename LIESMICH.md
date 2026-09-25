@@ -6,6 +6,11 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Sterne (25.09.2026, 14:50, Claude Code) – Schritt 4 von 7
+- `sterne()` in `js/szene.js`: schwache Sterne (`data-stufe="3"`) und mittlere mit Hof (`"2"`) je auf einer Leinwand, die hellsten 18–46 als `<i>` in `.sterne__hell` mit eigenem Takt (`funkeln`/`funkeln-b`, Dauer 2,4–7 s, zufällige Verzögerung). Farben weiß, warmweiß, bläulich.
+- Einblenden: `--sterne` (hellste, p 0,26–0,36) → `--sterne2` (0,32–0,44) → `--sterne3` (0,38–0,52), Milchstraße `--milch` ab 0,42 (körnig, dunkle Staubbahnen, max. 70 % Deckkraft).
+- Sternschnuppe alle 18–40 s, nur in voller Nacht und solange das Startbild sichtbar ist. Funkeln pausiert außerhalb des Bildes, bei „Bewegung reduzieren" kein Funkeln und keine Schnuppen.
+
 ## Gezeichnete Szene statt Foto-Ebenen (25.09.2026, 14:30, Claude Code) – Schritt 2 + 3 von 7
 - `js/szene.js` zeichnet die Landschaft beim Laden auf Canvas: ferne Kette mit Schneeresten und Gesteinsschichten (`fern`), mittlere Kette (`mitte`), Hügel mit fernem Waldsaum (`huegel`), Waldkante mit Nadelbäumen (gestufte Äste, jeder anders) und wenigen Laubbäumen (`wald`), Wiese mit Halmen und dem Schäferhund (`wiese`), Gras vorne in zwei Wind-Gruppen (`gras`, CSS `skewX`).
 - Jede Ebene in **3 Lichtstimmungen** (Tag, Gold, Nacht), beim Scrollen nur `opacity`-Überblendung über `--gold`/`--nacht`/`--tag` + `translate3d` (Parallaxe `TIEFE`). Hänge zur Lichtquelle heller (Sonne mittig, nachts Mond links), Lichtkanten auf Graten, Bäumen, Grasspitzen; ferne Ketten heller/blauer (Luftperspektive), Dunst in den Tälern. Kanten bleiben im Umriss (clip), damit die Nacht die Abendfassung ganz deckt.
