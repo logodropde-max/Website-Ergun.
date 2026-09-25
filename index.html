@@ -25,6 +25,7 @@
 
 <link rel="preload" href="schriften/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="schriften/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<script>document.documentElement.classList.add('js');</script>
 
 <style>
 html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
@@ -35,10 +36,10 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
 @font-face { font-family: "Geist"; src: url("schriften/Geist-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Geist"; src: url("schriften/Geist-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
 :root {
-  --bg: #0E0E0C;
+  --bg: #000000;
   --text: #F2EFE8;
-  --muted: #8A867D;   /* auf --bg 5.4:1 */
-  --accent: #FF5A1F;  /* auf --bg 6.0:1 */
+  --muted: #8A867D;   /* auf Schwarz 5.9:1 */
+  --accent: #FF5A1F;  /* auf Schwarz 6.6:1 */
   --line: rgba(242, 239, 232, 0.12);
   --pad: clamp(20px, 4vw, 56px);
   --serif: "Instrument Serif", Georgia, serif;
@@ -47,752 +48,172 @@ html { touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adju
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 *, *::before, *::after { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--sans);
-  font-size: 16px;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
 a { color: inherit; text-decoration: none; }
 :where(a, button, input, select, textarea):focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 h1, h2, h3, p { margin: 0; font-weight: 400; }
 h2 { text-wrap: balance; }
 img { display: block; max-width: 100%; height: auto; }
-
-/* Direkt zum Inhalt (Tastatur) */
+.hinweis-versteckt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .skip { position: fixed; left: var(--pad); top: 16px; z-index: 50; padding: 12px 16px; background: var(--text); color: var(--bg); border-radius: 999px; font-size: 14px; transform: translateY(-200%); transition: transform 160ms var(--ease-out); }
 .skip:focus-visible { transform: none; outline-offset: 2px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 
-/* ---------- Auftritt (Loader) ---------- */
-.loader { display: none; position: fixed; inset: 0; z-index: 100; align-items: center; justify-content: center; pointer-events: none; }
-html.intro .loader { display: flex; pointer-events: auto; }
-html.intro body { overflow: hidden; }
-html.intro .parallax__title { opacity: 0; }
-.loader__grund { position: absolute; inset: 0; background: var(--bg); }
-.loader__name {
-  position: relative; font-family: var(--serif);
-  font-size: min(17vw, 16rem); line-height: 0.85; letter-spacing: 0.02em;
-  text-transform: uppercase; white-space: nowrap; color: #F4EEE4;
-  text-shadow: 0 0.03em 0.2em rgba(0,0,0,0.45);
-  transform-origin: 50% 50%; will-change: transform;
-}
-.loader__name .dot { color: var(--accent); display: inline-block; }
-.loader__maske { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.06em 0 0.1em; margin: -0.06em 0 -0.1em; }
-.loader__buchstabe { display: inline-block; will-change: transform; }
-@media (max-width: 700px) { .loader__name { font-size: 21vw; } }
-
-
-/* ---------- Navigation ---------- */
-.nav {
-  position: fixed; inset: 0 0 auto 0; z-index: 20;
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 22px var(--pad);
-  font-size: 14px;
-  color: var(--text);
-  text-shadow: 0 1px 12px rgba(14,14,12,0.6);
-}
-.nav__mark { font-family: var(--serif); font-size: 22px; letter-spacing: 0.01em; }
-.nav__links { display: flex; gap: 28px; }
+/* ---------- Navigation: beim Runterscrollen weg, beim Hochscrollen wieder da ---------- */
+.nav { position: fixed; inset: 0 0 auto 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; padding: 14px 24px; font-size: 14px; color: var(--text); text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45); transition: transform 450ms var(--ease-out); }
+.nav--weg { transform: translateY(-120%); }
+.nav:focus-within { transform: none; }
+.nav__mark { font-family: var(--serif); font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase; }
+.nav__mark .dot { color: var(--accent); }
+.nav__links { display: flex; align-items: center; gap: 28px; }
 .nav__link { position: relative; padding-bottom: 2px; }
-.nav__link::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px;
-  background: currentColor; transform: scaleX(0); transform-origin: right;
-  transition: transform 300ms var(--ease);
-}
+.nav__link::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 300ms var(--ease); }
 .nav__link:focus-visible::after { transform: scaleX(1); transform-origin: left; }
 @media (hover: hover) and (pointer: fine) { .nav__link:hover::after { transform: scaleX(1); transform-origin: left; } }
+@media (max-width: 700px) { .nav { padding: 8px 16px; } .nav__links { gap: 20px; } .nav__link { font-size: 13px; } }
+@media (pointer: coarse) { .nav__mark, .nav__link, .footer a, .contact__meta a { display: inline-flex; align-items: center; min-height: 44px; } }
 
-/* ---------- Hero: Layer-Parallax ---------- */
-.parallax__header { position: relative; }
-.parallax__visuals { position: relative; height: 125svh; min-height: 640px; overflow: hidden; background: var(--bg); }
-.parallax__layers { position: absolute; inset: 0; }
-.parallax__layer-img {
-  position: absolute; top: 0; left: 0;
-  width: 100%; height: 118%;
-  object-fit: cover; object-position: 50% 100%;
-  pointer-events: none; user-select: none;
-  will-change: transform; backface-visibility: hidden; transform: translateZ(0);
-}
-.parallax__layer-title {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100svh;
-  display: flex; justify-content: center; align-items: center;
-  padding-bottom: 54svh;   /* Name sitzt oben, frei lesbar – beim Scrollen wandert er hinter die Person */
-  will-change: transform;
-}
-.parallax__title {
-  font-family: var(--serif);
-  font-size: min(17vw, 16rem);
-  line-height: 0.85;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: #F4EEE4;
-  text-shadow: 0 0.03em 0.2em rgba(0,0,0,0.45);
-}
-.parallax__title .dot, .nav__mark .dot { color: var(--accent); }
-.nav__mark { text-transform: uppercase; letter-spacing: 0.06em; font-size: 18px; }
-.parallax__layer-img--sky { top: -15%; }
-.parallax__fade {
-  position: absolute; left: 0; right: 0; bottom: -2px; height: 38%;
-  background: linear-gradient(to top, var(--bg) 12%, rgba(14,14,12,0.85) 40%, rgba(14,14,12,0));
-  pointer-events: none;
-}
-.parallax__hint {
-  position: absolute; right: var(--pad); bottom: 22svh;
-  display: flex; align-items: center; gap: 12px;
-  color: var(--muted); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
-}
-.parallax__hint::after { content: ""; width: 40px; height: 1px; background: currentColor; transform-origin: left; animation: atmen 2.4s var(--ease) infinite; }
-@keyframes atmen { 0%, 100% { transform: scaleX(0.3); opacity: 0.4; } 50% { transform: scaleX(1); opacity: 1; } }
+/* ---------- Startbild: gezeichnete Landschaft (js/szene.js) ---------- */
+/* Jede Ebene liegt in drei Lichtstimmungen übereinander (Tag, Gold, Nacht); das Skript setzt nur
+   --gold, --nacht usw. und verschiebt die Ebenen. Nur transform/opacity, keine Filter. */
+.szene { position: relative; --gold: 0; --blau: 0; --nacht: 0; --himmel-nacht: 0; --sterne: 0; --tief: 0; --mond: 0; }
+.szene__buehne { position: relative; height: 100svh; min-height: 560px; overflow: hidden; background: #BFD6EA; isolation: isolate; }
+.szene__ebene { position: absolute; inset: 0; pointer-events: none; will-change: transform; }
+.szene__bild { position: absolute; left: 0; width: 100%; display: block; opacity: 0; }
+.szene--bereit .szene__bild[data-licht="tag"] { opacity: var(--tag, 1); }
+.szene--bereit .szene__bild[data-licht="gold"] { opacity: var(--gold); }
+.szene--bereit .szene__bild[data-licht="nacht"] { opacity: var(--nacht); }
+.szene__hund { position: absolute; display: block; }
 
-/* ---------- Statement ---------- */
-.statement {
-  min-height: 100svh;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 40px;
-  padding: 18svh var(--pad);
-  text-align: center;
-}
-.statement__icon { width: 44px; height: 44px; color: var(--accent); }
-.statement__text {
-  font-family: var(--serif);
-  font-size: clamp(3rem, 9vw, 8.5rem);
-  line-height: 0.95;
-  letter-spacing: -0.025em;
-  max-width: 12ch;
-}
-.statement__text em { font-style: italic; color: var(--accent); }
-.word { display: inline-block; }
-.statement__sub { color: var(--muted); font-size: clamp(15px, 1.3vw, 18px); max-width: 40ch; text-wrap: pretty; }
+/* Himmel: Farbverlauf hängt an der Sonnenhöhe – Tag, Goldene Stunde, blaue Stunde, Nacht */
+.himmel { position: absolute; inset: 0; }
+.himmel--tag { background: linear-gradient(180deg, #2D69B0 0%, #4F89C9 28%, #8DB7DD 50%, #C6DDEE 62%, #E2ECF2 72%); }
+.himmel--gold { opacity: var(--gold); background: linear-gradient(180deg, #27365D 0%, #5A5680 22%, #B8767A 42%, #F09A66 54%, #FFC37A 62%, #FFE3AE 70%); }
+.himmel--blau { opacity: var(--blau); background: linear-gradient(180deg, #0C1633 0%, #1D3062 30%, #435A93 50%, #8C87AE 62%, #C79A97 70%); }
+.himmel--nacht { opacity: var(--himmel-nacht); background: linear-gradient(180deg, #02040A 0%, #060C1A 30%, #0D1830 52%, #182A48 64%, #1E3150 72%); }
 
-/* ---------- Leistungen ---------- */
-.services { position: relative; padding: 0 var(--pad) 18svh; }
-.services__row {
-  display: grid;
-  grid-template-columns: 64px minmax(0, 1fr) minmax(0, 20rem);
-  align-items: baseline;
-  gap: 24px;
-  padding: clamp(20px, 3vw, 36px) 0;
-  border-top: 1px solid var(--line);
-}
-.services__row:last-child { border-bottom: 1px solid var(--line); }
-.services__nr { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; letter-spacing: 0.06em; }
-.services__name {
-  font-family: var(--serif);
-  font-size: clamp(3rem, 10vw, 9rem);
-  line-height: 0.95;
-  letter-spacing: -0.03em;
-  transition: color 300ms var(--ease), transform 300ms var(--ease);
-}
-@media (hover: hover) and (pointer: fine) {
-  .services__row:hover .services__name { color: var(--accent); transform: translateX(0.08em); }
-}
-.services__desc { color: var(--muted); justify-self: end; text-align: right; max-width: 24ch; }
-.services__bild { grid-column: 1 / -1; display: none; margin: 0; }
-/* Desktop: ein Bild folgt dem Zeiger über den Zeilen */
-.services__cursor {
-  position: absolute; left: 0; top: 0; z-index: 3; margin: 0;
-  width: clamp(220px, 22vw, 340px); aspect-ratio: 4 / 3;
-  border-radius: 6px; overflow: hidden;
-  opacity: 0; transform: translate(-50%, -50%) scale(0.94);
-  pointer-events: none;
-  transition: opacity 220ms var(--ease-out), transform 280ms var(--ease-out);
-}
-.services__cursor img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 300ms var(--ease); }
-.services__cursor img.ist-aktiv { opacity: 1; }
-.services__cursor.ist-sichtbar { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+/* Sonne: weicher Kern, Hof und Glut – kein harter Rand. Wird tiefer, wärmer und größer im Hof. */
+.sonne, .mond { position: absolute; left: 0; top: 0; width: 0; height: 0; will-change: transform; }
+.sonne { opacity: calc(1 - var(--himmel-nacht)); }
+.sonne i, .mond i, .sonne b, .mond b { position: absolute; left: 0; top: 0; border-radius: 50%; transform: translate(-50%, -50%); }
+.sonne__hof { width: calc(var(--sonne-r) * 14); height: calc(var(--sonne-r) * 14); background: radial-gradient(closest-side, rgba(255, 250, 225, 0.5), rgba(255, 240, 200, 0.16) 40%, rgba(255, 235, 190, 0) 100%); opacity: calc(1 - var(--tief) * 0.5); }
+.sonne__glut { width: calc(var(--sonne-r) * 26); height: calc(var(--sonne-r) * 16); background: radial-gradient(closest-side, rgba(255, 170, 90, 0.55), rgba(255, 120, 60, 0.18) 45%, rgba(255, 100, 50, 0) 100%); opacity: var(--tief); }
+.sonne__kern { width: calc(var(--sonne-r) * 2); height: calc(var(--sonne-r) * 2); background: radial-gradient(circle, #FFFFFA 0 50%, #FFF6D8 62%, rgba(255, 240, 200, 0) 71%); }
+.sonne__kern--abend { background: radial-gradient(circle, #FFF1C8 0 38%, #FFC06A 56%, rgba(255, 150, 70, 0) 71%); opacity: var(--tief); }
+.mond { opacity: var(--mond); }
+.mond__hof { width: calc(var(--sonne-r) * 9); height: calc(var(--sonne-r) * 9); background: radial-gradient(closest-side, rgba(200, 215, 255, 0.3), rgba(170, 190, 245, 0.08) 45%, rgba(160, 180, 240, 0) 100%); }
+.mond__kern { width: calc(var(--sonne-r) * 1.5); height: calc(var(--sonne-r) * 1.5);
+  background: radial-gradient(circle at 36% 40%, rgba(170, 170, 160, 0.35) 0 9%, transparent 10%), radial-gradient(circle at 60% 62%, rgba(170, 170, 160, 0.28) 0 12%, transparent 13%), radial-gradient(circle at 62% 30%, rgba(170, 170, 160, 0.22) 0 6%, transparent 7%), radial-gradient(circle at 44% 44%, #FDFBF3 0 40%, #E9E5D8 60%, #D5D0C3 68%, rgba(210, 205, 190, 0) 71%); }
 
-/* ---------- Laufband ---------- */
-.marquee { overflow: hidden; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 18px 0; }
-.marquee__track { display: flex; gap: 0; width: max-content; will-change: transform; }
-.marquee__item { display: inline-flex; align-items: center; font-family: var(--serif); font-size: clamp(1.6rem, 3.2vw, 2.6rem); letter-spacing: -0.01em; white-space: nowrap; padding-right: 1.2em; color: var(--muted); }
-.marquee__star { width: 0.45em; height: 0.45em; margin: 0 1.2em; color: var(--accent); flex: none; }
+/* Titel */
+.szene__titel { display: flex; flex-direction: column; align-items: center; padding: 0 var(--pad); }
+.rolle { position: absolute; left: 0; right: 0; top: 36%; display: flex; justify-content: center; align-items: center; gap: 14px; font-family: var(--sans); font-weight: 500; font-size: clamp(13px, 1.2vw, 16px); letter-spacing: 0.32em; text-transform: uppercase; color: #FFF8EE; text-shadow: 0 1px 3px rgba(20, 20, 30, 0.45), 0 0 26px rgba(20, 20, 30, 0.35); }
+.rolle::before, .rolle::after { content: ""; width: 28px; height: 1px; background: rgba(255, 248, 238, 0.55); }
 
-/* ---------- Pakete: drei gleiche Karten, kein „Bestseller"-Theater ---------- */
-.packages { padding: 10svh var(--pad) 4svh; }
-.packages__kicker { display: block; margin-bottom: 18px; color: var(--accent); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; }
-.pkg--featured { border-color: rgba(255,90,31,0.75); }
-.pkg--featured::before {
-  content: "Empfehlung"; position: absolute; top: 24px; right: 26px; z-index: 10;
-  padding: 4px 11px; background: var(--accent); color: var(--bg);
-  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; border-radius: 999px;
+/* Gras im Wind: zwei Gruppen, eigener Takt, nur Neigung (transform) */
+.szene__wind { position: absolute; left: 0; width: 100%; transform-origin: 50% 100%; }
+@media (prefers-reduced-motion: no-preference) {
+  .szene--bereit .szene__wind--0 { animation: wind 6.8s ease-in-out -2s infinite alternate; }
+  .szene--bereit .szene__wind--1 { animation: wind 5.2s ease-in-out -4s infinite alternate-reverse; }
+  .szene--weg .szene__wind { animation-play-state: paused; }
 }
-.packages__trust { display: flex; flex-wrap: wrap; gap: 10px 28px; justify-content: center; margin-top: 44px; color: var(--muted); font-size: 14px; }
-.packages__trust span { display: inline-flex; align-items: center; gap: 10px; }
-.packages__trust span::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; }
-.packages__head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 56px; }
-.packages__title { font-family: var(--serif); font-size: clamp(2.6rem, 6vw, 5rem); line-height: 0.95; letter-spacing: -0.03em; }
-.packages__note { color: var(--muted); max-width: 26ch; font-size: 15px; text-wrap: pretty; }
-.packages__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
-.pkg {
-  position: relative; display: flex; flex-direction: column; gap: 22px;
-  padding: 32px 28px 28px; border: 1px solid var(--line); border-radius: 6px;
-  transition: border-color 300ms var(--ease), transform 300ms var(--ease);
-}
-@media (hover: hover) and (pointer: fine) { .pkg:hover { border-color: rgba(242,239,232,0.3); transform: translateY(-4px); } }
-.pkg__name { font-family: var(--serif); font-size: clamp(2rem, 3.4vw, 2.8rem); line-height: 1; letter-spacing: -0.02em; }
-.pkg__price { font-family: var(--serif); font-size: clamp(2.4rem, 4.4vw, 3.6rem); line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
-.pkg__price small { display: block; margin-top: 8px; font-family: var(--sans); font-size: 13px; color: var(--muted); letter-spacing: 0.04em; }
-.pkg__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; color: var(--muted); font-size: 15px; flex: 1; }
-.pkg__list li { padding-left: 18px; position: relative; }
-.pkg__list li::before { content: ""; position: absolute; left: 0; top: 0.65em; width: 8px; height: 1px; background: var(--accent); }
+@keyframes wind { 0% { transform: skewX(-1.4deg); } 55% { transform: skewX(0.6deg); } 100% { transform: skewX(1.6deg); } }
 
-/* ---------- Buttons: Druck-Feedback, klare Zustände ---------- */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  min-height: 48px; padding: 13px 22px; border-radius: 999px;
-  border: 1px solid var(--line); background: transparent; color: var(--text);
-  font: 500 15px/1 var(--sans); cursor: pointer;
-  transition: transform 160ms var(--ease-out), border-color 300ms var(--ease), background-color 300ms var(--ease), color 300ms var(--ease);
-}
+/* Übergang ins Schwarz der Seite: keine Kante zur endo.ai-Sektion */
+.szene__fade { position: absolute; left: 0; right: 0; bottom: -1px; height: 22%; z-index: 2; pointer-events: none; background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.6) 35%, rgba(0, 0, 0, 0) 100%); }
+.szene__oben { position: absolute; inset: 0 0 auto 0; height: 22%; z-index: 2; pointer-events: none; background: linear-gradient(rgba(6, 12, 28, 0.28), rgba(6, 12, 28, 0)); }
+
+/* ---------- Buttons ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 13px 22px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--text); font: 500 15px/1 var(--sans); cursor: pointer; transition: transform 160ms var(--ease-out), border-color 300ms var(--ease), background-color 300ms var(--ease), color 300ms var(--ease); }
 .btn:active { transform: scale(0.97); }
-.btn--wa { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.btn--wa { background: var(--accent); border-color: var(--accent); color: #0E0E0C; }
 .btn svg { width: 18px; height: 18px; }
-@media (hover: hover) and (pointer: fine) {
-  .btn:hover { border-color: var(--text); }
-  .btn--wa:hover { border-color: var(--accent); background: #ff6d3a; }
-}
-.pkg .btn { align-self: flex-start; }
+@media (hover: hover) and (pointer: fine) { .btn:hover { border-color: var(--text); } .btn--wa:hover { border-color: var(--accent); background: #ff6d3a; } }
 
-/* ---------- Kontakt + Formular ---------- */
-.contact {
-  min-height: 90svh;
-  display: flex; flex-direction: column; justify-content: center; align-items: center;
-  gap: 28px;
-  padding: 12svh var(--pad);
-  text-align: center;
-}
-.contact__label { color: var(--muted); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; }
-.contact__big {
-  font-family: var(--serif);
-  font-size: clamp(3.2rem, 11vw, 10rem);
-  line-height: 0.9;
-  letter-spacing: -0.03em;
-}
-.contact__meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 32px; color: var(--muted); font-size: 15px; }
-.contact__meta a { border-bottom: 1px solid transparent; transition: color 200ms var(--ease), border-color 200ms var(--ease); }
-@media (hover: hover) and (pointer: fine) { .contact__meta a:hover { color: var(--text); border-color: var(--line); } }
-
-.form { width: min(100%, 640px); margin-top: 8px; display: grid; gap: 16px; text-align: left; }
+/* ---------- Formularfelder ---------- */
 .form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .field { display: grid; gap: 6px; }
 .field label { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-.field input, .field textarea {
-  width: 100%; background: transparent; border: 0; border-bottom: 1px solid var(--line);
-  color: var(--text); font: inherit; font-size: 17px; padding: 10px 0; border-radius: 0;
-  transition: border-color 300ms var(--ease);
-}
+.field input, .field textarea { width: 100%; background: transparent; border: 0; border-bottom: 1px solid var(--line); color: var(--text); font: inherit; font-size: 17px; padding: 10px 0; border-radius: 0; transition: border-color 300ms var(--ease); }
 .field input:focus-visible, .field textarea:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 1px 0 var(--accent); }
 .field textarea { resize: vertical; min-height: 96px; }
-/* Hochladeflaeche mit Symbol (echtes Dateifeld liegt unsichtbar darueber) */
-.upload { position: relative; display: flex; align-items: center; gap: 16px; padding: 22px 20px; border: 1.5px dashed rgba(242,239,232,0.22); border-radius: 10px; background: rgba(242,239,232,0.02); transition: border-color 200ms var(--ease), background-color 200ms var(--ease); }
-.upload__symbol { width: 44px; height: 44px; flex: none; padding: 10px; border-radius: 50%; color: var(--accent); background: rgba(255,90,31,0.12); transition: transform 200ms var(--ease-out); }
+.field select { width: 100%; appearance: none; -webkit-appearance: none; color-scheme: dark; background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238A867D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 2px center / 16px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; color: var(--text); font: inherit; font-size: 17px; padding: 10px 26px 10px 0; cursor: pointer; transition: border-color 300ms var(--ease); }
+.field select:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 1px 0 var(--accent); }
+.field select option { background: #0E0E0C; color: var(--text); }
+.field.hat-fehler input, .field.hat-fehler textarea { border-color: var(--accent); }
+.field__error { min-height: 1.2em; font-size: 13px; color: var(--accent); }
+.upload { position: relative; display: flex; align-items: center; gap: 16px; padding: 14px 16px; border: 1.5px dashed rgba(242, 239, 232, 0.22); border-radius: 12px; background: rgba(242, 239, 232, 0.02); transition: border-color 200ms var(--ease), background-color 200ms var(--ease); }
+.upload__symbol { width: 38px; height: 38px; flex: none; padding: 9px; border-radius: 50%; color: var(--accent); background: rgba(255, 90, 31, 0.12); transition: transform 200ms var(--ease-out); }
 .upload__text b { display: block; font-weight: 500; font-size: 15px; color: var(--text); }
 .upload__text small { display: block; margin-top: 3px; font-size: 13px; color: var(--muted); }
 .upload input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 .upload:focus-within { border-color: var(--accent); }
-.upload.ist-drueber { border-color: var(--accent); background: rgba(255,90,31,0.08); }
+.upload.ist-drueber { border-color: var(--accent); background: rgba(255, 90, 31, 0.08); }
 .upload.ist-drueber .upload__symbol { transform: translateY(-3px); }
-@media (hover: hover) and (pointer: fine) { .upload:hover { border-color: rgba(255,90,31,0.6); } .upload:hover .upload__symbol { transform: translateY(-2px); } }
+@media (hover: hover) and (pointer: fine) { .upload:hover { border-color: rgba(255, 90, 31, 0.6); } .upload:hover .upload__symbol { transform: translateY(-2px); } }
 .datei__liste { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .datei__liste:empty { display: none; }
 .datei__liste li { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px 5px 5px; }
 .datei__liste img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; }
+.datei__liste i { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 90, 31, 0.14); color: var(--accent); font-style: normal; font-size: 11px; font-weight: 500; }
 .datei__stand { font-size: 12px; color: var(--muted); }
 .datei__stand.ist-ok { color: #3fb96b; }
 .datei__stand.ist-fehler { color: var(--accent); }
-.datei__liste i { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,90,31,0.14); color: var(--accent); font-style: normal; font-size: 11px; font-weight: 500; }
-.field.hat-fehler input, .field.hat-fehler textarea { border-color: var(--accent); }
-.field__error { min-height: 1.2em; font-size: 13px; color: var(--accent); }
-.form__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
 .form__status { min-height: 1.4em; font-size: 14px; color: var(--text); }
 .form__hint { color: var(--muted); font-size: 13px; text-wrap: pretty; }
+.weg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.weg__option { position: relative; display: block; }
+.weg__option input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.weg__option span { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; font-size: 15px; color: var(--muted); transition: border-color 200ms var(--ease), color 200ms var(--ease), background-color 200ms var(--ease); }
+.weg__option svg { width: 20px; height: 20px; flex: none; }
+.weg__option input:checked + span { border-color: var(--accent); color: var(--text); background: rgba(255, 90, 31, 0.12); }
+.weg__option input:checked + span svg { color: var(--accent); }
+.weg__option input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .weg__option:hover span { border-color: rgba(242, 239, 232, 0.35); color: var(--text); } }
+.anfrage__senden { width: 100%; min-height: 54px; font-size: 16px; }
+.anfrage__icon { display: inline-flex; }
+.anfrage__icon[hidden] { display: none; }
 
-/* ---------- Hero: Rolle unter dem Namen ---------- */
-.parallax__layer-title { flex-direction: column; gap: clamp(10px, 1.6vw, 22px); }
-.parallax__rolle {
-  display: flex; align-items: center; gap: 14px;
-  font-family: var(--sans); font-size: clamp(12px, 1.15vw, 15px); letter-spacing: 0.32em; text-transform: uppercase;
-  color: rgba(244,238,228,0.88); text-shadow: 0 1px 14px rgba(0,0,0,0.55);
-}
-.parallax__rolle { order: -1; }   /* ueber dem Namen: dunkler Himmel statt heller Sonne */
-.parallax__claim { order: -1; margin: -4px 0 6px; font-family: var(--serif); font-style: italic; font-size: clamp(15px, 1.5vw, 21px); color: rgba(244,238,228,0.9); text-shadow: 0 1px 14px rgba(0,0,0,0.6); text-align: center; text-wrap: balance; padding: 0 var(--pad); }
-.parallax__rolle::before, .parallax__rolle::after { content: ""; width: 28px; height: 1px; background: rgba(255,176,102,0.75); }
-
-/* Navigation: beim Runterscrollen weg, beim Hochscrollen wieder da */
-.nav { transition: transform 450ms var(--ease-out); }
-.nav--weg { transform: translateY(-120%); }
-.nav:focus-within { transform: none; }
-
-/* ---------- Pakete v2: jede Karte zeigt, was man bekommt ---------- */
-.packages { position: relative; overflow-x: clip; }
-body { overflow-x: clip; }
-.packages::before {
-  content: ""; position: absolute; left: 50%; top: 0; width: 120vmin; height: 60vmin; transform: translate(-50%, -30%);
-  background: radial-gradient(closest-side, rgba(255,110,40,0.10), rgba(14,14,12,0)); pointer-events: none;
-}
-.pkg { background: linear-gradient(180deg, rgba(242,239,232,0.035), rgba(242,239,232,0.01)); padding: 16px 20px 24px; gap: 18px; overflow: hidden; }
-@media (hover: hover) and (pointer: fine) { .pkg:hover { border-color: rgba(255,130,60,0.45); } }
-.pkg__demo {
-  position: relative; height: 210px; margin: 0 -4px; border-radius: 4px; overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
-  background: radial-gradient(120% 90% at 50% 0%, rgba(255,120,50,0.18), rgba(14,14,12,0) 70%), #141412;
-}
-.pkg__kopf { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.pkg__tag { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
-.pkg__list li::before { width: 6px; height: 6px; border-radius: 50%; top: 0.5em; background: var(--accent); box-shadow: 0 0 8px rgba(255,120,50,0.6); }
-.pkg .pkg__cta { align-self: stretch; }
-
-.demo-phone { width: 106px; height: 196px; border-radius: 18px; border: 2px solid rgba(242,239,232,0.22); background: #0b0b0a; padding: 5px; box-shadow: 0 20px 40px rgba(0,0,0,0.45); transform: translateY(22px); }
-.demo-phone__screen { position: relative; width: 100%; height: 100%; border-radius: 13px; overflow: hidden; background: var(--bg); }
-.demo-phone__page { width: 100%; height: auto; display: block; will-change: transform; }
-
-.demo-stapel { position: relative; width: 74%; aspect-ratio: 16 / 10; }
-.demo-seite { position: absolute; inset: 0; border-radius: 4px; overflow: hidden; border: 1px solid rgba(242,239,232,0.18); background: #141412; box-shadow: 0 12px 30px rgba(0,0,0,0.5); transform-origin: 50% 100%; will-change: transform; }
-.demo-seite img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
-.demo-seite span { position: absolute; left: 8px; bottom: 8px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(14,14,12,0.78); padding: 3px 8px; border-radius: 999px; color: var(--text); }
-
-.demo-browser { position: relative; width: 82%; aspect-ratio: 16 / 10; border-radius: 6px; overflow: hidden; border: 1px solid rgba(242,239,232,0.18); background: var(--bg); box-shadow: 0 16px 36px rgba(0,0,0,0.5); }
-.demo-browser__leiste { height: 14px; background: #1a1a17; display: flex; gap: 4px; align-items: center; padding: 0 6px; }
-.demo-browser__leiste i { width: 5px; height: 5px; border-radius: 50%; background: rgba(242,239,232,0.25); }
-.demo-browser__buehne { position: absolute; inset: 14px 0 0 0; overflow: hidden; }
-/* Individuell: kosmische Szene – die Milchstrasse dreht langsam, der Vordergrund steht */
-.kosmos { background: #05060b; }
-.kosmos__himmel { position: absolute; left: -45%; top: -30%; width: 190%; height: auto; max-width: none; will-change: transform; transform-origin: 50% 70%; }
-.kosmos__vorn { position: absolute; left: 0; bottom: -5%; width: 100%; height: auto; will-change: transform; }
-.kosmos__nav { position: absolute; top: 0; left: 0; right: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; font-size: 7.5px; letter-spacing: 0.22em; color: rgba(255,255,255,0.9); }
-.kosmos__nav span:last-child { letter-spacing: 0.04em; border: 1px solid rgba(255,255,255,0.45); border-radius: 999px; padding: 2px 7px; }
-.kosmos__titel { position: absolute; left: 11px; top: 26%; z-index: 2; color: #F4EEE4; font-family: var(--serif); font-size: 22px; line-height: 0.95; text-shadow: 0 1px 12px rgba(0,0,0,0.6); }
-.kosmos__titel small { display: block; margin-bottom: 5px; font-family: var(--sans); font-size: 7px; letter-spacing: 0.24em; text-transform: uppercase; color: #E9B872; }
-.pkg__beispiel { position: absolute; right: 10px; bottom: 10px; z-index: 6; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(242,239,232,0.75); background: rgba(14,14,12,0.72); border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px; }
-
-/* ---------- Kontakt v2: Auswahl, Live-Vorschau ---------- */
-.contact { min-height: auto; align-items: stretch; text-align: left; padding: 6svh var(--pad) 14svh; }
-.contact__kopf { display: grid; gap: 16px; justify-items: center; text-align: center; margin-bottom: 48px; }
+/* ---------- Kontakt ---------- */
+.contact { display: flex; flex-direction: column; align-items: center; gap: 28px; padding: clamp(88px, 14svh, 144px) var(--pad) 14svh; }
+.contact__kopf { display: grid; gap: 16px; justify-items: center; text-align: center; margin-bottom: 8px; }
+.contact__big { font-family: var(--serif); font-size: clamp(2.8rem, 7.4vw, 5.8rem); line-height: 0.95; letter-spacing: -0.02em; text-wrap: balance; }
 .contact__intro { color: var(--muted); max-width: 46ch; text-wrap: pretty; }
-.contact__raster { display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px; max-width: 680px; width: 100%; margin: 0 auto; align-items: start; }
-.contact .form { width: 100%; margin: 0; }
-.contact .contact__meta { margin-top: 40px; }
-.field--chips { border: 0; padding: 0; margin: 0; min-width: 0; }
-.field--chips legend { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; padding: 0; }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip { position: relative; display: inline-flex; }
-.chip input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
-.chip span { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 16px; border: 1px solid var(--line); border-radius: 999px; font-size: 14px; color: var(--muted); transition: border-color 200ms var(--ease), color 200ms var(--ease), background-color 200ms var(--ease); }
-.chip input:checked + span { border-color: var(--accent); color: var(--text); background: rgba(255,90,31,0.12); }
-.chip input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
-@media (hover: hover) and (pointer: fine) { .chip:hover span { border-color: rgba(242,239,232,0.35); color: var(--text); } }
-.vorschau { position: sticky; top: 96px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: #12110f; box-shadow: 0 30px 60px rgba(0,0,0,0.45); }
-.vorschau__kopf { display: flex; gap: 12px; align-items: center; padding: 14px 16px; background: #1a1916; border-bottom: 1px solid var(--line); }
-.vorschau__avatar { width: 40px; height: 40px; border-radius: 50%; flex: none; object-fit: cover; background: #1a1916; }
 .contact__person { margin: 0 0 6px; display: grid; justify-items: center; gap: 12px; }
-.contact__person img { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,140,60,0.45); padding: 3px; background: var(--bg); }
+.contact__person img { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255, 140, 60, 0.45); padding: 3px; background: var(--bg); }
 .contact__person figcaption { font-size: 14px; color: var(--muted); }
 .contact__person strong { font-weight: 500; color: var(--text); }
-/* Online-Status wie bei WhatsApp */
-.contact__bild { position: relative; }
 .online { display: inline-flex; align-items: center; gap: 7px; color: #5BE38A; }
-.online::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #2FD161; box-shadow: 0 0 0 0 rgba(47,209,97,0.5); animation: online-puls 2.4s ease-out infinite; }
-@keyframes online-puls { 0% { box-shadow: 0 0 0 0 rgba(47,209,97,0.5); } 70%, 100% { box-shadow: 0 0 0 7px rgba(47,209,97,0); } }
-@media (prefers-reduced-motion: reduce) { .online::before { animation: none; } }
-.vorschau__kopf strong { display: block; font-weight: 500; font-size: 15px; }
-.vorschau__kopf small { color: var(--muted); font-size: 12px; }
-.vorschau__chat { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; min-height: 260px; padding: 22px 16px 26px; background: radial-gradient(120% 80% at 100% 0%, rgba(255,110,40,0.08), rgba(0,0,0,0) 60%); }
-.vorschau__blase { max-width: 92%; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14.5px; line-height: 1.45; padding: 10px 12px 12px; border-radius: 12px 12px 4px 12px; background: rgba(255,90,31,0.14); border: 1px solid rgba(255,90,31,0.35); }
-.vorschau__zeit { font-size: 11px; color: var(--muted); }
-.vorschau__hinweis { padding: 0 16px 16px; font-size: 12px; color: var(--muted); }
-@media (max-width: 900px) {
-  .contact__raster { grid-template-columns: 1fr; gap: 32px; }
-  .vorschau { position: static; }
-}
-
-/* ---------- Pakete: Monatspreis fuer Hosting, Domain und Pflege ---------- */
-.pkg__abo { border-top: 1px solid var(--line); padding-top: 16px; display: grid; gap: 10px; }
-.pkg__abo-kopf { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.pkg__abo-preis { font-family: var(--serif); font-size: 1.9rem; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
-.pkg__abo-preis small { font-family: var(--sans); font-size: 13px; color: var(--muted); letter-spacing: 0.02em; }
-.pkg__abo-titel { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-align: right; }
-.pkg__abo ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
-.pkg__abo li { position: relative; padding-left: 16px; }
-.pkg__abo li::before { content: "+"; position: absolute; left: 0; color: var(--accent); }
-/* Wuensche: antippen = direkt in der Anfrage (WhatsApp/E-Mail) */
-.chip--klein span { min-height: 40px; padding: 6px 14px; font-size: 13.5px; }
-/* Auswahl-Knoepfe im Formular: normale Schreibweise (lesbarer, wie die Wunsch-Knoepfe) */
-.field--chips .chip span { text-transform: none; letter-spacing: 0.01em; }
-/* Touch: Links gross genug zum Tippen (mind. 44 px), Desktop bleibt gleich */
-@media (pointer: coarse) { .nav__mark, .nav__link, .footer a, .contact__meta a { display: inline-flex; align-items: center; min-height: 44px; } .nav { padding-top: 12px; padding-bottom: 12px; } }
+.online::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #2FD161; box-shadow: 0 0 0 0 rgba(47, 209, 97, 0.5); animation: online-puls 2.4s ease-out infinite; }
+@keyframes online-puls { 0% { box-shadow: 0 0 0 0 rgba(47, 209, 97, 0.5); } 70%, 100% { box-shadow: 0 0 0 7px rgba(47, 209, 97, 0); } }
+.contact__meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 32px; margin-top: 12px; color: var(--muted); font-size: 15px; }
+.contact__meta a { border-bottom: 1px solid transparent; transition: color 200ms var(--ease), border-color 200ms var(--ease); }
+@media (hover: hover) and (pointer: fine) { .contact__meta a:hover { color: var(--text); border-color: var(--line); } }
+.agentur { width: 100%; max-width: 680px; margin: 28px auto 0; padding-top: 44px; border-top: 1px solid var(--line); display: grid; gap: 14px; justify-items: center; text-align: center; }
+.agentur__marke { font-family: var(--serif); font-size: clamp(2.4rem, 6vw, 3.4rem); line-height: 1; letter-spacing: -0.02em; }
+.agentur__marke .dot { color: var(--accent); }
+.agentur__text { color: var(--muted); font-size: clamp(15px, 1.3vw, 17px); line-height: 1.6; max-width: 50ch; text-wrap: pretty; }
 
 /* ---------- Footer ---------- */
-.footer {
-  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px;
-  padding: 40px var(--pad) 32px;
-  color: var(--muted); font-size: 13px;
-}
+.footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; padding: 40px var(--pad) 32px; color: var(--muted); font-size: 13px; }
 .footer nav { display: flex; gap: 24px; }
 .footer a { transition: color 200ms var(--ease); }
 @media (hover: hover) and (pointer: fine) { .footer a:hover { color: var(--text); } }
 
-/* ---------- Einblenden (nur mit JS aktiv) ---------- */
-.js .reveal { opacity: 0; transform: translateY(24px); }
+/* ---------- Einblenden beim Scrollen (nur mit JS) ---------- */
+.js .reveal { opacity: 0; transform: translateY(24px); transition: opacity 900ms var(--ease), transform 900ms var(--ease); }
+.js .reveal.ist-da { opacity: 1; transform: none; }
 
-/* ---------- Tablet ---------- */
-@media (max-width: 1024px) {
-  .services__cursor { display: none; }
-  .services__bild { display: block; width: min(100%, 420px); aspect-ratio: 4 / 3; border-radius: 6px; overflow: hidden; }
-  .services__bild img { width: 100%; height: 100%; object-fit: cover; }
-}
-@media (max-width: 900px) { .packages__grid { grid-template-columns: 1fr; } .packages__head { flex-direction: column; align-items: start; } }
-
-/* ---------- Handy ---------- */
 @media (max-width: 700px) {
-  .parallax__visuals { height: 110svh; }
-  .parallax__layer-img { object-position: 50% 100%; }
-  .parallax__layer-title { padding-bottom: 50svh; }
-  .parallax__layer-img--sky { top: -14%; }
-  .parallax__title { font-size: 21vw; }
-  .parallax__hint { display: none; }
-  .services__row { grid-template-columns: 36px minmax(0, 1fr); }
-  .services__desc { grid-column: 2; justify-self: start; text-align: left; max-width: none; }
   .form__row { grid-template-columns: 1fr; }
-  .form__actions .btn { flex: 1 1 100%; }
+  .agentur { padding-top: 36px; }
 }
-
-/* ---------- Parallax ohne JavaScript: der Browser koppelt die Ebenen direkt ans Scrollen ---------- */
-@media (prefers-reduced-motion: no-preference) {
-  html { scroll-behavior: smooth; }
-  @supports (animation-timeline: view()) {
-    .parallax__header { view-timeline: --held block; }
-    [data-parallax-layer] { animation: ebene linear both; animation-timeline: --held; animation-range: exit 0% exit 100%; }
-    /* Szene 2 (25.09.): hinten viel, vorne wenig Weg – je größer der Unterschied, desto mehr Tiefe */
-    [data-parallax-layer="himmel"] { --weg: 78%; }
-    [data-parallax-layer="fern"] { --weg: 66%; }
-    [data-parallax-layer="mitte"] { --weg: 52%; }
-    [data-parallax-layer="titel"] { --weg: 58svh; }   /* Titel ist niedrig: Weg in Fensterhöhe statt in % */
-    [data-parallax-layer="wald"] { --weg: 34%; }
-    [data-parallax-layer="wiese"] { --weg: 14%; }
-    [data-parallax-layer="gras"] { --weg: 0%; }
-    @media (max-width: 700px) {
-      [data-parallax-layer="himmel"] { --weg: 64%; }
-      [data-parallax-layer="fern"] { --weg: 54%; }
-      [data-parallax-layer="mitte"] { --weg: 42%; }
-      [data-parallax-layer="titel"] { --weg: 48svh; }
-      [data-parallax-layer="wald"] { --weg: 28%; }
-      [data-parallax-layer="wiese"] { --weg: 10%; }
-    }
-  }
-}
-@keyframes ebene { to { translate: 0 var(--weg); } }
-
-/* ---------- Bewegung reduziert: Standbild, alles sofort da ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .js .reveal { opacity: 1; transform: none; }
-  .parallax__layer-img, .parallax__layer-title { will-change: auto; }
-  .parallax__hint::after { animation: none; transform: none; opacity: 1; }
-  .services__cursor { display: none; }
-  * { transition-duration: 0.01ms !important; }
+  .js .reveal { opacity: 1; transform: none; transition: none; }
+  .online::before { animation: none; }
 }
 
-/* ---------- Fragebogen (v5) ---------- */
-.contact__raster { max-width: 760px; }
-.form--bogen { gap: 14px; }
-.schritt { display: grid; gap: 16px; margin: 0; min-width: 0; padding: 26px 28px 22px; border: 1px solid var(--line); border-radius: 10px; background: linear-gradient(180deg, rgba(242,239,232,0.035), rgba(242,239,232,0.01)); transition: border-color 300ms var(--ease); }
-.schritt:focus-within { border-color: rgba(255,90,31,0.55); }
-.schritt legend, .schritt__frage { float: left; width: 100%; display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 4px; padding: 0; font-family: var(--serif); font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1.1; letter-spacing: -0.01em; text-transform: none; color: var(--text); }
-.schritt legend + *, .schritt__frage + * { clear: both; }
-.schritt__nr { font-family: var(--sans); font-size: 12px; letter-spacing: 0.14em; color: var(--accent); font-variant-numeric: tabular-nums; }
-.schritt legend small, .schritt__frage small { font-family: var(--sans); font-size: 13px; letter-spacing: 0.02em; color: var(--muted); }
-.schritt .field--chips, .schritt .field { margin: 0; }
-.form--bogen .form__actions { margin-top: 10px; }
-@media (max-width: 700px) { .schritt { padding: 20px 18px 16px; } }
-
-/* Pakete: gleiche Zeilen in allen Karten (Liste, Pflege, Knopf auf einer Hoehe) */
-@media (min-width: 901px) {
-  .packages__grid { grid-template-rows: repeat(6, auto); row-gap: 0; }
-  .pkg { display: grid; grid-row: span 6; grid-template-rows: subgrid; row-gap: 18px; }
-  .pkg__list { align-content: start; }
-  .pkg__abo { align-content: start; }
-}
-
-/* ---------- Feinschliff Hero (24.09.): Sonne hinter den Namen, Licht einheitlich ---------- */
-.parallax__layer-img--sky { top: -27%; }
-/* Gegenlicht: Bergkamm und Fels etwas dunkler und wärmer, damit sie zur Sonne dahinter passen */
-.parallax__layer-img[data-parallax-layer="2"] { filter: brightness(.8) saturate(.9) contrast(1.04); }
-.parallax__layer-img[data-parallax-layer="4"] { filter: brightness(.85) saturate(.95); }
-/* Person farblich an die Szene angleichen */
-.parallax__layer-img[data-parallax-layer="5"] { filter: brightness(.94) contrast(1.04) saturate(.94) sepia(.06); }
-@media (max-width: 700px) { .parallax__layer-img--sky { top: -20%; } }
-
-/* ---------- Pakete nach Oberthemen (24.09.) ---------- */
-.pkg__list { gap: 14px; }
-.pkg__list li.pkg__punkt { padding-left: 0; display: grid; gap: 3px; }
-.pkg__list li.pkg__punkt::before { content: none; }
-.pkg__kat { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
-.pkg__text { color: var(--text); font-size: 15px; line-height: 1.45; }
-.packages__immer { display: block; margin-top: 10px; color: var(--muted); }
-
-/* ---------- Fragebogen Schritt für Schritt (24.09.) ---------- */
-.bogen__kopf { display: none; }
-.bogen__extra { margin-top: 4px; }
-.chip--stil span { gap: 10px; padding-left: 10px; }
-.stil__farben { display: inline-flex; font-style: normal; }
-.stil__farben b { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(242,239,232,0.25); }
-.stil__farben b + b { margin-left: -5px; }
-.bogen__antworten { margin: 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
-.bogen__antworten b { color: var(--text); font-weight: 500; }
-.field--datei .upload { margin-top: 2px; }
-.ist-stepper .bogen__kopf { display: flex; align-items: center; gap: 16px; margin-bottom: 2px; }
-.bogen__zaehler { font-size: 12px; letter-spacing: 0.14em; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.bogen__zaehler b { color: var(--accent); font-weight: 500; }
-.bogen__balken { position: relative; flex: 1; height: 2px; border-radius: 2px; background: var(--line); overflow: hidden; }
-.bogen__balken i { position: absolute; inset: 0; background: var(--accent); transform-origin: left; transform: scaleX(0.143); transition: transform 500ms var(--ease); }
-.ist-stepper [data-schritt] { display: none; }
-.ist-stepper [data-schritt].ist-aktiv { display: grid; animation: bogenRein 420ms var(--ease) both; }
-.ist-stepper.geht-zurueck [data-schritt].ist-aktiv { animation-name: bogenZurueck; }
-@keyframes bogenRein { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
-@keyframes bogenZurueck { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
-.ist-stepper [data-zeige-bei] { display: none; }
-.ist-stepper [data-zeige-bei].ist-sichtbar { display: grid; animation: bogenAuf 300ms var(--ease) both; }
-@keyframes bogenAuf { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
-.bogen__nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 4px; }
-.bogen__nav[hidden] { display: none; }
-.bogen__zurueck { min-height: 44px; padding: 8px 4px; border: 0; background: none; color: var(--muted); font: inherit; font-size: 14px; cursor: pointer; transition: color 200ms var(--ease); }
-.bogen__zurueck:hover, .bogen__zurueck:focus-visible { color: var(--text); }
-.bogen__zurueck[disabled] { visibility: hidden; }
-.bogen__weiter { min-width: 150px; justify-content: center; }
-.bogen__weiter[hidden] { display: none; }
-.ist-stepper legend:focus, .ist-stepper .schritt__frage:focus { outline: none; }
-@media (prefers-reduced-motion: reduce) { .ist-stepper [data-schritt].ist-aktiv, .ist-stepper [data-zeige-bei].ist-sichtbar { animation: none; } .bogen__balken i { transition: none; } }
-/* ---------- Fragebogen wie ein Beratungsgespräch (24.09. abends) ---------- */
-.schritt .bogen__extra { margin-top: 4px; }
-.ist-stepper [data-schritt].ist-aktiv { animation: bogenRein 380ms var(--ease-out) both; }
-@keyframes bogenRein { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: none; } }
-@keyframes bogenZurueck { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: none; } }
-/* Antwort-Knöpfe kommen kurz nacheinander herein */
-.ist-stepper [data-schritt].ist-aktiv .chip { animation: chipRein 360ms var(--ease-out) both; animation-delay: calc(80ms + var(--i, 0) * 35ms); }
-@keyframes chipRein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-/* Druck-Rückmeldung und kleines Einrasten bei der Auswahl */
-.chip span { transition: border-color 200ms var(--ease), color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
-.chip:active span { transform: scale(0.97); }
-.chip input:checked + span { animation: chipWahl 260ms var(--ease-out); }
-@keyframes chipWahl { 0% { transform: scale(0.96); } 100% { transform: scale(1); } }
-
-/* „Das nehme ich mit in unser Gespräch" */
-.mitnahme { display: grid; gap: 12px; padding: 16px 18px; border-radius: 8px; border: 1px solid rgba(255,90,31,0.28); background: rgba(255,90,31,0.05); }
-.mitnahme[hidden] { display: none; }
-.mitnahme__titel { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; color: var(--text); }
-.mitnahme__titel img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
-.mitnahme__liste { margin: 0; display: grid; gap: 6px; }
-.mitnahme__zeile { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 12px; font-size: 14px; line-height: 1.45; }
-.mitnahme__zeile dt { color: var(--muted); }
-.mitnahme__zeile dd { margin: 0; color: var(--text); overflow-wrap: anywhere; }
-.ist-aktiv .mitnahme__zeile { animation: chipRein 420ms var(--ease-out) both; animation-delay: calc(140ms + var(--i, 0) * 55ms); }
-@media (max-width: 520px) { .mitnahme { padding: 14px 14px; } .mitnahme__zeile { grid-template-columns: 96px minmax(0, 1fr); gap: 10px; font-size: 13.5px; } }
-
-/* Abschluss nach dem Senden: Foto, Dank, was als Nächstes passiert */
-.abschluss { display: grid; gap: 28px; padding: 30px 28px 26px; border: 1px solid var(--line); border-radius: 10px; background: linear-gradient(180deg, rgba(242,239,232,0.035), rgba(242,239,232,0.01)); }
-.abschluss[hidden] { display: none; }
-.abschluss:focus { outline: none; }
-.ist-fertig > :not(.abschluss) { display: none !important; }
-.abschluss__kopf { display: flex; align-items: center; gap: 16px; }
-.abschluss__kopf img { width: 64px; height: 64px; flex: none; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,140,60,0.45); padding: 3px; }
-.abschluss__titel { font-family: var(--serif); font-size: clamp(1.8rem, 3vw, 2.4rem); line-height: 1.05; letter-spacing: -0.01em; }
-.abschluss__sub { margin-top: 4px; color: var(--muted); font-size: 15px; text-wrap: pretty; }
-.ablauf { list-style: none; margin: 0; padding: 0; counter-reset: ablauf; }
-.ablauf li { position: relative; display: grid; gap: 2px; padding: 0 0 22px 46px; counter-increment: ablauf; }
-.ablauf li:last-child { padding-bottom: 0; }
-.ablauf li::before { content: counter(ablauf); position: absolute; left: 0; top: -3px; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line); background: var(--bg); color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
-.ablauf li::after { content: ""; position: absolute; left: 15px; top: 32px; bottom: 2px; width: 1px; background: var(--line); transform-origin: top; }
-.ablauf li:last-child::after { content: none; }
-.ablauf li.ist-jetzt::before { border-color: var(--accent); background: var(--accent); color: var(--bg); }
-.ablauf b { font-weight: 500; font-size: 15px; color: var(--text); }
-.ablauf span { font-size: 14px; color: var(--muted); text-wrap: pretty; }
-.abschluss__aktionen { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; }
-.abschluss.ist-da .abschluss__kopf img { animation: fotoRein 520ms var(--ease-out) both; }
-.abschluss.ist-da .abschluss__kopf > div { animation: chipRein 480ms var(--ease-out) 80ms both; }
-.abschluss.ist-da .ablauf li { animation: chipRein 460ms var(--ease-out) both; animation-delay: calc(220ms + var(--i, 0) * 110ms); }
-.abschluss.ist-da .ablauf li::after { animation: linie 520ms var(--ease-out) both; animation-delay: calc(380ms + var(--i, 0) * 110ms); }
-.abschluss.ist-da .ablauf li.ist-jetzt::before { animation: punkt 900ms var(--ease-out) 520ms both; }
-.abschluss.ist-da .abschluss__aktionen { animation: chipRein 420ms var(--ease-out) 620ms both; }
-@keyframes fotoRein { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: none; } }
-@keyframes linie { from { transform: scaleY(0); } to { transform: none; } }
-@keyframes punkt { 0% { box-shadow: 0 0 0 0 rgba(255,90,31,0.45); } 100% { box-shadow: 0 0 0 10px rgba(255,90,31,0); } }
-@media (max-width: 700px) { .abschluss { padding: 24px 18px 20px; } .abschluss__aktionen .btn { flex: 1 1 100%; } }
-@media (prefers-reduced-motion: reduce) {
-  #anfrage *, #anfrage *::before, #anfrage *::after, .abschluss { animation: none !important; }
-}
-/* ---------- Fragebogen übersichtlicher (24.09. nachts): Antworten als ruhiges Raster statt Knopf-Wolke ---------- */
-.schritt .chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.schritt .chip { display: flex; min-width: 0; }
-.schritt .chip span { flex: 1; justify-content: flex-start; min-height: 52px; padding: 12px 16px; border-radius: 10px; font-size: 15px; line-height: 1.3; }
-.schritt .chip--stil span { padding-left: 14px; }
-.ist-stepper [data-zeige-bei].ist-sichtbar { margin-top: 2px; }
-@media (max-width: 520px) { .schritt .chips { grid-template-columns: minmax(0, 1fr); gap: 6px; } }
-/* ---------- Kontakt einfach (24.09. nachts): eine Karte, wenige Felder, gut am Handy ---------- */
-.anfrage { gap: 22px; padding: 28px; border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(180deg, rgba(242,239,232,0.035), rgba(242,239,232,0.01)); }
-.anfrage__gruppe { border: 0; padding: 0; margin: 0; min-width: 0; }
-.anfrage__gruppe legend { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; padding: 0; }
-.weg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.weg__option { position: relative; display: block; }
-.weg__option input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
-.weg__option span { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 10px; font-size: 15px; color: var(--muted); transition: border-color 200ms var(--ease), color 200ms var(--ease), background-color 200ms var(--ease); }
-.weg__option svg { width: 20px; height: 20px; flex: none; }
-.weg__option input:checked + span { border-color: var(--accent); color: var(--text); background: rgba(255,90,31,0.12); }
-.weg__option input:checked + span svg { color: var(--accent); }
-.weg__option input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
-@media (hover: hover) and (pointer: fine) { .weg__option:hover span { border-color: rgba(242,239,232,0.35); color: var(--text); } }
-.field select { width: 100%; appearance: none; -webkit-appearance: none; color-scheme: dark; background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238A867D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 2px center / 16px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; color: var(--text); font: inherit; font-size: 17px; padding: 10px 26px 10px 0; cursor: pointer; transition: border-color 300ms var(--ease); }
-.field select:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 1px 0 var(--accent); }
-.field select option { background: var(--bg); color: var(--text); }
-.anfrage .chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.anfrage .chip { display: flex; min-width: 0; }
-.anfrage .chip span { flex: 1; justify-content: center; text-align: center; min-height: 48px; border-radius: 10px; font-size: 14.5px; line-height: 1.3; }
-.anfrage .upload { padding: 14px 16px; }
-.anfrage .upload__symbol { width: 38px; height: 38px; padding: 9px; }
-.anfrage__senden { width: 100%; min-height: 54px; font-size: 16px; }
-.anfrage__icon { display: inline-flex; }
-.anfrage__icon[hidden] { display: none; }
-.agentur { width: 100%; max-width: 680px; margin: 56px auto 0; padding-top: 44px; border-top: 1px solid var(--line); display: grid; gap: 14px; justify-items: center; text-align: center; }
-.agentur__marke { font-family: var(--serif); font-size: clamp(2.4rem, 6vw, 3.4rem); line-height: 1; letter-spacing: -0.02em; }
-.agentur__marke .dot { color: var(--accent); }
-.agentur__text { color: var(--muted); font-size: clamp(15px, 1.3vw, 17px); line-height: 1.6; max-width: 50ch; text-wrap: pretty; }
-@media (max-width: 700px) {
-  .anfrage { padding: 22px 16px; gap: 20px; }
-  .anfrage .chips { grid-template-columns: minmax(0, 1fr); gap: 6px; }
-  .agentur { margin-top: 44px; padding-top: 36px; }
-}
-/* ---------- endo.ai oben rechts als Pille (25.09.) ---------- */
-.nav__links { align-items: center; }
-.nav__pille { display: inline-flex; align-items: center; min-height: 34px; padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(242, 239, 232, 0.16); background: rgba(14, 14, 12, 0.32); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); font-size: 13px; letter-spacing: 0.04em; color: var(--text); text-shadow: none; transition: background-color 200ms var(--ease), border-color 200ms var(--ease); }
-@media (hover: hover) and (pointer: fine) { .nav__pille:hover { background: rgba(242, 239, 232, 0.14); border-color: rgba(242, 239, 232, 0.28); } }
-.nav__pille:focus-visible { outline-offset: 2px; }
-@media (max-width: 700px) { .nav__links { gap: 16px; } .nav__link { font-size: 13px; } }
-/* ---------- Hero als ruhige Fläche im endo-Stil (25.09.) ---------- */
-/* Tiefschwarzer Grund wie endo.ai, die Szene liegt als abgerundete Fläche mit Rand darauf.
-   Die Ebenen behalten ihre alte Höhe (125svh), damit Sonne, Name und Emre wie abgestimmt zueinander stehen. */
-:root { --bg: #000000; --rahmen: 0px; --pille-zone: 0px; }
-.parallax__header { display: flex; flex-direction: column; align-items: center; padding: var(--rahmen) var(--rahmen) 0; }
-.parallax__visuals {
-  align-self: stretch; height: calc(100svh - var(--rahmen) - var(--pille-zone)); min-height: 520px;
-  border-radius: 24px; isolation: isolate;
-  box-shadow: 0 40px 120px -40px rgba(255, 90, 31, 0.14), 0 24px 64px rgba(0, 0, 0, 0.6);
-}
-.parallax__layers { inset: 0 0 auto 0; height: 125svh; min-height: 640px; }
-.parallax__fade, .parallax__hint { display: none; }
-.parallax__rolle::before, .parallax__rolle::after { background: rgba(244, 238, 228, 0.5); }
-.nav { padding: calc(var(--rahmen) + 14px) calc(var(--rahmen) + 24px) 14px; }
-/* Der Weg zu endo: eine Pille mittig unter der Fläche */
-.hero-endo {
-  display: inline-flex; align-items: center; gap: 10px; margin: 20px 0 22px; padding: 14px 28px;
-  border-radius: 999px; background: #1A1A17; color: var(--text);
-  font-size: 15px; line-height: 20px; font-weight: 500; letter-spacing: 0.01em;
-  transition: background-color 150ms var(--ease-out), transform 150ms var(--ease-out);
-}
-.hero-endo::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
-.hero-endo:active { transform: scale(0.97); }
-.hero-endo:focus-visible { outline-offset: 3px; }
-@media (hover: hover) and (pointer: fine) { .hero-endo:hover { background: #262622; } }
-@media (max-width: 700px) {
-  :root { --rahmen: 0px; --pille-zone: 0px; }
-  .parallax__visuals { border-radius: 20px; min-height: 480px; }
-  .parallax__layers { height: 110svh; }
-  .nav { padding: calc(var(--rahmen) + 8px) calc(var(--rahmen) + 16px) 8px; }
-}
-/* ---------- Schäferhund auf dem Fels (25.09.) ---------- */
-/* Der Hund ist in echter Größe kleiner als Emre. Damit er und der Fels in der abgerundeten Fläche stehen,
-   rücken Kamm, Fels und Hund um --verschub nach oben; Himmel, Sonne und Name bleiben, wo sie waren. */
-:root { --verschub: calc(25svh + var(--rahmen) + var(--pille-zone)); }
-.parallax__layer-img[data-parallax-layer="2"], .parallax__layer-img[data-parallax-layer="4"], .parallax__layer-img[data-parallax-layer="5"] { top: calc(-1 * var(--verschub)); }
-@media (max-width: 700px) { :root { --verschub: calc(10svh + var(--rahmen) + var(--pille-zone)); } }
-/* ---------- Szene 2: Bergwiese mit Schäferhund, randlos (25.09. nachts) ---------- */
-/* Sieben Ebenen aus einer Higgsfield-Szene (bilder/hero/4k/szene2/ebenen.py). Alle Bilder haben dieselbe Leinwand
-   (3840 × 3024, oben 40 % Himmel-Überstand) und stehen unten bündig; jede Ebene ist nach unten komplett gefüllt.
-   Die Sonne steht auf der Leinwand bei 43,4 % Höhe; --sonne-y rechnet ihre Lage im Fenster aus, dort steht der Name. */
-:root { --rahmen: 0px; --pille-zone: 0px; --verschub: 0px; }
-.parallax__header { padding: 0; }
-.parallax__visuals { height: 100svh; min-height: 560px; border-radius: 0; box-shadow: none; isolation: isolate;
-  --bild-y: 100%; --sonne-y: min(calc(100svh - 46.34vw), 43.4svh); }
-/* breite Fenster: unten mehr abschneiden, damit die Sonne bei knapp 30 % Höhe bleibt */
-@media (min-aspect-ratio: 17/10) { .parallax__visuals { --bild-y: 73%; --sonne-y: calc(35.56vw - 0.73 * (81.9vw - 100svh)); } }
-@media (min-aspect-ratio: 2/1) { .parallax__visuals { --bild-y: 61%; --sonne-y: calc(35.56vw - 0.61 * (81.9vw - 100svh)); } }
-.parallax__layers { inset: 0; height: auto; min-height: 0; }
-.parallax__layer-img, .parallax__layer-img[data-parallax-layer] { top: auto; bottom: 0; left: -2%; width: 104%; max-width: none; height: 100%; object-fit: cover; object-position: 50% var(--bild-y); filter: none; transform-origin: 50% 100%; }
-.parallax__layer-title { top: var(--sonne-y); height: auto; padding: 0; transform: translateY(-55%); }
-.parallax__title { font-size: min(15vw, 13.5rem); }
-.parallax__title { text-shadow: 0 0.02em 0.25em rgba(40, 20, 0, 0.35); }
-.parallax__rolle, .parallax__claim { color: #FFF8EE; text-shadow: 0 1px 3px rgba(40, 20, 5, 0.6), 0 0 26px rgba(40, 20, 5, 0.5); }
-.parallax__rolle { font-weight: 500; }
-/* oben ein Hauch Dunkel für die Leiste, unten ein langer Übergang ins Schwarz der Seite: keine Kante */
-.parallax__visuals::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 32%; z-index: 2; pointer-events: none; background: linear-gradient(rgba(8, 14, 30, 0.42), rgba(8, 14, 30, 0.12) 55%, rgba(8, 14, 30, 0)); }
-.parallax__fade { display: block; z-index: 2; bottom: -1px; height: 26%; background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.72) 30%, rgba(0, 0, 0, 0.22) 68%, rgba(0, 0, 0, 0) 100%); pointer-events: none; }
-@media (orientation: portrait) {
-  .parallax__visuals { --bild-y: 100%; --sonne-y: min(calc(100svh - 92.66vw), 43.4svh); }
-}
-@media (max-width: 700px) {
-  .parallax__visuals { min-height: 520px; }
-  .parallax__title { font-size: 22vw; }
-  .parallax__layer-title { transform: translateY(-58%); }
-}
-@media (prefers-reduced-motion: reduce) { .parallax__layer-img { will-change: auto; } }
-/* ---------- Tag → Nacht im Startbild (25.09. nachts) ---------- */
-/* Der Einstieg bleibt stehen (sticky), während man scrollt: die Sonne läuft im Halbkreis rechts hinter die Berge,
-   es wird Nacht, der Mond steigt links auf, Sterne und Sternschnuppen kommen, der Hund hebt den Kopf und jault.
-   Danach schiebt sich die Szene wie gewohnt mit Parallax weg. Nur transform/opacity. */
-/* 25.09. (Emre): das Bild hält nicht mehr an – Tag → Nacht läuft, während die Szene normal wegscrollt */
-.parallax__nacht { opacity: 0; visibility: hidden; }
-.sonne, .sterne, .mond, .jaul { position: absolute; inset: 0; pointer-events: none; }
-.sonne i, .mond i { position: absolute; left: 0; top: 0; width: var(--scheibe, 34px); height: var(--scheibe, 34px); margin: calc(var(--scheibe, 34px) / -2) 0 0 calc(var(--scheibe, 34px) / -2); border-radius: 50%; will-change: transform; }
-.sonne i { background: radial-gradient(circle, #FFFFF6 0 52%, #FFF1C4 68%, rgba(255, 214, 140, 0) 72%); }
-.sonne i::before, .sonne b { content: ""; position: absolute; left: 50%; top: 50%; border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); }
-.sonne i::before { width: 900%; height: 900%; background: radial-gradient(circle, rgba(255, 236, 170, 0.55), rgba(255, 190, 110, 0.18) 35%, rgba(255, 160, 90, 0) 70%); }
-.sonne b { display: block; width: 1400%; height: 1400%; background: radial-gradient(circle, rgba(255, 120, 60, 0.4), rgba(255, 90, 50, 0.12) 40%, rgba(255, 80, 40, 0) 70%); opacity: var(--abend, 0); }
-.mond i { background: radial-gradient(circle at 42% 40%, #FDFBF4 0 30%, #EEEADF 52%, #D9D4C8 66%, rgba(220, 215, 200, 0) 71%); opacity: 0; }
-.mond i::before { content: ""; position: absolute; left: 50%; top: 50%; width: 700%; height: 700%; border-radius: 50%; transform: translate(-50%, -50%); background: radial-gradient(circle, rgba(200, 215, 255, 0.28), rgba(160, 180, 240, 0.08) 40%, rgba(150, 170, 230, 0) 70%); }
-.sterne { opacity: 0; }
-.sterne canvas { position: absolute; left: 0; top: -40%; width: 100%; height: 140%; }
-@media (prefers-reduced-motion: no-preference) { .sterne__hell { animation: funkeln 3.2s ease-in-out infinite alternate; } }
-@keyframes funkeln { from { opacity: 0.35; } to { opacity: 1; } }
-.schnuppe { position: absolute; width: 180px; height: 1.5px; border-radius: 2px; background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(235, 242, 255, 0.95)); transform-origin: 100% 50%; opacity: 0; animation: schnuppe 1100ms cubic-bezier(0.2, 0.6, 0.3, 1) forwards; }
-@keyframes schnuppe { 0% { opacity: 0; transform: rotate(var(--winkel)) translateX(0) scaleX(0.3); } 15% { opacity: 1; } 100% { opacity: 0; transform: rotate(var(--winkel)) translateX(var(--weg-x)) scaleX(1); } }
-/* Hund hebt den Kopf als Bildfolge aus einem Higgsfield-Video (Kling 3.0), ans Scrollen gekoppelt */
-.hund-film { position: absolute; inset: 0; pointer-events: none; }
-.hund-film canvas { position: absolute; left: 0; top: 0; visibility: hidden; }
-.film-an .hund-film canvas { visibility: visible; }
-.parallax__visuals.film-an [data-hund-nacht], .parallax__visuals.film-an [data-hund-jault], .parallax__visuals.film-an [data-hund-tag] { visibility: hidden !important; }
-/* Hund: stehend (Tag/Nacht) → jaulend, weicher Wechsel (Rückfall, solange die Bildfolge lädt) */
-[data-hund-jault] { transition: opacity 320ms cubic-bezier(0.32, 0.72, 0, 1), visibility 0s linear 320ms; }
-.jault [data-hund-jault] { opacity: 1 !important; visibility: visible !important; transition: opacity 320ms cubic-bezier(0.32, 0.72, 0, 1); }
-.jault [data-hund-nacht], .jault [data-hund-tag] { opacity: 0 !important; transition: opacity 320ms cubic-bezier(0.32, 0.72, 0, 1); }
-.jaul > div { position: absolute; left: 0; top: 0; width: 0; height: 0; }
-.jaul i { position: absolute; left: -40px; top: -40px; width: 80px; height: 80px; border-radius: 50%; border: 1.5px solid rgba(215, 228, 255, 0.55); opacity: 0; }
-@media (prefers-reduced-motion: no-preference) {
-  .jault .jaul i { animation: jaul-ring 2.4s cubic-bezier(0.2, 0.6, 0.3, 1) infinite; }
-  .jault .jaul i:nth-child(2) { animation-delay: 0.8s; }
-  .jault .jaul i:nth-child(3) { animation-delay: 1.6s; }
-}
-@keyframes jaul-ring { 0% { opacity: 0; transform: scale(0.3); } 20% { opacity: 0.8; } 100% { opacity: 0; transform: scale(3.2); } }
-/* Name wie die Wolken im Abendlicht: oben weiß, unten warm angestrahlt, weicher Rand */
-.parallax__title { color: transparent; background: linear-gradient(180deg, #FFFFFF 8%, #FFF4E8 48%, #F9CFAE 100%); -webkit-background-clip: text; background-clip: text; text-shadow: none;
-  filter: drop-shadow(0 0 14px rgba(255, 240, 226, 0.38)) drop-shadow(0 10px 30px rgba(110, 50, 20, 0.22)); }
-.parallax__title .dot { -webkit-text-fill-color: var(--accent); }
-
-/* Ohne großen Namen (Emre, 25.09. nachts: „ERGUN in der Mitte weg, oben links reicht“): der Satz ist die Überschrift,
-   hell und weich wie die Wolken, oberhalb des Horizonts */
-.parallax__layer-title { transform: translateY(calc(-100% - 6svh)); }
-.parallax__claim { margin: 0; padding: 0 var(--pad); font-family: var(--serif); font-style: italic; font-weight: 400; font-size: clamp(2.4rem, 5.4vw, 5.2rem); line-height: 1; letter-spacing: -0.01em; text-wrap: balance;
-  color: transparent; background: linear-gradient(180deg, #FFFFFF 10%, #FFF4E8 52%, #F9CFAE 100%); -webkit-background-clip: text; background-clip: text; text-shadow: none;
-  filter: drop-shadow(0 0 16px rgba(255, 240, 226, 0.35)) drop-shadow(0 8px 26px rgba(80, 36, 12, 0.35)); }
-@media (max-width: 700px) { .parallax__layer-title { transform: translateY(calc(-100% - 5svh)); } .parallax__claim { font-size: clamp(2.2rem, 11vw, 3rem); } }
-/* Emre, 25.09. nachts: auch „Faire Preise …“ weg – im Himmel steht nur noch leise „Webdesigner“ (h1, davor unsichtbar „ERGUN.“) */
-.parallax__rolle { margin: 0; font-size: clamp(13px, 1.2vw, 16px); }
-.hinweis-versteckt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 /* ---------- Onepager (25.09., Emre): Hero → endo.ai → Erstgespräch, alles untereinander ---------- */
-.nav__links { align-items: center; }
-@media (max-width: 700px) { .nav__links { gap: 20px; } .nav__link { font-size: 13px; } }
-.hinweis-versteckt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-main section[id] { scroll-margin-top: 0; }
 
 /* endo.ai: die Nacht der Szene läuft weiter, die Kugel steht dort, wo eben noch der Mond war */
 .endo { position: relative; isolation: isolate; overflow: hidden; padding: clamp(56px, 9svh, 112px) var(--pad) clamp(88px, 14svh, 144px);
@@ -883,9 +304,6 @@ main section[id] { scroll-margin-top: 0; }
 @media (prefers-reduced-motion: reduce) { .endo .blase, .endo .agent__vorschlaege .chip { animation: none; } .endo .tippt i { animation: none; opacity: 0.7; } }
 
 /* Kostenloses Erstgespräch: vier Schritte in einer Karte */
-.contact { padding-top: clamp(88px, 14svh, 144px); align-items: center; }
-.contact__kopf { margin-bottom: 8px; }
-.contact__big { font-size: clamp(2.8rem, 7.4vw, 5.8rem); line-height: 0.95; letter-spacing: -0.02em; text-wrap: balance; }
 .bogen { width: min(100%, 640px); display: grid; gap: 24px; text-align: left; padding: 28px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(180deg, rgba(242, 239, 232, 0.035), rgba(242, 239, 232, 0.01)); }
 .bogen .schritt, .bogen .unterfrage { display: grid; gap: 18px; margin: 0; padding: 0; min-width: 0; border: 0; border-radius: 0; background: none; }
 .bogen .schritt:focus-within { border-color: transparent; }
@@ -934,17 +352,6 @@ main section[id] { scroll-margin-top: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .ist-stepper [data-schritt].ist-aktiv { animation: none; } .bogen__balken i { transition: none; } }
 </style>
-<script>
-/* Auftritt: zuerst nur der Name, dann die Seite. Bei "Bewegung reduzieren" kein Vorhang. */
-(function () {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var d = document.documentElement;   /* Vorhang-Intro seit 25.09. nachts aus (Emre) */
-  return;
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  window.__introEnde = function () { d.classList.remove('intro'); var l = document.querySelector('.loader'); if (l) l.remove(); };
-  setTimeout(function () { if (window.__introEnde) window.__introEnde(); }, 5000);
-})();
-</script>
 </head>
 <body>
 
@@ -958,38 +365,27 @@ main section[id] { scroll-margin-top: 0; }
   </nav>
 </header>
 
-<div id="smooth-wrapper">
-<div id="smooth-content">
-<div class="parallax" id="top">
-  <section class="parallax__header" aria-label="Einstieg">
-    <div class="parallax__visuals">
-      <div class="parallax__layers" data-parallax-layers>
-        <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-himmel-hoch.webp"><img src="bilder/hero/szene-himmel-1920.webp" srcset="bilder/hero/szene-himmel-1920.webp 1920w" sizes="104vw" width="2560" height="2016" data-parallax-layer="himmel" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
-        <div class="sonne" data-parallax-layer="himmel" aria-hidden="true"><i data-sonne><b></b></i></div>
-        <picture><source media="(orientation: portrait)" data-srcset="bilder/hero/szene-himmel-nacht-hoch.webp"><img data-src="bilder/hero/szene-himmel-nacht-1920.webp" data-srcset="bilder/hero/szene-himmel-nacht-1920.webp 1920w" sizes="104vw" width="2560" height="2016" data-parallax-layer="himmel" class="parallax__layer-img parallax__nacht" alt="" decoding="async"></picture>
-        <div class="sterne" data-parallax-layer="himmel" aria-hidden="true"><canvas data-sterne></canvas><canvas class="sterne__hell" data-sterne-hell></canvas><div data-schnuppen></div></div>
-        <div class="mond" data-parallax-layer="himmel" aria-hidden="true"><i data-mond></i></div>
-        <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-fern-hoch.webp"><img src="bilder/hero/szene-fern-1920.webp" srcset="bilder/hero/szene-fern-1920.webp 1920w" sizes="104vw" width="2560" height="2016" data-parallax-layer="fern" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
-        <picture><source media="(orientation: portrait)" data-srcset="bilder/hero/szene-fern-nacht-hoch.webp"><img data-src="bilder/hero/szene-fern-nacht-1920.webp" data-srcset="bilder/hero/szene-fern-nacht-1920.webp 1920w" sizes="104vw" width="2560" height="2016" data-parallax-layer="fern" class="parallax__layer-img parallax__nacht" alt="" decoding="async"></picture>
-        <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-mitte-hoch.webp"><img src="bilder/hero/szene-mitte-1920.webp" srcset="bilder/hero/szene-mitte-1920.webp 1920w" sizes="104vw" width="2560" height="2016" data-parallax-layer="mitte" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
-        <picture><source media="(orientation: portrait)" data-srcset="bilder/hero/szene-mitte-nacht-hoch.webp"><img data-src="bilder/hero/szene-mitte-nacht-1920.webp" data-srcset="bilder/hero/szene-mitte-nacht-1920.webp 1920w" sizes="104vw" width="2560" height="2016" data-parallax-layer="mitte" class="parallax__layer-img parallax__nacht" alt="" decoding="async"></picture>
-        <div data-parallax-layer="titel" class="parallax__layer-title">
-          <h1 class="parallax__rolle"><span class="hinweis-versteckt">ERGUN. </span>Webdesigner</h1>
-        </div>
-        <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-wald-hoch.webp"><img src="bilder/hero/szene-wald-1920.webp" srcset="bilder/hero/szene-wald-1920.webp 1920w" sizes="104vw" width="2560" height="2016" data-parallax-layer="wald" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
-        <picture><source media="(orientation: portrait)" data-srcset="bilder/hero/szene-wald-nacht-hoch.webp"><img data-src="bilder/hero/szene-wald-nacht-1920.webp" data-srcset="bilder/hero/szene-wald-nacht-1920.webp 1920w" sizes="104vw" width="2560" height="2016" data-parallax-layer="wald" class="parallax__layer-img parallax__nacht" alt="" decoding="async"></picture>
-        <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-wiese-hoch.webp"><img src="bilder/hero/szene-wiese-1920.webp" srcset="bilder/hero/szene-wiese-1920.webp 1920w, bilder/hero/szene-wiese-2560.webp 2560w" sizes="104vw" width="2560" height="2016" data-parallax-layer="wiese" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
-        <picture><source media="(orientation: portrait)" data-srcset="bilder/hero/szene-wiese-nacht-hoch.webp"><img data-src="bilder/hero/szene-wiese-nacht-1920.webp" data-srcset="bilder/hero/szene-wiese-nacht-1920.webp 1920w" sizes="104vw" width="2560" height="2016" data-parallax-layer="wiese" class="parallax__layer-img parallax__nacht" alt="" decoding="async"></picture>
-        <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-hund-hoch.webp"><img src="bilder/hero/szene-hund-1920.webp" data-hund-tag srcset="bilder/hero/szene-hund-1920.webp 1920w, bilder/hero/szene-hund-2560.webp 2560w" sizes="104vw" width="2560" height="2016" data-parallax-layer="wiese" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
-        <picture><source media="(orientation: portrait)" data-srcset="bilder/hero/szene-hund-nacht-hoch.webp"><img data-src="bilder/hero/szene-hund-nacht-1920.webp" data-srcset="bilder/hero/szene-hund-nacht-1920.webp 1920w" sizes="104vw" width="2560" height="2016" data-parallax-layer="wiese" class="parallax__layer-img parallax__nacht" alt="" decoding="async" data-hund-nacht></picture>
-        <picture><source media="(orientation: portrait)" data-srcset="bilder/hero/szene-hund-jault-nacht-hoch.webp"><img data-src="bilder/hero/szene-hund-jault-nacht-1920.webp" data-srcset="bilder/hero/szene-hund-jault-nacht-1920.webp 1920w" sizes="104vw" width="2560" height="2016" data-parallax-layer="wiese" class="parallax__layer-img parallax__nacht" alt="" decoding="async" data-hund-jault></picture>
-        <div class="hund-film" data-parallax-layer="wiese" aria-hidden="true"><canvas data-hund-film></canvas></div>
-        <picture><source media="(orientation: portrait)" srcset="bilder/hero/szene-gras-hoch.webp"><img src="bilder/hero/szene-gras-1920.webp" srcset="bilder/hero/szene-gras-1920.webp 1920w, bilder/hero/szene-gras-2560.webp 2560w" sizes="104vw" width="2560" height="2016" data-parallax-layer="gras" class="parallax__layer-img" alt="" fetchpriority="high"></picture>
-        <picture><source media="(orientation: portrait)" data-srcset="bilder/hero/szene-gras-nacht-hoch.webp"><img data-src="bilder/hero/szene-gras-nacht-1920.webp" data-srcset="bilder/hero/szene-gras-nacht-1920.webp 1920w" sizes="104vw" width="2560" height="2016" data-parallax-layer="gras" class="parallax__layer-img parallax__nacht" alt="" decoding="async"></picture>
-      </div>
-      <div class="parallax__fade"></div>
-      <p class="parallax__hint" aria-hidden="true">Scrollen</p>
+<div class="szene" id="top" data-szene>
+  <section class="szene__buehne" aria-label="Einstieg">
+    <div class="szene__ebene" data-ebene="himmel" aria-hidden="true">
+      <div class="himmel himmel--tag"></div>
+      <div class="himmel himmel--gold"></div>
+      <div class="himmel himmel--blau"></div>
+      <div class="himmel himmel--nacht"></div>
+      <div class="sonne"><b class="sonne__glut"></b><b class="sonne__hof"></b><i class="sonne__kern"></i><i class="sonne__kern sonne__kern--abend"></i></div>
+      <div class="mond"><b class="mond__hof"></b><i class="mond__kern"></i></div>
     </div>
+    <div class="szene__ebene" data-ebene="fern" aria-hidden="true"></div>
+    <div class="szene__ebene" data-ebene="mitte" aria-hidden="true"></div>
+    <div class="szene__ebene szene__titel" data-ebene="titel">
+      <h1 class="rolle"><span class="hinweis-versteckt">ERGUN. </span>Webdesigner</h1>
+    </div>
+    <div class="szene__ebene" data-ebene="huegel" aria-hidden="true"></div>
+    <div class="szene__ebene" data-ebene="wald" aria-hidden="true"></div>
+    <div class="szene__ebene" data-ebene="wiese" aria-hidden="true"></div>
+    <div class="szene__ebene" data-ebene="gras" aria-hidden="true"></div>
+    <div class="szene__oben" aria-hidden="true"></div>
+    <div class="szene__fade" aria-hidden="true"></div>
   </section>
 </div>
 
@@ -1197,362 +593,26 @@ main section[id] { scroll-margin-top: 0; }
     <a href="datenschutz.html">Datenschutz</a>
   </nav>
 </footer>
-</div><!-- /smooth-content -->
-</div><!-- /smooth-wrapper -->
 
-
-<!-- GSAP liegt lokal im Ordner js/ (kein fremder Server) -->
-<script src="js/gsap.min.js"></script>
-<script src="js/ScrollTrigger.min.js"></script>
+<script src="js/szene.js?v=2"></script>
 <script>
+/* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {
-  if (!window.gsap || !window.ScrollTrigger) { if (window.__introEnde) window.__introEnde(); return; }
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduce) return;
-
-  document.documentElement.classList.add('js');
-  gsap.registerPlugin(ScrollTrigger);
-
-  ScrollTrigger.config({ ignoreMobileResize: true });
-  /* Parallax: Browser mit Scroll-Animationen machen es selbst (CSS oben), sonst GSAP */
-  var cssParallax = window.CSS && CSS.supports && CSS.supports('animation-timeline: view()');
-  var mobile = window.matchMedia('(max-width: 700px)').matches;
-  var f = mobile ? 0.78 : 1;
-
-  /* Hero: jede Ebene bewegt sich unterschiedlich schnell (wie Osmo-Vorlage).
-     Person und Vordergrund laufen gleich schnell, damit die Füße auf dem Fels bleiben. */
-  var layersEl = document.querySelector('[data-parallax-layers]');
-  if (!cssParallax) {
-    var tl = gsap.timeline({ scrollTrigger: { trigger: '.parallax__header', start: 'bottom bottom', end: 'bottom top', scrub: true } });
-    [['himmel', 78], ['fern', 66], ['mitte', 52], ['titel', 58], ['wald', 34], ['wiese', 14]].forEach(function (l, i) {
-      var ziel = l[0] === 'titel' ? { y: function () { return window.innerHeight * l[1] * f / 100; }, ease: 'none' } : { yPercent: l[1] * f, ease: 'none' };
-      tl.to(layersEl.querySelectorAll('[data-parallax-layer="' + l[0] + '"]'), ziel, i === 0 ? undefined : '<');
+  var nav = document.querySelector('.nav'), y0 = window.scrollY, geplant = false;
+  window.addEventListener('scroll', function () {
+    if (geplant) return; geplant = true;
+    requestAnimationFrame(function () {
+      geplant = false; var y = window.scrollY;
+      if (y > 140 && y > y0 + 4) nav.classList.add('nav--weg'); else if (y < y0 - 4 || y <= 140) nav.classList.remove('nav--weg');
+      y0 = y;
     });
-  }
-
-  /* Einstieg: Berge und Emre setzen sich kurz, Zeile und Navigation blenden ein – nur transform/opacity */
-  var heroEinstieg = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } })
-    /* Kamerafahrt zurück: vorne mehr vergrößert als hinten, alles setzt sich zur Mitte unten – verdeckt nie etwas */
-    .from('[data-parallax-layer="himmel"]', { scale: 1.05, duration: 1.8, ease: 'expo.out' }, 0)
-    .from('[data-parallax-layer="fern"]', { scale: 1.03, duration: 1.8, ease: 'expo.out' }, 0)
-    .from('[data-parallax-layer="mitte"]', { scale: 1.05, duration: 1.8, ease: 'expo.out' }, 0)
-    .from('[data-parallax-layer="wald"]', { scale: 1.08, duration: 1.8, ease: 'expo.out' }, 0)
-    .from('[data-parallax-layer="wiese"]', { scale: 1.12, duration: 1.8, ease: 'expo.out' }, 0)
-    .from('[data-parallax-layer="gras"]', { scale: 1.18, duration: 1.8, ease: 'expo.out' }, 0)
-    .from('.parallax__rolle', { opacity: 0, y: 8, duration: 0.7 }, 0.35)
-    .from('.nav', { opacity: 0, duration: 0.6, ease: 'power2.out' }, 0.5);
-
-  /* ===== Auftritt: "E." erscheint, der Punkt zieht nach rechts und zieht "RGUN" hinter sich her, dann blendet die Szene auf ===== */
-  var loader = document.querySelector('.loader');
-  var titel = document.querySelector('.parallax__title');
-  /* Notbremse (5 s, z. B. langsames Netz): Vorhang weg UND Hero komplett zeigen – nie unsichtbare Navigation/Zeile */
-  var vorhangWeg = window.__introEnde;
-  window.__introEnde = function () {
-    if (vorhangWeg) vorhangWeg();
-    gsap.set(titel, { opacity: 1 });
-    heroEinstieg.progress(1);
-    ScrollTrigger.refresh();
-  };
-  if (!loader || !document.documentElement.classList.contains('intro')) {
-    heroEinstieg.play();
-  } else {
-    window.scrollTo(0, 0);
-    var name = loader.querySelector('[data-loader-name]');
-    var punkt = name.querySelector('.dot'); punkt.remove();
-    var text = name.textContent.trim(); name.textContent = '';
-    text.split('').forEach(function (z) {
-      var m = document.createElement('span'); m.className = 'loader__maske';
-      var b = document.createElement('span'); b.className = 'loader__buchstabe'; b.textContent = z;
-      m.appendChild(b); name.appendChild(m);
-    });
-    name.appendChild(punkt);
-    var buchstaben = name.querySelectorAll('.loader__buchstabe');
-    var erster = buchstaben[0], rest = [].slice.call(buchstaben, 1);
-    gsap.set(buchstaben, { yPercent: 115 });
-    gsap.set(punkt, { opacity: 0 });
-    var eFertig = false, geladen = false, gestartet = false;
-
-    /* Anfang: nur "E." – Punkt direkt hinter dem E, Gruppe mittig */
-    function messen() {
-      var n = name.getBoundingClientRect(), e = erster.parentNode.getBoundingClientRect(), pk = punkt.getBoundingClientRect();
-      return { name: (n.left + n.width / 2) - (e.left + e.right + pk.width) / 2, punkt: e.right - pk.left };
-    }
-    var schriftBereit = (document.fonts && document.fonts.ready)
-      ? Promise.race([document.fonts.ready, new Promise(function (r) { setTimeout(r, 500); })])
-      : Promise.resolve();
-    schriftBereit.then(function () {
-      var v = messen();
-      gsap.set(name, { x: v.name }); gsap.set(punkt, { x: v.punkt });
-      gsap.timeline({ onComplete: function () { eFertig = true; weiter(); } })
-        .to(erster, { yPercent: 0, duration: 0.7, ease: 'expo.out' }, 0.05)
-        .to(punkt, { opacity: 1, duration: 0.4, ease: 'power2.out' }, 0.35);
-    });
-
-    /* Warten nur auf die Hero-Bilder, hoechstens 2,5 s */
-    var bilder = [].slice.call(document.querySelectorAll('.parallax__layer-img:not(.parallax__nacht)')), offen = bilder.length;
-    function eins() { if (--offen <= 0) { geladen = true; weiter(); } }
-    function dekodieren(img) { return img.decode ? img.decode().catch(function () {}) : Promise.resolve(); }
-    bilder.forEach(function (img) {
-      if (img.complete && img.naturalWidth) dekodieren(img).then(eins);
-      else {
-        img.addEventListener('load', function () { dekodieren(img).then(eins); }, { once: true });
-        img.addEventListener('error', eins, { once: true });
-      }
-    });
-    setTimeout(function () { geladen = true; weiter(); }, 2500);
-
-    function weiter() {
-      if (gestartet || !eFertig || !geladen) return;
-      gestartet = true;
-      /* Der Punkt zieht nach rechts, jeder Buchstabe steigt erst auf, wenn der Punkt an ihm vorbei ist */
-      var masken = [].slice.call(name.querySelectorAll('.loader__maske'), 1);
-      var marken = masken.map(function (m) { return m.offsetLeft + m.offsetWidth * 0.55; });
-      var naechster = 0;
-      function aufdecken(bisX) {
-        while (naechster < marken.length && bisX >= marken[naechster]) {
-          gsap.to(rest[naechster], { yPercent: 0, duration: 0.55, ease: 'expo.out' });
-          naechster++;
-        }
-      }
-      gsap.timeline({ onComplete: uebergabe })
-        .to(name, { x: 0, duration: 1.1, ease: 'power2.inOut' }, 0)
-        .to(punkt, { x: 0, duration: 1.1, ease: 'power2.inOut',
-          onUpdate: function () { aufdecken(punkt.offsetLeft + gsap.getProperty(punkt, 'x')); },
-          onComplete: function () { aufdecken(Infinity); } }, 0)
-        .to({}, { duration: 0.45 });
-    }
-    function uebergabe() {
-      /* Name gleitet exakt auf den Hero-Titel, der dunkle Grund blendet aus */
-      var a = name.getBoundingClientRect(), z = titel.getBoundingClientRect();
-      var dx = (z.left + z.width / 2) - (a.left + a.width / 2);
-      var dy = (z.top + z.height / 2) - (a.top + a.height / 2);
-      gsap.timeline({ onComplete: function () {
-          gsap.set(titel, { opacity: 1 });
-          document.documentElement.classList.remove('intro');
-          loader.remove();
-          ScrollTrigger.refresh();
-        } })
-        .to(loader.querySelector('.loader__grund'), { opacity: 0, duration: 0.7, ease: 'power2.out' }, 0)
-        .add(function () { heroEinstieg.play(); }, 0)
-        .to(name, { x: dx, y: dy, scale: z.width / a.width, duration: 0.8, ease: 'power3.inOut' }, 0);
-    }
-  }
-
-  /* Navigation: beim Runterscrollen ausblenden, beim Hochscrollen zeigen */
-  var navEl = document.querySelector('.nav');
-  ScrollTrigger.create({ start: 0, end: 'max', onUpdate: function (self) {
-    var y = self.scroll();
-    if (y > 140 && self.direction === 1) navEl.classList.add('nav--weg');
-    else if (self.direction === -1 || y <= 140) navEl.classList.remove('nav--weg');
-  } });
-
-  /* Pakete: Vorschauen laufen nur, solange sie sichtbar sind */
-  function nurSichtbar(el, tw) {
-    ScrollTrigger.create({ trigger: el, start: 'top bottom', end: 'bottom top', onToggle: function (st) { if (st.isActive) tw.play(); else tw.pause(); } });
-  }
-  gsap.utils.toArray('[data-demo-scroll]').forEach(function (img) {
-    var screen = img.parentNode;
-    var tw = gsap.to(img, { y: function () { return -Math.max(0, img.offsetHeight - screen.offsetHeight); }, duration: 9, ease: 'sine.inOut', repeat: -1, yoyo: true, repeatDelay: 0.8, paused: true });
-    img.addEventListener('load', function () { tw.invalidate(); });
-    nurSichtbar(screen, tw);
-  });
-  gsap.utils.toArray('[data-demo-stapel]').forEach(function (st) {
-    var seiten = st.querySelectorAll('.demo-seite'), mitte = (seiten.length - 1) / 2;
-    var tl = gsap.timeline({ paused: true, repeat: -1, yoyo: true, repeatDelay: 1.4, defaults: { duration: 1.2, ease: 'power3.inOut' } });
-    seiten.forEach(function (s, i) { s.style.zIndex = seiten.length - i; tl.to(s, { xPercent: (i - mitte) * 12, yPercent: Math.abs(i - mitte) * 5, rotation: (i - mitte) * 4 }, 0); });
-    nurSichtbar(st, tl);
-  });
-  gsap.utils.toArray('[data-demo-kosmos]').forEach(function (b) {
-    var tl = gsap.timeline({ paused: true, repeat: -1, yoyo: true, defaults: { duration: 9, ease: 'sine.inOut' } })
-      .fromTo(b.querySelector('.kosmos__himmel'), { rotation: -4, xPercent: -3 }, { rotation: 4, xPercent: 3 }, 0)
-      .fromTo(b.querySelector('.kosmos__vorn'), { xPercent: 0.8 }, { xPercent: -0.8 }, 0);
-    nurSichtbar(b, tl);
-  });
-
-  /* Pakete: dezente Parallax in den Vorschauen – wie im Hero bewegt sich Hinteres staerker mit als Vorderes */
-  function tiefe(bereich, ebenen) {
-    var tl = gsap.timeline({ scrollTrigger: { trigger: bereich, start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
-    ebenen.forEach(function (e) { if (e[0]) tl.fromTo(e[0], { y: e[1] }, { y: e[2], ease: 'none' }, 0); });
-  }
-  gsap.utils.toArray('.demo-phone').forEach(function (ph) { tiefe(ph.parentNode, [[ph, 36, 4]]); });
-  gsap.utils.toArray('[data-demo-stapel]').forEach(function (st) {
-    tiefe(st.parentNode, [].map.call(st.querySelectorAll('.demo-seite'), function (s, i) { return [s, -i * 6, i * 6]; }));
-  });
-  gsap.utils.toArray('[data-demo-kosmos]').forEach(function (b) {
-    tiefe(b.parentNode, [[b.querySelector('.kosmos__himmel'), -20, 20], [b.querySelector('.kosmos__titel'), -10, 10], [b.querySelector('.kosmos__vorn'), -4, 4]]);
-    /* Schrift der Beispielseite blendet beim ersten Erscheinen ein */
-    gsap.from(b.querySelectorAll('.kosmos__nav, .kosmos__titel small, .kosmos__titel'), { opacity: 0, duration: 1.1, ease: 'power2.out', stagger: 0.25,
-      scrollTrigger: { trigger: b, start: 'top 85%', once: true } });
-  });
-
-  /* Pakete: Karten heben sich nacheinander */
-  ScrollTrigger.batch('.pkg', { start: 'top 88%', once: true,
-    onEnter: function (els) { gsap.to(els, { opacity: 1, y: 0, duration: 1, ease: 'expo.out', stagger: 0.12 }); } });
-
-  /* Alles mit .reveal blendet einmal sanft ein */
-  gsap.utils.toArray('.reveal:not(.pkg)').forEach(function (el) {
-    gsap.to(el, { opacity: 1, y: 0, duration: 1.0, ease: 'expo.out',
-      scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
-  });
-
-  /* Maße nach Schriften/Bildern neu berechnen */
-  window.addEventListener('load', function () { ScrollTrigger.refresh(); });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
-})();
-</script>
-<script>
-/* Tag → Nacht im Startbild (25.09. nachts). Ein Fortschrittswert p (0–1) über die angeheftete Strecke steuert alles.
-   Sonne und Mond laufen auf einem Halbkreis um die Bildmitte; ihre Lage kommt aus der Leinwand der Ebenen
-   (object-fit: cover), damit sie auf jedem Bildschirm am Horizont verschwinden. */
-(function () {
-  if (!window.gsap || !window.ScrollTrigger) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var d = document.documentElement; d.classList.add('nacht-an');
-  var held = document.querySelector('.parallax__header'), vis = document.querySelector('.parallax__visuals');
-  var probe = document.querySelector('.parallax__layer-img[data-parallax-layer="himmel"]');
-  var sonne = document.querySelector('[data-sonne]'), mond = document.querySelector('[data-mond]');
-  var sterne = document.querySelector('.sterne'), jaulPunkt = document.querySelector('[data-jaul]');
-  var nachtBilder = [].slice.call(document.querySelectorAll('.parallax__nacht:not([data-hund-jault])'));
-  var hoch = window.matchMedia('(orientation: portrait)');
-  var m = {};
-
-  /* Nachtbilder erst nach dem Laden holen */
-  function nachladen() {
-    document.querySelectorAll('.parallax__nacht').forEach(function (img) {
-      img.parentNode.querySelectorAll('source[data-srcset]').forEach(function (so) { so.srcset = so.getAttribute('data-srcset'); });
-      if (img.getAttribute('data-srcset')) img.srcset = img.getAttribute('data-srcset');
-      if (img.getAttribute('data-src')) img.src = img.getAttribute('data-src');
-    });
-  }
-  function spaeter() { nachladen(); filmLaden(); }
-  if (document.readyState === 'complete') setTimeout(spaeter, 400); else window.addEventListener('load', function () { setTimeout(spaeter, 400); });
-
-  function punkt(x, y) { return [m.ox + x * m.s, m.oy + y * m.s]; }
-  /* Punkt der Leinwand → Pixel in der Szene (ohne die Scroll-Verschiebung der Ebenen) */
-  function messen() {
-    var v = vis.getBoundingClientRect();
-    var bw = v.width * 1.04, bh = v.height, h = hoch.matches, cw = h ? 1440 : 2560, ch = h ? 2268 : 2016;
-    var s = Math.max(bw / cw, bh / ch);
-    var py = parseFloat((getComputedStyle(probe).objectPosition.split(' ')[1]) || '100') / 100;
-    m = { s: s, ox: -v.width * 0.02 + (bw - cw * s) * 0.5, oy: (bh - ch * s) * py, h: h, w: v.width, hh: v.height };
-    var k = 2560 / 3840;
-    /* Sonne (Leinwand 3840: 1858/1313), Maul des jaulenden Hundes (breit 1914/1897, hoch 543/1423) */
-    m.sonne = h ? punkt((1858 - 960) * 0.75, 1313 * 0.75) : punkt(1858 * k, 1313 * k);
-    m.maul = h ? punkt(543, 1423) : punkt(1914 * k, 1897 * k);
-    m.r = Math.max(28, Math.min(46, m.w * 0.026));
-    vis.style.setProperty('--scheibe', m.r + 'px');
-    zeichneSterne();
-    filmLage();
-    render();
-  }
-
-  function mulberry(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
-  /* Sterne: einmal zeichnen, danach nur Deckkraft */
-  function zeichneSterne() {
-    [['[data-sterne]', 420, 0.9], ['[data-sterne-hell]', 60, 1.8]].forEach(function (c) {
-      var cv = document.querySelector(c[0]); if (!cv) return;
-      var dpr = Math.min(window.devicePixelRatio || 1, 2), w = cv.clientWidth, h = cv.clientHeight;
-      if (!w || !h) return;
-      cv.width = w * dpr; cv.height = h * dpr;
-      var g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
-      var zufall = mulberry(c[1] * 7 + 3), n = Math.round(c[1] * Math.min(1.4, w / 1200));
-      for (var i = 0; i < n; i++) {
-        var x = zufall() * w, y = zufall() * h * 0.7, r = (0.35 + zufall() * 0.9) * c[2] * 0.6;
-        g.globalAlpha = 0.35 + zufall() * 0.65;
-        g.fillStyle = zufall() > 0.85 ? '#FFE9D2' : (zufall() > 0.7 ? '#D6E2FF' : '#FFFFFF');
-        g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
-      }
-    });
-  }
-
-  var st = { p: 0 }, jault = false, nacht = false, tagWert = 1;
-  var tagBilder = [].slice.call(document.querySelectorAll('.parallax__layer-img:not(.parallax__nacht)'));
-  function zw(a, b, p) { var t = Math.min(1, Math.max(0, (p - a) / (b - a))); return t * t * (3 - 2 * t); }
-  /* Halbkreis um die Bildmitte, unten der Horizont (Höhe der alten Sonne) */
-  function bahn(winkel) {
-    var cx = m.w * 0.5, cy = m.sonne[1] + m.r * 1.6, rx = m.w * (m.h ? 0.36 : 0.34), ry = cy - m.hh * (m.h ? 0.16 : 0.13);
-    var a = winkel * Math.PI / 180;
-    return [cx + rx * Math.cos(a), cy - ry * Math.sin(a)];
-  }
-  function render() {
-    if (!m.sonne) return;
-    var p = st.p;
-    var s = bahn(24 - 40 * zw(0, 0.42, p));              /* rechts neben der Überschrift → hinter die Berge rechts */
-    gsap.set(sonne, { x: s[0], y: s[1] });
-    vis.style.setProperty('--abend', zw(0.08, 0.36, p).toFixed(3));
-    var n = zw(0.14, 0.46, p);
-    var nOp = Math.min(1, n * 1.25);   /* Nachtbilder sind schon ganz deckend, bevor die Tagbilder gehen */
-    nachtBilder.forEach(function (img) { img.style.opacity = nOp; img.style.visibility = nOp > 0.001 ? 'visible' : 'hidden'; });
-    /* volle Nacht: Tagbilder ganz weg (spart Grafikspeicher, nichts scheint durch) */
-    var nachtDa = nachtBilder.every(function (img) { return img.complete && img.naturalWidth > 0; });
-    /* Kurz vor voller Nacht blenden die Tagbilder aus – sonst leuchten ihre Kanten unter den Nachtkanten als feine Linie durch */
-    var tag = nachtDa ? Math.min(1, (1 - n) / 0.2) : 1;
-    if (Math.abs(tag - tagWert) > 0.001) { tagWert = tag; tagBilder.forEach(function (img) { img.style.opacity = tag; img.style.visibility = tag < 0.001 ? 'hidden' : ''; }); }
-    var mo = bahn(196 - 44 * zw(0.3, 0.66, p));           /* links hinter den Bergen hervor, im Bogen nach oben */
-    gsap.set(mond, { x: mo[0], y: mo[1], opacity: zw(0.28, 0.38, p) });
-    sterne.style.opacity = zw(0.3, 0.56, p);
-    nacht = p > 0.4 && p < 0.95;
-    var j = p > 0.5;
-    if (j !== jault) { jault = j; vis.classList.toggle('jault', j); }
-    /* Bildfolge: ab voller Nacht, Kopf hebt sich zwischen p 0,46 und 0,64 */
-    var an = film.bereit && p >= 0.46;
-    if (an !== film.an) { film.an = an; vis.classList.toggle('film-an', an); }
-    if (an) zeigeBild(Math.round(Math.min(1, (p - 0.46) / 0.18) * (film.bilder.length - 1)));
-  }
-
-  /* ---------- Bildfolge des Hundes (bilder/hero/hund-film/) ---------- */
-  var film = { bilder: [], bereit: false, an: false, jetzt: -1, info: null, cv: document.querySelector('[data-hund-film]') };
-  function zeigeBild(i) {
-    if (i === film.jetzt || !film.bilder[i]) return;
-    film.jetzt = i;
-    var g = film.cv.getContext('2d'); g.clearRect(0, 0, film.cv.width, film.cv.height); g.drawImage(film.bilder[i], 0, 0);
-  }
-  function filmLage() {
-    var f = film.info; if (!f || !m.s) return;
-    var x = m.h ? (f.x - 960) * 0.75 : f.x * 2560 / 3840, y = m.h ? f.y * 0.75 : f.y * 2560 / 3840;
-    var k = m.h ? 0.75 : 2560 / 3840, a = punkt(x, y);
-    film.cv.style.left = a[0] + 'px'; film.cv.style.top = a[1] + 'px';
-    film.cv.style.width = (f.b * k * m.s) + 'px'; film.cv.style.height = (f.h * k * m.s) + 'px';
-  }
-  function filmLaden() {
-    if (!film.cv || !window.fetch) return;
-    fetch('bilder/hero/hund-film/info.json').then(function (r) { return r.json(); }).then(function (f) {
-      film.info = f; film.cv.width = f.b; film.cv.height = f.h; filmLage();
-      var offen = f.anzahl;
-      for (var i = 0; i < f.anzahl; i++) {
-        var im = new Image(); im.decoding = 'async';
-        im.onload = function () { if (--offen === 0) { film.bereit = true; film.jetzt = -1; render(); } };
-        im.src = 'bilder/hero/hund-film/' + (i < 10 ? '0' : '') + i + '.webp';
-        film.bilder.push(im);
-      }
-    }).catch(function () {});
-  }
-
-  /* Zum Prüfen: ?nacht=0.8 stellt den Ablauf fest ein */
-  var test = /[?&]nacht=([\d.]+)/.exec(location.search);
-  if (test) { st.p = parseFloat(test[1]); nachladen(); filmLaden(); window.addEventListener('load', function () { setTimeout(function () { nachladen(); messen(); }, 300); }); }
-  else gsap.to(st, { p: 1, ease: 'none', onUpdate: render,
-    scrollTrigger: { trigger: held, start: 'top top', end: 'bottom top', scrub: 0.35, onRefresh: messen } });
-  window.addEventListener('resize', function () { clearTimeout(window.__nachtRt); window.__nachtRt = setTimeout(messen, 150); });
-  window.addEventListener('load', messen);
-  messen();
-
-  /* Sternschnuppen: nur nachts und solange der Einstieg zu sehen ist */
-  var box = document.querySelector('[data-schnuppen]');
-  function schnuppe() {
-    if (nacht && !document.hidden && vis.getBoundingClientRect().bottom > 0) {
-      var e = document.createElement('i'); e.className = 'schnuppe';
-      var links = Math.random() < 0.5;
-      e.style.left = (links ? 12 + Math.random() * 28 : 50 + Math.random() * 36) + '%';
-      e.style.top = (30 + Math.random() * 16) + '%';
-      e.style.setProperty('--winkel', (links ? 150 + Math.random() * 12 : 18 + Math.random() * 12) + 'deg');
-      e.style.setProperty('--weg-x', (160 + Math.random() * 200) + 'px');
-      e.addEventListener('animationend', function () { e.remove(); });
-      box.appendChild(e);
-    }
-    setTimeout(schnuppe, 1400 + Math.random() * 2200);
-  }
-  setTimeout(schnuppe, 1500);
+  }, { passive: true });
+  var els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) { els.forEach(function (el) { el.classList.add('ist-da'); }); return; }
+  var io = new IntersectionObserver(function (eintraege) {
+    eintraege.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('ist-da'); io.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -8% 0px' });
+  els.forEach(function (el) { io.observe(el); });
 })();
 </script>
 <script>

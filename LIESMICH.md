@@ -6,6 +6,13 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Gezeichnete Szene statt Foto-Ebenen (25.09.2026, 14:30, Claude Code) – Schritt 2 + 3 von 7
+- `js/szene.js` zeichnet die Landschaft beim Laden auf Canvas: ferne Kette mit Schneeresten und Gesteinsschichten (`fern`), mittlere Kette (`mitte`), Hügel mit fernem Waldsaum (`huegel`), Waldkante mit Nadelbäumen (gestufte Äste, jeder anders) und wenigen Laubbäumen (`wald`), Wiese mit Halmen und dem Schäferhund (`wiese`), Gras vorne in zwei Wind-Gruppen (`gras`, CSS `skewX`).
+- Jede Ebene in **3 Lichtstimmungen** (Tag, Gold, Nacht), beim Scrollen nur `opacity`-Überblendung über `--gold`/`--nacht`/`--tag` + `translate3d` (Parallaxe `TIEFE`). Hänge zur Lichtquelle heller (Sonne mittig, nachts Mond links), Lichtkanten auf Graten, Bäumen, Grasspitzen; ferne Ketten heller/blauer (Luftperspektive), Dunst in den Tälern. Kanten bleiben im Umriss (clip), damit die Nacht die Abendfassung ganz deckt.
+- Himmel: 4 CSS-Verläufe (Tag, Gold, blaue Stunde, Nacht). Sonne = Kern + Hof + Glut (ohne harten Rand), startet **mittig oben** und sinkt **senkrecht** (Bahn wie 00637db) hinter den Sattel, fertig bei p ≈ 0,26. Mond steigt links auf (p 0,27–0,6).
+- Hund: `bilder/hero/hund-silhouette.webp` (Sprite 6×6 aus den 36 Kling-Bildern, 315×360 je Bild), Farbe/Saum folgen dem Licht, Kopf hebt sich bei p 0,40–0,58.
+- Prüfen: `?p=0.3` stellt die Tageszeit fest ein (ohne Parallaxe). GSAP wird nicht mehr geladen. Die alten Foto-Ebenen (`bilder/hero/szene-*`, `hund-film/`) sind unbenutzt, liegen aber noch im Projekt.
+
 ## Onepager: Hero → endo.ai → Erstgespräch (25.09.2026, 13:45, Claude Code) – Schritt 1 von 7
 - Emres Auftrag (Teil 1): ERGUN. = Digitalstudio mit zwei Bereichen, alles untereinander. Pfeil „endo entdecken“, iframe-Ebene (`.endo-ebene`) und Wisch-Skript sind raus.
 - Neu `<section class="endo" id="endo">` direkt unter dem Hero: Kugel (`ki/js/orb.js`, wird erst 600 px vor dem Bereich nachgeladen), „Zeigen Sie mir Ihr Produkt.“, derselbe Chat wie auf /ki/ (`ki/js/agent.js`, Markup identisch), drei Bereiche **ohne Preise**, Link „Mehr zu endo.ai“ → `ki/` (bleibt die ausführliche Seite mit Paketen).
