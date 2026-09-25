@@ -6,6 +6,12 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Feinschliff Handy + Performance (25.09.2026, 15:40, Claude Code) – Schritt 7 von 7
+- Messung (Vorschau-Browser): Szene zeichnen 70 ms (1024 px), 35 ms (Handy 375 px); Grafikspeicher der Leinwände ca. 20 MB; keine Konsolenfehler, kein seitliches Überlaufen. `__szene.bauzeit()` zeigt den Wert.
+- Hund: zuerst nur `bilder/hero/hund-steht.webp` (6 KB), die Bildfolge (190 KB) nach dem Laden der Seite; bei „Bewegung reduzieren" gar nicht.
+- Alles, was beim Scrollen überblendet wird, hat `will-change: opacity` (eigene Grafikebene, kein Neumalen des Himmels). Wiese und Gras reichen 15 % unter den Rand; neu gezeichnet wird ab 60 px Höhenänderung.
+- `bilder/og.jpg` = neue Szene (Goldene Stunde, 1200×630).
+
 ## endo-Chat übersichtlicher (25.09.2026, 15:20, Claude Code) – Schritt 6 von 7
 - `ki/js/agent.js` (gilt für Startseite und /ki/): Antworten von endo werden formatiert – Absätze, Listen (`-`, `1.`), `Code`, Codeblöcke, **fett**, Links –, nur über DOM-Knoten (`formatiert()`/`zeile()`), nie innerHTML mit fremdem Text. Logik und `/api/agent` unverändert.
 - Startseite: beim ersten Antippen rückt der Chat in die Bildschirmmitte (`mittig()`); wächst der Verlauf, scrollt die Seite so weit mit, dass die Eingabe sichtbar bleibt (`eingabeImBild()`); Handy: sichtbare Höhe über `visualViewport` → `--sicht` begrenzt den Verlauf, die Eingabe bleibt über der Tastatur.

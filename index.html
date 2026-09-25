@@ -84,6 +84,9 @@ img { display: block; max-width: 100%; height: auto; }
 .szene--bereit .szene__bild[data-licht="gold"] { opacity: var(--gold); }
 .szene--bereit .szene__bild[data-licht="nacht"] { opacity: var(--nacht); }
 .szene__hund { position: absolute; display: block; }
+/* alles, was beim Scrollen überblendet wird, auf eigene Grafikebene – sonst malt das Handy den Himmel jedes Bild neu */
+.szene__bild[data-licht="gold"], .szene__bild[data-licht="nacht"], .himmel--gold, .himmel--blau, .himmel--nacht, .sonne__glut, .sonne__hof, .sonne__kern--abend, .sonne, .mond, .sterne canvas, .sterne__hell { will-change: opacity; }
+.sonne, .mond { will-change: transform, opacity; }
 
 /* Himmel: Farbverlauf hängt an der Sonnenhöhe – Tag, Goldene Stunde, blaue Stunde, Nacht */
 .himmel { position: absolute; inset: 0; }
@@ -635,7 +638,7 @@ img { display: block; max-width: 100%; height: auto; }
   </nav>
 </footer>
 
-<script src="js/szene.js?v=6"></script>
+<script src="js/szene.js?v=8"></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {

@@ -362,7 +362,8 @@
 
   var GRAS_GRUPPEN = 2;
   function gras(ebene) {
-    var oben = m.H * 0.8, unten = m.H;
+    /* etwas über den unteren Rand hinaus, falls das Bild nach dem Zeichnen noch höher wird */
+    var oben = m.H * 0.8, unten = m.H * 1.15;
     for (var gr = 0; gr < GRAS_GRUPPEN; gr++) {
       var wind = document.createElement('div');
       wind.className = 'szene__wind szene__wind--' + gr; wind.style.top = oben + 'px'; wind.style.height = (unten - oben) + 'px';
@@ -370,7 +371,7 @@
       var r = zufall(900 + gr), halme = [], n = Math.round(m.W * (gr ? 0.42 : 0.6));
       for (var i = 0; i < n; i++) {
         var x = r() * (m.W + 40) - 20, t = r();
-        halme.push({ x: x, y: unten - t * m.H * (gr ? 0.03 : 0.07) + 4, h: m.H * (gr ? 0.06 + r() * 0.1 : 0.035 + r() * 0.07) * (1 - t * 0.3), neig: (r() - 0.45) * (gr ? 0.5 : 0.7), b: gr ? 1.6 + r() * 2.2 : 1 + r() * 1.4, f: Math.floor(r() * 5) });
+        halme.push({ x: x, y: m.H - t * m.H * (gr ? 0.03 : 0.07) + 4, h: m.H * (gr ? 0.06 + r() * 0.1 : 0.035 + r() * 0.07) * (1 - t * 0.3), neig: (r() - 0.45) * (gr ? 0.5 : 0.7), b: gr ? 1.6 + r() * 2.2 : 1 + r() * 1.4, f: Math.floor(r() * 5) });
       }
       halme.sort(function (a, b) { return a.y - b.y; });
       LICHTER.forEach(function (licht) {
@@ -386,29 +387,36 @@
   }
 
   /* ---------- Hund (Bildfolge aus dem Kling-Video als Silhouette, 36 Bilder) ---------- */
-  var hund = { bild: null, x: 0, y: 0, w: 0, h: 0, leinwand: null, zuletzt: '' };
-  var hundBild = new Image();
-  hundBild.decoding = 'async';
-  hundBild.onload = function () { hund.bild = hundBild; hund.zuletzt = ''; zeichne(true); };
-  hundBild.src = 'bilder/hero/hund-silhouette.webp';
+  var hund = { bild: null, blatt: null, x: 0, y: 0, w: 0, h: 0, leinwand: null, zuletzt: '' };
+  /* erst nur der stehende Hund (klein), die ganze Bildfolge (190 KB) nach dem Laden der Seite */
+  function hundLaden(src, feld) {
+    var b = new Image(); b.decoding = 'async';
+    b.onload = function () { hund[feld] = b; hund.zuletzt = ''; zeichne(true); };
+    b.src = src;
+  }
+  hundLaden('bilder/hero/hund-steht.webp', 'bild');
+  function blattLaden() { if (!ruhig) hundLaden('bilder/hero/hund-silhouette.webp', 'blatt'); }
+  if (document.readyState === 'complete') setTimeout(blattLaden, 300); else window.addEventListener('load', function () { setTimeout(blattLaden, 300); });
   var HB = 315, HH = 360;
   function hundZeichnen(bildNr, farbe, kantenFarbe, kantenA, lx) {
     var c = hund.leinwand; if (!c || !hund.bild) return;
-    var schluessel = bildNr + farbe + kantenA.toFixed(2) + lx.toFixed(1);
+    var schluessel = (hund.blatt ? bildNr : 0) + farbe + kantenA.toFixed(2) + lx.toFixed(1);
     if (schluessel === hund.zuletzt) return;
     hund.zuletzt = schluessel;
+    var quelle = hund.blatt || hund.bild;
+    if (!hund.blatt) bildNr = 0;
     var g = c.getContext('2d'), sx = (bildNr % 6) * HB, sy = Math.floor(bildNr / 6) * HH;
     g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, c.width, c.height);
     var d = Math.max(1, c.width * 0.012);
     if (kantenA > 0.03) {
-      g.globalAlpha = kantenA; g.drawImage(hund.bild, sx, sy, HB, HH, lx * d, -d * 0.8, c.width, c.height);
+      g.globalAlpha = kantenA; g.drawImage(quelle, sx, sy, HB, HH, lx * d, -d * 0.8, c.width, c.height);
       g.globalAlpha = 1; g.globalCompositeOperation = 'source-in'; g.fillStyle = kantenFarbe; g.fillRect(0, 0, c.width, c.height);
       g.globalCompositeOperation = 'source-over';
     }
     /* Körper in eigener Farbe darüber (über Zwischenleinwand, damit der Saum erhalten bleibt) */
     var t = hund.tmp || (hund.tmp = document.createElement('canvas'));
     t.width = c.width; t.height = c.height;
-    var tg = t.getContext('2d'); tg.drawImage(hund.bild, sx, sy, HB, HH, 0, 0, t.width, t.height);
+    var tg = t.getContext('2d'); tg.drawImage(quelle, sx, sy, HB, HH, 0, 0, t.width, t.height);
     tg.globalCompositeOperation = 'source-in'; tg.fillStyle = farbe; tg.fillRect(0, 0, t.width, t.height);
     g.drawImage(t, 0, 0);
   }
@@ -512,8 +520,9 @@
   }
 
   /* ---------- Aufbau ---------- */
-  var ebenen = {}, himmel = {}, sonne, mond, bereit = false;
+  var ebenen = {}, sonne, mond, bereit = false, bauzeit = 0;
   function aufbauen() {
+    var t0 = performance.now();
     messen();
     held.style.setProperty('--szene-h', m.H + 'px');
     ['fern', 'mitte', 'huegel', 'wald', 'wiese', 'gras'].forEach(function (k) { var e = ebenen[k]; e.querySelectorAll('canvas:not(.szene__hund), .szene__wind').forEach(function (c) { c.remove(); }); });
@@ -521,7 +530,7 @@
     berg('mitte', ebenen.mitte, tiefster('huegel') + 2, { saat: 9, schichten: 6, tiefe: 1.1 });
     huegel(ebenen.huegel, tiefster('wald') + m.H * 0.03 + 2);
     wald(ebenen.wald, tiefster('wiese') + 2);
-    wiese(ebenen.wiese, m.H, ebenen.wiese);
+    wiese(ebenen.wiese, m.H * 1.15, ebenen.wiese);
     gras(ebenen.gras);
     sterne();
     /* Sonne startet mittig oben, sinkt senkrecht und verschwindet hinter dem Sattel in der Mitte */
@@ -535,6 +544,7 @@
     held.style.setProperty('--titel-oben', (m.H * (m.hoch ? 0.24 : 0.2)) + 'px');
     held.classList.add('szene--bereit');
     bereit = true;
+    bauzeit = Math.round(performance.now() - t0);
     zeichne(true);
   }
 
@@ -602,13 +612,13 @@
       clearTimeout(t);
       t = setTimeout(function () {
         /* Handy: die Adressleiste ändert nur die Höhe ein wenig – dann nicht neu zeichnen */
-        if (window.innerWidth === breite && Math.abs(buehne.clientHeight - hoehe) < 80) { zeichne(true); return; }
+        if (window.innerWidth === breite && Math.abs(buehne.clientHeight - hoehe) < 60) { zeichne(true); return; }
         breite = window.innerWidth; hoehe = buehne.clientHeight; aufbauen();
       }, 150);
     });
     /* Wind nur, solange das Startbild zu sehen ist */
     if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { held.classList.toggle('szene--weg', !e[0].isIntersecting); }).observe(held);
-    window.__szene = { p: function (x) { window.scrollTo(0, x * m.H); } };
+    window.__szene = { p: function (x) { window.scrollTo(0, x * m.H); }, bauzeit: function () { return bauzeit; } };
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
