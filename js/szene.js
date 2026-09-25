@@ -59,6 +59,16 @@
 
   /* ---------- Farben je Lichtstimmung (von hinten nach vorne dunkler und satter: Luftperspektive) ---------- */
   var F = {
+    weit: {
+      tag: { grund: '#A8BDD5', dunst: '#D3E2EF', hell: '#C4D4E6', schatten: '#94A9C5', kante: '#FFFFFF', kanteA: 0.3, schneeH: '#F6F8FB', schneeS: '#D2DCE9', schicht: '#93A8C2' },
+      gold: { grund: '#AF8F9F', dunst: '#EFB894', hell: '#F1C1A1', schatten: '#977A93', kante: '#FFE0B0', kanteA: 0.8, schneeH: '#FFE9D4', schneeS: '#C5A8BC', schicht: '#9A7E95' },
+      nacht: { grund: '#303C57', dunst: '#394866', hell: '#44557A', schatten: '#28334C', kante: '#AFC0E0', kanteA: 0.45, schneeH: '#C3CFE8', schneeS: '#62739A', schicht: '#28334C' }
+    },
+    wolke: {
+      tag: { koerper: '#FFFFFF', unten: '#DCE6F0', a: 0.34 },
+      gold: { koerper: '#7E6485', unten: '#FFB88A', a: 0.46 },
+      nacht: { koerper: '#18213A', unten: '#5E7098', a: 0.42 }
+    },
     fern: {
       tag: { grund: '#90A9C4', dunst: '#C9DAEA', hell: '#B9CCE0', schatten: '#7A91AE', kante: '#FFFFFF', kanteA: 0.35, schneeH: '#F4F7FB', schneeS: '#C6D3E4', schicht: '#6E86A3' },
       gold: { grund: '#9B7D95', dunst: '#E8AE8C', hell: '#EDB896', schatten: '#7C6583', kante: '#FFD9A2', kanteA: 0.9, schneeH: '#FFE3C6', schneeS: '#B598B3', schicht: '#7C627F' },
@@ -89,11 +99,15 @@
       gold: { halm: ['#2F2A1C', '#3A3322', '#453B26', '#2A2519', '#4F4229'], kante: '#FFC47E', kanteA: 0.95 },
       nacht: { halm: ['#0A1216', '#0E181C', '#121E23', '#0B1418', '#15232A'], kante: '#5E78A8', kanteA: 0.55 }
     },
+    stein: { tag: ['#6E6A60', '#B9B3A2'], gold: ['#4A3F3A', '#E6A77A'], nacht: ['#171D26', '#5F6F93'] },
+    bluete: { tag: ['#F4F1E6', '#E7C75A', '#B9A3D6'], gold: ['#F6D9B8', '#F2B45C', '#C79AB8'], nacht: ['#8A93A8', '#7F8496', '#737B94'] },
     hund: { tag: '#231E1A', gold: '#17120F', nacht: '#07090E', kanteTag: '#9C7B55', kanteGold: '#FFB870', kanteNacht: '#8FA4D0' }
   };
 
   /* ---------- Landschaft (Weltkoordinaten u 0–1, Höhen in Anteilen der Bildhöhe) ---------- */
   var KAEMME = {
+    /* sehr ferne Kette: blass, zeigt sich nur in den Lücken der fernen Kette */
+    weit: kamm({ saat: 5, basis: 0.575, fein: 0.016, rau: 0.64, wellen: 0.008, neben: 1, gipfel: [[0.02, 0.07, 0.1], [0.12, 0.1, 0.08, 1.4], [0.35, 0.095, 0.07, 1.4], [0.44, 0.065, 0.06], [0.63, 0.085, 0.07, 1.3], [0.87, 0.105, 0.08, 1.5]] }),
     /* ferne Kette: zwei Gipfelgruppen links und rechts, mittig ein Sattel, in den die Sonne sinkt */
     fern: kamm({ saat: 11, basis: 0.60, fein: 0.028, rau: 0.68, wellen: 0.016, neben: 3, gipfel: [[0.06, 0.13, 0.16, 1.2], [0.19, 0.2, 0.15, 1.5], [0.29, 0.16, 0.12, 1.4], [0.395, 0.1, 0.1], [0.5, 0.045, 0.12], [0.6, 0.11, 0.1], [0.7, 0.21, 0.14, 1.6], [0.8, 0.17, 0.12, 1.4], [0.93, 0.14, 0.14, 1.3]] }),
     mitte: kamm({ saat: 23, basis: 0.66, fein: 0.022, rau: 0.66, wellen: 0.012, neben: 3, gipfel: [[0.0, 0.09, 0.2], [0.14, 0.12, 0.16, 1.3], [0.33, 0.085, 0.14], [0.47, 0.05, 0.14], [0.58, 0.1, 0.14, 1.3], [0.76, 0.13, 0.15, 1.4], [0.97, 0.1, 0.16]] }),
@@ -102,7 +116,7 @@
     wiese: kamm({ saat: 53, basis: 0.9, fein: 0.004, rau: 0.45, wellen: 0.006, gipfel: [[0.64, 0.05, 0.3, 1.8], [0.1, 0.02, 0.3, 1.2]] })
   };
   /* Tiefe: hinten viel Weg (fast stehend), vorne wenig – so entsteht beim Scrollen die Parallaxe */
-  var TIEFE = { himmel: 0.84, fern: 0.74, mitte: 0.62, titel: 0.52, huegel: 0.48, wald: 0.33, wiese: 0.17, gras: 0 };
+  var TIEFE = { himmel: 0.84, weit: 0.8, fern: 0.74, mitte: 0.62, titel: 0.52, huegel: 0.48, wald: 0.33, wiese: 0.17, gras: 0 };
 
   var m = {};           /* Maße */
   function messen() {
@@ -207,16 +221,68 @@
           g.globalAlpha = 1;
         }
       }
+      /* Felsrippen und Rinnen: laufen schräg vom Grat talwärts, mit Lichtseite daneben – gibt Relief */
+      if (extra.rippen) {
+        var rz = zufall(extra.saat + 77), anzahl = Math.round(m.W / 1440 * 150 * extra.rippen), hm = KAEMME[name].hmax * m.H;
+        var schneelinie = extra.schnee ? KAEMME[name].basis * m.H - hm * extra.schnee : -1;
+        for (var ri2 = 0; ri2 < anzahl; ri2++) {
+          var x0 = rz() * m.W, y0 = ky(name, x0), h0 = KAEMME[name].basis * m.H - y0;
+          if (h0 < hm * 0.22) { rz(); rz(); rz(); continue; }
+          var richt = ky(name, x0 + 6) > ky(name, x0 - 6) ? 1 : -1, len = (0.25 + rz() * 0.55) * Math.min(tief, h0 * 1.3), sp = 0.3 + rz() * 0.45;
+          var lxr = lichtX(licht, x0) >= 0 ? 1 : -1, pts = [[x0, y0 + 1]], xx = x0, yy2 = y0 + 1;
+          for (var st3 = 0; st3 < 9; st3++) { xx += richt * len / 9 * sp * (0.3 + rz() * 1.2) + (rz() - 0.5) * len * 0.03; yy2 += len / 9 * (0.8 + rz() * 0.4); pts.push([xx, yy2]); }
+          var schneeRinne = extra.schnee && y0 < schneelinie + hm * 0.05 && rz() < 0.35;
+          g.lineCap = 'round';
+          [[p.schatten, licht === 'tag' ? 0.2 : 0.3, 1.1, 0], [p.hell, licht === 'tag' ? 0.2 : 0.3 * (0.4 + naehe(licht, x0)), 0.9, lxr * 1.2]].forEach(function (z) {
+            g.strokeStyle = rgba(z[0], z[1]); g.lineWidth = z[2];
+            g.beginPath(); pts.forEach(function (pt, k) { if (k) g.lineTo(pt[0] + z[3], pt[1]); else g.moveTo(pt[0] + z[3], pt[1]); }); g.stroke();
+          });
+          if (schneeRinne) {
+            g.strokeStyle = rgba(p.schneeH, 0.45); g.lineWidth = 1.5;
+            g.beginPath(); pts.slice(0, 4 + Math.floor(rz() * 4)).forEach(function (pt, k) { if (k) g.lineTo(pt[0], pt[1]); else g.moveTo(pt[0], pt[1]); }); g.stroke();
+          }
+        }
+      }
+      /* Felsbänder: kurze, leicht schräge Stufen mit heller Oberkante */
+      if (extra.baender) {
+        var bz = zufall(extra.saat + 91);
+        for (var bi = 0; bi < extra.baender * m.W / 1440; bi++) {
+          var bx = bz() * m.W, by = ky(name, bx) + (0.12 + bz() * 0.5) * tief, bl = 8 + bz() * 26, bw = (bz() - 0.5) * 0.25;
+          g.fillStyle = rgba(p.schatten, 0.32); g.fillRect(bx, by, bl, 1.4);
+          g.strokeStyle = rgba(p.hell, 0.25); g.lineWidth = 1; g.beginPath(); g.moveTo(bx, by - 0.6); g.lineTo(bx + bl, by - 0.6 + bl * bw); g.stroke();
+        }
+      }
+      /* Geröll am Fuß: feine helle und dunkle Punkte im unteren Drittel */
+      if (extra.geroell) {
+        var gz = zufall(extra.saat + 5);
+        for (var gi = 0; gi < extra.geroell * m.W / 1440; gi++) {
+          var gx = gz() * m.W, gy = unten - gz() * tief * 0.35, gyk = ky(name, gx);
+          if (gy < gyk + 4) continue;
+          g.fillStyle = rgba(gz() < 0.5 ? p.hell : p.schatten, 0.3); g.fillRect(gx, gy, 0.8 + gz() * 1.4, 0.8 + gz());
+        }
+      }
       /* Dunst im Tal: zum unteren Rand hin in die Himmelsfarbe am Horizont */
       var dh = Math.min(tief, m.H * 0.09);
       var dg = g.createLinearGradient(0, unten - dh, 0, unten);
       dg.addColorStop(0, rgba(p.dunst, 0)); dg.addColorStop(1, rgba(p.dunst, licht === 'nacht' ? 0.55 : 0.75));
       g.fillStyle = dg; g.fillRect(0, unten - dh, m.W, dh);
+      nebel(g, unten, p.dunst, licht, extra.saat);
       kornAuf(g, oben, unten, licht === 'nacht' ? 0.05 : 0.07);
       g.restore();
       /* Lichtkante auf dem Grat (im Gegenlicht kräftig, zum Licht hin stärker) */
       kante(g, name, p, licht, 1.2);
     });
+  }
+  /* Nebelschwaden: lange, flache, weiche Bänder über dem Talboden */
+  function nebel(g, unten, farbe, licht, saat) {
+    var nz = zufall(saat + 300), n = Math.round(10 * m.W / 1440) + 4;
+    for (var i = 0; i < n; i++) {
+      var x = nz() * m.W, y = unten - m.H * (0.005 + nz() * 0.035), rx = m.W * (0.08 + nz() * 0.16);
+      g.save(); g.translate(x, y); g.scale(1, 0.12 + nz() * 0.08);
+      var gr = g.createRadialGradient(0, 0, 0, 0, 0, rx);
+      gr.addColorStop(0, rgba(farbe, (licht === 'nacht' ? 0.22 : 0.34) * (0.6 + nz() * 0.4))); gr.addColorStop(1, rgba(farbe, 0));
+      g.fillStyle = gr; g.fillRect(-rx, -rx, rx * 2, rx * 2); g.restore();
+    }
   }
   function kante(g, name, p, licht, breite) {
     g.lineWidth = breite; g.lineCap = 'round';
@@ -264,8 +330,29 @@
     if (a > 0.04) {
       g.fillStyle = rgba(p.kante, a); g.fill();
       g.translate(dx, dy); g.beginPath(); art(g, x, y, h, zufall(saat)); g.fillStyle = farbe; g.fill();
+      g.translate(-dx, -dy);
     }
+    /* Volumen: die vom Licht abgewandte Hälfte etwas dunkler, weich zur Mitte hin */
+    var sg = g.createLinearGradient(x - h * 0.2 * (lx >= 0 ? 1 : -1), 0, x + h * 0.05 * (lx >= 0 ? 1 : -1), 0);
+    sg.addColorStop(0, 'rgba(0,0,0,' + (licht === 'nacht' ? 0.18 : 0.26) + ')'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = sg; g.fillRect(x - h * 0.4, y - h * 1.1, h * 0.8, h * 1.2);
     g.restore();
+  }
+  /* kahler oder abgestorbener Baum: Stamm mit wenigen dünnen Ästen */
+  function kahl(g, x, y, h, r) {
+    var neig = (r() - 0.5) * 0.1, b = h * 0.018;
+    g.moveTo(x - b, y); g.lineTo(x + neig * h - b * 0.3, y - h); g.lineTo(x + neig * h + b * 0.3, y - h); g.lineTo(x + b, y); g.closePath();
+    for (var i = 0; i < 7; i++) {
+      var t = 0.3 + r() * 0.62, ax = x + neig * h * t, ay = y - h * t, s = r() < 0.5 ? -1 : 1, l = h * (0.08 + r() * 0.14) * (1.1 - t);
+      g.moveTo(ax, ay); g.lineTo(ax + s * l, ay - l * (0.4 + r() * 0.5)); g.lineTo(ax + s * l, ay - l * (0.4 + r() * 0.5) - b * 0.5); g.lineTo(ax, ay - b * 1.2); g.closePath();
+    }
+  }
+  /* Busch: Haufen kleiner Blattkreise am Waldrand */
+  function busch(g, x, y, h, r) {
+    for (var i = 0, n = 7 + Math.floor(r() * 6); i < n; i++) {
+      var cx = x + (r() - 0.5) * h * 1.6, cy = y - r() * h * 0.6, rr = h * (0.18 + r() * 0.25);
+      g.moveTo(cx + rr, cy); g.arc(cx, cy, rr, 0, Math.PI * 2);
+    }
   }
 
   function huegel(ebene, unten) {
@@ -301,18 +388,24 @@
       var u = uVon(x), groesse = m.H * (0.07 + Math.pow(r(), 1.6) * 0.12) * (m.hoch ? 0.9 : 1);
       /* mittig und um den Hund lichter, damit die Sonne zwischen den Wipfeln Raum hat */
       var luecke = Math.exp(-Math.pow((u - 0.5) / 0.05, 2)) * 0.55;
-      if (r() > luecke) baeume.push({ x: x + (r() - 0.5) * 6, h: groesse, laub: r() < 0.07, saat: Math.floor(r() * 1e9), farbe: Math.floor(r() * 4), tief: r() });
+      if (r() > luecke) { var z = r(); baeume.push({ x: x + (r() - 0.5) * 6, h: groesse, art: z < 0.07 ? 'laub' : (z < 0.1 ? 'kahl' : 'tanne'), saat: Math.floor(r() * 1e9), farbe: Math.floor(r() * 4), tief: r() }); }
       x += groesse * (0.12 + r() * 0.26);
     }
+    /* Büsche am Waldrand, vor den Bäumen */
+    var bz = zufall(515), buesche = [];
+    for (var bx = -10; bx < m.W + 10; bx += m.H * (0.02 + bz() * 0.05)) if (bz() < 0.55) buesche.push({ x: bx, h: m.H * (0.012 + bz() * 0.018), saat: Math.floor(bz() * 1e9), farbe: Math.floor(bz() * 2) });
     baeume.sort(function (a, b) { return a.tief - b.tief; });
     var oben = Math.max(0, hoechster('wald') - m.H * 0.2);
     LICHTER.forEach(function (licht) {
       var p = F.wald[licht], g = leinwand(ebene, oben, unten, licht);
       baeume.forEach(function (b) {
-        var y = ky('wald', b.x) + m.H * 0.012 + b.tief * m.H * 0.03, farbe = b.laub ? p.laub[b.farbe % 2] : p.baeume[b.farbe];
+        var y = ky('wald', b.x) + m.H * 0.012 + b.tief * m.H * 0.03, farbe = b.art === 'laub' ? p.laub[b.farbe % 2] : p.baeume[b.farbe];
         /* hintere Reihe etwas im Dunst: Luftperspektive auch innerhalb des Waldes */
-        farbe = mixHex(farbe.charAt(0) === '#' ? farbe : '#000000', F.huegel[licht].dunst, (1 - b.tief) * (licht === 'nacht' ? 0.18 : 0.32));
-        baumMitKante(g, b.laub ? laubbaum : tanne, b.x, y, b.laub ? b.h * 0.7 : b.h, b.saat, farbe, p, licht);
+        farbe = mixHex(farbe, F.huegel[licht].dunst, (1 - b.tief) * (licht === 'nacht' ? 0.18 : 0.32));
+        baumMitKante(g, b.art === 'laub' ? laubbaum : (b.art === 'kahl' ? kahl : tanne), b.x, y, b.art === 'laub' ? b.h * 0.7 : (b.art === 'kahl' ? b.h * 0.8 : b.h), b.saat, farbe, p, licht);
+      });
+      buesche.forEach(function (b) {
+        baumMitKante(g, busch, b.x, ky('wald', b.x) + m.H * 0.036, b.h, b.saat, mixHex(p.laub[b.farbe], p.boden, 0.35), p, licht);
       });
       /* Boden unter den Bäumen */
       g.beginPath(); g.moveTo(-2, unten + 2);
@@ -338,6 +431,10 @@
     var oben = Math.max(0, hoechster('wiese') - m.H * 0.02);
     var r0 = zufall(71), halme = [];
     for (var i = 0, n = Math.round(m.W * 0.9); i < n; i++) halme.push({ x: r0() * m.W, t: r0(), h: m.H * (0.008 + r0() * 0.02), neig: (r0() - 0.5) * 0.9, f: Math.floor(r0() * 4) });
+    var steine = [], bluemchen = [], hx0 = xVon(m.hundU);
+    for (i = 0; i < Math.round(9 * m.W / 1440) + 3; i++) { var sx = r0() * m.W; if (Math.abs(sx - hx0) < m.H * 0.09) continue; steine.push({ x: sx, t: r0(), w: m.H * (0.012 + r0() * 0.03), hv: 0.45 + r0() * 0.3, saat: Math.floor(r0() * 1e9) }); }
+    steine.sort(function (a, b) { return a.t - b.t; });
+    for (i = 0; i < Math.round(m.W * 0.12); i++) bluemchen.push({ x: r0() * m.W, t: r0(), h: m.H * (0.006 + r0() * 0.012), f: Math.floor(r0() * 3) });
     LICHTER.forEach(function (licht) {
       var p = F.wiese[licht], g = leinwand(ebene, oben, unten, licht);
       g.beginPath(); g.moveTo(-2, unten + 2);
@@ -348,6 +445,20 @@
       halme.forEach(function (h) {
         var y = ky('wiese', h.x) + h.t * (unten - ky('wiese', h.x)) * 0.9 + 2;
         halm(g, h.x, y, h.h * (1 - h.t * 0.4), h.neig, 1.1, p.halm[h.f], p.kante, p.kanteA * naehe(licht, h.x) * (1 - h.t) * (licht === 'tag' ? 0.5 : 1));
+      });
+      /* Steine: unregelmäßig, oben heller (Licht), unten Kontaktschatten */
+      steine.forEach(function (st) {
+        var y = ky('wiese', st.x) + st.t * m.H * 0.06 + 3, w = st.w, h = w * st.hv, sr = zufall(st.saat);
+        g.fillStyle = 'rgba(0,0,0,0.25)'; g.beginPath(); g.ellipse(st.x, y + 1, w * 0.62, h * 0.18, 0, 0, Math.PI * 2); g.fill();
+        g.beginPath(); g.moveTo(st.x - w * 0.5, y);
+        for (var k = 0; k <= 6; k++) { var a = Math.PI + k / 6 * Math.PI; g.lineTo(st.x + Math.cos(a) * w * (0.42 + sr() * 0.14), y + Math.sin(a) * h * (0.7 + sr() * 0.35)); }
+        g.closePath(); g.fillStyle = F.stein[licht][0]; g.fill();
+        g.save(); g.clip(); g.fillStyle = rgba(F.stein[licht][1], licht === 'tag' ? 0.55 : 0.4 + naehe(licht, st.x) * 0.3); g.fillRect(st.x - w, y - h * 1.2, w * 2, h * 0.55); g.restore();
+      });
+      /* Blüten und Samenstände, vereinzelt, nachts fast unsichtbar */
+      bluemchen.forEach(function (b) {
+        var y = ky('wiese', b.x) + b.t * m.H * 0.07 + 2;
+        g.fillStyle = rgba(F.bluete[licht][b.f], licht === 'nacht' ? 0.35 : 0.85); g.beginPath(); g.arc(b.x, y - b.h, 0.9 + b.t * 1.1, 0, Math.PI * 2); g.fill();
       });
       kornAuf(g, oben, unten, 0.06);
     });
@@ -371,7 +482,7 @@
       var r = zufall(900 + gr), halme = [], n = Math.round(m.W * (gr ? 0.42 : 0.6));
       for (var i = 0; i < n; i++) {
         var x = r() * (m.W + 40) - 20, t = r();
-        halme.push({ x: x, y: m.H - t * m.H * (gr ? 0.03 : 0.07) + 4, h: m.H * (gr ? 0.06 + r() * 0.1 : 0.035 + r() * 0.07) * (1 - t * 0.3), neig: (r() - 0.45) * (gr ? 0.5 : 0.7), b: gr ? 1.6 + r() * 2.2 : 1 + r() * 1.4, f: Math.floor(r() * 5) });
+        halme.push({ x: x, y: m.H - t * m.H * (gr ? 0.03 : 0.07) + 4, h: m.H * (gr ? 0.06 + r() * 0.1 : 0.035 + r() * 0.07) * (1 - t * 0.3), neig: (r() - 0.45) * (gr ? 0.5 : 0.7), b: gr ? 1.6 + r() * 2.2 : 1 + r() * 1.4, f: Math.floor(r() * 5), aehre: r() < (gr ? 0.06 : 0.03) });
       }
       halme.sort(function (a, b) { return a.y - b.y; });
       LICHTER.forEach(function (licht) {
@@ -380,7 +491,17 @@
         c.width = Math.ceil(m.W * q); c.height = Math.ceil((unten - o2) * q);
         c.style.top = (o2 - oben) + 'px'; c.style.height = (unten - o2) + 'px'; c.className = 'szene__bild'; c.setAttribute('data-licht', licht);
         var g = c.getContext('2d'); g.setTransform(q, 0, 0, q, 0, -o2 * q);
-        halme.forEach(function (h) { halm(g, h.x, h.y, h.h, h.neig, h.b, p.halm[h.f], p.kante, p.kanteA * (licht === 'tag' ? 0.45 : naehe(licht, h.x) * 0.8 + 0.2)); });
+        halme.forEach(function (h) {
+          halm(g, h.x, h.y, h.h, h.neig, h.b, p.halm[h.f], p.kante, p.kanteA * (licht === 'tag' ? 0.45 : naehe(licht, h.x) * 0.8 + 0.2));
+          /* einzelne Halme tragen einen Samenstand (schmale Ähre an der Spitze) */
+          if (h.aehre) {
+            var ax = h.x + h.neig * h.h, ay = h.y - h.h;
+            g.save(); g.translate(ax, ay); g.rotate(Math.atan2(h.neig, 1) * 0.8);
+            g.fillStyle = mixHex(p.halm[h.f], '#000000', 0.15); g.beginPath(); g.ellipse(0, -h.b * 1.6, h.b * 0.55, h.b * 2.2, 0, 0, Math.PI * 2); g.fill();
+            g.fillStyle = rgba(p.kante, p.kanteA * (licht === 'tag' ? 0.35 : naehe(licht, h.x) * 0.7)); g.beginPath(); g.ellipse(h.b * 0.2, -h.b * 1.7, h.b * 0.25, h.b * 1.8, 0, 0, Math.PI * 2); g.fill();
+            g.restore();
+          }
+        });
         wind.appendChild(c);
       });
     }
@@ -419,6 +540,38 @@
     var tg = t.getContext('2d'); tg.drawImage(quelle, sx, sy, HB, HH, 0, 0, t.width, t.height);
     tg.globalCompositeOperation = 'source-in'; tg.fillStyle = farbe; tg.fillRect(0, 0, t.width, t.height);
     g.drawImage(t, 0, 0);
+  }
+
+  /* ---------- Wolken: zurückhaltende Schleier, weg von Sonnenbahn und Mond ---------- */
+  function wolken(ebene) {
+    var hoehe = m.H * 0.58, q = 0.5, wz = zufall(808), feld = [];
+    /* Bänder: oben links/rechts, dazu ein langer Streifen knapp über dem Horizont */
+    var n = Math.round(7 * m.W / 1440) + 4;
+    for (var i = 0; i < n; i++) {
+      var u = wz(), y = hoehe * (0.1 + wz() * 0.28);
+      var x = xVon(u < 0.5 ? u * 0.62 : 0.62 + (u - 0.5) * 0.76);
+      if (Math.abs(x - m.W * 0.24) < m.W * 0.08 && y < hoehe * 0.3) continue;
+      feld.push({ x: x, y: y, w: m.W * (0.06 + wz() * 0.12), h: m.H * (0.012 + wz() * 0.02) });
+    }
+    for (i = 0; i < 5; i++) feld.push({ x: m.W * (0.1 + wz() * 0.8), y: hoehe * (0.8 + wz() * 0.12), w: m.W * (0.12 + wz() * 0.2), h: m.H * (0.008 + wz() * 0.01) });
+    LICHTER.forEach(function (licht) {
+      var c = document.createElement('canvas');
+      c.width = Math.ceil(m.W * q); c.height = Math.ceil(hoehe * q);
+      c.className = 'szene__bild szene__wolken'; c.setAttribute('data-licht', licht); c.style.top = '0px'; c.style.height = hoehe + 'px';
+      var g = c.getContext('2d'), p = F.wolke[licht]; g.setTransform(q, 0, 0, q, 0, 0);
+      feld.forEach(function (w, k) {
+        var r = zufall(900 + k);
+        for (var j = 0; j < 14; j++) {
+          var bx = w.x + (r() - 0.5) * w.w, by = w.y + (r() - 0.5) * w.h, rx = w.w * (0.14 + r() * 0.24), ry = w.h * (0.35 + r() * 0.45);
+          [[p.koerper, 0, p.a], [p.unten, ry * 0.35, p.a * 0.7]].forEach(function (z) {
+            g.save(); g.translate(bx, by + z[1]); g.scale(1, ry / rx);
+            var gr = g.createRadialGradient(0, 0, 0, 0, 0, rx); gr.addColorStop(0, rgba(z[0], z[2] * 0.5)); gr.addColorStop(1, rgba(z[0], 0));
+            g.fillStyle = gr; g.fillRect(-rx, -rx, rx * 2, rx * 2); g.restore();
+          });
+        }
+      });
+      ebene.insertBefore(c, ebene.querySelector('.sonne'));
+    });
   }
 
   /* ---------- Sterne ----------
@@ -525,9 +678,12 @@
     var t0 = performance.now();
     messen();
     held.style.setProperty('--szene-h', m.H + 'px');
-    ['fern', 'mitte', 'huegel', 'wald', 'wiese', 'gras'].forEach(function (k) { var e = ebenen[k]; e.querySelectorAll('canvas:not(.szene__hund), .szene__wind').forEach(function (c) { c.remove(); }); });
-    berg('fern', ebenen.fern, tiefster('mitte') + 2, { saat: 5, schnee: 0.64, schichten: 3, tiefe: 1 });
-    berg('mitte', ebenen.mitte, tiefster('huegel') + 2, { saat: 9, schichten: 6, tiefe: 1.1 });
+    ['weit', 'fern', 'mitte', 'huegel', 'wald', 'wiese', 'gras'].forEach(function (k) { var e = ebenen[k]; e.querySelectorAll('canvas:not(.szene__hund), .szene__wind').forEach(function (c) { c.remove(); }); });
+    ebenen.himmel.querySelectorAll('.szene__wolken').forEach(function (c) { c.remove(); });
+    wolken(ebenen.himmel);
+    berg('weit', ebenen.weit, tiefster('fern') + 2, { saat: 3, schnee: 0.62, tiefe: 0.8, rippen: 0.5 });
+    berg('fern', ebenen.fern, tiefster('mitte') + 2, { saat: 5, schnee: 0.64, schichten: 3, tiefe: 1, rippen: 1, baender: 40, geroell: 600 });
+    berg('mitte', ebenen.mitte, tiefster('huegel') + 2, { saat: 9, schichten: 6, tiefe: 1.1, rippen: 1.2, baender: 70, geroell: 900 });
     huegel(ebenen.huegel, tiefster('wald') + m.H * 0.03 + 2);
     wald(ebenen.wald, tiefster('wiese') + 2);
     wiese(ebenen.wiese, m.H * 1.15, ebenen.wiese);
@@ -602,7 +758,7 @@
   function anfordern() { if (!geplant) { geplant = true; requestAnimationFrame(function () { zeichne(false); }); } }
 
   function start() {
-    ['himmel', 'fern', 'mitte', 'titel', 'huegel', 'wald', 'wiese', 'gras'].forEach(function (k) { ebenen[k] = held.querySelector('[data-ebene="' + k + '"]'); });
+    ['himmel', 'weit', 'fern', 'mitte', 'titel', 'huegel', 'wald', 'wiese', 'gras'].forEach(function (k) { ebenen[k] = held.querySelector('[data-ebene="' + k + '"]'); });
     sonne = held.querySelector('.sonne'); mond = held.querySelector('.mond');
     aufbauen();
     window.addEventListener('scroll', anfordern, { passive: true });

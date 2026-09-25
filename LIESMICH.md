@@ -6,6 +6,13 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Teil 2 · Schritt 1: Titelbild detailreicher (25.09.2026, 16:10, Claude Code)
+- Neue Ebene `weit` (sehr ferne, blasse Kette, Tiefe 0,8), zeigt sich in den Lücken der fernen Kette.
+- `berg()` hat neue Optionen: `rippen` (Felsrippen/Rinnen schräg vom Grat, Schatten- + Lichtlinie, teils Schnee), `baender` (Felsbänder), `geroell` (Punkte am Fuß); `nebel()` legt flache Nebelschwaden über den Talboden jeder Kette.
+- Wald: Bäume mit Volumen (abgewandte Seite dunkler), 3 % kahle Bäume (`kahl`), Büsche am Waldrand (`busch`). Wiese: Steine mit Licht und Kontaktschatten, vereinzelt Blüten; Gras vorne mit einzelnen Samenständen.
+- Wolkenschleier (`wolken()`, 3 Lichtstimmungen, halbe Auflösung), halten Abstand zu Sonnenbahn und Mond.
+- Messung: Aufbau 65 ms, ca. 21 MB (1024 px).
+
 ## Feinschliff Handy + Performance (25.09.2026, 15:40, Claude Code) – Schritt 7 von 7
 - Messung (Vorschau-Browser): Szene zeichnen 70 ms (1024 px), 35 ms (Handy 375 px); Grafikspeicher der Leinwände ca. 20 MB; keine Konsolenfehler, kein seitliches Überlaufen. `__szene.bauzeit()` zeigt den Wert.
 - Hund: zuerst nur `bilder/hero/hund-steht.webp` (6 KB), die Bildfolge (190 KB) nach dem Laden der Seite; bei „Bewegung reduzieren" gar nicht.
