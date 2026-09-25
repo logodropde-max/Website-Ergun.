@@ -520,22 +520,26 @@
      je Figur ein Tag- und ein Abendbild und für die Nacht die Bildfolge – der Hund hebt den Kopf und jault, Emre winkt
      („Tschüss“). Beides startet gemeinsam, sobald es Nacht ist und man weiterscrollt, und läuft dann in eigener Zeit ab
      (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
-  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4198, breite: 0.7704 }, emre: { b: 268, h: 560, anzahl: 30, spalten: 6, fuss: 0.9914, oben: 0.0416, mitte: 0.5821, breite: 0.7687 } };
-  var fig = { phase: 0, ziel: 0, laeuft: false, t: 0 }, FIG_DAUER = 3.2, lichtGold = 0, lichtNacht = 0;
+  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4198, breite: 0.7704 }, emre: { b: 268, h: 560, anzahl: 30, spalten: 6, fuss: 0.9914, oben: 0.0574, mitte: 0.5821, breite: 0.7687 } };
+  var fig = { phase: 0, ziel: 0, laeuft: false, t: 0 }, FIG_DAUER = 3.6, lichtGold = 0, lichtNacht = 0;
   function figurLaden(name, licht) {
     var f = FIGUREN[name], b = new Image(); b.decoding = 'async';
     b.onload = function () { f.bilder[licht] = b; f.zuletzt = ''; figurenZeichnen(); };
-    b.src = 'bilder/hero/figuren/' + name + '-' + licht + '.webp?v=1';
+    b.src = 'bilder/hero/figuren/' + name + '-' + licht + '.webp?v=2';
   }
   Object.keys(FIGUREN).forEach(function (k) { FIGUREN[k].bilder = {}; FIGUREN[k].zuletzt = ''; figurLaden(k, 'tag'); figurLaden(k, 'gold'); });
   /* die Nacht-Bildfolgen (größer) erst nach dem Laden der Seite */
   function nachtLaden() { Object.keys(FIGUREN).forEach(function (k) { figurLaden(k, 'nacht'); }); }
   if (document.readyState === 'complete') setTimeout(nachtLaden, 200); else window.addEventListener('load', function () { setTimeout(nachtLaden, 200); });
+  /* nr darf gebrochen sein: zwischen zwei Einzelbildern wird weich überblendet (additiv, dadurch ohne Geisterbild) */
   function figurZeichnen(f, nr) {
     var c = f.leinwand; if (!c || !f.bilder.tag) return;
     if (!f.bilder.nacht) nr = 0;
-    var gold = f.bilder.gold ? lichtGold : 0, nacht = f.bilder.nacht ? (nr > 0 ? 1 : lichtNacht) : 0;
-    var schluessel = nr + '|' + gold.toFixed(2) + '|' + nacht.toFixed(2);
+    var n0 = Math.floor(nr), t = Math.round((nr - n0) * 12) / 12, n1 = Math.min(f.anzahl - 1, n0 + 1);
+    var gold = f.bilder.gold ? lichtGold : 0;
+    /* läuft die Bewegung, gilt für die Figuren das Nachtlicht (die Bildfolge gibt es nur nachts) – weich angehoben */
+    var nacht = f.bilder.nacht ? Math.max(lichtNacht, sanft(0, 0.12, fig.phase)) : 0;
+    var schluessel = n0 + '|' + t + '|' + gold.toFixed(2) + '|' + nacht.toFixed(2);
     if (schluessel === f.zuletzt) return;
     f.zuletzt = schluessel;
     var g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, c.width, c.height); g.globalAlpha = 1;
@@ -544,13 +548,19 @@
       if (gold > 0.002) { g.globalAlpha = gold; g.drawImage(f.bilder.gold, 0, 0, c.width, c.height); }
     }
     if (nacht > 0.002) {
-      g.globalAlpha = nacht;
-      g.drawImage(f.bilder.nacht, (nr % f.spalten) * f.b, Math.floor(nr / f.spalten) * f.h, f.b, f.h, 0, 0, c.width, c.height);
+      var z = f.zwischen || (f.zwischen = document.createElement('canvas'));
+      if (z.width !== c.width || z.height !== c.height) { z.width = c.width; z.height = c.height; }
+      var zg = z.getContext('2d'); zg.globalCompositeOperation = 'source-over'; zg.globalAlpha = 1; zg.clearRect(0, 0, z.width, z.height);
+      zg.globalAlpha = 1 - t; zg.drawImage(f.bilder.nacht, (n0 % f.spalten) * f.b, Math.floor(n0 / f.spalten) * f.h, f.b, f.h, 0, 0, z.width, z.height);
+      if (t > 0) { zg.globalCompositeOperation = 'lighter'; zg.globalAlpha = t; zg.drawImage(f.bilder.nacht, (n1 % f.spalten) * f.b, Math.floor(n1 / f.spalten) * f.h, f.b, f.h, 0, 0, z.width, z.height); }
+      g.globalAlpha = nacht; g.drawImage(z, 0, 0);
     }
     g.globalAlpha = 1;
   }
   function figurenZeichnen() {
-    Object.keys(FIGUREN).forEach(function (k) { var f = FIGUREN[k]; figurZeichnen(f, Math.round(fig.phase * (f.anzahl - 1))); });
+    /* sanft anfahren und auslaufen, wie eine echte Bewegung */
+    var e = fig.phase * fig.phase * (3 - 2 * fig.phase);
+    Object.keys(FIGUREN).forEach(function (k) { var f = FIGUREN[k]; figurZeichnen(f, e * (f.anzahl - 1)); });
   }
   function figStart(z) {
     if (fig.ziel === z) return;
@@ -575,32 +585,44 @@
     var hx = xVon(m.hundU), abstand = stand * 0.1;
     var ex = hx + hw * H.breite * 0.5 + abstand + ew * E.breite * 0.5;
     if (ex + ew * E.breite * 0.5 > m.W - 8) ex = hx - hw * H.breite * 0.5 - abstand - ew * E.breite * 0.5;
-    var sinken = stand * 0.03;   /* Füße stehen ein wenig im Gras */
+    /* nicht auf der Kammlinie (dort wirkt man schwebend), sondern ein Stück davor auf der Wiesenfläche –
+       beide auf derselben Höhe = gleiche Entfernung; die Füße stehen ein wenig im Gras */
+    var boden = Math.max(ky('wiese', hx - hw * 0.3), ky('wiese', hx + hw * 0.3), ky('wiese', ex - ew * 0.2), ky('wiese', ex + ew * 0.2)) + m.H * 0.022;
+    var sinken = stand * 0.025;
     [[H, hx, hw, hh], [E, ex, ew, eh]].forEach(function (z) {
-      var f = z[0], x = z[1] - z[2] * f.mitte, y = ky('wiese', z[1]) + sinken - z[3] * f.fuss;
+      var f = z[0], x = z[1] - z[2] * f.mitte, y = boden + sinken - z[3] * f.fuss;
       var c = f.leinwand || document.createElement('canvas');
       c.className = 'szene__hund'; c.width = Math.ceil(z[2] * m.q); c.height = Math.ceil(z[3] * m.q);
       c.style.left = x + 'px'; c.style.top = y + 'px'; c.style.width = z[2] + 'px'; c.style.height = z[3] + 'px';
       if (f === E) huelle.insertBefore(c, huelle.firstChild); else huelle.appendChild(c);
       f.leinwand = c; f.zuletzt = '';
-      f.fussX = z[1]; f.fussB = z[2] * f.breite; f.fussY = ky('wiese', z[1]) + sinken;
+      f.fussX = z[1]; f.fussB = z[2] * f.breite; f.fussY = boden + sinken * 0.4; f.stand = z[3] * (f.fuss - f.oben);
     });
     return huelle;
   }
   /* vor den Füßen: weicher Kontaktschatten und ein paar Halme in den Farben der Wiese */
   function fussgras(huelle, licht) {
     var p = F.wiese[licht], r = zufall(4242), oben = m.H, unten = 0;
-    Object.keys(FIGUREN).forEach(function (k) { var f = FIGUREN[k]; oben = Math.min(oben, f.fussY - m.H * 0.05); unten = Math.max(unten, f.fussY + m.H * 0.02); });
+    Object.keys(FIGUREN).forEach(function (k) { var f = FIGUREN[k]; oben = Math.min(oben, f.fussY - m.H * 0.05); unten = Math.max(unten, f.fussY + m.H * 0.07); });
     var c = document.createElement('canvas'), q = m.q;
     c.width = Math.ceil(m.W * q); c.height = Math.ceil((unten - oben) * q);
     c.style.top = oben + 'px'; c.style.height = (unten - oben) + 'px'; c.className = 'szene__bild'; c.setAttribute('data-licht', licht);
     var g = c.getContext('2d'); g.setTransform(q, 0, 0, q, 0, -oben * q);
     Object.keys(FIGUREN).forEach(function (k) {
       var f = FIGUREN[k], w = f.fussB;
-      var sg = g.createRadialGradient(f.fussX, f.fussY, 0, f.fussX, f.fussY, w * 0.62);
-      sg.addColorStop(0, 'rgba(0,0,0,' + (licht === 'nacht' ? 0.45 : 0.32) + ')'); sg.addColorStop(1, 'rgba(0,0,0,0)');
-      g.save(); g.translate(f.fussX, f.fussY); g.scale(1, 0.22); g.translate(-f.fussX, -f.fussY);
+      /* Kontaktschatten direkt unter den Füßen … */
+      var sg = g.createRadialGradient(f.fussX, f.fussY, 0, f.fussX, f.fussY, w * 0.6);
+      sg.addColorStop(0, 'rgba(0,0,0,' + (licht === 'nacht' ? 0.5 : 0.4) + ')'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      g.save(); g.translate(f.fussX, f.fussY); g.scale(1, 0.2); g.translate(-f.fussX, -f.fussY);
       g.fillStyle = sg; g.fillRect(f.fussX - w, f.fussY - w, w * 2, w * 2); g.restore();
+      /* … und der Schlagschatten in Lichtrichtung: Abendsonne hinten → Schatten fällt nach vorn (zum Betrachter),
+         Mond links oben → nach rechts, Mittagssonne → kurz */
+      var sl = f.stand * (licht === 'gold' ? 0.5 : (licht === 'nacht' ? 0.55 : 0.2)), sw = w * 0.42;
+      var dx = licht === 'nacht' ? sl : sl * 0.1, dy = licht === 'nacht' ? sl * 0.12 : (licht === 'gold' ? sl * 0.3 : sl * 0.15);
+      g.save(); g.translate(f.fussX, f.fussY); g.rotate(Math.atan2(dy, dx)); 
+      var lg = g.createLinearGradient(0, 0, Math.hypot(dx, dy), 0);
+      lg.addColorStop(0, 'rgba(0,0,0,' + (licht === 'nacht' ? 0.3 : 0.26) + ')'); lg.addColorStop(1, 'rgba(0,0,0,0)');
+      g.fillStyle = lg; g.beginPath(); g.ellipse(Math.hypot(dx, dy) * 0.45, 0, Math.hypot(dx, dy) * 0.55, sw * 0.5, 0, 0, Math.PI * 2); g.fill(); g.restore();
       for (var i = 0; i < 26; i++) {
         var x = f.fussX + (r() - 0.5) * w * 1.25, h = m.H * (0.008 + r() * 0.016);
         halm(g, x, f.fussY + r() * m.H * 0.006, h, (r() - 0.5) * 0.8, 1.1, p.halm[Math.floor(r() * 4)], p.kante, p.kanteA * naehe(licht, x) * (licht === 'tag' ? 0.5 : 1));
@@ -813,7 +835,7 @@
     var pz = p / ZEIT;
     if (!isNaN(festP)) { fig.phase = sanft(0.4, 0.58, pz); figurenZeichnen(); }
     else if (ruhig) { fig.phase = pz > 0.42 ? 1 : 0; }
-    else if (pz > 0.38) figStart(1); else if (pz < 0.3) figStart(0);
+    else if (pz > 0.35) figStart(1); else if (pz < 0.28) figStart(0);
     /* Sonne, Mond, Licht und Hund folgen einem weich nachgeführten Wert – keine Sprünge bei Mausrad-Schritten */
     ziel = p;
     if (immer || ruhig || !isNaN(festP)) { weich = p; licht(weich); }

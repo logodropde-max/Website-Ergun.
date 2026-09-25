@@ -11,6 +11,12 @@
 
 
 
+
+## Figuren: echter Kopf, Licht, Stand, Überblendung (26.09.2026, 03:30, Claude Code)
+- `figuren.py winken`: Kopf aus `bilder/hero/4k/emre-ausschnitt.png` (Studiokopf), per Körperumriss auf Bild 0 gesetzt (Maßstab mit bester Deckung), dann Kopfbewegung des Videos Bild 0 → i per SIFT (Ähnlichkeit). In der Kopfzone gilt nur der echte Umriss; Hand = Videobild außerhalb des Video-Kopfumrisses links vom Kopf. Masken-Zwischenspeicher `video/winken-masken-*.npz`.
+- `figuren_stil.py`: neue Lichtwerte (Tag 0,86 · Abend 0,5 Gegenlicht · Nacht 0,24). Bilder `?v=2`.
+- `js/szene.js` (`?v=19`): gemeinsamer Boden = tiefster Kammpunkt unter beiden + 2,2 % Bildhöhe; Schlagschatten je Licht; `figurZeichnen()` blendet gebrochene Bildnummern additiv über (Zwischenleinwand), Phase mit smoothstep, `FIG_DAUER` 3,6 s, Start p/ZEIT > 0,35 (zurück < 0,28).
+
 ## Emre + Hund als echte Figuren, Winken (26.09.2026, 02:30, Claude Code)
 - `bilder/hero/4k/szene2/figuren.py` (+ `figuren_stil.py`): erzeugt `bilder/hero/figuren/{hund,emre}-{tag,gold}.webp` (Bild 0) und `-nacht.webp` (Raster 6 Spalten: Hund 36 Bilder 318×360, Emre 30 Bilder 268×560) + `.json` (Zelle, Fußlinie `fuss`, Kopflinie `oben`, `mitte`, `breite`). Hund: Farbbilder aus `video/v1-9493b609.mp4` + Masken aus `hund-film/`. Emre: `python figuren.py winken video/winken-v2-ca4f3250.mp4 0.4 3.9` – isnet-Freistellung, echter Kopf aus b305a018 per SIFT (nur Ähnlichkeitstransformation), Hand bleibt davor, weiße Bewegungsränder raus.
 - `js/szene.js` (`?v=18`): `FIGUREN` (Werte aus den json), `figurenStellen()` (nebeneinander auf `ky('wiese')`, Emre = 1,95 × Hundehöhe), `fussgras()` (Schatten + Halme je Licht), `figurZeichnen()` (Tag/Abend/Nacht überblenden, Nachtbild = Bildnummer), `figStart()/figLauf()` (Phase 0–1 in 3,2 s, Start bei p/ZEIT > 0,38, zurück < 0,3; mit `?p=` gescrubbt). Hülle `.szene__figuren` (z-index 1) über den Wiesen-Fassungen. Alte Silhouetten (`hund-steht/-silhouette.webp`, `emre-silhouette.webp`) nicht mehr benutzt.
