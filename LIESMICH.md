@@ -6,6 +6,14 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+
+## Teil 5: Daten statt Nebel + endo-Schrift (25.09.2026, 23:30, Claude Code)
+- Neu `ki/studio.css` (auf Startseite und /ki/ eingebunden): Schrift **Geist Light** (`schriften/Geist-Light.woff2`) und **Geist Mono** (`schriften/GeistMono-Regular.woff2`, beide OFL aus dem `geist`-Paket), Variablen `--endo-schrift`, `--endo-mono`, `--endo-chrom`; Wortmarke `.endo-marke` (`<b>endo</b> <span>Studio</span>`, `--klein` für die Navigation); Daten-Ebenen `.daten` / `.daten__ebene` (`--wurzeln`, `--strom` mit Lichtimpuls `::after`, `--welle`, `--netz`, Deckkraft über `--deck`).
+- Neu `ki/js/daten.js` (ersetzt `ki/js/nebel.js`, das nicht mehr eingebunden ist): setzt `.ist-bereit` auf `[data-daten]` erst nach dem Laden (dann werden die Bilder geholt) und `.daten-pause`, solange die Ebene nicht im Bild ist.
+- Bilder `bilder/studio/`: `wurzeln-daten.webp`, `datenstrom.webp`, `datenstrom-welle.webp`, `netz.webp` (Higgsfield auf Schwarz, Helligkeit = Deckkraft, zusammen ca. 720 KB).
+- Startseite: `.endo__daten` statt `.endo__nebel`; Wurzeln ab 30svh wachsen per `animation-timeline: view()` nach unten, Strom sitzt rechnerisch auf der Kugelmitte (gleiche Maße wie `.endo__orb`). /ki/: `.daten-feld` (fest, Netz) + `.hero__daten` (Welle durch die Kugel). Im Chat (`.endo-chat`) und bei „Bewegung reduzieren“ still.
+- Schrift: `.endo__titel.endo-display`, `.endo__bereiche b`, Chat-Name, /ki/ `h1`, `.kopf h2`, `.kopf__label`/`.hero__marke` (Mono), Credit-Fenster, `pakete.css` (`.sp__titel`, `.sp-karte__preis`, `.sp__vm-titel`) → Geist Light. /ki/ lädt Instrument Serif nicht mehr.
+
 ## Nebel über der Unterkante des Titelbilds (25.09.2026, 22:40, Claude Code)
 - Emre (iPhone-Screenshot): flache dunkle Fläche mit Kante zwischen Titelbild und Nebel. Lösung: `.endo` liegt jetzt mit `z-index: 2` über dem Titelbild, oben durchsichtig (Hintergrund erst ab 34svh), `pointer-events: none` außer `.endo__innen`/`.endo__pakete`. Der Nebel beginnt 12svh unter der Oberkante der Sektion und zieht damit schon über die versinkende Wiese (Lagen 1–3 höher gesetzt).
 

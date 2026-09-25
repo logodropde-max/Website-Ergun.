@@ -17,12 +17,11 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <!-- Die Tassen-Bilder liegen vorerst bei Higgsfield (CloudFront). -->
 <link rel="preconnect" href="https://d8j0ntlcm91z4.cloudfront.net" crossorigin>
-<link rel="preload" href="../schriften/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../schriften/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <script>document.documentElement.classList.add('js');</script>
-<link rel="stylesheet" href="pakete.css?v=2">
+<link rel="stylesheet" href="pakete.css?v=3">
+<link rel="stylesheet" href="studio.css?v=1">
 <style>
-@font-face { font-family: "Instrument Serif"; src: url("../schriften/InstrumentSerif-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Geist"; src: url("../schriften/Geist-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Geist"; src: url("../schriften/Geist-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
 
@@ -34,7 +33,6 @@
   --leise: #9CA2AA;          /* auf --bg 7:1 */
   --linie: rgba(226, 230, 236, 0.12);
   --premium: #FF7A3D;
-  --serif: "Instrument Serif", Georgia, serif;
   --sans: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --pad: clamp(20px, 4vw, 56px);
@@ -58,21 +56,13 @@ button { font: inherit; color: inherit; }
 .innen { width: min(100%, var(--breite)); margin: 0 auto; padding: 0 var(--pad); }
 .chrom { background: var(--chrom); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
-/* ---------- Nachtnebel über die ganze Seite: fest hinter allem, drei Lagen ziehen langsam im Wind ---------- */
-.nebel-feld { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity 1600ms var(--ease); }
-.nebel-feld.ist-bereit { opacity: 1; }
-.nebel-feld::before { content: ""; position: absolute; inset: 0; background: radial-gradient(55% 40% at 18% 8%, rgba(150, 170, 220, 0.1), rgba(150, 170, 220, 0) 70%); }
-.nebel { position: absolute; left: 0; width: 200%; background-repeat: repeat-x; background-size: 50% 100%; will-change: transform; }
-.nebel-feld .nebel--1 { top: 18%; height: 34%; opacity: 0.42; background-image: var(--nebel-1); }
-.nebel-feld .nebel--2 { top: 46%; height: 30%; opacity: 0.3; background-image: var(--nebel-2); }
-.nebel-feld .nebel--3 { top: 70%; height: 32%; opacity: 0.24; background-image: var(--nebel-3); }
-@media (prefers-reduced-motion: no-preference) {
-  .nebel-feld .nebel--1 { animation: nebel-zieht 120s linear infinite; }
-  .nebel-feld .nebel--2 { animation: nebel-zieht 170s linear infinite reverse; }
-  .nebel-feld .nebel--3 { animation: nebel-zieht 230s linear infinite; }
-}
-.endo-chat .nebel-feld .nebel { animation-play-state: paused !important; }
-@keyframes nebel-zieht { to { transform: translate3d(-50%, 0, 0); } }
+/* ---------- Daten statt Nebel (Teil 5): feines Netz fest hinter der ganzen Seite, Datenstrom durch die Kugel ----------
+   Bilder und Bewegung: studio.css */
+.daten-feld { position: fixed; z-index: -1; }
+.daten-feld::before { content: ""; position: absolute; inset: 0; background: radial-gradient(55% 40% at 18% 8%, rgba(150, 170, 220, 0.08), rgba(150, 170, 220, 0) 70%); }
+.daten-feld .daten--netz { --deck: 0.34; inset: 0; }
+.hero__daten { z-index: -2; }
+.hero__daten .daten--welle { --deck: 0.55; top: calc(clamp(24px, 4svh, 56px) + min(440px, 76vw) / 2 - var(--w) * 0.125); }
 body { isolation: isolate; }
 
 /* ---------- Knöpfe ---------- */
@@ -84,10 +74,6 @@ body { isolation: isolate; }
 
 /* ---------- Navigation ---------- */
 .nav { position: sticky; top: 0; z-index: 40; display: flex; align-items: center; gap: 24px; padding: 14px var(--pad); background: linear-gradient(rgba(6, 7, 9, 0.92), rgba(6, 7, 9, 0.72)); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid var(--linie); }
-.marke { display: inline-flex; align-items: baseline; gap: 8px; font-size: 15px; font-weight: 500; letter-spacing: 0.02em; }
-.marke b { font-family: var(--serif); font-weight: 400; font-size: 20px; letter-spacing: 0.06em; }
-.marke b i { font-style: normal; color: #FF5A1F; }
-.marke span { background: var(--chrom); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .nav__links { display: flex; gap: 24px; margin: 0 0 0 auto; padding: 0; list-style: none; font-size: 14px; color: var(--leise); }
 .nav__links a { transition: color 200ms var(--ease); }
 .nav__links a:hover, .nav__links a:focus-visible { color: var(--text); }
@@ -104,8 +90,8 @@ body { isolation: isolate; }
 .endo-chat .orb--bereit { opacity: 0.4; }
 .orb canvas { display: block; width: 100%; height: 100%; }
 .hero__kopf { display: grid; justify-items: center; gap: 18px; }
-.hero__marke { font-size: 13px; font-weight: 500; letter-spacing: 0.26em; text-transform: uppercase; color: var(--leise); }
-.hero h1 { font-family: var(--serif); font-size: clamp(3rem, 8vw, 6.6rem); line-height: 0.95; letter-spacing: -0.02em; text-wrap: balance; }
+.hero__marke { font-family: var(--endo-mono); font-size: 11px; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase; color: var(--leise); }
+.hero h1 { font-family: var(--endo-schrift); font-weight: 300; font-size: clamp(2.6rem, 7vw, 5.8rem); line-height: 1.02; letter-spacing: -0.045em; text-wrap: balance; padding-bottom: 0.06em; }
 .hero__satz { max-width: 48ch; color: var(--leise); font-size: clamp(16px, 1.35vw, 19px); text-wrap: pretty; }
 .hero__satz b { color: var(--text); font-weight: 500; }
 .hero__knoepfe { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 28px; }
@@ -166,7 +152,7 @@ body { isolation: isolate; }
 .agent__avatar { display: none; }
 .agent__kopf { gap: 10px; padding: 10px 14px 12px; }
 .agent__name { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.agent__name b { font-family: "Instrument Serif", Georgia, serif; font-size: 22px; font-weight: 400; line-height: 1; letter-spacing: 0.01em; }
+.agent__name b { font-family: var(--endo-schrift); font-size: 21px; font-weight: 300; line-height: 1; letter-spacing: -0.035em; background: var(--endo-chrom); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .agent__name small { font-size: 12px; }
 .endo-chat .agent { padding: 6px 6px 8px; border: 1px solid rgba(226, 230, 236, 0.14); background: rgba(9, 11, 17, 0.62); box-shadow: none; }
 .endo-chat .agent__verlauf { height: min(46svh, 420px, calc(var(--sicht, 100svh) - 220px)); max-height: none; padding: 18px 14px; gap: 14px; }
@@ -187,8 +173,8 @@ body { isolation: isolate; }
 /* ---------- Abschnitte ---------- */
 .abschnitt { padding: clamp(72px, 12svh, 128px) 0; border-top: 1px solid var(--linie); }
 .kopf { display: grid; gap: 14px; max-width: 640px; margin-bottom: 40px; }
-.kopf__label { font-size: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--leise); }
-.kopf h2 { font-family: var(--serif); font-size: clamp(2.3rem, 5vw, 3.8rem); line-height: 1; letter-spacing: -0.015em; text-wrap: balance; }
+.kopf__label { font-family: var(--endo-mono); font-size: 11px; font-weight: 400; letter-spacing: 0.28em; text-transform: uppercase; color: var(--leise); }
+.kopf h2 { font-family: var(--endo-schrift); font-weight: 300; font-size: clamp(2.1rem, 4.6vw, 3.4rem); line-height: 1.04; letter-spacing: -0.04em; text-wrap: balance; }
 .kopf p { color: var(--leise); text-wrap: pretty; }
 
 /* Vorher / nachher, kompakt */
@@ -221,10 +207,10 @@ body { isolation: isolate; }
 .credit-fenster::backdrop { background: rgba(0, 0, 0, 0.6); }
 .credit-fenster__innen { display: grid; gap: 20px; padding: 24px; }
 .credit-fenster__kopf { display: flex; justify-content: space-between; align-items: center; }
-.credit-fenster h2 { font-family: var(--serif); font-size: 28px; }
+.credit-fenster h2 { font-family: var(--endo-schrift); font-weight: 300; font-size: 26px; letter-spacing: -0.03em; }
 .credit-fenster h3 { margin-bottom: 8px; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--leise); }
 .credit-fenster__stand { display: grid; gap: 6px; }
-.credit-fenster__stand b { font-family: var(--serif); font-size: 44px; line-height: 1; }
+.credit-fenster__stand b { font-family: var(--endo-schrift); font-weight: 300; font-size: 46px; line-height: 1; letter-spacing: -0.045em; font-variant-numeric: tabular-nums; }
 .credit-fenster__stand span { font-size: 14px; color: var(--leise); }
 .credit-fenster dl { display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; margin: 0; font-size: 14px; }
 .credit-fenster dt { color: var(--leise); } .credit-fenster dd { margin: 0; font-variant-numeric: tabular-nums; }
@@ -252,11 +238,11 @@ body { isolation: isolate; }
 </head>
 <body>
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
-<!-- Nachtnebel über die ganze Seite (wie im Übergang auf der Startseite), liegt ruhig hinter allem -->
-<div class="nebel-feld" data-nebel aria-hidden="true"><div class="nebel nebel--1"></div><div class="nebel nebel--2"></div><div class="nebel nebel--3"></div></div>
+<!-- Daten-Hintergrund über die ganze Seite (wie im Übergang auf der Startseite), liegt ruhig hinter allem -->
+<div class="daten daten-feld" data-daten aria-hidden="true"><div class="daten__ebene daten--netz"></div></div>
 
 <header class="nav">
-  <a class="marke" href="#start" aria-label="endo Studio, nach oben"><b>endo</b><span>Studio</span></a>
+  <a class="marke endo-marke endo-marke--klein" href="#start" aria-label="endo Studio, nach oben"><b>endo</b> <span>Studio</span></a>
   <ul class="nav__links">
     <li><a href="#pakete">Pakete</a></li>
     <li class="nur-breit"><a href="#fragen">Fragen</a></li>
@@ -267,6 +253,7 @@ body { isolation: isolate; }
 
 <main id="inhalt" tabindex="-1">
   <section class="hero" id="start" aria-labelledby="titel">
+    <div class="daten hero__daten" data-daten aria-hidden="true"><div class="daten__ebene daten--welle"></div></div>
     <div class="orb" data-orb aria-hidden="true"></div>
     <div class="innen">
       <div class="hero__kopf">
@@ -407,7 +394,7 @@ body { isolation: isolate; }
 </script>
 <script src="js/pakete.js?v=3"></script>
 <script src="js/agent.js?v=10" defer></script>
-<script src="js/nebel.js?v=1" defer></script>
+<script src="js/daten.js?v=1" defer></script>
 <script>
 /* Kugel (three.js) erst nach dem Laden der Seite – der Start bleibt flüssig, die Kugel blendet weich ein */
 (function () {

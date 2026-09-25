@@ -1,0 +1,59 @@
+/* endo Studio – gemeinsamer Look für Startseite (#endo) und /ki/ (25.09.2026 abends, Emre: „high Tech, hochwertig“)
+   1. Schrift: klare Geist Light mit Chrom statt Serifen, kleine Beschriftungen in Geist Mono.
+   2. Daten statt Nebel: Graswurzeln werden zu Datenlinien, ein Datenstrom läuft durch die Kugel, dahinter ein feines Netz.
+      Bilder: bilder/studio/*.webp (Higgsfield, Schwarz → transparent). Geladen erst nach der Seite (ki/js/daten.js setzt .ist-bereit).
+      Bewegung nur transform/opacity, im Chat und außerhalb des Bildes still, bei „Bewegung reduzieren“ ganz ruhig. */
+@font-face { font-family: "Geist"; src: url("../schriften/Geist-Light.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+@font-face { font-family: "Geist Mono"; src: url("../schriften/GeistMono-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+:root {
+  --endo-schrift: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --endo-mono: "Geist Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --endo-chrom: linear-gradient(180deg, #FFFFFF 0%, #F1F3F6 34%, #C3C9D1 66%, #8C949F 100%);
+}
+
+/* ---------- Wortmarke: endo | STUDIO ---------- */
+.endo-marke { display: inline-flex; align-items: center; gap: 12px; margin: 0; font-family: var(--endo-schrift); line-height: 1; }
+.endo-marke b { font-weight: 300; font-size: 28px; letter-spacing: -0.035em; background: var(--endo-chrom); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: 0.08em; }
+.endo-marke span { padding-left: 12px; border-left: 1px solid rgba(226, 230, 236, 0.24); font-family: var(--endo-mono); font-size: 10.5px; font-weight: 400; letter-spacing: 0.34em; text-transform: uppercase; line-height: 1.5;
+  background: none; -webkit-text-fill-color: currentColor; color: rgba(226, 230, 236, 0.66); }
+.endo-marke--klein { gap: 10px; }
+.endo-marke--klein b { font-size: 22px; }
+.endo-marke--klein span { padding-left: 10px; font-size: 9.5px; letter-spacing: 0.3em; }
+
+/* große Zeilen: Light, eng, Chrom */
+.endo-display { font-family: var(--endo-schrift); font-weight: 300; letter-spacing: -0.045em; line-height: 1.02; text-wrap: balance;
+  background: var(--endo-chrom); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: 0.06em; }
+/* kleine technische Beschriftung */
+.endo-label { font-family: var(--endo-mono); font-size: 11px; font-weight: 400; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(226, 230, 236, 0.6); }
+
+/* ---------- Daten-Hintergrund ---------- */
+.daten { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.daten__ebene { position: absolute; background-repeat: no-repeat; background-size: 100% 100%; opacity: 0; transition: opacity 2200ms cubic-bezier(0.22, 1, 0.36, 1); }
+.daten.ist-bereit .daten__ebene { opacity: var(--deck, 0.5); }
+.daten.ist-bereit .daten--wurzeln { background-image: url("../bilder/studio/wurzeln-daten.webp"); }
+.daten.ist-bereit .daten--strom { background-image: url("../bilder/studio/datenstrom.webp"); }
+.daten.ist-bereit .daten--welle { background-image: url("../bilder/studio/datenstrom-welle.webp"); }
+.daten.ist-bereit .daten--netz { background-image: url("../bilder/studio/netz.webp"); background-repeat: repeat; }
+/* Wurzeln: mittig, nach unten auslaufend */
+.daten--wurzeln { --w: clamp(560px, 92vw, 1100px); left: 50%; width: var(--w); margin-left: calc(var(--w) * -0.5); aspect-ratio: 1000 / 1040; transform-origin: 50% 0;
+  -webkit-mask-image: linear-gradient(#000 0, #000 55%, transparent 96%); mask-image: linear-gradient(#000 0, #000 55%, transparent 96%); }
+/* Datenstrom: waagrechtes Band, zieht sacht hin und her */
+.daten--strom, .daten--welle { --w: max(1100px, 150vw); left: 50%; width: var(--w); margin-left: calc(var(--w) * -0.5); aspect-ratio: 1800 / 353; }
+.daten--welle { aspect-ratio: 1800 / 450; }
+/* Lichtimpuls: ein heller Faden läuft ab und zu durch den Strom */
+.daten--strom::after { content: ""; position: absolute; left: 0; top: 50%; width: 12%; height: 2px; margin-top: -1px; border-radius: 2px; opacity: 0; transform: translate3d(-100%, 0, 0);
+  background: linear-gradient(90deg, rgba(214, 230, 255, 0), rgba(232, 242, 255, 0.95) 70%, rgba(214, 230, 255, 0)); box-shadow: 0 0 10px 1px rgba(170, 200, 255, 0.35); }
+/* Netz: feine Punkte und Linien, ganz hinten */
+.daten--netz { --deck: 0.42; background-size: max(1100px, 120vw) auto; background-position: 50% 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .daten.ist-bereit .daten--strom, .daten.ist-bereit .daten--welle { animation: daten-zieht 42s ease-in-out infinite alternate; }
+  .daten.ist-bereit .daten--strom::after { animation: daten-impuls 11s linear 3s infinite; }
+  .daten.ist-bereit .daten--netz { animation: netz-atmet 70s ease-in-out infinite alternate; }
+  /* die Wurzeln hängen am Scrollen und laufen immer mit; alles andere hält außerhalb des Bildes und im Chat still */
+  .daten-pause :is(.daten--strom, .daten--welle, .daten--netz), .daten-pause .daten--strom::after,
+  .endo-chat :is(.daten--strom, .daten--welle, .daten--netz), .endo-chat .daten--strom::after { animation-play-state: paused !important; }
+}
+@keyframes daten-zieht { from { transform: translate3d(-3%, 0, 0); } to { transform: translate3d(3%, 0, 0); } }
+@keyframes daten-impuls { 0% { opacity: 0; transform: translate3d(-100%, 0, 0); } 4% { opacity: 1; } 26% { opacity: 1; } 30% { opacity: 0; transform: translate3d(900%, 0, 0); } 100% { opacity: 0; transform: translate3d(900%, 0, 0); } }
+@keyframes netz-atmet { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(0, -3%, 0) scale(1.06); } }

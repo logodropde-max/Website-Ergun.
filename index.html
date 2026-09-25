@@ -26,7 +26,8 @@
 <link rel="preload" href="schriften/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="schriften/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <script>document.documentElement.classList.add('js');</script>
-<link rel="stylesheet" href="ki/pakete.css?v=2">
+<link rel="stylesheet" href="ki/pakete.css?v=3">
+<link rel="stylesheet" href="ki/studio.css?v=1">
 
 <style>
 html, body { touch-action: pan-x pan-y; }
@@ -286,29 +287,24 @@ img { display: block; max-width: 100%; height: auto; }
   background: linear-gradient(180deg, rgba(7, 11, 22, 0) 0, rgba(7, 11, 22, 0) 33svh, #070B16 34svh, #070B16 36svh, #04060D 60svh, #000 98svh); }
 /* oben liegt die Sektion über dem Titelbild (Nebel zieht darüber) – Klicks gehen nur an ihren Inhalt */
 .endo__innen, .endo__pakete { pointer-events: auto; }
-/* Nachtnebel aus dem Tal des Titelbilds zieht weiter: drei Lagen, langsam im Wind, nach unten verlöschend.
-   Links oben ein weicher Mondschein-Hof (dort steht der Mond). Nur transform, pausiert außerhalb des Bildes. */
-.endo__nebel { position: absolute; z-index: -2; left: 0; right: 0; top: 0; bottom: 0; overflow: hidden; pointer-events: none;
-  -webkit-mask-image: linear-gradient(transparent 0, transparent 12svh, #000 38svh, #000 88%, transparent 100%); mask-image: linear-gradient(transparent 0, transparent 12svh, #000 38svh, #000 88%, transparent 100%); }
-.endo__nebel::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 40% at 20% 44svh, rgba(150, 170, 220, 0.12), rgba(150, 170, 220, 0) 70%); }
-.nebel { position: absolute; left: 0; width: 200%; background-repeat: repeat-x; background-size: 50% 100%; will-change: transform; }
-.nebel--1 { top: 16svh; height: 38svh; opacity: 0.6; background-image: var(--nebel-1); }
-.nebel--2 { top: 36svh; height: 34svh; opacity: 0.5; background-image: var(--nebel-2); }
-.nebel--3 { top: 56svh; height: 30svh; opacity: 0.42; background-image: var(--nebel-3); }
-@media (prefers-reduced-motion: no-preference) {
-  .nebel--1 { animation: nebel-zieht 110s linear infinite; }
-  .nebel--2 { animation: nebel-zieht 160s linear infinite reverse; }
-  .nebel--3 { animation: nebel-zieht 220s linear infinite; }
-  .endo:not(.endo--sichtbar) .nebel { animation-play-state: paused; }
+/* Daten statt Nebel (Teil 5, Emre: „wie Daten übertragen, KI, Innovation – Rauch passt nicht zum Rasen“):
+   unter dem Rasen werden die Graswurzeln zu Datenlinien, die zur Kugel laufen; durch die Kugel zieht ein Datenstrom
+   mit gelegentlichem Lichtimpuls, dahinter ein feines Netz. Bilder und Bewegung: ki/studio.css */
+.endo__daten { z-index: -2;
+  -webkit-mask-image: linear-gradient(transparent 0, transparent 26svh, #000 40svh, #000 90%, transparent 100%); mask-image: linear-gradient(transparent 0, transparent 26svh, #000 40svh, #000 90%, transparent 100%); }
+.endo__daten::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 40% at 20% 44svh, rgba(150, 170, 220, 0.1), rgba(150, 170, 220, 0) 70%); }
+.endo__daten .daten--wurzeln { --deck: 0.48; top: 30svh; }
+/* Mitte des Stroms = Mitte der Kugel (gleiche Maße wie .endo__orb) */
+.endo__daten .daten--strom { --deck: 0.8; top: calc(34svh + clamp(240px, 44svh, 440px) + clamp(-72px, -6svh, -24px) + min(460px, 74vw) / 2 - var(--w) * 0.0981); }
+.endo__daten .daten--netz { top: calc(34svh + clamp(240px, 44svh, 440px)); bottom: 0; left: 0; right: 0;
+  -webkit-mask-image: linear-gradient(transparent, #000 36svh); mask-image: linear-gradient(transparent, #000 36svh); }
+/* beim Abstieg wachsen die Wurzeln nach unten */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .endo__daten .daten--wurzeln { animation: wurzeln-wachsen linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; }
+  }
 }
-.nebel--4 { top: 58%; height: 34svh; opacity: 0.42; background-image: var(--nebel-2); }
-.nebel--5 { top: 78%; height: 30svh; opacity: 0.34; background-image: var(--nebel-1); }
-@media (prefers-reduced-motion: no-preference) {
-  .nebel--4 { animation: nebel-zieht 190s linear infinite reverse; }
-  .nebel--5 { animation: nebel-zieht 250s linear infinite; }
-}
-.endo-chat .nebel { animation-play-state: paused !important; }
-@keyframes nebel-zieht { to { transform: translate3d(-50%, 0, 0); } }
+@keyframes wurzeln-wachsen { from { transform: translate3d(0, -6svh, 0) scaleY(0.5); } to { transform: none; } }
 .endo__orb { position: relative; z-index: -1; width: min(460px, 74vw); aspect-ratio: 1; margin: clamp(-72px, -6svh, -24px) auto clamp(-72px, -7svh, -40px); opacity: 0; pointer-events: none;
   -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent); mask-image: radial-gradient(closest-side, #000 62%, transparent); transition: opacity 1400ms var(--ease), transform 1600ms var(--ease); transform: translateY(14svh) scale(0.86); }
 .endo--da .endo__orb { transform: none; }
@@ -325,14 +321,10 @@ img { display: block; max-width: 100%; height: auto; }
 .endo__orb canvas { display: block; width: 100%; height: 100%; }
 .endo__innen { position: relative; max-width: 720px; margin: 0 auto; display: grid; justify-items: center; gap: 36px; text-align: center; }
 .endo__kopf { display: grid; justify-items: center; gap: 18px; }
-.endo__marke { font-size: 15px; font-weight: 500; letter-spacing: 0.02em; color: var(--text); }
-.endo__marke { font-family: var(--serif); font-size: 22px; font-weight: 400; letter-spacing: 0.05em; }
-.endo__marke i { font-style: normal; color: var(--accent); }
-.endo__marke span, .endo__titel, .endo__bereiche b { background: linear-gradient(180deg, #FFFFFF 0%, #E6E9EE 26%, #A3AAB4 48%, #F4F6F8 62%, #B9BFC8 82%, #ECEEF1 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.endo__marke span { font-family: var(--sans); font-size: 15px; font-weight: 500; letter-spacing: 0.02em; }
+.endo__bereiche b { background: var(--endo-chrom); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .endo .rund--haupt { background: linear-gradient(180deg, #FBFCFD 0%, #D6DBE1 46%, #A9B0BA 54%, #E6E9ED 100%); }
 .endo .blase--du { background: linear-gradient(180deg, #F7F8FA, #D8DCE2); }
-.endo__titel { font-family: var(--serif); font-size: clamp(2.8rem, 7.4vw, 5.8rem); line-height: 0.95; letter-spacing: -0.02em; text-wrap: balance; }
+.endo__titel { font-size: clamp(2.5rem, 6.6vw, 5.2rem); }
 .endo__intro { max-width: 44ch; color: var(--muted); font-size: clamp(16px, 1.3vw, 18px); line-height: 1.55; text-wrap: pretty; }
 
 /* Chat: ruhend nur die Eingabe, ab der ersten Nachricht ein ruhiges Fenster, das nach unten wächst */
@@ -405,7 +397,7 @@ img { display: block; max-width: 100%; height: auto; }
 .endo__bereiche { list-style: none; margin: 8px 0 0; padding: 0; width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); text-align: left; }
 .endo__bereiche li { display: grid; gap: 6px; align-content: start; padding: 22px 20px 0 0; }
 .endo__bereiche li + li { padding-left: 20px; border-left: 1px solid var(--line); }
-.endo__bereiche b { font-family: var(--serif); font-size: 24px; line-height: 1.1; font-weight: 400; }
+.endo__bereiche b { font-family: var(--endo-schrift); font-size: 19px; line-height: 1.2; font-weight: 400; letter-spacing: -0.02em; }
 .endo__bereiche span { color: var(--muted); font-size: 14px; line-height: 1.5; text-wrap: pretty; }
 .endo__pakete { position: relative; width: min(100%, 1120px); margin: clamp(64px, 10svh, 112px) auto 0; padding-top: clamp(48px, 7svh, 80px); border-top: 1px solid var(--line); scroll-margin-top: 24px; }
 .endo__pakete[hidden] { display: none; }
@@ -433,7 +425,7 @@ img { display: block; max-width: 100%; height: auto; }
 .endo .agent__avatar { display: none; }
 .endo .agent__kopf { gap: 10px; padding: 10px 14px 12px; }
 .endo .agent__name { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.endo .agent__name b { font-family: "Instrument Serif", Georgia, serif; font-size: 22px; font-weight: 400; line-height: 1; letter-spacing: 0.01em; }
+.endo .agent__name b { font-family: var(--endo-schrift); font-size: 21px; font-weight: 300; line-height: 1; letter-spacing: -0.035em; background: var(--endo-chrom); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .endo .agent__name small { font-size: 12px; }
 .endo-chat .endo .agent { padding: 6px 6px 8px; border: 1px solid rgba(226, 230, 236, 0.14); background: rgba(9, 11, 17, 0.62); box-shadow: none; }
 .endo-chat .endo .agent__verlauf { height: min(46svh, 420px, calc(var(--sicht, 100svh) - 220px)); max-height: none; padding: 18px 14px; gap: 14px; }
@@ -524,12 +516,12 @@ img { display: block; max-width: 100%; height: auto; }
 <main id="inhalt" tabindex="-1">
   <!-- endo Studio (früher endo.ai): zweiter Bereich, direkt unter dem Titelbild. Ausführlich mit Funktionen und Paketen: ki/ -->
   <section class="endo" id="endo" aria-labelledby="endo-titel">
-    <div class="endo__nebel" data-nebel aria-hidden="true"><div class="nebel nebel--1"></div><div class="nebel nebel--2"></div><div class="nebel nebel--3"></div><div class="nebel nebel--4"></div><div class="nebel nebel--5"></div></div>
+    <div class="daten endo__daten" data-daten aria-hidden="true"><div class="daten__ebene daten--netz"></div><div class="daten__ebene daten--wurzeln"></div><div class="daten__ebene daten--strom"></div></div>
     <div class="endo__orb" data-orb aria-hidden="true"></div>
     <div class="endo__innen">
       <div class="endo__kopf reveal">
-        <p class="endo__marke">endo <span>Studio</span></p>
-        <h2 class="endo__titel" id="endo-titel">Zeigen Sie mir Ihr Produkt.</h2>
+        <p class="endo__marke endo-marke"><b>endo</b> <span>Studio</span></p>
+        <h2 class="endo__titel endo-display" id="endo-titel">Zeigen Sie mir Ihr Produkt.</h2>
         <p class="endo__intro">endo Studio macht aus Ihrem Handyfoto Produktfotos, Werbevideos und Bilder für Ihre Website. Fragen Sie endo, unseren Assistenten, was möglich ist.</p>
       </div>
 
@@ -909,7 +901,7 @@ img { display: block; max-width: 100%; height: auto; }
   if (document.readyState === 'complete') setTimeout(beobachten, 800); else window.addEventListener('load', function () { setTimeout(beobachten, 800); });
 })();
 </script>
-<script src="ki/js/nebel.js?v=1" defer></script>
+<script src="ki/js/daten.js?v=1" defer></script>
 <script src="ki/js/endo-daten.js?v=4"></script>
 <script src="ki/js/pakete.js?v=3"></script>
 <script>
