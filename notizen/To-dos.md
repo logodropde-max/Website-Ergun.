@@ -19,4 +19,5 @@ Offene Punkte aus [[ERGUN Website (Übersicht)]].
 - [ ] Tassenbild von endo.ai als WebP ins Projekt holen (nach Freigabe der Domain)
 - [ ] endo an die echte Erzeugung anschließen, sobald Login und Credits stehen → [[endo Chat-Agent]]
 - [ ] Login, Credit-Kauf und echte Erzeugung für [[endo-ai|endo.ai]] bauen (nach den Konten)
-- [ ] Credit-Verbrauch an echte Kosten anpassen → [[Credit-Pakete]]
+- [x] Credit-Verbrauch an echte Kosten anpassen → [[Credit-Pakete]] (25.09.: Preise von Emre, mind. 47 % Gewinn)
+- [ ] Neues abstraktes Titelbild bauen, Animationen flüssig machen → [[Neustart – hier weitermachen]]

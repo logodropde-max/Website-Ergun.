@@ -1,8 +1,16 @@
-# Agentur-Website ERGUN. – Stand 25.09.2026, 02:30
+# Agentur-Website ERGUN. – Stand 25.09.2026, 04:50
+
+> Überblick für eine neue Sitzung: Vault-Notiz `08 Projekte/Neustart – hier weitermachen.md`. Hier stehen die technischen Details, neuester Abschnitt oben.
 
 > **Aktuell live:** die Seite von 138c7c9 (Hero mit Parallax → Kontaktformular → Footer), plus **endo.ai als Pille oben rechts** (`.nav__pille`, CSS-Block am Ende des `<style>`).
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
+
+## Pfeil statt Umschalter, endo mit 3 Bereichen (25.09.2026, 04:40, Claude Code)
+- Startseite: `a.seitenpfeil[data-endo-pille]` (fixed, rechts mittig, „endo entdecken“, Linie `.seitenpfeil__linie` mit `linie-ziehen`), Handy: Lasche am Rand ohne Text. Klick → `oeffnen({ klick: true })` (wartet auf das iframe). Umschalter-HTML entfernt (CSS/JS dafür ohne Wirkung).
+- endo: `a.seitenpfeil--links` → `../` (im iframe schließt der Klick die Ebene). `.orb` nur noch obere 58 % (Handy 52 %), Kugel füllt bis 66 % davon (`orb.js?v=6`). Hero-Text darunter, `clamp(44px, 6vw, 80px)`. Chat-Feld = Pille (Rand, Glas, weißer Senden-Knopf). `.abo` (Handy-Paketwahl) ausgeblendet und aus dem HTML entfernt, `.preise` auf jeder Breite.
+- `window.ENDO`: Pakete 5/40, 20/200, 100/1000; Bereiche foto 5 (extra: Shop-Bild 5), video 20, web 10; Premium video10 40, 3d 50, parallax 30, emre. `api/agent.js` kennt dieselben Zahlen.
+- Titelbild-Vorschau: `_test-titel.html?v=v1-d39df812|v2-a6ef78e8|v3-9c9456ed&f=emre|hund` (Dateien in `bilder/hero/4k/titel3/`).
 
 ## endo.ai ruhig + Umschalter (25.09.2026, 04:00, Claude Code)
 - `ki/index.html`: `window.ENDO` im Kopf = einzige Stelle für Pakete (`credits: null` bis Emre die Higgsfield-Kosten nennt), Werkzeuge, Premium-Liste. Skript vor dem Fuß rendert Funktionen (`[data-funktionen-wahl]`, `[data-funktionen-detail]`), Premium-Ordner, Pakete (`[data-preise]`), Verbrauch und Credit-Fenster (`dialog[data-credit-fenster]`, Knopf `[data-credits-auf]`, Anker `#credits`).
