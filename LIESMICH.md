@@ -6,6 +6,10 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Titel im Himmel (25.09.2026, 15:05, Claude Code) – Schritt 5 von 7
+- `.titel` in der Titel-Ebene: Zeile „Digitalstudio für Webdesign & endo.ai“ (Einordnung, beide Bereiche) und groß „Webdesigner“ (h1, Instrument Serif, bis 10rem). **Kein Slogan** (Emre, 25.09. nachmittags – gilt, auch wenn der Auftrag „Slogan bleibt“ sagte).
+- Lage aus dem Skript: `--titel-oben` = 20 % der Bildhöhe (Handy 24 %). Die Sonne startet jetzt darüber (10 %, Handy 13 %) und sinkt durch den Schriftzug; Mond links oben (x 24 %, y 11 %).
+
 ## Sterne (25.09.2026, 14:50, Claude Code) – Schritt 4 von 7
 - `sterne()` in `js/szene.js`: schwache Sterne (`data-stufe="3"`) und mittlere mit Hof (`"2"`) je auf einer Leinwand, die hellsten 18–46 als `<i>` in `.sterne__hell` mit eigenem Takt (`funkeln`/`funkeln-b`, Dauer 2,4–7 s, zufällige Verzögerung). Farben weiß, warmweiß, bläulich.
 - Einblenden: `--sterne` (hellste, p 0,26–0,36) → `--sterne2` (0,32–0,44) → `--sterne3` (0,38–0,52), Milchstraße `--milch` ab 0,42 (körnig, dunkle Staubbahnen, max. 70 % Deckkraft).

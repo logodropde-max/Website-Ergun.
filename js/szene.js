@@ -146,11 +146,11 @@
 
   /* Richtung des Lichts: Sonne mittig (Tag, Gold), Mond links (Nacht). +1 = Licht kommt von rechts */
   function lichtX(licht, x) {
-    if (licht === 'nacht') { var mx = m.W * 0.3; return Math.max(-1, Math.min(1, (mx - x) / (m.W * 0.25))); }
+    if (licht === 'nacht') { var mx = m.W * 0.24; return Math.max(-1, Math.min(1, (mx - x) / (m.W * 0.25))); }
     return Math.max(-1, Math.min(1, (m.W * 0.5 - x) / (m.W * 0.22)));
   }
   /* Nähe zur Lichtquelle (für Streiflicht und Kanten im Gegenlicht) */
-  function naehe(licht, x) { var lx = licht === 'nacht' ? m.W * 0.3 : m.W * 0.5; return Math.exp(-Math.pow((x - lx) / (m.W * (licht === 'tag' ? 0.6 : 0.32)), 2)); }
+  function naehe(licht, x) { var lx = licht === 'nacht' ? m.W * 0.24 : m.W * 0.5; return Math.exp(-Math.pow((x - lx) / (m.W * (licht === 'tag' ? 0.6 : 0.32)), 2)); }
 
   /* ---------- Berge ---------- */
   function berg(name, ebene, unten, extra) {
@@ -526,12 +526,13 @@
     sterne();
     /* Sonne startet mittig oben, sinkt senkrecht und verschwindet hinter dem Sattel in der Mitte */
     m.sonneR = Math.max(26, Math.min(44, m.W * 0.026));
-    m.sonneStart = m.H * (m.hoch ? 0.2 : 0.17);
+    m.sonneStart = m.H * (m.hoch ? 0.13 : 0.1);
     m.sonneEnde = ky('fern', m.W / 2) + (TIEFE.himmel - TIEFE.fern * m.f) * 0.26 * m.H + m.sonneR * 1.4;
-    m.mondX = m.W * (m.hoch ? 0.26 : 0.3);
+    m.mondX = m.W * (m.hoch ? 0.22 : 0.24);
     m.mondStart = ky('fern', m.mondX) + (TIEFE.himmel - TIEFE.fern * m.f) * 0.3 * m.H + m.sonneR;
-    m.mondEnde = m.H * (m.hoch ? 0.17 : 0.16);
+    m.mondEnde = m.H * (m.hoch ? 0.12 : 0.11);
     held.style.setProperty('--sonne-r', m.sonneR + 'px');
+    held.style.setProperty('--titel-oben', (m.H * (m.hoch ? 0.24 : 0.2)) + 'px');
     held.classList.add('szene--bereit');
     bereit = true;
     zeichne(true);
