@@ -6,6 +6,11 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Start ohne Ruckeln + Nebel auf der ganzen Studio-Seite (25.09.2026, 20:40, Claude Code)
+- `js/szene.js` zeichnet in Stufen: `landschaft()` mit `AKTIV = ['tag']` sofort (Aufbau 18 ms statt ca. 108 ms), danach per `requestIdleCallback` Gold, Nacht und zuletzt die Sterne. Gras-Windhüllen werden wiederverwendet (gleicher Takt), der Hund nur im ersten Durchgang angelegt. Die Landschaft blendet beim Start einmal weich ein (500 ms), Himmel und Titel stehen sofort.
+- Nebel liegt jetzt in `ki/js/nebel.js` (für alle `[data-nebel]`, gerechnet erst nach dem Laden). Startseite: `.endo__nebel[data-nebel]`. /ki/: `.nebel-feld` fest hinter der ganzen Seite (drei Lagen, 120/170/230 s).
+- Kugel (three.js): Startseite beobachtet erst 0,8 s nach dem Laden (Vorlauf 240 px), /ki/ lädt sie erst nach dem Laden der Seite.
+
 ## Scrollen oben auf dem iPhone (25.09.2026, 20:05, Claude Code)
 - Emre: „ganz oben buggt es beim Scrollen“. Behoben (auf dem echten iPhone noch zu bestätigen):
   1. Zoom-Sperre: `touchmove`- und `touchend`-Sperren (nicht-passiv) entfernt – sie bremsten jedes Scrollen und brachen schnelles Nachwischen ab (Doppeltipp-Sperre). Jetzt nur Safari-Gesten + CSS `touch-action: pan-x pan-y` auf html und body.

@@ -58,6 +58,22 @@ button { font: inherit; color: inherit; }
 .innen { width: min(100%, var(--breite)); margin: 0 auto; padding: 0 var(--pad); }
 .chrom { background: var(--chrom); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
+/* ---------- Nachtnebel über die ganze Seite: fest hinter allem, drei Lagen ziehen langsam im Wind ---------- */
+.nebel-feld { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity 1600ms var(--ease); }
+.nebel-feld.ist-bereit { opacity: 1; }
+.nebel-feld::before { content: ""; position: absolute; inset: 0; background: radial-gradient(55% 40% at 18% 8%, rgba(150, 170, 220, 0.1), rgba(150, 170, 220, 0) 70%); }
+.nebel { position: absolute; left: 0; width: 200%; background-repeat: repeat-x; background-size: 50% 100%; will-change: transform; }
+.nebel-feld .nebel--1 { top: 18%; height: 34%; opacity: 0.42; background-image: var(--nebel-1); }
+.nebel-feld .nebel--2 { top: 46%; height: 30%; opacity: 0.3; background-image: var(--nebel-2); }
+.nebel-feld .nebel--3 { top: 70%; height: 32%; opacity: 0.24; background-image: var(--nebel-3); }
+@media (prefers-reduced-motion: no-preference) {
+  .nebel-feld .nebel--1 { animation: nebel-zieht 120s linear infinite; }
+  .nebel-feld .nebel--2 { animation: nebel-zieht 170s linear infinite reverse; }
+  .nebel-feld .nebel--3 { animation: nebel-zieht 230s linear infinite; }
+}
+@keyframes nebel-zieht { to { transform: translate3d(-50%, 0, 0); } }
+body { isolation: isolate; }
+
 /* ---------- Knöpfe ---------- */
 .knopf { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 12px 22px; border-radius: 999px; border: 1px solid transparent; font-size: 15px; font-weight: 500; line-height: 1; cursor: pointer; transition: transform 160ms var(--ease), filter 200ms var(--ease), background-color 200ms var(--ease); }
 .knopf:active { transform: scale(0.97); }
@@ -211,6 +227,8 @@ button { font: inherit; color: inherit; }
 </head>
 <body>
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
+<!-- Nachtnebel über die ganze Seite (wie im Übergang auf der Startseite), liegt ruhig hinter allem -->
+<div class="nebel-feld" data-nebel aria-hidden="true"><div class="nebel nebel--1"></div><div class="nebel nebel--2"></div><div class="nebel nebel--3"></div></div>
 
 <header class="nav">
   <a class="marke" href="#start" aria-label="endo Studio, nach oben"><b>endo</b><span>Studio</span></a>
@@ -364,6 +382,14 @@ button { font: inherit; color: inherit; }
 </script>
 <script src="js/pakete.js?v=3"></script>
 <script src="js/agent.js?v=9" defer></script>
-<script src="js/orb.js?v=6" defer></script>
+<script src="js/nebel.js?v=1" defer></script>
+<script>
+/* Kugel (three.js) erst nach dem Laden der Seite – der Start bleibt flüssig, die Kugel blendet weich ein */
+(function () {
+  function laden() { var s = document.createElement('script'); s.src = 'js/orb.js?v=6'; s.async = true; document.body.appendChild(s); }
+  function spaeter() { if (window.requestIdleCallback) requestIdleCallback(laden, { timeout: 1200 }); else setTimeout(laden, 300); }
+  if (document.readyState === 'complete') spaeter(); else window.addEventListener('load', spaeter);
+})();
+</script>
 </body>
 </html>

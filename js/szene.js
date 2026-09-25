@@ -16,6 +16,8 @@
   var buehne = held.querySelector('.szene__buehne');
   var ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var LICHTER = ['tag', 'gold', 'nacht'];
+  /* welche Lichtstimmungen gerade gezeichnet werden: erst nur Tag (schneller Start), Gold und Nacht danach */
+  var AKTIV = LICHTER;
 
   /* ---------- Werkzeuge ---------- */
   function zufall(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
@@ -174,7 +176,7 @@
   /* ---------- Berge ---------- */
   function berg(name, ebene, unten, extra) {
     var oben = Math.max(0, hoechster(name) - 4);
-    LICHTER.forEach(function (licht) {
+    AKTIV.forEach(function (licht) {
       var p = F[name][licht], g = leinwand(ebene, oben, unten, licht), r = zufall(KAEMME[name].basis * 1000 | 0);
       var schritt = 2, tief = unten - oben;
       /* Körper */
@@ -362,7 +364,7 @@
 
   function huegel(ebene, unten) {
     var oben = Math.max(0, hoechster('huegel') - m.H * 0.04);
-    LICHTER.forEach(function (licht) {
+    AKTIV.forEach(function (licht) {
       var p = F.huegel[licht], g = leinwand(ebene, oben, unten, licht);
       g.beginPath(); g.moveTo(-2, unten + 2);
       for (var x = -2; x <= m.W + 2; x += 2) g.lineTo(x, ky('huegel', x));
@@ -401,7 +403,7 @@
     for (var bx = -10; bx < m.W + 10; bx += m.H * (0.02 + bz() * 0.05)) if (bz() < 0.55) buesche.push({ x: bx, h: m.H * (0.012 + bz() * 0.018), saat: Math.floor(bz() * 1e9), farbe: Math.floor(bz() * 2) });
     baeume.sort(function (a, b) { return a.tief - b.tief; });
     var oben = Math.max(0, hoechster('wald') - m.H * 0.2);
-    LICHTER.forEach(function (licht) {
+    AKTIV.forEach(function (licht) {
       var p = F.wald[licht], g = leinwand(ebene, oben, unten, licht);
       baeume.forEach(function (b) {
         var y = ky('wald', b.x) + m.H * 0.012 + b.tief * m.H * 0.03, farbe = b.art === 'laub' ? p.laub[b.farbe % 2] : p.baeume[b.farbe];
@@ -440,7 +442,7 @@
     for (i = 0; i < Math.round(9 * m.W / 1440) + 3; i++) { var sx = r0() * m.W; if (Math.abs(sx - hx0) < m.H * 0.09) continue; steine.push({ x: sx, t: r0(), w: m.H * (0.012 + r0() * 0.03), hv: 0.45 + r0() * 0.3, saat: Math.floor(r0() * 1e9) }); }
     steine.sort(function (a, b) { return a.t - b.t; });
     for (i = 0; i < Math.round(m.W * 0.12); i++) bluemchen.push({ x: r0() * m.W, t: r0(), h: m.H * (0.006 + r0() * 0.012), f: Math.floor(r0() * 3) });
-    LICHTER.forEach(function (licht) {
+    AKTIV.forEach(function (licht) {
       var p = F.wiese[licht], g = leinwand(ebene, oben, unten, licht);
       g.beginPath(); g.moveTo(-2, unten + 2);
       for (var x = -2; x <= m.W + 2; x += 3) g.lineTo(x, ky('wiese', x));
@@ -467,6 +469,7 @@
       });
       kornAuf(g, oben, unten, 0.06);
     });
+    if (AKTIV.indexOf('tag') < 0) return;
     /* Hund: steht auf der Kuppe, Füße im Gras */
     var hx = xVon(m.hundU), hh = m.H * (m.hoch ? 0.13 : 0.155), hw = hh * 315 / 360;
     hund.x = hx - hw * 0.5; hund.y = ky('wiese', hx) - hh * 0.97; hund.w = hw; hund.h = hh;
@@ -476,21 +479,24 @@
     hundEbene.appendChild(c); hund.leinwand = c; hund.zuletzt = '';
   }
 
-  var GRAS_GRUPPEN = 2;
+  var GRAS_GRUPPEN = 2, windHuellen = [];
   function gras(ebene) {
     /* etwas über den unteren Rand hinaus, falls das Bild nach dem Zeichnen noch höher wird */
     var oben = m.H * 0.8, unten = m.H * 1.15;
     for (var gr = 0; gr < GRAS_GRUPPEN; gr++) {
-      var wind = document.createElement('div');
-      wind.className = 'szene__wind szene__wind--' + gr; wind.style.top = oben + 'px'; wind.style.height = (unten - oben) + 'px';
-      ebene.appendChild(wind);
+      var wind = windHuellen[gr];
+      if (!wind) {
+        wind = document.createElement('div');
+        wind.className = 'szene__wind szene__wind--' + gr; wind.style.top = oben + 'px'; wind.style.height = (unten - oben) + 'px';
+        ebene.appendChild(wind); windHuellen[gr] = wind;
+      }
       var r = zufall(900 + gr), halme = [], n = Math.round(m.W * (gr ? 0.42 : 0.6));
       for (var i = 0; i < n; i++) {
         var x = r() * (m.W + 40) - 20, t = r();
         halme.push({ x: x, y: m.H - t * m.H * (gr ? 0.03 : 0.07) + 4, h: m.H * (gr ? 0.06 + r() * 0.1 : 0.035 + r() * 0.07) * (1 - t * 0.3), neig: (r() - 0.45) * (gr ? 0.5 : 0.7), b: gr ? 1.6 + r() * 2.2 : 1 + r() * 1.4, f: Math.floor(r() * 5), aehre: r() < (gr ? 0.06 : 0.03) });
       }
       halme.sort(function (a, b) { return a.y - b.y; });
-      LICHTER.forEach(function (licht) {
+      AKTIV.forEach(function (licht) {
         var p = F.gras[licht], c = document.createElement('canvas'), q = m.q;
         var o2 = oben - m.H * 0.14;
         c.width = Math.ceil(m.W * q); c.height = Math.ceil((unten - o2) * q);
@@ -559,7 +565,7 @@
       feld.push({ x: x, y: y, w: m.W * (0.06 + wz() * 0.12), h: m.H * (0.012 + wz() * 0.02) });
     }
     for (i = 0; i < 5; i++) feld.push({ x: m.W * (0.1 + wz() * 0.8), y: hoehe * (0.8 + wz() * 0.12), w: m.W * (0.12 + wz() * 0.2), h: m.H * (0.008 + wz() * 0.01) });
-    LICHTER.forEach(function (licht) {
+    AKTIV.forEach(function (licht) {
       var c = document.createElement('canvas');
       c.width = Math.ceil(m.W * q); c.height = Math.ceil(hoehe * q);
       c.className = 'szene__bild szene__wolken'; c.setAttribute('data-licht', licht); c.style.top = '0px'; c.style.height = hoehe + 'px';
@@ -678,13 +684,10 @@
   }
 
   /* ---------- Aufbau ---------- */
-  var ebenen = {}, sonne, mond, bereit = false, bauzeit = 0;
-  function aufbauen() {
-    var t0 = performance.now();
-    messen();
-    held.style.setProperty('--szene-h', m.H + 'px');
-    ['weit', 'fern', 'mitte', 'huegel', 'wald', 'wiese', 'gras'].forEach(function (k) { var e = ebenen[k]; e.querySelectorAll('canvas:not(.szene__hund), .szene__wind').forEach(function (c) { c.remove(); }); });
-    ebenen.himmel.querySelectorAll('.szene__wolken').forEach(function (c) { c.remove(); });
+  var ebenen = {}, sonne, mond, bereit = false, bauzeit = 0, bauNr = 0;
+  function spaeter(fn) { if (window.requestIdleCallback) requestIdleCallback(fn, { timeout: 500 }); else setTimeout(fn, 60); }
+  /* zeichnet alle Ebenen in den Lichtstimmungen aus AKTIV */
+  function landschaft() {
     wolken(ebenen.himmel);
     berg('weit', ebenen.weit, tiefster('fern') + 2, { saat: 3, schnee: 0.62, tiefe: 0.8, rippen: 0.5 });
     berg('fern', ebenen.fern, tiefster('mitte') + 2, { saat: 5, schnee: 0.64, schichten: 3, tiefe: 1, rippen: 1, baender: 40, geroell: 600 });
@@ -693,7 +696,21 @@
     wald(ebenen.wald, tiefster('wiese') + 2);
     wiese(ebenen.wiese, m.H * 1.15, ebenen.wiese);
     gras(ebenen.gras);
-    sterne();
+  }
+  function aufbauen() {
+    var t0 = performance.now();
+    messen();
+    held.style.setProperty('--szene-h', m.H + 'px');
+    ['weit', 'fern', 'mitte', 'huegel', 'wald', 'wiese', 'gras'].forEach(function (k) { var e = ebenen[k]; e.querySelectorAll('canvas:not(.szene__hund), .szene__wind').forEach(function (c) { c.remove(); }); });
+    ebenen.himmel.querySelectorAll('.szene__wolken').forEach(function (c) { c.remove(); });
+    windHuellen = [];
+    var nr = ++bauNr;
+    /* Stufe 1: nur das Tagbild – so steht der Startbildschirm sofort und ohne Ruckeln */
+    AKTIV = ['tag']; landschaft(); AKTIV = LICHTER;
+    /* Stufe 2 und 3: Abend und Nacht, danach Sterne – jeweils, wenn der Browser gerade Luft hat */
+    spaeter(function () { if (nr !== bauNr) return; AKTIV = ['gold']; landschaft(); AKTIV = LICHTER;
+      spaeter(function () { if (nr !== bauNr) return; AKTIV = ['nacht']; landschaft(); AKTIV = LICHTER;
+        spaeter(function () { if (nr !== bauNr) return; sterne(); zeichne(true); }); }); });
     /* Sonne startet mittig oben, sinkt senkrecht und verschwindet hinter dem Sattel in der Mitte */
     m.sonneR = Math.max(26, Math.min(44, m.W * 0.026));
     m.sonneStart = m.H * (m.hoch ? 0.13 : 0.1);

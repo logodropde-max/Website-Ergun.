@@ -83,6 +83,9 @@ img { display: block; max-width: 100%; height: auto; }
 /* weicher Übergang ohne Maske (Masken über bewegten Ebenen flackern in Safari): unten ein Verlauf genau
    in der Farbe, mit der die Studio-Sektion beginnt */
 .szene__ebene { position: absolute; inset: 0; pointer-events: none; will-change: transform; }
+/* Start: Himmel und Titel stehen sofort, die gezeichnete Landschaft blendet einmal weich ein */
+.szene__ebene[data-ebene]:not([data-ebene="himmel"]):not([data-ebene="titel"]) { transition: opacity 500ms var(--ease); }
+.szene:not(.szene--bereit) .szene__ebene[data-ebene]:not([data-ebene="himmel"]):not([data-ebene="titel"]) { opacity: 0; }
 .szene__bild { position: absolute; left: 0; width: 100%; display: block; opacity: 0; }
 .szene--bereit .szene__bild[data-licht="tag"] { opacity: var(--tag, 1); }
 .szene--bereit .szene__bild[data-licht="gold"] { opacity: var(--gold); }
@@ -457,7 +460,7 @@ img { display: block; max-width: 100%; height: auto; }
 <main id="inhalt" tabindex="-1">
   <!-- endo Studio (früher endo.ai): zweiter Bereich, direkt unter dem Titelbild. Ausführlich mit Funktionen und Paketen: ki/ -->
   <section class="endo" id="endo" aria-labelledby="endo-titel">
-    <div class="endo__nebel" aria-hidden="true"><div class="nebel nebel--1"></div><div class="nebel nebel--2"></div><div class="nebel nebel--3"></div></div>
+    <div class="endo__nebel" data-nebel aria-hidden="true"><div class="nebel nebel--1"></div><div class="nebel nebel--2"></div><div class="nebel nebel--3"></div></div>
     <div class="endo__orb" data-orb aria-hidden="true"></div>
     <div class="endo__innen">
       <div class="endo__kopf reveal">
@@ -639,7 +642,7 @@ img { display: block; max-width: 100%; height: auto; }
   </nav>
 </footer>
 
-<script src="js/szene.js?v=12"></script>
+<script src="js/szene.js?v=13"></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {
@@ -825,23 +828,6 @@ img { display: block; max-width: 100%; height: auto; }
 (function () {
   var buehne = document.querySelector('.endo__orb'), sektion = document.getElementById('endo');
   if (!buehne) return;
-  /* Nebel: drei weiche, nahtlos wiederholbare Streifen, einmal gerechnet (klein, weich hochskaliert) */
-  function nebelBild(saat, dichte) {
-    var c = document.createElement('canvas'), w = 640, h = 160, g = c.getContext('2d'), a = saat;
-    function r() { a = (a * 16807) % 2147483647; return a / 2147483647; }
-    c.width = w; c.height = h;
-    for (var i = 0; i < dichte; i++) {
-      var x = r() * w, y = h * (0.35 + r() * 0.4), rx = w * (0.06 + r() * 0.12), ry = h * (0.12 + r() * 0.2), al = 0.05 + r() * 0.08;
-      [x - w, x, x + w].forEach(function (xx) {
-        g.save(); g.translate(xx, y); g.scale(1, ry / rx);
-        var gr = g.createRadialGradient(0, 0, 0, 0, 0, rx);
-        gr.addColorStop(0, 'rgba(172,188,226,' + al + ')'); gr.addColorStop(1, 'rgba(172,188,226,0)');
-        g.fillStyle = gr; g.fillRect(-rx, -rx, rx * 2, rx * 2); g.restore();
-      });
-    }
-    return 'url(' + c.toDataURL('image/png') + ')';
-  }
-  [[11, 70], [23, 55], [37, 45]].forEach(function (n, i) { sektion.style.setProperty('--nebel-' + (i + 1), nebelBild(n[0], n[1])); });
   if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { sektion.classList.toggle('endo--sichtbar', e[0].isIntersecting); }).observe(sektion);
   if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { if (e[0].isIntersecting) sektion.classList.add('endo--da'); }, { rootMargin: '0px 0px -20% 0px' }).observe(sektion);
   else sektion.classList.add('endo--da');
@@ -850,11 +836,16 @@ img { display: block; max-width: 100%; height: auto; }
     if (geladen) return; geladen = true;
     var s = document.createElement('script'); s.src = 'ki/js/orb.js?v=6'; s.async = true; document.body.appendChild(s);
   }
-  if (!('IntersectionObserver' in window)) { laden(); return; }
-  var io = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { io.disconnect(); laden(); } }, { rootMargin: '600px 0px' });
-  io.observe(buehne);
+  if (!('IntersectionObserver' in window)) { window.addEventListener('load', laden); return; }
+  /* erst nach dem Laden der Seite beobachten – der Start bleibt frei von der 500-KB-Kugel */
+  function beobachten() {
+    var io = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { io.disconnect(); laden(); } }, { rootMargin: '0px 0px 240px 0px' });
+    io.observe(buehne);
+  }
+  if (document.readyState === 'complete') setTimeout(beobachten, 800); else window.addEventListener('load', function () { setTimeout(beobachten, 800); });
 })();
 </script>
+<script src="ki/js/nebel.js?v=1" defer></script>
 <script src="ki/js/endo-daten.js?v=4"></script>
 <script src="ki/js/pakete.js?v=3"></script>
 <script>
