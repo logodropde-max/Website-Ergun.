@@ -7,6 +7,12 @@
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
 
+
+## Wurzeln aus dem Gras (26.09.2026, 00:10, Claude Code)
+- `js/szene.js`: neue Funktion `wurzeln()` (nach den Sternen, per `spaeter`). `gras()` merkt sich die Halme (`grasFuesse`); aus deren Füßen wachsen ca. W/5,5 Wurzeln, davon W/60 (mind. 8) lange, die zur Mitte der `.endo__orb` steuern (Ziel zurückgerechnet durch die End-Stellung von `gras-nah`: 10svh hoch, ×1,6). Farbe: Erd-Blau oben → Silber → hell, tiefer mit leichtem Schein und Lichtpunkten.
+- Wachsen: jedes Stück kommt in einen von 8 Streifen nach „gewachsenem Weg ÷ Tempo der Wurzel“ → unregelmäßige Wachstumsfront. Je Streifen eine Leinwand mit eigener `animation-range` (exit 6 %…100 %), Keyframes `wurzel-waechst` (opacity).
+- `index.html`: `.szene__grund` (dunkler Verlauf unter der Bühne) + `.szene__wurzeln` im `.szene`-Block (dort gilt die Zeitleiste `--szene`); `.szene__wurzeln` hat Animation `gras-nah` mit `transform-origin: 50% var(--wurzel-fuss)` = Unterkante der Bühne → Wurzeln bleiben an den Halmen. `.szene__fade` nur noch 22 %. `erde-steigt` läuft nicht mehr. `.endo` hat keinen Hintergrund mehr (durchsichtig), `.endo__daten` und `ki/js/daten.js` sind von der Startseite entfernt (bleiben auf /ki/).
+
 ## Teil 5: Daten statt Nebel + endo-Schrift (25.09.2026, 23:30, Claude Code)
 - Neu `ki/studio.css` (auf Startseite und /ki/ eingebunden): Schrift **Geist Light** (`schriften/Geist-Light.woff2`) und **Geist Mono** (`schriften/GeistMono-Regular.woff2`, beide OFL aus dem `geist`-Paket), Variablen `--endo-schrift`, `--endo-mono`, `--endo-chrom`; Wortmarke `.endo-marke` (`<b>endo</b> <span>Studio</span>`, `--klein` für die Navigation); Daten-Ebenen `.daten` / `.daten__ebene` (`--wurzeln`, `--strom` mit Lichtimpuls `::after`, `--welle`, `--netz`, Deckkraft über `--deck`).
 - Neu `ki/js/daten.js` (ersetzt `ki/js/nebel.js`, das nicht mehr eingebunden ist): setzt `.ist-bereit` auf `[data-daten]` erst nach dem Laden (dann werden die Bilder geholt) und `.daten-pause`, solange die Ebene nicht im Bild ist.

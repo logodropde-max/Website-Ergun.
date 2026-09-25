@@ -479,7 +479,7 @@
     hundEbene.appendChild(c); hund.leinwand = c; hund.zuletzt = '';
   }
 
-  var GRAS_GRUPPEN = 2, windHuellen = [];
+  var GRAS_GRUPPEN = 2, windHuellen = [], grasFuesse = [];
   function gras(ebene) {
     /* etwas über den unteren Rand hinaus, falls das Bild nach dem Zeichnen noch höher wird */
     var oben = m.H * 0.8, unten = m.H * 1.15;
@@ -496,6 +496,7 @@
         halme.push({ x: x, y: m.H - t * m.H * (gr ? 0.03 : 0.07) + 4, h: m.H * (gr ? 0.06 + r() * 0.1 : 0.035 + r() * 0.07) * (1 - t * 0.3), neig: (r() - 0.45) * (gr ? 0.5 : 0.7), b: gr ? 1.6 + r() * 2.2 : 1 + r() * 1.4, f: Math.floor(r() * 5), aehre: r() < (gr ? 0.06 : 0.03) });
       }
       halme.sort(function (a, b) { return a.y - b.y; });
+      if (AKTIV.indexOf('tag') >= 0) grasFuesse[gr] = halme;
       AKTIV.forEach(function (licht) {
         var p = F.gras[licht], c = document.createElement('canvas'), q = m.q;
         var o2 = oben - m.H * 0.14;
@@ -516,6 +517,95 @@
         wind.appendChild(c);
       });
     }
+  }
+
+  /* ---------- Wurzeln (25.09. nachts, Emre: „aus dem Anfang der Grashalme, sauber, wie Parallax“) ----------
+     Aus den Füßen der Grashalme wachsen feine Wurzeln in die dunkle Erde; nach unten werden sie zu leuchtenden
+     Datenlinien, die langen laufen in die endo-Kugel. Sie liegen in .szene__wurzeln (unter dem Titelbild, hinter der
+     Studio-Sektion) und machen genau die Scroll-Animation des Grases mit (gras-nah) – so bleiben sie an den Halmen.
+     Einmal gezeichnet und in Wachstums-Streifen geteilt, die beim Abstieg nacheinander einblenden: die Wurzeln wachsen. */
+  var wurzelHuelle = held.querySelector('.szene__wurzeln'), WURZEL_STREIFEN = 8;
+  function seitenOben(el) { var y = 0; while (el) { y += el.offsetTop; el = el.offsetParent; } return y; }
+  function wurzeln() {
+    if (!wurzelHuelle || !grasFuesse[0]) return;
+    wurzelHuelle.textContent = '';
+    var W = m.W, H = m.H, S = H * 0.09;
+    /* Ziel = Mitte der Kugel, zurückgerechnet durch die End-Stellung der Gras-Animation (10svh hoch, ×1,6 um die Unterkante) */
+    var zoom = cssParallaxe && isNaN(festP) ? 1.6 : 1, hoch = zoom > 1 ? window.innerHeight * 0.1 : 0;
+    var kugel = document.querySelector('.endo__orb'), ty = H * 0.45;
+    if (kugel) ty = (seitenOben(kugel) + kugel.offsetHeight / 2 - seitenOben(held) - H + hoch) / zoom;
+    ty = Math.max(H * 0.25, Math.min(H * 0.9, ty));
+    var D = Math.ceil(S + ty + H * 0.03), zielY = S + ty, cx = W / 2;
+    var q = Math.min(2, m.q * (zoom > 1 ? 1.35 : 1));
+    /* Jede Wurzel wächst mit eigenem Tempo: ein Stück wird dem Streifen zugeordnet, in dem es „gewachsen“ ist
+       (Weg ab dem Halmfuß ÷ Tempo). So endet die Wachstumsfront unregelmäßig statt als gerade Kante,
+       und jedes Stück liegt genau einmal auf der Seite (keine Doppelungen, keine hellen oder dunklen Streifen). */
+    var N = WURZEL_STREIFEN, SCHRITT = ty * 1.05 / N, streifen = [];
+    for (var z = 0; z < N; z++) streifen.push({ teile: [], punkte: [], oben: 1e9, unten: -1e9 });
+    function merke(nr, y1, y2, rand) { var st = streifen[nr]; st.oben = Math.min(st.oben, Math.min(y1, y2) - rand); st.unten = Math.max(st.unten, Math.max(y1, y2) + rand); return st; }
+    function nummer(lauf, tempo) { return Math.min(N - 1, Math.floor(lauf / (SCHRITT * tempo))); }
+    var r = zufall(4711);
+    var ERDE = hex('#34445A'), SILBER = hex('#7690BA'), HELL = hex('#D8E5F8');
+    function farbe(y, a) {
+      var d = Math.max(0, (y - S) / ty), A, B, t;
+      if (d < 0.4) { A = ERDE; B = SILBER; t = sanft(0, 0.4, d); } else { A = SILBER; B = HELL; t = sanft(0.4, 1.05, d); }
+      return 'rgba(' + Math.round(mix(A[0], B[0], t)) + ',' + Math.round(mix(A[1], B[1], t)) + ',' + Math.round(mix(A[2], B[2], t)) + ',' + a.toFixed(3) + ')';
+    }
+    /* w = Abweichung von „senkrecht nach unten“ im Bogenmaß, lauf = gewachsener Weg ab dem Halmfuß */
+    function ast(x, y, w, laenge, breite, stufe, zurKugel, lauf, tempo) {
+      var schritt = 4, n = Math.max(3, Math.round(laenge / schritt));
+      for (var i = 0; i < n; i++) {
+        var f = i / n;
+        w += (r() - 0.5) * 0.24 - w * 0.035;
+        if (zurKugel) { var soll = Math.atan2(cx - x, Math.max(24, zielY - y)); w += (soll - w) * (0.03 + f * 0.12); }
+        var nx = x + Math.sin(w) * schritt, ny = y + Math.cos(w) * schritt;
+        var bb = Math.max(0.35, breite * Math.pow(1 - f * 0.85, 0.9));
+        var a = Math.min(1, 0.6 + f * 4) * (f > 0.78 ? Math.max(0, (1 - f) / 0.22) : 1);
+        var d = (ny - S) / ty, nr = nummer(lauf, tempo), st = merke(nr, y, ny, bb * 2 + 3);
+        st.teile.push([x, y, nx, ny, bb, farbe(ny, (0.62 + 0.3 * sanft(0.2, 0.9, d)) * a), d > 0.3 ? farbe(ny, 0.09 * a * sanft(0.3, 0.8, d)) : null]);
+        lauf += schritt;
+        if (stufe < 3 && f > 0.06 && f < 0.75 && r() < 0.03) {
+          var seite = r() < 0.5 ? -1 : 1;
+          ast(nx, ny, w + seite * (0.45 + r() * 0.6), laenge * (1 - f) * (0.25 + r() * 0.4), bb * 0.75, stufe + 1, false, lauf, tempo);
+          if (d > 0.4 && r() < 0.22) merke(nr, ny, ny, 8).punkte.push([nx, ny, 0.7]);
+        }
+        x = nx; y = ny;
+        if (y > D - 3 || x < -40 || x > W + 40 || (zurKugel && y > zielY - 6)) break;
+      }
+      if ((y - S) / ty > 0.45 && r() < 0.3) merke(nummer(lauf, tempo), y, y, 8).punkte.push([x, y, 1]);
+    }
+    /* Startpunkte: Füße der Halme (beide Gruppen), dünn ausgewählt; ein paar lange laufen bis in die Kugel */
+    var fuesse = grasFuesse[0].concat(grasFuesse[1] || []).filter(function (h) { return h.x > -10 && h.x < W + 10; });
+    var anzahl = Math.round(W / 5.5), lang = Math.max(8, Math.round(W / 60));
+    for (var k = 0; k < anzahl; k++) {
+      var h = fuesse[Math.floor(r() * fuesse.length)], y0 = h.y - (H - S), wahl = r();
+      var zum = k < lang, L = zum ? ty * 1.6 : ty * (wahl < 0.68 ? 0.08 + r() * 0.28 : 0.36 + r() * 0.42);
+      ast(h.x + h.neig * 2, y0, (r() - 0.5) * 0.5, L, zum ? 1.5 + r() * 0.5 : 0.8 + r() * 0.8, 0, zum, 0, zum ? 1.05 + r() * 0.2 : 0.72 + r() * 0.6);
+    }
+    /* Streifen zeichnen: je Streifen eine Leinwand, nur so hoch wie nötig; jeder blendet beim Abstieg etwas später ein */
+    wurzelHuelle.style.top = (H - S) + 'px'; wurzelHuelle.style.height = D + 'px';
+    wurzelHuelle.style.setProperty('--wurzel-fuss', S + 'px');
+    streifen.forEach(function (st, i) {
+      if (!st.teile.length && !st.punkte.length) return;
+      var o = Math.max(0, Math.floor(st.oben)), hh = Math.min(D, Math.ceil(st.unten)) - o; if (hh <= 0) return;
+      var c = document.createElement('canvas'); c.width = Math.ceil(W * q); c.height = Math.ceil(hh * q);
+      var g = c.getContext('2d'); g.setTransform(q, 0, 0, q, 0, -o * q); g.lineCap = 'round';
+      st.teile.forEach(function (t) {
+        if (t[6]) { g.strokeStyle = t[6]; g.lineWidth = t[4] * 4 + 1.6; g.beginPath(); g.moveTo(t[0], t[1]); g.lineTo(t[2], t[3]); g.stroke(); }
+      });
+      st.teile.forEach(function (t) { g.strokeStyle = t[5]; g.lineWidth = t[4]; g.beginPath(); g.moveTo(t[0], t[1]); g.lineTo(t[2], t[3]); g.stroke(); });
+      /* leuchtende Knoten: kleine Lichtpunkte an Verzweigungen und Spitzen */
+      st.punkte.forEach(function (p) {
+        var rr = 3.2 + p[2] * 2.4, gr = g.createRadialGradient(p[0], p[1], 0, p[0], p[1], rr);
+        gr.addColorStop(0, 'rgba(226,236,252,' + (0.5 * p[2] + 0.2).toFixed(2) + ')'); gr.addColorStop(1, 'rgba(160,190,240,0)');
+        g.fillStyle = gr; g.beginPath(); g.arc(p[0], p[1], rr, 0, Math.PI * 2); g.fill();
+      });
+      c.style.top = o + 'px'; c.style.height = (c.height / q) + 'px';
+      var a0 = 6 + i * 10, a1 = Math.min(100, a0 + 18);
+      c.style.setProperty('animation-range', 'exit ' + a0 + '% exit ' + a1 + '%');
+      wurzelHuelle.appendChild(c);
+    });
+    wurzelHuelle.classList.add('ist-bereit');
   }
 
   /* ---------- Hund (Bildfolge aus dem Kling-Video als Silhouette, 36 Bilder) ---------- */
@@ -717,7 +807,8 @@
     /* Stufe 2 und 3: Abend und Nacht, danach Sterne – jeweils, wenn der Browser gerade Luft hat */
     spaeter(function () { if (nr !== bauNr) return; AKTIV = ['gold']; landschaft(); AKTIV = LICHTER;
       spaeter(function () { if (nr !== bauNr) return; AKTIV = ['nacht']; landschaft(); AKTIV = LICHTER;
-        spaeter(function () { if (nr !== bauNr) return; sterne(); zeichne(true); }); }); });
+        spaeter(function () { if (nr !== bauNr) return; sterne(); zeichne(true);
+          spaeter(function () { if (nr !== bauNr) return; wurzeln(); }); }); }); });
     /* Sonne startet mittig oben, sinkt senkrecht und verschwindet hinter dem Sattel in der Mitte */
     m.sonneR = Math.max(26, Math.min(44, m.W * 0.026));
     m.sonneStart = m.H * (m.hoch ? 0.13 : 0.1);
