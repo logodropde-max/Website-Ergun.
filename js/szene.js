@@ -116,6 +116,8 @@
     wiese: kamm({ saat: 53, basis: 0.9, fein: 0.004, rau: 0.45, wellen: 0.006, gipfel: [[0.64, 0.05, 0.3, 1.8], [0.1, 0.02, 0.3, 1.2]] })
   };
   /* Tiefe: hinten viel Weg (fast stehend), vorne wenig – so entsteht beim Scrollen die Parallaxe */
+  /* bis hierhin (Anteil des Startbilds) ist die Sonne hinter dem Sattel – ca. 10 % mehr Strecke als vorher */
+  var SONNE_BIS = 0.31;
   var TIEFE = { himmel: 0.84, weit: 0.8, fern: 0.74, mitte: 0.62, titel: 0.52, huegel: 0.48, wald: 0.33, wiese: 0.17, gras: 0 };
 
   var m = {};           /* Maße */
@@ -692,7 +694,7 @@
     /* Sonne startet mittig oben, sinkt senkrecht und verschwindet hinter dem Sattel in der Mitte */
     m.sonneR = Math.max(26, Math.min(44, m.W * 0.026));
     m.sonneStart = m.H * (m.hoch ? 0.13 : 0.1);
-    m.sonneEnde = ky('fern', m.W / 2) + (TIEFE.himmel - TIEFE.fern * m.f) * 0.26 * m.H + m.sonneR * 1.4;
+    m.sonneEnde = ky('fern', m.W / 2) + (TIEFE.himmel - TIEFE.fern * m.f) * SONNE_BIS * 0.9 * m.H + m.sonneR * 1.4;
     m.mondX = m.W * (m.hoch ? 0.22 : 0.24);
     m.mondStart = ky('fern', m.mondX) + (TIEFE.himmel - TIEFE.fern * m.f) * 0.3 * m.H + m.sonneR;
     m.mondEnde = m.H * (m.hoch ? 0.12 : 0.11);
@@ -722,9 +724,22 @@
     if (!immer && Math.abs(p - letztesP) < 0.0005) return;
     letztesP = p;
     var s = isNaN(festP) ? p * m.H : 0;
-    /* Parallaxe */
+    /* Parallaxe: direkt am Scrollen, sonst schwimmt die Landschaft gegen die Seite */
     Object.keys(ebenen).forEach(function (k) { setze(ebenen[k], s * TIEFE[k] * (k === 'himmel' ? 1 : m.f)); });
-    /* Licht */
+    /* Sonne, Mond, Licht und Hund folgen einem weich nachgeführten Wert – keine Sprünge bei Mausrad-Schritten */
+    ziel = p;
+    if (immer || ruhig || !isNaN(festP)) { weich = p; licht(weich); }
+    else if (!laeuft) { laeuft = true; zuletztT = performance.now(); requestAnimationFrame(nachfuehren); }
+  }
+  var ziel = 0, weich = 0, laeuft = false, zuletztT = 0;
+  function nachfuehren(t) {
+    var dt = Math.min(0.05, Math.max(0, (t - zuletztT) / 1000)); zuletztT = t;
+    weich += (ziel - weich) * (1 - Math.exp(-dt / 0.2));
+    if (Math.abs(ziel - weich) < 0.0003) { weich = ziel; laeuft = false; }
+    licht(weich);
+    if (laeuft) requestAnimationFrame(nachfuehren);
+  }
+  function licht(p) {
     var gold = sanft(0.05, 0.19, p), nacht = sanft(0.22, 0.42, p);
     held.style.setProperty('--gold', (nacht > 0.995 ? 0 : gold).toFixed(3));
     held.style.setProperty('--nacht', nacht.toFixed(3));
@@ -739,13 +754,13 @@
     held.style.setProperty('--sterne3', sanft(0.38, 0.52, p).toFixed(3));
     held.style.setProperty('--milch', sanft(0.42, 0.6, p).toFixed(3));
     held.classList.toggle('szene--sterne', s1 > 0.01);
-    /* Sonne: senkrecht, zuerst langsam, dann schneller zum Horizont */
-    var ps = sanft(0, 0.28, p), ys = mix(m.sonneStart, m.sonneEnde, ps * ps * (1.6 - 0.6 * ps));
-    sonne.style.transform = 'translate3d(' + (m.W / 2) + 'px,' + ys.toFixed(1) + 'px,0)';
+    /* Sonne: senkrecht, gleichmäßig mit sanftem Anfang und Ende */
+    var ps = sanft(0, SONNE_BIS, p), ys = mix(m.sonneStart, m.sonneEnde, ps);
+    sonne.style.transform = 'translate3d(' + (m.W / 2).toFixed(2) + 'px,' + ys.toFixed(2) + 'px,0)';
     held.style.setProperty('--tief', sanft(0.04, 0.24, p).toFixed(3));
     /* Mond steigt links auf */
-    var pm = sanft(0.27, 0.6, p), ym = mix(m.mondStart, m.mondEnde, 1 - Math.pow(1 - pm, 2));
-    mond.style.transform = 'translate3d(' + m.mondX.toFixed(1) + 'px,' + ym.toFixed(1) + 'px,0)';
+    var pm = sanft(0.27, 0.62, p), ym = mix(m.mondStart, m.mondEnde, pm);
+    mond.style.transform = 'translate3d(' + m.mondX.toFixed(2) + 'px,' + ym.toFixed(2) + 'px,0)';
     held.style.setProperty('--mond', sanft(0.27, 0.4, p).toFixed(3));
     /* Hund: Farbe folgt dem Licht, nachts hebt er den Kopf */
     var bildNr = Math.round(sanft(0.4, 0.58, p) * 35);

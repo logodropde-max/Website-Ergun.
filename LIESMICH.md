@@ -6,6 +6,10 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Teil 3 · Schritt 1: Sonne und Mond flüssig (25.09.2026, 18:00, Claude Code)
+- `zeichne()` setzt nur noch die Parallaxe direkt; Licht, Sonne, Mond, Sterne und Hund laufen in `licht(p)` über einen weich nachgeführten Wert (`nachfuehren()`, eigene rAF-Schleife, Zeitkonstante 0,2 s) – keine Sprünge mehr bei Mausrad-Schritten.
+- Sonne: `SONNE_BIS = 0.31` (vorher 0,28), gleichmäßige Bahn mit sanftem Anfang/Ende; Mond 0,27–0,62, gleichmäßig. Transforms mit 2 Nachkommastellen.
+
 ## Teil 2 · Schritte 3–6: ERGUN. Studio in Chrom-Silber, Funktionswahl, Pakete (25.09.2026, 17:15, Claude Code)
 - **Umbenannt (Emre): endo.ai → „ERGUN. Studio“.** Der Chat-Assistent heißt weiter **endo**. Adresse bleibt `/ki/`, dazu Weiterleitung `/studio` → `/ki/` (`vercel.json`, `redirects`).
 - `ki/index.html` neu (alte Fassung: `_code/archiv/ki-index-vor-chrom-2026-09-25.html`): dunkel, Chrom-Verläufe (`--chrom`, `--chrom-kante`), Serifen-Überschriften, Orange nur als Premium-Punkt. Aufbau: Hero mit Kugel, 1 Satz + Chat → Vorher/nachher → **Funktionen wählen** (`#auswahl`) → **Pakete** (`#pakete`) → Vormerken → Fragen → Fuß. Credit-Fenster bleibt.
