@@ -293,7 +293,6 @@ button { font: inherit; color: inherit; }
     <div class="orb" data-orb aria-hidden="true"></div>
     <div class="innen">
       <div class="hero__kopf">
-        <p class="hero__marke">ERGUN. Studio</p>
         <h1 id="titel" class="chrom">Zeigen Sie mir Ihr Produkt.</h1>
         <p class="hero__satz"><b>ERGUN. Studio macht aus Ihrem Handyfoto Produktfotos, Werbevideos und Bilder für Ihre Website.</b> Vom Digitalstudio ERGUN.: Webdesign und die Bilder dafür aus einer Hand.</p>
       </div>
@@ -554,7 +553,8 @@ button { font: inherit; color: inherit; }
     var ul = k.querySelector('ul');
     p.kann.forEach(function (id) { var f = namen[id]; if (!f) return; var li = document.createElement('li'); li.textContent = f.name; if (f.premium) li.className = 'plus'; ul.appendChild(li); });
     var knopf = document.createElement('a');
-    knopf.className = 'knopf ' + (premium || i === 1 ? 'knopf--chrom' : 'knopf--rand');
+    /* nur das empfohlene Paket bekommt den Chrom-Knopf (ohne Auswahl: Pro) */
+    knopf.className = 'knopf ' + (i === 1 ? 'knopf--chrom' : 'knopf--rand');
     if (p.kaufen) { knopf.href = p.kaufen; knopf.textContent = p.name + ' kaufen'; knopf.rel = 'noopener'; }
     else {
       knopf.href = '#vormerken-bereich'; knopf.textContent = p.name + ' vormerken';
@@ -567,7 +567,12 @@ button { font: inherit; color: inherit; }
   if (E.pakete.every(function (p) { return p.kaufen; })) document.getElementById('vormerken-bereich').hidden = true;
   wahl.addEventListener('change', vormerkText);
   function markiere() {
-    pakete.querySelectorAll('.paket').forEach(function (k) { k.classList.toggle('ist-empfohlen', !!empfohlen && k.getAttribute('data-paket-karte') === empfohlen.name); });
+    var ziel = empfohlen ? empfohlen.name : 'Pro';
+    pakete.querySelectorAll('.paket').forEach(function (k) {
+      var n = k.getAttribute('data-paket-karte'), b = k.querySelector('.knopf');
+      k.classList.toggle('ist-empfohlen', !!empfohlen && n === empfohlen.name);
+      if (b) { b.classList.toggle('knopf--chrom', n === ziel); b.classList.toggle('knopf--rand', n !== ziel); }
+    });
     if (empfohlen) wahl.value = empfohlen.name;
   }
   function auswahlText() {
