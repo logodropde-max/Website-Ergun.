@@ -6,6 +6,12 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Abstieg zur Erde + Abstand zu endo Studio (25.09.2026, 22:20, Claude Code)
+- Emre: sauberer Übergang, endo Studio nicht direkt am Titelbild, passende Animation „zur Erde runter“.
+- Neu `.szene__erde` (Verlauf in #070B16, steigt per Scroll-Animation `erde-steigt` von unten auf, exit 30–92 %). Gras (`gras-nah`, bis scale 1.6), Wiese mit Hund (`wiese-nah`, 1.28) und Wald (`wald-nah`, 1.1) kommen näher, der Titel blendet aus (`titel-aus`, exit 32–62 %). Nur bei CSS-Scroll-Animationen und ohne „Bewegung reduzieren“.
+- `.endo` Abstand oben: `34svh + clamp(240px, 44svh, 440px)` – nach dem Titelbild erst eine ruhige Nebelzone, dann Kugel und Überschrift.
+- Titelzeile: nur noch „Digitalstudio für Design“ (Emre).
+
 ## Blauer Streifen oben hinter der Navigation (25.09.2026, 21:55, Claude Code)
 - Emre (iPhone): „oben über dem Namen, wo ERGUN/Pakete steht, wird es blau“. Ursache: der Himmel reichte beim Scrollen in Safari nicht ganz bis oben, dahinter schien die hellblaue Grundfarbe von `.szene__buehne` (#BFD6EA).
 - Lösung: `.himmel { inset: -60% 0 0 0 }` – alle vier Himmelsverläufe reichen 60 % über den Rand, oben jeweils in ihrer eigenen obersten Farbe (Farbstopps umgerechnet, sichtbarer Verlauf unverändert). Grundfarbe der Bühne jetzt `#070B16`.

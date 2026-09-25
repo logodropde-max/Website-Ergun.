@@ -91,6 +91,26 @@ img { display: block; max-width: 100%; height: auto; }
   }
 }
 @keyframes ebene-weg { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, var(--weg, 0px), 0); } }
+
+/* Abstieg zur Erde (25.09. abends, Emre): nach der Nacht kommt die Wiese mit dem Hund näher, das Gras wächst ins Bild,
+   der Schriftzug blendet aus, und von unten steigt das Dunkel der Erde auf – in genau der Farbe, mit der endo Studio
+   beginnt. So endet das Titelbild ohne Kante. Alles über die Scroll-Animation des Browsers (kein Nachlauf). */
+.szene__erde { position: absolute; left: 0; right: 0; bottom: -1px; height: 100%; z-index: 3; pointer-events: none; transform: translate3d(0, 100%, 0);
+  background: linear-gradient(to top, #070B16 0%, #070B16 42%, rgba(7, 11, 22, 0.88) 58%, rgba(7, 11, 22, 0.45) 78%, rgba(7, 11, 22, 0) 100%); }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .szene--css .szene__erde { animation: erde-steigt linear both; animation-timeline: --szene; animation-range: exit 30% exit 92%; }
+    .szene--css .szene__ebene[data-ebene="gras"] { animation-name: gras-nah; transform-origin: 50% 100%; }
+    .szene--css .szene__ebene[data-ebene="wiese"] { animation-name: wiese-nah; transform-origin: 56% 100%; }
+    .szene--css .szene__ebene[data-ebene="wald"] { animation-name: wald-nah; transform-origin: 50% 100%; }
+    .szene--css .szene__ebene[data-ebene="titel"] { animation-name: ebene-weg, titel-aus; animation-timeline: --szene, --szene; animation-range: exit 0% exit 100%, exit 32% exit 62%; }
+  }
+}
+@keyframes erde-steigt { from { transform: translate3d(0, 100%, 0); } to { transform: translate3d(0, 0, 0); } }
+@keyframes gras-nah { 0%, 30% { transform: translate3d(0, 0, 0) scale(1); } 100% { transform: translate3d(0, -10svh, 0) scale(1.6); } }
+@keyframes wiese-nah { 0% { transform: translate3d(0, 0, 0) scale(1); } 38% { transform: translate3d(0, calc(var(--weg, 0px) * 0.38), 0) scale(1); } 100% { transform: translate3d(0, calc(var(--weg, 0px) - 3svh), 0) scale(1.28); } }
+@keyframes wald-nah { 0% { transform: translate3d(0, 0, 0) scale(1); } 38% { transform: translate3d(0, calc(var(--weg, 0px) * 0.38), 0) scale(1); } 100% { transform: translate3d(0, var(--weg, 0px), 0) scale(1.1); } }
+@keyframes titel-aus { from { opacity: 1; } to { opacity: 0; } }
 /* Start: Himmel und Titel stehen sofort, die gezeichnete Landschaft blendet einmal weich ein */
 .szene__ebene[data-ebene]:not([data-ebene="himmel"]):not([data-ebene="titel"]) { transition: opacity 500ms var(--ease); }
 .szene:not(.szene--bereit) .szene__ebene[data-ebene]:not([data-ebene="himmel"]):not([data-ebene="titel"]) { opacity: 0; }
@@ -262,7 +282,7 @@ img { display: block; max-width: 100%; height: auto; }
 /* ---------- Onepager (25.09., Emre): Hero → endo.ai → Erstgespräch, alles untereinander ---------- */
 
 /* endo.ai: die Nacht der Szene läuft weiter, die Kugel steht dort, wo eben noch der Mond war */
-.endo { position: relative; z-index: 0; isolation: isolate; overflow: hidden; margin-top: -34svh; padding: calc(34svh + clamp(40px, 6svh, 88px)) var(--pad) clamp(88px, 14svh, 144px);
+.endo { position: relative; z-index: 0; isolation: isolate; overflow: hidden; margin-top: -34svh; padding: calc(34svh + clamp(240px, 44svh, 440px)) var(--pad) clamp(88px, 14svh, 144px);
   background: linear-gradient(180deg, #070B16 0, #070B16 36svh, #04060D 60svh, #000 98svh); }
 /* Nachtnebel aus dem Tal des Titelbilds zieht weiter: drei Lagen, langsam im Wind, nach unten verlöschend.
    Links oben ein weicher Mondschein-Hof (dort steht der Mond). Nur transform, pausiert außerhalb des Bildes. */
@@ -485,7 +505,7 @@ img { display: block; max-width: 100%; height: auto; }
     <div class="szene__ebene" data-ebene="mitte" aria-hidden="true"></div>
     <div class="szene__ebene szene__titel" data-ebene="titel">
       <div class="titel">
-        <p class="titel__studio">Digitalstudio für Webdesign, Produktfotos &amp; Videos</p>
+        <p class="titel__studio">Digitalstudio für Design</p>
         <h1 class="titel__haupt"><span class="hinweis-versteckt">ERGUN. </span>Webdesigner</h1>
       </div>
     </div>
@@ -495,6 +515,7 @@ img { display: block; max-width: 100%; height: auto; }
     <div class="szene__ebene" data-ebene="gras" aria-hidden="true"></div>
     <div class="szene__oben" aria-hidden="true"></div>
     <div class="szene__fade" aria-hidden="true"></div>
+    <div class="szene__erde" aria-hidden="true"></div>
   </section>
 </div>
 
