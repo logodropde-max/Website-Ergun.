@@ -100,7 +100,7 @@ img { display: block; max-width: 100%; height: auto; }
   background: linear-gradient(to top, #070B16 0%, #070B16 42%, rgba(7, 11, 22, 0.88) 58%, rgba(7, 11, 22, 0.45) 78%, rgba(7, 11, 22, 0) 100%); }
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    /* die Erde steigt nicht mehr über das Gras: darunter wachsen jetzt die Wurzeln aus den Halmen (25.09. nachts) */
+    .szene--css .szene__erde { animation: erde-steigt linear both; animation-timeline: --szene; animation-range: exit 30% exit 92%; }
     .szene--css .szene__ebene[data-ebene="gras"] { animation-name: gras-nah; transform-origin: 50% 100%; }
     .szene--css .szene__ebene[data-ebene="wiese"] { animation-name: wiese-nah; transform-origin: 56% 100%; }
     .szene--css .szene__ebene[data-ebene="wald"] { animation-name: wald-nah; transform-origin: 50% 100%; }
@@ -112,20 +112,6 @@ img { display: block; max-width: 100%; height: auto; }
 @keyframes wiese-nah { 0% { transform: translate3d(0, 0, 0) scale(1); } 38% { transform: translate3d(0, calc(var(--weg, 0px) * 0.38), 0) scale(1); } 100% { transform: translate3d(0, calc(var(--weg, 0px) - 3svh), 0) scale(1.28); } }
 @keyframes wald-nah { 0% { transform: translate3d(0, 0, 0) scale(1); } 38% { transform: translate3d(0, calc(var(--weg, 0px) * 0.38), 0) scale(1); } 100% { transform: translate3d(0, var(--weg, 0px), 0) scale(1.1); } }
 @keyframes titel-aus { from { opacity: 1; } to { opacity: 0; } }
-/* Unter dem Rasen: dunkle Erde und Wurzeln (js/szene.js, Funktion wurzeln). Die Wurzeln beginnen an den Füßen der Halme,
-   machen dieselbe Scroll-Animation wie das Gras (gras-nah, gleicher Drehpunkt an der Unterkante) und wachsen beim
-   Abstieg Streifen für Streifen nach unten, bis in die endo-Kugel. Die Studio-Sektion liegt darüber und ist durchsichtig. */
-.szene__grund { position: absolute; left: 0; right: 0; top: 100%; height: 64svh; pointer-events: none; background: linear-gradient(#070B16, #04060D 40%, #000); }
-.szene__wurzeln { position: absolute; left: 0; right: 0; top: 100%; pointer-events: none; transform-origin: 50% var(--wurzel-fuss, 0px); opacity: 0; transition: opacity 600ms var(--ease); }
-.szene__wurzeln.ist-bereit { opacity: 1; }
-.szene__wurzeln canvas { position: absolute; left: 0; width: 100%; display: block; }
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .szene--css .szene__wurzeln { animation: gras-nah linear both; animation-timeline: --szene; animation-range: exit 0% exit 100%; }
-    .szene--css .szene__wurzeln canvas { animation: wurzel-waechst linear both; animation-timeline: --szene; }
-  }
-}
-@keyframes wurzel-waechst { from { opacity: 0; } to { opacity: 1; } }
 /* Start: Himmel und Titel stehen sofort, die gezeichnete Landschaft blendet einmal weich ein */
 .szene__ebene[data-ebene]:not([data-ebene="himmel"]):not([data-ebene="titel"]) { transition: opacity 500ms var(--ease); }
 .szene:not(.szene--bereit) .szene__ebene[data-ebene]:not([data-ebene="himmel"]):not([data-ebene="titel"]) { opacity: 0; }
@@ -201,7 +187,7 @@ img { display: block; max-width: 100%; height: auto; }
 
 /* Übergang ins Schwarz der Seite: keine Kante zur endo.ai-Sektion */
 /* leichter Bodennebel über der Unterkante, in der Farbe der endo-Sektion */
-.szene__fade { position: absolute; left: 0; right: 0; bottom: -1px; height: 22%; z-index: 2; pointer-events: none; background: linear-gradient(to top, #070B16 0%, rgba(7, 11, 22, 0.88) 16%, rgba(7, 11, 22, 0.5) 45%, rgba(7, 11, 22, 0.16) 75%, rgba(7, 11, 22, 0) 100%); }
+.szene__fade { position: absolute; left: 0; right: 0; bottom: -1px; height: 36%; z-index: 2; pointer-events: none; background: linear-gradient(to top, #070B16 0%, rgba(7, 11, 22, 0.88) 16%, rgba(7, 11, 22, 0.5) 45%, rgba(7, 11, 22, 0.16) 75%, rgba(7, 11, 22, 0) 100%); }
 .szene__oben { position: absolute; inset: 0 0 auto 0; height: 22%; z-index: 2; pointer-events: none; background: linear-gradient(rgba(6, 12, 28, 0.28), rgba(6, 12, 28, 0)); }
 
 /* ---------- Buttons ---------- */
@@ -298,9 +284,28 @@ img { display: block; max-width: 100%; height: auto; }
 
 /* endo.ai: die Nacht der Szene läuft weiter, die Kugel steht dort, wo eben noch der Mond war */
 .endo { position: relative; z-index: 2; isolation: isolate; pointer-events: none; overflow: hidden; margin-top: -34svh; padding: calc(34svh + clamp(240px, 44svh, 440px)) var(--pad) clamp(88px, 14svh, 144px);
-  background: none; } /* durchsichtig: darunter liegen Erde und Wurzeln des Titelbilds (.szene__grund, .szene__wurzeln) */
+  background: linear-gradient(180deg, rgba(7, 11, 22, 0) 0, rgba(7, 11, 22, 0) 33svh, #070B16 34svh, #070B16 36svh, #04060D 60svh, #000 98svh); }
 /* oben liegt die Sektion über dem Titelbild (Nebel zieht darüber) – Klicks gehen nur an ihren Inhalt */
 .endo__innen, .endo__pakete { pointer-events: auto; }
+/* Schlichter Übergang (26.09., Emre: Wurzeln waren „zu doll“, bis eine Vorlage kommt): aus dem Dunkel der Erde
+   läuft beim Scrollen ein einzelner feiner Lichtfaden nach unten bis in die Kugel; ab und zu wandert ein Lichtpunkt hinab.
+   Länge = Abstand von der Unterkante des Titelbilds bis zur Kugelmitte (gleiche Maße wie .endo__orb). */
+.endo__faden { position: absolute; z-index: -2; left: 50%; top: 30svh; width: 1px; margin-left: -0.5px; pointer-events: none; transform-origin: 50% 0;
+  --faden-h: calc(4svh + clamp(240px, 44svh, 440px) + clamp(-72px, -6svh, -24px) + min(460px, 74vw) / 2); height: var(--faden-h);
+  background: linear-gradient(rgba(214, 226, 245, 0), rgba(214, 226, 245, 0.28) 30%, rgba(226, 234, 248, 0.6)); }
+.endo__faden::after { content: ""; position: absolute; left: -2px; top: 0; width: 5px; height: 36px; border-radius: 3px; opacity: 0;
+  background: radial-gradient(closest-side, rgba(240, 245, 255, 0.95), rgba(200, 216, 245, 0)); }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .endo__faden { animation: faden-waechst linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; }
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .endo__faden::after { animation: faden-punkt 7s cubic-bezier(0.45, 0, 0.55, 1) 2s infinite; }
+  .endo:not(.endo--sichtbar) .endo__faden::after, .endo-chat .endo__faden::after { animation-play-state: paused; }
+}
+@keyframes faden-waechst { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes faden-punkt { 0% { opacity: 0; transform: translate3d(0, 0, 0); } 8% { opacity: 1; } 42% { opacity: 1; } 50% { opacity: 0; transform: translate3d(0, calc(var(--faden-h) - 36px), 0); } 100% { opacity: 0; transform: translate3d(0, calc(var(--faden-h) - 36px), 0); } }
 .endo__orb { position: relative; z-index: -1; width: min(460px, 74vw); aspect-ratio: 1; margin: clamp(-72px, -6svh, -24px) auto clamp(-72px, -7svh, -40px); opacity: 0; pointer-events: none;
   -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent); mask-image: radial-gradient(closest-side, #000 62%, transparent); transition: opacity 1400ms var(--ease), transform 1600ms var(--ease); transform: translateY(14svh) scale(0.86); }
 .endo--da .endo__orb { transform: none; }
@@ -507,13 +512,12 @@ img { display: block; max-width: 100%; height: auto; }
     <div class="szene__fade" aria-hidden="true"></div>
     <div class="szene__erde" aria-hidden="true"></div>
   </section>
-  <div class="szene__grund" aria-hidden="true"></div>
-  <div class="szene__wurzeln" aria-hidden="true"></div>
 </div>
 
 <main id="inhalt" tabindex="-1">
   <!-- endo Studio (früher endo.ai): zweiter Bereich, direkt unter dem Titelbild. Ausführlich mit Funktionen und Paketen: ki/ -->
   <section class="endo" id="endo" aria-labelledby="endo-titel">
+    <div class="endo__faden" aria-hidden="true"></div>
     <div class="endo__orb" data-orb aria-hidden="true"></div>
     <div class="endo__innen">
       <div class="endo__kopf reveal">
@@ -695,7 +699,7 @@ img { display: block; max-width: 100%; height: auto; }
   </nav>
 </footer>
 
-<script src="js/szene.js?v=15"></script>
+<script src="js/szene.js?v=16"></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {

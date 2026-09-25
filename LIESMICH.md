@@ -8,6 +8,12 @@
 
 
 
+
+## Wurzeln zurückgenommen → Lichtfaden (26.09.2026, 00:30, Claude Code)
+- `js/szene.js` wieder auf dem Stand von 8912bd2 (ohne `wurzeln()`), `?v=16`. In `index.html`: `.szene__grund`/`.szene__wurzeln` entfernt, `erde-steigt` läuft wieder, `.szene__fade` wieder 36 %, `.endo` hat wieder seinen Verlauf.
+- Neu `.endo__faden`: 1 px Linie in der Mitte von 30svh bis zur Kugelmitte (`--faden-h`, gleiche Maße wie `.endo__orb`), wächst per `animation-timeline: view()` (scaleY), Lichtpunkt `::after` alle 7 s; im Chat/außerhalb still, „Bewegung reduzieren“ = statisch.
+- Wurzel-Version zum Nachschlagen: Commit 0327880.
+
 ## Wurzeln aus dem Gras (26.09.2026, 00:10, Claude Code)
 - `js/szene.js`: neue Funktion `wurzeln()` (nach den Sternen, per `spaeter`). `gras()` merkt sich die Halme (`grasFuesse`); aus deren Füßen wachsen ca. W/5,5 Wurzeln, davon W/60 (mind. 8) lange, die zur Mitte der `.endo__orb` steuern (Ziel zurückgerechnet durch die End-Stellung von `gras-nah`: 10svh hoch, ×1,6). Farbe: Erd-Blau oben → Silber → hell, tiefer mit leichtem Schein und Lichtpunkten.
 - Wachsen: jedes Stück kommt in einen von 8 Streifen nach „gewachsenem Weg ÷ Tempo der Wurzel“ → unregelmäßige Wachstumsfront. Je Streifen eine Leinwand mit eigener `animation-range` (exit 6 %…100 %), Keyframes `wurzel-waechst` (opacity).
