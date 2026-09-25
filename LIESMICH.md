@@ -6,6 +6,14 @@
 > Die Scroll-Szene „Sonnenuntergang → endo.ai“ (Abschnitt unten) war am 25.09. von 00:22 bis 00:28 live und wurde auf Emres Wunsch zurückgenommen.
 > Ihr Code liegt in `_code/archiv/index-sonnenuntergang-endo-2026-09-25.html` (Vault-Commits beebffe, 007bc5b); die Bilder `sonne*`, `layer-1-sky-ohne-sonne*`, `layer-1-sky-blaue-stunde*` und `4k/sonnenuntergang.py` bleiben im Projekt (unbenutzt).
 
+## Onepager: Hero → endo.ai → Erstgespräch (25.09.2026, 13:45, Claude Code) – Schritt 1 von 7
+- Emres Auftrag (Teil 1): ERGUN. = Digitalstudio mit zwei Bereichen, alles untereinander. Pfeil „endo entdecken“, iframe-Ebene (`.endo-ebene`) und Wisch-Skript sind raus.
+- Neu `<section class="endo" id="endo">` direkt unter dem Hero: Kugel (`ki/js/orb.js`, wird erst 600 px vor dem Bereich nachgeladen), „Zeigen Sie mir Ihr Produkt.“, derselbe Chat wie auf /ki/ (`ki/js/agent.js`, Markup identisch), drei Bereiche **ohne Preise**, Link „Mehr zu endo.ai“ → `ki/` (bleibt die ausführliche Seite mit Paketen).
+- `window.ENDO` liegt jetzt in `ki/js/endo-daten.js` (von /ki/ und der Startseite geladen) – weiterhin die EINE Stelle für Preise und Werkzeuge.
+- Kontakt = Fragebogen „Kostenloses Erstgespräch“ in 4 Schritten (`#anfrage.bogen`, `[data-schritt]`): Worum geht es? (geht allein weiter) · Vorhaben + „Was gibt es schon?“ + Dateien · Kontakt + Weg · Übersicht + Senden. Ohne JS stehen alle Schritte untereinander. Versand/Upload wie vorher.
+- Datenschutz Abschnitt 7 (`#endo`) nennt jetzt auch die Startseite. `jetzt-veroeffentlichen.ps1` nimmt optional `-Nachricht "…"`.
+- Nächste Schritte: Sonne/Mond-Bahn + Licht, Szene als SVG/Canvas-Illustration, Sterne, „Webdesigner“ + Slogan, Chat-Feinschliff, Handy/Performance.
+
 ## Hund-Bildfolge statt Bildwechsel (25.09.2026, 07:10, Claude Code)
 - Dateien: `bilder/hero/hund-film/NN.webp` (36 Bilder, 676×768, Leinwand-Position in `info.json`: x 1831, y 1894 im 3840×3024-Raster). Neu bauen: `python bilder/hero/4k/szene2/hund_video.py video/v1-9493b609.mp4 0.9 3.4 36` (braucht ffmpeg + rembg, ca. 45 min auf der CPU).
 - `<canvas data-hund-film>` in `.hund-film[data-parallax-layer="wiese"]`. `filmLaden()` nach dem Seitenaufbau, `filmLage()` in `messen()` (gleiche Umrechnung wie Sonne/Mond), `zeigeBild(i)` in `render()`: Bild = (p − 0,46) / 0,18. Klasse `.film-an` blendet Tages-, Nacht- und Jaul-Standbild aus (Selektor mit `.parallax__visuals`, sonst gewinnt `.jault`).

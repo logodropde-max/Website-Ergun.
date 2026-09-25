@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>ERGUN. – Webdesigner</title>
-<meta name="description" content="Websites mit Design, Bewegung und eigenen Bildern – individuell geplant nach einem kostenlosen Erstgespräch. Entworfen und gebaut in Elmshorn.">
+<title>ERGUN. – Digitalstudio für Webdesign und endo.ai</title>
+<meta name="description" content="ERGUN. ist ein Digitalstudio mit zwei Bereichen: Websites mit Design, Bewegung und eigenen Bildern, und endo.ai für Produktfotos und Werbevideos. Kostenloses Erstgespräch, aus Elmshorn.">
 <meta name="theme-color" content="#000000">
 
 <!-- Teilen in Social Media / Messengern -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="ERGUN. – Webdesigner">
+<meta property="og:title" content="ERGUN. – Digitalstudio für Webdesign und endo.ai">
 <meta property="og:description" content="Websites mit Design, Bewegung und eigenen Bildern. Kostenloses Erstgespräch, aus Elmshorn.">
 <meta property="og:image" content="https://website-ergun.vercel.app/bilder/og.jpg">
 <meta property="og:url" content="https://website-ergun.vercel.app/">
@@ -788,73 +788,151 @@ body { overflow-x: clip; }
 /* Emre, 25.09. nachts: auch „Faire Preise …“ weg – im Himmel steht nur noch leise „Webdesigner“ (h1, davor unsichtbar „ERGUN.“) */
 .parallax__rolle { margin: 0; font-size: clamp(13px, 1.2vw, 16px); }
 .hinweis-versteckt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-/* ---------- endo-Pille oben rechts mit Wisch-Hinweis (25.09. nachts) ---------- */
-/* Solange der Einstieg im Bild ist, zieht die Pille alle paar Sekunden kurz nach links: hier kann man wischen.
-   Nach dem ersten Wechsel zu endo ist der Hinweis weg. Nur transform/opacity. */
-.nav__pille { gap: 8px; padding: 6px 14px 6px 12px; font-weight: 500; letter-spacing: 0.02em; }
-.nav__pille-punkt { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; }
-.nav__pille-pfeil { flex: none; margin-right: -2px; opacity: 0.55; }
-@media (prefers-reduced-motion: no-preference) {
-  html:not(.endo-bekannt) .nav:not(.nav--unten) .nav__pille { animation: endo-zupfen 5.2s cubic-bezier(0.32, 0.72, 0, 1) 3.2s infinite; }
-  html:not(.endo-bekannt) .nav:not(.nav--unten) .nav__pille-pfeil { animation: endo-pfeil 5.2s cubic-bezier(0.32, 0.72, 0, 1) 3.2s infinite; }
-}
-@keyframes endo-zupfen { 0%, 72%, 100% { transform: translate3d(0, 0, 0); } 80% { transform: translate3d(-10px, 0, 0); } 90% { transform: translate3d(0, 0, 0); } }
-@keyframes endo-pfeil { 0%, 72%, 100% { transform: translate3d(0, 0, 0); opacity: 0.55; } 80% { transform: translate3d(-3px, 0, 0); opacity: 1; } 90% { transform: translate3d(0, 0, 0); opacity: 0.55; } }
-.endo-bekannt .nav__pille-pfeil { display: none; }
-@media (max-width: 700px) { .nav__pille { min-height: 32px; padding: 5px 12px 5px 10px; font-size: 13px; } }
-/* ---------- Pfeil zu endo.ai statt Umschalter (25.09., Emre) ---------- */
-/* Mittig am rechten Rand, fixed – wandert beim Scrollen mit. Feine Linie zieht sich, kleiner Hinweis. Nur transform/opacity. */
-.seitenpfeil { position: fixed; top: 50%; right: 16px; z-index: 30; display: flex; align-items: center; gap: 12px; padding: 8px; transform: translateY(-50%); color: #F2EFE8; -webkit-tap-highlight-color: transparent; transition: opacity 300ms var(--ease); }
-.seitenpfeil__kreis { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 999px; border: 1px solid rgba(242, 239, 232, 0.28); background: rgba(14, 14, 12, 0.4); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: transform 400ms cubic-bezier(0.32, 0.72, 0, 1), border-color 300ms var(--ease), background-color 300ms var(--ease); }
-.seitenpfeil__kreis svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.seitenpfeil__text { display: flex; align-items: center; gap: 10px; font-size: 12px; line-height: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(242, 239, 232, 0.8); text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6); }
-.seitenpfeil__linie { display: block; width: 40px; height: 1px; background: currentColor; transform-origin: 0 50%; }
-@media (prefers-reduced-motion: no-preference) {
-  .seitenpfeil__linie { animation: linie-ziehen 2.8s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
-  .seitenpfeil__kreis svg { animation: pfeil-rechts 2.8s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
-}
-@keyframes linie-ziehen { 0% { transform: scaleX(0); opacity: 0; } 30% { opacity: 1; } 60%, 100% { transform: scaleX(1); opacity: 0; } }
-@keyframes pfeil-rechts { 0%, 50%, 100% { transform: none; } 25% { transform: translateX(3px); } }
-@media (hover: hover) and (pointer: fine) { .seitenpfeil:hover .seitenpfeil__kreis { border-color: #F2EFE8; background: rgba(40, 40, 36, 0.6); transform: translateX(4px); } .seitenpfeil:hover .seitenpfeil__text { color: #F2EFE8; } }
-.seitenpfeil:active .seitenpfeil__kreis { transform: scale(0.94); }
-.seitenpfeil:focus-visible { outline: none; } .seitenpfeil:focus-visible .seitenpfeil__kreis { outline: 2px solid var(--accent); outline-offset: 3px; }
+/* ---------- Onepager (25.09., Emre): Hero → endo.ai → Erstgespräch, alles untereinander ---------- */
+.nav__links { align-items: center; }
+@media (max-width: 700px) { .nav__links { gap: 20px; } .nav__link { font-size: 13px; } }
+.hinweis-versteckt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+main section[id] { scroll-margin-top: 0; }
+
+/* endo.ai: die Nacht der Szene läuft weiter, die Kugel steht dort, wo eben noch der Mond war */
+.endo { position: relative; isolation: isolate; overflow: hidden; padding: clamp(56px, 9svh, 112px) var(--pad) clamp(88px, 14svh, 144px);
+  background: radial-gradient(120% 70% at 50% 0%, rgba(34, 46, 78, 0.34), rgba(0, 0, 0, 0) 70%), #000; }
+.endo__orb { position: relative; z-index: -1; width: min(460px, 82vw); aspect-ratio: 1; margin: clamp(-72px, -6svh, -24px) auto clamp(-72px, -7svh, -40px); opacity: 0; pointer-events: none;
+  -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent); mask-image: radial-gradient(closest-side, #000 62%, transparent); transition: opacity 1400ms var(--ease); }
+.endo__orb.orb--bereit { opacity: 0.75; }
+.endo-chat .endo__orb.orb--bereit { opacity: 0.4; }
+.endo__orb canvas { display: block; width: 100%; height: 100%; }
+.endo__innen { position: relative; max-width: 720px; margin: 0 auto; display: grid; justify-items: center; gap: 36px; text-align: center; }
+.endo__kopf { display: grid; justify-items: center; gap: 18px; }
+.endo__marke { font-size: 15px; font-weight: 500; letter-spacing: 0.02em; color: var(--text); }
+.endo__marke span { color: var(--muted); }
+.endo__titel { font-family: var(--serif); font-size: clamp(2.8rem, 7.4vw, 5.8rem); line-height: 0.95; letter-spacing: -0.02em; text-wrap: balance; }
+.endo__intro { max-width: 44ch; color: var(--muted); font-size: clamp(16px, 1.3vw, 18px); line-height: 1.55; text-wrap: pretty; }
+
+/* Chat: ruhend nur die Eingabe, ab der ersten Nachricht ein ruhiges Fenster, das nach unten wächst */
+.endo .agent { position: relative; width: 100%; max-width: 640px; text-align: left; border: 1px solid transparent; border-radius: 28px; padding: 0;
+  transition: background-color 400ms var(--ease), border-color 400ms var(--ease), padding 400ms var(--ease), box-shadow 400ms var(--ease); }
+.endo-chat .endo .agent { padding: 8px; border-color: rgba(242, 239, 232, 0.1); background: rgba(12, 13, 16, 0.86); box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55); }
+.endo .agent__oben { display: flex; flex-direction: column; }
+.endo .agent__kopf { display: none; align-items: center; gap: 12px; padding: 8px 12px 12px; border-bottom: 1px solid rgba(242, 239, 232, 0.08); }
+.endo-chat .endo .agent__kopf { display: flex; }
+.endo .agent__avatar { position: relative; flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(242, 239, 232, 0.3); background: #000; }
+.endo .agent__avatar::before { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--text); }
+.endo .agent__avatar::after { content: ""; position: absolute; right: 3px; bottom: 3px; width: 6px; height: 6px; border-radius: 50%; background: #3BD16F; }
+.endo .agent__name { display: grid; flex: 1; min-width: 0; }
+.endo .agent__name b { font-size: 14px; line-height: 20px; font-weight: 500; }
+.endo .agent__name small { font-size: 12px; line-height: 16px; color: var(--muted); }
+.endo .agent__name a, .endo .agent__hinweis a { text-decoration: underline; text-decoration-color: rgba(138, 134, 125, 0.6); text-underline-offset: 2px; }
+.endo .rund.agent__zu, .endo .agent__oeffnen { display: none; }
+.endo .agent__verlauf { display: flex; flex-direction: column; gap: 10px; max-height: min(52svh, 480px); overflow-y: auto; overscroll-behavior: contain; padding: 0 12px;
+  scrollbar-width: thin; scrollbar-color: rgba(242, 239, 232, 0.16) transparent; }
+.endo .agent__verlauf:not(:empty) { padding: 16px 12px; }
+.endo .blase { max-width: 82%; margin: 0; padding: 10px 14px; border-radius: 18px; font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; animation: blase-rein 280ms var(--ease-out) both; }
+.endo .blase--endo { align-self: flex-start; background: rgba(242, 239, 232, 0.07); color: var(--text); border-top-left-radius: 6px; }
+.endo .blase--du { align-self: flex-end; background: var(--text); color: #0E0E0C; border-top-right-radius: 6px; }
+.endo .blase a { text-decoration: underline; text-underline-offset: 2px; }
+.endo .blase--bild { padding: 6px; }
+.endo .blase--du.blase--bild { background: rgba(242, 239, 232, 0.12); color: var(--text); }
+.endo .blase--bild img { width: 180px; max-width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 12px; }
+.endo .blase--bild figcaption { padding: 6px 6px 2px; font-size: 12px; line-height: 16px; color: var(--muted); }
+.endo .tippt { display: inline-flex; gap: 4px; align-items: center; height: 22px; }
+.endo .tippt i { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: tippen 1100ms ease-in-out infinite; }
+.endo .tippt i:nth-child(2) { animation-delay: 150ms; }
+.endo .tippt i:nth-child(3) { animation-delay: 300ms; }
+@keyframes tippen { 0%, 60%, 100% { opacity: 0.35; transform: none; } 30% { opacity: 1; transform: translateY(-3px); } }
+@keyframes blase-rein { from { opacity: 0; transform: translateY(8px); } }
+.endo .agent__vorschlaege { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 12px 12px; }
+.endo .agent__vorschlaege:empty { display: none; }
+.endo .agent__vorschlaege .chip { min-height: 38px; padding: 8px 14px; border: 1px solid rgba(242, 239, 232, 0.16); border-radius: 999px; background: transparent; color: var(--text); font: inherit; font-size: 14px; line-height: 20px; cursor: pointer;
+  animation: blase-rein 280ms var(--ease-out) both; transition: background-color 200ms var(--ease), border-color 200ms var(--ease), transform 160ms var(--ease-out); }
+.endo .agent__vorschlaege .chip--haupt { background: var(--text); border-color: var(--text); color: #0E0E0C; font-weight: 500; }
+.endo .agent__vorschlaege .chip:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) { .endo .agent__vorschlaege .chip:hover { border-color: rgba(242, 239, 232, 0.4); background: rgba(242, 239, 232, 0.06); } .endo .agent__vorschlaege .chip--haupt:hover { background: #fff; } }
+.endo .agent__eingabe { position: relative; }
+.endo .agent__feld { display: flex; align-items: center; gap: 4px; height: 56px; padding: 6px; border: 1px solid rgba(242, 239, 232, 0.16); border-radius: 999px; background: rgba(242, 239, 232, 0.05); transition: border-color 200ms var(--ease), background-color 200ms var(--ease); }
+.endo .agent__feld:focus-within { border-color: rgba(242, 239, 232, 0.45); }
+.endo-chat .endo .agent__feld { background: rgba(242, 239, 232, 0.04); }
+.endo .agent__feld input[type="text"], .endo .agent__feld input[type="email"] { flex: 1; min-width: 0; height: 44px; padding: 0 10px; border: 0; background: transparent; color: var(--text); font: inherit; font-size: 16px; }
+.endo .agent__feld input:focus-visible { outline: none; }
+.endo .agent__feld input::placeholder { color: rgba(242, 239, 232, 0.5); }
+.endo .rund { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer; transition: background-color 200ms var(--ease), color 200ms var(--ease), transform 160ms var(--ease-out); }
+.endo .rund svg { width: 20px; height: 20px; }
+.endo .rund--haupt { background: var(--text); color: #0E0E0C; }
+.endo .rund:active { transform: scale(0.94); }
+.endo .rund:disabled { opacity: 0.4; cursor: default; transform: none; }
+@media (hover: hover) and (pointer: fine) { .endo .rund:hover { color: var(--text); background: rgba(242, 239, 232, 0.08); } .endo .rund--haupt:hover { color: #0E0E0C; background: #fff; } }
+.endo .agent__hinweis { margin-top: 12px; text-align: center; font-size: 12px; color: var(--muted); }
+.endo-chat .endo .agent__hinweis { display: none; }
+
+.endo__bereiche { list-style: none; margin: 8px 0 0; padding: 0; width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); text-align: left; }
+.endo__bereiche li { display: grid; gap: 6px; align-content: start; padding: 22px 20px 0 0; }
+.endo__bereiche li + li { padding-left: 20px; border-left: 1px solid var(--line); }
+.endo__bereiche b { font-family: var(--serif); font-size: 24px; line-height: 1.1; font-weight: 400; }
+.endo__bereiche span { color: var(--muted); font-size: 14px; line-height: 1.5; text-wrap: pretty; }
+.endo__mehr { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 15px; border-bottom: 1px solid var(--line); transition: border-color 200ms var(--ease); }
+.endo__mehr span { transition: transform 200ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .endo__mehr:hover { border-color: var(--text); } .endo__mehr:hover span { transform: translateX(3px); } }
 @media (max-width: 700px) {
-  .seitenpfeil { right: 0; padding: 8px 0 8px 8px; }
-  .seitenpfeil__kreis { width: 40px; height: 56px; border-radius: 999px 0 0 999px; border-right: 0; }
-  .seitenpfeil__text { display: none; }
+  .endo__innen { gap: 28px; }
+  .endo__bereiche { grid-template-columns: minmax(0, 1fr); }
+  .endo__bereiche li, .endo__bereiche li + li { padding: 16px 0; border-left: 0; }
+  .endo__bereiche li + li { border-top: 1px solid var(--line); }
+  .endo .agent__verlauf { max-height: min(46svh, 400px); }
+  .endo .blase { max-width: 88%; }
 }
-.endo-bekannt .seitenpfeil__linie { animation: none; opacity: 0; }
-/* ---------- Umschalter ERGUN. | endo.ai (25.09. nachts) ---------- */
-/* Ein Klick wechselt die Seite. Die helle Marke gleitet zur gewählten Seite, dann kommt endo herein. */
-.umschalter { position: relative; display: inline-flex; padding: 3px; border-radius: 999px; border: 1px solid rgba(242, 239, 232, 0.16); background: rgba(14, 14, 12, 0.36); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); text-shadow: none; }
-.umschalter::before { content: ""; position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: 999px; background: #F2EFE8; transition: transform 360ms cubic-bezier(0.32, 0.72, 0, 1); }
-.umschalter--endo::before { transform: translateX(100%); }
-.umschalter a { position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 76px; min-height: 30px; padding: 4px 12px; border-radius: 999px; font-size: 13px; font-weight: 500; letter-spacing: 0.02em; color: rgba(242, 239, 232, 0.72); transition: color 200ms var(--ease); }
-.umschalter a[aria-current="page"] { color: #0E0E0C; }
-.umschalter--endo a[aria-current="page"] { color: rgba(242, 239, 232, 0.72); }
-.umschalter--endo a[data-endo-pille] { color: #0E0E0C; }
-@media (hover: hover) and (pointer: fine) { .umschalter a:not([aria-current]):hover { color: #F2EFE8; } }
-.umschalter a:focus-visible { outline-offset: 2px; }
-@media (prefers-reduced-motion: no-preference) {
-  html:not(.endo-bekannt) .nav:not(.nav--unten) .umschalter [data-endo-pille] { animation: endo-zupfen 5.2s cubic-bezier(0.32, 0.72, 0, 1) 3.2s infinite; }
+@media (prefers-reduced-motion: reduce) { .endo .blase, .endo .agent__vorschlaege .chip { animation: none; } .endo .tippt i { animation: none; opacity: 0.7; } }
+
+/* Kostenloses Erstgespräch: vier Schritte in einer Karte */
+.contact { padding-top: clamp(88px, 14svh, 144px); align-items: center; }
+.contact__kopf { margin-bottom: 8px; }
+.contact__big { font-size: clamp(2.8rem, 7.4vw, 5.8rem); line-height: 0.95; letter-spacing: -0.02em; text-wrap: balance; }
+.bogen { width: min(100%, 640px); display: grid; gap: 24px; text-align: left; padding: 28px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(180deg, rgba(242, 239, 232, 0.035), rgba(242, 239, 232, 0.01)); }
+.bogen .schritt, .bogen .unterfrage { display: grid; gap: 18px; margin: 0; padding: 0; min-width: 0; border: 0; border-radius: 0; background: none; }
+.bogen .schritt:focus-within { border-color: transparent; }
+.bogen .schritt + .schritt { padding-top: 24px; border-top: 1px solid var(--line); }
+.bogen .schritt > legend, .bogen .schritt__frage { float: none; display: block; width: auto; margin: 0 0 2px; padding: 0; font-family: var(--serif); font-size: clamp(1.7rem, 3vw, 2.3rem); line-height: 1.1; letter-spacing: -0.01em; color: var(--text); }
+.bogen .schritt > legend + * { clear: none; }
+.bogen .unterfrage { gap: 10px; }
+.bogen .unterfrage > legend { float: none; margin: 0 0 10px; padding: 0; font-family: var(--sans); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.bogen small { font-size: 12px; letter-spacing: 0.02em; text-transform: none; color: var(--muted); }
+.wahl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.wahl--klein { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.wahl__option { position: relative; display: flex; min-width: 0; }
+.wahl__option input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.wahl__option span { flex: 1; display: flex; align-items: center; min-height: 56px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; font-size: 15px; line-height: 1.3; color: var(--text);
+  transition: border-color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
+.wahl--klein .wahl__option span { min-height: 46px; padding: 10px 12px; justify-content: center; text-align: center; font-size: 14px; }
+.wahl__option input:checked + span { border-color: var(--accent); background: rgba(255, 90, 31, 0.12); }
+.wahl__option input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
+.wahl__option:active span { transform: scale(0.98); }
+@media (hover: hover) and (pointer: fine) { .wahl__option:hover span { border-color: rgba(242, 239, 232, 0.32); } .wahl__option input:checked + span { border-color: var(--accent); } }
+.uebersicht { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 10px 16px; margin: 0; font-size: 15px; line-height: 1.45; }
+.uebersicht dt { color: var(--muted); }
+.uebersicht dd { margin: 0; overflow-wrap: anywhere; white-space: pre-line; }
+.bogen__kopf { display: none; align-items: center; gap: 16px; }
+.ist-stepper .bogen__kopf { display: flex; }
+.bogen__zaehler { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bogen__zaehler b { color: var(--text); font-weight: 500; }
+.bogen__balken { position: relative; flex: 1; height: 2px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.bogen__balken i { position: absolute; inset: 0; background: var(--accent); transform-origin: left; transform: scaleX(0.25); transition: transform 500ms var(--ease); }
+.ist-stepper [data-schritt] { display: none; }
+.ist-stepper [data-schritt].ist-aktiv { display: grid; animation: bogenRein 360ms var(--ease-out) both; }
+.ist-stepper.geht-zurueck [data-schritt].ist-aktiv { animation-name: bogenZurueck; }
+.ist-stepper .schritt + .schritt { padding-top: 0; border-top: 0; }
+.bogen__nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.bogen__nav[hidden], .bogen__weiter[hidden] { display: none; }
+.bogen__zurueck { min-height: 44px; padding: 8px 4px; border: 0; background: none; color: var(--muted); font: inherit; font-size: 15px; cursor: pointer; transition: color 200ms var(--ease); }
+.bogen__zurueck:hover, .bogen__zurueck:focus-visible { color: var(--text); }
+.bogen__zurueck[disabled] { visibility: hidden; }
+.bogen__weiter { min-width: 140px; }
+.bogen legend:focus, .bogen .schritt__frage:focus { outline: none; }
+@media (max-width: 700px) {
+  .bogen { padding: 22px 16px; gap: 20px; border-radius: 16px; }
+  .wahl { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .wahl--klein { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .uebersicht { grid-template-columns: 96px minmax(0, 1fr); font-size: 14px; }
 }
-@media (max-width: 700px) { .umschalter a { min-width: 64px; padding: 4px 10px; font-size: 12.5px; } .nav__links { gap: 12px; } }
-/* Übergang sauber: kein Schatten-Rand, etwas länger und ruhiger */
-.endo-ebene { box-shadow: none; }
-.endo-ebene.ist-animiert { transition: transform 440ms cubic-bezier(0.32, 0.72, 0, 1), opacity 440ms cubic-bezier(0.32, 0.72, 0, 1); }
-.endo-schatten.ist-animiert { transition: opacity 440ms cubic-bezier(0.32, 0.72, 0, 1); }
-/* ---------- Wischen zwischen ERGUN. und endo.ai (25.09.) ---------- */
-/* endo liegt als eigene Seite (iframe) rechts neben ERGUN. und gleitet herein. Nur transform/opacity. */
-.endo-schatten { position: fixed; inset: 0; z-index: 90; background: #000; opacity: 0; pointer-events: none; visibility: hidden; }
-.endo-ebene { position: fixed; inset: 0; z-index: 95; background: #000; transform: translate3d(100%, 0, 0); visibility: hidden; will-change: transform; box-shadow: -24px 0 64px rgba(0, 0, 0, 0.5); }
-.endo-ebene iframe { display: block; width: 100%; height: 100%; border: 0; background: #000; }
-.endo-ebene.ist-sichtbar, .endo-schatten.ist-sichtbar { visibility: visible; }
-.endo-ebene.ist-animiert { transition: transform 360ms cubic-bezier(0.32, 0.72, 0, 1), opacity 360ms cubic-bezier(0.32, 0.72, 0, 1); }
-.endo-schatten.ist-animiert { transition: opacity 360ms cubic-bezier(0.32, 0.72, 0, 1); }
-@media (prefers-reduced-motion: reduce) {
-  .endo-ebene { transform: none; opacity: 0; box-shadow: none; }
-  .endo-ebene.ist-animiert, .endo-schatten.ist-animiert { transition-duration: 200ms; transition-timing-function: linear; }
-}
+@media (prefers-reduced-motion: reduce) { .ist-stepper [data-schritt].ist-aktiv { animation: none; } .bogen__balken i { transition: none; } }
 </style>
 <script>
 /* Auftritt: zuerst nur der Name, dann die Seite. Bei "Bewegung reduzieren" kein Vorhang. */
@@ -875,16 +953,11 @@ body { overflow-x: clip; }
 <header class="nav">
   <a class="nav__mark" href="#top" aria-label="ERGUN – nach oben">ERGUN<span class="dot">.</span></a>
   <nav class="nav__links" aria-label="Seitennavigation">
-    <a class="nav__link" href="#kontakt">Projekt anfragen</a>
-
+    <a class="nav__link" href="#endo">endo.ai</a>
+    <a class="nav__link" href="#kontakt">Erstgespräch</a>
   </nav>
 </header>
 
-<!-- Pfeil zu endo.ai: mittig am rechten Rand, bleibt beim Scrollen stehen -->
-<a class="seitenpfeil" href="ki/" aria-label="endo.ai entdecken" data-endo-pille>
-  <span class="seitenpfeil__text" aria-hidden="true"><span>endo entdecken</span><i class="seitenpfeil__linie"></i></span>
-  <span class="seitenpfeil__kreis" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></svg></span>
-</a>
 <div id="smooth-wrapper">
 <div id="smooth-content">
 <div class="parallax" id="top">
@@ -921,26 +994,113 @@ body { overflow-x: clip; }
 </div>
 
 <main id="inhalt" tabindex="-1">
+  <!-- endo.ai: zweiter Bereich von ERGUN., direkt unter dem Hero. Ausführlich mit Paketen: ki/ -->
+  <section class="endo" id="endo" aria-labelledby="endo-titel">
+    <div class="endo__orb" data-orb aria-hidden="true"></div>
+    <div class="endo__innen">
+      <div class="endo__kopf reveal">
+        <p class="endo__marke">endo<span>.ai</span></p>
+        <h2 class="endo__titel" id="endo-titel">Zeigen Sie mir Ihr Produkt.</h2>
+        <p class="endo__intro">Aus einem Handyfoto werden Produktfotos, kurze Werbevideos und Bilder für Ihre Website. Fragen Sie endo, was möglich ist.</p>
+      </div>
+
+      <section class="agent" data-agent aria-label="Chat mit endo">
+        <div class="agent__oben" data-oben>
+          <div class="agent__kopf">
+            <span class="agent__avatar" aria-hidden="true"></span>
+            <div class="agent__name"><b>endo</b><small>KI, kann sich irren · <a href="datenschutz.html#endo">Datenschutz</a></small></div>
+            <button class="rund agent__zu" type="button" data-zu aria-label="Chat schließen">
+              <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128 50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z"/></svg>
+            </button>
+          </div>
+          <div class="agent__verlauf" data-verlauf role="log" aria-live="polite"></div>
+          <div class="agent__vorschlaege" data-vorschlaege></div>
+        </div>
+        <form class="agent__eingabe" data-eingabe novalidate>
+          <div class="agent__feld">
+            <button class="rund" type="button" data-foto aria-label="Produktfoto hochladen">
+              <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208 56h-27.72l-13.63-20.44A8 8 0 0 0 160 32H96a8 8 0 0 0-6.65 3.56L75.71 56H48a24 24 0 0 0-24 24v112a24 24 0 0 0 24 24h160a24 24 0 0 0 24-24V80a24 24 0 0 0-24-24Zm8 136a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V80a8 8 0 0 1 8-8h32a8 8 0 0 0 6.66-3.56L100.28 48h55.43l13.63 20.44A8 8 0 0 0 176 72h32a8 8 0 0 1 8 8ZM128 88a44 44 0 1 0 44 44 44.05 44.05 0 0 0-44-44Zm0 72a28 28 0 1 1 28-28 28 28 0 0 1-28 28Z"/></svg>
+            </button>
+            <input type="file" accept="image/*" hidden data-datei>
+            <label class="hinweis-versteckt" for="endo-text">Nachricht an endo</label>
+            <input id="endo-text" type="text" maxlength="600" autocomplete="off" enterkeyhint="send" placeholder="Fragen Sie endo …" data-text>
+            <button class="rund rund--haupt" type="submit" aria-label="Senden" data-senden>
+              <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66 117.66a8 8 0 0 1-11.32 0L136 59.31V216a8 8 0 0 1-16 0V59.31l-58.34 58.35a8 8 0 0 1-11.32-11.32l72-72a8 8 0 0 1 11.32 0l72 72a8 8 0 0 1 0 11.32Z"/></svg>
+            </button>
+          </div>
+          <button class="agent__oeffnen" type="button" data-oeffnen aria-expanded="false" aria-label="Chat mit endo öffnen"></button>
+          <p class="agent__hinweis">endo ist eine KI und kann sich irren · <a href="datenschutz.html#endo">Datenschutz</a></p>
+        </form>
+      </section>
+
+      <ul class="endo__bereiche reveal" aria-label="Was endo kann">
+        <li><b>Produktfotos</b><span>Ihr Produkt im Studiolicht, auf Wunsch freigestellt als Shop-Bild.</span></li>
+        <li><b>Werbevideos</b><span>Kurze Clips aus Ihrem Produktfoto, für Reels, Stories und Anzeigen.</span></li>
+        <li><b>Website-Bilder</b><span>Ein großes Titelbild, passend zu Ihrer Marke und Ihrem Produkt.</span></li>
+      </ul>
+      <a class="endo__mehr reveal" href="ki/">Mehr zu endo.ai <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <!-- Kostenloses Erstgespräch: Fragebogen in vier Schritten. Ohne JavaScript stehen alle Schritte untereinander. -->
   <section class="contact" id="kontakt" aria-labelledby="kontakt-titel">
     <div class="contact__kopf">
       <figure class="contact__person reveal">
         <span class="contact__bild"><img src="bilder/kontakt/emre-264.webp" width="88" height="88" alt="Porträt von Emre Ergun" loading="lazy" decoding="async"></span>
         <figcaption><strong>Emre Ergun</strong> · <span class="online">online</span></figcaption>
       </figure>
-      <span class="contact__label reveal">Kostenloses Erstgespräch</span>
-      <h2 class="contact__big reveal" id="kontakt-titel">Projekt anfragen</h2>
-      <p class="contact__intro reveal">Ein paar Angaben genügen. Ich melde mich persönlich, per WhatsApp oder E-Mail, ganz wie Sie es möchten.</p>
+      <h2 class="contact__big reveal" id="kontakt-titel">Kostenloses Erstgespräch</h2>
+      <p class="contact__intro reveal">Vier kurze Schritte. Ich melde mich persönlich, per WhatsApp oder E-Mail, ganz wie Sie es möchten.</p>
     </div>
-    <div class="contact__raster">
-      <form class="form anfrage reveal" id="anfrage" novalidate>
-        <fieldset class="anfrage__gruppe">
-          <legend>Wie möchten Sie Kontakt aufnehmen?</legend>
-          <div class="weg">
-            <label class="weg__option"><input type="radio" name="weg" value="whatsapp" checked><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg> WhatsApp</span></label>
-            <label class="weg__option"><input type="radio" name="weg" value="mail"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg> E-Mail</span></label>
+
+    <form class="bogen reveal" id="anfrage" novalidate>
+      <div class="bogen__kopf" aria-hidden="true">
+        <span class="bogen__zaehler">Schritt <b data-nr>1</b> von <span data-von>4</span></span>
+        <span class="bogen__balken"><i data-balken></i></span>
+      </div>
+      <p class="hinweis-versteckt" aria-live="polite" data-ansage></p>
+
+      <fieldset class="schritt" data-schritt data-auto>
+        <legend tabindex="-1">Worum geht es?</legend>
+        <div class="wahl">
+          <label class="wahl__option"><input type="radio" name="hilfe" value="Neue Website"><span>Neue Website</span></label>
+          <label class="wahl__option"><input type="radio" name="hilfe" value="Website-Redesign"><span>Website-Redesign</span></label>
+          <label class="wahl__option"><input type="radio" name="hilfe" value="Onlineshop"><span>Onlineshop</span></label>
+          <label class="wahl__option"><input type="radio" name="hilfe" value="Etwas anderes"><span>Etwas anderes</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="schritt" data-schritt>
+        <legend tabindex="-1">Erzählen Sie kurz davon</legend>
+        <div class="field">
+          <label for="f-text">Ihr Vorhaben <small>(optional)</small></label>
+          <textarea id="f-text" name="text" rows="4" placeholder="Was machen Sie, und was soll die Website können? Ein, zwei Sätze genügen."></textarea>
+        </div>
+        <fieldset class="unterfrage">
+          <legend>Was gibt es schon? <small>(mehrere möglich)</small></legend>
+          <div class="wahl wahl--klein">
+            <label class="wahl__option"><input type="checkbox" name="vorhanden" value="Logo"><span>Logo</span></label>
+            <label class="wahl__option"><input type="checkbox" name="vorhanden" value="Fotos"><span>Fotos</span></label>
+            <label class="wahl__option"><input type="checkbox" name="vorhanden" value="Texte"><span>Texte</span></label>
+            <label class="wahl__option"><input type="checkbox" name="vorhanden" value="Domain"><span>Domain</span></label>
+            <label class="wahl__option"><input type="checkbox" name="vorhanden" value="Alte Website"><span>Alte Website</span></label>
+            <label class="wahl__option"><input type="checkbox" name="vorhanden" value="Noch nichts"><span>Noch nichts</span></label>
           </div>
         </fieldset>
+        <div class="field field--datei">
+          <label for="f-datei">Logo oder Fotos mitschicken <small>(optional)</small></label>
+          <div class="upload" data-upload>
+            <svg class="upload__symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4"/><path d="m7 9 5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+            <span class="upload__text"><b>Dateien auswählen</b><small>Antippen oder hierher ziehen · Bilder, PDF, Word, ZIP</small></span>
+            <input id="f-datei" name="dateien" type="file" multiple accept="image/*,.pdf,.doc,.docx,.svg,.ai,.zip">
+          </div>
+          <ul class="datei__liste" data-datei-liste aria-live="polite"></ul>
+          <span class="form__hint">Die Dateien werden beim Auswählen hochgeladen und kommen als Link in die Nachricht. Nach 30 Tagen werden sie automatisch gelöscht.</span>
+        </div>
+      </fieldset>
 
+      <fieldset class="schritt" data-schritt>
+        <legend tabindex="-1">Wie erreiche ich Sie?</legend>
         <div class="form__row">
           <div class="field">
             <label for="f-name">Name</label>
@@ -957,89 +1117,80 @@ body { overflow-x: clip; }
           <div class="field">
             <label for="f-land">Land</label>
             <select id="f-land" name="land" autocomplete="country-name">
-                <option value="Belgien" data-vorwahl="+32">Belgien</option>
-                <option value="Bulgarien" data-vorwahl="+359">Bulgarien</option>
-                <option value="Dänemark" data-vorwahl="+45">Dänemark</option>
-                <option value="Deutschland" data-vorwahl="+49" selected>Deutschland</option>
-                <option value="Estland" data-vorwahl="+372">Estland</option>
-                <option value="Finnland" data-vorwahl="+358">Finnland</option>
-                <option value="Frankreich" data-vorwahl="+33">Frankreich</option>
-                <option value="Griechenland" data-vorwahl="+30">Griechenland</option>
-                <option value="Irland" data-vorwahl="+353">Irland</option>
-                <option value="Italien" data-vorwahl="+39">Italien</option>
-                <option value="Kroatien" data-vorwahl="+385">Kroatien</option>
-                <option value="Lettland" data-vorwahl="+371">Lettland</option>
-                <option value="Litauen" data-vorwahl="+370">Litauen</option>
-                <option value="Luxemburg" data-vorwahl="+352">Luxemburg</option>
-                <option value="Malta" data-vorwahl="+356">Malta</option>
-                <option value="Niederlande" data-vorwahl="+31">Niederlande</option>
-                <option value="Österreich" data-vorwahl="+43">Österreich</option>
-                <option value="Polen" data-vorwahl="+48">Polen</option>
-                <option value="Portugal" data-vorwahl="+351">Portugal</option>
-                <option value="Rumänien" data-vorwahl="+40">Rumänien</option>
-                <option value="Schweden" data-vorwahl="+46">Schweden</option>
-                <option value="Slowakei" data-vorwahl="+421">Slowakei</option>
-                <option value="Slowenien" data-vorwahl="+386">Slowenien</option>
-                <option value="Spanien" data-vorwahl="+34">Spanien</option>
-                <option value="Tschechien" data-vorwahl="+420">Tschechien</option>
-                <option value="Ungarn" data-vorwahl="+36">Ungarn</option>
-                <option value="Zypern" data-vorwahl="+357">Zypern</option>
-                <option value="Anderes Land" data-vorwahl="">Anderes Land</option>
+              <option value="Belgien" data-vorwahl="+32">Belgien</option>
+              <option value="Bulgarien" data-vorwahl="+359">Bulgarien</option>
+              <option value="Dänemark" data-vorwahl="+45">Dänemark</option>
+              <option value="Deutschland" data-vorwahl="+49" selected>Deutschland</option>
+              <option value="Estland" data-vorwahl="+372">Estland</option>
+              <option value="Finnland" data-vorwahl="+358">Finnland</option>
+              <option value="Frankreich" data-vorwahl="+33">Frankreich</option>
+              <option value="Griechenland" data-vorwahl="+30">Griechenland</option>
+              <option value="Irland" data-vorwahl="+353">Irland</option>
+              <option value="Italien" data-vorwahl="+39">Italien</option>
+              <option value="Kroatien" data-vorwahl="+385">Kroatien</option>
+              <option value="Lettland" data-vorwahl="+371">Lettland</option>
+              <option value="Litauen" data-vorwahl="+370">Litauen</option>
+              <option value="Luxemburg" data-vorwahl="+352">Luxemburg</option>
+              <option value="Malta" data-vorwahl="+356">Malta</option>
+              <option value="Niederlande" data-vorwahl="+31">Niederlande</option>
+              <option value="Österreich" data-vorwahl="+43">Österreich</option>
+              <option value="Polen" data-vorwahl="+48">Polen</option>
+              <option value="Portugal" data-vorwahl="+351">Portugal</option>
+              <option value="Rumänien" data-vorwahl="+40">Rumänien</option>
+              <option value="Schweden" data-vorwahl="+46">Schweden</option>
+              <option value="Slowakei" data-vorwahl="+421">Slowakei</option>
+              <option value="Slowenien" data-vorwahl="+386">Slowenien</option>
+              <option value="Spanien" data-vorwahl="+34">Spanien</option>
+              <option value="Tschechien" data-vorwahl="+420">Tschechien</option>
+              <option value="Ungarn" data-vorwahl="+36">Ungarn</option>
+              <option value="Zypern" data-vorwahl="+357">Zypern</option>
+              <option value="Anderes Land" data-vorwahl="">Anderes Land</option>
             </select>
           </div>
           <div class="field">
-            <label for="f-tel">Telefon (optional)</label>
+            <label for="f-tel">Telefon <small>(optional)</small></label>
             <input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel">
           </div>
         </div>
-
-        <fieldset class="anfrage__gruppe field--chips">
-          <legend>Wobei brauchen Sie Hilfe?</legend>
-          <div class="chips">
-            <label class="chip"><input type="radio" name="hilfe" value="Neue Website"><span>Neue Website</span></label>
-            <label class="chip"><input type="radio" name="hilfe" value="Website-Redesign"><span>Website-Redesign</span></label>
-            <label class="chip"><input type="radio" name="hilfe" value="Onlineshop (E-Commerce)"><span>Onlineshop (E-Commerce)</span></label>
-            <label class="chip"><input type="radio" name="hilfe" value="Anderes"><span>Anderes</span></label>
+        <fieldset class="unterfrage">
+          <legend>Wie möchten Sie Kontakt aufnehmen?</legend>
+          <div class="weg">
+            <label class="weg__option"><input type="radio" name="weg" value="whatsapp" checked><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg> WhatsApp</span></label>
+            <label class="weg__option"><input type="radio" name="weg" value="mail"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg> E-Mail</span></label>
           </div>
         </fieldset>
+      </fieldset>
 
-        <div class="field">
-          <label for="f-text">Ihre Anfrage</label>
-          <textarea id="f-text" name="text" rows="4" placeholder="Worum geht es? Ein, zwei Sätze genügen."></textarea>
-        </div>
-
-        <div class="field field--datei">
-          <label for="f-datei">Logo oder Fotos mitschicken (optional)</label>
-          <div class="upload" data-upload>
-            <svg class="upload__symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4"/><path d="m7 9 5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-            <span class="upload__text"><b>Dateien auswählen</b><small>Antippen oder hierher ziehen · Bilder, PDF, Word, ZIP</small></span>
-            <input id="f-datei" name="dateien" type="file" multiple accept="image/*,.pdf,.doc,.docx,.svg,.ai,.zip">
-          </div>
-          <ul class="datei__liste" data-datei-liste aria-live="polite"></ul>
-          <span class="form__hint">Die Dateien werden beim Auswählen hochgeladen und kommen als Link in die Nachricht. Nach 30 Tagen werden sie automatisch gelöscht.</span>
-        </div>
-
+      <div class="schritt" role="group" aria-labelledby="schritt-pruefen" data-schritt>
+        <h3 class="schritt__frage" id="schritt-pruefen" tabindex="-1">Alles richtig?</h3>
+        <dl class="uebersicht" data-uebersicht></dl>
         <button class="btn btn--wa anfrage__senden" type="submit" data-senden>
           <span class="anfrage__icon" data-icon-wa><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg></span><span class="anfrage__icon" data-icon-mail hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg></span>
           <span data-senden-text>Per WhatsApp senden</span>
         </button>
         <p class="form__status" data-status aria-live="polite"></p>
         <p class="form__hint">Öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Ihre Angaben speichert die Website nicht, nur hochgeladene Dateien liegen bis zu 30 Tage bei Vercel.</p>
-      </form>
-    </div>
+      </div>
+
+      <div class="bogen__nav" data-bogen-nav hidden>
+        <button class="bogen__zurueck" type="button" data-zurueck>Zurück</button>
+        <button class="btn bogen__weiter" type="button" data-weiter>Weiter</button>
+      </div>
+    </form>
+
     <div class="contact__meta reveal">
       <a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a>
       <a href="tel:+4915906344961">+49 1590 6344961</a>
     </div>
     <div class="agentur reveal">
       <p class="agentur__marke">ERGUN<span class="dot">.</span></p>
-      <p class="agentur__text">ERGUN. ist eine Premium-Digitalagentur für Websites auf Weltklasse-Niveau. Wir gestalten Seiten, die Vertrauen schaffen, Besucher zu Kunden machen und auf jedem Gerät hervorragend aussehen.</p>
+      <p class="agentur__text">ERGUN. ist ein Digitalstudio mit zwei Bereichen: Webdesign mit Bewegung und eigenen Bildern, und endo.ai für Produktfotos und Werbevideos. Entwurf und Umsetzung aus einer Hand.</p>
     </div>
   </section>
 </main>
 
 <footer class="footer">
-  <span>ERGUN. · Emre Ergun · Webdesigner · © 2026</span>
+  <span>ERGUN. · Emre Ergun · Digitalstudio · © 2026</span>
   <nav aria-label="Rechtliches">
     <a href="ki/">endo.ai</a>
     <a href="impressum.html">Impressum</a>
@@ -1049,11 +1200,6 @@ body { overflow-x: clip; }
 </div><!-- /smooth-content -->
 </div><!-- /smooth-wrapper -->
 
-<!-- endo.ai: gleitet beim Wischen nach links (oder Pfeil rechts) herein -->
-<div class="endo-schatten" data-endo-schatten aria-hidden="true"></div>
-<div class="endo-ebene" data-endo-ebene aria-hidden="true" inert>
-  <iframe data-src="ki/" title="endo.ai"></iframe>
-</div>
 
 <!-- GSAP liegt lokal im Ordner js/ (kein fremder Server) -->
 <script src="js/gsap.min.js"></script>
@@ -1410,25 +1556,27 @@ body { overflow-x: clip; }
 })();
 </script>
 <script>
-/* Kontaktformular: Weg waehlen (WhatsApp oder E-Mail), wenige Felder, Versand ueber WhatsApp oder Mailprogramm.
-   Dateien gehen beim Auswaehlen an /api/upload (Vercel Blob) und landen als Link in der Nachricht;
-   klappt das nicht, haengt man sie selbst an. */
+/* Kostenloses Erstgespräch: Fragebogen in vier Schritten (Worum geht es? · Vorhaben · Kontakt · Prüfen).
+   Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)
+   und landen als Link in der Nachricht; klappt das nicht, hängt man sie selbst an.
+   Ohne JavaScript stehen alle Schritte untereinander und das Formular tut nichts Falsches. */
 (function () {
   var WA_NUMMER = '4915906344961';
   var MAIL = 'ergun.eu@gmail.com';
   var form = document.getElementById('anfrage');
   if (!form) return;
+  var ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var status = form.querySelector('[data-status]');
   var sendenKnopf = form.querySelector('[data-senden]'), sendenText = form.querySelector('[data-senden-text]');
   function wert(k) { var el = form.elements[k]; return el && el.value ? el.value.trim() : ''; }
   function gewaehlt(name) { var el = form.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ''; }
+  function alleGewaehlt(name) { return [].map.call(form.querySelectorAll('input[name="' + name + '"]:checked'), function (el) { return el.value; }); }
   function weg() { return gewaehlt('weg') || 'whatsapp'; }
 
-  /* ---- Knopf folgt dem gewaehlten Weg, Telefonfeld zeigt die Vorwahl des Landes ---- */
+  /* ---- Knopf folgt dem gewählten Weg, Telefonfeld zeigt die Vorwahl des Landes ---- */
   function knopf() {
     var wa = weg() === 'whatsapp';
     sendenText.textContent = wa ? 'Per WhatsApp senden' : 'Per E-Mail senden';
-    sendenKnopf.classList.toggle('btn--wa', wa);
     form.querySelector('[data-icon-wa]').hidden = !wa;
     form.querySelector('[data-icon-mail]').hidden = wa;
   }
@@ -1438,10 +1586,20 @@ body { overflow-x: clip; }
     tel.placeholder = v ? v + ' …' : 'mit Ländervorwahl';
   }
   land.addEventListener('change', vorwahl);
-  form.addEventListener('change', function (e) { if (e.target.name === 'weg') { knopf(); status.textContent = ''; } });
   knopf(); vorwahl();
 
-  /* ---- Pruefung ---- */
+  /* „Noch nichts" schließt die anderen Häkchen aus (und umgekehrt) */
+  form.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.name === 'weg') { knopf(); status.textContent = ''; }
+    if (t.name === 'vorhanden' && t.checked) {
+      form.querySelectorAll('input[name="vorhanden"]').forEach(function (el) {
+        if (el !== t && (t.value === 'Noch nichts' || el.value === 'Noch nichts')) el.checked = false;
+      });
+    }
+  });
+
+  /* ---- Prüfung ---- */
   var regeln = {
     name: function (v) { return v ? '' : 'Bitte Ihren Namen eintragen.'; },
     email: function (v) { return !v ? 'Bitte eine E-Mail-Adresse eintragen, damit ich antworten kann.' : (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? '' : 'Das sieht nicht nach einer E-Mail-Adresse aus.'); }
@@ -1477,7 +1635,7 @@ body { overflow-x: clip; }
     e.anzeige.textContent = stand === 'ok' ? '✓ hochgeladen' : stand === 'fehler' ? 'bitte selbst anhängen' : 'lädt …';
     if (!laufend() && status.getAttribute('data-wartet')) { status.removeAttribute('data-wartet'); status.textContent = 'Dateien sind hochgeladen. Jetzt können Sie senden.'; }
   }
-  /* Grosse Fotos im Browser verkleinern, damit sie unter das Limit der Vercel-Funktion passen */
+  /* Große Fotos im Browser verkleinern, damit sie unter das Limit der Vercel-Funktion passen */
   function vorbereiten(f) {
     if (f.size <= 3.5 * 1024 * 1024 || !/^image\/(jpeg|png|webp|heic|heif)$/.test(f.type) || !window.createImageBitmap) return Promise.resolve({ daten: f, name: f.name });
     return createImageBitmap(f).then(function (bild) {
@@ -1522,14 +1680,77 @@ body { overflow-x: clip; }
     eintraege.reduce(function (kette, e) { return kette.then(function () { return meineRunde === runde ? hochladen(e, meineRunde) : null; }); }, Promise.resolve());
   });
 
+  /* ---- Schritt für Schritt ---- */
+  var schritte = [].slice.call(form.querySelectorAll('[data-schritt]'));
+  var nav = form.querySelector('[data-bogen-nav]'), zurueck = form.querySelector('[data-zurueck]'), weiter = form.querySelector('[data-weiter]');
+  var nrEl = form.querySelector('[data-nr]'), balken = form.querySelector('[data-balken]'), ansage = form.querySelector('[data-ansage]');
+  var jetzt = 0;
+  form.classList.add('ist-stepper');
+  nav.hidden = false;
+  form.querySelector('[data-von]').textContent = schritte.length;
+
+  function titel(s) { return s.querySelector('legend, .schritt__frage'); }
+  function zeige(i, fokus) {
+    form.classList.toggle('geht-zurueck', i < jetzt);
+    jetzt = Math.max(0, Math.min(schritte.length - 1, i));
+    schritte.forEach(function (s, k) { s.classList.toggle('ist-aktiv', k === jetzt); });
+    nrEl.textContent = jetzt + 1;
+    balken.style.transform = 'scaleX(' + ((jetzt + 1) / schritte.length) + ')';
+    zurueck.disabled = jetzt === 0;
+    weiter.hidden = jetzt === schritte.length - 1;
+    if (jetzt === schritte.length - 1) uebersicht();
+    ansage.textContent = 'Schritt ' + (jetzt + 1) + ' von ' + schritte.length + ': ' + titel(schritte[jetzt]).textContent.trim();
+    if (fokus) {
+      var t = titel(schritte[jetzt]);
+      t.focus({ preventScroll: true });
+      var oben = form.getBoundingClientRect().top;
+      if (oben < 0 || oben > window.innerHeight * 0.4) form.scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
+    }
+  }
+  function schrittOk() {
+    if (schritte[jetzt].contains(form.elements['name'])) return pruefen();
+    return true;
+  }
+  weiter.addEventListener('click', function () { if (schrittOk()) zeige(jetzt + 1, true); });
+  zurueck.addEventListener('click', function () { zeige(jetzt - 1, true); });
+  /* Eine Antwort genügt: bei „Worum geht es?" geht es nach kurzer Pause allein weiter */
+  schritte.forEach(function (s, k) {
+    if (!s.hasAttribute('data-auto')) return;
+    s.addEventListener('change', function (e) { if (e.target.type === 'radio') setTimeout(function () { if (jetzt === k) zeige(k + 1, true); }, ruhig ? 0 : 260); });
+  });
+  /* Enter in einem Textfeld = Weiter (außer im letzten Schritt und in der Textfläche) */
+  form.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON' || jetzt === schritte.length - 1) return;
+    if (e.target.tagName === 'INPUT' && e.target.type !== 'radio' && e.target.type !== 'checkbox' && e.target.type !== 'file') { e.preventDefault(); weiter.click(); }
+  });
+
+  function uebersicht() {
+    var dl = form.querySelector('[data-uebersicht]'), zeilen = [
+      ['Anliegen', gewaehlt('hilfe') || '–'],
+      ['Vorhaben', wert('text') || '–'],
+      ['Schon da', alleGewaehlt('vorhanden').join(', ') || '–'],
+      ['Dateien', eintraege.length ? eintraege.map(function (e) { return e.name; }).join(', ') : '–'],
+      ['Name', wert('name')],
+      ['Kontakt', wert('email') + (wert('tel') ? '\n' + wert('tel') : '') + '\n' + wert('land')],
+      ['Antwort per', weg() === 'whatsapp' ? 'WhatsApp' : 'E-Mail']
+    ];
+    dl.innerHTML = '';
+    zeilen.forEach(function (z) {
+      var dt = document.createElement('dt'), dd = document.createElement('dd');
+      dt.textContent = z[0]; dd.textContent = z[1]; dl.appendChild(dt); dl.appendChild(dd);
+    });
+  }
+  zeige(0, false);
+
   /* ---- Nachricht & Versand ---- */
   function nachricht() {
-    var hilfe = gewaehlt('hilfe'), text = wert('text');
+    var hilfe = gewaehlt('hilfe'), text = wert('text'), da = alleGewaehlt('vorhanden');
     var mitLink = eintraege.filter(function (e) { return e.stand === 'ok'; });
     var ohneLink = selbstAnhaengen().map(function (e) { return e.name; });
-    return 'Hallo Emre, ich bin ' + wert('name') + '.\n\n' +
-      (hilfe ? 'Ich brauche Hilfe bei: ' + hilfe + '\n\n' : '') +
+    return 'Hallo Emre, ich bin ' + wert('name') + ' und möchte ein kostenloses Erstgespräch.\n\n' +
+      (hilfe ? 'Es geht um: ' + hilfe + '\n\n' : '') +
       (text ? text + '\n\n' : '') +
+      (da.length ? 'Schon vorhanden: ' + da.join(', ') + '\n\n' : '') +
       (mitLink.length ? 'Meine Dateien:\n' + mitLink.map(function (e) { return '• ' + e.name + ': ' + e.url; }).join('\n') + '\n\n' : '') +
       (ohneLink.length ? 'Dateien, die ich hier anhänge: ' + ohneLink.join(', ') + '\n\n' : '') +
       'E-Mail: ' + wert('email') + '\n' +
@@ -1539,7 +1760,8 @@ body { overflow-x: clip; }
   }
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    if (!pruefen()) { status.textContent = 'Bitte Name und E-Mail ausfüllen.'; return; }
+    if (jetzt !== schritte.length - 1) { weiter.click(); return; }
+    if (!pruefen()) { zeige(schritte.indexOf(form.elements['name'].closest('[data-schritt]')), false); pruefen(); status.textContent = 'Bitte Name und E-Mail ausfüllen.'; return; }
     if (laufend()) { status.setAttribute('data-wartet', '1'); status.textContent = 'Ihre Dateien werden noch hochgeladen. Einen Moment, dann bitte erneut auf Senden tippen.'; return; }
     var m = nachricht(), selbst = selbstAnhaengen().length ? ' Bitte die Dateien, die nicht hochgeladen werden konnten, dort anhängen.' : '';
     if (weg() === 'whatsapp') {
@@ -1550,7 +1772,7 @@ body { overflow-x: clip; }
       else { location.href = waLink; }
       status.textContent = 'Danke! WhatsApp ist geöffnet, bitte dort nur noch auf Senden tippen.' + selbst;
     } else {
-      var betreff = 'Anfrage' + (gewaehlt('hilfe') ? ': ' + gewaehlt('hilfe') : '') + ' über ERGUN.';
+      var betreff = 'Erstgespräch' + (gewaehlt('hilfe') ? ': ' + gewaehlt('hilfe') : '') + ' über ERGUN.';
       location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent(betreff) + '&body=' + encodeURIComponent(m);
       status.textContent = 'Danke! Ihr Mailprogramm öffnet sich mit der fertigen Nachricht.' + selbst;
     }
@@ -1558,180 +1780,29 @@ body { overflow-x: clip; }
 })();
 </script>
 <script>
+/* endo.ai auf der Startseite: Chat sofort, die Kugel (three.js, gut 500 KB) erst kurz bevor der Bereich ins Bild kommt */
+(function () {
+  var buehne = document.querySelector('.endo__orb');
+  if (!buehne) return;
+  var geladen = false;
+  function laden() {
+    if (geladen) return; geladen = true;
+    var s = document.createElement('script'); s.src = 'ki/js/orb.js?v=6'; s.async = true; document.body.appendChild(s);
+  }
+  if (!('IntersectionObserver' in window)) { laden(); return; }
+  var io = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { io.disconnect(); laden(); } }, { rootMargin: '600px 0px' });
+  io.observe(buehne);
+})();
+</script>
+<script src="ki/js/endo-daten.js?v=1"></script>
+<script src="ki/js/agent.js?v=6"></script>
+<script>
 /* Kein Zoomen: iPhone ignoriert user-scalable=no, daher Zwei-Finger-Zoom und Doppeltippen hier sperren */
 (function () {
   ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (t) { document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false }); });
   document.addEventListener('touchmove', function (e) { if (e.touches && e.touches.length > 1) e.preventDefault(); }, { passive: false });
   var zuletzt = 0;
   document.addEventListener('touchend', function (e) { var jetzt = Date.now(); if (jetzt - zuletzt < 300 && !e.target.closest('input, textarea, select')) e.preventDefault(); zuletzt = jetzt; }, { passive: false });
-})();
-</script>
-<script>
-/* Wischen zwischen ERGUN. und endo.ai (25.09.): die Seite folgt dem Finger und rastet beim Loslassen ein.
-   Beide Seiten laufen weiter (endo ist ein iframe), die Scrollpositionen bleiben. */
-(function () {
-  var ebene = document.querySelector('[data-endo-ebene]'), schatten = document.querySelector('[data-endo-schatten]');
-  if (!ebene) return;
-  var rahmen = ebene.querySelector('iframe');
-  var ergun = [document.getElementById('smooth-wrapper'), document.querySelector('.nav'), document.querySelector('.skip')];
-  var ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var offen = false, geladen = false, breite = window.innerWidth, letzterFokus = null, ergunY = 0;
-  /* Zurück-Navigation darf die Scrollposition von ERGUN. nicht verändern */
-  function haltePosition() { if (Math.abs(window.scrollY - ergunY) > 1) window.scrollTo({ top: ergunY, behavior: 'instant' }); }
-  window.addEventListener('resize', function () { breite = window.innerWidth; });
-
-  function laden() { if (geladen) return; geladen = true; rahmen.src = rahmen.getAttribute('data-src'); }
-  /* p: 0 = ERGUN., 1 = endo */
-  function setze(p, animiert) {
-    ebene.classList.toggle('ist-animiert', animiert); schatten.classList.toggle('ist-animiert', animiert);
-    if (ruhig) ebene.style.opacity = p; else ebene.style.transform = 'translate3d(' + ((1 - p) * 100) + '%,0,0)';
-    schatten.style.opacity = p * 0.6;
-  }
-  function zeigen() { ebene.classList.add('ist-sichtbar'); schatten.classList.add('ist-sichtbar'); }
-  function verstecken() { ebene.classList.remove('ist-sichtbar'); schatten.classList.remove('ist-sichtbar'); }
-  ebene.addEventListener('transitionend', function (e) { if (e.target === ebene && !offen) verstecken(); });
-
-  /* Wischen (und Pfeiltaste) nur, solange der Einstieg im Bild ist – nicht im Formular */
-  var hero = document.querySelector('.parallax__visuals'), navEl = document.querySelector('.nav');
-  function imHero() { return !hero || hero.getBoundingClientRect().bottom > window.innerHeight * 0.45; }
-  function merkeHero() { if (navEl) navEl.classList.toggle('nav--unten', !imHero()); }
-  window.addEventListener('scroll', merkeHero, { passive: true }); merkeHero();
-  /* Hinweis nur bis zum ersten Wechsel – bewusst ohne Speichern im Browser (keine Cookies, kein localStorage) */
-  function bekannt() { document.documentElement.classList.add('endo-bekannt'); }
-
-  var umschalter = document.querySelector('[data-umschalter]');
-  function umschalten(endoAn) { if (umschalter) umschalter.classList.toggle('umschalter--endo', endoAn); }
-  var fertigGeladen = false;
-  rahmen.addEventListener('load', function () { fertigGeladen = true; });
-  function oeffnen(o) {
-    o = o || {};
-    umschalten(true);
-    /* Beim Klick erst öffnen, wenn endo geladen ist (höchstens 1,2 s warten) – sonst gleitet eine leere Fläche herein */
-    if (o.klick && !fertigGeladen) {
-      laden();
-      var fertig = false, weiter = function () { if (fertig) return; fertig = true; oeffnen({}); };
-      rahmen.addEventListener('load', weiter, { once: true }); setTimeout(weiter, 1200);
-      return;
-    }
-    laden(); zeigen(); bekannt();
-    if (!offen) {
-      offen = true; letzterFokus = document.activeElement; ergunY = window.scrollY;
-      ebene.inert = false; ebene.setAttribute('aria-hidden', 'false');
-      ergun.forEach(function (el) { if (el) el.inert = true; });
-      if (!o.ausVerlauf && location.hash !== '#endo') history.pushState({ endo: 1 }, '', '#endo');
-      setTimeout(function () { try { rahmen.focus(); } catch (e) {} }, o.sofort ? 0 : 360);
-    }
-    if (o.sofort) setze(1, false);
-    else requestAnimationFrame(function () { setze(1, true); });
-  }
-  function schliessen(o) {
-    o = o || {};
-    umschalten(false);
-    if (offen) {
-      offen = false;
-      ebene.inert = true; ebene.setAttribute('aria-hidden', 'true');
-      ergun.forEach(function (el) { if (el) el.inert = false; });
-      if (!o.ausVerlauf && location.hash === '#endo') {
-        if (history.state && history.state.endo) history.back();
-        else history.replaceState(null, '', location.pathname + location.search);
-      }
-      if (letzterFokus && letzterFokus.focus && letzterFokus !== document.body) letzterFokus.focus({ preventScroll: true });
-      haltePosition(); requestAnimationFrame(haltePosition); setTimeout(haltePosition, 50);
-    }
-    setze(0, !o.sofort);
-    if (o.sofort) verstecken();
-  }
-  window.addEventListener('popstate', function () {
-    if (location.hash === '#endo') { if (!offen) oeffnen({ ausVerlauf: true }); }
-    else if (offen) schliessen({ ausVerlauf: true });
-  });
-
-  /* Nicht wischen auf Reglern, Textfeldern und seitlich scrollenden Leisten */
-  function ausgenommen(el) {
-    for (; el && el.nodeType === 1; el = el.parentElement) {
-      if (el.matches('input[type="range"], textarea, [data-kein-wischen]')) return true;
-      if (el.scrollWidth > el.clientWidth + 2) {
-        var ox = el.ownerDocument.defaultView.getComputedStyle(el).overflowX;
-        if (ox === 'auto' || ox === 'scroll') return true;
-      }
-    }
-    return false;
-  }
-
-  function wischen(doc, vonEndo) {
-    var x0 = null, y0 = 0, achse = null, dx = 0, lx = 0, lt = 0, v = 0;
-    doc.addEventListener('touchstart', function (e) {
-      achse = null; x0 = null;
-      if (e.touches.length !== 1 || vonEndo !== offen || ausgenommen(e.target) || (!vonEndo && !imHero())) return;
-      x0 = lx = e.touches[0].clientX; y0 = e.touches[0].clientY; lt = e.timeStamp; dx = 0; v = 0;
-      if (!vonEndo) laden();
-    }, { passive: true });
-    doc.addEventListener('touchmove', function (e) {
-      if (x0 === null || achse === 'y') return;
-      var t = e.touches[0], mx = t.clientX - x0, my = t.clientY - y0;
-      if (achse === null) {
-        if (Math.abs(mx) < 10 && Math.abs(my) < 10) return;
-        /* eher senkrecht = normales Scrollen */
-        if (Math.abs(mx) > Math.abs(my) * 1.3 && (vonEndo ? mx > 0 : mx < 0)) { achse = 'x'; x0 = lx = t.clientX; lt = e.timeStamp; zeigen(); }
-        else { achse = 'y'; return; }
-      }
-      if (e.cancelable) e.preventDefault();
-      dx = t.clientX - x0;
-      if (e.timeStamp > lt) { v = (t.clientX - lx) / (e.timeStamp - lt); lx = t.clientX; lt = e.timeStamp; }
-      var p = vonEndo ? 1 - Math.max(0, dx) / breite : Math.max(0, -dx) / breite;
-      setze(Math.min(1, p), false);
-    }, { passive: false });
-    function ende() {
-      if (achse === 'x') {
-        if (vonEndo) { if (dx > breite * 0.3 || v > 0.45) schliessen(); else oeffnen(); }
-        else { if (-dx > breite * 0.3 || v < -0.45) oeffnen(); else schliessen(); }
-      }
-      achse = null; x0 = null;
-    }
-    doc.addEventListener('touchend', ende); doc.addEventListener('touchcancel', ende);
-  }
-  function tasten(doc, vonEndo) {
-    doc.addEventListener('keydown', function (e) {
-      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || e.defaultPrevented) return;
-      var z = e.target; if (z && z.closest && z.closest('input, textarea, select, [contenteditable="true"]')) return;
-      if (!vonEndo && !offen && e.key === 'ArrowRight' && imHero()) { e.preventDefault(); oeffnen(); }
-      if (vonEndo && offen && e.key === 'ArrowLeft') { e.preventDefault(); schliessen(); }
-    });
-  }
-  wischen(document, false); tasten(document, false);
-
-  /* Links auf endo öffnen die Ebene statt einer neuen Seite */
-  document.addEventListener('click', function (e) {
-    var a = e.target.closest && e.target.closest('a[href="ki/"]');
-    if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
-    e.preventDefault(); if (!offen) setTimeout(function () { oeffnen({ klick: true }); }, 160); umschalten(true);
-  });
-  document.querySelectorAll('a[href="ki/"]').forEach(function (a) {
-    ['pointerenter', 'focus', 'touchstart'].forEach(function (t) { a.addEventListener(t, laden, { passive: true }); });
-  });
-
-  rahmen.addEventListener('load', function () {
-    var d; try { d = rahmen.contentDocument; } catch (e) { return; }
-    if (!d || !d.body) return;
-    d.documentElement.classList.add('ist-eingebettet');
-    wischen(d, true); tasten(d, true);
-    /* Links aus endo zurück zu ERGUN. schließen die Ebene; Impressum & Co. öffnen die ganze Seite */
-    d.addEventListener('click', function (e) {
-      var a = e.target.closest && e.target.closest('a[href^="../"]');
-      if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
-      var h = a.getAttribute('href').slice(3);
-      if (h === '' || h.charAt(0) === '#') {
-        e.preventDefault(); schliessen();
-        var ziel = h && document.getElementById(h.slice(1));
-        if (ziel) setTimeout(function () { ziel.scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth' }); }, ruhig ? 0 : 380);
-      } else a.target = '_top';
-    });
-  });
-
-  if (location.hash === '#endo') oeffnen({ sofort: true, ausVerlauf: true });
-  else window.addEventListener('load', function () {
-    setTimeout(function () { (window.requestIdleCallback || setTimeout)(laden); }, 2500);
-  });
 })();
 </script>
 </body>
