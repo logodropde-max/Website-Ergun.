@@ -17,7 +17,6 @@
   var extern = box.hasAttribute('data-eigene-sichtbarkeit');
   /* Kein aufklappendes Panel mehr – auch am Handy nicht. Die Breite steuert nur noch das CSS. */
   var handyMq = { matches: false };
-  var SICHTBAR = 3;
 
   var WA_NUMMER = '4915906344961', MAIL = 'ergun.eu@gmail.com';
   var BILD_NACHHER = 'https://d8j0ntlcm91z4.cloudfront.net/user_3JGnRZcljS9ZEfmpThKsT6DATn2/hf_20260924_200307_ee98c144-5d85-4b91-8e6b-c82d664263d9.png';
@@ -37,12 +36,10 @@
   function paketListe() { return E.pakete.map(function (p) { return p.name + ' ' + p.preis + ' €' + (p.credits ? ' für ' + p.credits.toLocaleString('de-DE') + ' Credits' : ''); }).join(', '); }
 
   /* ---------- Darstellung ---------- */
+  /* Verlauf bleibt vollständig (Emre, 25.09.: „übersichtlich, man soll seine Nachrichten sehen“) – nur nach unten scrollen */
   function nachUnten() {
-    var alle = [].slice.call(verlauf.children).filter(function (el) { return !el.classList.contains('blase--alt'); });
-    alle.slice(0, Math.max(0, alle.length - SICHTBAR)).forEach(function (el) {
-      el.classList.add('blase--alt'); el.setAttribute('aria-hidden', 'true');
-      setTimeout(function () { el.remove(); }, ruhig ? 0 : 720);
-    });
+    verlauf.scrollTop = verlauf.scrollHeight;
+    requestAnimationFrame(function () { verlauf.scrollTop = verlauf.scrollHeight; });
   }
   function blase(wer, text) {
     var b = document.createElement('div');

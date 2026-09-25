@@ -609,6 +609,34 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .seitenpfeil__kreis { width: 40px; height: 56px; border-radius: 0 9999px 9999px 0; border-left: 0; }
   .seitenpfeil__text { display: none; }
 }
+
+/* ---------- Chat elegant eingefasst (25.09., Emre: „übersichtlich, eigene Nachrichten sehen, elegant umzäunen“) ---------- */
+/* Ruhend nur die Pille. Sobald man schreibt, wird daraus ein ruhiges Glas-Fenster: Verlauf oben (scrollbar), Pille unten. */
+.agent__oben { position: static; }
+.agent { border-radius: 30px; transition: background-color 500ms var(--ease), border-color 500ms var(--ease), box-shadow 500ms var(--ease), padding 500ms var(--ease); }
+.endo-chat .agent { padding: 8px; border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(14, 14, 14, 0.78); -webkit-backdrop-filter: blur(24px) saturate(1.2); backdrop-filter: blur(24px) saturate(1.2); box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55); }
+.endo-chat .agent__feld { box-shadow: none; background: rgba(255, 255, 255, 0.05); }
+.agent__kopf { display: none; }
+.endo-chat .agent__kopf { display: flex; padding: 8px 12px 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 4px; }
+.endo-chat .agent__avatar { border-color: rgba(255, 255, 255, 0.3); box-shadow: none; }
+.endo-chat .agent__avatar::after { background: #3BD16F; box-shadow: none; }
+.agent__verlauf { height: 0; padding: 0 12px; gap: 10px; overflow-y: auto; -webkit-mask-image: none; mask-image: none; scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.15) transparent; }
+.endo-chat .agent__verlauf { height: min(340px, 44svh); padding: 12px; }
+.blase { max-width: 82%; padding: 10px 14px; border-radius: 18px; font-size: 15px; line-height: 22px; text-shadow: none; filter: none; }
+.blase--endo { background: rgba(255, 255, 255, 0.06); border-top-left-radius: 6px; color: var(--text); }
+.blase--du { background: var(--text); color: #000; border-top-right-radius: 6px; text-align: left; }
+.blase--bild { padding: 6px; background: rgba(255, 255, 255, 0.06); }
+.blase--du.blase--bild { background: rgba(255, 255, 255, 0.12); }
+.blase--bild figcaption { color: var(--leise); padding: 6px 6px 2px; }
+@keyframes schweben { from { opacity: 0; transform: translateY(10px); } }
+.agent__vorschlaege { justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; padding: 4px 8px 10px; }
+.endo-chat .hero__text { opacity: 0.18; transform: translateY(-12px); }
+.endo-chat .agent__hinweis { display: none; }
+@media (max-width: 860px) {
+  .endo-chat .agent { left: 8px; right: 8px; }
+  .endo-chat .agent__verlauf { height: min(46svh, 360px); }
+  .endo-chat .hero__text { opacity: 0; }
+}
 </style>
 <script>
 /* endo.ai: Preise und Werkzeuge an EINER Stelle (Seite, Chat, Credit-Fenster lesen von hier).
@@ -1090,7 +1118,7 @@ window.ENDO = {
   });
 })();
 </script>
-<script src="js/agent.js?v=4" defer></script>
+<script src="js/agent.js?v=5" defer></script>
 <script src="js/orb.js?v=6" defer></script>
 <script>
 /* Direkt auf /ki/ geöffnet: nach rechts wischen führt zurück zu ERGUN. (eingebettet übernimmt das die Startseite) */
