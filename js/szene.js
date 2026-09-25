@@ -522,12 +522,12 @@
      je Figur ein Tag- und ein Abendbild und für die Nacht die Bildfolge – der Hund hebt den Kopf und jault, Emre winkt
      („Tschüss“). Beides startet gemeinsam, sobald es Nacht ist und man weiterscrollt, und läuft dann in eigener Zeit ab
      (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
-  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 297, h: 720, anzahl: 30, spalten: 6, fuss: 0.9958, oben: 0.0364, mitte: 0.5801, breite: 0.7662 } };
-  var fig = { phase: 0, ziel: 0, laeuft: false, t: 0 }, FIG_DAUER = 3.6, lichtGold = 0, lichtBlau = 0, lichtNacht = 0;
+  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 245, h: 600, anzahl: 64, spalten: 8, fuss: 0.9964, oben: 0.0531, mitte: 0.5794, breite: 0.7595 } };
+  var fig = { phase: 0, ziel: 0, laeuft: false, t: 0 }, FIG_DAUER = 4.4, lichtGold = 0, lichtBlau = 0, lichtNacht = 0;
   function figurLaden(name, folge) {
     var f = FIGUREN[name], b = new Image(); b.decoding = 'async';
     b.onload = function () { f[folge ? 'folge' : 'bild'] = b; f.zuletzt = ''; figurenZeichnen(); };
-    b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=5';
+    b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=6';
   }
   Object.keys(FIGUREN).forEach(function (k) { FIGUREN[k].zuletzt = ''; figurLaden(k, false); });
   /* die Bildfolgen (groß) erst nach dem Laden der Seite */
@@ -540,7 +540,7 @@
     tag:   { mul: [0.9, 0.91, 0.93], lift: [0, 0, 0], rim: [255, 246, 216], ra: 0.32 },
     gold:  { mul: [0.6, 0.46, 0.4], lift: [0.04, 0.02, 0.03], rim: [255, 182, 100], ra: 0.9 },
     blau:  { mul: [0.3, 0.34, 0.44], lift: [0.02, 0.03, 0.06], rim: [176, 196, 240], ra: 0.35 },
-    nacht: { mul: [0.2, 0.25, 0.37], lift: [0.03, 0.045, 0.08], rim: [170, 196, 255], ra: 0.6 }
+    nacht: { mul: [0.27, 0.32, 0.45], lift: [0.035, 0.05, 0.085], rim: [170, 196, 255], ra: 0.6 }
   };
   function figurLicht() {
     var l = { mul: [0, 0, 0], lift: [0, 0, 0], rim: [0, 0, 0], ra: 0 };
@@ -560,7 +560,8 @@
   function figurZeichnen(f, nr, l) {
     var c = f.leinwand; if (!c || !f.bild) return;
     if (!f.folge) nr = 0;
-    var n0 = Math.floor(nr), t = Math.round((nr - n0) * 12) / 12, n1 = Math.min(f.anzahl - 1, n0 + 1);
+    /* kein Überblenden zwischen Einzelbildern (das zeigte beim schnellen Heben zwei halbdurchsichtige Arme) – bei 64 Bildern läuft es so flüssig */
+    var n0 = Math.min(f.anzahl - 1, Math.round(nr)), t = 0, n1 = n0;
     var schluessel = n0 + '|' + t + '|' + lichtGold.toFixed(2) + '|' + lichtBlau.toFixed(2) + '|' + lichtNacht.toFixed(2);
     if (schluessel === f.zuletzt) return;
     f.zuletzt = schluessel;
