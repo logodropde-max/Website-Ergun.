@@ -211,7 +211,7 @@ export async function gespraech({ client, verlauf, ctx }) {
     .filter((t) => t && !/^(ich\s+)?warte\s+auf\s+(ihre|die)\s+(auswahl|antwort|wahl)/i.test(t))
     .join(' ').replace(/\s{2,}/g, ' ').trim();
   const auswahl = elemente.filter((el) => el.typ === 'auswahl').pop();
-  if (auswahl && auswahl.frage && !text.toLowerCase().includes(auswahl.frage.toLowerCase().replace(/[?.!]+$/, ''))) {
+  if (auswahl && auswahl.frage && !text.includes('?')) { // nur wenn endo selbst gar keine Frage geschrieben hat
     text = (text + ' ' + auswahl.frage).trim();
   }
   return { text, elemente, kosten };
