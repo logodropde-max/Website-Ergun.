@@ -16,6 +16,13 @@
 
 
 
+## Titelbild – 4 Punkte einzeln (26.09.2026, Claude Code)
+Vier nummerierte Änderungen, je ein Commit. Basis: freigegebener Stand (CSS-Sonne, gezeichnete Landschaft, eine Lichtlinie).
+1. **Wolken weg** (`3c67fce`, `szene.js?v=26`): `wolken()`, `F.wolke`, `F.wolkeSaum` und der Aufruf in `landschaft()` entfernt.
+2. **Sterne/Milchstraße/Schnuppe weg** (`c84330f`, `?v=27`): kompletter Sterne-Block (`STERNFARBEN`, `sterne()`, `schnuppePlanen()`, `schnuppeTimer`) raus; in `aufbauen` `sterne(); zeichne(true)` → `zeichne(true)`; `schnuppePlanen()` aus `start()`; `--sterne*`/`--milch`-Zuweisungen und `szene--sterne`-Toggle aus `licht()`; CSS `.sterne/.milchstrasse/.schnuppe*`, Keyframes `funkeln*`/`schnuppe`, Markup `<div class="sterne">` und `--sterne:0` entfernt.
+3. **Winken früher, nur runter, einmal** (`ac4699d`, `?v=28`): neues Flag `var gewunken=false`. In `zeichne()` Richtungserkennung `var vorherP = letztesP;` (vor dem Early-Return). Trigger ersetzt: bei `p<=0.02` `gewunken=false` + Figur auf Ruhe (`fig.phase=0`); sonst `!gewunken && pz>0.22 && p>vorherP` → `gewunken=true; figStart(1)`. Kein `figStart(0)` mehr (kein Rückwärts). `else if (ruhig)` leer = Figur ruht. `figLauf` läuft nur vorwärts auf `ziel=1`.
+4. **endo-Faden an Scroll gekoppelt** (`69eaede`, nur `index.html`): Timer-Punkt entfernt (`faden-punkt`-Animation, Pause-Regel, Keyframes). `.endo__faden::after` von `top:0; opacity:0` → `bottom:-5px; opacity:0.9`, sodass der Punkt am unteren Ende (= Spitze) sitzt. Die Spitze folgt über die vorhandene scaleY-Kopplung (`faden-waechst` + `animation-timeline: view()`, Range `entry 0% cover 40%`) der Scrollposition. Reduced-motion: kein scaleY → statischer Faden, Punkt an der Kugel.
+
 ## Teil 7 Schritt 1: Kopf ruhig/größer, Winken-Halt (26.09.2026, Claude Code)
 - `figuren.py winken`: Kopf um KF=1,09 um die Kopfmitte vergrößert (echt/ea aus `setz` + Skf). Nachführung in 2 Durchgängen: alle Tracks sammeln, in (tx,ty,winkel,skala) zerlegt, Gauß-geglättet (sigma 4) und auf 35 % um den Mittelwert gedämpft → kein Wackeln. `emre.h` 600, 64 Bilder.
 - `js/szene.js` (`?v=27`, Figuren `?v=7`): `winkKurve()` (heben→oben halten→senken), in `figurenZeichnen` nur für Emre; Hund weiter smoothstep. Sterne-Guard bei 0-Breite.
