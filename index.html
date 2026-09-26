@@ -143,7 +143,7 @@ img { display: block; max-width: 100%; height: auto; }
 .sonne__glut { width: calc(var(--sonne-r) * 32); height: calc(var(--sonne-r) * 20); background: radial-gradient(closest-side, rgba(255, 170, 90, 0.55), rgba(255, 120, 60, 0.18) 45%, rgba(255, 100, 50, 0) 100%); opacity: var(--tief); }
 /* echte, fotorealistische Sonne (aus Higgsfield-Bild, Schwarz->Alpha freigestellt): zentriert auf der Sonnenbahn,
    Tag-Sonne blendet ohne Sprung in die orange Abend-Sonne, dahinter waermer Schein (Glut) und Halo (Hof) */
-.sonne__echt { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); width: calc(var(--sonne-r) * 16); height: calc(var(--sonne-r) * 16); max-width: none; object-fit: contain; }
+.sonne__echt { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); width: calc(var(--sonne-r) * 6); height: calc(var(--sonne-r) * 6); max-width: none; object-fit: contain; }
 .sonne__echt--tag { opacity: calc(1 - var(--tief)); }
 .sonne__echt--abend { opacity: var(--tief); }
 .mond { opacity: var(--mond); }
@@ -706,7 +706,7 @@ img { display: block; max-width: 100%; height: auto; }
   </nav>
 </footer>
 
-<script src="js/szene.js?v=30"></script>
+<script src="js/szene.js?v=31"></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {
