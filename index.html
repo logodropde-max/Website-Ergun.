@@ -149,8 +149,9 @@ img { display: block; max-width: 100%; height: auto; }
 /* 26.09. (Emre): Mond leuchtender – weiter, weicher Schein, dazu ein enger heller Hof */
 .mond__hof { width: calc(var(--sonne-r) * 16); height: calc(var(--sonne-r) * 16); background: radial-gradient(closest-side, rgba(255, 210, 150, 0.24), rgba(255, 180, 110, 0.1) 32%, rgba(255, 170, 100, 0.03) 62%, rgba(255, 170, 100, 0) 100%); }
 /* Saturn als drehendes Video statt Mond (Emre, 26.09.): rechts oben, Rand weich ausgeblendet, damit der schwarze Videorahmen im Nachthimmel verschwindet */
-.mond__saturn { width: calc(var(--sonne-r) * 7); height: calc(var(--sonne-r) * 7); object-fit: contain; border-radius: 0; background: transparent;
-  -webkit-mask-image: radial-gradient(closest-side, #000 60%, rgba(0,0,0,0.6) 74%, transparent 86%); mask-image: radial-gradient(closest-side, #000 60%, rgba(0,0,0,0.6) 74%, transparent 86%); }
+.mond__saturn { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); width: calc(var(--sonne-r) * 7.5); height: calc(var(--sonne-r) * 7.5); object-fit: contain; background: transparent;
+  mix-blend-mode: screen;  /* Schwarz verschwindet komplett – kein sichtbarer Video-Kasten */
+  -webkit-mask-image: radial-gradient(closest-side, #000 82%, transparent 100%); mask-image: radial-gradient(closest-side, #000 82%, transparent 100%); }
 .mond__kern { width: calc(var(--sonne-r) * 1.5); height: calc(var(--sonne-r) * 1.5);
   background: radial-gradient(circle at 36% 40%, rgba(170, 170, 160, 0.35) 0 9%, transparent 10%), radial-gradient(circle at 60% 62%, rgba(170, 170, 160, 0.28) 0 12%, transparent 13%), radial-gradient(circle at 62% 30%, rgba(170, 170, 160, 0.22) 0 6%, transparent 7%), radial-gradient(circle at 44% 44%, #FDFBF3 0 40%, #E9E5D8 60%, #D5D0C3 68%, rgba(210, 205, 190, 0) 71%); }
 
@@ -500,8 +501,8 @@ img { display: block; max-width: 100%; height: auto; }
       <div class="himmel himmel--blau"></div>
       <div class="himmel himmel--nacht"></div>
       <div class="sterne"></div>
-      <div class="sonne"><b class="sonne__hof"></b><img class="sonne__echt sonne__echt--tag" src="bilder/hero/himmel/sonne-tag.webp?v=2" alt="" aria-hidden="true"><img class="sonne__echt sonne__echt--abend" src="bilder/hero/himmel/sonne-abend.webp?v=2" alt="" aria-hidden="true"></div>
-      <div class="mond"><b class="mond__hof"></b><video class="mond__saturn" autoplay muted loop playsinline preload="none" aria-hidden="true"><source src="bilder/hero/himmel/saturn.mp4?v=2" type="video/mp4"></video></div>
+      <div class="sonne"><b class="sonne__hof"></b><img class="sonne__echt sonne__echt--tag" src="bilder/hero/himmel/sonne-tag.webp?v=3" alt="" aria-hidden="true"><img class="sonne__echt sonne__echt--abend" src="bilder/hero/himmel/sonne-abend.webp?v=3" alt="" aria-hidden="true"></div>
+      <div class="mond"><video class="mond__saturn" autoplay muted loop playsinline preload="none" aria-hidden="true"><source src="bilder/hero/himmel/saturn.mp4?v=3" type="video/mp4"></video></div>
     </div>
     <div class="szene__ebene" data-ebene="weit" aria-hidden="true"></div>
     <div class="szene__ebene" data-ebene="fern" aria-hidden="true"></div>
@@ -707,7 +708,7 @@ img { display: block; max-width: 100%; height: auto; }
   </nav>
 </footer>
 
-<script src="js/szene.js?v=30"></script>
+<script src="js/szene.js?v=31"></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {
