@@ -2,7 +2,7 @@
    Quelle für ki/js/orb.js. Neu bauen:
    npx esbuild ki/js/orb.quelle.js --bundle --minify --format=iife --target=es2018 --outfile=ki/js/orb.js
    (three.js Version 0.186.1 muss dafür installiert sein: npm i --no-save three@0.186.1 esbuild) */
-import { Scene, PerspectiveCamera, WebGLRenderer, IcosahedronGeometry, ShaderMaterial, Color, Vector3, Mesh } from 'three';
+import { Scene, PerspectiveCamera, WebGLRenderer, IcosahedronGeometry, ShaderMaterial, Color, Vector3, Vector4, Quaternion, Mesh } from 'three';
 
 const buehne = document.querySelector('[data-orb]');
 if (buehne) start(buehne);
@@ -31,14 +31,22 @@ function start(el) {
 
   /* Feinheit: am Handy weniger Dreiecke, damit es flüssig bleibt */
   const geometry = new IcosahedronGeometry(1.2, klein ? 24 : 40);
+  /* Datenpakete (26.09., Emre): die Kugel streckt sich nahen Paketen mit weichen Armen entgegen (max. 3, Handy 2)
+     und ein kurzer Lichtimpuls läuft vom Einsaugpunkt über die Oberfläche. Richtung + Stärke kommen von js/endo-zufluss.js. */
+  const ARME = klein ? 2 : 3;
+  const zugU = [0, 1, 2].map(() => new Vector4(0, 0, 1, 0)), pulsU = [0, 1, 2].map(() => new Vector4(0, 0, 1, -1));
   const material = new ShaderMaterial({
+    defines: { ARME },
     uniforms: {
+      zug: { value: zugU },
+      puls: { value: pulsU },
       time: { value: 0 },
       pointLightPosition: { value: new Vector3(0, 0, 5) },
       color: { value: new Color('#FF5A1F') }
     },
     vertexShader: `
       uniform float time;
+      uniform vec4 zug[3];
       varying vec3 vNormal;
       varying vec3 vPosition;
       vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -89,11 +97,22 @@ function start(el) {
         vPosition = position;
         float displacement = snoise(position * 2.0 + time * 0.5) * 0.2;
         vec3 newPosition = position + normal * displacement;
+        /* weicher, sich verjüngender Arm zum Paket: breite Beule, zur Spitze schmaler, wie flüssiges Metall */
+        vec3 n0 = normalize(position);
+        for (int i = 0; i < ARME; i++) {
+          float s = zug[i].w;
+          if (s > 0.001) {
+            float w = smoothstep(0.52, 1.0, dot(n0, zug[i].xyz));
+            float arm = w * w * (0.45 + 0.55 * w);
+            newPosition += mix(normal, zug[i].xyz, 0.55) * (s * arm * 0.42);
+          }
+        }
         gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
       }`,
     fragmentShader: `
       uniform vec3 color;
       uniform vec3 pointLightPosition;
+      uniform vec4 puls[3];
       varying vec3 vNormal;
       varying vec3 vPosition;
       void main() {
@@ -104,6 +123,18 @@ function start(el) {
         fresnel = pow(fresnel, 2.0);
         vec3 neon = vec3(0.80, 0.82, 0.88);   /* ruhiges Silberweiß (25.09. nachts: Orange nur noch für Premium) */
         vec3 finalColor = neon * (0.24 + diffuse * 0.82) + vec3(1.0, 1.0, 1.0) * fresnel * 0.6;
+        /* Aufnahme: kurzes Aufleuchten am Einsaugpunkt, das als leiser Ring über die Oberfläche läuft und verblasst */
+        vec3 n1 = normalize(vPosition);
+        float glanz = 0.0;
+        for (int i = 0; i < 3; i++) {
+          float ph = puls[i].w;
+          if (ph >= 0.0 && ph < 1.0) {
+            float ang = acos(clamp(dot(n1, puls[i].xyz), -1.0, 1.0));
+            float d = (ang - ph * 2.6) / (0.2 + ph * 0.25);
+            glanz += (1.0 - ph) * (1.0 - ph) * exp(-d * d) * 0.2;
+          }
+        }
+        finalColor += vec3(0.9, 0.95, 1.0) * min(glanz, 0.26);   /* sehr dezent, auch wenn mehrere gleichzeitig ankommen */
         gl_FragColor = vec4(finalColor, 1.0);
       }`,
     wireframe: true
@@ -124,9 +155,35 @@ function start(el) {
   }
   if (feineMaus) window.addEventListener('pointermove', (e) => lichtAuf(e.clientX, e.clientY), { passive: true });
 
-  let frameId = 0, laeuft = false, start0 = performance.now();
+  /* Schnittstelle für die Datenpakete: je Arm Bildschirmrichtung (x rechts, y unten) und Zielstärke 0…1; puls(x, y) beim Einsaugen */
+  const zuege = [0, 1, 2].map(() => ({ x: 0, y: 0, s: 0 })), staerke = [0, 0, 0], sicht = [0, 0, 1].map(() => new Vector3(0, 0, 1));
+  const pulse = [0, 1, 2].map(() => ({ dir: new Vector3(0, 0, 1), t0: -1 }));
+  const umkehr = new Quaternion(), hilf = new Vector3();
+  let pulsNr = 0;
+  window.endoKugel = {
+    arme: ARME, zuege, staerke,
+    puls(x, y) {
+      if (ruhig) return;
+      const p = pulse[pulsNr++ % 3]; umkehr.copy(mesh.quaternion).invert();
+      p.dir.set(x, -y, 0.35).normalize().applyQuaternion(umkehr); p.t0 = performance.now();
+    }
+  };
+  let frameId = 0, laeuft = false, start0 = performance.now(), zuletzt = performance.now();
   function bild(t) {
-    const zeit = t - start0;
+    const zeit = t - start0, dt = Math.min(0.05, Math.max(0, (t - zuletzt) / 1000)); zuletzt = t;
+    /* Arme: weich hinaus, gedämpft zurück (exponentiell = kein Nachwackeln); Richtung folgt dem Paket, trotz Drehung */
+    umkehr.copy(mesh.quaternion).invert();
+    for (let i = 0; i < 3; i++) {
+      const z = zuege[i], ziel = i < ARME ? Math.max(0, Math.min(1, z.s || 0)) : 0;
+      staerke[i] += (ziel - staerke[i]) * (1 - Math.exp(-dt / (ziel > staerke[i] ? 0.12 : 0.26)));
+      if (staerke[i] < 0.002 && ziel === 0) staerke[i] = 0;
+      if (ziel > 0) sicht[i].set(z.x, -z.y, 0.3).normalize();
+      hilf.copy(sicht[i]).applyQuaternion(umkehr);
+      zugU[i].set(hilf.x, hilf.y, hilf.z, staerke[i]);
+      const p = pulse[i], ph = p.t0 < 0 ? -1 : (t - p.t0) / 950;
+      if (ph >= 1) p.t0 = -1;
+      pulsU[i].set(p.dir.x, p.dir.y, p.dir.z, ph >= 1 ? -1 : ph);
+    }
     material.uniforms.time.value = zeit * 0.0003;
     mesh.rotation.y += 0.0005 * 4;
     mesh.rotation.x += 0.0002 * 4;

@@ -16,6 +16,12 @@
 
 
 
+## Kugel saugt Pakete ein + Tipp-Pakete (26.09.2026, Claude Code)
+`ki/js/orb.js?v=8` (beide Seiten), `js/endo-zufluss.js?v=3`. **Neu bauen** (three 0.186.1 + esbuild in einem Ordner außerhalb des Vaults, dann `NODE_PATH=<ordner>/node_modules esbuild ki/js/orb.quelle.js --bundle --minify --format=iife --target=es2018 --outfile=ki/js/orb.js`).
+- Shader: `defines ARME` (3/Handy 2), `uniform vec4 zug[3]` (Objekt-Richtung xyz, Stärke w): `newPosition += mix(normal, dir, 0.55) · s · w²(0.45+0.55w) · 0.42` mit `w = smoothstep(0.52, 1, dot(n, dir))`. `uniform vec4 puls[3]` (Richtung, Phase 0…1): Ring `ang − ph·2.6`, Summe ≤ 0.26.
+- `window.endoKugel = { arme, zuege[{x,y,s}], staerke[], puls(x,y) }`: Pakete geben Bildschirmrichtung (x rechts, y unten) + Zielstärke; Kugel dämpft (hinaus τ 0,12 s, zurück 0,26 s), rechnet jedes Bild über die inverse Mesh-Drehung in Objektkoordinaten um.
+- Pakete: `.endo__daten` jetzt `position: fixed` (Viewport), Simulation in Seitenkoordinaten, Kugel per `getBoundingClientRect` alle 250 ms. Zug ab `2,4 R` (R = 0,56 · halbe Kugelbreite), dann `spd += 300 px/s²` (Handy 240), Richtung biegt radial ein; Aufnahme an der tatsächlichen Armspitze `R(1 + 0.32 · staerke)`. Arme bleiben einem Paket bis zur Aufnahme zugeordnet. Tipps: `click` (passiv, `detail > 0`) innerhalb `.endo` unterhalb von 30 % Viewporthöhe über seiner Oberkante; max. 12/8 gleichzeitig. Ohne WebGL-Kugel: altes Aufglimmen am Rand.
+
 ## Sonnenbahn + Winken-Timing (26.09.2026, Claude Code)
 `szene.js?v=32`. `sonneStartSetzen()`: Titelunterkante über `offsetTop`-Kette bis `held` (ohne Parallaxe) + `2,4 · sonneR`, höchstens `sonneEnde − 3 · sonneR`; in `aufbauen()` nach `--titel-oben` und nach `document.fonts.ready`. Sonne mit `sanfter()` (smootherstep). `GLATT = 0.15`. Winken: `winkStartP` beim Start, in `figLauf` `phase = max(Zeit, (p − winkStartP)/WINK_WEG)`, `WINK_WEG = 0.55`.
 
