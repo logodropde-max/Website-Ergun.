@@ -657,105 +657,6 @@
     huelle.appendChild(c);
   }
 
-  /* ---------- Sterne ----------
-     drei Helligkeitsstufen, die nacheinander erscheinen (zuerst die hellsten), die hellsten als eigene
-     Elemente mit unregelmäßigem Funkeln (CSS, jeder Stern mit eigenem Takt), dazu eine zurückhaltende
-     Milchstraße und sehr selten eine Sternschnuppe. */
-  var STERNFARBEN = ['#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFF1DC', '#FFE6C8', '#DCE6FF', '#CFDDFF'];
-  function sterne() {
-    var box = held.querySelector('.sterne'); if (!box) return;
-    box.innerHTML = '';
-    var hoehe = m.H * 0.66, r = zufall(4242), q = Math.min(m.q, 1.5);
-    box.style.height = hoehe + 'px';
-    /* Milchstraße: schräges Band, grob gerechnet und weich hochskaliert */
-    var mw = 640, mh = Math.round(mw * hoehe / m.W), mc = document.createElement('canvas');
-    mc.width = mw; mc.height = mh; mc.className = 'milchstrasse';
-    var mg = mc.getContext('2d'), wink = -0.42, cx = mw * 0.62, cy = mh * 0.42, ca = Math.cos(wink), sa = Math.sin(wink);
-    /* weicher Schimmer, darin sehr viele winzige Punkte: körnig statt wolkig */
-    for (var i = 0; i < 260; i++) {
-      var t = (r() - 0.5) * mw * 1.6, d = (r() + r() + r() - 1.5) * mh * 0.07;
-      var x = cx + t * ca - d * sa, y = cy + t * sa + d * ca, rr = 6 + r() * 14;
-      var gr = mg.createRadialGradient(x, y, 0, x, y, rr);
-      gr.addColorStop(0, 'rgba(210,218,255,' + (0.035 + r() * 0.035) + ')'); gr.addColorStop(1, 'rgba(210,218,255,0)');
-      mg.fillStyle = gr; mg.fillRect(x - rr, y - rr, rr * 2, rr * 2);
-    }
-    for (i = 0; i < 5200; i++) {
-      t = (r() - 0.5) * mw * 1.6; d = (r() + r() + r() + r() - 2) * mh * 0.06;
-      x = cx + t * ca - d * sa; y = cy + t * sa + d * ca;
-      mg.fillStyle = 'rgba(235,238,255,' + (0.12 + r() * 0.38) + ')'; mg.fillRect(x, y, r() < 0.85 ? 0.7 : 1.2, r() < 0.85 ? 0.7 : 1.2);
-    }
-    /* dunkle Staubbahnen */
-    mg.globalCompositeOperation = 'destination-out';
-    for (i = 0; i < 140; i++) {
-      t = (r() - 0.5) * mw * 1.5; d = (r() - 0.5) * mh * 0.03;
-      x = cx + t * ca - d * sa; y = cy + t * sa + d * ca; rr = 3 + r() * 8;
-      gr = mg.createRadialGradient(x, y, 0, x, y, rr); gr.addColorStop(0, 'rgba(0,0,0,0.35)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
-      mg.fillStyle = gr; mg.fillRect(x - rr, y - rr, rr * 2, rr * 2);
-    }
-    box.appendChild(mc);
-    /* zwei Leinwände: schwache und mittlere Sterne */
-    /* 26.09. (Emre): Nachthimmel leuchtender – dichter, heller, weicherer Schein um die mittleren Sterne */
-    [['3', 1 / 950, 0.32, 0.62], ['2', 1 / 5200, 0.6, 1.05]].forEach(function (st) {
-      var c = document.createElement('canvas'); c.width = Math.ceil(m.W * q); c.height = Math.ceil(hoehe * q);
-      c.className = 'sterne__feld'; c.setAttribute('data-stufe', st[0]);
-      var g = c.getContext('2d'); g.setTransform(q, 0, 0, q, 0, 0);
-      var n = Math.round(m.W * hoehe * st[1]);
-      for (var k = 0; k < n; k++) {
-        var x2 = r() * m.W, y2 = Math.pow(r(), 1.25) * hoehe;
-        /* in der Milchstraße dichter */
-        if (st[0] === '3' && r() < 0.35) {
-          var tt = (r() - 0.5) * m.W * 1.4, dd = (r() + r() - 1) * hoehe * 0.1;
-          x2 = m.W * 0.62 + tt * ca - dd * sa; y2 = hoehe * 0.42 + tt * sa + dd * ca;
-          if (y2 < 0 || y2 > hoehe) continue;
-        }
-        var ra = st[2] + r() * (st[3] - st[2]), f = STERNFARBEN[Math.floor(r() * STERNFARBEN.length)];
-        g.globalAlpha = (0.45 + r() * 0.55) * (1 - Math.pow(y2 / hoehe, 3) * 0.55);
-        if (st[0] === '2') {
-          var gg = g.createRadialGradient(x2, y2, 0, x2, y2, ra * 5);
-          gg.addColorStop(0, rgba(f, 0.45)); gg.addColorStop(1, rgba(f, 0));
-          g.fillStyle = gg; g.fillRect(x2 - ra * 5, y2 - ra * 5, ra * 10, ra * 10);
-        }
-        g.fillStyle = f; g.beginPath(); g.arc(x2, y2, ra, 0, Math.PI * 2); g.fill();
-      }
-      box.appendChild(c);
-    });
-    /* die hellsten: eigene Elemente, jeder mit eigenem, unregelmäßigem Takt */
-    var hell = document.createElement('div'); hell.className = 'sterne__hell';
-    var anzahl = Math.round(Math.min(70, Math.max(26, m.W / 22)));
-    for (var j = 0; j < anzahl; j++) {
-      var sp = document.createElement('i'), gr2 = 1.6 + Math.pow(r(), 2) * 3;
-      sp.style.left = (r() * 100).toFixed(2) + '%';
-      sp.style.top = (Math.pow(r(), 1.4) * 88).toFixed(2) + '%';
-      sp.style.setProperty('--g', gr2.toFixed(2) + 'px');
-      sp.style.setProperty('--f', STERNFARBEN[Math.floor(r() * STERNFARBEN.length)]);
-      sp.style.animationDuration = (2.4 + r() * 4.6).toFixed(2) + 's';
-      sp.style.animationDelay = (-r() * 7).toFixed(2) + 's';
-      if (r() < 0.5) sp.className = 'anders';
-      hell.appendChild(sp);
-    }
-    box.appendChild(hell);
-    var sch = document.createElement('div'); sch.className = 'schnuppen'; box.appendChild(sch);
-  }
-  /* Sternschnuppe: selten (alle 18–40 s), nur nachts und wenn das Startbild zu sehen ist */
-  var schnuppeTimer = 0;
-  function schnuppePlanen() {
-    clearTimeout(schnuppeTimer);
-    if (ruhig) return;
-    schnuppeTimer = setTimeout(function () {
-      var box = held.querySelector('.schnuppen'), jetzt = parseFloat(held.style.getPropertyValue('--sterne')) || 0;
-      if (box && jetzt > 0.85 && !held.classList.contains('szene--weg') && !document.hidden) {
-        var r = Math.random, e = document.createElement('i');
-        e.className = 'schnuppe';
-        e.style.left = (10 + r() * 70) + '%'; e.style.top = (4 + r() * 38) + '%';
-        e.style.setProperty('--winkel', (18 + r() * 22) + 'deg');
-        e.style.setProperty('--weg', (120 + r() * 160) + 'px');
-        box.appendChild(e);
-        e.addEventListener('animationend', function () { e.remove(); });
-      }
-      schnuppePlanen();
-    }, 18000 + Math.random() * 22000);
-  }
-
   /* ---------- Aufbau ---------- */
   var ebenen = {}, sonne, mond, bereit = false, bauzeit = 0, bauNr = 0;
   /* Parallaxe: kann der Browser Scroll-Animationen (Chrome, Edge, Safari 26), verschiebt er die Ebenen selbst –
@@ -789,7 +690,7 @@
     /* Stufe 2 und 3: Abend und Nacht, danach Sterne – jeweils, wenn der Browser gerade Luft hat */
     spaeter(function () { if (nr !== bauNr) return; AKTIV = ['gold']; landschaft(); AKTIV = LICHTER;
       spaeter(function () { if (nr !== bauNr) return; AKTIV = ['nacht']; landschaft(); AKTIV = LICHTER;
-        spaeter(function () { if (nr !== bauNr) return; sterne(); zeichne(true); }); }); });
+        spaeter(function () { if (nr !== bauNr) return; zeichne(true); }); }); });
     /* Sonne startet mittig oben, sinkt senkrecht und verschwindet hinter dem Sattel in der Mitte */
     m.sonneR = Math.max(26, Math.min(44, m.W * 0.026));
     m.sonneStart = m.H * (m.hoch ? 0.13 : 0.1);
@@ -858,12 +759,6 @@
     wert('--blau', sanft(0.18, 0.3, p).toFixed(3));
     wert('--himmel-nacht', sanft(0.28, 0.46, p).toFixed(3));
     /* Sterne: zuerst die hellsten, dann mehr; Milchstraße erst in tiefer Nacht */
-    var s1 = sanft(0.26, 0.36, p);
-    wert('--sterne', s1.toFixed(3));
-    wert('--sterne2', sanft(0.32, 0.44, p).toFixed(3));
-    wert('--sterne3', sanft(0.38, 0.52, p).toFixed(3));
-    wert('--milch', sanft(0.42, 0.6, p).toFixed(3));
-    held.classList.toggle('szene--sterne', s1 > 0.01);
     /* Sonne: senkrecht, gleichmäßig mit sanftem Anfang und Ende */
     var ps = sanft(0, SONNE_BIS, p), ys = mix(m.sonneStart, m.sonneEnde, ps);
     sonne.style.transform = 'translate3d(' + (m.W / 2).toFixed(2) + 'px,' + ys.toFixed(2) + 'px,0)';
@@ -883,7 +778,6 @@
     sonne = held.querySelector('.sonne'); mond = held.querySelector('.mond');
     aufbauen();
     window.addEventListener('scroll', anfordern, { passive: true });
-    schnuppePlanen();
     var breite = window.innerWidth, hoehe = buehne.clientHeight, t;
     window.addEventListener('resize', function () {
       clearTimeout(t);

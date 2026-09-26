@@ -79,7 +79,7 @@ img { display: block; max-width: 100%; height: auto; }
 /* ---------- Startbild: gezeichnete Landschaft (js/szene.js) ---------- */
 /* Jede Ebene liegt in drei Lichtstimmungen übereinander (Tag, Gold, Nacht); das Skript setzt nur
    --gold, --nacht usw. und verschiebt die Ebenen. Nur transform/opacity, keine Filter. */
-.szene { position: relative; z-index: 1; --gold: 0; --blau: 0; --nacht: 0; --himmel-nacht: 0; --sterne: 0; --tief: 0; --mond: 0; }
+.szene { position: relative; z-index: 1; --gold: 0; --blau: 0; --nacht: 0; --himmel-nacht: 0; --tief: 0; --mond: 0; }
 .szene__buehne { position: relative; height: 100svh; min-height: 560px; overflow: hidden; background: #070B16; isolation: isolate; }
 /* weicher Übergang ohne Maske (Masken über bewegten Ebenen flackern in Safari): unten ein Verlauf genau
    in der Farbe, mit der die Studio-Sektion beginnt */
@@ -123,7 +123,7 @@ img { display: block; max-width: 100%; height: auto; }
 /* Emre und der Hund liegen in einer eigenen Hülle über allen Fassungen der Wiese (Füße, Schatten und Halme davor) */
 .szene__figuren { position: absolute; inset: 0; z-index: 1; }
 /* alles, was beim Scrollen überblendet wird, auf eigene Grafikebene – sonst malt das Handy den Himmel jedes Bild neu */
-.szene__bild[data-licht="gold"], .szene__bild[data-licht="nacht"], .himmel--gold, .himmel--blau, .himmel--nacht, .sonne__glut, .sonne__hof, .sonne__kern--abend, .sonne, .mond, .sterne canvas, .sterne__hell { will-change: opacity; }
+.szene__bild[data-licht="gold"], .szene__bild[data-licht="nacht"], .himmel--gold, .himmel--blau, .himmel--nacht, .sonne__glut, .sonne__hof, .sonne__kern--abend, .sonne, .mond { will-change: opacity; }
 .sonne, .mond { will-change: transform, opacity; }
 
 /* Himmel: Farbverlauf hängt an der Sonnenhöhe – Tag, Goldene Stunde, blaue Stunde, Nacht */
@@ -150,25 +150,6 @@ img { display: block; max-width: 100%; height: auto; }
 .mond__kern { width: calc(var(--sonne-r) * 1.5); height: calc(var(--sonne-r) * 1.5);
   background: radial-gradient(circle at 36% 40%, rgba(170, 170, 160, 0.35) 0 9%, transparent 10%), radial-gradient(circle at 60% 62%, rgba(170, 170, 160, 0.28) 0 12%, transparent 13%), radial-gradient(circle at 62% 30%, rgba(170, 170, 160, 0.22) 0 6%, transparent 7%), radial-gradient(circle at 44% 44%, #FDFBF3 0 40%, #E9E5D8 60%, #D5D0C3 68%, rgba(210, 205, 190, 0) 71%); }
 
-/* Sterne: drei Stufen, die hellsten funkeln einzeln (eigener Takt), Milchstraße zurückhaltend */
-.sterne { position: absolute; left: 0; top: 0; width: 100%; pointer-events: none; }
-.sterne canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.milchstrasse { opacity: var(--milch, 0); }
-.sterne__feld[data-stufe="3"] { opacity: var(--sterne3, 0); }
-.sterne__feld[data-stufe="2"] { opacity: var(--sterne2, 0); }
-.sterne__hell { position: absolute; inset: 0; opacity: var(--sterne, 0); }
-.sterne__hell i { position: absolute; width: calc(var(--g) * 5); height: calc(var(--g) * 5); margin: calc(var(--g) * -2.5) 0 0 calc(var(--g) * -2.5); border-radius: 50%;
-  background: radial-gradient(circle, var(--f) 0 calc(var(--g) * 0.5), rgba(235, 240, 255, 0.36) calc(var(--g) * 0.9), rgba(235, 240, 255, 0) calc(var(--g) * 2.5)); }
-@media (prefers-reduced-motion: no-preference) {
-  .szene--sterne .sterne__hell i { animation: funkeln 4s ease-in-out infinite; }
-  .szene--sterne .sterne__hell i.anders { animation-name: funkeln-b; }
-  .szene--weg .sterne__hell i { animation-play-state: paused; }
-}
-@keyframes funkeln { 0%, 100% { opacity: 1; transform: scale(1); } 18% { opacity: 0.55; transform: scale(0.8); } 26% { opacity: 1; transform: scale(1.08); } 61% { opacity: 0.8; transform: scale(0.95); } }
-@keyframes funkeln-b { 0%, 100% { opacity: 0.85; transform: scale(0.95); } 33% { opacity: 1; transform: scale(1.1); } 47% { opacity: 0.45; transform: scale(0.75); } 72% { opacity: 0.95; transform: scale(1); } }
-.schnuppen { position: absolute; inset: 0; }
-.schnuppe { position: absolute; width: 150px; height: 1.5px; border-radius: 2px; background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(235, 242, 255, 0.95)); transform-origin: 100% 50%; opacity: 0; animation: schnuppe 1100ms cubic-bezier(0.2, 0.6, 0.3, 1) forwards; }
-@keyframes schnuppe { 0% { opacity: 0; transform: rotate(var(--winkel)) translateX(0) scaleX(0.3); } 15% { opacity: 1; } 100% { opacity: 0; transform: rotate(var(--winkel)) translateX(var(--weg)) scaleX(1); } }
 
 /* Titel */
 .szene__titel { display: flex; flex-direction: column; align-items: center; padding: 0 var(--pad); }
@@ -495,7 +476,6 @@ img { display: block; max-width: 100%; height: auto; }
       <div class="himmel himmel--gold"></div>
       <div class="himmel himmel--blau"></div>
       <div class="himmel himmel--nacht"></div>
-      <div class="sterne"></div>
       <div class="sonne"><b class="sonne__glut"></b><b class="sonne__hof"></b><i class="sonne__kern"></i><i class="sonne__kern sonne__kern--abend"></i></div>
       <div class="mond"><b class="mond__hof"></b><b class="mond__schein"></b><i class="mond__kern"></i></div>
     </div>
@@ -703,7 +683,7 @@ img { display: block; max-width: 100%; height: auto; }
   </nav>
 </footer>
 
-<script src="js/szene.js?v=26"></script>
+<script src="js/szene.js?v=27"></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {
