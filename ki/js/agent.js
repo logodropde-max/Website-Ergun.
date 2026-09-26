@@ -139,7 +139,6 @@
   }
   function du(text) { blase('du', text); historie.push({ rolle: 'user', text: text }); inKugel(text, null); }
   function bild(wer, src, unterschrift) {
-    if (wer === 'du') inKugel(null, src);
     var f = document.createElement('figure');
     f.className = 'blase blase--bild blase--' + wer;
     var img = document.createElement('img'); img.src = src; img.alt = unterschrift; img.loading = 'lazy';
@@ -148,6 +147,7 @@
     img.addEventListener('load', nachUnten);
     img.addEventListener('error', function () { f.remove(); });
     verlauf.appendChild(f); nachUnten();
+    return f;
   }
   function knoepfe(liste) {
     vorschlaege.innerHTML = '';
@@ -200,6 +200,7 @@
         { text: 'Foto hochladen', haupt: angemeldet(), aktion: function () { datei.click(); } },
         angemeldet() && !testCode ? { text: 'Mein Konto', aktion: kontoZeigen } : null,
         !angemeldet() ? { text: 'Anmelden', aktion: function () { anmeldenMenue(); } } : null,
+        daten.lokalFoto && !genugCredits() ? { text: 'Paket wählen', aktion: function () { paketFenster(); } } : null,
         { text: 'Was kostet das?', aktion: function () { freieFrage('Was kostet das?'); } }
       ].filter(Boolean)));
       return;
@@ -286,8 +287,9 @@
     datei.value = '';
     if (!f) return;
     if (!/^image\//.test(f.type)) { endo('Das ist leider kein Bild. Laden Sie bitte ein Foto hoch, zum Beispiel ein JPG vom Handy.'); return; }
-    if (angemeldet()) { endoFoto(f); return; }
-    if (!kiAus && schritt === 'ki') { wartendesFoto = f; anmeldenMenue('foto'); return; }
+    if (angemeldet() && genugCredits()) { endoFoto(f); return; }
+    /* ohne Guthaben (Emre, 26./27.09.): das Foto bleibt nur im Browser – nichts wird hochgeladen, nichts kostet */
+    if (!kiAus && schritt === 'ki') { lokalesFoto(f); return; }
     knoepfe([]);
     bild('du', URL.createObjectURL(f), f.name);
     historie.push({ rolle: 'user', text: '[Foto hochgeladen: ' + f.name + ']' });
@@ -300,7 +302,7 @@
   /* Angemeldet oder Testmodus: Foto über /api/endo/foto (prüft Typ, Größe, Auflösung, Inhalt), dann führt endo weiter */
   function endoFoto(f) {
     knoepfe([]); sperren(true);
-    bild('du', URL.createObjectURL(f), f.name);
+    einsaugen(bild('du', URL.createObjectURL(f), f.name));
     daten.fotoName = f.name;
     var t0 = tippt();
     verkleinern(f).then(function (v) {
@@ -308,10 +310,105 @@
         .then(function (r) { return r.json().catch(function () { return {}; }); });
     }).catch(function () { return {}; }).then(function (j) {
       t0.remove(); sperren(false);
-      if (j && j.fotoUrl) { daten.fotoUrl = j.fotoUrl; galerieLaden(); freieFrage('Ich habe ein Foto meines Produkts hochgeladen.'); }
+      if (j && j.fotoUrl) { daten.fotoUrl = j.fotoUrl; galerieLaden(); freieFrage('Ich habe ein Foto meines Produkts hochgeladen.', true); }
       else { endo((j && j.meldung) || 'Das Foto konnte ich leider nicht annehmen. Versuchen Sie es bitte mit einem anderen Bild.').then(zeigeSchritt); }
     });
   }
+  /* Ohne Guthaben: Foto bleibt im Browser (Objekt-URL), wird eingesaugt, endo berät weiter; erstellt wird erst mit Paket */
+  function lokalesFoto(f) {
+    knoepfe([]);
+    var url = URL.createObjectURL(f);
+    einsaugen(bild('du', url, f.name));
+    daten.lokalFoto = url; daten.fotoName = f.name;
+    freieFrage('[Ich habe ein Foto meines Produkts ausgewählt. Es bleibt in meinem Browser, weil ich noch kein Guthaben habe.]', true);
+  }
+  /* Das Foto wird von der Kugel eingesaugt (ki/js/orb.js → endoKugel.saugen); an seiner Stelle bleibt eine kleine,
+     elegante Miniatur „Foto erhalten“. Ohne Kugel im Bild oder bei „Bewegung reduzieren“: nur kurz ausblenden. */
+  function bildBereit(img) {
+    return new Promise(function (ok) { if (img.complete && img.naturalWidth) ok(); else { img.addEventListener('load', ok, { once: true }); img.addEventListener('error', ok, { once: true }); } });
+  }
+  function saugBild(img) {
+    var K = window.endoKugel;
+    if (!flugAn || !K || !K.saugen || !kugelDa() || !img.naturalWidth) return Promise.resolve(false);
+    kugelWecken(3400);
+    var rc = img.getBoundingClientRect();
+    img.style.opacity = '0';
+    return K.saugen(img, rc).catch(function () { return false; });
+  }
+  function einsaugen(f) {
+    var img = f && f.querySelector('img');
+    if (!img) return Promise.resolve();
+    function miniatur() {
+      img.style.opacity = '';
+      f.classList.add('blase--erhalten');
+      var c = f.querySelector('figcaption'); if (c) c.textContent = 'Foto erhalten';
+      nachUnten();
+    }
+    return bildBereit(img).then(function () { return saugBild(img); }).then(miniatur, miniatur);
+  }
+  var verfuegbarJetzt = null;
+  function genugCredits() { return !!testCode || (verfuegbarJetzt != null && verfuegbarJetzt >= 5); }
+
+  /* ---------- Paket-Fenster (Emre, 27.09.): wer ohne Guthaben Werkzeug + Look gewählt hat, sieht in Ruhe die Pakete ----------
+     Gleiche Karten, gleicher Umschalter, gleiche Texte wie auf der Seite (ki/js/pakete.js). Oben das eigene Foto und das
+     Beispiel des gewählten Looks (kein erfundenes Ergebnis). Höchstens einmal pro Sitzung von selbst, danach über den
+     Knopf „Paket wählen“. Testmodus und Kunden mit genug Credits sehen es nie. Nichts wird gespeichert. */
+  var paketFensterAuto = false, paketWahl = null;
+  function werkzeugInfo(id) { var alle = (E.funktionen || []).concat(E.premium || []); for (var i = 0; i < alle.length; i++) if (alle[i].id === id) return alle[i]; return null; }
+  function passendesPaket(credits) { var p = (E.pakete || []).filter(function (x) { return x.credits >= (credits || 0); })[0]; return p ? p.name : 'Premium'; }
+  function paketFenster(wahl) {
+    if (testCode || genugCredits() || !window.endoPakete) return false;
+    if (wahl) paketWahl = wahl;
+    wahl = paketWahl || {};
+    var w = werkzeugInfo(wahl.werkzeug);
+    var d = el('dialog', 'endo-paketfenster');
+    d.setAttribute('aria-label', 'Paket wählen');
+    var kopf = el('div', 'endo-paketfenster__kopf');
+    var vor = el('div', 'endo-paketfenster__vorschau');
+    var foto = daten.lokalFoto || daten.fotoUrl;
+    if (foto) { var i1 = el('img', 'endo-paketfenster__bild'); i1.src = foto; i1.alt = 'Ihr Foto'; vor.appendChild(i1); }
+    if (wahl.look) {
+      var lk = el('figure', 'endo-paketfenster__look');
+      if (wahl.look.bild && /^https:\/\//.test(wahl.look.bild)) { var i2 = el('img', 'endo-paketfenster__bild'); i2.src = wahl.look.bild; i2.alt = ''; lk.appendChild(i2); }
+      else { var m = el('span', 'endo-paketfenster__bild endo-look__muster'); m.setAttribute('data-look', wahl.look.id || ''); lk.appendChild(m); }
+      lk.appendChild(el('figcaption', null, 'Look „' + wahl.look.name + '“'));
+      vor.appendChild(lk);
+    }
+    kopf.appendChild(vor);
+    var txt = el('div', 'endo-paketfenster__text');
+    txt.appendChild(el('h2', 'endo-paketfenster__titel', w ? 'So könnte Ihr ' + w.name + ' aussehen' : 'Ein Paket für Ihre Bilder'));
+    txt.appendChild(el('p', 'endo-paketfenster__satz', (wahl.look ? 'Links Ihr Foto, rechts das Beispiel des Looks – Ihr eigenes Ergebnis erstelle ich, sobald Sie ein Paket haben.' : 'Ihr Foto ist bereit – erstellen kann ich, sobald Sie ein Paket haben.') + (w && w.credits ? ' ' + w.name + ' kostet ' + w.credits + ' Credits.' : '')));
+    kopf.appendChild(txt);
+    var zuK = el('button', 'endo-paketfenster__zu'); zuK.type = 'button'; zuK.setAttribute('aria-label', 'Schließen');
+    zuK.innerHTML = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg>';
+    zuK.addEventListener('click', function () { d.close(); });
+    kopf.appendChild(zuK);
+    d.appendChild(kopf);
+    var pk = el('div', 'endo-paketfenster__pakete');
+    d.appendChild(pk);
+    window.endoPakete.bauen(pk, { wunsch: (w ? w.name : '') + (wahl.look ? ' · Look ' + wahl.look.name : ''), vorwahl: passendesPaket(w && w.credits) });
+    d.addEventListener('click', function (e) { if (e.target === d) d.close(); });
+    d.addEventListener('close', function () { d.remove(); if (!zu) feld.focus({ preventScroll: true }); });
+    d.setAttribute('tabindex', '-1');
+    document.body.appendChild(d);
+    if (d.showModal) d.showModal(); else d.setAttribute('open', '');
+    d.focus({ preventScroll: true });   /* Fokus aufs Fenster statt auf „Schließen“ (kein Fokusring beim Öffnen) */
+    return true;
+  }
+  /* Look gewählt ohne Guthaben: kein Fehler, sondern ein freundlicher Satz und (einmal von selbst) das Paket-Fenster */
+  function lookOhneGuthaben(e, l) {
+    var w = werkzeugInfo(e.werkzeug), name = w ? w.name : (e.name || 'Ihr Bild');
+    du('Ich nehme den Look „' + l.name + '“' + (e.name ? ' für ' + e.name : '') + '.');
+    paketWahl = { werkzeug: e.werkzeug, look: l };
+    knoepfe([]); sperren(true);
+    var erstes = !paketFensterAuto;
+    endo(erstes ? 'Schöne Wahl. Damit ich ' + name + ' im Look „' + l.name + '“ für Sie erstelle, brauchen Sie ein Paket – ich zeige Ihnen, welches passt.'
+      : 'Schöne Wahl. Ein passendes Paket finden Sie jederzeit über „Paket wählen“.').then(function () {
+      sperren(false); zeigeSchritt();
+      if (erstes) { paketFensterAuto = true; setTimeout(function () { paketFenster(); }, ruhig ? 0 : 350); }
+    });
+  }
+
   /* Upload über dieselbe Funktion wie das Kontaktformular (Vercel Blob). Klappt es nicht, bleibt der Dateiname. */
   function hochladen(f) {
     verkleinern(f).then(function (v) {
@@ -380,9 +477,10 @@
     freieFrage(t);
   });
 
-  function freieFrage(t) {
+  function freieFrage(t, still) {
     auswahl = null; /* jede Antwort des Kunden schließt die angebotenen Knöpfe */
-    knoepfe([]); du(t); sperren(true);
+    knoepfe([]); sperren(true);
+    if (still) historie.push({ rolle: 'user', text: t }); else du(t);
     var t0 = tippt();
     frageKI().then(function (erg) {
       t0.remove();
@@ -450,7 +548,7 @@
           schritt = vorSchritt || 'ki';
           return endo('Das Codewort stimmt leider nicht.').then(function () { sperren(false); zeigeSchritt(); });
         }
-        testCode = c; kiAus = false; schritt = 'ki';
+        testCode = c; kiAus = false; schritt = 'ki'; verfuegbarJetzt = k.verfuegbar;
         statusZeigen(k.verfuegbar); galerieLaden();
         var id = auftragAusAdresse();
         return endo(id ? 'Testmodus aktiv. Ich zeige Ihnen den Stand Ihres Auftrags.' : 'Testmodus aktiv. Laden Sie ein Foto Ihres Produkts hoch, dann bereite ich Ihren Auftrag vor.')
@@ -505,6 +603,7 @@
       return r.ok ? r.json() : null;
     }).catch(function () { return null; }).then(function (k) {
       if (k && k.verfuegbar != null) {
+        verfuegbarJetzt = k.verfuegbar;
         if (sitzung && !sitzung.mail && k.name) sitzungSetzen({ access: sitzung.access, refresh: sitzung.refresh, bis: sitzung.bis, mail: k.name });
         statusZeigen(k.verfuegbar);
       }
@@ -793,6 +892,8 @@
     if (y + rad < 24 || y - rad > window.innerHeight) return null;
     return { x: x, y: y, r: rad, sichtbarY: Math.max(y, 24) };
   }
+  /* für den Sog reicht es, dass die Kugel existiert – liegt sie über dem Bildschirm, zieht es das Bild nach oben zu ihr */
+  function kugelDa() { if (!kugelEl) return false; var r = kugelEl.getBoundingClientRect(); return r.width > 0 && r.top < window.innerHeight; }
   function kugelWecken(ms) {
     if (!kugelEl) return;
     kugelEl.classList.add('orb--wach');
@@ -922,6 +1023,7 @@
         if (beschaeftigt) return;
         reihe.querySelectorAll('.endo-look').forEach(function (x) { x.classList.remove('endo-look--gewaehlt'); });
         b.classList.add('endo-look--gewaehlt');
+        if (!genugCredits() && daten.lokalFoto) { lookOhneGuthaben(e, l); return; }
         freieFrage('Ich nehme den Look „' + l.name + '“' + (e.name ? ' für ' + e.name : '') + '.');
       });
       reihe.appendChild(b);
@@ -942,7 +1044,7 @@
     var k = e.karte || {};
     var aussen = el('div', 'endo-el endo-karte'), innen = el('div', 'endo-karte__innen');
     aussen.appendChild(innen);
-    if (k.foto) { var img = el('img', 'endo-karte__foto'); img.src = k.foto; img.alt = 'Ihr Foto'; innen.appendChild(img); }
+    if (k.foto) { var img = el('img', 'endo-karte__foto'); img.crossOrigin = 'anonymous'; img.src = k.foto; img.alt = 'Ihr Foto'; innen.appendChild(img); }
     var info = el('div');
     info.appendChild(el('div', 'endo-karte__titel', k.name || 'Ihr Auftrag'));
     var zeilen = el('ul', 'endo-karte__zeilen');
@@ -962,6 +1064,8 @@
     ja.addEventListener('click', function () {
       if (ja.disabled) return;
       ja.disabled = aendern.disabled = true; ja.textContent = 'Wird gestartet …';
+      var kf = innen.querySelector('.endo-karte__foto');
+      if (kf) saugBild(kf).then(function () { kf.style.opacity = ''; });   /* das Foto wird eingesaugt – die Kugel arbeitet */
       starteAuftrag(e.token, auftragId, k).then(function (ok) {
         ja.textContent = ok ? 'Gestartet' : 'Ja, erzeugen';
         if (!ok) ja.disabled = aendern.disabled = false;
@@ -1035,11 +1139,11 @@
     var medium;
     if (s.art === 'video') {
       medium = el('video', 'endo-ergebnis__medium');
-      medium.src = s.ergebnisUrl; medium.muted = true; medium.loop = true; medium.controls = true;
+      medium.crossOrigin = 'anonymous'; medium.src = s.ergebnisUrl; medium.muted = true; medium.loop = true; medium.controls = true;
       medium.setAttribute('playsinline', ''); if (!ruhig) medium.autoplay = true;
       medium.addEventListener('loadeddata', nachUnten);
     } else {
-      medium = el('img', 'endo-ergebnis__medium'); medium.src = s.ergebnisUrl; medium.alt = titel;
+      medium = el('img', 'endo-ergebnis__medium'); medium.crossOrigin = 'anonymous'; medium.src = s.ergebnisUrl; medium.alt = titel;
       medium.addEventListener('load', nachUnten);
     }
     /* Lädt die Vorschau nicht, bleibt der Download – statt eines kaputten Bildes ein ruhiger Hinweis */
@@ -1053,7 +1157,23 @@
     laden.href = s.ergebnisUrl + (s.ergebnisUrl.indexOf('?') < 0 ? '?download=1' : '&download=1');
     laden.rel = 'noopener'; laden.setAttribute('download', '');
     fuss.appendChild(laden); innen.appendChild(fuss);
+    /* Das Ergebnis fließt aus der Kugel in den Chat und entfaltet sich dort zur Karte */
+    aussen.classList.add('endo-ergebnis--wartet');
     verlauf.appendChild(aussen); nachUnten();
+    var entfaltet = false;
+    function entfalten() { if (entfaltet) return; entfaltet = true; aussen.classList.remove('endo-ergebnis--wartet'); aussen.classList.add('endo-ergebnis--da'); nachUnten(); }
+    setTimeout(entfalten, 4000);   /* Sicherheitsnetz */
+    function ausDerKugel(quelle) {
+      var K = window.endoKugel;
+      if (!flugAn || !K || !K.ausgeben || !kugelDa()) { entfalten(); return; }
+      kugelWecken(3400);
+      K.ausgeben(quelle, medium.getBoundingClientRect()).then(entfalten, entfalten);
+    }
+    if (s.art === 'video') medium.addEventListener('loadeddata', function () {
+      try { var c = document.createElement('canvas'); c.width = medium.videoWidth || 640; c.height = medium.videoHeight || 360; c.getContext('2d').drawImage(medium, 0, 0, c.width, c.height); ausDerKugel(c); } catch (err) { entfalten(); }
+    }, { once: true });
+    else medium.addEventListener('load', function () { ausDerKugel(medium); }, { once: true });
+    medium.addEventListener('error', entfalten, { once: true });
     historie.push({ rolle: 'assistant', text: '[Ergebnis fertig: ' + titel + ']' });
     galerieLaden();
     endo('Fertig. Passt es so? Aus dem Ergebnis mache ich Ihnen gern auch ein Werbevideo oder eine Anzeige.');

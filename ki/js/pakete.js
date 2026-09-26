@@ -49,7 +49,11 @@
     ziel.appendChild(el('span', 'sp-karte__waehrung', '€'));
   }
 
-  document.querySelectorAll('[data-studio-pakete]').forEach(function (box, nr) {
+  /* Baut das Modul in ein Element. opt (für das Paket-Fenster im Chat): { wunsch: 'Produktfoto · Look …', vorwahl: 'Start' } */
+  var zaehler = 0;
+  function bauen(box, opt) {
+    opt = opt || {};
+    var nr = zaehler++;
     var kontakt = box.getAttribute('data-kontakt') || '#kontakt';
     box.classList.add('sp');
 
@@ -155,7 +159,7 @@
     preiseSetzen();
     /* ein Hauptknopf: Pro, bis ein Paket gewählt ist */
     function hauptknopf(name) { knoepfe.forEach(function (b) { b.classList.toggle('sp-knopf--haupt', b.getAttribute('data-paket') === name); }); }
-    hauptknopf('Pro');
+    hauptknopf(opt.vorwahl || 'Pro');
 
     /* ---- Hinweise und Kosten pro Ergebnis (einmal, aufklappbar) ---- */
     var fuss = el('div', 'sp__fuss');
@@ -224,7 +228,7 @@
       var weg = (e.submitter && e.submitter.value) || 'whatsapp', paket = gewaehlt(), p = E.pakete.filter(function (x) { return x.name === paket; })[0];
       var abo = einmal() && p.einmal ? 'einmalig, ' + euro(p.einmal) + ', kein Abo, ' + zahl(p.credits) + ' Credits für ' + GUELTIG + ' Monate'
         : (jahr() && p.jahr ? 'Jahresabo, ' + euro(p.jahr.monat) + ' im Monat, jährlich ' + euro(p.jahr.gesamt) : 'monatlich, ' + euro(p.preis) + ' im Monat') + ', ' + zahl(p.credits) + ' Credits pro Monat';
-      var text = 'Hallo Emre, ich möchte bei endo Studio ein Paket vormerken.\n\nPaket: ' + paket + ' (' + abo + ')\nE-Mail: ' + inp.value.trim() + '\n\nGesendet über endo Studio';
+      var text = 'Hallo Emre, ich möchte bei endo Studio ein Paket vormerken.\n\nPaket: ' + paket + ' (' + abo + ')' + (opt.wunsch ? '\nMein Wunsch: ' + opt.wunsch : '') + '\nE-Mail: ' + inp.value.trim() + '\n\nGesendet über endo Studio';
       if (weg === 'whatsapp') {
         var link = 'https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(text), win = window.open(link, '_blank');
         if (win) { try { win.opener = null; } catch (err) {} } else location.href = link;
@@ -241,5 +245,9 @@
     var zk = el('a', 'sp-knopf', 'Kostenloses Erstgespräch'); zk.href = kontakt;
     weiter.appendChild(zk);
     box.appendChild(weiter);
-  });
+    return { waehlen: hauptknopf, vormerken: vormerken };
+  }
+  document.querySelectorAll('[data-studio-pakete]').forEach(function (box) { bauen(box); });
+  /* für das Paket-Fenster im Chat (ki/js/agent.js): gleiche Karten, gleicher Umschalter, gleiche Texte */
+  window.endoPakete = { bauen: bauen };
 })();

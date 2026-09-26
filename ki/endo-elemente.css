@@ -242,3 +242,54 @@ html .agent__vorschlaege .chip.chip--premium .chip__credits { color: #FFB08A; ba
 @media (hover: hover) and (pointer: fine) { html .agent__vorschlaege .chip.chip--premium:hover { border-color: rgba(255, 150, 96, 0.9); background: rgba(255, 122, 61, 0.12); } }
 .agent__vorschlaege .chip-umbruch { flex-basis: 100%; height: 0; }
 .agent__vorschlaege .chip-titel { align-self: center; margin-right: 2px; font-size: 11px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #FF9A68; }
+
+/* ---------- Sog (Emre, 27.09.): Foto wird eingesaugt / Ergebnis fließt heraus – Overlay aus ki/js/orb.js ---------- */
+.endo-sog { position: fixed; left: 0; top: 0; width: 100vw !important; height: 100vh !important; z-index: 70; pointer-events: none; }
+/* an der Stelle des Fotos bleibt eine kleine Miniatur „Foto erhalten“ */
+.blase.blase--erhalten { display: inline-flex; align-items: center; gap: 10px; padding: 6px 12px 6px 6px !important; border-radius: 14px; border: 1px solid rgba(226, 230, 236, 0.16);
+  background: rgba(226, 230, 236, 0.05); animation: endo-erhalten 420ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.blase.blase--erhalten img { width: 40px !important; height: 40px; aspect-ratio: 1; border-radius: 9px; object-fit: cover; }
+.blase.blase--erhalten figcaption { padding: 0 !important; font-size: 13px !important; color: #EEF0F3 !important; }
+@keyframes endo-erhalten { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: none; } }
+/* Ergebnis: wartet unsichtbar, bis es aus der Kugel geflossen ist, dann entfaltet es sich */
+.endo-ergebnis.endo-ergebnis--wartet { opacity: 0; transform: scale(0.97); }
+.endo-ergebnis.endo-ergebnis--da { animation: endo-entfalten 520ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes endo-entfalten { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: none; } }
+
+/* ---------- Paket-Fenster (Emre, 27.09.): gleiche Karten wie „Pakete“, als ruhiges Fenster bzw. Blatt von unten ---------- */
+.endo-paketfenster { width: min(94vw, 1120px); max-width: none; max-height: 90svh; margin: auto; padding: 0; overflow: auto; overscroll-behavior: contain; color: #EEF0F3;
+  border: 1px solid transparent; border-radius: 24px;
+  background: linear-gradient(180deg, #111318, #0A0B0E) padding-box, linear-gradient(160deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.06) 40%, rgba(255, 255, 255, 0.16)) border-box;
+  box-shadow: 0 40px 120px -40px rgba(0, 0, 0, 0.95); scrollbar-width: thin; scrollbar-color: rgba(226, 230, 236, 0.18) transparent; }
+.endo-paketfenster[open] { animation: endo-fenster-auf 460ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes endo-fenster-auf { from { opacity: 0; transform: translateY(16px) scale(0.985); } to { opacity: 1; transform: none; } }
+.endo-paketfenster::backdrop { background: rgba(4, 5, 8, 0.7); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.endo-paketfenster__kopf { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 24px; align-items: center; padding: 28px 64px 8px 32px; }
+.endo-paketfenster__vorschau { display: flex; gap: 10px; }
+.endo-paketfenster__bild { display: block; width: 104px; height: 130px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(226, 230, 236, 0.16); background: #0B0C0E; }
+.endo-paketfenster__look { margin: 0; display: grid; gap: 6px; }
+.endo-paketfenster__look figcaption { font-size: 12px; color: rgba(226, 230, 236, 0.62); }
+.endo-paketfenster__text { display: grid; gap: 8px; }
+.endo-paketfenster__label { margin: 0; font-size: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #9CA2AA; }
+.endo-paketfenster__titel { margin: 0; font-family: "Geist", system-ui, sans-serif; font-weight: 300; font-size: clamp(1.6rem, 3vw, 2.3rem); line-height: 1.08; letter-spacing: -0.035em; padding-bottom: 0.06em;
+  background: linear-gradient(180deg, #FFFFFF 0%, #E6E9EE 26%, #A3AAB4 48%, #F4F6F8 62%, #B9BFC8 82%, #ECEEF1 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.endo-paketfenster__satz { margin: 0; max-width: 60ch; font-size: 15px; line-height: 1.55; color: #9CA2AA; }
+.endo-paketfenster__zu { position: absolute; top: 20px; right: 20px; display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 50%; background: rgba(226, 230, 236, 0.06); color: #DCE0E6; cursor: pointer; }
+.endo-paketfenster__zu svg { width: 15px; height: 15px; }
+.endo-paketfenster__zu:focus-visible { outline: 2px solid #DDE3EA; outline-offset: 2px; }
+.endo-paketfenster__pakete { padding: 16px 32px 32px; }
+.endo-paketfenster__pakete .sp__kopf { display: none; }   /* die Überschrift sagt das Fenster schon */
+@media (max-width: 640px) {
+  /* Handy: Blatt von unten */
+  .endo-paketfenster { width: 100vw; max-height: 88svh; margin: auto 0 0; border-radius: 24px 24px 0 0; }
+  .endo-paketfenster[open] { animation-name: endo-blatt-auf; }
+  @keyframes endo-blatt-auf { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .endo-paketfenster__kopf { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 24px 20px 4px; }
+  .endo-paketfenster__bild { width: 84px; height: 104px; }
+  .endo-paketfenster__zu { top: 14px; right: 14px; }
+  .endo-paketfenster__pakete { padding: 12px 16px 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blase.blase--erhalten, .endo-ergebnis.endo-ergebnis--da, .endo-paketfenster[open] { animation: none; }
+}
+.endo-paketfenster:focus { outline: none; }

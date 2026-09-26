@@ -4,7 +4,7 @@
    Die Zunge bleibt: sie holt das Paket, der Aufschlag kommt, wenn sie fast eingezogen ist. Alle Werte in KUGEL.
    Quelle für ki/js/orb.js. Neu bauen (three 0.186.1 + esbuild in einem Ordner AUSSERHALB des Vaults installieren):
    NODE_PATH=<ordner>/node_modules <ordner>/node_modules/.bin/esbuild ki/js/orb.quelle.js --bundle --minify --format=iife --target=es2018 --outfile=ki/js/orb.js */
-import { Scene, PerspectiveCamera, WebGLRenderer, IcosahedronGeometry, ShaderMaterial, Color, Vector3, Vector4, Quaternion, Mesh } from 'three';
+import { Scene, PerspectiveCamera, WebGLRenderer, IcosahedronGeometry, PlaneGeometry, ShaderMaterial, Texture, Color, Vector2, Vector3, Vector4, Quaternion, Mesh } from 'three';
 
 /* ===== Einstellwerte für das Einsammeln der Datenpakete (26.09., Emre: „Frequenz/Impuls – schnell hin, seidig zurück“) =====
    Winkel in Radiant, Längen als Anteil vom Kugelradius, Zeiten in Millisekunden. */
@@ -422,6 +422,109 @@ function start(el) {
       schreibt(ja) { schreibt = !!ja; }
     };
   })();
+  /* ===== Sog (Emre, 27.09.): ein Bild wird wie von einem Magneten in die Kugel gezogen – oder fließt aus ihr heraus =====
+     Das Bild liegt als Textur auf einem fein unterteilten Gitter. Jeder Punkt läuft auf seiner eigenen weichen Kurve zur
+     Kugel, die vordere Kante zuerst: So streckt sich das Bild in Flugrichtung, verjüngt sich zur Kugel hin, biegt sich
+     entlang der Kurve, die Ecken runden sich, es wird kleiner und heller – fließend wie Flüssigmetall. Die Zunge der Kugel
+     greift der vorderen Kante entgegen (bestehende Arm-Logik); der Aufschlag (Delle, Ringe, Herzschlag, Leuchten) folgt,
+     wenn sie wieder eingezogen ist. Heraus: umgekehrt, die Kugel pulsiert, eine Zunge „gibt frei“, das Bild fließt zum Ziel.
+     Ein eigenes Overlay-Bild, nur während des Sogs im Dokument; bildratenunabhängig (Zeit, nicht Bilder). */
+  const SOG = { dauer: 1150, ausDauer: 1000, kurve: 0.22, vorlauf: 0.42, hell: 0.5, welle: 3.5, ziel: 0.55 };
+  let sogR = null, sogSzene = null, sogAnzahl = 0;
+  const sogVS = `
+    uniform vec4 uRect; uniform vec2 uZiel; uniform vec2 uKontroll; uniform vec2 uSicht; uniform float uT; uniform float uVorlauf; uniform float uWelle;
+    varying vec2 vUv; varying float vE;
+    vec2 bez(vec2 a, vec2 b, vec2 c, float t) { float s = 1.0 - t; return s * s * a + 2.0 * s * t * b + t * t * c; }
+    void main() {
+      vUv = uv;
+      vec2 p0 = uRect.xy + vec2(uv.x, 1.0 - uv.y) * uRect.zw;
+      vec2 c0 = uRect.xy + 0.5 * uRect.zw;
+      vec2 dir = normalize(uZiel - c0);
+      float halb = 0.5 * (abs(dir.x) * uRect.z + abs(dir.y) * uRect.w);
+      float vorn = clamp(dot(p0 - c0, dir) / max(halb, 1.0) * 0.5 + 0.5, 0.0, 1.0);          /* 1 = vordere Kante */
+      float k = clamp(uT * (1.0 + uVorlauf) - (1.0 - vorn) * uVorlauf, 0.0, 1.0);            /* vorne zuerst → Streckung */
+      float e = k * k;                                                                        /* Magnet: erst sanft, dann zügig */
+      vec2 kp = uKontroll + (p0 - c0) * (1.0 - e) * 0.5;                                      /* Bahnen laufen zur Kugel zusammen → Verjüngung */
+      vec2 p = bez(p0, kp, uZiel, e);
+      vec2 n = vec2(-dir.y, dir.x);
+      p += n * sin(vorn * 6.2831 + uT * 9.0) * uWelle * e * (1.0 - e);                        /* ganz leichtes Fließen */
+      vE = e;
+      gl_Position = vec4(p.x / uSicht.x * 2.0 - 1.0, 1.0 - p.y / uSicht.y * 2.0, 0.0, 1.0);
+    }`;
+  const sogFS = `
+    uniform sampler2D uTex; uniform float uT; uniform vec4 uRect; uniform float uHell;
+    varying vec2 vUv; varying float vE;
+    void main() {
+      vec4 f = texture2D(uTex, vUv);
+      vec2 px = vUv * uRect.zw, h = 0.5 * uRect.zw;
+      float r = mix(12.0, 0.5 * min(uRect.z, uRect.w), smoothstep(0.0, 0.75, uT));           /* Ecken runden sich */
+      vec2 q = abs(px - h) - (h - r);
+      float maske = 1.0 - smoothstep(-1.0, 0.5, length(max(q, 0.0)) - r);
+      vec3 farbe = mix(f.rgb, vec3(0.93, 0.95, 1.0), vE * uHell) + vE * vE * 0.22;            /* heller zur Kugel hin */
+      gl_FragColor = vec4(farbe, f.a * maske * (1.0 - smoothstep(0.84, 1.0, uT)));
+    }`;
+  function sogBuehne() {
+    if (sogR) return true;
+    try {
+      sogR = new WebGLRenderer({ antialias: true, alpha: true, premultipliedAlpha: false });
+      sogR.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      sogR.domElement.className = 'endo-sog'; sogR.domElement.setAttribute('aria-hidden', 'true');
+      sogSzene = new Scene();
+      return true;
+    } catch (e) { sogR = null; return false; }
+  }
+  /* richtung 1 = in die Kugel, -1 = aus der Kugel heraus zum Rechteck; liefert ein Promise (true = gezeigt) */
+  function sog(quelle, rect, richtung) {
+    return new Promise((fertig) => {
+      if (ruhig || !quelle || !rect || !rect.width || !sogBuehne()) { fertig(false); return; }
+      const W = window.innerWidth, H = window.innerHeight, c = sogR.domElement;
+      const o = el.getBoundingClientRect(); if (!o.width) { fertig(false); return; }
+      const ox = o.left + o.width / 2, oy = o.top + o.height / 2, R = o.width / 2 * 0.55;
+      const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2, L = Math.hypot(ox - cx, oy - cy) || 1;
+      const ux = (ox - cx) / L, uy = (oy - cy) / L, seite = ox > cx ? -1 : 1;
+      const zx = ox - ux * R * SOG.ziel, zy = oy - uy * R * SOG.ziel;
+      const kx = (cx + zx) / 2 - uy * L * SOG.kurve * seite, ky = (cy + zy) / 2 + ux * L * SOG.kurve * seite;
+      let tex;
+      try { tex = new Texture(quelle); tex.needsUpdate = true; } catch (e) { fertig(false); return; }
+      const mat = new ShaderMaterial({
+        uniforms: { uTex: { value: tex }, uRect: { value: new Vector4(rect.left, rect.top, rect.width, rect.height) }, uZiel: { value: new Vector2(zx, zy) },
+          uKontroll: { value: new Vector2(kx, ky) }, uSicht: { value: new Vector2(W, H) }, uT: { value: richtung > 0 ? 0 : 1 },
+          uVorlauf: { value: SOG.vorlauf }, uWelle: { value: SOG.welle }, uHell: { value: SOG.hell } },
+        vertexShader: sogVS, fragmentShader: sogFS, transparent: true, depthTest: false, depthWrite: false
+      });
+      const netz = new Mesh(new PlaneGeometry(1, 1, 36, 36), mat); netz.frustumCulled = false;
+      if (!c.isConnected) document.body.appendChild(c);
+      sogR.setSize(W, H); sogSzene.add(netz); sogAnzahl++;
+      const K = window.endoKugel; let arm = -1;
+      const dauer = richtung > 0 ? SOG.dauer : SOG.ausDauer, t0 = performance.now();
+      if (richtung < 0 && K) {                                    /* heraus: Kugel pulsiert, eine Zunge „gibt frei“ */
+        K.puls(-ux, -uy);
+        arm = K.greifen(-ux, -uy, K.reichweite);
+      }
+      function schritt(t) {
+        const k = Math.min(1, Math.max(0, (t - t0) / dauer));
+        const u = richtung > 0 ? k : 1 - (1 - (1 - k) * (1 - k));   /* heraus: schnell aus der Kugel, weich zur Karte */
+        mat.uniforms.uT.value = u;
+        if (richtung > 0 && K) {                                    /* die Zunge greift der vorderen Kante entgegen */
+          const kv = Math.min(1, u * (1 + SOG.vorlauf)), e = kv * kv, s1 = 1 - e;
+          const fx = cx + ux * rect.width / 2, fy = cy + uy * rect.height / 2;
+          const px = s1 * s1 * fx + 2 * s1 * e * kx + e * e * zx, py = s1 * s1 * fy + 2 * s1 * e * ky + e * e * zy;
+          const d = Math.hypot(px - ox, py - oy) / R, dx = (px - ox) / (d * R || 1), dy = (py - oy) / (d * R || 1);
+          if (arm < 0 && d <= K.reichweite * 0.97 && d > 1) arm = K.greifen(dx, dy, d);
+          else if (arm >= 0 && !K.gefangen(arm)) K.folgen(arm, dx, dy, Math.max(1, d));
+        }
+        sogR.render(sogSzene, camera);
+        if (k < 1) { requestAnimationFrame(schritt); return; }
+        sogSzene.remove(netz); netz.geometry.dispose(); mat.dispose(); tex.dispose();
+        if (--sogAnzahl === 0) { sogR.clear(); c.remove(); }
+        fertig(true);
+      }
+      requestAnimationFrame(schritt);
+    });
+  }
+  window.endoKugel.saugen = (quelle, rect) => sog(quelle, rect, 1);
+  window.endoKugel.ausgeben = (quelle, rect) => sog(quelle, rect, -1);
+
   if (miniApi) {
     window.endoKugel.mini = miniApi;
     document.addEventListener('visibilitychange', () => { if (document.hidden) miniApi.an(false); });

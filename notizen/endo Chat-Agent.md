@@ -18,6 +18,9 @@ Der Assistent „endo" steht auf [[endo-ai|endo.ai]] ganz oben im Vordergrund. E
 - **Nachrichten:** endo links in Glas-Sprechblasen mit **Mini-Kugel** (Bild der echten Kugel, schwebt leicht, pulsiert beim Schreiben, Impuls bei Antwort); eigene Nachrichten schlicht rechts. Antwort kommt als Lichtpunkt aus der großen Kugel, eigene Nachricht fliegt hinein.
 - **Galerie-Zeichen** im Eingabefeld: Galerie mit „Foto hochladen“ + Ergebnissen (Bilder, Videos, Fotos), groß ansehen + Download.
 - **Kugel:** treibt kaum; beim Einsammeln Aufschlag wie Flüssigmetall (Delle, Ringe, Herzschlag, Aufleuchten).
+- **Foto hochladen:** Das Foto wird von der Kugel eingesaugt (Sog, Zunge, Aufschlag); im Chat bleibt „Foto erhalten“. Ohne Guthaben bleibt es nur im Browser. **Ergebnis:** fließt aus der Kugel und entfaltet sich zur Karte.
+- **Ohne Guthaben:** Nach der Look-Wahl öffnet sich einmal von selbst das Paket-Fenster (gleiche Karten wie „Pakete“), danach Knopf „Paket wählen“. Nicht im Testmodus, nicht mit genug Credits.
+- **Avatar:** die echte Kugel live neben der neuesten Nachricht; Werkzeug-Knöpfe mit Credits, Premium mit orangem Rand.
 
 ## Aussehen (Stand 25.09. nachmittags)
 - endo steht jetzt auch **auf der Startseite** direkt unter dem Titelbild (Bereich endo.ai, gleiches Skript). Ruhend nur die Eingabe, ab der ersten Nachricht ein ruhiges Fenster mit Blasen (endo links, eigene rechts), das nach unten wächst.
