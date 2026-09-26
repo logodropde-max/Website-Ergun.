@@ -62,7 +62,7 @@ const TOOL_AUFTRAG = {
 };
 const TOOL_AUSWAHL = {
   name: 'auswahl_zeigen',
-  description: 'Zeigt dem Kunden Antwort-Knöpfe zu deiner Frage (2–6 kurze Antworten), z. B. für Kanal, Zielgruppe, Stimmung, Format oder Überschrift-Vorschläge. Nutze es bei jeder Frage mit wenigen typischen Antworten – die Frage steht zusätzlich kurz in deinem Text. Der Kunde kann trotzdem frei schreiben („Etwas anderes“ kommt automatisch dazu). mehrfach=true, wenn mehrere Antworten gleichzeitig passen.',
+  description: 'Zeigt dem Kunden Antwort-Knöpfe zu deiner Frage (2–6 kurze Antworten), z. B. für Kanal, Zielgruppe, Stimmung, Format oder Überschrift-Vorschläge. Nutze es bei jeder Frage mit wenigen typischen Antworten. Schreibe die Frage (mit einem kurzen, hilfreichen Satz davor) als Text VOR dem Aufruf; danach nichts mehr. Der Kunde kann trotzdem frei schreiben („Etwas anderes“ kommt automatisch dazu). mehrfach=true, wenn mehrere Antworten gleichzeitig passen.',
   input_schema: {
     type: 'object',
     properties: {
@@ -157,7 +157,7 @@ export async function werkzeugAusfuehren(name, eingabe, ctx) {
       .map((o) => String(o || '').replace(/\s+/g, ' ').trim().slice(0, 40)).filter(Boolean))].slice(0, 6);
     if (optionen.length < 2) return { text: 'Nicht angezeigt: mindestens 2 Antworten nötig.' };
     return {
-      text: `Knöpfe angezeigt: ${optionen.join(' · ')}. Warte auf die Antwort des Kunden.`,
+      text: `Knöpfe angezeigt: ${optionen.join(' · ')}. Deine Frage steht schon im Text – schreibe jetzt nichts mehr dazu und warte auf die Wahl des Kunden.`,
       element: { typ: 'auswahl', frage, optionen, mehrfach: e.mehrfach === true }
     };
   }
@@ -183,12 +183,14 @@ export async function gespraech({ client, verlauf, ctx }) {
   const messages = [...verlauf];
   const elemente = [];
   let kosten = 0, res;
+  const texte = []; // Text aus allen Runden – die Frage steht oft VOR dem Werkzeug-Aufruf
   for (let runde = 0; runde < MAX_RUNDEN; runde++) {
     res = await client.messages.create({
       model: MODELL, max_tokens: 2000,
       output_config: { effort: 'low' }, system, tools, messages
     });
     kosten += kostenUsd(res.usage);
+    texte.push(...res.content.filter((b) => b.type === 'text').map((b) => b.text.trim()).filter(Boolean));
     if (res.stop_reason === 'refusal') return { text: 'Dabei kann ich leider nicht helfen. Erzählen Sie mir gern, was Sie verkaufen – dann zeige ich Ihnen, was möglich ist.', elemente, kosten };
     const aufrufe = res.content.filter((b) => b.type === 'tool_use');
     if (res.stop_reason !== 'tool_use' || !aufrufe.length) break;
@@ -203,7 +205,12 @@ export async function gespraech({ client, verlauf, ctx }) {
     }
     messages.push({ role: 'user', content: ergebnisse });
   }
-  const text = (res && res.content ? res.content : []).filter((b) => b.type === 'text').map((b) => b.text).join(' ').trim();
+  // Füllsätze wie „Ich warte auf Ihre Auswahl“ weglassen; steht die Frage der Knöpfe nirgends, kommt sie dazu
+  let text = texte.filter((t) => !/^ich warte auf ihre (auswahl|antwort)/i.test(t)).join(' ').trim();
+  const auswahl = elemente.filter((el) => el.typ === 'auswahl').pop();
+  if (auswahl && auswahl.frage && !text.toLowerCase().includes(auswahl.frage.toLowerCase().replace(/[?.!]+$/, ''))) {
+    text = (text + ' ' + auswahl.frage).trim();
+  }
   return { text, elemente, kosten };
 }
 
