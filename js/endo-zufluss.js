@@ -4,14 +4,18 @@
    Spitze ein und gleitet seidig zurück – dabei läuft ein leiser Wellenring über die Kugel.
    Pakete entstehen zufällig am Rand des Bereichs und dort, wo man in #endo tippt/klickt (2–3 pro Tipp, nie blockierend).
    Ein Canvas fest über dem Bildschirm, gerechnet in Seitenkoordinaten; läuft nur, wenn #endo im Bild und der Tab sichtbar ist.
-   Testansicht: ?kugel=test (Kugel mittig, alle 1–2 s ein Paket). „Bewegung reduzieren“ → keine Pakete. */
+   Testansicht: ?kugel=test (Kugel mittig, alle 1–2 s ein Paket). „Bewegung reduzieren“ → keine Pakete.
+   Seit 26.09. spät auch auf /ki/ (Hero): dort nur „bei Bedarf“ – beim Erzeugen und wenn eine Nachricht/ein Foto in die
+   Kugel fliegt (endoZufluss.schicken), sonst ruht der Canvas ganz. */
 (function () {
-  var sektion = document.querySelector('.endo');
+  var sektion = document.querySelector('.endo') || document.querySelector('[data-endo-hero]') || document.querySelector('.hero');
   if (!sektion) return;
-  var orb = sektion.querySelector('.endo__orb');
-  var cv = sektion.querySelector('.endo__daten');
-  if (!orb || !cv) return;
+  var orb = sektion.querySelector('.endo__orb') || sektion.querySelector('[data-orb]');
+  if (!orb) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var nurBeiBedarf = !sektion.classList.contains('endo');
+  var cv = sektion.querySelector('.endo__daten');
+  if (!cv) { cv = document.createElement('canvas'); cv.className = 'endo__daten'; cv.setAttribute('aria-hidden', 'true'); sektion.insertBefore(cv, sektion.firstChild); }
 
   /* ===== Einstellwerte (Pakete) – die Werte der Zunge selbst stehen oben in ki/js/orb.quelle.js (KUGEL) ===== */
   var TEST = /[?&]kugel=test\b/.test(location.search);
@@ -154,14 +158,19 @@
     var dt = Math.min(0.05, (zeit - letzteZeit) / 1000) || 0.016; letzteZeit = zeit;
     if (zeit - gemessen > 250) { gemessen = zeit; kugelMessen(); }
     var zufaellige = teilchen.filter(function (p) { return !p.tipp; }).length;
-    var takt = erzeugt ? [220, 460] : PAKET.takt, maxZ = erzeugt ? MAX_ALLE : MAX_ZUFALL;
-    if (zeit > naechster && zufaellige < maxZ && teilchen.length < MAX_ALLE) {
-      teilchen.push(zufall()); naechster = zeit + takt[0] + Math.random() * (takt[1] - takt[0]);
+    var takt = erzeugt ? [320, 700] : PAKET.takt, maxZ = erzeugt ? MAX_ALLE : MAX_ZUFALL;
+    if ((erzeugt || !nurBeiBedarf) && zeit > naechster && zufaellige < maxZ && teilchen.length < MAX_ALLE) {
+      /* beim Erzeugen kommt jedes dritte Paket aus der Arbeits-Karte im Chat – die Daten fließen sichtbar vom Chat in die Kugel */
+      var q = erzeugt && quelle && Math.random() < 0.34 ? quelle.getBoundingClientRect() : null;
+      if (q && q.width && q.bottom > 0 && q.top < H) teilchen.push(neu(q.left + Math.random() * q.width, q.top + scrollY() + Math.random() * q.height * 0.5, true));
+      else teilchen.push(zufall());
+      naechster = zeit + takt[0] + Math.random() * (takt[1] - takt[0]);
     }
     for (var i = teilchen.length - 1; i >= 0; i--) { schritt(teilchen[i], dt); kugelKontakt(teilchen[i], i); }
     for (var j = tipps.length - 1; j >= 0; j--) { tipps[j].t += dt / 0.32; if (tipps[j].t >= 1) tipps.splice(j, 1); }
     for (var g = glanz.length - 1; g >= 0; g--) { glanz[g].t += dt / 0.55; if (glanz[g].t >= 1) glanz.splice(g, 1); }
     zeichnen(scrollY());
+    if (nurBeiBedarf && !erzeugt && !teilchen.length && !tipps.length && !glanz.length) { laeuft = false; ctx.clearRect(0, 0, W, H); return; } /* /ki/: ruhen */
     requestAnimationFrame(schleife);
   }
 
@@ -175,7 +184,7 @@
   /* Tippen/Klicken im endo-Bereich: 2–3 Pakete ab dem Tipp-Punkt. Passiver Listener, blockiert nie einen Klick;
      Wischen/Scrollen erzeugt keinen click. Tastatur-Klicks (detail 0) zählen nicht. */
   document.addEventListener('click', function (e) {
-    if (!laeuft || !e.detail) return;
+    if (!laeuft || !e.detail || nurBeiBedarf) return;
     var r = sektion.getBoundingClientRect();
     if (e.clientY < r.top + H * 0.3 || e.clientY > r.bottom || e.clientX < r.left || e.clientX > r.right) return;
     var n = 2 + (Math.random() < 0.5 ? 1 : 0), sy = scrollY();
@@ -186,8 +195,24 @@
     }
   }, { passive: true });
 
-  /* Schnittstelle für den Chat (ki/js/agent.js): endoZufluss.erzeugen(true) während ein Auftrag läuft */
-  window.endoZufluss = { erzeugen: function (an) { erzeugt = !!an; if (an) { naechster = 0; start(); } } };
+  /* Schnittstelle für den Chat (ki/js/agent.js):
+     erzeugen(true, karte) während ein Auftrag läuft (karte = Arbeits-Karte im Chat, von dort kommen einige Pakete)
+     schicken(x, y, n) – n Pakete ab Bildschirmpunkt x/y zur Kugel (Nachricht oder Foto „fliegt hinein“); false, wenn nicht möglich */
+  var quelle = null;
+  window.endoZufluss = {
+    erzeugen: function (an, karte) { erzeugt = !!an; quelle = an ? karte || null : null; if (an) { naechster = 0; start(); } },
+    schicken: function (x, y, n) {
+      if (!sichtbar || !wach) return false;
+      start();
+      if (!laeuft) return false;
+      var sy = scrollY();
+      for (var i = 0; i < (n || 3) && teilchen.length < MAX_ALLE + 4; i++) {
+        var w = Math.random() * Math.PI * 2, o = 4 + Math.random() * 8;
+        teilchen.push(neu(x + Math.cos(w) * o, y + sy + Math.sin(w) * o, true));
+      }
+      return true;
+    }
+  };
 
   var io = new IntersectionObserver(function (e) { sichtbar = e[0].isIntersecting; if (sichtbar) start(); else stopp(); }, { threshold: 0.02 });
   io.observe(sektion);

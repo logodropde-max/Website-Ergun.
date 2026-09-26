@@ -34,6 +34,7 @@
   /* Kundenkonto (26.09.): Sitzung von Supabase, nur für Angemeldete im Browser-Speicher (Schlüssel endo-sitzung).
      Passwörter gehen direkt an /api/konto und landen nie im Verlauf für Claude. */
   var SPEICHER = 'endo-sitzung';
+  box.classList.add('agent--frei'); /* Chat ohne Kasten: Nachrichten schweben frei, nur die Eingabe-Pille bleibt (Emre, 26.09.) */
   var sitzung = sitzungLesen(), formMail = '', wartendesFoto = null, linkNachricht = null;
   var UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -98,6 +99,7 @@
     b.className = 'blase blase--' + wer;
     if (wer === 'endo') b.appendChild(formatiert(text)); else b.textContent = text;
     verlauf.appendChild(b); nachUnten();
+    if (wer === 'endo') ausKugel(b);
     return b;
   }
   function tippt() {
@@ -120,8 +122,9 @@
       return b;
     });
   }
-  function du(text) { blase('du', text); historie.push({ rolle: 'user', text: text }); }
+  function du(text) { blase('du', text); historie.push({ rolle: 'user', text: text }); inKugel(text, null); }
   function bild(wer, src, unterschrift) {
+    if (wer === 'du') inKugel(null, src);
     var f = document.createElement('figure');
     f.className = 'blase blase--bild blase--' + wer;
     var img = document.createElement('img'); img.src = src; img.alt = unterschrift; img.loading = 'lazy';
@@ -139,7 +142,7 @@
       b.className = 'chip' + (k.haupt ? ' chip--haupt' : '');
       b.textContent = k.text;
       b.style.animationDelay = (ruhig ? 0 : i * 60) + 'ms';
-      b.addEventListener('click', function () { if (!beschaeftigt) k.aktion(); });
+      b.addEventListener('click', function () { if (beschaeftigt) return; flugStart = { r: b.getBoundingClientRect(), t: Date.now() }; k.aktion(); });
       vorschlaege.appendChild(b);
     });
     vorschlaege.scrollLeft = 0;
@@ -167,7 +170,7 @@
     if (linkNachricht) { var l = linkNachricht; linkNachricht = null; linkAusMail(l); return; }
     endo('Hallo, ich bin endo. Aus Ihrem Handyfoto mache ich Produktfotos, Werbeanzeigen, kurze Werbevideos und Titelbilder für Ihre Website.')
       .then(function () { return endo(sitzung ? 'Schön, dass Sie wieder da sind. Was möchten Sie heute erstellen?' : 'Was verkaufen Sie?'); })
-      .then(function () { sperren(false); zeigeSchritt(); if (sitzung) kontoStand(); if (auftragAusAdresse()) fortsetzenAnbieten(); });
+      .then(function () { sperren(false); zeigeSchritt(); if (sitzung) { kontoStand(); galerieLaden(); } if (auftragAusAdresse()) fortsetzenAnbieten(); });
   }
   function zeigeSchritt() {
     var MAIL_SCHRITTE = { mail: 1, 'a-mail': 1, 'r-mail': 1 };
@@ -274,7 +277,7 @@
         .then(function (r) { return r.json().catch(function () { return {}; }); });
     }).catch(function () { return {}; }).then(function (j) {
       t0.remove(); sperren(false);
-      if (j && j.fotoUrl) { daten.fotoUrl = j.fotoUrl; freieFrage('Ich habe ein Foto meines Produkts hochgeladen.'); }
+      if (j && j.fotoUrl) { daten.fotoUrl = j.fotoUrl; galerieLaden(); freieFrage('Ich habe ein Foto meines Produkts hochgeladen.'); }
       else { endo((j && j.meldung) || 'Das Foto konnte ich leider nicht annehmen. Versuchen Sie es bitte mit einem anderen Bild.').then(zeigeSchritt); }
     });
   }
@@ -417,7 +420,7 @@
           return endo('Das Codewort stimmt leider nicht.').then(function () { sperren(false); zeigeSchritt(); });
         }
         testCode = c; kiAus = false; schritt = 'ki';
-        statusZeigen(k.verfuegbar);
+        statusZeigen(k.verfuegbar); galerieLaden();
         var id = auftragAusAdresse();
         return endo(id ? 'Testmodus aktiv. Ich zeige Ihnen den Stand Ihres Auftrags.' : 'Testmodus aktiv. Laden Sie ein Foto Ihres Produkts hoch, dann bereite ich Ihren Auftrag vor.')
           .then(function () { sperren(false); zeigeSchritt(); if (id && !laufend) fortschritt(id, null, null); });
@@ -551,7 +554,7 @@
       var zusatz = n === 0 && !testCode ? ' Ihr Guthaben: 0 Credits. Credit-Pakete gibt es in Kürze – bis dahin berate ich Sie gern.' : (n != null ? ' Sie haben ' + n.toLocaleString('de-DE') + ' Credits.' : '');
       return endo(satz + zusatz);
     }).then(function () {
-      sperren(false); zeigeSchritt();
+      sperren(false); zeigeSchritt(); galerieLaden();
       if (wartendesFoto) { var f = wartendesFoto; wartendesFoto = null; endoFoto(f); }
       else if (auftragAusAdresse() && !laufend) fortschritt(auftragAusAdresse(), null, null);
     });
@@ -566,7 +569,7 @@
   function abmelden() {
     knoepfe([]); blase('du', 'Abmelden'); sperren(true);
     var alt = sitzung && sitzung.access;
-    sitzungSetzen(null); statusZeigen(null); daten.fotoUrl = '';
+    sitzungSetzen(null); statusZeigen(null); daten.fotoUrl = ''; galerieWeg();
     (alt ? kontoPost('abmelden', {}, alt) : Promise.resolve()).then(function () {
       return endo('Sie sind abgemeldet. Bis bald!');
     }).then(function () { schritt = 'ki'; sperren(false); zeigeSchritt(); });
@@ -595,83 +598,217 @@
     }
     return angemeldetWeiter('Ihre E-Mail-Adresse ist bestätigt – willkommen bei endo Studio.');
   }
-  /* „Mein Konto“: Guthaben, Ergebnisse und Fotos der letzten 90 Tage – herunterladen, weiterverwenden, löschen */
+  /* „Mein Konto“: kurze Übersicht im Chat – Bilder, Videos und Fotos liegen in der Galerie (rechts bzw. über der Eingabe) */
   function kontoZeigen() {
     auswahl = null; knoepfe([]); blase('du', 'Mein Konto'); sperren(true);
     var t0 = tippt();
-    Promise.all([kontoStand(), api('/api/konto?aktion=dateien').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })])
-      .then(function (x) {
-        t0.remove();
-        var k = x[0], d = x[1];
-        if (!k || !d) {
-          if (!sitzung) { sperren(false); anmeldenMenue('abgelaufen'); return; }
-          endo('Ihr Konto lädt gerade nicht. Bitte versuchen Sie es gleich noch einmal.').then(function () { sperren(false); zeigeSchritt(); });
-          return;
-        }
-        dateienZeigen(k, d);
-        sperren(false);
-        knoepfe([
-          { text: 'Weiter im Chat', haupt: true, aktion: function () { knoepfe([]); zeigeSchritt(); feld.focus(); } },
-          { text: 'Abmelden', aktion: abmelden }
-        ]);
-      });
-  }
-  function dateienZeigen(k, d) {
-    var box = el('section', 'endo-el endo-konto');
-    box.setAttribute('aria-label', 'Mein Konto');
-    var kopfZeile = el('div', 'endo-konto__kopf');
-    kopfZeile.appendChild(el('span', 'endo-konto__mail', (sitzung && sitzung.mail) || k.name || 'Ihr Konto'));
-    kopfZeile.appendChild(el('b', 'endo-konto__credits', Number(k.verfuegbar).toLocaleString('de-DE') + ' Credits'));
-    box.appendChild(kopfZeile);
-    function gruppe(titel, liste, art) {
-      box.appendChild(el('h3', 'endo-konto__titel', titel + (liste.length ? ' (' + liste.length + ')' : '')));
-      if (!liste.length) {
-        box.appendChild(el('p', 'endo-konto__leer', art === 'ergebnis' ? 'Noch keine Ergebnisse. Alles, was endo für Sie erstellt, erscheint hier.' : 'Noch keine Fotos hochgeladen.'));
+    kontoStand().then(function (k) {
+      t0.remove();
+      if (!k) {
+        if (!sitzung) { sperren(false); anmeldenMenue('abgelaufen'); return; }
+        endo('Ihr Konto lädt gerade nicht. Bitte versuchen Sie es gleich noch einmal.').then(function () { sperren(false); zeigeSchritt(); });
         return;
       }
-      var raster = el('div', 'endo-konto__raster');
-      liste.forEach(function (x) {
-        if (!x.url || !/^https:\/\//.test(x.url)) return;
-        var kachel = el('div', 'endo-konto__kachel');
-        var video = /\.(mp4|mov)$/i.test(x.url);
-        var m = el(video ? 'video' : 'img', 'endo-konto__bild');
-        m.src = x.url;
-        if (video) { m.muted = true; m.setAttribute('playsinline', ''); m.preload = 'metadata'; } else { m.alt = ''; m.loading = 'lazy'; }
-        m.addEventListener('error', function () { kachel.remove(); });
-        kachel.appendChild(m);
-        var leiste = el('div', 'endo-konto__aktionen');
-        var laden = el('a', 'endo-knopf', 'Laden'); laden.href = x.url + '?download=1'; laden.rel = 'noopener'; laden.setAttribute('download', '');
-        laden.setAttribute('aria-label', 'Herunterladen');
-        leiste.appendChild(laden);
-        if (!video) {
-          var nutzen = el('button', 'endo-knopf', 'Nutzen'); nutzen.type = 'button';
-          nutzen.setAttribute('aria-label', 'Als Ausgangsfoto verwenden');
-          nutzen.addEventListener('click', function () {
-            if (beschaeftigt) return;
-            daten.fotoUrl = x.url;
-            freieFrage(art === 'foto' ? 'Ich möchte dieses Foto noch einmal verwenden.' : 'Ich möchte mit diesem Ergebnis weiterarbeiten.');
-          });
-          leiste.appendChild(nutzen);
-        }
-        var weg = el('button', 'endo-knopf endo-knopf--leise', 'Löschen'); weg.type = 'button';
-        weg.addEventListener('click', function () {
-          if (weg.disabled) return;
-          if (weg.getAttribute('data-sicher') !== '1') { weg.setAttribute('data-sicher', '1'); weg.textContent = 'Sicher?'; return; }
-          weg.disabled = true;
-          api('/api/konto?aktion=datei-loeschen', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ art: art, id: x.id }) })
-            .then(function (r) { if (r.ok) kachel.remove(); else { weg.disabled = false; weg.textContent = 'Löschen'; weg.removeAttribute('data-sicher'); } })
-            .catch(function () { weg.disabled = false; });
-        });
-        leiste.appendChild(weg);
-        kachel.appendChild(leiste);
-        raster.appendChild(kachel);
+      var box2 = el('section', 'endo-el endo-konto');
+      box2.setAttribute('aria-label', 'Mein Konto');
+      var kz = el('div', 'endo-konto__kopf');
+      kz.appendChild(el('span', 'endo-konto__mail', (sitzung && sitzung.mail) || k.name || 'Ihr Konto'));
+      kz.appendChild(el('b', 'endo-konto__credits', Number(k.verfuegbar).toLocaleString('de-DE') + ' Credits'));
+      box2.appendChild(kz);
+      var breit = window.matchMedia && matchMedia('(min-width: 1180px)').matches;
+      box2.appendChild(el('p', 'endo-konto__leer', 'Ihre Bilder, Videos und Fotos finden Sie in Ihrer Galerie ' + (breit ? 'rechts neben dem Chat' : 'über dem Eingabefeld') + '. Alles bleibt 90 Tage gespeichert.'));
+      verlauf.appendChild(box2); nachUnten();
+      galerieLaden(true);
+      sperren(false);
+      knoepfe([
+        { text: 'Weiter im Chat', haupt: true, aktion: function () { knoepfe([]); zeigeSchritt(); feld.focus(); } },
+        { text: 'Abmelden', aktion: abmelden }
+      ]);
+    });
+  }
+
+  /* ---------- Galerie (Emre, 26.09.): rechts neben dem Chat, am Handy als Leiste über der Eingabe ---------- */
+  var galerie = null, galerieIds = null;
+  function galerieBauen() {
+    if (galerie) return galerie;
+    galerie = el('aside', 'endo-galerie');
+    galerie.setAttribute('aria-label', 'Ihre Galerie');
+    var k = el('div', 'endo-galerie__kopf');
+    k.appendChild(el('span', null, 'Ihre Galerie'));
+    k.appendChild(el('small', null, '90 Tage gespeichert'));
+    galerie.appendChild(k);
+    galerie.appendChild(el('div', 'endo-galerie__raster'));
+    galerie.appendChild(el('p', 'endo-galerie__leer', 'Hier erscheinen Ihre Bilder, Videos und Fotos.'));
+    box.insertBefore(galerie, eingabe);
+    return galerie;
+  }
+  function galerieWeg() { box.classList.remove('agent--galerie'); if (galerie) galerie.querySelector('.endo-galerie__raster').innerHTML = ''; galerieIds = null; }
+  function galerieLaden(hervorheben) {
+    if (!angemeldet()) { galerieWeg(); return; }
+    api('/api/konto?aktion=dateien').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+      .then(function (d) {
+        if (!d || !angemeldet()) return;
+        var liste = (d.ergebnisse || []).map(function (x) { return { art: 'ergebnis', id: x.id, url: x.url, t: x.erstellt || '' }; })
+          .concat((d.fotos || []).map(function (x) { return { art: 'foto', id: x.id, url: x.url, t: x.erstellt || '' }; }))
+          .filter(function (x) { return x.url && /^https:\/\//.test(x.url); })
+          .sort(function (a, b) { return a.t < b.t ? 1 : a.t > b.t ? -1 : 0; });
+        galerieZeigen(liste, hervorheben);
       });
-      box.appendChild(raster);
+  }
+  function galerieZeigen(liste, hervorheben) {
+    galerieBauen();
+    var raster = galerie.querySelector('.endo-galerie__raster'), alt = galerieIds;
+    galerieIds = {};
+    raster.innerHTML = '';
+    liste.forEach(function (x, i) {
+      var key = x.art + ':' + x.id;
+      galerieIds[key] = true;
+      var video = /\.(mp4|mov)$/i.test(x.url);
+      var b = el('button', 'endo-galerie__bild'); b.type = 'button';
+      b.setAttribute('aria-label', (x.art === 'foto' ? 'Ihr Foto' : video ? 'Ihr Video' : 'Ihr Bild') + ' ansehen');
+      var m = el(video ? 'video' : 'img');
+      m.src = x.url;
+      if (video) { m.muted = true; m.setAttribute('playsinline', ''); m.preload = 'metadata'; } else { m.alt = ''; m.loading = 'lazy'; m.decoding = 'async'; }
+      m.addEventListener('error', function () { b.remove(); });
+      b.appendChild(m);
+      if (x.art === 'foto' || video) b.appendChild(el('span', 'endo-galerie__art', x.art === 'foto' ? 'Foto' : 'Video'));
+      if (alt && !alt[key]) { b.classList.add('endo-galerie__bild--neu'); b.style.animationDelay = (ruhig ? 0 : i * 40) + 'ms'; }
+      b.addEventListener('click', function () { ansicht(x, video, b); });
+      raster.appendChild(b);
+    });
+    galerie.classList.toggle('endo-galerie--leer', !liste.length);
+    box.classList.add('agent--galerie');
+    if (hervorheben && !ruhig && galerie.animate) galerie.animate([{ opacity: 0.35 }, { opacity: 1 }], { duration: 520, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
+  }
+  /* Großansicht: Laden · Weiterverwenden · Löschen */
+  function ansicht(x, video, kachel) {
+    var d = el('dialog', 'endo-el endo-ansicht');
+    d.setAttribute('aria-label', x.art === 'foto' ? 'Ihr Foto' : 'Ihr Ergebnis');
+    var m = el(video ? 'video' : 'img', 'endo-ansicht__medium');
+    m.src = x.url;
+    if (video) { m.controls = true; m.muted = true; m.loop = true; m.setAttribute('playsinline', ''); if (!ruhig) m.autoplay = true; } else m.alt = '';
+    d.appendChild(m);
+    var leiste = el('div', 'endo-ansicht__knoepfe');
+    var laden = el('a', 'endo-knopf endo-knopf--ja', 'Herunterladen'); laden.href = x.url + '?download=1'; laden.rel = 'noopener'; laden.setAttribute('download', '');
+    leiste.appendChild(laden);
+    if (!video) {
+      var nutzen = el('button', 'endo-knopf', 'Weiterverwenden'); nutzen.type = 'button';
+      nutzen.addEventListener('click', function () {
+        d.close(); if (beschaeftigt) return;
+        daten.fotoUrl = x.url;
+        freieFrage(x.art === 'foto' ? 'Ich möchte dieses Foto noch einmal verwenden.' : 'Ich möchte mit diesem Ergebnis weiterarbeiten.');
+      });
+      leiste.appendChild(nutzen);
     }
-    gruppe('Meine Ergebnisse', d.ergebnisse || [], 'ergebnis');
-    gruppe('Meine Fotos', d.fotos || [], 'foto');
-    box.appendChild(el('p', 'endo-konto__leer', 'Alles bleibt ' + (d.tage || 90) + ' Tage gespeichert und wird danach automatisch gelöscht.'));
-    verlauf.appendChild(box); nachUnten();
+    var weg = el('button', 'endo-knopf endo-knopf--leise', 'Löschen'); weg.type = 'button';
+    weg.addEventListener('click', function () {
+      if (weg.disabled) return;
+      if (weg.getAttribute('data-sicher') !== '1') { weg.setAttribute('data-sicher', '1'); weg.textContent = 'Wirklich löschen?'; return; }
+      weg.disabled = true;
+      api('/api/konto?aktion=datei-loeschen', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ art: x.art, id: x.id }) })
+        .then(function (r) { if (r.ok) { d.close(); kachel.remove(); if (galerieIds) delete galerieIds[x.art + ':' + x.id]; } else { weg.disabled = false; weg.textContent = 'Löschen'; weg.removeAttribute('data-sicher'); } })
+        .catch(function () { weg.disabled = false; });
+    });
+    leiste.appendChild(weg);
+    var zu = el('button', 'endo-knopf endo-ansicht__zu', 'Schließen'); zu.type = 'button';
+    zu.addEventListener('click', function () { d.close(); });
+    leiste.appendChild(zu);
+    d.appendChild(leiste);
+    d.addEventListener('click', function (e) { if (e.target === d) d.close(); });
+    d.addEventListener('close', function () { d.remove(); });
+    document.body.appendChild(d);
+    if (d.showModal) d.showModal(); else d.setAttribute('open', '');
+  }
+
+  /* ---------- Flüge zur Kugel (Emre, 26.09.): Nachricht und Foto fliegen hinein, endos Antwort kommt heraus ----------
+     Gut dosiert: nur wenn die Kugel im Bild ist, höchstens ein Flug gleichzeitig pro Richtung, bei „Bewegung reduzieren“ nie.
+     Die Kugel ruht im Chat (Emre, 25.09.) und wird nur für den Flug kurz geweckt. */
+  var kugelEl = document.querySelector('.endo__orb') || document.querySelector('[data-orb]');
+  var flugAn = !ruhig && !!(document.body && document.body.animate);
+  var flugStart = null, fliegtRein = false, zuletztRaus = 0, wachTimer = null;
+  function kugelPunkt() {
+    if (!kugelEl) return null;
+    var r = kugelEl.getBoundingClientRect();
+    if (!r.width) return null;
+    var x = r.left + r.width / 2, y = r.top + r.height / 2, rad = r.width * 0.28;
+    if (y + rad < 24 || y - rad > window.innerHeight) return null;
+    return { x: x, y: y, r: rad, sichtbarY: Math.max(y, 24) };
+  }
+  function kugelWecken(ms) {
+    if (!kugelEl) return;
+    kugelEl.classList.add('orb--wach');
+    kugelEl.dispatchEvent(new Event('orb:weiter'));
+    clearTimeout(wachTimer);
+    wachTimer = setTimeout(kugelRuhe, ms || 2400);
+  }
+  function kugelRuhe() {
+    if (laufend) { wachTimer = setTimeout(kugelRuhe, 1500); return; } /* während erzeugt wird, bleibt sie wach */
+    kugelEl.classList.remove('orb--wach');
+    if (document.documentElement.classList.contains('endo-chat')) kugelEl.dispatchEvent(new Event('orb:halt'));
+  }
+  function pulsVon(x, y, z) {
+    var K = window.endoKugel, dx = x - z.x, dy = y - z.y, l = Math.hypot(dx, dy) || 1;
+    if (K && K.puls) K.puls(dx / l, dy / l);
+  }
+  /* Nachricht (Text) oder Foto (Bild-Adresse) fliegt als kleiner Schein in die Kugel und löst sich dort in Datenpakete auf */
+  function inKugel(text, bildSrc) {
+    var z = kugelPunkt();
+    if (!flugAn || !z || fliegtRein) return;
+    var q = flugStart && Date.now() - flugStart.t < 600 ? flugStart.r : (bildSrc ? fotoKnopf : feld).getBoundingClientRect();
+    flugStart = null;
+    if (!q || !q.width) return;
+    var g;
+    if (bildSrc) { g = el('div', 'endo-flug endo-flug--bild'); var i = el('img'); i.src = bildSrc; i.alt = ''; g.appendChild(i); }
+    else g = el('div', 'endo-flug', text.length > 38 ? text.slice(0, 36) + '…' : text);
+    g.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(g);
+    var w = g.offsetWidth, h = g.offsetHeight;
+    var x0 = Math.min(Math.max(8, q.left + q.width / 2 - w / 2), window.innerWidth - w - 8), y0 = q.top + q.height / 2 - h / 2;
+    g.style.left = x0 + 'px'; g.style.top = y0 + 'px';
+    var cx = x0 + w / 2, cy = y0 + h / 2, dx = z.x - cx, dy = z.sichtbarY - cy;
+    /* bis gut zur Hälfte fliegen und dabei zu einem Lichtpunkt schrumpfen – den Rest übernehmen die Datenpakete */
+    var anteil = 0.55, ex = dx * anteil, ey = dy * anteil, bogen = (dx >= 0 ? -1 : 1) * Math.min(60, Math.abs(dy) * 0.12);
+    fliegtRein = true;
+    kugelWecken(2600);
+    var a = g.animate([
+      { transform: 'translate3d(0,0,0) scale(1)', opacity: 1 },
+      { transform: 'translate3d(' + (ex * 0.45 + bogen) + 'px,' + (ey * 0.4) + 'px,0) scale(0.82)', opacity: 0.95, offset: 0.4 },
+      { transform: 'translate3d(' + ex + 'px,' + ey + 'px,0) scale(0.08)', opacity: 0 }
+    ], { duration: 620, easing: 'cubic-bezier(0.55, 0.05, 0.35, 1)', fill: 'forwards' });
+    a.onfinish = function () {
+      g.remove(); fliegtRein = false;
+      var px = cx + ex, py = cy + ey;
+      if (!(window.endoZufluss && window.endoZufluss.schicken && window.endoZufluss.schicken(px, py, bildSrc ? 5 : 3))) funke(px, py, z.x, z.sichtbarY, 520, function () { pulsVon(px, py, z); });
+    };
+  }
+  /* kleiner Lichtpunkt von A nach B */
+  function funke(x0, y0, x1, y1, ms, fertig) {
+    var f = el('div', 'endo-funke'); f.setAttribute('aria-hidden', 'true');
+    f.style.left = (x0 - 4) + 'px'; f.style.top = (y0 - 4) + 'px';
+    document.body.appendChild(f);
+    var mx = (x1 - x0) * 0.5 + (x1 > x0 ? -1 : 1) * 30, my = (y1 - y0) * 0.5;
+    var a = f.animate([
+      { transform: 'translate3d(0,0,0) scale(0.4)', opacity: 0 },
+      { transform: 'translate3d(' + mx + 'px,' + my + 'px,0) scale(1)', opacity: 1, offset: 0.45 },
+      { transform: 'translate3d(' + (x1 - x0) + 'px,' + (y1 - y0) + 'px,0) scale(0.6)', opacity: 0.9, offset: 0.92 },
+      { transform: 'translate3d(' + (x1 - x0) + 'px,' + (y1 - y0) + 'px,0) scale(2.2)', opacity: 0 }
+    ], { duration: ms, easing: 'cubic-bezier(0.3, 0, 0.2, 1)', fill: 'forwards' });
+    a.onfinish = function () { f.remove(); if (fertig) fertig(); };
+  }
+  /* endos Antwort: ein Lichtpunkt verlässt die Kugel, landet am Anfang der Nachricht – dann entfaltet sie sich */
+  function ausKugel(b) {
+    var z = kugelPunkt();
+    if (!flugAn || !z || Date.now() - zuletztRaus < 900 || !gestartet) return;
+    var r = b.getBoundingClientRect();
+    if (!r.width || r.top > window.innerHeight || r.bottom < 0) return;
+    zuletztRaus = Date.now();
+    b.classList.add('blase--wartet');
+    kugelWecken(1800);
+    pulsVon(r.left, r.top, z);
+    funke(z.x, z.sichtbarY + z.r * 0.4, r.left + 6, r.top + 12, 460, function () {
+      b.classList.remove('blase--wartet'); b.classList.add('blase--aus-kugel');
+    });
+    setTimeout(function () { b.classList.remove('blase--wartet'); }, 1200); /* Sicherheitsnetz */
   }
 
   /* ---------- Elemente von endo: Looks, Bestätigung, Fortschritt, Ergebnis, Kontakt ---------- */
@@ -805,7 +942,8 @@
     var hinweis = el('p', 'endo-arbeit__text', 'Bilder brauchen etwa 1–2 Minuten, Videos 2–4. Sie können die Seite neu laden – der Auftrag läuft weiter.');
     box.appendChild(hinweis);
     verlauf.appendChild(box); nachUnten();
-    if (window.endoZufluss) window.endoZufluss.erzeugen(true);
+    kugelWecken(4000);
+    if (window.endoZufluss) window.endoZufluss.erzeugen(true, box);
     var start0 = Date.now(), pause = 3000;
     var uhr = setInterval(function () {
       var s = Math.round((Date.now() - start0) / 1000);
@@ -858,6 +996,7 @@
     fuss.appendChild(laden); innen.appendChild(fuss);
     verlauf.appendChild(aussen); nachUnten();
     historie.push({ rolle: 'assistant', text: '[Ergebnis fertig: ' + titel + ']' });
+    galerieLaden();
     endo('Fertig. Passt es so? Aus dem Ergebnis mache ich Ihnen gern auch ein Werbevideo oder eine Anzeige.');
   }
   function kontakt(e) {

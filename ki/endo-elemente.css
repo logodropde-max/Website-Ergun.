@@ -108,9 +108,80 @@
 .endo-konto__credits { font-weight: 500; background: var(--el-chrom); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .endo-konto__titel { margin: 4px 0 0; font-size: 13.5px; font-weight: 500; }
 .endo-konto__leer { margin: 0; font-size: 12px; color: var(--el-leise); }
-.endo-konto__raster { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 8px; }
-.endo-konto__kachel { display: grid; gap: 6px; padding: 6px; border: 1px solid var(--el-linie); border-radius: 12px; background: var(--el-flaeche); }
-.endo-konto__bild { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; background: #0B0C0E; display: block; }
-.endo-konto__aktionen { display: flex; flex-wrap: wrap; gap: 4px; }
-.endo-konto__aktionen .endo-knopf { min-height: 32px; padding: 5px 10px; font-size: 12.5px; line-height: 18px; }
-@media (max-width: 640px) { .endo-konto__raster { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---------- Chat frei schwebend (Emre, 26.09.: „nicht so Kasten“) – nur die Eingabe-Pille bleibt ---------- */
+html.endo-chat .agent.agent--frei { background: none; border-color: transparent; box-shadow: none; }
+html.endo-chat .agent--frei .agent__kopf { border-bottom-color: transparent; }
+html.endo-chat .agent--frei .agent__verlauf {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 28px, #000 calc(100% - 8px), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 28px, #000 calc(100% - 8px), transparent 100%);
+  scrollbar-width: none;
+}
+html.endo-chat .agent--frei .agent__verlauf::-webkit-scrollbar { display: none; }
+html.endo-chat .agent--frei .agent__feld { background: rgba(9, 11, 17, 0.5); border-color: rgba(226, 230, 236, 0.16); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+html.endo-chat .agent--frei .blase--endo { text-shadow: 0 1px 14px rgba(0, 0, 0, 0.65); }
+html.endo-chat .agent--frei .blase--du { background: rgba(9, 11, 17, 0.35); }
+
+/* endos Antwort entfaltet sich, wenn der Lichtpunkt aus der Kugel ankommt */
+.blase.blase--wartet { opacity: 0; animation: none; }
+.blase.blase--aus-kugel { transform-origin: 0 0; animation: endo-aus-kugel 520ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes endo-aus-kugel { from { opacity: 0; transform: translateY(-6px) scale(0.96); } to { opacity: 1; transform: none; } }
+
+/* Flug in die Kugel: Nachricht / Foto als kleiner Schein, Lichtpunkt */
+.endo-flug { position: fixed; z-index: 60; pointer-events: none; max-width: 260px; padding: 6px 12px; border: 1px solid rgba(226, 230, 236, 0.3); border-radius: 999px;
+  background: rgba(9, 11, 17, 0.55); color: #EEF0F3; font-size: 14px; line-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  box-shadow: 0 0 24px rgba(214, 226, 248, 0.25); will-change: transform, opacity; }
+.endo-flug--bild { padding: 0; width: 56px; height: 56px; border-radius: 14px; overflow: hidden; }
+.endo-flug--bild img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.endo-funke { position: fixed; z-index: 60; pointer-events: none; width: 8px; height: 8px; border-radius: 50%; background: #fff;
+  box-shadow: 0 0 10px 3px rgba(226, 234, 250, 0.75), 0 0 28px 8px rgba(196, 212, 244, 0.28); will-change: transform, opacity; }
+
+/* Kugel kurz wach (Flug, Antwort, Erzeugen) – im Chat sonst gedämpft und still */
+html.endo-chat .orb--bereit.orb--wach { opacity: 0.66; }
+
+/* ---------- Galerie: rechts neben dem Chat (ab 1180 px), sonst Leiste über der Eingabe ---------- */
+.endo-galerie { display: none; pointer-events: auto; }
+html.endo-chat .agent--galerie .endo-galerie { display: grid; align-content: start; gap: 10px; }
+.endo-galerie__kopf { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 13px; color: #EEF0F3; }
+.endo-galerie__kopf small { font-size: 11.5px; color: rgba(226, 230, 236, 0.55); }
+.endo-galerie__raster { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.endo-galerie__leer { margin: 0; font-size: 12px; line-height: 1.45; color: rgba(226, 230, 236, 0.55); }
+.endo-galerie:not(.endo-galerie--leer) .endo-galerie__leer { display: none; }
+.endo-galerie__bild { position: relative; padding: 0; border: 1px solid rgba(226, 230, 236, 0.14); border-radius: 12px; overflow: hidden; background: #0B0C0E; aspect-ratio: 1; cursor: pointer;
+  transition: border-color 200ms cubic-bezier(0.22, 1, 0.36, 1), transform 160ms cubic-bezier(0.22, 1, 0.36, 1); }
+.endo-galerie__bild img, .endo-galerie__bild video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.endo-galerie__bild:active { transform: scale(0.97); }
+.endo-galerie__bild:focus-visible { outline: 2px solid #DCE0E6; outline-offset: 2px; }
+@media (hover: hover) and (pointer: fine) { .endo-galerie__bild:hover { border-color: rgba(226, 230, 236, 0.5); } }
+.endo-galerie__art { position: absolute; left: 6px; bottom: 6px; padding: 1px 7px; border-radius: 999px; background: rgba(9, 11, 17, 0.72); font-size: 10.5px; line-height: 16px; color: rgba(238, 240, 243, 0.85); }
+.endo-galerie__bild--neu { animation: endo-galerie-neu 560ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes endo-galerie-neu { from { opacity: 0; transform: scale(0.82); } to { opacity: 1; transform: none; } }
+@media (min-width: 1180px) {
+  html.endo-chat .agent--galerie .endo-galerie { position: absolute; top: 12px; bottom: 12px; left: calc(100% + 28px); width: 212px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(226, 230, 236, 0.18) transparent;
+    animation: endo-galerie-rein 520ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+  @keyframes endo-galerie-rein { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: none; } }
+}
+@media (max-width: 1179px) {
+  html.endo-chat .agent--galerie .endo-galerie { padding: 0 14px 10px; }
+  html.endo-chat .agent--galerie .endo-galerie--leer, .endo-galerie__kopf { display: none; }
+  html.endo-chat .agent--galerie .endo-galerie__raster { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 56px; overflow-x: auto; scrollbar-width: none; }
+  .endo-galerie__bild { border-radius: 10px; }
+  .endo-galerie__art { left: 3px; bottom: 3px; padding: 0 5px; font-size: 9.5px; line-height: 14px; }
+}
+
+/* Großansicht aus der Galerie */
+.endo-ansicht { width: min(92vw, 720px); max-height: 92svh; padding: 10px; border: 1px solid rgba(226, 230, 236, 0.16); border-radius: 20px; background: rgba(12, 13, 15, 0.96); color: #EEF0F3; }
+.endo-ansicht[open] { display: grid; gap: 10px; }
+.endo-ansicht::backdrop { background: rgba(4, 5, 8, 0.66); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.endo-ansicht__medium { width: 100%; max-height: 70svh; object-fit: contain; border-radius: 12px; background: #0B0C0E; display: block; }
+.endo-ansicht__knoepfe { display: flex; flex-wrap: wrap; gap: 8px; }
+.endo-ansicht__zu { margin-left: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  .blase.blase--aus-kugel, .endo-galerie__bild--neu, html.endo-chat .agent--galerie .endo-galerie { animation: none; }
+  .endo-flug, .endo-funke { display: none; }
+}
+
+/* Datenpakete auf /ki/ (Canvas legt js/endo-zufluss.js selbst an; auf der Startseite steht er im HTML) */
+.hero > .endo__daten { position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .hero > .endo__daten { display: none; } }
