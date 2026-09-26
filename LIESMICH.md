@@ -16,6 +16,12 @@
 
 
 
+## endo Phase C – Schritt 2: Speicher + Credit-Logik (26.09.2026, Claude Code)
+- Neu: `api/_lib/endo/speicher.js` (Konten, Credits, Aufträge über Supabase-RPC) und `api/_lib/endo/limits.js` (10 Aufträge/h, 30/Tag, Chat 40/Tag, Tageslimit 10 $ bzw. `ENDO_TAGESLIMIT_USD`). `api/_lib` = keine Vercel-Funktion, nicht öffentlich.
+- Die Logik (Sperren, Reservieren, Abbuchen, Zurückgeben, Doppelbuchen, Limits) steckt in Postgres-Funktionen: `_code/werkzeuge/endo-datenbank/schema.sql` (einmal im Supabase-SQL-Editor ausführen; Funktionen nur für den Server-Schlüssel freigegeben).
+- Tests: `_code/werkzeuge/endo-datenbank/` → `npm test` (16 Tests gegen echtes Postgres im Speicher, PGlite).
+- Noch nicht eingebunden – wird ab Schritt 3 von den neuen Funktionen `api/endo/*` genutzt. Bauplan: Vault `08 Projekte/endo Phase C – Bauplan.md`.
+
 ## Kugel-Einsammeln als Impuls (26.09.2026, Claude Code) – ersetzt die Arm-Logik im Abschnitt darunter
 `ki/js/orb.js?v=9`, `js/endo-zufluss.js?v=4`. Einstellwerte: `KUGEL` oben in `orb.quelle.js` (breite, umfeld, maxLaenge, hinMs, daempfung, frequenz, welle…, blitzMs, ring…, glanz), `PAKET` in `endo-zufluss.js` (anzug, greifen, halten, radius, takt, abstandTest).
 - Shader: `uniform vec4 arm[3]` (Objekt-Richtung, Länge L als Radius-Anteil), `armInfo[3]` (x Welle, y Blitz), `puls[3]` (Ring-Phase), `sek` (Sekunden für die Welle); Form `kern = exp(−θ²/BREITE²)`, `form = kern + umfeld(1−kern)`, Verschiebung `dir · L · 1,2 · form + normal · Welle`; Helligkeit über `varying vHell` (≤ 1 · GLANZ). Konstanten als `defines`.

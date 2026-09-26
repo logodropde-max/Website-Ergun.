@@ -25,7 +25,20 @@ Umschalter „Monatlich | Jährlich −20 %“ über den Karten (Standard: Monat
 
 → Auch mit 20 % Jahresrabatt überall über 35 % (Ziel erfüllt). Texte „kein Abo“ auf Karten, im Chat und in der FAQ von /ki/ entsprechend angepasst.
 
-## Verbrauch (endo-Credits pro Ergebnis)
+## Verbrauch ab Phase C (beschlossen 26.09.2026, auf der Website ab Schritt 3)
+Rechnung mit Listenpreisen der Higgsfield-API (nach Aktionsende), schlechtester Fall 0,063 € netto je Credit, 1 $ = 1 € → [[endo Phase C – Bauplan]].
+| Werkzeug | Credits | API-Listenpreis | Modell | Gewinn schlechtester Fall |
+|---|---|---|---|---|
+| Produktfoto (2K) | **12** | 0,452 $ | marketing-studio/image, Direktmodus | 40 % |
+| Werbeanzeige (neu, 2K) | **10** | 0,372 $ | marketing-studio/image, Preset | 41 % |
+| Shop-Bild (weißer Hintergrund, 2K) | **5** | 0,075 $ | alibaba/qwen-image-3/edit | 76 % |
+| Werbevideo 5 s (1080p, ohne Ton) | **20** | 0,56 $ | kling-video/v3.0/pro/image-to-video | 56 % |
+| Website-Titelbild (4K, 16:9) | **12** | 0,424 $ | marketing-studio/image, Direktmodus | 44 % |
+| **Premium:** Werbevideo 10 s | **40** | 1,12 $ | kling-video/v3.0/pro/image-to-video | 56 % |
+| **Premium:** 3D-Produkt, Parallax-Szene | auf Anfrage | – | nicht über die API – Emre von Hand | – |
+| **Premium:** Abstimmung mit Emre | – | – | Anfrage | – |
+
+## Verbrauch bis Phase C (alt, 25.09.)
 | Bereich | Credits | Higgsfield-Kosten | Modell |
 |---|---|---|---|
 | Produktfoto (Produkt in Szene) | 5 | 2 | marketing_studio_image |
