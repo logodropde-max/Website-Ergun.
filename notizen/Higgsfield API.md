@@ -46,6 +46,8 @@ Oberfläche für die **API** (nicht das Abo): Bilder und Videos mit ~38 Modellen
 4. Prüfen (kostet nichts): `node hf.mjs test` im Ordner → „Schlüssel ist eingetragen …“.
 - **Später für die Website (Phase C):** derselbe Schlüssel in [[Vercel]] → Projekt `website-ergun` → Settings → Environment Variables → Name `HF_KEY`, Wert `ID:SECRET` → Save → neu veröffentlichen. Nie in Dateien, Git oder Obsidian.
 
+- **Stand 26.09., 17:37:** Schlüssel eingetragen, erster Test erfolgreich – Z-Image Turbo 1k, Preis laut API 0,015 $ (0,24 API-Credits), Bild `api_f13c7922_api-test-tasse` in der [[Higgsfield-Galerie]]. Cashback-Prüfung durch Emre steht aus.
+
 ### Befehle (PowerShell im Ordner `_code\werkzeuge\higgsfield-api`)
 ```
 node hf.mjs test
