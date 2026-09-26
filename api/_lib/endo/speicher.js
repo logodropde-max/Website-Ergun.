@@ -2,7 +2,8 @@
    Liegt unter api/_lib: Vercel macht daraus keine Funktion und liefert die Datei nicht öffentlich aus.
    Die eigentliche Logik (Sperren, Prüfen, Buchen) steckt in den Postgres-Funktionen aus
    _code/werkzeuge/endo-datenbank/schema.sql; hier wird nur aufgerufen und ausgewertet.
-   Umgebung (nur in Vercel): SUPABASE_URL + SUPABASE_SECRET_KEY (oder SUPABASE_SERVICE_ROLE_KEY). */
+   Umgebung (nur in Vercel, von der Supabase-Integration angelegt): SUPABASE_URL oder NEXT_PUBLIC_SUPABASE_URL
+   + SUPABASE_SECRET_KEY (oder SUPABASE_SERVICE_ROLE_KEY). */
 import { LIMITS } from './limits.js';
 
 /* Speicher auf Basis einer rpc(name, argumente)-Funktion.
@@ -59,7 +60,7 @@ export function supabaseRpc(url, schluessel, fetchFn = fetch) {
 
 /* Speicher aus den Vercel-Umgebungsvariablen; null, wenn die Datenbank (noch) fehlt. */
 export function speicherAusUmgebung(env = process.env) {
-  const url = env.SUPABASE_URL;
+  const url = env.SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL; // die Vercel-Integration legt teils nur NEXT_PUBLIC_… an
   const schluessel = env.SUPABASE_SECRET_KEY || env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !schluessel) return null;
   return erstelleSpeicher(supabaseRpc(url, schluessel));
