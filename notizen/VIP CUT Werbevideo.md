@@ -14,8 +14,9 @@ Stand: 26.09.2026 · gepflegt von Claude Code
 - Öffnungszeiten 9:00 bis 19:30 Uhr
 
 ## Fertig
-- **Video für die Anzeigetafel**, hochkant 9:16, 1080×1920, 46 Sekunden, ohne Ton
-  - Baustelle (VORHER) → ein langer Kameraflug durch den fertigen Laden (NACHHER) → Decke, Stühle, Schriftzug → Chef mit Flamme und Infoblock → Logo-Endbild
+- **Video für die Anzeigetafel**, hochkant 9:16, 1080×1920, 40,5 Sekunden, ohne Ton (Version 4)
+  - Baustelle (VORHER) → Kameraflug durch den fertig eingerichteten Laden (NACHHER, ohne Baustellenreste) → Decke, Stühle, Schriftzug → Chef mit Flamme und Infoblock → Logo-Endbild
+  - Der Chef kommt nur einmal vor: am Ende mit Feuer
   - Infoblock (VIP CUT, Öffnungszeiten, Adresse, Telefon) erscheint, sobald der Chef in die Kamera schaut
   - Logo aus dem Originalfoto, Spiegelungen herausgerechnet, nicht von einer KI verändert
   - Ende geht nahtlos in den Anfang über, damit das Video als Schleife läuft
