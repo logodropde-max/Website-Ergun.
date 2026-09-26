@@ -517,10 +517,18 @@
      (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
   var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 245, h: 600, anzahl: 64, spalten: 8, fuss: 0.9964, oben: 0.0531, mitte: 0.5794, breite: 0.7595 } };
   var fig = { phase: 0, ziel: 0, laeuft: false, t: 0 }, FIG_DAUER = 4.4, lichtGold = 0, lichtBlau = 0, lichtNacht = 0;
-  var gewunken = false; /* pro Besuch von oben nur ein Winken – wird ganz oben (p<=0.02) wieder freigegeben */
+  /* Winken (26.09., Emre): sofort beim ersten Runterwischen von ganz oben, einmal – erst nach erneutem
+     Seitenanfang wieder. Sind die Einzelbilder noch nicht geladen, wartet das Winken kurz auf sie. */
+  var gewunken = false, winkenWartet = false;
+  function folgenDa() { return Object.keys(FIGUREN).every(function (k) { return !!FIGUREN[k].folge; }); }
+  function winken() {
+    if (fig.laeuft) return;                         /* läuft noch – nicht neu ansetzen (kein Sprung) */
+    if (!folgenDa()) { winkenWartet = true; return; }
+    winkenWartet = false; fig.phase = 0; fig.ziel = 0; figStart(1);
+  }
   function figurLaden(name, folge) {
     var f = FIGUREN[name], b = new Image(); b.decoding = 'async';
-    b.onload = function () { f[folge ? 'folge' : 'bild'] = b; f.zuletzt = ''; figurenZeichnen(); };
+    b.onload = function () { f[folge ? 'folge' : 'bild'] = b; f.zuletzt = ''; figurenZeichnen(); if (folge && winkenWartet && folgenDa()) winken(); };
     b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=6';
   }
   Object.keys(FIGUREN).forEach(function (k) { FIGUREN[k].zuletzt = ''; figurLaden(k, false); });
@@ -587,7 +595,10 @@
   }
   function figurenZeichnen() {
     var l = figurLicht(), e = fig.phase * fig.phase * (3 - 2 * fig.phase);
-    Object.keys(FIGUREN).forEach(function (k) { var f = FIGUREN[k]; figurZeichnen(f, e * (f.anzahl - 1), l); });
+    /* Emre: Einzelbilder vorwärts (heben, winken, senken). Hund jault mit und senkt am Ende den Kopf wieder –
+       Hin- und Rückweg seiner Folge, oben kurz gehalten, damit beide weich in der Ruhepose ankommen. */
+    var h = Math.min(1, Math.sin(Math.PI * e) * 1.25);
+    Object.keys(FIGUREN).forEach(function (k) { var f = FIGUREN[k]; figurZeichnen(f, (k === 'hund' ? h : e) * (f.anzahl - 1), l); });
   }
   function figStart(z) {
     if (fig.ziel === z) return;
@@ -677,6 +688,7 @@
   function aufbauen() {
     var t0 = performance.now();
     messen();
+    heldOben = held.getBoundingClientRect().top + leseY();   /* Lage des Titelbilds, einmal – nicht pro Bild */
     held.style.setProperty('--szene-h', m.H + 'px');
     if (cssParallaxe && isNaN(festP)) {
       Object.keys(ebenen).forEach(function (k) { ebenen[k].style.removeProperty('transform'); ebenen[k].style.setProperty('--weg', (m.H * TIEFE[k] * (k === 'himmel' ? 1 : m.f)).toFixed(1) + 'px'); });
@@ -707,54 +719,67 @@
     zeichne(true);
   }
 
-  /* ---------- Scrollen ---------- */
-  var letztesP = -1, geplant = false;
+  /* ---------- Scrollen ----------
+     Eine gemeinsame Scroll-Quelle (26.09., Emre: alles live am Finger, in beide Richtungen): ein Takt liest pro
+     Bild (requestAnimationFrame) scrollY – auch während des Schwungscrollens auf dem iPhone. Parallaxe und Winken
+     nehmen den echten Wert; Sonne, Mond, Himmel, Licht auf Landschaft/Figuren und der endo-Faden einen ganz leicht
+     geglätteten (~60 ms), damit Mausrad-Schritte nicht ruckeln. Kein Nachlaufen, keine Tempogrenze, hoch = runter. */
+  var letztesP = -1, heldOben = 0, rohY = 0, weichY = 0, GLATT = 0.06;
   /* Zum Prüfen: ?p=0.3 stellt die Tageszeit fest ein */
   var festP = parseFloat(new URLSearchParams(location.search).get('p'));
-  function fortschritt() {
+  function leseY() { return Math.max(0, window.pageYOffset || document.documentElement.scrollTop || 0); }
+  function fortschritt(y) {
     if (!isNaN(festP)) return festP;
-    if (ruhig) return 0;
-    var s = -held.getBoundingClientRect().top;
-    return Math.max(0, Math.min(1.2, s / m.H));
+    return Math.max(0, Math.min(1.2, (y - heldOben) / m.H));
   }
   function setze(el, y) { el.style.transform = 'translate3d(0,' + y.toFixed(1) + 'px,0)'; }
   function zeichne(immer) {
-    geplant = false;
     if (!bereit) return;
-    var p = fortschritt();
+    if (immer) rohY = leseY();
+    var p = fortschritt(rohY);
     var vorherP = letztesP;
-    if (!immer && Math.abs(p - letztesP) < 0.0005) return;
-    letztesP = p;
-    var s = isNaN(festP) ? p * m.H : 0;
-    /* Parallaxe: direkt am Scrollen, sonst schwimmt die Landschaft gegen die Seite */
-    if (!(cssParallaxe && isNaN(festP))) Object.keys(ebenen).forEach(function (k) { setze(ebenen[k], s * TIEFE[k] * (k === 'himmel' ? 1 : m.f)); });
-    /* Jaulen und Winken: starten, sobald es Nacht wird und man weiterscrollt (am echten Scrollwert, ohne Nachlauf) */
-    var pz = p / ZEIT;
-    if (!isNaN(festP)) { fig.phase = sanft(0.4, 0.58, pz); figurenZeichnen(); }
-    else if (ruhig) { /* Bewegung reduziert: Figur ruht, kein Winken */ }
-    else if (p <= 0.02) {
-      /* Ganz oben am Seitenanfang: Winken für den nächsten Runter-Weg wieder freigeben, Figur ruhen lassen */
-      gewunken = false;
-      if (fig.phase !== 0 || fig.laeuft) { fig.laeuft = false; fig.ziel = 0; fig.phase = 0; figurenZeichnen(); }
-    } else if (!gewunken && pz > 0.22 && p > vorherP) {
-      /* Goldene Stunde (Sonne kurz vor dem Bergsattel) und man scrollt nach unten: genau einmal winken */
-      gewunken = true; figStart(1);
+    if (immer || Math.abs(p - letztesP) >= 0.0005) {
+      letztesP = p;
+      var s = (isNaN(festP) && !ruhig) ? p * m.H : 0;
+      /* Parallaxe: direkt am echten Scrollwert, sonst schwimmt die Landschaft gegen die Seite (Bewegung reduziert: keine) */
+      if (!(cssParallaxe && isNaN(festP))) Object.keys(ebenen).forEach(function (k) { setze(ebenen[k], s * TIEFE[k] * (k === 'himmel' ? 1 : m.f)); });
+      /* Winken: sofort beim ersten Runterwischen von ganz oben; erst ganz oben wird es wieder freigegeben */
+      if (!isNaN(festP)) { fig.phase = sanft(0.4, 0.58, p / ZEIT); figurenZeichnen(); }
+      else if (ruhig) { /* Bewegung reduziert: kein Winken */ }
+      else if (vorherP < 0) gewunken = p > 0.003;            /* erster Aufbau: nur ganz oben ist das Winken frei */
+      else if (p <= 0.003) { gewunken = false; winkenWartet = false; }
+      else if (!gewunken && p > vorherP) { gewunken = true; winken(); }
     }
-    /* Sonne, Mond, Licht und Hund folgen einem weich nachgeführten Wert – keine Sprünge bei Mausrad-Schritten */
-    ziel = p;
-    if (immer || ruhig || !isNaN(festP)) { weich = p; licht(weich); }
-    else if (!laeuft) { laeuft = true; zuletztT = performance.now(); requestAnimationFrame(nachfuehren); }
+    /* Neuaufbau: Licht und Faden sofort auf den aktuellen Stand */
+    if (immer) { fadenMessen(); weichY = rohY; lichtP = fortschritt(rohY); licht(lichtP); faden(rohY); }
   }
-  var ziel = 0, weich = 0, laeuft = false, zuletztT = 0;
-  function nachfuehren(t) {
+  /* Der Takt läuft, solange gescrollt wird, und noch kurz danach (iPhone-Schwungscrollen) – dann schläft er */
+  var laeuft = false, zuletztT = 0, stillSeit = 0, lichtP = -1;
+  function takt(t) {
     var dt = Math.min(0.05, Math.max(0, (t - zuletztT) / 1000)); zuletztT = t;
-    /* ruhig nachgleiten statt direkt am Finger (Emre, 26.09.): weich mit 0,9 s, und höchstens 0,2 Bildhöhen je Sekunde –
-       auch bei schnellem Wischen dauert der Wechsel von Sonne zu Mond mindestens gut 1,5 Sekunden */
-    var schritt = (ziel - weich) * (1 - Math.exp(-dt / 0.9)), grenze = 0.2 * dt;
-    weich += Math.max(-grenze, Math.min(grenze, schritt));
-    if (Math.abs(ziel - weich) < 0.0003) { weich = ziel; laeuft = false; }
-    licht(weich);
-    if (laeuft) requestAnimationFrame(nachfuehren);
+    var y = leseY();
+    if (y !== rohY) { rohY = y; stillSeit = t; }
+    zeichne(false);
+    if (ruhig || !isNaN(festP)) weichY = rohY;
+    else { weichY += (rohY - weichY) * (1 - Math.exp(-dt / GLATT)); if (Math.abs(rohY - weichY) < 0.3) weichY = rohY; }
+    var lp = fortschritt(weichY);
+    if (Math.abs(lp - lichtP) > 0.00005) { lichtP = lp; licht(lp); }
+    faden(weichY);
+    if (weichY !== rohY) stillSeit = t;
+    if (t - stillSeit < 300) requestAnimationFrame(takt); else laeuft = false;
+  }
+  /* endo-Faden: die Spitze (mit Lichtpunkt) hängt an der Blickhöhe des Betrachters – sie rutscht live mit dem Wischen
+     die Linie hinunter bzw. zurück und endet an der Kugel. Nur transform; Maße nur beim Aufbau/Größenwechsel. */
+  var fadenEl = document.querySelector('.endo__faden'), fadenOben = 0, fadenH = 1, sichtH = 1, fadenS = -1;
+  function fadenMessen() {
+    if (!fadenEl) return;
+    fadenOben = fadenEl.getBoundingClientRect().top + leseY(); fadenH = fadenEl.offsetHeight || 1; sichtH = window.innerHeight || 1;
+  }
+  function faden(y) {
+    if (!fadenEl) return;
+    var f = Math.max(0, Math.min(1, (y + sichtH * 0.62 - fadenOben) / fadenH));
+    f = Math.round(f * 1000) / 1000;
+    if (f !== fadenS) { fadenS = f; fadenEl.style.transform = 'scaleY(' + f + ')'; }
   }
   var gesetzt = {};
   function wert(name, v) { if (gesetzt[name] !== v) { gesetzt[name] = v; held.style.setProperty(name, v); } }
@@ -780,13 +805,14 @@
     lichtGold = gold; lichtBlau = sanft(0.18, 0.3, p); lichtNacht = nacht;
     figurenZeichnen();
   }
-  function anfordern() { if (!geplant) { geplant = true; requestAnimationFrame(function () { zeichne(false); }); } }
+  function anfordern() { if (!laeuft) { laeuft = true; zuletztT = stillSeit = performance.now(); requestAnimationFrame(takt); } }
 
   function start() {
     ['himmel', 'weit', 'fern', 'mitte', 'titel', 'huegel', 'wald', 'wiese', 'gras'].forEach(function (k) { ebenen[k] = held.querySelector('[data-ebene="' + k + '"]'); });
     sonne = held.querySelector('.sonne'); mond = held.querySelector('.mond');
     aufbauen();
     window.addEventListener('scroll', anfordern, { passive: true });
+    if (document.readyState !== 'complete') window.addEventListener('load', function () { zeichne(true); });
     var breite = window.innerWidth, hoehe = buehne.clientHeight, t;
     window.addEventListener('resize', function () {
       clearTimeout(t);
@@ -798,7 +824,8 @@
     });
     /* Wind nur, solange das Startbild zu sehen ist */
     if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { held.classList.toggle('szene--weg', !e[0].isIntersecting); }).observe(held);
-    window.__szene = { p: function (x) { window.scrollTo(0, x * m.H); }, bauzeit: function () { return bauzeit; } };
+    window.__szene = { p: function (x) { window.scrollTo(0, x * m.H); }, bauzeit: function () { return bauzeit; },
+      zustand: function () { return { phase: fig.phase, laeuft: fig.laeuft, gewunken: gewunken, wartet: winkenWartet, rohY: rohY, weichY: weichY, licht: lichtP, faden: fadenS }; } };
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();

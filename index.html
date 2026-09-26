@@ -281,12 +281,8 @@ img { display: block; max-width: 100%; height: auto; }
 .endo__faden::after { content: ""; position: absolute; left: -2px; bottom: -5px; width: 5px; height: 30px; border-radius: 3px; opacity: 0.9;
   background: radial-gradient(closest-side, rgba(240, 245, 255, 0.95), rgba(200, 216, 245, 0));
   /* Lichtpunkt sitzt an der Spitze des Fadens; die Spitze folgt ueber die scaleY-Kopplung direkt der Scrollposition */ }
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .endo__faden { animation: faden-waechst linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; }
-  }
-}
-@keyframes faden-waechst { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+/* Wachsen/Zurückziehen steuert js/szene.js live am Scrollen (gemeinsamer Takt mit Sonne und Mond, 26.09.) */
+.js .endo__faden { transform: scaleY(0); }
 /* Zufliegende Datenpakete: leichtes Canvas hinter Text und Kugel, nur transform/opacity im JS (26.09.) */
 .endo__daten { position: absolute; left: 0; top: 0; width: 100%; height: 0; z-index: -1; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .endo__daten { display: none; } }
@@ -683,7 +679,7 @@ img { display: block; max-width: 100%; height: auto; }
   </nav>
 </footer>
 
-<script src="js/szene.js?v=28"></script>
+<script src="js/szene.js?v=29"></script>
 <script src="js/endo-daten.js?v=1" defer></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
