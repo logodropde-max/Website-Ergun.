@@ -15,6 +15,11 @@
 
 
 
+
+## Teil 7 Schritt 1: Kopf ruhig/größer, Winken-Halt (26.09.2026, Claude Code)
+- `figuren.py winken`: Kopf um KF=1,09 um die Kopfmitte vergrößert (echt/ea aus `setz` + Skf). Nachführung in 2 Durchgängen: alle Tracks sammeln, in (tx,ty,winkel,skala) zerlegt, Gauß-geglättet (sigma 4) und auf 35 % um den Mittelwert gedämpft → kein Wackeln. `emre.h` 600, 64 Bilder.
+- `js/szene.js` (`?v=27`, Figuren `?v=7`): `winkKurve()` (heben→oben halten→senken), in `figurenZeichnen` nur für Emre; Hund weiter smoothstep. Sterne-Guard bei 0-Breite.
+
 ## Winken mit 64 Bildern, ohne Überblenden (26.09.2026, 06:20, Claude Code)
 - `python figuren.py winken video/winken2-v1-4c32d096.mp4 0.4 4.9 64` (5. Argument = Bildanzahl): `emre-folge.webp` = 8 Spalten × 8 Zeilen à 248×600 (Qualität 80). Masken-Cache `video/winken-masken-winken2-v1-4-64.npz`.
 - `js/szene.js` (`?v=25`, Figuren `?v=6`): `figurZeichnen` nimmt `Math.round(nr)` (kein additives Zwischenbild mehr), `FIG_DAUER` 4,4 s, `FIGLICHT.nacht.mul` 0,27/0,32/0,45.

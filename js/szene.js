@@ -522,12 +522,12 @@
      je Figur ein Tag- und ein Abendbild und für die Nacht die Bildfolge – der Hund hebt den Kopf und jault, Emre winkt
      („Tschüss“). Beides startet gemeinsam, sobald es Nacht ist und man weiterscrollt, und läuft dann in eigener Zeit ab
      (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
-  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 245, h: 600, anzahl: 64, spalten: 8, fuss: 0.9964, oben: 0.0531, mitte: 0.5794, breite: 0.7595 } };
+  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 245, h: 600, anzahl: 64, spalten: 8, fuss: 0.9964, oben: 0.0525, mitte: 0.5794, breite: 0.7595 } };
   var fig = { phase: 0, ziel: 0, laeuft: false, t: 0 }, FIG_DAUER = 4.4, lichtGold = 0, lichtBlau = 0, lichtNacht = 0;
   function figurLaden(name, folge) {
     var f = FIGUREN[name], b = new Image(); b.decoding = 'async';
     b.onload = function () { f[folge ? 'folge' : 'bild'] = b; f.zuletzt = ''; figurenZeichnen(); };
-    b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=6';
+    b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=7';
   }
   Object.keys(FIGUREN).forEach(function (k) { FIGUREN[k].zuletzt = ''; figurLaden(k, false); });
   /* die Bildfolgen (groß) erst nach dem Laden der Seite */
@@ -591,9 +591,16 @@
     }
     var g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H); g.drawImage(A, 0, 0);
   }
+  /* Ablaufkurve fürs Winken: schnell heben, oben die offene Hand kurz halten, dann senken (Emre, 26.09.) */
+  function winkKurve(x) {
+    if (x < 0.34) return x / 0.34 * 0.44;
+    if (x < 0.62) return 0.44 + (x - 0.34) / 0.28 * 0.14;
+    return 0.58 + (x - 0.62) / 0.38 * 0.42;
+  }
   function figurenZeichnen() {
     var l = figurLicht(), e = fig.phase * fig.phase * (3 - 2 * fig.phase);
-    Object.keys(FIGUREN).forEach(function (k) { var f = FIGUREN[k]; figurZeichnen(f, e * (f.anzahl - 1), l); });
+    figurZeichnen(FIGUREN.hund, e * (FIGUREN.hund.anzahl - 1), l);
+    figurZeichnen(FIGUREN.emre, winkKurve(e) * (FIGUREN.emre.anzahl - 1), l);
   }
   function figStart(z) {
     if (fig.ziel === z) return;
@@ -728,6 +735,7 @@
     box.innerHTML = '';
     var hoehe = m.H * 0.66, r = zufall(4242), q = Math.min(m.q, 1.5);
     box.style.height = hoehe + 'px';
+    if (!(m.W > 0 && hoehe > 0)) return;  /* während einer 0-Breite (Neuaufbau) nichts zeichnen */
     /* Milchstraße: schräges Band, grob gerechnet und weich hochskaliert */
     var mw = 640, mh = Math.round(mw * hoehe / m.W), mc = document.createElement('canvas');
     mc.width = mw; mc.height = mh; mc.className = 'milchstrasse';
