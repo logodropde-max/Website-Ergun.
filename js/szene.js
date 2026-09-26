@@ -22,6 +22,8 @@
   /* ---------- Werkzeuge ---------- */
   function zufall(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
   function sanft(a, b, x) { var t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); }
+  /* noch weicher an beiden Enden (Sonne: ruhiger Anfang, gleichmäßige Mitte, weiches Eintauchen) */
+  function sanfter(a, b, x) { var t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * t * (t * (6 * t - 15) + 10); }
   function mix(a, b, t) { return a + (b - a) * t; }
   function hex(h) { h = h.replace('#', ''); return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]; }
   function rgba(h, a) { var c = hex(h); return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + (a == null ? 1 : a) + ')'; }
@@ -524,8 +526,11 @@
   function winken() {
     if (fig.laeuft) return;                         /* läuft noch – nicht neu ansetzen (kein Sprung) */
     if (!folgenDa()) { winkenWartet = true; return; }
-    winkenWartet = false; fig.phase = 0; fig.ziel = 0; figStart(1);
+    winkenWartet = false; fig.phase = 0; fig.ziel = 0; winkStartP = Math.max(0, letztesP); figStart(1);
   }
+  /* Das Winken läuft nach Zeit (4,4 s) – scrollt man zügig weiter, läuft es mit dem Scrollweg schneller mit und ist
+     spätestens nach 55 % Bildhöhe fertig, solange Emre noch ganz im Bild steht. Nur vorwärts, nie rückwärts. */
+  var winkStartP = -1, WINK_WEG = 0.55;
   function figurLaden(name, folge) {
     var f = FIGUREN[name], b = new Image(); b.decoding = 'async';
     b.onload = function () { f[folge ? 'folge' : 'bild'] = b; f.zuletzt = ''; figurenZeichnen(); if (folge && winkenWartet && folgenDa()) winken(); };
@@ -608,6 +613,7 @@
   function figLauf(t) {
     var dt = Math.min(0.1, Math.max(0, (t - fig.t) / 1000)), r = fig.ziel > fig.phase ? 1 : -1; fig.t = t;
     fig.phase = Math.max(0, Math.min(1, fig.phase + r * dt / FIG_DAUER));
+    if (r > 0 && winkStartP >= 0) fig.phase = Math.max(fig.phase, Math.min(1, (letztesP - winkStartP) / WINK_WEG));
     if ((r > 0 && fig.phase >= fig.ziel) || (r < 0 && fig.phase <= fig.ziel)) { fig.phase = fig.ziel; fig.laeuft = false; }
     figurenZeichnen();
     if (fig.laeuft) requestAnimationFrame(figLauf);
@@ -704,19 +710,28 @@
     spaeter(function () { if (nr !== bauNr) return; AKTIV = ['gold']; landschaft(); AKTIV = LICHTER;
       spaeter(function () { if (nr !== bauNr) return; AKTIV = ['nacht']; landschaft(); AKTIV = LICHTER;
         spaeter(function () { if (nr !== bauNr) return; zeichne(true); }); }); });
-    /* Sonne startet mittig oben, sinkt senkrecht und verschwindet hinter dem Sattel in der Mitte */
+    /* Sonne startet direkt unter dem Titel (26.09., Emre), sinkt senkrecht und verschwindet hinter dem Sattel in der Mitte */
     m.sonneR = Math.max(26, Math.min(44, m.W * 0.026));
-    m.sonneStart = m.H * (m.hoch ? 0.13 : 0.1);
     m.sonneEnde = ky('fern', m.W / 2) + (TIEFE.himmel - TIEFE.fern * m.f) * SONNE_BIS * ZEIT * 0.9 * m.H + m.sonneR * 1.4;
     m.mondX = m.W * (m.hoch ? 0.22 : 0.24);
     m.mondStart = ky('fern', m.mondX) + (TIEFE.himmel - TIEFE.fern * m.f) * 0.3 * ZEIT * m.H + m.sonneR;
     m.mondEnde = m.H * (m.hoch ? 0.12 : 0.11);
     held.style.setProperty('--sonne-r', m.sonneR + 'px');
     held.style.setProperty('--titel-oben', (m.H * (m.hoch ? 0.24 : 0.2)) + 'px');
+    sonneStartSetzen();
     held.classList.add('szene--bereit');
     bereit = true;
     bauzeit = Math.round(performance.now() - t0);
     zeichne(true);
+  }
+
+  /* Startpunkt der Sonne: knapp unter der Titelzeile „Webdesigner“ (Layout-Lage, ohne Parallaxe gemessen), der Kern
+     berührt die Schrift nicht; nie tiefer als kurz über ihrem Endpunkt hinter dem Sattel. Nach dem Laden der Schrift erneut. */
+  function sonneStartSetzen() {
+    var t = held.querySelector('.titel__haupt'), unten = m.H * (m.hoch ? 0.34 : 0.3), el = t, y = 0;
+    while (el && el !== held) { y += el.offsetTop; el = el.offsetParent; }
+    if (t && el === held) unten = y + t.offsetHeight;
+    m.sonneStart = Math.min(unten + m.sonneR * 2.4, m.sonneEnde - m.sonneR * 3);
   }
 
   /* ---------- Scrollen ----------
@@ -724,7 +739,7 @@
      Bild (requestAnimationFrame) scrollY – auch während des Schwungscrollens auf dem iPhone. Parallaxe und Winken
      nehmen den echten Wert; Sonne, Mond, Himmel, Licht auf Landschaft/Figuren und der endo-Faden einen ganz leicht
      geglätteten (~60 ms), damit Mausrad-Schritte nicht ruckeln. Kein Nachlaufen, keine Tempogrenze, hoch = runter. */
-  var letztesP = -1, heldOben = 0, rohY = 0, weichY = 0, GLATT = 0.06;
+  var letztesP = -1, heldOben = 0, rohY = 0, weichY = 0, GLATT = 0.15;   /* 150 ms: ruhig, aber am Finger (26.09.) */
   /* Zum Prüfen: ?p=0.3 stellt die Tageszeit fest ein; ?nacht=0…1 = Anteil des Himmelswegs (0 Tag, 1 volle Nacht) */
   var suche = new URLSearchParams(location.search), festP = parseFloat(suche.get('p'));
   if (isNaN(festP) && suche.has('nacht')) festP = Math.max(0, Math.min(1, parseFloat(suche.get('nacht')) || 0)) * 0.46 * ZEIT;
@@ -817,7 +832,7 @@
     wert('--himmel-nacht', sanft(0.28, 0.46, p).toFixed(3));
     /* Sterne: zuerst die hellsten, dann mehr; Milchstraße erst in tiefer Nacht */
     /* Sonne: senkrecht, gleichmäßig mit sanftem Anfang und Ende */
-    var ps = sanft(0, SONNE_BIS, p), ys = mix(m.sonneStart, m.sonneEnde, ps);
+    var ps = sanfter(0, SONNE_BIS, p), ys = mix(m.sonneStart, m.sonneEnde, ps);
     sonne.style.transform = 'translate3d(' + (m.W / 2).toFixed(2) + 'px,' + ys.toFixed(2) + 'px,0)';
     wert('--tief', sanft(0.04, 0.24, p).toFixed(3));
     /* Mond steigt links auf */
@@ -837,6 +852,7 @@
     window.addEventListener('scroll', anfordern, { passive: true });
     if (ruhig) { fadenAn = true; if (fadenEl) fadenEl.classList.remove('ist-still'); if (funkeEl) funkeEl.classList.remove('ist-still'); }
     if (document.readyState !== 'complete') window.addEventListener('load', function () { zeichne(true); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (bereit) { sonneStartSetzen(); zeichne(true); } });
     var breite = window.innerWidth, hoehe = buehne.clientHeight, t;
     window.addEventListener('resize', function () {
       clearTimeout(t);

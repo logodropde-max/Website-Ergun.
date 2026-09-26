@@ -16,6 +16,9 @@
 
 
 
+## Sonnenbahn + Winken-Timing (26.09.2026, Claude Code)
+`szene.js?v=32`. `sonneStartSetzen()`: Titelunterkante über `offsetTop`-Kette bis `held` (ohne Parallaxe) + `2,4 · sonneR`, höchstens `sonneEnde − 3 · sonneR`; in `aufbauen()` nach `--titel-oben` und nach `document.fonts.ready`. Sonne mit `sanfter()` (smootherstep). `GLATT = 0.15`. Winken: `winkStartP` beim Start, in `figLauf` `phase = max(Zeit, (p − winkStartP)/WINK_WEG)`, `WINK_WEG = 0.55`.
+
 ## Lichtlinie nur beim Scrollen + Leuchtpunkt (26.09.2026, Claude Code)
 `szene.js?v=31`, `endo-zufluss.js?v=2`. `.endo { --faden-bis-rand; --faden-h = bis-rand + 0,2 · Kugelbreite }` (Wortmarke nutzt `--faden-bis-rand`). Markup `.endo__faden.ist-still` + `.endo__funke.ist-still` (`i.endo__schein`, `b.endo__schweif`, `i.endo__kern`). `faden(y, tempo)` setzt `scaleY`, Punkt per `translate3d(0, f·fadenH)`, Schweif `scaleY(0.18 + |v|/2600)`, `.ist-null` bei f ≤ 0,002. `fadenBewegt(richtung)` aus dem Takt bei jeder Scrollbewegung: zeigen (außer runter und f ≥ 1), Timer 650 ms → `ist-still`. CSS-Übergänge: ein 150 ms, aus 400 ms. Reduced motion: Klassen beim Start entfernt. Pakete: `SCHEIN`/`KERN`-Sprites via `drawImage`.
 
