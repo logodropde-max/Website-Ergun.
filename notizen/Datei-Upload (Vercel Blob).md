@@ -11,3 +11,7 @@ Gehört zum [[Kontaktformular]]. Grund: WhatsApp-Links können nur Text tragen, 
 - `api/aufraeumen.js` löscht Dateien nach 30 Tagen (täglicher Cron).
 - **Noch offen:** Blob-Speicher in Vercel anlegen, Zugriff „Public", mit dem Projekt verbinden. Siehe [[To-dos]].
 - Beschrieben in der Datenschutzerklärung Abschnitt 6, siehe [[Datenschutz und Recht]].
+
+## Stand 26.09.2026
+- Blob-Speicher **ergun-dateien** angelegt (Vercel → Storage, Region **Frankfurt fra1**, Zugriff **Public**, 1 GB frei), verbunden mit website-ergun (Production + Preview), Variable `BLOB_READ_WRITE_TOKEN`. Vorher gab es keinen Speicher – der Upload im Kontaktformular konnte deshalb nicht funktionieren.
+- Ordner: `anfragen/` (Kontaktformular), `endo/fotos/` (Kundenfotos für endo), `endo/ergebnisse/` (Ergebnisse). Alles wird nach 30 Tagen vom täglichen Cron gelöscht (`api/aufraeumen.js`).

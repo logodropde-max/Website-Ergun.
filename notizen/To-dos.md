@@ -8,7 +8,7 @@ Offene Punkte aus [[ERGUN Website (Übersicht)]].
 ## Emre
 - [ ] Neuen Higgsfield-Schlüssel erzeugen, alten löschen (wurde im Chat geteilt), nur in [[Vercel]] als `HF_KEY` eintragen → [[Higgsfield API]]
 - [ ] Bei console.anthropic.com einen API-Schlüssel erzeugen und in [[Vercel]] als `ANTHROPIC_API_KEY` eintragen, damit [[endo Chat-Agent|endo]] frei antwortet (ohne Schlüssel: eingebaute Antworten)
-- [ ] Blob-Speicher in Vercel anlegen, Zugriff „Public" → [[Datei-Upload (Vercel Blob)]]
+- [x] Blob-Speicher in Vercel angelegt (26.09., Claude): **ergun-dateien**, Public, Frankfurt, mit website-ergun verbunden → [[Datei-Upload (Vercel Blob)]]
 - [ ] Konto bei [[Lemon Squeezy]] und Store anlegen, je Paket (Start 5 €, Pro 20 €, Premium 100 €) ein Produkt → die 3 Checkout-Links an Claude geben (kommen in `ki/js/endo-daten.js`, Feld `kaufen`)
 - [ ] Konto bei [[Supabase]] anlegen
 - [ ] In der Claude-Umgebung die Domain `d8j0ntlcm91z4.cloudfront.net` freigeben (Bilder für [[endo-ai|endo.ai]])
