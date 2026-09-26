@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
+<script src="js/schrift-test.js?v=1"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>ERGUN. – Digitalstudio für Webdesign, Produktfotos und Videos</title>
 <meta name="description" content="ERGUN. ist ein Digitalstudio mit zwei Bereichen: Websites mit Design, Bewegung und eigenen Bildern, und endo Studio für Produktfotos und Werbevideos. Kostenloses Erstgespräch, aus Elmshorn.">
@@ -339,7 +340,8 @@ img { display: block; max-width: 100%; height: auto; }
 .endo__orb.orb--bereit { opacity: 0.75; }
 .endo-chat .endo__orb.orb--bereit { opacity: 0.4; }
 .endo__orb canvas { display: block; width: 100%; height: 100%; }
-.endo__innen { position: relative; max-width: 720px; margin: 0 auto; display: grid; justify-items: center; gap: 36px; text-align: center; }
+.endo__innen { position: relative; max-width: 720px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 36px; text-align: center; }
+.endo__innen > * { max-width: 100%; }
 .endo__kopf { display: grid; justify-items: center; gap: 18px; }
 /* Wortmarke an der Lichtlinie (26.09., Emre): „endo" links, „Studio" rechts, gleiche Höhe, gleicher Abstand –
    die Linie selbst ist der Trenner. Schrift, Größe und Chrom wie das Logo (.endo-marke aus ki/studio.css). */
