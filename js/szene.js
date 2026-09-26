@@ -767,15 +767,17 @@
       else if (!gewunken && p > vorherP) { gewunken = true; winken(); }
     }
     /* Neuaufbau: Licht und Faden sofort auf den aktuellen Stand */
-    if (immer) { fadenMessen(); weichY = rohY; lichtP = fortschritt(rohY); licht(lichtP); faden(rohY); }
+    if (immer) { fadenMessen(); weichY = rohY; lichtP = fortschritt(rohY); licht(lichtP); faden(rohY); gwBauen(); }
   }
   /* Der Takt läuft, solange gescrollt wird, und noch kurz danach (iPhone-Schwungscrollen) – dann schläft er */
   var laeuft = false, zuletztT = 0, stillSeit = 0, lichtP = -1;
   function takt(t) {
     var dt = Math.min(0.05, Math.max(0, (t - zuletztT) / 1000)); zuletztT = t;
     var y = leseY(), richtung = 0;
-    if (y !== rohY) { richtung = y > rohY ? 1 : -1; rohY = y; stillSeit = t; }
+    if (y !== rohY) { richtung = y > rohY ? 1 : -1; rohY = y; stillSeit = t; gwRichtung = richtung; }
     zeichne(false);
+    gwPruefen(richtung);
+    if (gw && gwP && !gwP.mo.css) gwJs(fortschritt(rohY));
     var vorherW = weichY;
     if (ruhig || !isNaN(festP)) weichY = rohY;
     else { weichY += (rohY - weichY) * (1 - Math.exp(-dt / GLATT)); if (Math.abs(rohY - weichY) < 0.3) weichY = rohY; }
@@ -790,7 +792,148 @@
      die Linie hinunter bzw. zurück und endet an der Kugel. Nur transform; Maße nur beim Aufbau/Größenwechsel. */
   var fadenEl = document.querySelector('.endo__faden'), fadenOben = 0, fadenH = 1, sichtH = 1, fadenS = -1;
   /* Leuchtpunkt an der Spitze (eigenes Element, nicht mitgestaucht) und sein Schweif, der mit dem Tempo länger wird */
-  var funkeEl = document.querySelector('.endo__funke'), schweifEl = funkeEl && funkeEl.querySelector('.endo__schweif'), funkeY = -1, schweifS = -1;
+  var funkeEl = document.querySelector('.endo__funke'), schweifEl = funkeEl && funkeEl.querySelector('.endo__schweif'), funkeY = -1, schweifS = -1, funkeNah = -1;
+
+  /* ---------- Der Funke (Emre, 27.09.) ----------
+     Ein Glühwürmchen sitzt oben zwischen Emre und dem Hund im Gras, hebt beim Runterscrollen ab, lädt sich mit der Tageszeit
+     auf (Leuchten + Licht-Ring aus 20 Punkten, voll bei Beginn der Erde), taucht mittig in den Boden und wird genau am
+     Linienstart zum Lichtpunkt der Linie. Bahn, Größe und Leuchten hängen an DERSELBEN Scroll-Animation wie die Wiese
+     (CSS view-timeline --szene, ungeglättet = kein Schwimmen); dieses Skript rechnet nur die Keyframes aus den Maßen
+     (Wiesen-/Wald-Parallaxe, Figuren, Linienstart). Ohne Scroll-Animationen setzt der Takt dieselben Werte per JS.
+     Nur von oben nach unten: scharf erst wieder ganz oben (Scroll 0), einmal pro Durchgang. */
+  var gw = held.querySelector('.gluehwurm'), gwWeg, gwKoerper, gwWarm, gwKalt, gwBlitz, gwPunkte = [], gwFunken = [];
+  var GW_PUNKTE = 20, GW_FUNKEN = 5, gwStil = null, gwSchluessel = '', gwP = null, gwZustand = '', gwRichtung = 0;
+  function gwInit() {
+    if (!gw) return;
+    if (ruhig) { gw.remove(); gw = null; return; }
+    gwWeg = gw.querySelector('.gluehwurm__weg'); gwKoerper = gw.querySelector('.gluehwurm__koerper');
+    gwWarm = gw.querySelector('.gluehwurm__warm'); gwKalt = gw.querySelector('.gluehwurm__kalt'); gwBlitz = gw.querySelector('.gluehwurm__blitz');
+    var ring = gw.querySelector('.gluehwurm__ring'), spr = gw.querySelector('.gluehwurm__spritzer'), i, e;
+    for (i = 0; i < GW_PUNKTE; i++) { e = document.createElement('i'); e.className = 'gw-punkt-' + i; ring.appendChild(e); gwPunkte.push(e); }
+    for (i = 0; i < GW_FUNKEN; i++) { e = document.createElement('i'); e.className = 'gw-funke-' + i; spr.appendChild(e); gwFunken.push(e); }
+    gwStil = document.createElement('style'); gwStil.id = 'gluehwurm-bahn'; document.head.appendChild(gwStil);
+  }
+  /* Lage eines Punkts der Ebene k (Ebenen-Koordinaten) in der Bühne bei Fortschritt p – exakt wie die Ebene selbst läuft:
+     CSS: Keyframes wiese-nah/wald-nah (bis 38 % nur Weg, danach Weg + Zoom um ihren Ursprung), JS: nur Weg. */
+  function ebenePunkt(k, lx, ly, p, mo) {
+    var weg = m.H * TIEFE[k] * m.f;
+    if (!mo.css) return { x: lx, y: ly + weg * p };
+    var ende = k === 'wiese' ? { t: weg - 0.03 * m.H, s: 1.28, ox: 0.56 } : { t: weg, s: 1.1, ox: 0.5 };
+    var T = weg * p, S = 1;
+    if (p > 0.38) { var u = Math.min(1, (p - 0.38) / 0.62); T = mix(0.38 * weg, ende.t, u); S = mix(1, ende.s, u); }
+    var ox = ende.ox * m.W, oy = m.H;
+    return { x: ox + S * (lx - ox), y: oy + S * (ly - oy) + T };
+  }
+  function gwProbe(p, P) {
+    var q = p / P.pU, qc = P.pC / P.pU;
+    var r = sanfter(0.06, 0.55, q), d = 0.5 * sanft(0.06, 0.5, q);                        /* abheben; Tiefe wandert von Wiese Richtung Wald */
+    var lx = mix(P.A.x, P.B.x, r), ly = mix(P.A.y, P.B.y, r) - m.H * 0.05 * Math.sin(Math.PI * r);
+    var env = sanft(0.12, 0.35, q) * (1 - sanft(qc - 0.06, qc, q));                          /* leichtes Schlingern, weich (kein Zittern) */
+    lx += env * m.W * 0.012 * (Math.sin(q * 19) + 0.55 * Math.sin(q * 37 + 1.3));
+    ly += env * m.H * 0.012 * (Math.sin(q * 23 + 0.7) + 0.5 * Math.sin(q * 47 + 2.1));
+    var a = ebenePunkt('wiese', lx, ly, p, P.mo), b = ebenePunkt('wald', lx, ly, p, P.mo);
+    var x = mix(a.x, b.x, d), y = mix(a.y, b.y, d);
+    var t = Math.max(0, Math.min(1, (q - qc) / (1 - qc))), e = t * t;                        /* Eintauchen: beschleunigt in den Boden */
+    if (p <= P.pU) { x = mix(x, P.U.x, e); y = mix(y, P.U.y, e); }
+    else { x = P.U.x; y = 0.62 * P.mo.V + P.mo.scrollVon(p) - heldOben; e = 1; }              /* danach genau wie der Lichtpunkt der Linie */
+    var tz = (P.mo.scrollVon(p) - heldOben) / m.H / ZEIT;                                     /* dieselbe Tageszeit wie Himmel und Sonne */
+    var hell = Math.min(1, 0.3 + 0.2 * sanft(0.05, 0.19, tz) + 0.25 * sanft(0.18, 0.3, tz) + 0.25 * sanft(0.22, 0.42, tz));
+    var s = mix(mix(0.14, 0.42, sanft(0.05, 0.6, q)), 1, e);
+    var nach = p > P.pU ? Math.min(1, (p - P.pU) / (P.pEnd - P.pU)) : 0;
+    return { p: p, x: x, y: y, s: s, warm: hell * (1 - e), kalt: e * (1 - nach) };
+  }
+  function gwBauen() {
+    if (gw && !gwWeg) gwInit();
+    if (!gw || !bereit || !FIGUREN.hund.fussX || !fadenEl) return;
+    var V = window.innerHeight || m.H, css = cssParallaxe && isNaN(festP);
+    var mo = { V: V, css: css,
+      scrollVon: css ? function (p) { return heldOben + (m.H - V) + p * V; } : function (p) { return heldOben + p * m.H; },
+      pVon: css ? function (s) { return (s - heldOben - (m.H - V)) / V; } : function (s) { return (s - heldOben) / m.H; } };
+    var pU = mo.pVon(fadenOben - 0.62 * V);                                                   /* Linienstart = Übergabe an die Linie */
+    if (!(pU > 0.05 && pU < 0.95)) return;
+    var pC = css ? Math.min(0.30, pU - 0.03) : pU - 0.04;                                      /* voll geladen: Beginn der Erde (CSS 30 %) */
+    var schluessel = [m.W, m.H, V, Math.round(pU * 1000), css].join('|');
+    if (schluessel === gwSchluessel) return;
+    gwSchluessel = schluessel;
+    var hu = FIGUREN.hund, em = FIGUREN.emre;
+    var P = { mo: mo, pU: pU, pC: pC, pEnd: pU + 0.04,
+      A: { x: (hu.fussX + em.fussX) / 2, y: Math.max(hu.fussY, em.fussY) + m.H * 0.008 },     /* im Gras zwischen Emre und dem Hund */
+      B: { x: m.W * 0.5, y: ky('wiese', m.W * 0.5) - m.H * 0.15 },                            /* Bildmitte über der Wiese */
+      U: { x: m.W * 0.5, y: 0.62 * V + mo.scrollVon(pU) - heldOben } };                     /* Spitze der Linie im Moment der Übergabe */
+    var punkte = [], p;
+    for (p = 0; p < P.pEnd; p += 0.004) punkte.push(p);
+    punkte.push(pC, pU, P.pEnd); punkte.sort(function (a, b) { return a - b; });
+    P.proben = punkte.map(function (x) { return gwProbe(x, P); });
+    gwP = P;
+    if (css) gwStil.textContent = gwKeyframes(P); else gwStil.textContent = '';
+    if (!gwZustand) gwSetzen(leseY() <= 2 ? 'scharf' : 'fertig');
+    if (!css) gwJs(fortschritt(rohY));
+  }
+  function pz(p) { return (Math.max(0, Math.min(1, p)) * 100).toFixed(3) + '%'; }
+  function gwKeyframes(P) {
+    var weg = [], koe = [], warm = [], kalt = [], css = '', i, R = m.W < 700 ? 11 : 13;
+    P.proben.forEach(function (o) {
+      weg.push(pz(o.p) + '{transform:translate3d(' + o.x.toFixed(1) + 'px,' + o.y.toFixed(1) + 'px,0)}');
+      koe.push(pz(o.p) + '{transform:scale(' + o.s.toFixed(3) + ')}');
+      warm.push(pz(o.p) + '{opacity:' + o.warm.toFixed(3) + '}');
+      kalt.push(pz(o.p) + '{opacity:' + o.kalt.toFixed(3) + '}');
+    });
+    var an = 'linear both;animation-timeline:--szene;animation-range:exit 0% exit 100%}';
+    css += '@keyframes gw-weg{' + weg.join('') + '}@keyframes gw-koerper{' + koe.join('') + '}@keyframes gw-warm{' + warm.join('') + '}@keyframes gw-kalt{' + kalt.join('') + '}';
+    css += '.szene--css .gluehwurm__weg{animation:gw-weg ' + an + '.szene--css .gluehwurm__koerper{animation:gw-koerper ' + an;
+    css += '.szene--css .gluehwurm__warm{animation:gw-warm ' + an + '.szene--css .gluehwurm__kalt{animation:gw-kalt ' + an;
+    /* Licht-Ring: 20 Punkte leuchten nacheinander auf (Ladeanzeige), beim Eintauchen weg */
+    var aus1 = P.pC + (P.pU - P.pC) * 0.35, aus2 = P.pC + (P.pU - P.pC) * 0.8;
+    for (i = 0; i < GW_PUNKTE; i++) {
+      var pi = P.pC * (i + 1) / GW_PUNKTE, w = i * 360 / GW_PUNKTE;
+      css += '@keyframes gw-punkt-' + i + '{0%{opacity:0}' + pz(pi - 0.006) + '{opacity:0}' + pz(pi) + '{opacity:.9}' + pz(aus1) + '{opacity:.9}' + pz(aus2) + '{opacity:0}100%{opacity:0}}';
+      css += '.gluehwurm__ring .gw-punkt-' + i + '{transform:rotate(' + w + 'deg) translateY(-' + R + 'px)}';
+      css += '.szene--css .gluehwurm__ring .gw-punkt-' + i + '{animation:gw-punkt-' + i + ' ' + an;
+    }
+    /* voll geladen: kurzes, feines Aufblitzen */
+    css += '@keyframes gw-blitz{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}' + pz(P.pC - 0.008) + '{opacity:0;transform:translate(-50%,-50%) scale(.5)}' + pz(P.pC) + '{opacity:1;transform:translate(-50%,-50%) scale(1.15)}' + pz(P.pC + 0.012) + '{opacity:0;transform:translate(-50%,-50%) scale(1.8)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.8)}}';
+    css += '.szene--css .gluehwurm__blitz{animation:gw-blitz ' + an;
+    /* ab „voll geladen“ über der aufsteigenden Erde: man sieht es durch den Boden bis zur Linienspitze tauchen (nahtlos) */
+    css += '@keyframes gw-ebene{0%{z-index:0}' + pz(P.pC) + '{z-index:0}' + pz(P.pC + 0.001) + '{z-index:4}100%{z-index:4}}';
+    css += '.szene--css .gluehwurm{animation:gw-ebene ' + an;
+    /* Eintauchen: ein paar feine Lichtspritzer an der Eintrittsstelle */
+    for (i = 0; i < GW_FUNKEN; i++) {
+      var a = (-160 + i * 35) * Math.PI / 180, dx = Math.cos(a) * 22, dy = Math.sin(a) * 16;
+      css += '@keyframes gw-funke-' + i + '{0%{opacity:0;transform:translate(0,0)}' + pz(P.pU - 0.004) + '{opacity:0;transform:translate(0,0)}' + pz(P.pU) + '{opacity:.95;transform:translate(0,0)}' + pz(P.pU + 0.022) + '{opacity:0;transform:translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)}100%{opacity:0;transform:translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)}}';
+      css += '.szene--css .gluehwurm__spritzer .gw-funke-' + i + '{animation:gw-funke-' + i + ' ' + an;
+    }
+    return css;
+  }
+  /* Rückfall ohne Scroll-Animationen: dieselben Proben per JavaScript (Rohwert, wie die Ebenen) */
+  function gwJs(p) {
+    if (!gwP) return;
+    var L = gwP.proben, o = L[L.length - 1], i;
+    for (i = 1; i < L.length; i++) if (L[i].p >= p) { var a = L[i - 1], b = L[i], t = b.p > a.p ? Math.max(0, Math.min(1, (p - a.p) / (b.p - a.p))) : 0;
+      o = { x: mix(a.x, b.x, t), y: mix(a.y, b.y, t), s: mix(a.s, b.s, t), warm: mix(a.warm, b.warm, t), kalt: mix(a.kalt, b.kalt, t) }; break; }
+    if (p <= 0) o = L[0];
+    gwWeg.style.transform = 'translate3d(' + o.x.toFixed(1) + 'px,' + o.y.toFixed(1) + 'px,0)';
+    gwKoerper.style.transform = 'scale(' + o.s.toFixed(3) + ')';
+    gwWarm.style.opacity = o.warm.toFixed(3); gwKalt.style.opacity = o.kalt.toFixed(3);
+    var R = m.W < 700 ? 11 : 13;
+    gwPunkte.forEach(function (e, i) { e.style.transform = 'rotate(' + (i * 360 / GW_PUNKTE) + 'deg) translateY(-' + R + 'px)'; e.style.opacity = p >= gwP.pC * (i + 1) / GW_PUNKTE && p < gwP.pC + (gwP.pU - gwP.pC) * 0.6 ? 0.9 : 0; });
+    gwBlitz.style.opacity = Math.abs(p - gwP.pC) < 0.008 ? 1 - Math.abs(p - gwP.pC) / 0.008 : 0;
+    gw.style.zIndex = p > gwP.pC ? 4 : 0;
+  }
+  function gwSetzen(z) {
+    if (!gw || z === gwZustand) return;
+    gwZustand = z;
+    gw.classList.toggle('ist-aus', !(z === 'scharf' || z === 'reise'));
+    gw.classList.toggle('ist-oben', z === 'scharf');
+    if (funkeEl) funkeEl.classList.toggle('ist-gesperrt', !(z === 'reise' || z === 'linie'));
+  }
+  /* nur von oben nach unten: ganz oben scharf; runter = Reise; hoch = aus (bis wieder ganz oben); nach der Übergabe die Linie */
+  function gwPruefen(richtung) {
+    if (!gw || !gwP) return;
+    if (rohY <= 2) { gwSetzen('scharf'); return; }
+    if (gwZustand === 'scharf' && richtung > 0) gwSetzen('reise');
+    else if (richtung < 0 && (gwZustand === 'scharf' || gwZustand === 'reise' || gwZustand === 'linie')) gwSetzen('fertig');
+    if (gwZustand === 'reise' && gwP.mo.pVon(rohY) >= gwP.pEnd) gwSetzen('linie');
+  }
   function fadenMessen() {
     if (!fadenEl) return;
     fadenOben = fadenEl.getBoundingClientRect().top + leseY(); fadenH = fadenEl.offsetHeight || 1; sichtH = window.innerHeight || 1;
@@ -804,6 +947,15 @@
     funkeEl.classList.toggle('ist-null', f <= 0.002);   /* Punkt erst, wenn die Linie wirklich wächst */
     var ty = Math.round(f * fadenH * 10) / 10;
     if (ty !== funkeY) { funkeY = ty; funkeEl.style.transform = 'translate3d(0,' + ty + 'px,0)'; }
+    if (gw) {
+      /* die letzten 20 % zur Kugel: schwächer; ganz unten sammelt die Kugel ihn ein (Aufschlag) – nur einmal pro Reise */
+      var nah = f > 0.8 ? Math.round((1 - 0.85 * Math.min(1, (f - 0.8) / 0.2)) * 100) / 100 : 1;
+      if (nah !== funkeNah) { funkeNah = nah; funkeEl.style.setProperty('--nah', nah); }
+      if (gwZustand === 'linie' && f >= 0.995 && gwRichtung > 0) {
+        if (window.endoKugel && window.endoKugel.puls) window.endoKugel.puls(0, -1);
+        gwSetzen('fertig');
+      }
+    }
     var l = ruhig ? 0.2 : Math.round(Math.min(1, 0.18 + Math.abs(tempo || 0) / 2600) * 100) / 100;
     if (l !== schweifS && schweifEl) { schweifS = l; schweifEl.style.transform = 'scaleY(' + l + ')'; }
   }
@@ -865,7 +1017,8 @@
     /* Wind nur, solange das Startbild zu sehen ist */
     if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { held.classList.toggle('szene--weg', !e[0].isIntersecting); }).observe(held);
     window.__szene = { p: function (x) { window.scrollTo(0, x * m.H); }, bauzeit: function () { return bauzeit; },
-      zustand: function () { return { phase: fig.phase, laeuft: fig.laeuft, gewunken: gewunken, wartet: winkenWartet, rohY: rohY, weichY: weichY, licht: lichtP, faden: fadenS }; } };
+      zustand: function () { return { phase: fig.phase, laeuft: fig.laeuft, gewunken: gewunken, wartet: winkenWartet, rohY: rohY, weichY: weichY, licht: lichtP, faden: fadenS, funke: gwZustand }; },
+      funke: function () { return gwP ? { zustand: gwZustand, css: gwP.mo.css, pU: gwP.pU, pC: gwP.pC, pEnd: gwP.pEnd, V: gwP.mo.V, H: m.H, pVon: gwP.mo.pVon, proben: gwP.proben, ebenePunkt: function (k, x, y, p) { return ebenePunkt(k, x, y, p, gwP.mo); }, A: gwP.A } : null; } };
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();

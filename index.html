@@ -108,6 +108,23 @@ img { display: block; max-width: 100%; height: auto; }
   }
 }
 @keyframes erde-steigt { from { transform: translate3d(0, 100%, 0); } to { transform: translate3d(0, 0, 0); } }
+/* Der Funke (27.09., Emre): Glühwürmchen im Gras → lädt sich mit der Tageszeit auf → taucht in die Erde → wird zum Lichtpunkt der
+   Linie. Bahn, Größe und Leuchten hängen an derselben Scroll-Animation wie die Wiese; die Keyframes rechnet js/szene.js. */
+.gluehwurm { position: absolute; left: 0; top: 0; width: 0; height: 0; pointer-events: none; transition: opacity 400ms var(--ease); }
+.gluehwurm.ist-aus, .szene:not(.szene--bereit) .gluehwurm { opacity: 0; transition: opacity 280ms ease-out; }
+.gluehwurm__weg, .gluehwurm__glimm, .gluehwurm__koerper, .gluehwurm__ring, .gluehwurm__spritzer { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+.gluehwurm__weg, .gluehwurm__koerper { will-change: transform; }
+.gluehwurm__koerper i, .gluehwurm__blitz { position: absolute; left: 0; top: 0; border-radius: 50%; transform: translate(-50%, -50%); }
+.gluehwurm__warm { width: 92px; height: 92px; background: radial-gradient(closest-side, rgba(255, 238, 180, 0.72), rgba(255, 216, 138, 0.34) 30%, rgba(255, 198, 112, 0.1) 60%, rgba(255, 190, 100, 0) 100%); }
+.gluehwurm__kalt { width: 92px; height: 92px; opacity: 0; background: radial-gradient(closest-side, rgba(222, 234, 252, 0.46), rgba(206, 222, 248, 0.2) 32%, rgba(196, 212, 244, 0.06) 62%, rgba(190, 206, 240, 0) 100%); }
+.gluehwurm__kern { width: 9px; height: 9px; background: radial-gradient(circle, #FFFFFF 0 34%, rgba(255, 248, 226, 0.92) 50%, rgba(255, 238, 200, 0) 100%); }
+.gluehwurm__blitz { width: 70px; height: 70px; opacity: 0; background: radial-gradient(closest-side, rgba(255, 255, 255, 0.9), rgba(255, 240, 210, 0.35) 40%, rgba(255, 236, 200, 0)); }
+.gluehwurm__ring i { position: absolute; left: -1px; top: -1px; width: 2px; height: 2px; border-radius: 50%; opacity: 0; background: #FFF4DA; box-shadow: 0 0 4px 1px rgba(255, 218, 150, 0.7); }
+.gluehwurm__spritzer i { position: absolute; left: -1px; top: -1px; width: 2px; height: 2px; border-radius: 50%; opacity: 0; background: #FFFFFF; box-shadow: 0 0 5px 1px rgba(226, 236, 252, 0.85); }
+.gluehwurm.ist-oben .gluehwurm__glimm { animation: gw-glimmen 3.6s ease-in-out infinite; }
+@keyframes gw-glimmen { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+@media (max-width: 640px) { .gluehwurm__warm, .gluehwurm__kalt { width: 72px; height: 72px; } }
+@media (prefers-reduced-motion: reduce) { .gluehwurm { display: none; } }
 @keyframes gras-nah { 0%, 30% { transform: translate3d(0, 0, 0) scale(1); } 100% { transform: translate3d(0, -10svh, 0) scale(1.6); } }
 @keyframes wiese-nah { 0% { transform: translate3d(0, 0, 0) scale(1); } 38% { transform: translate3d(0, calc(var(--weg, 0px) * 0.38), 0) scale(1); } 100% { transform: translate3d(0, calc(var(--weg, 0px) - 3svh), 0) scale(1.28); } }
 @keyframes wald-nah { 0% { transform: translate3d(0, 0, 0) scale(1); } 38% { transform: translate3d(0, calc(var(--weg, 0px) * 0.38), 0) scale(1); } 100% { transform: translate3d(0, var(--weg, 0px), 0) scale(1.1); } }
@@ -290,6 +307,9 @@ img { display: block; max-width: 100%; height: auto; }
 .endo__faden, .endo__funke { transition: opacity 150ms linear; }
 .endo__faden.ist-still, .endo__funke.ist-still { opacity: 0; transition: opacity 400ms ease-out; }
 .endo__funke.ist-null { opacity: 0; transition: none; }
+/* Der Funke: nur auf der ersten Reise von ganz oben sichtbar (nie zurück nach oben), kurz vor der Kugel wird er schwächer */
+.endo__funke.ist-gesperrt { opacity: 0 !important; transition: opacity 250ms ease-out; }
+.endo__funke > * { opacity: var(--nah, 1); }
 /* Leuchtender Punkt an der Spitze: scharfer, fast weißer Kern + großer, weich auslaufender kühler Schein + kurzer Schweif nach oben
    (länger bei schnellem Scrollen). Eigenes Element, nur transform/opacity, kein filter. */
 .endo__funke { position: absolute; z-index: -1; left: 50%; top: 30svh; width: 0; height: 0; pointer-events: none; will-change: transform, opacity; }
@@ -542,6 +562,7 @@ img { display: block; max-width: 100%; height: auto; }
     <div class="szene__ebene" data-ebene="huegel" aria-hidden="true"></div>
     <div class="szene__ebene" data-ebene="wald" aria-hidden="true"></div>
     <div class="szene__ebene" data-ebene="wiese" aria-hidden="true"></div>
+    <div class="gluehwurm ist-aus" aria-hidden="true"><div class="gluehwurm__weg"><div class="gluehwurm__ring"></div><div class="gluehwurm__glimm"><div class="gluehwurm__koerper"><i class="gluehwurm__warm"></i><i class="gluehwurm__kalt"></i><i class="gluehwurm__kern"></i></div></div><i class="gluehwurm__blitz"></i><div class="gluehwurm__spritzer"></div></div></div>
     <div class="szene__ebene" data-ebene="gras" aria-hidden="true"></div>
     <div class="szene__oben" aria-hidden="true"></div>
     <div class="szene__fade" aria-hidden="true"></div>
@@ -739,7 +760,7 @@ img { display: block; max-width: 100%; height: auto; }
   </nav>
 </footer>
 
-<script src="js/szene.js?v=32"></script>
+<script src="js/szene.js?v=34"></script>
 <script src="js/endo-zufluss.js?v=6" defer></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
