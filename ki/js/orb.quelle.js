@@ -1,8 +1,31 @@
 /* endo.ai Hero: lebendige Drahtgitter-Kugel (nach Emres Vorlage „Anomalous Matter").
-   Quelle für ki/js/orb.js. Neu bauen:
-   npx esbuild ki/js/orb.quelle.js --bundle --minify --format=iife --target=es2018 --outfile=ki/js/orb.js
-   (three.js Version 0.186.1 muss dafür installiert sein: npm i --no-save three@0.186.1 esbuild) */
+   Quelle für ki/js/orb.js. Neu bauen (three 0.186.1 + esbuild in einem Ordner AUSSERHALB des Vaults installieren):
+   NODE_PATH=<ordner>/node_modules <ordner>/node_modules/.bin/esbuild ki/js/orb.quelle.js --bundle --minify --format=iife --target=es2018 --outfile=ki/js/orb.js */
 import { Scene, PerspectiveCamera, WebGLRenderer, IcosahedronGeometry, ShaderMaterial, Color, Vector3, Vector4, Quaternion, Mesh } from 'three';
+
+/* ===== Einstellwerte für das Einsammeln der Datenpakete (26.09., Emre: „Frequenz/Impuls – schnell hin, seidig zurück“) =====
+   Winkel in Radiant, Längen als Anteil vom Kugelradius, Zeiten in Millisekunden. */
+const KUGEL = {
+  breite: 0.11,          // Zunge: Gauß-Breite σ (≈ 6°) → sichtbare Öffnung ca. 15–20°
+  breiteHandy: 0.14,     // am Handy etwas breiter (gröberes Gitter, bleibt weich)
+  umfeld: 0.45,          // feiner Übergang: Umgebung wird in diesem Bereich (σ ≈ 26°) leicht mitgezogen …
+  umfeldAnteil: 0.12,    // … mit 12 % der Zungenlänge
+  maxLaenge: 0.55,       // weiteste Ausstülpung: 55 % des Radius
+  hinMs: 190,            // Ausstrecken zum Paket (Ease-out, Quart)
+  daempfung: 0.8,        // Rückweg: gedämpfte Feder (0,8 → ca. 1,5 % Nachschwingen)
+  frequenz: 5.5,         // Eigenfrequenz der Feder (rad/s) → ca. 1 s bis zur Ruhe
+  zurueckEndeMs: 1250,   // danach ist der Arm sicher wieder ganz eingezogen
+  welleK: 38,            // feine Welle entlang der Zunge: Wellenzahl …
+  welleW: 44,            // … Tempo (rad/s) …
+  welleAmp: 0.018,       // … und Höhe (Welteinheiten, klein)
+  welleNachMs: 260,      // die Welle klingt nach dem Einsammeln so schnell aus
+  blitzMs: 150,          // Aufglimmen an der Spitze beim Einsammeln
+  ringMs: 1150,          // Wellenring über die Oberfläche (2 Ringe)
+  ringWeg: 2.5,          // so weit (rad) läuft der Ring
+  ringBreite: 0.16,
+  ringAmp: 0.028,        // Ring-Höhe (Welteinheiten, dezent)
+  glanz: 0.55            // wie stark Zunge, Blitz und Ring das Drahtgitter aufhellen
+};
 
 const buehne = document.querySelector('[data-orb]');
 if (buehne) start(buehne);
@@ -11,6 +34,7 @@ function webglMoeglich() {
   try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl'))); }
   catch (e) { return false; }
 }
+function f(v) { return Number(v).toFixed(5); }   // Zahl als GLSL-Fließkommazahl (Funktion: steht beim Start schon bereit)
 
 function start(el) {
   if (!webglMoeglich()) { el.classList.add('orb--ohne'); return; }
@@ -31,24 +55,34 @@ function start(el) {
 
   /* Feinheit: am Handy weniger Dreiecke, damit es flüssig bleibt */
   const geometry = new IcosahedronGeometry(1.2, klein ? 24 : 40);
-  /* Datenpakete (26.09., Emre): die Kugel streckt sich nahen Paketen mit weichen Armen entgegen (max. 3, Handy 2)
-     und ein kurzer Lichtimpuls läuft vom Einsaugpunkt über die Oberfläche. Richtung + Stärke kommen von js/endo-zufluss.js. */
+  /* Arme zu den Datenpaketen (max. 3, Handy 2): armU = Richtung (Objektraum) + Länge, infoU = Welle, Blitz; pulsU = Ringe */
   const ARME = klein ? 2 : 3;
-  const zugU = [0, 1, 2].map(() => new Vector4(0, 0, 1, 0)), pulsU = [0, 1, 2].map(() => new Vector4(0, 0, 1, -1));
+  const armU = [0, 1, 2].map(() => new Vector4(0, 0, 1, 0)), infoU = [0, 1, 2].map(() => new Vector4(0, 0, 0, 0));
+  const pulsU = [0, 1, 2].map(() => new Vector4(0, 0, 1, -1));
   const material = new ShaderMaterial({
-    defines: { ARME },
+    defines: {
+      ARME, BREITE: f(klein ? KUGEL.breiteHandy : KUGEL.breite), UMFELD: f(KUGEL.umfeld), UMFELD_ANTEIL: f(KUGEL.umfeldAnteil),
+      WELLE_K: f(KUGEL.welleK), WELLE_W: f(KUGEL.welleW), WELLE_AMP: f(KUGEL.welleAmp),
+      RING_WEG: f(KUGEL.ringWeg), RING_B: f(KUGEL.ringBreite), RING_AMP: f(KUGEL.ringAmp), GLANZ: f(KUGEL.glanz)
+    },
     uniforms: {
-      zug: { value: zugU },
+      arm: { value: armU },
+      armInfo: { value: infoU },
       puls: { value: pulsU },
+      sek: { value: 0 },
       time: { value: 0 },
       pointLightPosition: { value: new Vector3(0, 0, 5) },
       color: { value: new Color('#FF5A1F') }
     },
     vertexShader: `
       uniform float time;
-      uniform vec4 zug[3];
+      uniform float sek;
+      uniform vec4 arm[3];
+      uniform vec4 armInfo[3];
+      uniform vec4 puls[3];
       varying vec3 vNormal;
       varying vec3 vPosition;
+      varying float vHell;
       vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
       vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
       vec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }
@@ -97,24 +131,44 @@ function start(el) {
         vPosition = position;
         float displacement = snoise(position * 2.0 + time * 0.5) * 0.2;
         vec3 newPosition = position + normal * displacement;
-        /* weicher, sich verjüngender Arm zum Paket: breite Beule, zur Spitze schmaler, wie flüssiges Metall */
         vec3 n0 = normalize(position);
+        float hell = 0.0;
+        /* Zunge zum Paket: schmales Gauß-Profil entlang der Paketrichtung (weich zulaufende Spitze), Umgebung leicht mitgezogen;
+           beim Ausstrecken läuft eine feine, schnelle Welle von der Basis zur Spitze. Mehrere Arme addieren sich weich. */
         for (int i = 0; i < ARME; i++) {
-          float s = zug[i].w;
-          if (s > 0.001) {
-            float w = smoothstep(0.52, 1.0, dot(n0, zug[i].xyz));
-            float arm = w * w * (0.45 + 0.55 * w);
-            newPosition += mix(normal, zug[i].xyz, 0.55) * (s * arm * 0.42);
+          float L = arm[i].w;
+          if (L > 0.0005) {
+            float th = acos(clamp(dot(n0, arm[i].xyz), -1.0, 1.0));
+            float kern = exp(-(th * th) / (BREITE * BREITE));
+            float umfeld = exp(-(th * th) / (UMFELD * UMFELD)) * UMFELD_ANTEIL;
+            float form = kern + umfeld * (1.0 - kern);
+            float welle = armInfo[i].x * WELLE_AMP * sin(th * WELLE_K + sek * WELLE_W) * kern;
+            newPosition += arm[i].xyz * (L * 1.2 * form) + normal * welle;
+            hell += kern * min(1.0, L * 2.2) * 0.45 + armInfo[i].y * exp(-(th * th) / (BREITE * BREITE * 0.5));
           }
         }
+        /* Aufnahme: vom Einsaugpunkt laufen zwei leise Wellenringe über die Oberfläche und klingen aus */
+        for (int i = 0; i < 3; i++) {
+          float ph = puls[i].w;
+          if (ph >= 0.0 && ph < 1.0) {
+            float th = acos(clamp(dot(n0, puls[i].xyz), -1.0, 1.0));
+            float r1 = (th - ph * RING_WEG) / RING_B;
+            float r2 = (th - (ph - 0.18) * RING_WEG) / RING_B;
+            float a = (1.0 - ph) * (1.0 - ph);
+            float ring = exp(-r1 * r1) + 0.55 * exp(-r2 * r2) * step(0.18, ph);
+            newPosition += normal * (RING_AMP * a * ring);
+            hell += a * ring * 0.4;
+          }
+        }
+        vHell = hell;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
       }`,
     fragmentShader: `
       uniform vec3 color;
       uniform vec3 pointLightPosition;
-      uniform vec4 puls[3];
       varying vec3 vNormal;
       varying vec3 vPosition;
+      varying float vHell;
       void main() {
         vec3 normal = normalize(vNormal);
         vec3 lightDir = normalize(pointLightPosition - vPosition);
@@ -123,18 +177,8 @@ function start(el) {
         fresnel = pow(fresnel, 2.0);
         vec3 neon = vec3(0.80, 0.82, 0.88);   /* ruhiges Silberweiß (25.09. nachts: Orange nur noch für Premium) */
         vec3 finalColor = neon * (0.24 + diffuse * 0.82) + vec3(1.0, 1.0, 1.0) * fresnel * 0.6;
-        /* Aufnahme: kurzes Aufleuchten am Einsaugpunkt, das als leiser Ring über die Oberfläche läuft und verblasst */
-        vec3 n1 = normalize(vPosition);
-        float glanz = 0.0;
-        for (int i = 0; i < 3; i++) {
-          float ph = puls[i].w;
-          if (ph >= 0.0 && ph < 1.0) {
-            float ang = acos(clamp(dot(n1, puls[i].xyz), -1.0, 1.0));
-            float d = (ang - ph * 2.6) / (0.2 + ph * 0.25);
-            glanz += (1.0 - ph) * (1.0 - ph) * exp(-d * d) * 0.2;
-          }
-        }
-        finalColor += vec3(0.9, 0.95, 1.0) * min(glanz, 0.26);   /* sehr dezent, auch wenn mehrere gleichzeitig ankommen */
+        /* Zunge, Blitz und Ringe hellen das Drahtgitter leicht auf – gedeckelt, auch wenn mehrere zusammenkommen */
+        finalColor += vec3(0.9, 0.95, 1.0) * min(vHell, 1.0) * GLANZ;
         gl_FragColor = vec4(finalColor, 1.0);
       }`,
     wireframe: true
@@ -155,35 +199,76 @@ function start(el) {
   }
   if (feineMaus) window.addEventListener('pointermove', (e) => lichtAuf(e.clientX, e.clientY), { passive: true });
 
-  /* Schnittstelle für die Datenpakete: je Arm Bildschirmrichtung (x rechts, y unten) und Zielstärke 0…1; puls(x, y) beim Einsaugen */
-  const zuege = [0, 1, 2].map(() => ({ x: 0, y: 0, s: 0 })), staerke = [0, 0, 0], sicht = [0, 0, 1].map(() => new Vector3(0, 0, 1));
+  /* ===== Arme: jede Ausstülpung hat eine eigene, zeitgesteuerte Abfolge (bildratenunabhängig) =====
+     frei → hin (Ease-out zum Paket, Spitze folgt ihm genau) → zurück (gedämpfte Feder) → frei.
+     Schnittstelle für js/endo-zufluss.js (Richtung in Bildschirmkoordinaten: x rechts, y unten; d = Abstand in Kugelradien):
+       greifen(x, y, d) → Kennung oder -1 · folgen(k, x, y, d) · gefangen(k) · fortschritt(k) · puls(x, y) */
+  const armZ = [0, 1, 2].map(() => ({ zustand: 0, kennung: 0, t0: 0, tLos: 0, L: 0, L0: 0, Lstart: 0, x: 1, y: 0, d: 1,
+    blick: new Vector3(0, 0, 1), objekt: new Vector3(0, 0, 1) }));
   const pulse = [0, 1, 2].map(() => ({ dir: new Vector3(0, 0, 1), t0: -1 }));
-  const umkehr = new Quaternion(), hilf = new Vector3();
-  let pulsNr = 0;
+  const umkehr = new Quaternion();
+  let pulsNr = 0, kennungen = 0;
+  const zd = KUGEL.daempfung, w0 = KUGEL.frequenz, wd = w0 * Math.sqrt(1 - zd * zd);
+  function pulsStart(dirObjekt) { const p = pulse[pulsNr++ % 3]; p.dir.copy(dirObjekt); p.t0 = performance.now(); }
+  function blickRichtung(a) { a.blick.set(a.x, -a.y, 0.15).normalize(); }
   window.endoKugel = {
-    arme: ARME, zuege, staerke,
+    arme: ARME, reichweite: 1 + KUGEL.maxLaenge,
+    greifen(x, y, d) {
+      if (ruhig) return -1;
+      for (let i = 0; i < ARME; i++) {
+        const a = armZ[i];
+        if (a.zustand === 0 || (a.zustand === 2 && a.L < 0.03)) {
+          a.zustand = 1; a.kennung = ++kennungen * 4 + i; a.t0 = performance.now(); a.Lstart = a.L;   /* fast eingezogener Arm: ohne Sprung weiter */
+          a.x = x; a.y = y; a.d = d; blickRichtung(a);
+          return a.kennung;
+        }
+      }
+      return -1;
+    },
+    folgen(k, x, y, d) { const a = armZ[k % 4]; if (a && a.kennung === k && a.zustand === 1) { a.x = x; a.y = y; a.d = d; blickRichtung(a); } },
+    gefangen(k) { const a = armZ[k % 4]; return !a || a.kennung !== k || a.zustand !== 1; },
+    zustand() { return armZ.slice(0, ARME).map((a) => [a.zustand, Math.round(a.L * 1000) / 1000]); },   /* nur zum Prüfen */
+    fortschritt(k) { const a = armZ[k % 4]; return a && a.kennung === k && a.zustand === 1 ? Math.max(0, Math.min(1, (performance.now() - a.t0) / KUGEL.hinMs)) : 1; },
     puls(x, y) {
       if (ruhig) return;
-      const p = pulse[pulsNr++ % 3]; umkehr.copy(mesh.quaternion).invert();
-      p.dir.set(x, -y, 0.35).normalize().applyQuaternion(umkehr); p.t0 = performance.now();
+      umkehr.copy(mesh.quaternion).invert();
+      pulsStart(new Vector3(x, -y, 0.15).normalize().applyQuaternion(umkehr));
     }
   };
-  let frameId = 0, laeuft = false, start0 = performance.now(), zuletzt = performance.now();
-  function bild(t) {
-    const zeit = t - start0, dt = Math.min(0.05, Math.max(0, (t - zuletzt) / 1000)); zuletzt = t;
-    /* Arme: weich hinaus, gedämpft zurück (exponentiell = kein Nachwackeln); Richtung folgt dem Paket, trotz Drehung */
+
+  function armeRechnen(t) {
     umkehr.copy(mesh.quaternion).invert();
     for (let i = 0; i < 3; i++) {
-      const z = zuege[i], ziel = i < ARME ? Math.max(0, Math.min(1, z.s || 0)) : 0;
-      staerke[i] += (ziel - staerke[i]) * (1 - Math.exp(-dt / (ziel > staerke[i] ? 0.12 : 0.26)));
-      if (staerke[i] < 0.002 && ziel === 0) staerke[i] = 0;
-      if (ziel > 0) sicht[i].set(z.x, -z.y, 0.3).normalize();
-      hilf.copy(sicht[i]).applyQuaternion(umkehr);
-      zugU[i].set(hilf.x, hilf.y, hilf.z, staerke[i]);
-      const p = pulse[i], ph = p.t0 < 0 ? -1 : (t - p.t0) / 950;
-      if (ph >= 1) p.t0 = -1;
-      pulsU[i].set(p.dir.x, p.dir.y, p.dir.z, ph >= 1 ? -1 : ph);
+      const a = armZ[i], info = infoU[i];
+      if (a.zustand === 1) {
+        /* hin: stark ease-out (schießt los, bremst weich vor dem Paket ab); die Spitze folgt dem Paket und trifft es genau */
+        /* max(0, …): der Bild-Zeitstempel kann minimal vor dem Greif-Zeitpunkt liegen – sonst kurze Delle nach innen */
+        const p = Math.max(0, Math.min(1, (t - a.t0) / KUGEL.hinMs)), e = 1 - Math.pow(1 - p, 4);
+        const ziel = Math.max(0, Math.min(KUGEL.maxLaenge, a.d - 1));
+        a.L = a.Lstart + (ziel - a.Lstart) * e;
+        a.objekt.copy(a.blick).applyQuaternion(umkehr);
+        info.x = 1; info.y = 0;
+        if (p >= 1) { a.zustand = 2; a.tLos = t; a.L0 = a.L; pulsStart(a.objekt); }
+      } else if (a.zustand === 2) {
+        /* zurück: gedämpfte Feder (geschlossene Form, bildratenunabhängig); Richtung bleibt am Kugelpunkt, dreht also mit */
+        const s = (t - a.tLos) / 1000;
+        a.L = a.L0 * Math.exp(-zd * w0 * s) * (Math.cos(wd * s) + (zd * w0 / wd) * Math.sin(wd * s));
+        info.x = Math.max(0, 1 - (t - a.tLos) / KUGEL.welleNachMs);
+        info.y = Math.exp(-(t - a.tLos) / KUGEL.blitzMs);
+        if (t - a.tLos > KUGEL.zurueckEndeMs) { a.zustand = 0; a.L = 0; info.x = info.y = 0; }
+      }
+      armU[i].set(a.objekt.x, a.objekt.y, a.objekt.z, i < ARME ? a.L : 0);
+      const pl = pulse[i], ph = pl.t0 < 0 ? -1 : (t - pl.t0) / KUGEL.ringMs;
+      if (ph >= 1) pl.t0 = -1;
+      pulsU[i].set(pl.dir.x, pl.dir.y, pl.dir.z, ph >= 1 ? -1 : ph);
     }
+  }
+
+  let frameId = 0, laeuft = false, start0 = performance.now();
+  function bild(t) {
+    const zeit = t - start0;
+    armeRechnen(t);
+    material.uniforms.sek.value = (zeit / 1000) % 1000;
     material.uniforms.time.value = zeit * 0.0003;
     mesh.rotation.y += 0.0005 * 4;
     mesh.rotation.x += 0.0002 * 4;

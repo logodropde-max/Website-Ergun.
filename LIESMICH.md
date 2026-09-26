@@ -16,6 +16,12 @@
 
 
 
+## Kugel-Einsammeln als Impuls (26.09.2026, Claude Code) – ersetzt die Arm-Logik im Abschnitt darunter
+`ki/js/orb.js?v=9`, `js/endo-zufluss.js?v=4`. Einstellwerte: `KUGEL` oben in `orb.quelle.js` (breite, umfeld, maxLaenge, hinMs, daempfung, frequenz, welle…, blitzMs, ring…, glanz), `PAKET` in `endo-zufluss.js` (anzug, greifen, halten, radius, takt, abstandTest).
+- Shader: `uniform vec4 arm[3]` (Objekt-Richtung, Länge L als Radius-Anteil), `armInfo[3]` (x Welle, y Blitz), `puls[3]` (Ring-Phase), `sek` (Sekunden für die Welle); Form `kern = exp(−θ²/BREITE²)`, `form = kern + umfeld(1−kern)`, Verschiebung `dir · L · 1,2 · form + normal · Welle`; Helligkeit über `varying vHell` (≤ 1 · GLANZ). Konstanten als `defines`.
+- Arm-Zustände `frei → hin → zurück`: hin `L = Lstart + (ziel − Lstart)(1 − (1 − p)⁴)`, `p ≥ 0` geklemmt, `ziel = clamp(d − 1, 0, maxLaenge)` folgt dem Paket; zurück `L0 e^(−ζωt)(cos ω_d t + ζω/ω_d sin ω_d t)`. Schnittstelle `window.endoKugel = { arme, reichweite, greifen(x,y,d) → Kennung, folgen(k,…), gefangen(k), fortschritt(k), puls(x,y), zustand() }`.
+- `.endo__orb`-Maske `#000 78%` (vorher 62 %). `?kugel=test` = Testansicht. Aufnahme-Werkzeug `_code/werkzeuge/cdp-shot.mjs` kann jetzt auch Screencasts (`aufnahme: {ms, dir}`).
+
 ## Kugel saugt Pakete ein + Tipp-Pakete (26.09.2026, Claude Code)
 `ki/js/orb.js?v=8` (beide Seiten), `js/endo-zufluss.js?v=3`. **Neu bauen** (three 0.186.1 + esbuild in einem Ordner außerhalb des Vaults, dann `NODE_PATH=<ordner>/node_modules esbuild ki/js/orb.quelle.js --bundle --minify --format=iife --target=es2018 --outfile=ki/js/orb.js`).
 - Shader: `defines ARME` (3/Handy 2), `uniform vec4 zug[3]` (Objekt-Richtung xyz, Stärke w): `newPosition += mix(normal, dir, 0.55) · s · w²(0.45+0.55w) · 0.42` mit `w = smoothstep(0.52, 1, dot(n, dir))`. `uniform vec4 puls[3]` (Richtung, Phase 0…1): Ring `ang − ph·2.6`, Summe ≤ 0.26.

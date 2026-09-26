@@ -303,7 +303,7 @@ img { display: block; max-width: 100%; height: auto; }
 .endo__daten { position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .endo__daten { display: none; } }
 .endo__orb { position: relative; z-index: -1; width: min(460px, 74vw); aspect-ratio: 1; margin: clamp(-72px, -6svh, -24px) auto clamp(-72px, -7svh, -40px); opacity: 0; pointer-events: none;
-  -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent); mask-image: radial-gradient(closest-side, #000 62%, transparent); transition: opacity 1400ms var(--ease), transform 1600ms var(--ease); transform: translateY(14svh) scale(0.86); }
+  -webkit-mask-image: radial-gradient(closest-side, #000 78%, transparent); mask-image: radial-gradient(closest-side, #000 78%, transparent); transition: opacity 1400ms var(--ease), transform 1600ms var(--ease); transform: translateY(14svh) scale(0.86); }
 .endo--da .endo__orb { transform: none; }
 .endo { scroll-margin-top: -28svh; }
 @supports (animation-timeline: view()) {
@@ -736,7 +736,7 @@ img { display: block; max-width: 100%; height: auto; }
 </footer>
 
 <script src="js/szene.js?v=32"></script>
-<script src="js/endo-zufluss.js?v=3" defer></script>
+<script src="js/endo-zufluss.js?v=4" defer></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {
@@ -928,7 +928,7 @@ img { display: block; max-width: 100%; height: auto; }
   var geladen = false;
   function laden() {
     if (geladen) return; geladen = true;
-    var s = document.createElement('script'); s.src = 'ki/js/orb.js?v=8'; s.async = true; document.body.appendChild(s);
+    var s = document.createElement('script'); s.src = 'ki/js/orb.js?v=9'; s.async = true; document.body.appendChild(s);
   }
   if (!('IntersectionObserver' in window)) { window.addEventListener('load', laden); return; }
   /* erst nach dem Laden der Seite beobachten – der Start bleibt frei von der 500-KB-Kugel */
