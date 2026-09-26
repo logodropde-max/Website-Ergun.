@@ -16,6 +16,18 @@
 
 
 
+## Titelbild live am Scrollen (26.09.2026, Claude Code) – ersetzt Punkt 3/4 unten
+`szene.js?v=29`, Commit `91b1062`.
+- **Gemeinsamer Takt** `takt(t)`: per rAF, liest `leseY()` (scrollY); läuft solange sich `rohY`/`weichY` ändern + 300 ms, dann schläft er (`anfordern()` bei `scroll` weckt ihn). `fortschritt(y) = (y - heldOben)/m.H` – `heldOben` einmal in `aufbauen()` gemessen (keine `getBoundingClientRect` pro Bild mehr).
+- `zeichne(immer)`: Parallaxe + Winken am echten `rohY`; bei `immer` Licht/Faden sofort (+ `fadenMessen()`). Glättung nur noch `weichY += (rohY-weichY)*(1-exp(-dt/GLATT))`, `GLATT = 0.06` s → `licht(fortschritt(weichY))` + `faden(weichY)`. Alte `nachfuehren()` (0,9 s + 0,2 H/s-Grenze), `ziel/weich/geplant` entfernt.
+- **Winken:** `winken()` (startet nur, wenn nichts läuft; wartet via `winkenWartet` auf die Bildfolgen, `folgenDa()`), Auslöser `!gewunken && p > vorherP` sobald `p > 0.003`; Freigabe bei `p <= 0.003`; erster Aufbau: `gewunken = p > 0.003`. Hund in `figurenZeichnen()` mit `min(1, sin(π·e)·1.25)` (hin und zurück), Emre unverändert `e`.
+- **Faden:** CSS-`view()`-Animation entfernt, `.js .endo__faden { transform: scaleY(0) }`; `faden(y)`: `scaleY = clamp((y + 0.62·innerHeight - fadenOben)/fadenH)`.
+- Bewegung reduziert: `fortschritt` liefert jetzt auch dort die Position (Licht/Faden folgen), Parallaxe `s = 0`, kein Winken.
+- Test-Helfer: `window.__szene.zustand()` (Phase, gewunken, rohY/weichY, Licht, Faden).
+
+## endo Studio: Datenpakete zur Kugel (26.09.2026, Claude Code)
+`js/endo-zufluss.js?v=1` + `<canvas class="endo__daten">` vor `.endo__orb` (z-index −1), Commit `55a665e`. Canvas nur als Streifen ±1,5 Kugelbreiten um die Kugelmitte (Layoutposition `offsetTop/Left`, gemessen bei Start/Resize), dpr ≤ 1,5. Teilchen: Start 1,5–2,6 × Kugelradius (ungemaskiert) in zufälliger Richtung, Bogen `sin(πt)·biege`, Beschleunigung `v += dt(0.10+0.35t)`, Ausblenden+Schrumpfen ab 1,3 R (sichtbarer R = 0,62 · halbe Breite), Entfernen bei 1,04 R mit Rand-Aufglimmen (0,55 s). Max 8/Handy 5, alle 0,8–2 s. IntersectionObserver + `visibilitychange`; reduced-motion: kein Start, Canvas `display:none`.
+
 ## Titelbild – 4 Punkte einzeln (26.09.2026, Claude Code)
 Vier nummerierte Änderungen, je ein Commit. Basis: freigegebener Stand (CSS-Sonne, gezeichnete Landschaft, eine Lichtlinie).
 1. **Wolken weg** (`3c67fce`, `szene.js?v=26`): `wolken()`, `F.wolke`, `F.wolkeSaum` und der Aufruf in `landschaft()` entfernt.
