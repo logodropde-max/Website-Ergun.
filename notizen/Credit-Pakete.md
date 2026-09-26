@@ -25,11 +25,11 @@ Umschalter „Monatlich | Jährlich −20 %“ über den Karten (Standard: Monat
 
 → Auch mit 20 % Jahresrabatt überall über 35 % (Ziel erfüllt). Texte „kein Abo“ auf Karten, im Chat und in der FAQ von /ki/ entsprechend angepasst.
 
-## Premium inklusive Website von Emre (Emre, 27.09.2026 – Bedingungen noch Platzhalter)
-Auf Seite, Paket-Fenster, Paket-Karten und in endos Wissen: **„Premium: inklusive Ihrer Website von Emre“**. Die Bedingungen stehen in `ki/js/endo-daten.js` → `premiumWebsite` (`bestaetigt: false`). Leere Zahlen erscheinen nicht auf der Seite.
-- **Premium jährlich:** Website inklusive. Onepager aus einer ERGUN.-Vorlage (**Emre, 27.09.: Seitenzahl bleibt wie jetzt – ein Onepager, keine feste Abschnitts-Zahl**), 1 Korrekturrunde, eigene Bilder und Videos mit endo.
+## Premium inklusive Website von Emre (Emre, 27.09.2026 – freigegeben)
+Auf Seite, Paket-Fenster, Paket-Karten und in endos Wissen: **„Premium: inklusive Ihrer Website von Emre“**. Die Bedingungen stehen in `ki/js/endo-daten.js` → `premiumWebsite` (`bestaetigt: true`). Emre: „ok“; Rabatt und Korrekturrunden auf seinen Wunsch von Claude gewählt („mach du es passend und schlau“, „nach sinnvollem Marketing-Plan“).
+- **Premium jährlich:** Website inklusive. Onepager aus einer ERGUN.-Vorlage (**Emre, 27.09.: Seitenzahl bleibt wie jetzt – ein Onepager, keine feste Abschnitts-Zahl**), **2 Korrekturrunden** (branchenüblich, nimmt Kunden die Sorge; ca. 1–2 h mehr Aufwand), eigene Bilder und Videos mit endo.
 - **Premium monatlich:** Website inklusive bei **12 Monaten Mindestlaufzeit**.
-- **Premium einmalig:** keine Website, dafür **[X] % Rabatt** auf eine Website (Platzhalter `rabattEinmalProzent`).
+- **Premium einmalig:** keine Website, dafür **20 % Rabatt** auf eine Website (gleich wie der Jahresrabatt – einheitlich; beim Onepager-Richtwert 80 € = 16 €, Gewinn Premium einmalig bleibt ca. 57 €).
 - Größere Seiten oder ein Onlineshop: im Erstgespräch.
 
 **Lohnt es sich? Gewinn vor Emres Arbeitszeit (schlechtester Fall, aus den Tabellen oben):**

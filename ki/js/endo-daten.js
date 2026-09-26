@@ -11,18 +11,19 @@
 window.ENDO = {
   marke: 'endo Studio',
   abrechnung: { standard: 'monat', rabattJahr: 20, einmalGueltigMonate: 12 },
-  /* Premium inklusive Website von Emre (Emre, 27.09.) – BEDINGUNGEN SIND PLATZHALTER, Emre bestätigt sie noch.
-     Leere Zahlen (null) erscheinen auf der Seite nicht – es wird nichts versprochen, was nicht feststeht. */
+  /* Premium inklusive Website von Emre (Emre, 27.09.). Bedingungen freigegeben: Emre „ok“, Rabatt und Korrekturrunden
+     auf seinen Wunsch („mach du es passend und schlau“) von Claude gewählt – 20 % wie beim Jahresabo, 2 Korrekturrunden.
+     Leere Zahlen (null) erscheinen auf der Seite nicht. */
   premiumWebsite: {
-    bestaetigt: false,
+    bestaetigt: true,
     titel: 'Inklusive Ihrer Website von Emre',
     jahr: 'im Jahresabo inklusive',                              // Premium jährlich
     monat: 'inklusive bei 12 Monaten Mindestlaufzeit',          // Premium monatlich
     einmalTitel: 'Rabatt auf Ihre Website von Emre',            // Premium einmalig …
     einmal: 'keine Website inklusive',                          // … statt Website ein Rabatt
     abschnitte: null,        // Emre, 27.09.: Seitenzahl bleibt wie jetzt – ein Onepager, keine feste Abschnitts-Zahl
-    korrekturrunden: 1,
-    rabattEinmalProzent: null, // PLATZHALTER: Rabatt in % bei Premium einmalig
+    korrekturrunden: 2,
+    rabattEinmalProzent: 20,   // Premium einmalig: 20 % Rabatt auf eine Website (gleich wie der Jahresrabatt)
     umfang: ['Onepager aus einer ERGUN.-Vorlage', 'Ihre eigenen Bilder und Videos, erstellt mit endo Studio'],
     groesser: 'Größere Seiten oder ein Onlineshop: im kostenlosen Erstgespräch'
   },
