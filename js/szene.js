@@ -728,6 +728,7 @@
     box.innerHTML = '';
     var hoehe = m.H * 0.66, r = zufall(4242), q = Math.min(m.q, 1.5);
     box.style.height = hoehe + 'px';
+    if (!(m.W > 0 && hoehe > 0)) return;  /* während einer 0-Breite (Neuaufbau) nichts zeichnen */
     /* Milchstraße: schräges Band, grob gerechnet und weich hochskaliert */
     var mw = 640, mh = Math.round(mw * hoehe / m.W), mc = document.createElement('canvas');
     mc.width = mw; mc.height = mh; mc.className = 'milchstrasse';
