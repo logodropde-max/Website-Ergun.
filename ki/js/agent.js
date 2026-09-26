@@ -143,10 +143,13 @@
   function knoepfe(liste) {
     vorschlaege.innerHTML = '';
     liste.forEach(function (k, i) {
+      if (k.umbruch) { vorschlaege.appendChild(el('span', 'chip-umbruch')); return; }   /* neue Reihe */
+      if (k.titel) { vorschlaege.appendChild(el('span', 'chip-titel', k.titel)); return; }
       var b = document.createElement('button');
       b.type = 'button';
-      b.className = 'chip' + (k.haupt ? ' chip--haupt' : '');
+      b.className = 'chip' + (k.haupt ? ' chip--haupt' : '') + (k.premium ? ' chip--premium' : '') + (k.werkzeug ? ' chip--werkzeug' : '');
       b.textContent = k.text;
+      if (k.credits != null) b.appendChild(el('span', 'chip__credits', k.credits));
       b.style.animationDelay = (ruhig ? 0 : i * 60) + 'ms';
       b.addEventListener('click', function () { if (beschaeftigt) return; flugStart = { r: b.getBoundingClientRect(), t: Date.now() }; k.aktion(); });
       vorschlaege.appendChild(b);
@@ -183,15 +186,13 @@
     eingabeArt(MAIL_SCHRITTE[schritt] ? 'mail' : schritt === 'code' ? 'code' : schritt === 'a-pw' ? 'pw-alt' : schritt === 'r-pw' || schritt === 'pw-neu' ? 'pw-neu' : 'text');
     if (schritt === 'ki' && auswahl) { auswahlKnoepfe(auswahl); return; }
     if (schritt === 'ki') {
-      knoepfe([
-        { text: 'Produktfoto', aktion: function () { freieFrage('Ich möchte ein Produktfoto.'); } },
-        { text: 'Werbeanzeige', aktion: function () { freieFrage('Ich möchte eine Werbeanzeige.'); } },
-        { text: 'Werbevideo', aktion: function () { freieFrage('Ich möchte ein Werbevideo.'); } },
+      /* Übersicht, was man erstellen kann (Emre, 27.09.): jedes Werkzeug mit Credits, Premium mit orangem Rand */
+      knoepfe(werkzeugKnoepfe().concat([
         { text: 'Foto hochladen', haupt: angemeldet(), aktion: function () { datei.click(); } },
         angemeldet() && !testCode ? { text: 'Mein Konto', aktion: kontoZeigen } : null,
         !angemeldet() ? { text: 'Anmelden', aktion: function () { anmeldenMenue(); } } : null,
         { text: 'Was kostet das?', aktion: function () { freieFrage('Was kostet das?'); } }
-      ].filter(Boolean));
+      ].filter(Boolean)));
       return;
     }
     if (schritt === 'code') { knoepfe([{ text: 'Abbrechen', aktion: codeAbbrechen }]); return; }
@@ -215,6 +216,21 @@
       { text: 'Was ist Premium?', aktion: function () { freieFrage('Was ist im Premium-Paket?'); } },
       { text: 'Neues Produkt', aktion: neuesProdukt }
     ]);
+  }
+  var WUNSCH = {
+    foto: 'Ich möchte ein Produktfoto.', anzeige: 'Ich möchte eine Werbeanzeige.', shop: 'Ich möchte ein Shop-Bild auf weißem Hintergrund.',
+    video: 'Ich möchte ein Werbevideo mit 5 Sekunden.', web: 'Ich möchte ein Titelbild für meine Website.',
+    video10: 'Ich möchte ein Werbevideo mit 10 Sekunden (Premium).', '3d': 'Ich interessiere mich für ein 3D-Produkt (Premium).',
+    parallax: 'Ich interessiere mich für eine Parallax-Szene (Premium).'
+  };
+  function werkzeugKnoepfe() {
+    var normal = (E.funktionen || []).map(function (f) {
+      return { text: f.name, credits: f.credits, werkzeug: true, aktion: function () { freieFrage(WUNSCH[f.id] || 'Ich möchte ' + f.name + '.'); } };
+    });
+    var premium = (E.premium || []).filter(function (f) { return WUNSCH[f.id]; }).map(function (f) {
+      return { text: f.name, credits: f.credits ? f.credits : 'auf Anfrage', premium: true, werkzeug: true, aktion: function () { freieFrage(WUNSCH[f.id]); } };
+    });
+    return normal.concat([{ umbruch: true }, { titel: 'Premium' }], premium, [{ umbruch: true }]);
   }
   function kategorie(k) {
     knoepfe([]); du(k); daten.kategorie = k; schritt = 'look'; sperren(true);
