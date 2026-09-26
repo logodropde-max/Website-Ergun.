@@ -4,15 +4,26 @@ tags: [endo-ai, preise]
 # Credit-Pakete
 
 Preise von [[endo-ai|endo.ai]], festgelegt von Emre am 25.09.2026. Für die Webdesign-Pakete siehe [[Pakete & Preise]].
-Die Zahlen stehen im Code an einer Stelle: `window.ENDO` in `ki/index.html` (Seite, Chat und Credit-Fenster lesen von dort).
-Login und Bezahlung sind noch nicht fertig: alle Knöpfe heißen „… vormerken“. **Kauf-Links von Lemon Squeezy** kommen in `ki/js/endo-daten.js` ins Feld `kaufen` des jeweiligen Pakets – dann heißen die Knöpfe automatisch „… kaufen“ (seit 25.09., Bereich heißt jetzt ERGUN. Studio).
+Die Zahlen stehen im Code an einer Stelle: `window.ENDO` in `ki/js/endo-daten.js` (Karten, Umschalter, Chat und Credit-Fenster lesen von dort).
+Login und Bezahlung sind noch nicht fertig: alle Knöpfe heißen „… vormerken“. **Kauf-Links von Lemon Squeezy** kommen in `ki/js/endo-daten.js` je Paket ins Feld `kaufen` (Monatsabo) bzw. `kaufenJahr` (Jahresabo) – dann heißt der Knopf in der gewählten Abrechnung automatisch „… kaufen“.
 
-## Pakete
-| Paket | Preis | Credits | Enthalten |
-|---|---|---|---|
-| Start | 5 € | 40 | alle drei Bereiche |
-| Pro | 20 € | 200 | alle drei Bereiche |
-| Premium | 100 € | 1.000 | alle drei Bereiche + Premium-Ordner |
+## Pakete (seit 26.09.2026: Monatlich oder Jahresabo −20 %)
+Umschalter „Monatlich | Jährlich −20 %“ über den Karten (Standard: Monatlich), gilt für alle Karten zugleich; gleiche Credits pro Monat.
+
+| Paket | Credits/Monat | Monatlich | Jährlich (pro Monat) | Jährlich abgerechnet | Enthalten |
+|---|---|---|---|---|---|
+| Start | 40 | 5 € | 3,99 € | 47,88 € | alle drei Bereiche |
+| Pro | 200 | 20 € | 16 € | 192 € | alle drei Bereiche |
+| Premium | 1.000 | 100 € | 80 € | 960 € | alle drei Bereiche + Premium-Ordner |
+
+**Gewinn im schlechtesten Fall** (gleiche Rechnung wie unten; Jahresabo = eine Abbuchung pro Jahr, also nur einmal 0,50 € Gebühr):
+| Paket | Monatlich | Jährlich: Netto/Jahr | Kosten/Jahr | Gewinn | Anteil |
+|---|---|---|---|---|---|
+| Start | 53 % | 37,34 € | 19,46 € | 17,88 € | **~48 %** |
+| Pro | 47 % | 151,24 € | 97,32 € | 53,92 € | **~36 %** |
+| Premium | 48 % | 758,22 € | 486,72 € | 271,50 € | **~36 %** |
+
+→ Auch mit 20 % Jahresrabatt überall über 35 % (Ziel erfüllt). Texte „kein Abo“ auf Karten, im Chat und in der FAQ von /ki/ entsprechend angepasst.
 
 ## Verbrauch (endo-Credits pro Ergebnis)
 | Bereich | Credits | Higgsfield-Kosten | Modell |

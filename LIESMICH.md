@@ -16,6 +16,14 @@
 
 
 
+## Sammelauftrag Himmel + endo (26.09.2026, Claude Code)
+`szene.js?v=30`, `pakete.css?v=4`, `endo-daten.js?v=5`, `pakete.js?v=4`, `agent.js?v=11`.
+1. Himmel: `.himmel--tag/--gold/--blau/--nacht` neue Verläufe; `.himmel--korn` (SVG-feTurbulence, Alpha 0,03) gegen Banding; `.sonne .sonne__glut` skaliert mit `--tief`; `.mond__hof` leiser. `?nacht=x` → `festP = x · 0.46 · ZEIT`.
+2. Wortmarke: `<p class="endo__marke endo-marke">` direkt in `.endo` (vor dem Canvas), absolut bei `top: 30svh + --faden-h · 0.46`, `left: 50%`, `b` rechtsbündig / `span` linksbündig mit `--marke-luft` (20/15 px). `--faden-h` jetzt auf `.endo` definiert.
+3. Pakete: `ENDO.abrechnung {standard, rabattJahr}`, je Paket `jahr {monat, gesamt}`, `kaufenJahr`. `pakete.js`: gemeinsamer `modus`, `umschalter()` (auch im Vormerken-Formular), `beiWechsel`-Liste, Preiswechsel über `.sp--wechsel` (opacity/transform 150 ms, ohne rAF), `.sp--jahr` zeigt Badges. CSS: `.sp__schalter/.sp__schieber/.sp__wahl`, Karten `--karte-rand` (Pro/Premium eigene), subgrid (`grid-row: span 4`), unter 860 px ohne subgrid. Vormerk-Nachricht nennt Abrechnung.
+4. Leistungen: CSS-Zähler `decimal-leading-zero` in `li::before` (Geist Mono), `b` in `--serif`, Liste `width: min(960px, 100vw − 2·pad)` mittig über `margin-left`.
+- Prüfwerkzeug (Scratchpad): `cdp-shot.mjs` steuert Edge headless über DevTools (Viewport, echtes Scrollen, Screenshots) – das Browser-Pane liefert nach Scrollen verschobene Standbilder, wenn es versteckt ist.
+
 ## Titelbild live am Scrollen (26.09.2026, Claude Code) – ersetzt Punkt 3/4 unten
 `szene.js?v=29`, Commit `91b1062`.
 - **Gemeinsamer Takt** `takt(t)`: per rAF, liest `leseY()` (scrollY); läuft solange sich `rohY`/`weichY` ändern + 300 ms, dann schläft er (`anfordern()` bei `scroll` weckt ihn). `fortschritt(y) = (y - heldOben)/m.H` – `heldOben` einmal in `aufbauen()` gemessen (keine `getBoundingClientRect` pro Bild mehr).
