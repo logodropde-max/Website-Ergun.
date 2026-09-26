@@ -517,6 +517,7 @@
      (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
   var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 245, h: 600, anzahl: 64, spalten: 8, fuss: 0.9964, oben: 0.0531, mitte: 0.5794, breite: 0.7595 } };
   var fig = { phase: 0, ziel: 0, laeuft: false, t: 0 }, FIG_DAUER = 4.4, lichtGold = 0, lichtBlau = 0, lichtNacht = 0;
+  var gewunken = false; /* pro Besuch von oben nur ein Winken – wird ganz oben (p<=0.02) wieder freigegeben */
   function figurLaden(name, folge) {
     var f = FIGUREN[name], b = new Image(); b.decoding = 'async';
     b.onload = function () { f[folge ? 'folge' : 'bild'] = b; f.zuletzt = ''; figurenZeichnen(); };
@@ -721,6 +722,7 @@
     geplant = false;
     if (!bereit) return;
     var p = fortschritt();
+    var vorherP = letztesP;
     if (!immer && Math.abs(p - letztesP) < 0.0005) return;
     letztesP = p;
     var s = isNaN(festP) ? p * m.H : 0;
@@ -729,8 +731,15 @@
     /* Jaulen und Winken: starten, sobald es Nacht wird und man weiterscrollt (am echten Scrollwert, ohne Nachlauf) */
     var pz = p / ZEIT;
     if (!isNaN(festP)) { fig.phase = sanft(0.4, 0.58, pz); figurenZeichnen(); }
-    else if (ruhig) { fig.phase = pz > 0.42 ? 1 : 0; }
-    else if (pz > 0.35) figStart(1); else if (pz < 0.28) figStart(0);
+    else if (ruhig) { /* Bewegung reduziert: Figur ruht, kein Winken */ }
+    else if (p <= 0.02) {
+      /* Ganz oben am Seitenanfang: Winken für den nächsten Runter-Weg wieder freigeben, Figur ruhen lassen */
+      gewunken = false;
+      if (fig.phase !== 0 || fig.laeuft) { fig.laeuft = false; fig.ziel = 0; fig.phase = 0; figurenZeichnen(); }
+    } else if (!gewunken && pz > 0.22 && p > vorherP) {
+      /* Goldene Stunde (Sonne kurz vor dem Bergsattel) und man scrollt nach unten: genau einmal winken */
+      gewunken = true; figStart(1);
+    }
     /* Sonne, Mond, Licht und Hund folgen einem weich nachgeführten Wert – keine Sprünge bei Mausrad-Schritten */
     ziel = p;
     if (immer || ruhig || !isNaN(festP)) { weich = p; licht(weich); }
