@@ -21,3 +21,4 @@ Offene Punkte aus [[ERGUN Website (Übersicht)]].
 - [ ] Login, Credit-Kauf und echte Erzeugung für [[endo-ai|endo.ai]] bauen (nach den Konten)
 - [x] Credit-Verbrauch an echte Kosten anpassen → [[Credit-Pakete]] (25.09.: Preise von Emre, mind. 47 % Gewinn)
 - [ ] Neues abstraktes Titelbild bauen, Animationen flüssig machen → [[Neustart – hier weitermachen]]
+- [ ] Scheren-Clip in das VIP-CUT-Video einbauen, sobald der Kunde ihn schickt → [[VIP CUT Werbevideo]]
