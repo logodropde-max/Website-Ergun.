@@ -1,5 +1,5 @@
 /* endo Studio – Dateien in Vercel Blob: Kundenfotos (endo/fotos/) und Ergebnisse (endo/ergebnisse/).
-   Beides wird nach 30 Tagen vom täglichen Cron gelöscht (api/aufraeumen.js). Braucht BLOB_READ_WRITE_TOKEN. */
+   Beides wird nach 90 Tagen vom täglichen Cron gelöscht (api/aufraeumen.js). Braucht BLOB_READ_WRITE_TOKEN. */
 import { put } from '@vercel/blob';
 
 const ENDUNGEN = { 'image/png': '.png', 'image/jpeg': '.jpg', 'image/webp': '.webp', 'video/mp4': '.mp4', 'video/quicktime': '.mov' };

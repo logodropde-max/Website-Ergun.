@@ -48,6 +48,22 @@ export function erstelleSpeicher(rpc) {
     auftragIntern(auftragId) {
       return rpc('endo_auftrag_intern', { p_auftrag: auftragId });
     },
+    /* Kundenkonto beim ersten Anmelden anlegen (0 Credits) */
+    kontoSicherstellen(kontoId, name) {
+      return rpc('endo_konto_sicherstellen', { p_konto: kontoId, p_name: name || '' });
+    },
+    fotoMerken(kontoId, url) {
+      return rpc('endo_foto_merken', { p_konto: kontoId, p_url: url });
+    },
+    meineDateien(kontoId, tage = 90) {
+      return rpc('endo_meine_dateien', { p_konto: kontoId, p_tage: tage });
+    },
+    dateiLoeschen(kontoId, art, id) {
+      return rpc('endo_datei_loeschen', { p_konto: kontoId, p_art: art, p_id: String(id) });
+    },
+    alteDateienAustragen(tage = 90) {
+      return rpc('endo_alte_dateien_austragen', { p_tage: tage });
+    },
     konto(kontoId) {
       return rpc('endo_konto', { p_konto: kontoId });
     },

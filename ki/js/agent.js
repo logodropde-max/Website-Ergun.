@@ -3,7 +3,8 @@
    Seit 25.09. nachts ohne Kasten: die Nachrichten schweben über dem Hintergrund, höchstens drei sind zu sehen,
    ältere lösen sich nach oben auf. Das Gespräch startet beim ersten Antippen der Zeile.
    Freie Fragen gehen an /api/agent (Claude). Ist dort kein Schlüssel hinterlegt oder schlägt der
-   Aufruf fehl, antwortet endo mit den eingebauten Antworten unten. */
+   Aufruf fehl, antwortet endo mit den eingebauten Antworten unten.
+   Seit 26.09.: Kundenkonto (E-Mail + Passwort über /api/konto), „Mein Konto“ mit Ergebnissen und Fotos (90 Tage). */
 (function () {
   var box = document.querySelector('[data-agent]');
   if (!box) return;
@@ -30,6 +31,10 @@
      Das alte Drehbuch (Kategorie → Look → Werkzeug → Foto → Vormerken) bleibt als Rückfall ohne Claude. */
   var testCode = '', laufend = null, vorSchritt = 'ki';
   var auswahl = null; /* Antwort-Knöpfe, die endo gerade anbietet (Werkzeug auswahl_zeigen) */
+  /* Kundenkonto (26.09.): Sitzung von Supabase, nur für Angemeldete im Browser-Speicher (Schlüssel endo-sitzung).
+     Passwörter gehen direkt an /api/konto und landen nie im Verlauf für Claude. */
+  var SPEICHER = 'endo-sitzung';
+  var sitzung = sitzungLesen(), formMail = '', wartendesFoto = null, linkNachricht = null;
   var UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
   var KATEGORIEN = ['Mode', 'Kosmetik', 'Elektronik', 'Essen und Getränke', 'Möbel und Deko', 'Etwas anderes'];
@@ -147,10 +152,11 @@
     vorschlaege.scrollLeft += e.deltaY;
   }, { passive: false });
   function eingabeArt(art) {
-    feld.type = art === 'mail' ? 'email' : art === 'code' ? 'password' : 'text';
+    var pw = art === 'code' || art === 'pw-alt' || art === 'pw-neu';
+    feld.type = art === 'mail' ? 'email' : pw ? 'password' : 'text';
     feld.setAttribute('inputmode', art === 'mail' ? 'email' : 'text');
-    feld.setAttribute('autocomplete', art === 'mail' ? 'email' : art === 'code' ? 'one-time-code' : 'off');
-    feld.placeholder = art === 'mail' ? 'name@shop.de' : art === 'code' ? 'Codewort …' : PLATZHALTER;
+    feld.setAttribute('autocomplete', art === 'mail' ? (schritt === 'a-mail' ? 'username' : 'email') : art === 'code' ? 'one-time-code' : art === 'pw-alt' ? 'current-password' : art === 'pw-neu' ? 'new-password' : 'off');
+    feld.placeholder = art === 'mail' ? 'name@shop.de' : art === 'code' ? 'Codewort …' : art === 'pw-alt' ? 'Passwort …' : art === 'pw-neu' ? 'Passwort: 8+ Zeichen, Buchstaben und Zahlen' : PLATZHALTER;
   }
   function sperren(an) { beschaeftigt = an; senden.disabled = an; }
 
@@ -158,24 +164,30 @@
   function start() {
     schritt = 'ki';
     sperren(true);
+    if (linkNachricht) { var l = linkNachricht; linkNachricht = null; linkAusMail(l); return; }
     endo('Hallo, ich bin endo. Aus Ihrem Handyfoto mache ich Produktfotos, Werbeanzeigen, kurze Werbevideos und Titelbilder für Ihre Website.')
-      .then(function () { return endo('Was verkaufen Sie?'); })
-      .then(function () { sperren(false); zeigeSchritt(); if (auftragAusAdresse()) fortsetzenAnbieten(); });
+      .then(function () { return endo(sitzung ? 'Schön, dass Sie wieder da sind. Was möchten Sie heute erstellen?' : 'Was verkaufen Sie?'); })
+      .then(function () { sperren(false); zeigeSchritt(); if (sitzung) kontoStand(); if (auftragAusAdresse()) fortsetzenAnbieten(); });
   }
   function zeigeSchritt() {
-    eingabeArt(schritt === 'mail' ? 'mail' : schritt === 'code' ? 'code' : 'text');
+    var MAIL_SCHRITTE = { mail: 1, 'a-mail': 1, 'r-mail': 1 };
+    eingabeArt(MAIL_SCHRITTE[schritt] ? 'mail' : schritt === 'code' ? 'code' : schritt === 'a-pw' ? 'pw-alt' : schritt === 'r-pw' || schritt === 'pw-neu' ? 'pw-neu' : 'text');
     if (schritt === 'ki' && auswahl) { auswahlKnoepfe(auswahl); return; }
     if (schritt === 'ki') {
       knoepfe([
         { text: 'Produktfoto', aktion: function () { freieFrage('Ich möchte ein Produktfoto.'); } },
         { text: 'Werbeanzeige', aktion: function () { freieFrage('Ich möchte eine Werbeanzeige.'); } },
         { text: 'Werbevideo', aktion: function () { freieFrage('Ich möchte ein Werbevideo.'); } },
-        { text: 'Foto hochladen', haupt: !!testCode, aktion: function () { datei.click(); } },
+        { text: 'Foto hochladen', haupt: angemeldet(), aktion: function () { datei.click(); } },
+        angemeldet() && !testCode ? { text: 'Mein Konto', aktion: kontoZeigen } : null,
+        !angemeldet() ? { text: 'Anmelden', aktion: function () { anmeldenMenue(); } } : null,
         { text: 'Was kostet das?', aktion: function () { freieFrage('Was kostet das?'); } }
-      ]);
+      ].filter(Boolean));
       return;
     }
     if (schritt === 'code') { knoepfe([{ text: 'Abbrechen', aktion: codeAbbrechen }]); return; }
+    if (schritt === 'a-mail' || schritt === 'r-mail' || schritt === 'r-pw' || schritt === 'pw-neu') { knoepfe([{ text: 'Abbrechen', aktion: kontoAbbrechen }]); return; }
+    if (schritt === 'a-pw') { knoepfe([{ text: 'Passwort vergessen', aktion: passwortVergessen }, { text: 'Abbrechen', aktion: kontoAbbrechen }]); return; }
     if (schritt === 'kategorie') knoepfe(KATEGORIEN.map(function (k) { return { text: k, aktion: function () { kategorie(k); } }; }));
     else if (schritt === 'look') knoepfe(LOOKS.map(function (l) { return { text: l, aktion: function () { look(l); } }; }).concat([{ text: 'Ich beschreibe es selbst', aktion: selbstBeschreiben }]));
     else if (schritt === 'format') knoepfe(FORMATE.map(function (f) { return { text: f.name + ' · ' + f.credits + ' Credits' + (f.premium ? ' · Premium' : ''), aktion: function () { format(f); } }; }));
@@ -240,7 +252,8 @@
     datei.value = '';
     if (!f) return;
     if (!/^image\//.test(f.type)) { endo('Das ist leider kein Bild. Laden Sie bitte ein Foto hoch, zum Beispiel ein JPG vom Handy.'); return; }
-    if (testCode) { endoFoto(f); return; }
+    if (angemeldet()) { endoFoto(f); return; }
+    if (!kiAus && schritt === 'ki') { wartendesFoto = f; anmeldenMenue('foto'); return; }
     knoepfe([]);
     bild('du', URL.createObjectURL(f), f.name);
     historie.push({ rolle: 'user', text: '[Foto hochgeladen: ' + f.name + ']' });
@@ -250,14 +263,14 @@
     endo('Starkes Motiv. Genau so etwas setze ich ins Studio, mache ein kurzes Video daraus oder ein Titelbild für Ihre Website.')
       .then(function () { sperren(false); if (!daten.email) frageMail(); else { schritt = 'senden'; zeigeSchritt(); } });
   });
-  /* Testmodus: Foto über /api/endo/foto (prüft Typ, Größe, Auflösung, Inhalt), dann führt endo weiter */
+  /* Angemeldet oder Testmodus: Foto über /api/endo/foto (prüft Typ, Größe, Auflösung, Inhalt), dann führt endo weiter */
   function endoFoto(f) {
     knoepfe([]); sperren(true);
     bild('du', URL.createObjectURL(f), f.name);
     daten.fotoName = f.name;
     var t0 = tippt();
     verkleinern(f).then(function (v) {
-      return fetch('/api/endo/foto', { method: 'POST', headers: kopf({ 'content-type': 'application/octet-stream' }), body: v.daten })
+      return api('/api/endo/foto', { method: 'POST', headers: { 'content-type': 'application/octet-stream' }, body: v.daten })
         .then(function (r) { return r.json().catch(function () { return {}; }); });
     }).catch(function () { return {}; }).then(function (j) {
       t0.remove(); sperren(false);
@@ -312,10 +325,12 @@
   var FRAGE = /\?|^(was|wie|wann|wo|warum|wieso|welche|welcher|kann|gibt|ist|sind|darf|muss|brauche|hast|habt|haben|kostet)\b/i;
   eingabe.addEventListener('submit', function (e) {
     e.preventDefault();
-    var t = feld.value.trim();
+    var roh = feld.value, t = roh.trim();
     if (!t || beschaeftigt) return;
     feld.value = '';
     if (schritt === 'code') { codePruefen(t); return; }
+    if (schritt === 'a-mail' || schritt === 'r-mail') { mailEingabe(t); return; }
+    if (schritt === 'a-pw' || schritt === 'r-pw' || schritt === 'pw-neu') { passwortEingabe(roh); return; }
     if (/^\/?test(modus)?$/i.test(t)) { codeAbfragen(); return; }
     if (schritt === 'mail') {
       if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(t)) {
@@ -352,16 +367,26 @@
       sperren(false); zeigeSchritt();
     });
   }
-  function kopf(h) { h = h || {}; if (testCode) h['x-endo-code'] = testCode; return h; }
+  function kopf(h) {
+    h = h || {};
+    if (testCode) h['x-endo-code'] = testCode;
+    else if (sitzung && sitzung.access) h['x-endo-sitzung'] = sitzung.access;
+    return h;
+  }
+  /* fetch mit Konto: frischt die Sitzung vorher auf, falls sie gleich abläuft */
+  function api(url, opt) {
+    opt = opt || {};
+    return sitzungFrisch().then(function () { opt.headers = kopf(opt.headers || {}); return fetch(url, opt); });
+  }
   function frageKI() {
     if (kiAus || !window.fetch) return Promise.resolve(null);
     var ctrl = window.AbortController ? new AbortController() : null;
     var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 45000);
     var body = { nachrichten: historie.slice(-12) };
-    if (testCode && daten.fotoUrl) body.fotoUrl = daten.fotoUrl;
-    return fetch('/api/agent', {
+    if (angemeldet() && daten.fotoUrl) body.fotoUrl = daten.fotoUrl;
+    return api('/api/agent', {
       method: 'POST',
-      headers: kopf({ 'content-type': 'application/json' }),
+      headers: { 'content-type': 'application/json' },
       body: JSON.stringify(body),
       signal: ctrl ? ctrl.signal : undefined
     }).then(function (r) {
@@ -384,7 +409,7 @@
   function codeAbbrechen() { schritt = vorSchritt || 'ki'; knoepfe([]); zeigeSchritt(); }
   function codePruefen(c) {
     sperren(true); blase('du', '••••••••'); /* nie in den Verlauf für Claude */
-    fetch('/api/endo/konto', { headers: { 'x-endo-code': c } })
+    fetch('/api/konto?aktion=ich', { headers: { 'x-endo-code': c } })
       .then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
       .then(function (k) {
         if (!k || k.verfuegbar == null) {
@@ -400,17 +425,253 @@
   }
   function statusZeigen(n) {
     var s = verlauf.querySelector('.endo-status');
+    if (n == null) { if (s) s.remove(); return; }
     if (!s) { s = el('div', 'endo-el endo-status'); s.appendChild(el('i')); s.appendChild(el('span')); verlauf.appendChild(s); nachUnten(); }
-    s.lastChild.textContent = 'Testmodus · ' + Number(n).toLocaleString('de-DE') + ' Credits';
+    s.lastChild.textContent = (testCode ? 'Testmodus · ' : (sitzung && sitzung.mail ? sitzung.mail + ' · ' : '')) + Number(n).toLocaleString('de-DE') + ' Credits';
   }
   function auftragAusAdresse() {
     var m = /#auftrag=([0-9a-f-]{36})/i.exec(location.hash || '');
     return m && UUID_RE.test(m[1]) ? m[1] : null;
   }
   function fortsetzenAnbieten() {
-    if (testCode) { if (!laufend) fortschritt(auftragAusAdresse(), null, null); return; }
+    if (angemeldet()) { if (!laufend) fortschritt(auftragAusAdresse(), null, null); return; }
     sperren(true);
-    endo('Ihr Auftrag von vorhin ist noch da. Mit Ihrem Codewort zeige ich Ihnen den Stand.').then(function () { sperren(false); codeAbfragen(); });
+    endo('Ihr Auftrag von vorhin ist noch da. Melden Sie sich an, dann zeige ich Ihnen den Stand.').then(function () { sperren(false); anmeldenMenue('auftrag'); });
+  }
+
+  /* ---------- Kundenkonto: Anmelden, Registrieren, Passwort, Mein Konto ---------- */
+  function angemeldet() { return !!testCode || !!(sitzung && sitzung.access); }
+  function sitzungLesen() {
+    try { var x = JSON.parse(localStorage.getItem(SPEICHER) || 'null'); return x && x.access && x.refresh ? x : null; } catch (e) { return null; }
+  }
+  function sitzungSetzen(x) {
+    sitzung = x && x.access ? { access: x.access, refresh: x.refresh, bis: Number(x.bis) || Date.now() + 3600000, mail: x.mail || (sitzung && sitzung.mail) || '' } : null;
+    try { if (sitzung) localStorage.setItem(SPEICHER, JSON.stringify(sitzung)); else localStorage.removeItem(SPEICHER); } catch (e) {}
+  }
+  var erneuert = null;
+  function sitzungFrisch() {
+    if (testCode || !sitzung || sitzung.bis - Date.now() > 60000) return Promise.resolve();
+    if (erneuert) return erneuert;
+    erneuert = fetch('/api/konto?aktion=erneuern', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ refresh: sitzung.refresh }) })
+      .then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+      .then(function (j) { sitzungSetzen(j && j.sitzung ? j.sitzung : null); erneuert = null; });
+    return erneuert;
+  }
+  function kontoPost(aktion, body, mitSitzung) {
+    var h = { 'content-type': 'application/json' };
+    if (mitSitzung) h['x-endo-sitzung'] = mitSitzung;
+    return fetch('/api/konto?aktion=' + aktion, { method: 'POST', headers: h, body: JSON.stringify(body || {}) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { j.ok_ = r.ok; return j; }); })
+      .catch(function () { return { ok_: false, meldung: 'Keine Verbindung. Bitte versuchen Sie es gleich noch einmal.' }; });
+  }
+  /* Guthaben holen und anzeigen; liefert die Kontodaten (oder null) */
+  function kontoStand() {
+    return api('/api/konto?aktion=ich').then(function (r) {
+      if (r.status === 401 && !testCode) { sitzungSetzen(null); statusZeigen(null); return null; }
+      return r.ok ? r.json() : null;
+    }).catch(function () { return null; }).then(function (k) {
+      if (k && k.verfuegbar != null) {
+        if (sitzung && !sitzung.mail && k.name) sitzungSetzen({ access: sitzung.access, refresh: sitzung.refresh, bis: sitzung.bis, mail: k.name });
+        statusZeigen(k.verfuegbar);
+      }
+      return k;
+    });
+  }
+  function anmeldenMenue(grund) {
+    auswahl = null; knoepfe([]); if (!grund) blase('du', 'Anmelden'); sperren(true);
+    var satz = grund === 'foto'
+      ? 'Starkes Motiv. Damit ich daraus etwas erstellen kann, melden Sie sich bitte kurz an – oder legen Sie in einer Minute ein kostenloses Konto an.'
+      : 'Mit einem kostenlosen Konto erstellen Sie Bilder und Videos. Ihre Fotos und Ergebnisse bleiben 90 Tage unter „Mein Konto“ gespeichert.';
+    endo(satz).then(function () {
+      sperren(false);
+      knoepfe([
+        { text: 'Anmelden', haupt: true, aktion: function () { kontoSchritt('a-mail'); } },
+        { text: 'Kostenlos registrieren', aktion: function () { kontoSchritt('r-mail'); } },
+        { text: 'Später', aktion: kontoAbbrechen }
+      ]);
+    });
+  }
+  function kontoSchritt(s) {
+    knoepfe([]); sperren(true);
+    blase('du', s === 'a-mail' ? 'Anmelden' : 'Kostenlos registrieren');
+    schritt = s;
+    endo('Ihre E-Mail-Adresse, bitte.').then(function () { sperren(false); zeigeSchritt(); feld.focus(); });
+  }
+  function kontoAbbrechen() {
+    knoepfe([]); blase('du', 'Abbrechen');
+    schritt = 'ki'; wartendesFoto = null; formMail = '';
+    zeigeSchritt();
+  }
+  function mailEingabe(t) {
+    blase('du', t); /* E-Mail nicht in den Verlauf für Claude */
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(t)) {
+      sperren(true); endo('Die Adresse sieht noch unvollständig aus, zum Beispiel name@shop.de.').then(function () { sperren(false); zeigeSchritt(); feld.focus(); });
+      return;
+    }
+    formMail = t.toLowerCase();
+    var reg = schritt === 'r-mail';
+    schritt = reg ? 'r-pw' : 'a-pw'; knoepfe([]); sperren(true);
+    endo(reg ? 'Jetzt ein Passwort mit mindestens 8 Zeichen, Buchstaben und Zahlen.' : 'Und Ihr Passwort.').then(function () {
+      if (reg) {
+        var h = el('p', 'endo-el endo-hinweis');
+        h.appendChild(document.createTextNode('Mit der Registrierung legen Sie ein Konto bei endo Studio an. Wie wir Ihre Daten verarbeiten, steht in der '));
+        var a = el('a', null, 'Datenschutzerklärung'); a.href = (aufStartseite ? '' : '../') + 'datenschutz.html'; a.target = '_blank'; a.rel = 'noopener';
+        h.appendChild(a); h.appendChild(document.createTextNode('.'));
+        verlauf.appendChild(h); nachUnten();
+      }
+      sperren(false); zeigeSchritt(); feld.focus();
+    });
+  }
+  function passwortEingabe(pw) {
+    blase('du', '••••••••'); /* Passwort nie anzeigen und nie in den Verlauf */
+    knoepfe([]); sperren(true);
+    var s = schritt, t0 = tippt();
+    var anfrage = s === 'pw-neu' ? kontoPost('passwort-neu', { passwort: pw }, sitzung && sitzung.access)
+      : kontoPost(s === 'r-pw' ? 'registrieren' : 'anmelden', { mail: formMail, passwort: pw });
+    pw = '';
+    anfrage.then(function (j) {
+      t0.remove();
+      if (!j.ok_) {
+        return endo(j.meldung || 'Das hat nicht geklappt. Bitte versuchen Sie es noch einmal.').then(function () { sperren(false); zeigeSchritt(); feld.focus(); });
+      }
+      if (s === 'r-pw' && j.bestaetigen) {
+        schritt = 'ki';
+        return endo('Fast geschafft: Ich habe Ihnen eine E-Mail an ' + formMail + ' geschickt. Tippen Sie auf den Link darin – danach sind Sie hier angemeldet.')
+          .then(function () { formMail = ''; sperren(false); zeigeSchritt(); });
+      }
+      if (j.sitzung) sitzungSetzen(j.sitzung);
+      schritt = 'ki';
+      return angemeldetWeiter(s === 'pw-neu' ? 'Ihr neues Passwort ist gespeichert. Sie sind angemeldet.' : s === 'r-pw' ? 'Ihr Konto ist angelegt.' : 'Willkommen zurück.');
+    });
+  }
+  function angemeldetWeiter(satz) {
+    formMail = '';
+    return kontoStand().then(function (k) {
+      var n = k && k.verfuegbar != null ? k.verfuegbar : null;
+      var zusatz = n === 0 && !testCode ? ' Ihr Guthaben: 0 Credits. Credit-Pakete gibt es in Kürze – bis dahin berate ich Sie gern.' : (n != null ? ' Sie haben ' + n.toLocaleString('de-DE') + ' Credits.' : '');
+      return endo(satz + zusatz);
+    }).then(function () {
+      sperren(false); zeigeSchritt();
+      if (wartendesFoto) { var f = wartendesFoto; wartendesFoto = null; endoFoto(f); }
+      else if (auftragAusAdresse() && !laufend) fortschritt(auftragAusAdresse(), null, null);
+    });
+  }
+  function passwortVergessen() {
+    knoepfe([]); blase('du', 'Passwort vergessen'); sperren(true);
+    kontoPost('passwort-vergessen', { mail: formMail }).then(function (j) {
+      schritt = 'ki';
+      return endo(j.ok_ ? 'Wenn es für ' + formMail + ' ein Konto gibt, ist jetzt eine E-Mail mit einem Link unterwegs. Darüber setzen Sie ein neues Passwort.' : (j.meldung || 'Das hat gerade nicht geklappt.'));
+    }).then(function () { formMail = ''; sperren(false); zeigeSchritt(); });
+  }
+  function abmelden() {
+    knoepfe([]); blase('du', 'Abmelden'); sperren(true);
+    var alt = sitzung && sitzung.access;
+    sitzungSetzen(null); statusZeigen(null); daten.fotoUrl = '';
+    (alt ? kontoPost('abmelden', {}, alt) : Promise.resolve()).then(function () {
+      return endo('Sie sind abgemeldet. Bis bald!');
+    }).then(function () { schritt = 'ki'; sperren(false); zeigeSchritt(); });
+  }
+  /* Link aus der E-Mail von Supabase: #access_token=…&type=signup|recovery (oder #error=…) */
+  function linkLesen() {
+    var h = location.hash || '';
+    if (!/access_token=|error_code=|error=/.test(h)) return null;
+    var p = {};
+    h.replace(/^#/, '').split('&').forEach(function (t) {
+      var i = t.indexOf('=');
+      if (i > 0) { try { p[t.slice(0, i)] = decodeURIComponent(t.slice(i + 1).replace(/\+/g, ' ')); } catch (e) {} }
+    });
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} /* Token nicht in der Adresse lassen */
+    return p;
+  }
+  function linkAusMail(p) {
+    if (p.error || p.error_code || !p.access_token) {
+      return endo('Der Link aus der E-Mail ist abgelaufen oder wurde schon benutzt. Melden Sie sich einfach an – oder fordern Sie über „Passwort vergessen“ einen neuen an.')
+        .then(function () { sperren(false); anmeldenMenue('link'); });
+    }
+    sitzungSetzen({ access: p.access_token, refresh: p.refresh_token, bis: Date.now() + (Number(p.expires_in) || 3600) * 1000 });
+    if (p.type === 'recovery') {
+      schritt = 'pw-neu';
+      return endo('Setzen Sie jetzt Ihr neues Passwort: mindestens 8 Zeichen, Buchstaben und Zahlen.').then(function () { sperren(false); zeigeSchritt(); feld.focus(); });
+    }
+    return angemeldetWeiter('Ihre E-Mail-Adresse ist bestätigt – willkommen bei endo Studio.');
+  }
+  /* „Mein Konto“: Guthaben, Ergebnisse und Fotos der letzten 90 Tage – herunterladen, weiterverwenden, löschen */
+  function kontoZeigen() {
+    auswahl = null; knoepfe([]); blase('du', 'Mein Konto'); sperren(true);
+    var t0 = tippt();
+    Promise.all([kontoStand(), api('/api/konto?aktion=dateien').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })])
+      .then(function (x) {
+        t0.remove();
+        var k = x[0], d = x[1];
+        if (!k || !d) {
+          if (!sitzung) { sperren(false); anmeldenMenue('abgelaufen'); return; }
+          endo('Ihr Konto lädt gerade nicht. Bitte versuchen Sie es gleich noch einmal.').then(function () { sperren(false); zeigeSchritt(); });
+          return;
+        }
+        dateienZeigen(k, d);
+        sperren(false);
+        knoepfe([
+          { text: 'Weiter im Chat', haupt: true, aktion: function () { knoepfe([]); zeigeSchritt(); feld.focus(); } },
+          { text: 'Abmelden', aktion: abmelden }
+        ]);
+      });
+  }
+  function dateienZeigen(k, d) {
+    var box = el('section', 'endo-el endo-konto');
+    box.setAttribute('aria-label', 'Mein Konto');
+    var kopfZeile = el('div', 'endo-konto__kopf');
+    kopfZeile.appendChild(el('span', 'endo-konto__mail', (sitzung && sitzung.mail) || k.name || 'Ihr Konto'));
+    kopfZeile.appendChild(el('b', 'endo-konto__credits', Number(k.verfuegbar).toLocaleString('de-DE') + ' Credits'));
+    box.appendChild(kopfZeile);
+    function gruppe(titel, liste, art) {
+      box.appendChild(el('h3', 'endo-konto__titel', titel + (liste.length ? ' (' + liste.length + ')' : '')));
+      if (!liste.length) {
+        box.appendChild(el('p', 'endo-konto__leer', art === 'ergebnis' ? 'Noch keine Ergebnisse. Alles, was endo für Sie erstellt, erscheint hier.' : 'Noch keine Fotos hochgeladen.'));
+        return;
+      }
+      var raster = el('div', 'endo-konto__raster');
+      liste.forEach(function (x) {
+        if (!x.url || !/^https:\/\//.test(x.url)) return;
+        var kachel = el('div', 'endo-konto__kachel');
+        var video = /\.(mp4|mov)$/i.test(x.url);
+        var m = el(video ? 'video' : 'img', 'endo-konto__bild');
+        m.src = x.url;
+        if (video) { m.muted = true; m.setAttribute('playsinline', ''); m.preload = 'metadata'; } else { m.alt = ''; m.loading = 'lazy'; }
+        m.addEventListener('error', function () { kachel.remove(); });
+        kachel.appendChild(m);
+        var leiste = el('div', 'endo-konto__aktionen');
+        var laden = el('a', 'endo-knopf', 'Laden'); laden.href = x.url + '?download=1'; laden.rel = 'noopener'; laden.setAttribute('download', '');
+        laden.setAttribute('aria-label', 'Herunterladen');
+        leiste.appendChild(laden);
+        if (!video) {
+          var nutzen = el('button', 'endo-knopf', 'Nutzen'); nutzen.type = 'button';
+          nutzen.setAttribute('aria-label', 'Als Ausgangsfoto verwenden');
+          nutzen.addEventListener('click', function () {
+            if (beschaeftigt) return;
+            daten.fotoUrl = x.url;
+            freieFrage(art === 'foto' ? 'Ich möchte dieses Foto noch einmal verwenden.' : 'Ich möchte mit diesem Ergebnis weiterarbeiten.');
+          });
+          leiste.appendChild(nutzen);
+        }
+        var weg = el('button', 'endo-knopf endo-knopf--leise', 'Löschen'); weg.type = 'button';
+        weg.addEventListener('click', function () {
+          if (weg.disabled) return;
+          if (weg.getAttribute('data-sicher') !== '1') { weg.setAttribute('data-sicher', '1'); weg.textContent = 'Sicher?'; return; }
+          weg.disabled = true;
+          api('/api/konto?aktion=datei-loeschen', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ art: art, id: x.id }) })
+            .then(function (r) { if (r.ok) kachel.remove(); else { weg.disabled = false; weg.textContent = 'Löschen'; weg.removeAttribute('data-sicher'); } })
+            .catch(function () { weg.disabled = false; });
+        });
+        leiste.appendChild(weg);
+        kachel.appendChild(leiste);
+        raster.appendChild(kachel);
+      });
+      box.appendChild(raster);
+    }
+    gruppe('Meine Ergebnisse', d.ergebnisse || [], 'ergebnis');
+    gruppe('Meine Fotos', d.fotos || [], 'foto');
+    box.appendChild(el('p', 'endo-konto__leer', 'Alles bleibt ' + (d.tage || 90) + ' Tage gespeichert und wird danach automatisch gelöscht.'));
+    verlauf.appendChild(box); nachUnten();
   }
 
   /* ---------- Elemente von endo: Looks, Bestätigung, Fortschritt, Ergebnis, Kontakt ---------- */
@@ -518,9 +779,10 @@
     verlauf.appendChild(aussen); nachUnten();
   }
   function starteAuftrag(token, id, karte) {
-    return fetch('/api/endo/auftrag', { method: 'POST', headers: kopf({ 'content-type': 'application/json' }), body: JSON.stringify({ token: token, auftragId: id }) })
+    return api('/api/endo/auftrag', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ token: token, auftragId: id }) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (x) {
+        if (x.j.fehler === 'anmelden') { sitzungSetzen(null); statusZeigen(null); anmeldenMenue('abgelaufen'); return false; }
         if (!x.ok) { endo(x.j.meldung || 'Der Auftrag konnte nicht gestartet werden.'); return false; }
         historie.push({ rolle: 'user', text: '[Auftrag bestätigt: ' + (karte.text || karte.name || '') + ']' });
         if (x.j.status === 'zurueck') { endo(x.j.meldung || 'Der Auftrag konnte nicht gestartet werden. Ihre Credits sind zurückgebucht.'); return true; }
@@ -552,7 +814,7 @@
     laufend = { id: id };
     function ende() { clearInterval(uhr); laufend = null; if (window.endoZufluss) window.endoZufluss.erzeugen(false); box.remove(); }
     function frage() {
-      fetch('/api/endo/status?id=' + encodeURIComponent(id), { headers: kopf() })
+      api('/api/endo/status?id=' + encodeURIComponent(id))
         .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { j.http = r.status; return j; }); })
         .then(function (s) {
           if (s.status === 'fertig') { ende(); ergebnis(s, karte); if (s.verfuegbar != null) statusZeigen(s.verfuegbar); return; }
@@ -694,6 +956,9 @@
     io.observe(box);
   }
   setzeOffen(false, false);
+  /* Kommt der Kunde über den Link aus der Bestätigungs- oder Passwort-E-Mail, startet das Gespräch gleich */
+  linkNachricht = linkLesen();
+  if (linkNachricht) setTimeout(function () { if (!gestartet) los(); else if (linkNachricht) { var l = linkNachricht; linkNachricht = null; linkAusMail(l); } }, ruhig ? 0 : 600);
   /* Ruhend steht nur die Zeile da; das Gespräch beginnt beim Antippen (siehe feld focus). */
   box.addEventListener('endo:zeigen', function () { if (!handyMq.matches) los(); });
   requestAnimationFrame(function () { box.classList.add('agent--da'); });
