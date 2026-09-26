@@ -60,6 +60,20 @@ const TOOL_AUFTRAG = {
     additionalProperties: false
   }
 };
+const TOOL_AUSWAHL = {
+  name: 'auswahl_zeigen',
+  description: 'Zeigt dem Kunden Antwort-Knöpfe zu deiner Frage (2–6 kurze Antworten), z. B. für Kanal, Zielgruppe, Stimmung, Format oder Überschrift-Vorschläge. Nutze es bei jeder Frage mit wenigen typischen Antworten – die Frage steht zusätzlich kurz in deinem Text. Der Kunde kann trotzdem frei schreiben („Etwas anderes“ kommt automatisch dazu). mehrfach=true, wenn mehrere Antworten gleichzeitig passen.',
+  input_schema: {
+    type: 'object',
+    properties: {
+      frage: { type: 'string', description: 'Die Frage, kurz (höchstens 80 Zeichen)' },
+      optionen: { type: 'array', items: { type: 'string' }, description: '2–6 kurze Antworten, je höchstens 40 Zeichen' },
+      mehrfach: { type: 'boolean', description: 'true, wenn mehrere Antworten gewählt werden dürfen' }
+    },
+    required: ['frage', 'optionen'],
+    additionalProperties: false
+  }
+};
 const TOOL_KONTAKT = {
   name: 'kontakt_emre',
   description: 'Zeigt dem Kunden den Kontakt zu Emre (WhatsApp/E-Mail). Für 3D-Produkt, Parallax-Szene, persönliche Abstimmung, eine ganze Website oder wenn du etwas nicht beantworten kannst.',
@@ -137,6 +151,16 @@ export async function werkzeugAusfuehren(name, eingabe, ctx) {
       throw err;
     }
   }
+  if (name === 'auswahl_zeigen') {
+    const frage = String(e.frage || '').replace(/\s+/g, ' ').trim().slice(0, 80);
+    const optionen = [...new Set((Array.isArray(e.optionen) ? e.optionen : [])
+      .map((o) => String(o || '').replace(/\s+/g, ' ').trim().slice(0, 40)).filter(Boolean))].slice(0, 6);
+    if (optionen.length < 2) return { text: 'Nicht angezeigt: mindestens 2 Antworten nötig.' };
+    return {
+      text: `Knöpfe angezeigt: ${optionen.join(' · ')}. Warte auf die Antwort des Kunden.`,
+      element: { typ: 'auswahl', frage, optionen, mehrfach: e.mehrfach === true }
+    };
+  }
   if (name === 'kontakt_emre') {
     return { text: 'Kontakt wird angezeigt: WhatsApp +49 1590 6344961, E-Mail ergun.eu@gmail.com.', element: { typ: 'kontakt', anliegen: e.anliegen || 'sonstiges' } };
   }
@@ -151,7 +175,7 @@ function kostenUsd(u) {
 
 /* Gespräch mit Werkzeugen (höchstens MAX_RUNDEN). client = Anthropic-Client (in Tests ersetzbar). */
 export async function gespraech({ client, verlauf, ctx }) {
-  const tools = ctx.kontoId ? [TOOL_LOOKS, TOOL_AUFTRAG, TOOL_KONTAKT] : [TOOL_LOOKS, TOOL_KONTAKT];
+  const tools = ctx.kontoId ? [TOOL_LOOKS, TOOL_AUSWAHL, TOOL_AUFTRAG, TOOL_KONTAKT] : [TOOL_LOOKS, TOOL_AUSWAHL, TOOL_KONTAKT];
   const system = [
     { type: 'text', text: `${FEST}\n\n# Persönlichkeit und Regeln (von Emre trainiert)\n${ANWEISUNG}\n\n# Wissen\n${WISSEN}\n\n# Beispiel-Gespräche (Ton und Ablauf, nicht wörtlich übernehmen)\n${BEISPIELE}`, cache_control: { type: 'ephemeral' } },
     { type: 'text', text: modusText(!!ctx.kontoId, ctx.fotoUrl) }

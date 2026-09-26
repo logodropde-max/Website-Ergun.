@@ -94,3 +94,6 @@
   .endo-el, .endo-look, .endo-knopf { animation: none; transition: none; }
   .endo-arbeit__balken::after { animation: none; width: 100%; opacity: 0.35; transform: none; }
 }
+
+/* ---------- Antwort-Knöpfe (auswahl_zeigen): gewählt bei Mehrfachwahl ---------- */
+.agent__vorschlaege .chip.chip--an, .endo .agent__vorschlaege .chip.chip--an { border-color: rgba(226, 230, 236, 0.75); background: rgba(226, 230, 236, 0.16); color: #F7F8FA; }

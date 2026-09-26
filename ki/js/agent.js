@@ -29,6 +29,7 @@
      Testmodus: Codewort nur im Arbeitsspeicher dieser Seite (kein Cookie, kein Browser-Speicher).
      Das alte Drehbuch (Kategorie → Look → Werkzeug → Foto → Vormerken) bleibt als Rückfall ohne Claude. */
   var testCode = '', laufend = null, vorSchritt = 'ki';
+  var auswahl = null; /* Antwort-Knöpfe, die endo gerade anbietet (Werkzeug auswahl_zeigen) */
   var UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
   var KATEGORIEN = ['Mode', 'Kosmetik', 'Elektronik', 'Essen und Getränke', 'Möbel und Deko', 'Etwas anderes'];
@@ -163,6 +164,7 @@
   }
   function zeigeSchritt() {
     eingabeArt(schritt === 'mail' ? 'mail' : schritt === 'code' ? 'code' : 'text');
+    if (schritt === 'ki' && auswahl) { auswahlKnoepfe(auswahl); return; }
     if (schritt === 'ki') {
       knoepfe([
         { text: 'Produktfoto', aktion: function () { freieFrage('Ich möchte ein Produktfoto.'); } },
@@ -330,6 +332,7 @@
   });
 
   function freieFrage(t) {
+    auswahl = null; /* jede Antwort des Kunden schließt die angebotenen Knöpfe */
     knoepfe([]); du(t); sperren(true);
     var t0 = tippt();
     frageKI().then(function (erg) {
@@ -419,9 +422,34 @@
   }
   function zeigeElement(e) {
     if (!e || !e.typ) return;
-    if (e.typ === 'looks') lookKarten(e);
+    if (e.typ === 'auswahl') { if (Array.isArray(e.optionen) && e.optionen.length >= 2) auswahl = e; }
+    else if (e.typ === 'looks') lookKarten(e);
     else if (e.typ === 'karte') bestaetigung(e);
     else if (e.typ === 'kontakt') kontakt(e);
+  }
+  /* Antwort-Knöpfe von endo: antippen = antworten. Mehrfachwahl: an-/abwählen, dann „Weiter“.
+     „Etwas anderes“ öffnet das Textfeld – frei schreiben geht immer. */
+  function auswahlKnoepfe(a) {
+    var gewaehlt = [];
+    var liste = a.optionen.map(function (o) {
+      return {
+        text: o,
+        aktion: function () {
+          if (!a.mehrfach) { freieFrage(o); return; }
+          var i = gewaehlt.indexOf(o);
+          if (i >= 0) gewaehlt.splice(i, 1); else gewaehlt.push(o);
+          [].forEach.call(vorschlaege.querySelectorAll('.chip'), function (c) {
+            if (a.optionen.indexOf(c.textContent) < 0) return;
+            var an = gewaehlt.indexOf(c.textContent) >= 0;
+            c.classList.toggle('chip--an', an); c.setAttribute('aria-pressed', String(an));
+          });
+        }
+      };
+    });
+    if (a.mehrfach) liste.push({ text: 'Weiter', haupt: true, aktion: function () { if (gewaehlt.length) freieFrage(gewaehlt.join(', ')); } });
+    liste.push({ text: 'Etwas anderes', aktion: function () { feld.focus(); } });
+    knoepfe(liste);
+    if (a.mehrfach) [].forEach.call(vorschlaege.querySelectorAll('.chip'), function (c) { if (a.optionen.indexOf(c.textContent) >= 0) c.setAttribute('aria-pressed', 'false'); });
   }
   function lookKarten(e) {
     var reihe = el('div', 'endo-el endo-looks');
