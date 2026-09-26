@@ -13,6 +13,12 @@ Der Assistent „endo" steht auf [[endo-ai|endo.ai]] ganz oben im Vordergrund. E
 5. E-Mail angeben, dann per WhatsApp oder E-Mail an Emre schicken. Die Nachricht enthält Kategorie, Look, Format, Foto-Link und E-Mail.
 6. Freie Fragen beantwortet endo jederzeit.
 
+## Aussehen (Stand 27.09.2026)
+- **Chat öffnen:** erstes Antippen → Überschrift/Satz unter der Kugel blenden aus und machen Platz, große Kugel kleiner + dunkler und ruhig. **Schließen-X** (oder Esc) → Text kommt zurück, Verlauf bleibt.
+- **Nachrichten:** endo links in Glas-Sprechblasen mit **Mini-Kugel** (Bild der echten Kugel, schwebt leicht, pulsiert beim Schreiben, Impuls bei Antwort); eigene Nachrichten schlicht rechts. Antwort kommt als Lichtpunkt aus der großen Kugel, eigene Nachricht fliegt hinein.
+- **Galerie-Zeichen** im Eingabefeld: Galerie mit „Foto hochladen“ + Ergebnissen (Bilder, Videos, Fotos), groß ansehen + Download.
+- **Kugel:** treibt kaum; beim Einsammeln Aufschlag wie Flüssigmetall (Delle, Ringe, Herzschlag, Aufleuchten).
+
 ## Aussehen (Stand 25.09. nachmittags)
 - endo steht jetzt auch **auf der Startseite** direkt unter dem Titelbild (Bereich endo.ai, gleiches Skript). Ruhend nur die Eingabe, ab der ersten Nachricht ein ruhiges Fenster mit Blasen (endo links, eigene rechts), das nach unten wächst.
 - Antworten werden formatiert: Absätze, Listen, Code, fett, Links.
