@@ -1,5 +1,5 @@
 /* endo, der Chat-Assistent von endo Studio – mit Werkzeugen (Bauplan Phase C, Schritt 4).
-   Gehirn: Claude (Anthropic API). Persönlichkeit, Wissen und Beispiele kommen aus dem Obsidian-Trainings-Ordner
+   Gehirn: Claude Sonnet 5 (Anthropic API, Emre 26.09.: günstigeres Modell). Persönlichkeit, Wissen und Beispiele kommen aus dem Obsidian-Trainings-Ordner
    „11 endo Agent/“ (→ _lib/endo/wissen.js, beim Veröffentlichen gebaut). Die festen Sicherheitsregeln unten sind
    NICHT trainierbar: endo erzeugt und bucht nie selbst – er zeigt Looks, bereitet eine Bestätigungskarte vor,
    und erzeugt wird erst, wenn der Kunde auf der Karte „Ja“ tippt (api/endo/auftrag.js).
@@ -19,8 +19,8 @@ const MAX_NACHRICHTEN = 16;
 const MAX_ZEICHEN = 600;
 const MAX_GESAMT = 6000;
 const MAX_RUNDEN = 4;
-const MODELL = 'claude-opus-5';
-const PREISE = { input: 5, output: 25, cacheLesen: 0.5, cacheSchreiben: 6.25 }; // $ pro 1 Mio. Tokens
+const MODELL = 'claude-sonnet-5'; // Emre, 26.09.: das günstigere Modell (≈ 2,5× billiger als Opus 5)
+const PREISE = { input: 2, output: 10, cacheLesen: 0.2, cacheSchreiben: 2.5 }; // $ pro 1 Mio. Tokens (Sonnet 5)
 
 /* Feste Regeln – stehen VOR dem trainierbaren Teil und gelten immer. */
 const FEST = `Du bist endo, der Assistent von endo Studio auf https://website-ergun.vercel.app/ (Digitalstudio ERGUN. von Emre Ergun).
@@ -160,8 +160,8 @@ export async function gespraech({ client, verlauf, ctx }) {
   const elemente = [];
   let kosten = 0, res;
   for (let runde = 0; runde < MAX_RUNDEN; runde++) {
-    res = await client.beta.messages.create({
-      model: MODELL, max_tokens: 2000, betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default',
+    res = await client.messages.create({
+      model: MODELL, max_tokens: 2000,
       output_config: { effort: 'low' }, system, tools, messages
     });
     kosten += kostenUsd(res.usage);

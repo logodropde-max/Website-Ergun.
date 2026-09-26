@@ -24,7 +24,7 @@ export async function pruefeInhalt(fotoUrl, env = process.env) {
   try {
     const client = new Anthropic();
     const res = await client.messages.create({
-      model: 'claude-opus-5',
+      model: 'claude-sonnet-5',
       max_tokens: 1000,
       output_config: { effort: 'low', format: { type: 'json_schema', schema: SCHEMA } },
       messages: [{ role: 'user', content: [
@@ -35,7 +35,7 @@ export async function pruefeInhalt(fotoUrl, env = process.env) {
     if (res.stop_reason === 'refusal') return { geprueft: true, ok: false, grund: 'sonstiges' };
     const text = res.content.filter((b) => b.type === 'text').map((b) => b.text).join('');
     const d = JSON.parse(text);
-    const kosten = (res.usage.input_tokens * 5 + res.usage.output_tokens * 25) / 1e6;
+    const kosten = (res.usage.input_tokens * 2 + res.usage.output_tokens * 10) / 1e6; // Sonnet 5
     return { geprueft: true, ok: d.erlaubt && d.produkt_erkennbar, grund: d.erlaubt ? (d.produkt_erkennbar ? 'ok' : 'kein_produkt') : d.grund, kostenUsd: kosten };
   } catch (e) {
     console.error('endo Inhaltscheck:', e && e.message);
