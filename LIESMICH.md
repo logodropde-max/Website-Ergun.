@@ -277,6 +277,11 @@ Vier nummerierte Änderungen, je ein Commit. Basis: freigegebener Stand (CSS-Son
 - Bilder: `szene-<ebene>-nacht-*`, `szene-hund-*`, `szene-hund-jault-nacht-*`. Neu bauen: `ebenen.py` und danach `sonne_weg.py` (Reihenfolge wichtig: `ebenen.py` schreibt den Himmel mit Sonne).
 - Intro aus (Kopfskript kehrt sofort zurück, `.loader` entfernt). `h1` ist jetzt `.parallax__claim`.
 
+## endo Studio: Kundenkonten (26.09.2026 abends, Claude Code)
+- `api/konto.js` (eine Funktion): `GET ?aktion=ich|dateien`, `POST ?aktion=registrieren|anmelden|erneuern|abmelden|passwort-vergessen|passwort-neu|datei-loeschen`. Auth über Supabase (`api/_lib/endo/anmeldung.js`), Konto über `kontoOderNull`/`kontoPflicht` in `api/_lib/endo/http.js` (Test-Codewort `x-endo-code` oder Sitzung `x-endo-sitzung`).
+- Chat (`ki/js/agent.js` v14, `ki/endo-elemente.css` v3): Knopf „Anmelden“/„Mein Konto“, Passwort als ••••, Sitzung in `localStorage` „endo-sitzung“ nur nach Anmeldung, Link aus der Supabase-Mail (`#access_token…&type=signup|recovery`) wird gelesen und aus der Adresse entfernt.
+- Dateien 90 Tage (`api/aufraeumen.js`), neue Konten 0 Credits. Tests: `_code/werkzeuge/endo-datenbank/konto.test.mjs`, live: `kontotest.mjs`.
+
 ## Hero-Szene 2: Bergwiese mit Schäferhund, randlos (25.09.2026, 02:30, Claude Code)
 - **Ebenen** (von hinten): `szene-himmel` · `szene-fern` · `szene-mitte` · Name (`data-parallax-layer="titel"`) · `szene-wald` · `szene-wiese` (mit Hund) · `szene-gras`. Je `-1920`, `-2560`, `-hoch` (Hochformat: mittlere Hälfte, Hund dort mittig).
 - **Leinwand** aller Ebenen: 3840 × 3024 (Szene 3840 × 2160 unten, darüber 864 px Himmel-Überstand). Unten bündig (`object-position: 50% var(--bild-y)`), Breite 104 % (links −2 %). Jede Ebene ist unter ihrer Kante komplett gefüllt (Inpainting der eigenen Farben).
