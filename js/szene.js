@@ -66,13 +66,6 @@
       gold: { grund: '#AF8F9F', dunst: '#EFB894', hell: '#F1C1A1', schatten: '#977A93', kante: '#FFE0B0', kanteA: 0.8, schneeH: '#FFE9D4', schneeS: '#C5A8BC', schicht: '#9A7E95' },
       nacht: { grund: '#303C57', dunst: '#394866', hell: '#44557A', schatten: '#28334C', kante: '#AFC0E0', kanteA: 0.45, schneeH: '#C3CFE8', schneeS: '#62739A', schicht: '#28334C' }
     },
-    wolke: {
-      tag: { koerper: '#FFFFFF', unten: '#DCE6F0', a: 0.34 },
-      gold: { koerper: '#7E6485', unten: '#FFB88A', a: 0.46 },
-      nacht: { koerper: '#18213A', unten: '#5E7098', a: 0.42 }
-    },
-    /* Lichtsaum der Sonnenwolken: Farbe, Stärke */
-    wolkeSaum: { tag: ['#FFFFFF', 0.7], gold: ['#FFD9A6', 0.95], nacht: ['#8FA4D0', 0.35] },
     fern: {
       tag: { grund: '#90A9C4', dunst: '#C9DAEA', hell: '#B9CCE0', schatten: '#7A91AE', kante: '#FFFFFF', kanteA: 0.35, schneeH: '#F4F7FB', schneeS: '#C6D3E4', schicht: '#6E86A3' },
       gold: { grund: '#9B7D95', dunst: '#E8AE8C', hell: '#EDB896', schatten: '#7C6583', kante: '#FFD9A2', kanteA: 0.9, schneeH: '#FFE3C6', schneeS: '#B598B3', schicht: '#7C627F' },
@@ -664,60 +657,6 @@
     huelle.appendChild(c);
   }
 
-  /* ---------- Wolken: zurückhaltende Schleier, weg von Sonnenbahn und Mond ---------- */
-  function wolken(ebene) {
-    var hoehe = m.H * 0.58, q = 0.5, wz = zufall(808), feld = [];
-    /* Bänder: oben links/rechts, dazu ein langer Streifen knapp über dem Horizont */
-    var n = Math.round(7 * m.W / 1440) + 4;
-    for (var i = 0; i < n; i++) {
-      var u = wz(), y = hoehe * (0.1 + wz() * 0.28);
-      var x = xVon(u < 0.5 ? u * 0.62 : 0.62 + (u - 0.5) * 0.76);
-      if (Math.abs(x - m.W * 0.24) < m.W * 0.08 && y < hoehe * 0.3) continue;
-      feld.push({ x: x, y: y, w: m.W * (0.06 + wz() * 0.12), h: m.H * (0.012 + wz() * 0.02) });
-    }
-    for (i = 0; i < 5; i++) feld.push({ x: m.W * (0.1 + wz() * 0.8), y: hoehe * (0.8 + wz() * 0.12), w: m.W * (0.12 + wz() * 0.2), h: m.H * (0.008 + wz() * 0.01) });
-    /* 26.09. (Emre): Wolken bei der Sonne – dünne Schleier auf der Sonnenbahn, liegen VOR der Sonne, tagsüber weiß mit
-       heller Oberkante, abends von unten orange angestrahlt, nachts dunkle Schleier mit Mondsaum */
-    var sonnig = [];
-    for (i = 0; i < 4; i++) sonnig.push({ x: m.W * (0.36 + wz() * 0.28), y: hoehe * (0.2 + i * 0.09 + wz() * 0.06), w: m.W * (0.09 + wz() * 0.12), h: m.H * (0.008 + wz() * 0.012) });
-    AKTIV.forEach(function (licht) {
-      var c = document.createElement('canvas');
-      c.width = Math.ceil(m.W * q); c.height = Math.ceil(hoehe * q);
-      c.className = 'szene__bild szene__wolken'; c.setAttribute('data-licht', licht); c.style.top = '0px'; c.style.height = hoehe + 'px';
-      var g = c.getContext('2d'), p = F.wolke[licht]; g.setTransform(q, 0, 0, q, 0, 0);
-      feld.forEach(function (w, k) {
-        var r = zufall(900 + k);
-        for (var j = 0; j < 14; j++) {
-          var bx = w.x + (r() - 0.5) * w.w, by = w.y + (r() - 0.5) * w.h, rx = w.w * (0.14 + r() * 0.24), ry = w.h * (0.35 + r() * 0.45);
-          [[p.koerper, 0, p.a], [p.unten, ry * 0.35, p.a * 0.7]].forEach(function (z) {
-            g.save(); g.translate(bx, by + z[1]); g.scale(1, ry / rx);
-            var gr = g.createRadialGradient(0, 0, 0, 0, 0, rx); gr.addColorStop(0, rgba(z[0], z[2] * 0.5)); gr.addColorStop(1, rgba(z[0], 0));
-            g.fillStyle = gr; g.fillRect(-rx, -rx, rx * 2, rx * 2); g.restore();
-          });
-        }
-      });
-      ebene.insertBefore(c, ebene.querySelector('.sonne'));
-      /* die Sonnenwolken vor der Sonne (hinter dem Mond) */
-      var v = document.createElement('canvas');
-      v.width = c.width; v.height = c.height;
-      v.className = 'szene__bild szene__wolken szene__wolken--vorn'; v.setAttribute('data-licht', licht); v.style.top = '0px'; v.style.height = hoehe + 'px';
-      var vg = v.getContext('2d'), saum = F.wolkeSaum[licht]; vg.setTransform(q, 0, 0, q, 0, 0);
-      sonnig.forEach(function (w, k) {
-        var r = zufall(1200 + k);
-        for (var j = 0; j < 12; j++) {
-          var bx = w.x + (r() - 0.5) * w.w, by = w.y + (r() - 0.5) * w.h, rx = w.w * (0.12 + r() * 0.2), ry = w.h * (0.35 + r() * 0.45);
-          /* Körper, dann der Lichtsaum: tagsüber oben (Sonne hoch), abends unten (Sonne tief), nachts oben links (Mond) */
-          [[p.koerper, 0, p.a * 0.8], [saum[0], licht === 'gold' ? ry * 0.45 : -ry * 0.4, saum[1]]].forEach(function (z, zi) {
-            vg.save(); vg.translate(bx + (licht === 'nacht' && zi ? -rx * 0.2 : 0), by + z[1]); vg.scale(1, ry / rx);
-            var gr = vg.createRadialGradient(0, 0, 0, 0, 0, rx * (zi ? 0.8 : 1)); gr.addColorStop(0, rgba(z[0], z[2] * 0.5)); gr.addColorStop(1, rgba(z[0], 0));
-            vg.fillStyle = gr; vg.fillRect(-rx, -rx, rx * 2, rx * 2); vg.restore();
-          });
-        }
-      });
-      ebene.insertBefore(v, ebene.querySelector('.mond'));
-    });
-  }
-
   /* ---------- Sterne ----------
      drei Helligkeitsstufen, die nacheinander erscheinen (zuerst die hellsten), die hellsten als eigene
      Elemente mit unregelmäßigem Funkeln (CSS, jeder Stern mit eigenem Takt), dazu eine zurückhaltende
@@ -825,7 +764,6 @@
   function spaeter(fn) { if (window.requestIdleCallback) requestIdleCallback(fn, { timeout: 500 }); else setTimeout(fn, 60); }
   /* zeichnet alle Ebenen in den Lichtstimmungen aus AKTIV */
   function landschaft() {
-    wolken(ebenen.himmel);
     berg('weit', ebenen.weit, tiefster('fern') + 2, { saat: 3, schnee: 0.62, tiefe: 0.8, rippen: 0.9, baender: 20 });
     berg('fern', ebenen.fern, tiefster('mitte') + 2, { saat: 5, schnee: 0.64, schichten: 4, tiefe: 1, rippen: 1.7, baender: 75, geroell: 1000 });
     berg('mitte', ebenen.mitte, tiefster('huegel') + 2, { saat: 9, schichten: 7, tiefe: 1.1, rippen: 1.9, baender: 120, geroell: 1500 });
