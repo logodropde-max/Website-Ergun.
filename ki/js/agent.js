@@ -1191,7 +1191,7 @@
   /* Eingebaute Antworten, wenn die KI nicht erreichbar ist */
   function lokaleAntwort(t) {
     var s = t.toLowerCase();
-    if (/premium/.test(s)) return 'Premium kostet 100 € für 1.000 Credits und schaltet zusätzlich Videos mit zehn Sekunden frei. 3D-Produkte und Parallax-Szenen setzt Emre auf Anfrage persönlich um, dazu kommt die persönliche Abstimmung mit ihm.';
+    if (/premium/.test(s)) return 'Premium kostet 100 € für 1.000 Credits und schaltet zusätzlich Videos mit zehn Sekunden frei. 3D-Produkte und Parallax-Szenen setzt Emre auf Anfrage persönlich um. Und: Premium enthält Ihre Website von Emre – im Jahresabo inklusive, monatlich bei 12 Monaten Laufzeit.';
     if (/preis|kost|teuer|günstig|euro|€|paket/.test(s)) return 'Es gibt drei Pakete: ' + paketListe() + '. Ein Produktfoto kostet 12 Credits, ein Video mit fünf Sekunden 20.';
     if (/credit/.test(s)) return 'Credits sind Ihr Guthaben. Jedes Ergebnis kostet eine feste Zahl: Produktfoto 12, Werbeanzeige 10, Shop-Bild 5, Werbevideo 5 s 20, Website-Titelbild 12. Unter „Funktionen und Pakete“ rechnet die Seite aus, welches Paket zu Ihnen passt.';
     if (/abo|kündig|laufzeit|monat|jahr/.test(s)) return 'Sie wählen monatlich, jährlich oder einmalig. Im Jahresabo sparen Sie ' + ((E.abrechnung && E.abrechnung.rabattJahr) || 20) + ' %, einmalig gibt es kein Abo und die Credits gelten ' + ((E.abrechnung && E.abrechnung.einmalGueltigMonate) || 12) + ' Monate.';

@@ -106,6 +106,28 @@
       });
       bsp.appendChild(ul); k.appendChild(bsp);
 
+      /* Premium: inklusive Website von Emre (je Abrechnung andere Bedingung) + aufklappbarer „Umfang der Website“ */
+      var PW = E.premiumWebsite, web = null;
+      if (premium && PW) {
+        web = el('div', 'sp-karte__website');
+        var webZeile = el('p', 'sp-karte__website-titel'), webBed = el('p', 'sp-karte__website-bed');
+        web.appendChild(webZeile); web.appendChild(webBed);
+        var umfang = el('details', 'sp-karte__umfang'), us = el('summary', null, 'Umfang der Website'), ul2 = el('ul');
+        umfang.appendChild(us); umfang.appendChild(ul2); web.appendChild(umfang);
+        preisZeilen.push(function () {
+          var mitWeb = !einmal();
+          webZeile.textContent = mitWeb ? PW.titel : PW.einmalTitel + (PW.rabattEinmalProzent ? ': ' + PW.rabattEinmalProzent + ' %' : '');
+          webBed.textContent = mitWeb ? (jahr() ? PW.jahr : PW.monat) : PW.einmal;
+          web.classList.toggle('ist-ohne', !mitWeb);
+          ul2.innerHTML = '';
+          var punkte = (PW.umfang || []).slice();
+          if (PW.abschnitte) punkte.splice(1, 0, 'bis zu ' + PW.abschnitte + ' Abschnitte');
+          if (PW.korrekturrunden) punkte.push(PW.korrekturrunden + (PW.korrekturrunden === 1 ? ' Korrekturrunde' : ' Korrekturrunden'));
+          punkte.forEach(function (t) { ul2.appendChild(el('li', null, t)); });
+          var g = el('li', 'ist-hinweis'); var a = el('a', null, PW.groesser); a.href = kontakt; g.appendChild(a); ul2.appendChild(g);
+        });
+      }
+
       var inkl = el('div', 'sp-karte__inkl');
       inkl.appendChild(el('p', 'sp-karte__klein', premium ? 'Alles aus Start und Pro, dazu' : 'Enthalten'));
       if (premium) {
@@ -116,6 +138,7 @@
         /* Start und Pro enthalten dasselbe: eine kurze Zeile statt einer langen Liste */
         inkl.appendChild(el('p', 'sp-karte__zeile', p.kann.map(function (id) { return nachId[id] ? nachId[id].name : ''; }).filter(Boolean).join(' · ')));
       }
+      if (web) inkl.appendChild(web);   /* im selben Raster-Feld wie „Enthalten“ – alle Karten bleiben auf einer Linie */
       k.appendChild(inkl);
 
       /* Kauf-Link je Abrechnung (kaufen / kaufenJahr); solange leer: „… vormerken“ */

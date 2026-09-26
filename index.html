@@ -26,7 +26,7 @@
 <link rel="preload" href="schriften/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="schriften/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <script>document.documentElement.classList.add('js');</script>
-<link rel="stylesheet" href="ki/pakete.css?v=5">
+<link rel="stylesheet" href="ki/pakete.css?v=6">
 <link rel="stylesheet" href="ki/studio.css?v=1">
 
 <style>
@@ -237,6 +237,9 @@ img { display: block; max-width: 100%; height: auto; }
 .form__status { min-height: 1.4em; font-size: 14px; color: var(--text); }
 .form__hint { color: var(--muted); font-size: 13px; text-wrap: pretty; }
 .weg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.wege__beides { max-width: 720px; margin: 20px auto 0; text-align: center; font-size: 15px; line-height: 1.55; color: var(--muted); }
+.wege__beides b { color: var(--text); font-weight: 500; }
+.wege__beides a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255, 122, 61, 0.7); }
 .weg__option { position: relative; display: block; }
 .weg__option input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
 .weg__option span { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; font-size: 15px; color: var(--muted); transition: border-color 200ms var(--ease), color 200ms var(--ease), background-color 200ms var(--ease); }
@@ -643,6 +646,7 @@ img { display: block; max-width: 100%; height: auto; }
       <li><b>Bestehende Website</b><span>Überarbeiten, modernisieren oder um neue Bereiche erweitern.</span></li>
       <li><b>Selbst mitarbeiten</b><span>Produktfotos, Videos und Website-Bilder selbst erstellen, mit <a href="#endo">endo Studio</a>.</span></li>
     </ul>
+    <p class="wege__beides reveal"><b>Oder beides:</b> <a href="#pakete">Premium</a> – endo Studio mit allen Vorlagen und Ihre Website von Emre.</p>
 
     <!-- Eine Karte, alles auf einen Blick (Emre, 25.09. abends: keine Schritte) -->
     <form class="anfrage reveal" id="anfrage" novalidate>
@@ -964,8 +968,8 @@ img { display: block; max-width: 100%; height: auto; }
   if (document.readyState === 'complete') setTimeout(beobachten, 800); else window.addEventListener('load', function () { setTimeout(beobachten, 800); });
 })();
 </script>
-<script src="ki/js/endo-daten.js?v=6"></script>
-<script src="ki/js/pakete.js?v=6"></script>
+<script src="ki/js/endo-daten.js?v=7"></script>
+<script src="ki/js/pakete.js?v=7"></script>
 <script>
 /* Pakete bleiben zu, bis man „Pakete ansehen“ (oder oben „Pakete“) antippt */
 (function () {
@@ -989,7 +993,7 @@ img { display: block; max-width: 100%; height: auto; }
   if (location.hash === '#pakete') oeffnen(true);
 })();
 </script>
-<script src="ki/js/agent.js?v=25"></script>
+<script src="ki/js/agent.js?v=26"></script>
 <script>
 /* Kein Zoomen: Zwei-Finger-Zoom (Safari-Gesten) sperren. Doppeltippen und Pinch sperrt CSS (touch-action).
    Früher lagen hier auch touchmove/touchend-Sperren – die haben auf dem iPhone das Scrollen gebremst

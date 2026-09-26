@@ -11,6 +11,21 @@
 window.ENDO = {
   marke: 'endo Studio',
   abrechnung: { standard: 'monat', rabattJahr: 20, einmalGueltigMonate: 12 },
+  /* Premium inklusive Website von Emre (Emre, 27.09.) – BEDINGUNGEN SIND PLATZHALTER, Emre bestätigt sie noch.
+     Leere Zahlen (null) erscheinen auf der Seite nicht – es wird nichts versprochen, was nicht feststeht. */
+  premiumWebsite: {
+    bestaetigt: false,
+    titel: 'Inklusive Ihrer Website von Emre',
+    jahr: 'im Jahresabo inklusive',                              // Premium jährlich
+    monat: 'inklusive bei 12 Monaten Mindestlaufzeit',          // Premium monatlich
+    einmalTitel: 'Rabatt auf Ihre Website von Emre',            // Premium einmalig …
+    einmal: 'keine Website inklusive',                          // … statt Website ein Rabatt
+    abschnitte: null,        // PLATZHALTER: bis zu X Abschnitte
+    korrekturrunden: 1,
+    rabattEinmalProzent: null, // PLATZHALTER: Rabatt in % bei Premium einmalig
+    umfang: ['Onepager aus einer ERGUN.-Vorlage', 'Ihre eigenen Bilder und Videos, erstellt mit endo Studio'],
+    groesser: 'Größere Seiten oder ein Onlineshop: im kostenlosen Erstgespräch'
+  },
   pakete: [
     { name: 'Start', preis: 5, jahr: { monat: 3.99, gesamt: 47.88 }, einmal: 6, credits: 40, kann: ['foto', 'anzeige', 'shop', 'video', 'web'], kaufen: '', kaufenJahr: '', kaufenEinmal: '' },
     { name: 'Pro', preis: 20, jahr: { monat: 16, gesamt: 192 }, einmal: 24, credits: 200, kann: ['foto', 'anzeige', 'shop', 'video', 'web'], kaufen: '', kaufenJahr: '', kaufenEinmal: '' },

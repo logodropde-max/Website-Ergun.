@@ -25,6 +25,31 @@ Umschalter „Monatlich | Jährlich −20 %“ über den Karten (Standard: Monat
 
 → Auch mit 20 % Jahresrabatt überall über 35 % (Ziel erfüllt). Texte „kein Abo“ auf Karten, im Chat und in der FAQ von /ki/ entsprechend angepasst.
 
+## Premium inklusive Website von Emre (Emre, 27.09.2026 – Bedingungen noch Platzhalter)
+Auf Seite, Paket-Fenster, Paket-Karten und in endos Wissen: **„Premium: inklusive Ihrer Website von Emre“**. Die Bedingungen stehen in `ki/js/endo-daten.js` → `premiumWebsite` (`bestaetigt: false`). Leere Zahlen erscheinen nicht auf der Seite.
+- **Premium jährlich:** Website inklusive. Onepager aus einer ERGUN.-Vorlage, bis zu **[X] Abschnitte** (Platzhalter `abschnitte`), 1 Korrekturrunde, eigene Bilder und Videos mit endo.
+- **Premium monatlich:** Website inklusive bei **12 Monaten Mindestlaufzeit**.
+- **Premium einmalig:** keine Website, dafür **[X] % Rabatt** auf eine Website (Platzhalter `rabattEinmalProzent`).
+- Größere Seiten oder ein Onlineshop: im Erstgespräch.
+
+**Lohnt es sich? Gewinn vor Emres Arbeitszeit (schlechtester Fall, aus den Tabellen oben):**
+
+| Premium | Netto | Kosten (schlechtester Fall) | Gewinn vor Arbeitszeit |
+|---|---|---|---|
+| jährlich (1 Jahr) | 758,22 € | 486,72 € | **271,50 €** |
+| monatlich × 12 (Mindestlaufzeit) | 12 × 78,53 € = 942,36 € | 12 × 40,56 € = 486,72 € | **455,64 €** |
+
+**Emres Arbeitszeit für die Website = [Stunden] × [Stundensatz]** (beides Platzhalter, Emre trägt ein):
+
+| Stunden für den Onepager | bei 25 €/h | bei 40 €/h | bei 60 €/h |
+|---|---|---|---|
+| 4 h | 100 € | 160 € | 240 € |
+| 6 h | 150 € | 240 € | 360 € |
+| 8 h | 200 € | 320 € | 480 € |
+| 12 h | 300 € | 480 € | 720 € |
+
+→ **Grenze (Gewinn = 0):** jährlich 271,50 € ÷ Stundensatz; bei 40 €/h also **ca. 6,8 h**, monatlich (12 Monate) 455,64 € ÷ 40 €/h = **ca. 11,4 h**. Die Beispiel-Stundensätze sind nur zur Rechnung, keine Festlegung. Der schlechteste Fall setzt voraus, dass der Kunde alle Credits für das teuerste Werkzeug verbraucht; in der Praxis bleibt mehr übrig. Hosting/Domain der Kunden-Website sind hier nicht eingerechnet (Webdesign-Pakete: [[Pakete & Preise]]).
+
 ## Einmalig kaufen (Emre, 26.09.2026 spät)
 Dritter Schalter „Einmalig“: gleiche Credits, **einmal bezahlt, kein Abo, Credits 12 Monate gültig**. Preis ≈ Monatspreis + 20 %, damit das Abo attraktiver bleibt. Kauf-Link je Paket: Feld `kaufenEinmal` in `ki/js/endo-daten.js`.
 
