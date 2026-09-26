@@ -273,24 +273,20 @@ img { display: block; max-width: 100%; height: auto; }
 /* oben liegt die Sektion über dem Titelbild (Nebel zieht darüber) – Klicks gehen nur an ihren Inhalt */
 .endo__innen, .endo__pakete { pointer-events: auto; }
 /* Schlichter Übergang (26.09., Emre: Wurzeln waren „zu doll“, bis eine Vorlage kommt): aus dem Dunkel der Erde
-   läuft beim Scrollen ein einzelner feiner Lichtfaden nach unten bis in die Kugel; ab und zu wandert ein Lichtpunkt hinab.
+   waechst beim Scrollen ein einzelner feiner Lichtfaden nach unten bis zur Kugel; ein Lichtpunkt sitzt an seiner Spitze und folgt so der Scrollposition.
    Er endet weich kurz über dem sichtbaren Rand der Kugel (Emre: nicht in die Kugel hinein), gleiche Maße wie .endo__orb. */
 .endo__faden { position: absolute; z-index: -2; left: 50%; top: 30svh; width: 1px; margin-left: -0.5px; pointer-events: none; transform-origin: 50% 0;
   --faden-h: calc(4svh + clamp(240px, 44svh, 440px) + clamp(-72px, -6svh, -24px) + min(460px, 74vw) * 0.08); height: var(--faden-h);
   background: linear-gradient(rgba(214, 226, 245, 0), rgba(214, 226, 245, 0.28) 30%, rgba(226, 234, 248, 0.55) 82%, rgba(226, 234, 248, 0)); }
-.endo__faden::after { content: ""; position: absolute; left: -2px; top: 0; width: 5px; height: 36px; border-radius: 3px; opacity: 0;
-  background: radial-gradient(closest-side, rgba(240, 245, 255, 0.95), rgba(200, 216, 245, 0)); }
+.endo__faden::after { content: ""; position: absolute; left: -2px; bottom: -5px; width: 5px; height: 30px; border-radius: 3px; opacity: 0.9;
+  background: radial-gradient(closest-side, rgba(240, 245, 255, 0.95), rgba(200, 216, 245, 0));
+  /* Lichtpunkt sitzt an der Spitze des Fadens; die Spitze folgt ueber die scaleY-Kopplung direkt der Scrollposition */ }
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .endo__faden { animation: faden-waechst linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; }
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .endo__faden::after { animation: faden-punkt 7s cubic-bezier(0.45, 0, 0.55, 1) 2s infinite; }
-  .endo:not(.endo--sichtbar) .endo__faden::after, .endo-chat .endo__faden::after { animation-play-state: paused; }
-}
 @keyframes faden-waechst { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-@keyframes faden-punkt { 0% { opacity: 0; transform: translate3d(0, 0, 0); } 8% { opacity: 1; } 36% { opacity: 1; } 48% { opacity: 0; transform: translate3d(0, calc(var(--faden-h) - 36px), 0); } 100% { opacity: 0; transform: translate3d(0, calc(var(--faden-h) - 36px), 0); } }
 .endo__orb { position: relative; z-index: -1; width: min(460px, 74vw); aspect-ratio: 1; margin: clamp(-72px, -6svh, -24px) auto clamp(-72px, -7svh, -40px); opacity: 0; pointer-events: none;
   -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent); mask-image: radial-gradient(closest-side, #000 62%, transparent); transition: opacity 1400ms var(--ease), transform 1600ms var(--ease); transform: translateY(14svh) scale(0.86); }
 .endo--da .endo__orb { transform: none; }
