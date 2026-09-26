@@ -49,7 +49,7 @@ export const WERKZEUGE = {
     modell: 'marketing-studio/image', looks: FOTO_LOOKS, formate: ['1:1', '3:4', '4:3', '9:16', '16:9'],
     eingabe({ look, format, fotoUrl }) {
       return {
-        prompt: `Professional product photograph of the product from the reference image, ${FOTO_LOOKS[look].szene}. ${PRODUKT_TREU}`,
+        prompt: `Professional product photograph of the product from the reference image, ${FOTO_LOOKS[look].szene}. The product is the clear hero: centered, filling about 60 percent of the frame height, shot at eye level. ${PRODUKT_TREU}`,
         image_urls: [fotoUrl], quality: 'high', resolution: '2k', aspect_ratio: format, moderation: 'auto', enhance_prompt: false
       };
     }
@@ -57,9 +57,13 @@ export const WERKZEUGE = {
   anzeige: {
     name: 'Werbeanzeige', credits: 10, art: 'bild', listenUsd: 0.372, maxUsd: 0.6, minuten: 10,
     modell: 'marketing-studio/image', preset: true, formate: ['auto'],
-    eingabe({ presetId, fotoUrl }) {
+    eingabe({ presetId, fotoUrl, ueberschrift }) {
+      // Überschrift: vom Kunden bestätigt, streng geprüft (pruefen.js → pruefeUeberschrift). Ohne Überschrift: kein Zusatztext.
+      const text = ueberschrift
+        ? `The only headline is exactly this German text, spelled exactly as given: "${ueberschrift}". Do not add any other headline, slogan, call to action or text.`
+        : 'Do not add any headline, slogan, call to action or other text.';
       return {
-        prompt: 'Clean, premium advertisement for the product in the reference image. Use only the brand and product name that are visible on the product itself. No prices, discounts, codes, ratings, reviews, testimonials, statistics or health claims.',
+        prompt: `Clean, premium advertisement for the product in the reference image. ${text} Besides that headline, only the brand and product name that are already printed on the product may appear. No prices, discounts, codes, ratings, stars, reviews, testimonials, statistics or health claims.`,
         image_urls: [fotoUrl], preset_id: presetId, quality: 'high', resolution: '2k', aspect_ratio: 'auto', moderation: 'auto', enhance_prompt: true
       };
     }

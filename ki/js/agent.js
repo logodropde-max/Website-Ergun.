@@ -330,17 +330,17 @@
   /* Eingebaute Antworten, wenn die KI nicht erreichbar ist */
   function lokaleAntwort(t) {
     var s = t.toLowerCase();
-    if (/premium/.test(s)) return 'Premium kostet 100 € für 1.000 Credits und schaltet zusätzlich Videos mit zehn Sekunden, drehbare 3D-Produkte und Parallax-Szenen frei. Dazu die persönliche Abstimmung mit Emre.';
-    if (/preis|kost|teuer|günstig|euro|€|paket/.test(s)) return 'Es gibt drei Pakete: ' + paketListe() + '. Ein Produktfoto kostet 5 Credits, ein Video mit fünf Sekunden 20.';
-    if (/credit/.test(s)) return 'Credits sind Ihr Guthaben. Jedes Ergebnis kostet eine feste Zahl: Produktfoto 5, Shop-Bild 5, Werbevideo 5 s 20, Website-Titelbild 10. Unter „Funktionen und Pakete“ rechnet die Seite aus, welches Paket zu Ihnen passt.';
+    if (/premium/.test(s)) return 'Premium kostet 100 € für 1.000 Credits und schaltet zusätzlich Videos mit zehn Sekunden frei. 3D-Produkte und Parallax-Szenen setzt Emre auf Anfrage persönlich um, dazu kommt die persönliche Abstimmung mit ihm.';
+    if (/preis|kost|teuer|günstig|euro|€|paket/.test(s)) return 'Es gibt drei Pakete: ' + paketListe() + '. Ein Produktfoto kostet 12 Credits, ein Video mit fünf Sekunden 20.';
+    if (/credit/.test(s)) return 'Credits sind Ihr Guthaben. Jedes Ergebnis kostet eine feste Zahl: Produktfoto 12, Werbeanzeige 10, Shop-Bild 5, Werbevideo 5 s 20, Website-Titelbild 12. Unter „Funktionen und Pakete“ rechnet die Seite aus, welches Paket zu Ihnen passt.';
     if (/abo|kündig|laufzeit|monat|jahr/.test(s)) return 'Sie wählen monatlich oder jährlich. Im Jahresabo sparen Sie ' + ((E.abrechnung && E.abrechnung.rabattJahr) || 20) + ' %. Die Credits setzen Sie jeden Monat für das ein, was Sie gerade brauchen.';
     if (/video|reel|tiktok|clip/.test(s)) return 'Ja, aus Ihrem Produktfoto mache ich einen Clip mit fünf Sekunden für 20 Credits. Zehn Sekunden gibt es im Premium-Paket.';
-    if (/3d|ar\b|drehbar/.test(s)) return 'Aus einem Foto erstelle ich ein drehbares 3D-Modell Ihres Produkts, zum Beispiel für Shop und AR. Das ist Teil von Premium.';
+    if (/3d|ar\b|drehbar/.test(s)) return 'Ein drehbares 3D-Modell Ihres Produkts setzt Emre im Premium-Paket auf Anfrage persönlich um. Schreiben Sie ihm gern per WhatsApp oder E-Mail.';
     if (/recht|kommerz|werbung|lizenz|nutzen|verwenden/.test(s)) return 'Ja, Sie dürfen alle Ergebnisse kommerziell nutzen, im Shop, in Anzeigen und auf Social Media.';
     if (/wann|start|verfügbar|live|bald|los/.test(s)) return 'endo Studio startet in Kürze. Wenn Sie Ihr Paket jetzt vormerken, bekommen Sie den Zugang als Erstes.';
     if (/daten|datenschutz|training|speicher|sicher/.test(s)) return 'Ihre Fotos werden nur für Ihre Aufträge verarbeitet und nicht zum Training verwendet. Dieser Chat speichert nichts.';
     if (/website|homepage|webseite|seite bauen/.test(s)) return 'Eine komplette Website baut Emre über ERGUN., mit Bewegung und eigenen Bildern. Das Erstgespräch ist kostenlos.';
-    if (/higgsfield|modell|kling|seedance|welche ki|wie funktioniert/.test(s)) return 'Im Hintergrund arbeiten Modelle von Higgsfield. Ich biete drei Bereiche: Produktfotos, Werbevideos mit fünf Sekunden und Bilder für Ihre Website.';
+    if (/higgsfield|modell|kling|seedance|welche ki|wie funktioniert/.test(s)) return 'Im Hintergrund arbeiten Modelle von Higgsfield. Ich mache Produktfotos, Shop-Bilder, Werbeanzeigen, Werbevideos und Titelbilder für Ihre Website.';
     if (/hallo|hi\b|hey|guten|servus|moin/.test(s)) return 'Hallo! Schön, dass Sie da sind. Erzählen Sie mir, was Sie verkaufen, dann zeige ich Ihnen, was möglich ist.';
     if (/emre|kontakt|mensch|anruf|telefon/.test(s)) return 'Emre erreichen Sie per WhatsApp unter +49 1590 6344961 oder per E-Mail an ergun.eu@gmail.com.';
     return 'Gute Frage. Die beantwortet Emre gern persönlich. Am schnellsten geht es, wenn Sie mir zeigen, was Sie verkaufen: Dann bereite ich alles für Sie vor.';

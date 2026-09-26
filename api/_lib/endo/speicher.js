@@ -37,6 +37,10 @@ export function erstelleSpeicher(rpc) {
     chatkosten(usd) {
       return rpc('endo_chatkosten', { p_usd: usd, p_tageslimit_usd: LIMITS.tageslimitUsd() });
     },
+    /* Nachricht eines Besuchers zählen; ok=false heißt: Tageslimit für diesen Besucher erreicht. */
+    chatZaehlen(besucherHash) {
+      return rpc('endo_chat_zaehlen', { p_besucher: besucherHash, p_max: LIMITS.chatNachrichtenProTag });
+    },
     auftrag(auftragId, kontoId) {
       return rpc('endo_auftrag', { p_auftrag: auftragId, p_konto: kontoId });
     },

@@ -54,7 +54,7 @@ export function erlaubteFotoUrl(url) {
 /* Auftrag prüfen: nur bekannte Felder, nur erlaubte Werte. presetIds = aktuell erlaubte Presets (live geholt). */
 export function pruefeAuftrag(roh, { presetIds = [] } = {}) {
   if (!roh || typeof roh !== 'object' || Array.isArray(roh)) throw new Abgelehnt('ungueltig', 'Ungültiger Auftrag.');
-  const erlaubt = new Set(['werkzeug', 'look', 'format', 'fotoUrl', 'presetId']);
+  const erlaubt = new Set(['werkzeug', 'look', 'format', 'fotoUrl', 'presetId', 'ueberschrift']);
   for (const k of Object.keys(roh)) if (!erlaubt.has(k)) throw new Abgelehnt('ungueltig', 'Ungültiger Auftrag.');
   const w = WERKZEUGE[roh.werkzeug];
   if (!w) throw new Abgelehnt('werkzeug', 'Dieses Werkzeug gibt es nicht.');
@@ -69,11 +69,25 @@ export function pruefeAuftrag(roh, { presetIds = [] } = {}) {
       throw new Abgelehnt('look', 'Diesen Look gibt es nicht (mehr).');
     }
     auftrag.presetId = roh.presetId;
-  } else if (roh.presetId !== undefined) throw new Abgelehnt('ungueltig', 'Ungültiger Auftrag.');
+    if (roh.ueberschrift !== undefined && roh.ueberschrift !== '') auftrag.ueberschrift = pruefeUeberschrift(roh.ueberschrift);
+  } else if (roh.presetId !== undefined || roh.ueberschrift !== undefined) throw new Abgelehnt('ungueltig', 'Ungültiger Auftrag.');
   const format = roh.format === undefined ? w.formate[0] : roh.format;
   if (!w.formate.includes(format)) throw new Abgelehnt('format', 'Dieses Format gibt es für dieses Werkzeug nicht.');
   auftrag.format = format;
   return auftrag;
+}
+
+/* Überschrift für Werbeanzeigen (Emre, 26.09.: endo schlägt deutsch vor, Kunde bestätigt).
+   Einziger Text, der zu Higgsfield darf – deshalb streng: kurz, nur Buchstaben/Ziffern/einfache Satzzeichen,
+   keine Preise, Prozente, Rabatte, Bewertungen, Versprechen oder Links. */
+const UEBERSCHRIFT_ZEICHEN = /^[A-Za-zÄÖÜäöüß0-9 .,!?&'’\-–]+$/;
+const UEBERSCHRIFT_VERBOTEN = /(€|\$|%|prozent|rabatt|sale|gratis|kostenlos|umsonst|gutschein|code|angebot|nur heute|sterne|bewertung|testsieger|garantie|heilt|klinisch|bewiesen|nr\.? ?1|www|http|\.de\b|\.com\b)/i;
+export function pruefeUeberschrift(roh) {
+  const t = String(roh).replace(/\s+/g, ' ').trim();
+  if (t.length < 3 || t.length > 40 || !UEBERSCHRIFT_ZEICHEN.test(t) || UEBERSCHRIFT_VERBOTEN.test(t) || /\d{3,}/.test(t)) {
+    throw new Abgelehnt('ueberschrift', 'Die Überschrift passt so nicht: höchstens 40 Zeichen, ohne Preise, Rabatte, Bewertungen oder Links.');
+  }
+  return t;
 }
 
 export function istAuftragsId(id) { return typeof id === 'string' && UUID.test(id); }

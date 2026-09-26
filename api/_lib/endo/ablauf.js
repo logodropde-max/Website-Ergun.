@@ -54,7 +54,7 @@ export async function vorbereiten({ kontoId, roh, hf, speicher, env = process.en
 
   const look = lookName(w, auftrag, presets);
   const formatText = auftrag.format === 'auto' || auftrag.format === 'bild' ? '' : auftrag.format;
-  const teile = [w.name, look, formatText, `${w.credits} Credits`].filter(Boolean);
+  const teile = [w.name, look, formatText, auftrag.ueberschrift ? `„${auftrag.ueberschrift}“` : '', `${w.credits} Credits`].filter(Boolean);
   return {
     karte: { werkzeug: auftrag.werkzeug, name: w.name, look, format: auftrag.format, credits: w.credits, text: teile.join(' · '), foto: auftrag.fotoUrl },
     token: signiereKarte({ kontoId, auftrag, credits: w.credits, kostenUsd }, env, jetzt)

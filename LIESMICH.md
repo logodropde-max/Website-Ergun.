@@ -16,6 +16,13 @@
 
 
 
+## endo Phase C – Schritt 4: Gehirn (26.09.2026, Claude Code)
+- `api/agent.js`: Claude Opus 5 (effort low, Fallbacks) mit Werkzeugen `looks_zeigen`, `auftrag_vorbereiten` (nur Testmodus + Foto; Foto-Adresse setzt der Server), `kontakt_emre`. Antwort `{ antwort, elemente: [looks|karte|kontakt], stand }` – die Seite liest bisher nur `antwort`, die Elemente nutzt Schritt 5. Feste Regeln im Code, trainierbarer Teil aus `api/_lib/endo/wissen.js`.
+- `wissen.js` wird von `_code/werkzeuge/endo-wissen/baue-wissen.mjs` aus dem Vault-Ordner `11 endo Agent/` erzeugt (Notizen mit `endo: anweisung|wissen|beispiele`), prüft Credits gegen `werkzeuge.js`; läuft in `jetzt-veroeffentlichen.ps1` vor dem Sync (Abbruch bei Widerspruch).
+- Besucher-Zähler: Tabelle `endo_chat_zaehler` + `endo_chat_zaehlen` (40/Tag, Hash aus IP + Server-Schlüssel), Tageslimit über `endo_chatkosten`.
+- Werbeanzeige mit Überschrift (`pruefeUeberschrift`), Produktfoto-Vorlage: Produkt ~60 % der Bildhöhe.
+- Seite: `ki/js/endo-daten.js` (Credits 12/10/5/20/12/40, Werbeanzeige neu, 3D/Parallax ohne Credits = auf Anfrage), Antworten in `ki/js/agent.js`, FAQ/Meta in `ki/index.html`, Satz in `index.html`. Test prüft Gleichheit mit `werkzeuge.js`.
+
 ## endo Phase C – Schritt 3: Werkzeuge, Prüfungen, Higgsfield, Ablauf (26.09.2026, Claude Code)
 - `api/_lib/endo/werkzeuge.js`: **eine** Tabelle – Modell, feste englische Prompt-Vorlagen, erlaubte Looks/Formate, Credits (foto 12, anzeige 10, shop 5, video 20, web 12, video10 40), Listenpreis und Preisgrenze `maxUsd`. Gesperrt: Preset-Gruppe „Social Proof“.
 - `pruefen.js`: Testcode (`ENDO_TEST_CODE`, Header `x-endo-code`), Foto (echter Typ über `image-size`, ≥ 800 px, ≤ 4 MB), Auftrag (nur erlaubte Felder/Werte, Foto nur aus eigenem Blob), signierte Karten (HMAC aus dem Supabase-Schlüssel, 10 min), Webhook-Schlüssel je Auftrag.
