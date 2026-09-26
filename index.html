@@ -272,123 +272,6 @@ img { display: block; max-width: 100%; height: auto; }
 .agentur__marke { font-family: var(--serif); font-size: clamp(2.4rem, 6vw, 3.4rem); line-height: 1; letter-spacing: -0.02em; }
 .agentur__marke .dot { color: var(--accent); }
 .agentur__text { color: var(--muted); font-size: clamp(15px, 1.3vw, 17px); line-height: 1.6; max-width: 50ch; text-wrap: pretty; }
-/* ---------- Kontakt nach „ContactWithGlobe“ (Emre, 27.09.): links Direkt erreichen + Globus, rechts Formular-Karte ---------- */
-.kt .reveal { transition-delay: calc(var(--v, 0) * 90ms); }
-.kt__kopf { display: grid; gap: 16px; justify-items: center; text-align: center; }
-.kt__pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
-.kt__pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: rgba(222, 234, 252, 0.95); box-shadow: 0 0 8px rgba(222, 234, 252, 0.8); }
-.kt__schnell { display: none; }
-.kt__raster { width: min(100%, 1080px); display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 4vw, 56px); align-items: start; margin-top: 8px; text-align: left; }
-.kt__links { display: grid; gap: 22px; }
-.kt__person { margin: 0; display: flex; align-items: center; gap: 14px; }
-.kt__person img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(242, 239, 232, 0.2); }
-.kt__person figcaption { display: grid; gap: 2px; font-size: 14px; color: var(--muted); }
-.kt__person strong { font-weight: 500; color: var(--text); font-size: 16px; }
-.kt__titel { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(1.6rem, 2.4vw, 2rem); line-height: 1.1; letter-spacing: -0.01em; }
-.kt__wege { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-.kt__wege a { display: flex; align-items: center; gap: 14px; min-height: 64px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 14px; background: rgba(242, 239, 232, 0.02);
-  transition: border-color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
-.kt__wege a:active { transform: scale(0.99); }
-.kt__wege a > span:last-child { display: grid; gap: 2px; font-size: 15px; color: var(--text); overflow-wrap: anywhere; }
-.kt__wege small { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-.kt__zeichen { flex: none; display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--line); color: var(--text); }
-.kt__zeichen svg { width: 20px; height: 20px; }
-@media (hover: hover) and (pointer: fine) { .kt__wege a:hover { border-color: rgba(242, 239, 232, 0.32); background: rgba(242, 239, 232, 0.05); } }
-.kt__wege a:focus-visible, .kt__schnell a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-
-/* Globus: Canvas + pulsierender Lichtpunkt (Farbe = Leuchtpunkt der Lichtlinie) */
-.kt__globus { position: relative; width: 100%; aspect-ratio: 1; max-width: 420px; justify-self: center; }
-.kt__globus canvas { position: absolute; inset: 0; width: 100%; height: calc(100% - 28px); }
-.kt__ort { position: absolute; left: 0; top: 0; width: 0; height: 0; opacity: 0; transition: opacity 600ms var(--ease); pointer-events: none; }
-.kt__ort::before, .kt__ort::after { content: ""; position: absolute; left: -4px; top: -4px; width: 8px; height: 8px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 0 10px 2px rgba(222, 234, 252, 0.9), 0 0 22px 6px rgba(196, 212, 244, 0.35); }
-.kt__ort::after { background: transparent; box-shadow: 0 0 0 1px rgba(222, 234, 252, 0.8); animation: kt-puls 2.4s var(--ease) infinite; }
-@keyframes kt-puls { from { transform: scale(1); opacity: 0.9; } to { transform: scale(4.2); opacity: 0; } }
-.kt__globus-text { position: absolute; left: 0; right: 0; bottom: 0; margin: 0; text-align: center; font-size: 12px; letter-spacing: 0.08em; color: var(--muted); }
-
-/* Formular-Karte */
-.kt__karte { position: relative; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(180deg, rgba(242, 239, 232, 0.045), rgba(242, 239, 232, 0.015)); box-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.8); overflow: hidden; }
-.kt__karte-innen { padding: clamp(22px, 3vw, 34px); transition: opacity 420ms var(--ease), transform 520ms var(--ease-out); }
-.kt__karte-kopf { display: grid; gap: 6px; }
-.kt__karte-kopf p { margin: 0; font-size: 14px; color: var(--muted); }
-/* gepunktete Trennlinie (FormDots der Vorlage) */
-.kt__punkte { height: 2px; margin: 20px 0 22px; background-image: radial-gradient(circle, rgba(242, 239, 232, 0.28) 1px, transparent 1.4px); background-size: 8px 2px; background-repeat: repeat-x; }
-.kt__form { display: grid; gap: 18px; }
-.kt__zeile { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.kt-feld { display: grid; gap: 7px; min-width: 0; margin: 0; padding: 0; border: 0; }
-.kt-feld label, .kt-feld legend { padding: 0; font-size: 13px; font-weight: 500; color: var(--text); }
-.kt-feld legend { margin-bottom: 9px; }
-.kt-feld small { font-weight: 400; color: var(--muted); }
-.kt-feld input[type="text"], .kt-feld input[type="email"], .kt-feld input[type="tel"], .kt-feld textarea {
-  width: 100%; min-height: 48px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: rgba(14, 14, 12, 0.55); color: var(--text); font: inherit; font-size: 16px; line-height: 1.4;
-  transition: border-color 200ms var(--ease), background-color 200ms var(--ease); }
-.kt-feld textarea { min-height: 104px; resize: none; overflow: hidden; field-sizing: content; }
-.kt-feld input::placeholder, .kt-feld textarea::placeholder { color: rgba(242, 239, 232, 0.38); }
-.kt-feld input:focus-visible, .kt-feld textarea:focus-visible { outline: none; border-color: rgba(242, 239, 232, 0.55); background: rgba(14, 14, 12, 0.8); box-shadow: 0 0 0 3px rgba(242, 239, 232, 0.08); }
-.kt-feld.hat-fehler input, .kt-feld.hat-fehler textarea { border-color: var(--accent); }
-.kt-feld__fehler { min-height: 0; font-size: 13px; color: #FF8A5C; }
-.kt-feld__fehler:empty { display: none; }
-.kt__chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.kt__chips label { position: relative; display: flex; }
-.kt__chips input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
-.kt__chips span { display: flex; align-items: center; min-height: 44px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 999px; font-size: 14.5px; color: var(--muted);
-  transition: border-color 200ms var(--ease), background-color 200ms var(--ease), color 200ms var(--ease), transform 160ms var(--ease-out); }
-.kt__chips input:checked + span { border-color: rgba(242, 239, 232, 0.7); background: rgba(242, 239, 232, 0.1); color: var(--text); }
-.kt__chips input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
-.kt__chips label:active span { transform: scale(0.97); }
-@media (hover: hover) and (pointer: fine) { .kt__chips label:hover span { border-color: rgba(242, 239, 232, 0.35); color: var(--text); } }
-.kt__chips--zwei span { min-width: 120px; justify-content: center; }
-.kt__datei .upload { padding: 10px 14px; border-radius: 12px; }
-.kt__datei .upload__symbol { width: 34px; height: 34px; padding: 8px; }
-.kt__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-.kt__haken { display: flex; gap: 12px; align-items: flex-start; font-size: 14px !important; font-weight: 400 !important; line-height: 1.5; color: var(--muted) !important; cursor: pointer; }
-.kt__haken input { flex: none; width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--accent); cursor: pointer; }
-.kt__haken a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(242, 239, 232, 0.4); }
-.kt__senden { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 54px; padding: 14px 22px; border: 0; border-radius: 999px; background: var(--accent); color: #0E0E0C; font: 500 16px/1 var(--sans); cursor: pointer;
-  transition: transform 160ms var(--ease-out), background-color 200ms var(--ease); }
-.kt__senden svg { width: 18px; height: 18px; transition: transform 300ms var(--ease-out); }
-.kt__senden:active { transform: scale(0.98); }
-.kt__senden:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
-@media (hover: hover) and (pointer: fine) { .kt__senden:hover svg { transform: translateX(4px); } .kt__senden:hover { background: #FF6D38; } }
-
-/* Erfolgs-Karte: Formular gleitet weg, Danke gleitet herein */
-.kt__karte.ist-gesendet .kt__karte-innen { opacity: 0; transform: translateY(-16px); pointer-events: none; }
-.kt__danke { position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; gap: 14px; padding: 32px; text-align: center; opacity: 0; transform: translateY(16px); transition: opacity 480ms var(--ease) 180ms, transform 560ms var(--ease-out) 180ms; }
-.kt__danke[hidden] { display: none; }
-.kt__karte.ist-gesendet .kt__danke { opacity: 1; transform: none; }
-.kt__danke:focus { outline: none; }
-.kt__danke p { margin: 0; max-width: 40ch; color: var(--muted); text-wrap: pretty; }
-.kt__danke-titel { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(1.8rem, 3vw, 2.4rem); line-height: 1.1; }
-.kt__check { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; color: #0E0E0C; background: var(--text); transform: scale(0.4); opacity: 0; transition: transform 520ms cubic-bezier(0.34, 1.56, 0.64, 1) 300ms, opacity 300ms var(--ease) 300ms; }
-.kt__check svg { width: 30px; height: 30px; transform: scale(0.6); opacity: 0; transition: transform 420ms var(--ease-out) 560ms, opacity 300ms var(--ease) 560ms; }
-.kt__karte.ist-gesendet .kt__check, .kt__karte.ist-gesendet .kt__check svg { transform: none; opacity: 1; }
-.kt__danke-knoepfe { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 6px; }
-.kt__senden--klein { width: auto; min-height: 48px; font-size: 15px; }
-.kt__zurueck { min-height: 48px; padding: 12px 20px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--text); font: 500 15px/1 var(--sans); cursor: pointer; }
-.kt__zurueck:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.kt .wege { margin-top: 36px; }
-
-/* Handy: eine Spalte – Überschrift → Schnell-Knöpfe → Formular → Globus flach */
-@media (max-width: 820px) {
-  .kt__raster { grid-template-columns: minmax(0, 1fr); gap: 28px; }
-  .kt__karte { order: 1; }
-  .kt__links { order: 2; }
-  .kt__person, .kt__links > .kt__titel, .kt__wege { display: none; }
-  .kt__schnell { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: 100%; }
-  .kt__schnell a { display: grid; justify-items: center; gap: 8px; min-height: 76px; padding: 14px 6px; border: 1px solid var(--line); border-radius: 16px; background: rgba(242, 239, 232, 0.03); font-size: 14px; color: var(--text); }
-  .kt__schnell svg { width: 22px; height: 22px; }
-  .kt__schnell a:active { transform: scale(0.97); }
-  .kt__globus { aspect-ratio: 2 / 1; max-width: none; }
-  .kt__zeile { grid-template-columns: minmax(0, 1fr); }
-  .kt__karte-innen { padding: 22px 16px; }
-  .kt__danke { padding: 24px 16px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .kt .reveal { transition-delay: 0ms; }
-  .kt__karte-innen, .kt__danke, .kt__check, .kt__check svg, .kt__senden svg { transition: none; }
-  .kt__ort::after { animation: none; opacity: 0; }
-}
-.kt__karte.ist-zu .kt__karte-innen { display: none; }
-.kt__karte.ist-zu .kt__danke { position: relative; inset: auto; min-height: 360px; }
 
 /* ---------- Footer ---------- */
 .footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; padding: 40px var(--pad) 32px; color: var(--muted); font-size: 13px; }
@@ -645,6 +528,39 @@ img { display: block; max-width: 100%; height: auto; }
   .wege li + li { border-top: 1px solid var(--line); }
   .anfrage { padding: 22px 16px; gap: 20px; border-radius: 16px; }
 }
+
+/* ---------- Kontakt-Kasten (Emre, 27.09.): altes Formular, nur der Kasten im neuen Stil –
+   runde Karte mit feinem Rand, ruhiger Grund, viel Innenabstand, gepunktete Linie, weiche Felder, Fokus-Ring in Akzentfarbe, Pfeil gleitet ---------- */
+.anfrage { width: min(100%, 720px); gap: 24px; padding: clamp(24px, 3.4vw, 40px); border-radius: 24px; border-color: rgba(242, 239, 232, 0.12);
+  background: linear-gradient(180deg, rgba(242, 239, 232, 0.045), rgba(242, 239, 232, 0.012)); box-shadow: 0 40px 90px -50px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(242, 239, 232, 0.05); }
+.anfrage__punkte { height: 2px; margin: -2px 0; background-image: radial-gradient(circle, rgba(242, 239, 232, 0.3) 1px, transparent 1.4px); background-size: 8px 2px; background-repeat: repeat-x; }
+.anfrage .field { gap: 8px; }
+.anfrage .field input, .anfrage .field textarea, .anfrage .field select {
+  min-height: 50px; padding: 12px 14px; border: 1px solid rgba(242, 239, 232, 0.14); border-radius: 12px; background-color: rgba(14, 14, 12, 0.55); font-size: 16px; line-height: 1.4;
+  transition: border-color 200ms var(--ease), box-shadow 200ms var(--ease), background-color 200ms var(--ease); }
+.anfrage .field select { padding-right: 40px; background-position: right 14px center; }
+.anfrage .field textarea { min-height: 112px; }
+.anfrage .field input::placeholder, .anfrage .field textarea::placeholder { color: rgba(242, 239, 232, 0.36); }
+.anfrage .field input:focus-visible, .anfrage .field textarea:focus-visible, .anfrage .field select:focus-visible {
+  outline: none; border-color: var(--accent); background-color: rgba(14, 14, 12, 0.8); box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.2); }
+.anfrage .field.hat-fehler input, .anfrage .field.hat-fehler textarea { border-color: var(--accent); }
+.anfrage .field__error { min-height: 0; }
+.anfrage .field__error:empty { display: none; }
+/* „Worum geht es?“ als Chips, die sauber umbrechen */
+.anfrage .wahl { display: flex; flex-wrap: wrap; gap: 8px; }
+.anfrage .wahl__option span { min-height: 44px; padding: 10px 18px; border-radius: 999px; font-size: 15px; color: var(--muted); }
+.anfrage .wahl__option input:checked + span { color: var(--text); }
+.anfrage .weg__option span { min-height: 50px; border-radius: 999px; }
+.anfrage__senden { min-height: 56px; }
+.anfrage__pfeil { display: inline-flex; transition: transform 300ms var(--ease-out); }
+.anfrage__pfeil svg { width: 18px; height: 18px; }
+@media (hover: hover) and (pointer: fine) { .anfrage__senden:hover .anfrage__pfeil { transform: translateX(4px); } }
+.anfrage__senden:active { transform: scale(0.98); }
+@media (max-width: 700px) {
+  .anfrage { padding: 24px 16px; border-radius: 20px; }
+  .anfrage .weg { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { .anfrage__pfeil { transition: none; } }
 </style>
 <link rel="stylesheet" href="ki/endo-elemente.css?v=13">
 </head>
@@ -750,133 +666,14 @@ img { display: block; max-width: 100%; height: auto; }
   </section>
 
   <!-- Kostenloses Erstgespräch: drei Wege der Zusammenarbeit, darunter ein übersichtliches Formular -->
-  <section class="contact kt" id="kontakt" aria-labelledby="kontakt-titel">
-    <!-- Kontakt nach der Vorlage „ContactWithGlobe“ (Emre, 27.09.), als reines HTML/CSS/JS -->
-    <div class="kt__kopf">
-      <span class="kt__pill reveal">Kontakt</span>
-      <h2 class="contact__big reveal" id="kontakt-titel" style="--v:1">Kostenloses Erstgespräch</h2>
-      <p class="contact__intro reveal" style="--v:2">Erzählen Sie mir kurz von Ihrem Vorhaben – ich melde mich persönlich innerhalb von 24&nbsp;Stunden.</p>
-    </div>
-
-    <!-- Handy: drei große Schnell-Knöpfe -->
-    <nav class="kt__schnell reveal" style="--v:3" aria-label="Direkt erreichen">
-      <a href="tel:+4915906344961"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3.5l1.6 4.3-2.2 1.4a10.5 10.5 0 0 0 6.4 6.4l1.4-2.2L20 15.5V19a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1Z"/></svg>Anrufen</a>
-      <a href="https://wa.me/4915906344961" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5l1.2-3.6A8 8 0 1 1 8.4 18.6Z"/><path d="M9.2 8.6c.3 2.9 2.4 5.2 5.3 5.7l1-1.3-1.8-.9-.7.8a4 4 0 0 1-2.2-2.2l.8-.7-.9-1.8Z"/></svg>WhatsApp</a>
-      <a href="mailto:ergun.eu@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/></svg>E-Mail</a>
-    </nav>
-
-    <div class="kt__raster">
-      <aside class="kt__links reveal" style="--v:3" aria-label="Direkt erreichen">
-        <figure class="kt__person">
-          <img src="bilder/kontakt/emre-264.webp" width="56" height="56" alt="Porträt von Emre Ergun" loading="lazy" decoding="async">
-          <figcaption><strong>Emre Ergun</strong><span class="online">online</span></figcaption>
-        </figure>
-        <h3 class="kt__titel">Direkt erreichen</h3>
-        <ul class="kt__wege">
-          <li><a href="mailto:ergun.eu@gmail.com"><span class="kt__zeichen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span><span><small>E-Mail</small>ergun.eu@gmail.com</span></a></li>
-          <li><a href="tel:+4915906344961"><span class="kt__zeichen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3.5l1.6 4.3-2.2 1.4a10.5 10.5 0 0 0 6.4 6.4l1.4-2.2L20 15.5V19a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1Z"/></svg></span><span><small>Telefon</small>+49 1590 6344961</span></a></li>
-          <li><a href="https://wa.me/4915906344961" target="_blank" rel="noopener"><span class="kt__zeichen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5l1.2-3.6A8 8 0 1 1 8.4 18.6Z"/><path d="M9.2 8.6c.3 2.9 2.4 5.2 5.3 5.7l1-1.3-1.8-.9-.7.8a4 4 0 0 1-2.2-2.2l.8-.7-.9-1.8Z"/></svg></span><span><small>WhatsApp</small>Schreiben Sie mir direkt</span></a></li>
-        </ul>
-        <div class="kt__globus" data-globus data-welt="js/welt.js?v=1">
-          <canvas aria-hidden="true"></canvas>
-          <i class="kt__ort" data-globus-punkt aria-hidden="true"></i>
-          <p class="kt__globus-text">Persönlich aus Elmshorn · deutschlandweit</p>
-        </div>
-      </aside>
-
-      <div class="kt__karte reveal" style="--v:4">
-        <div class="kt__karte-innen" data-karte>
-          <div class="kt__karte-kopf">
-            <h3 class="kt__titel">Nachricht senden</h3>
-            <p>Felder mit * brauche ich für die Antwort.</p>
-          </div>
-          <div class="kt__punkte" aria-hidden="true"></div>
-
-          <form class="kt__form" id="anfrage" novalidate>
-            <div class="kt__zeile">
-              <div class="kt-feld">
-                <label for="f-name">Name *</label>
-                <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-err">
-                <span class="kt-feld__fehler" id="f-name-err" aria-live="polite"></span>
-              </div>
-              <div class="kt-feld">
-                <label for="f-firma">Firma <small>(optional)</small></label>
-                <input id="f-firma" name="firma" type="text" autocomplete="organization">
-              </div>
-            </div>
-            <div class="kt__zeile">
-              <div class="kt-feld">
-                <label for="f-mail">E-Mail *</label>
-                <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="f-mail-err">
-                <span class="kt-feld__fehler" id="f-mail-err" aria-live="polite"></span>
-              </div>
-              <div class="kt-feld">
-                <label for="f-tel">Telefon / WhatsApp <small>(optional)</small></label>
-                <input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="+49 …" aria-describedby="f-tel-err">
-                <span class="kt-feld__fehler" id="f-tel-err" aria-live="polite"></span>
-              </div>
-            </div>
-
-            <fieldset class="kt-feld kt__thema">
-              <legend>Worum geht es?</legend>
-              <div class="kt__chips">
-                <label><input type="radio" name="hilfe" value="Website"><span>Website</span></label>
-                <label><input type="radio" name="hilfe" value="Website + Assistent"><span>Website + Assistent</span></label>
-                <label><input type="radio" name="hilfe" value="Website + Automatisierung"><span>Website + Automatisierung</span></label>
-                <label><input type="radio" name="hilfe" value="Betreuung"><span>Betreuung</span></label>
-                <label><input type="radio" name="hilfe" value="endo Studio"><span>endo Studio</span></label>
-                <label><input type="radio" name="hilfe" value="Weiß ich noch nicht"><span>Weiß ich noch nicht</span></label>
-              </div>
-            </fieldset>
-
-            <div class="kt-feld">
-              <label for="f-text">Nachricht *</label>
-              <textarea id="f-text" name="text" rows="3" required aria-describedby="f-text-err" placeholder="Was machen Sie, und was soll die Website können? Ein, zwei Sätze genügen."></textarea>
-              <span class="kt-feld__fehler" id="f-text-err" aria-live="polite"></span>
-            </div>
-
-            <div class="kt-feld kt__datei">
-              <div class="upload" data-upload>
-                <svg class="upload__symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4"/><path d="m7 9 5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-                <span class="upload__text"><b>Logo oder Fotos mitschicken</b><small>optional · Bilder, PDF, Word, ZIP</small></span>
-                <input id="f-datei" name="dateien" type="file" multiple accept="image/*,.pdf,.doc,.docx,.svg,.ai,.zip" aria-label="Logo oder Fotos mitschicken (optional)">
-              </div>
-              <ul class="datei__liste" data-datei-liste aria-live="polite"></ul>
-            </div>
-
-            <fieldset class="kt-feld kt__weg">
-              <legend>Senden über</legend>
-              <div class="kt__chips kt__chips--zwei">
-                <label><input type="radio" name="weg" value="whatsapp" checked><span>WhatsApp</span></label>
-                <label><input type="radio" name="weg" value="mail"><span>E-Mail</span></label>
-              </div>
-            </fieldset>
-
-            <!-- Honigtopf gegen Spam: für Menschen unsichtbar -->
-            <div class="kt__hp" aria-hidden="true"><label>Website <input type="text" name="webseite" tabindex="-1" autocomplete="off"></label></div>
-
-            <div class="kt-feld kt__ok">
-              <label class="kt__haken"><input type="checkbox" name="datenschutz" required aria-describedby="f-ds-err"><span>Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a> gelesen und bin einverstanden, dass Emre mich zu meiner Anfrage kontaktiert. *</span></label>
-              <span class="kt-feld__fehler" id="f-ds-err" aria-live="polite"></span>
-            </div>
-
-            <button class="kt__senden" type="submit" data-senden>Erstgespräch anfragen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button>
-            <p class="form__status" data-status aria-live="polite"></p>
-            <p class="form__hint">Öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Ihre Angaben speichert die Website nicht, nur mitgeschickte Dateien liegen bis zu 30 Tage bei Vercel.</p>
-          </form>
-        </div>
-
-        <div class="kt__danke" data-danke hidden tabindex="-1">
-          <span class="kt__check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12.5 4 4 8-9"/></svg></span>
-          <h3 class="kt__danke-titel" data-danke-titel>Danke!</h3>
-          <p data-danke-text>Ihre Nachricht ist fertig. Ich melde mich persönlich bei Ihnen.</p>
-          <div class="kt__danke-knoepfe">
-            <a class="kt__senden kt__senden--klein" href="#" data-nochmal>WhatsApp erneut öffnen</a>
-            <button class="kt__zurueck" type="button" data-bearbeiten>Nachricht bearbeiten</button>
-          </div>
-          <p class="form__hint">Klappt es nicht? Schreiben Sie mir direkt an <a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a>.</p>
-        </div>
-      </div>
+  <section class="contact" id="kontakt" aria-labelledby="kontakt-titel">
+    <div class="contact__kopf">
+      <figure class="contact__person reveal">
+        <span class="contact__bild"><img src="bilder/kontakt/emre-264.webp" width="88" height="88" alt="Porträt von Emre Ergun" loading="lazy" decoding="async"></span>
+        <figcaption><strong>Emre Ergun</strong> · <span class="online">online</span></figcaption>
+      </figure>
+      <h2 class="contact__big reveal" id="kontakt-titel">Kostenloses Erstgespräch</h2>
+      <p class="contact__intro reveal">Erzählen Sie kurz, worum es geht. Ich melde mich persönlich, per WhatsApp oder E-Mail.</p>
     </div>
 
     <ul class="wege reveal" aria-label="So arbeiten wir zusammen">
@@ -886,6 +683,108 @@ img { display: block; max-width: 100%; height: auto; }
     </ul>
     <p class="wege__beides reveal"><b>Oder beides:</b> <a href="#pakete">Premium</a> – endo Studio mit allen Vorlagen und Ihre Website von Emre.</p>
 
+    <!-- Eine Karte, alles auf einen Blick (Emre, 25.09. abends: keine Schritte) -->
+    <form class="anfrage reveal" id="anfrage" novalidate>
+      <fieldset class="anfrage__gruppe">
+        <legend>Worum geht es?</legend>
+        <div class="wahl">
+          <label class="wahl__option"><input type="radio" name="hilfe" value="Neue Website"><span>Neue Website</span></label>
+          <label class="wahl__option"><input type="radio" name="hilfe" value="Website überarbeiten"><span>Website überarbeiten</span></label>
+          <label class="wahl__option"><input type="radio" name="hilfe" value="Onlineshop"><span>Onlineshop</span></label>
+          <label class="wahl__option"><input type="radio" name="hilfe" value="Etwas anderes"><span>Etwas anderes</span></label>
+        </div>
+      </fieldset>
+      <div class="anfrage__punkte" aria-hidden="true"></div>
+
+      <div class="form__row">
+        <div class="field">
+          <label for="f-name">Name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-err">
+          <span class="field__error" id="f-name-err" aria-live="polite"></span>
+        </div>
+        <div class="field">
+          <label for="f-mail">E-Mail-Adresse</label>
+          <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="f-mail-err">
+          <span class="field__error" id="f-mail-err" aria-live="polite"></span>
+        </div>
+      </div>
+      <div class="form__row">
+        <div class="field">
+          <label for="f-land">Land</label>
+          <select id="f-land" name="land" autocomplete="country-name">
+              <option value="Belgien" data-vorwahl="+32">Belgien</option>
+              <option value="Bulgarien" data-vorwahl="+359">Bulgarien</option>
+              <option value="Dänemark" data-vorwahl="+45">Dänemark</option>
+              <option value="Deutschland" data-vorwahl="+49" selected>Deutschland</option>
+              <option value="Estland" data-vorwahl="+372">Estland</option>
+              <option value="Finnland" data-vorwahl="+358">Finnland</option>
+              <option value="Frankreich" data-vorwahl="+33">Frankreich</option>
+              <option value="Griechenland" data-vorwahl="+30">Griechenland</option>
+              <option value="Irland" data-vorwahl="+353">Irland</option>
+              <option value="Italien" data-vorwahl="+39">Italien</option>
+              <option value="Kroatien" data-vorwahl="+385">Kroatien</option>
+              <option value="Lettland" data-vorwahl="+371">Lettland</option>
+              <option value="Litauen" data-vorwahl="+370">Litauen</option>
+              <option value="Luxemburg" data-vorwahl="+352">Luxemburg</option>
+              <option value="Malta" data-vorwahl="+356">Malta</option>
+              <option value="Niederlande" data-vorwahl="+31">Niederlande</option>
+              <option value="Österreich" data-vorwahl="+43">Österreich</option>
+              <option value="Polen" data-vorwahl="+48">Polen</option>
+              <option value="Portugal" data-vorwahl="+351">Portugal</option>
+              <option value="Rumänien" data-vorwahl="+40">Rumänien</option>
+              <option value="Schweden" data-vorwahl="+46">Schweden</option>
+              <option value="Slowakei" data-vorwahl="+421">Slowakei</option>
+              <option value="Slowenien" data-vorwahl="+386">Slowenien</option>
+              <option value="Spanien" data-vorwahl="+34">Spanien</option>
+              <option value="Tschechien" data-vorwahl="+420">Tschechien</option>
+              <option value="Ungarn" data-vorwahl="+36">Ungarn</option>
+              <option value="Zypern" data-vorwahl="+357">Zypern</option>
+              <option value="Anderes Land" data-vorwahl="">Anderes Land</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-tel">Telefon <small>(optional)</small></label>
+          <input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="f-text">Ihre Nachricht <small>(optional)</small></label>
+        <textarea id="f-text" name="text" rows="4" placeholder="Was machen Sie, und was soll die Website können? Ein, zwei Sätze genügen."></textarea>
+      </div>
+
+      <div class="field field--datei">
+          <label for="f-datei">Logo oder Fotos mitschicken <small>(optional)</small></label>
+          <div class="upload" data-upload>
+            <svg class="upload__symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4"/><path d="m7 9 5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+            <span class="upload__text"><b>Dateien auswählen</b><small>Antippen oder hierher ziehen · Bilder, PDF, Word, ZIP</small></span>
+            <input id="f-datei" name="dateien" type="file" multiple accept="image/*,.pdf,.doc,.docx,.svg,.ai,.zip">
+          </div>
+          <ul class="datei__liste" data-datei-liste aria-live="polite"></ul>
+          <span class="form__hint">Die Dateien werden beim Auswählen hochgeladen und kommen als Link in die Nachricht. Nach 30 Tagen werden sie automatisch gelöscht.</span>
+        </div>
+
+      <fieldset class="anfrage__gruppe">
+        <legend>Antwort per</legend>
+        <div class="weg">
+          <label class="weg__option"><input type="radio" name="weg" value="whatsapp" checked><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg> WhatsApp</span></label>
+          <label class="weg__option"><input type="radio" name="weg" value="mail"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg> E-Mail</span></label>
+        </div>
+      </fieldset>
+
+      <button class="btn btn--wa anfrage__senden" type="submit" data-senden>
+        <span class="anfrage__icon" data-icon-wa><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg></span><span class="anfrage__icon" data-icon-mail hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg></span>
+        <span data-senden-text>Per WhatsApp senden</span>
+        <span class="anfrage__pfeil" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+      </button>
+      <p class="form__status" data-status aria-live="polite"></p>
+      <p class="form__hint">Öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Ihre Angaben speichert die Website nicht, nur hochgeladene Dateien liegen bis zu 30 Tage bei Vercel.</p>
+    </form>
+
+    <div class="contact__meta reveal">
+      <a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a>
+      <a href="tel:+4915906344961">+49 1590 6344961</a>
+    </div>
     <div class="agentur reveal">
       <p class="agentur__marke">ERGUN<span class="dot">.</span></p>
       <p class="agentur__text">ERGUN. ist ein Digitalstudio mit zwei Bereichen: Webdesign mit Bewegung und eigenen Bildern, und endo Studio für Produktfotos und Werbevideos. Entwurf und Umsetzung aus einer Hand.</p>
@@ -903,7 +802,7 @@ img { display: block; max-width: 100%; height: auto; }
 </footer>
 
 <script src="js/szene.js?v=34"></script>
-<script src="js/endo-zufluss.js?v=6" defer></script>
+<script src="js/endo-zufluss.js?v=7" defer></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {
@@ -934,49 +833,65 @@ img { display: block; max-width: 100%; height: auto; }
   var MAIL = 'ergun.eu@gmail.com';
   var form = document.getElementById('anfrage');
   if (!form) return;
-  var karte = form.closest('.kt__karte'), danke = karte.querySelector('[data-danke]');
   var ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var status = form.querySelector('[data-status]');
+  var sendenKnopf = form.querySelector('[data-senden]'), sendenText = form.querySelector('[data-senden-text]');
   function wert(k) { var el = form.elements[k]; return el && el.value ? el.value.trim() : ''; }
   function gewaehlt(name) { var el = form.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ''; }
+  function alleGewaehlt(name) { return [].map.call(form.querySelectorAll('input[name="' + name + '"]:checked'), function (el) { return el.value; }); }
   function weg() { return gewaehlt('weg') || 'whatsapp'; }
 
-  /* ---- Nachricht wächst beim Tippen mit (wo field-sizing fehlt) ---- */
-  var textFeld = form.elements['text'];
-  if (!(window.CSS && CSS.supports && CSS.supports('field-sizing', 'content'))) {
-    var wachsen = function () { textFeld.style.height = 'auto'; textFeld.style.height = Math.max(104, textFeld.scrollHeight + 2) + 'px'; };
-    textFeld.addEventListener('input', wachsen);
+  /* ---- Knopf folgt dem gewählten Weg, Telefonfeld zeigt die Vorwahl des Landes ---- */
+  function knopf() {
+    var wa = weg() === 'whatsapp';
+    sendenText.textContent = wa ? 'Per WhatsApp senden' : 'Per E-Mail senden';
+    form.querySelector('[data-icon-wa]').hidden = !wa;
+    form.querySelector('[data-icon-mail]').hidden = wa;
   }
+  var land = form.elements['land'], tel = form.elements['tel'];
+  function vorwahl() {
+    var o = land.options[land.selectedIndex], v = o ? o.getAttribute('data-vorwahl') : '';
+    tel.placeholder = v ? v + ' …' : 'mit Ländervorwahl';
+  }
+  land.addEventListener('change', vorwahl);
+  knopf(); vorwahl();
 
-  /* ---- Prüfung: klare Meldungen direkt am Feld, keine Browser-Popups ---- */
+  /* „Noch nichts" schließt die anderen Häkchen aus (und umgekehrt) */
+  form.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.name === 'weg') { knopf(); status.textContent = ''; }
+    if (t.name === 'vorhanden' && t.checked) {
+      form.querySelectorAll('input[name="vorhanden"]').forEach(function (el) {
+        if (el !== t && (t.value === 'Noch nichts' || el.value === 'Noch nichts')) el.checked = false;
+      });
+    }
+  });
+
+  /* ---- Prüfung ---- */
   var regeln = {
-    name: function (v) { return v.length >= 2 ? '' : 'Bitte geben Sie Ihren Namen ein.'; },
-    email: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? '' : 'Bitte geben Sie eine gültige E-Mail ein.'; },
-    tel: function (v) { return !v || /^\+?[\d\s()\/.-]{6,20}$/.test(v) ? '' : 'Bitte geben Sie eine gültige Telefonnummer ein – oder lassen Sie das Feld leer.'; },
-    text: function (v) { return v.length >= 3 ? '' : 'Bitte schreiben Sie kurz, worum es geht.'; },
-    datenschutz: function (v, el) { return el.checked ? '' : 'Bitte stimmen Sie der Datenschutzerklärung zu.'; }
+    name: function (v) { return v ? '' : 'Bitte Ihren Namen eintragen.'; },
+    email: function (v) { return !v ? 'Bitte eine E-Mail-Adresse eintragen, damit ich antworten kann.' : (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? '' : 'Das sieht nicht nach einer E-Mail-Adresse aus.'); }
   };
-  var FELDER = ['name', 'email', 'tel', 'text', 'datenschutz'];
   function fehler(el, text) {
-    var wrap = el.closest('.kt-feld'), out = wrap && wrap.querySelector('.kt-feld__fehler');
-    if (wrap) wrap.classList.toggle('hat-fehler', !!text);
+    var wrap = el.closest('.field'), out = wrap.querySelector('.field__error');
+    wrap.classList.toggle('hat-fehler', !!text);
     if (out) out.textContent = text || '';
     el.setAttribute('aria-invalid', text ? 'true' : 'false');
   }
-  function pruefeFeld(k) { var el = form.elements[k]; var t = regeln[k](el.value.trim(), el); fehler(el, t); return !t; }
+  function pruefeFeld(k) { var el = form.elements[k]; var t = regeln[k](el.value.trim()); fehler(el, t); return !t; }
   function pruefen() {
     var erster = null;
-    FELDER.forEach(function (k) { if (!pruefeFeld(k) && !erster) erster = form.elements[k]; });
+    ['name', 'email'].forEach(function (k) { if (!pruefeFeld(k) && !erster) erster = form.elements[k]; });
     if (erster) erster.focus();
     return !erster;
   }
-  FELDER.forEach(function (k) {
+  ['name', 'email'].forEach(function (k) {
     var el = form.elements[k];
-    el.addEventListener(k === 'datenschutz' ? 'change' : 'blur', function () { if (k === 'datenschutz' || el.value.trim() || el.getAttribute('aria-invalid') === 'true') pruefeFeld(k); });
+    el.addEventListener('blur', function () { if (el.value.trim() || el.getAttribute('aria-invalid') === 'true') pruefeFeld(k); });
     el.addEventListener('input', function () { if (el.getAttribute('aria-invalid') === 'true') pruefeFeld(k); });
   });
 
-  /* ---- Dateien (unverändert: Upload über /api/upload, Link kommt in die Nachricht) ---- */
+  /* ---- Dateien ---- */
   var dateiFeld = form.elements['dateien'], dateiListe = form.querySelector('[data-datei-liste]');
   var MAX_BYTES = 4 * 1024 * 1024;
   var eintraege = [], runde = 0;
@@ -1029,68 +944,42 @@ img { display: block; max-width: 100%; height: auto; }
       return { datei: f, name: f.name, url: '', stand: 'laedt', anzeige: anzeige };
     });
     eintraege.forEach(function (e) { standSetzen(e, 'laedt'); });
+    /* nacheinander hochladen, damit ein langsames Handynetz nicht alles gleichzeitig stemmen muss */
     eintraege.reduce(function (kette, e) { return kette.then(function () { return meineRunde === runde ? hochladen(e, meineRunde) : null; }); }, Promise.resolve());
   });
 
-  /* ---- Nachricht: alle Felder übersichtlich ---- */
+  /* ---- Nachricht & Versand ---- */
   function nachricht() {
+    var hilfe = gewaehlt('hilfe'), text = wert('text');
     var mitLink = eintraege.filter(function (e) { return e.stand === 'ok'; });
     var ohneLink = selbstAnhaengen().map(function (e) { return e.name; });
-    var z = ['Hallo Emre, ich möchte ein kostenloses Erstgespräch.', '',
-      'Name: ' + wert('name')];
-    if (wert('firma')) z.push('Firma: ' + wert('firma'));
-    z.push('E-Mail: ' + wert('email'));
-    if (wert('tel')) z.push('Telefon/WhatsApp: ' + wert('tel'));
-    z.push('Worum geht es: ' + (gewaehlt('hilfe') || 'nicht ausgewählt'), '', 'Nachricht:', wert('text'));
-    if (mitLink.length) z.push('', 'Meine Dateien:', mitLink.map(function (e) { return '• ' + e.name + ': ' + e.url; }).join('\n'));
-    if (ohneLink.length) z.push('', 'Dateien, die ich hier anhänge: ' + ohneLink.join(', '));
-    z.push('', 'Datenschutz: zugestimmt', 'Gesendet über die Website.');
-    return z.join('\n');
+    return 'Hallo Emre, ich bin ' + wert('name') + ' und möchte ein kostenloses Erstgespräch.\n\n' +
+      (hilfe ? 'Es geht um: ' + hilfe + '\n\n' : '') +
+      (text ? text + '\n\n' : '') +
+      (mitLink.length ? 'Meine Dateien:\n' + mitLink.map(function (e) { return '• ' + e.name + ': ' + e.url; }).join('\n') + '\n\n' : '') +
+      (ohneLink.length ? 'Dateien, die ich hier anhänge: ' + ohneLink.join(', ') + '\n\n' : '') +
+      'E-Mail: ' + wert('email') + '\n' +
+      (wert('tel') ? 'Telefon: ' + wert('tel') + '\n' : '') +
+      'Land: ' + wert('land') + '\n' +
+      'Gesendet über die Website.';
   }
-  function waLink() { return 'https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(nachricht()); }
-  function mailLink() {
-    var betreff = 'Erstgespräch' + (gewaehlt('hilfe') ? ': ' + gewaehlt('hilfe') : '') + ' – ' + wert('name');
-    return 'mailto:' + MAIL + '?subject=' + encodeURIComponent(betreff) + '&body=' + encodeURIComponent(nachricht());
-  }
-  function oeffnen() {
-    if (weg() === 'whatsapp') {
-      /* Ohne 'noopener': sonst liefert window.open immer null. Verbindung danach per opener = null trennen. */
-      var link = waLink(), win = window.open(link, '_blank');
-      if (win) { try { win.opener = null; } catch (err) {} } else location.href = link;
-    } else location.href = mailLink();
-  }
-
-  /* ---- Erfolgs-Karte ---- */
-  var nochmal = danke.querySelector('[data-nochmal]');
-  function dankeZeigen(echt) {
-    var vorname = wert('name').split(/\s+/)[0] || '';
-    danke.querySelector('[data-danke-titel]').textContent = 'Danke' + (vorname ? ', ' + vorname : '') + '!';
-    var wa = weg() === 'whatsapp';
-    danke.querySelector('[data-danke-text]').textContent = (wa ? 'WhatsApp ist geöffnet – tippen Sie dort nur noch auf Senden.' : 'Ihr Mailprogramm ist geöffnet – bitte dort nur noch auf Senden tippen.') +
-      ' Ich melde mich persönlich bei Ihnen.' + (selbstAnhaengen().length ? ' Hängen Sie die Dateien, die nicht hochgeladen werden konnten, bitte dort an.' : '');
-    nochmal.textContent = wa ? 'WhatsApp erneut öffnen' : 'E-Mail erneut öffnen';
-    nochmal.href = echt ? (wa ? waLink() : mailLink()) : '#';
-    if (wa) { nochmal.target = '_blank'; nochmal.rel = 'noopener'; } else { nochmal.removeAttribute('target'); nochmal.removeAttribute('rel'); }
-    danke.hidden = false;
-    void danke.offsetWidth;
-    karte.classList.add('ist-gesendet');
-    setTimeout(function () { if (karte.classList.contains('ist-gesendet')) karte.classList.add('ist-zu'); }, ruhig ? 0 : 560);
-    setTimeout(function () { danke.focus({ preventScroll: true }); var r = karte.getBoundingClientRect(); if (r.top < 0 || r.top > innerHeight * 0.5) karte.scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' }); }, ruhig ? 0 : 420);
-  }
-  danke.querySelector('[data-bearbeiten]').addEventListener('click', function () {
-    karte.classList.remove('ist-zu'); void karte.offsetWidth;
-    karte.classList.remove('ist-gesendet');
-    setTimeout(function () { danke.hidden = true; form.elements['text'].focus(); }, ruhig ? 0 : 400);
-  });
-
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    status.textContent = '';
-    if (wert('webseite')) { dankeZeigen(false); return; }   /* Honigtopf: Bots bekommen „Danke“, es wird nichts geöffnet */
-    if (!pruefen()) { status.textContent = 'Bitte prüfen Sie die markierten Felder.'; return; }
-    if (laufend()) { status.setAttribute('data-wartet', '1'); status.textContent = 'Ihre Dateien werden noch hochgeladen. Einen Moment, dann bitte erneut auf „Erstgespräch anfragen“ tippen.'; return; }
-    try { oeffnen(); dankeZeigen(true); }
-    catch (err) { status.innerHTML = ''; status.append('Das hat leider nicht geklappt. Schreiben Sie mir gern direkt: '); var a = document.createElement('a'); a.href = 'mailto:' + MAIL; a.textContent = MAIL; status.append(a); }
+    if (!pruefen()) { status.textContent = 'Bitte Name und E-Mail ausfüllen.'; return; }
+    if (laufend()) { status.setAttribute('data-wartet', '1'); status.textContent = 'Ihre Dateien werden noch hochgeladen. Einen Moment, dann bitte erneut auf Senden tippen.'; return; }
+    var m = nachricht(), selbst = selbstAnhaengen().length ? ' Bitte die Dateien, die nicht hochgeladen werden konnten, dort anhängen.' : '';
+    if (weg() === 'whatsapp') {
+      /* Ohne 'noopener': sonst liefert window.open immer null. Verbindung danach per opener = null trennen. */
+      var waLink = 'https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(m);
+      var win = window.open(waLink, '_blank');
+      if (win) { try { win.opener = null; } catch (err) {} }
+      else { location.href = waLink; }
+      status.textContent = 'Danke! WhatsApp ist geöffnet, bitte dort nur noch auf Senden tippen.' + selbst;
+    } else {
+      var betreff = 'Erstgespräch' + (gewaehlt('hilfe') ? ': ' + gewaehlt('hilfe') : '') + ' über ERGUN.';
+      location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent(betreff) + '&body=' + encodeURIComponent(m);
+      status.textContent = 'Danke! Ihr Mailprogramm öffnet sich mit der fertigen Nachricht.' + selbst;
+    }
   });
 })();
 </script>
@@ -1105,7 +994,7 @@ img { display: block; max-width: 100%; height: auto; }
   var geladen = false;
   function laden() {
     if (geladen) return; geladen = true;
-    var s = document.createElement('script'); s.src = 'ki/js/orb.js?v=16'; s.async = true; document.body.appendChild(s);
+    var s = document.createElement('script'); s.src = 'ki/js/orb.js?v=17'; s.async = true; document.body.appendChild(s);
   }
   if (!('IntersectionObserver' in window)) { window.addEventListener('load', laden); return; }
   /* erst nach dem Laden der Seite beobachten – der Start bleibt frei von der 500-KB-Kugel */
@@ -1142,7 +1031,6 @@ img { display: block; max-width: 100%; height: auto; }
 })();
 </script>
 <script src="ki/js/agent.js?v=27"></script>
-<script src="js/kontakt-globus.js?v=1" defer></script>
 <script>
 /* Kein Zoomen: Zwei-Finger-Zoom (Safari-Gesten) sperren. Doppeltippen und Pinch sperrt CSS (touch-action).
    Früher lagen hier auch touchmove/touchend-Sperren – die haben auf dem iPhone das Scrollen gebremst

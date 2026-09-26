@@ -31,6 +31,7 @@ const KUGEL = {
   /* Treiben statt Drehen (Emre, 27.09.): kaum wahrnehmbar */
   drehen: 0.022,         // Eigendrehung (rad/s) → eine Umdrehung in ca. 5 Minuten
   /* Aufschlag wie auf Flüssigmetall (Emre, 27.09.) */
+  tippWelle: 0.38,       // Antippen der Kugel (Emre, 27.09.): nur eine weiche Welle an der Tippstelle, keine Pakete
   aufschlagBeiL: 0.12,   // Zunge fast eingezogen (12 % des Radius) → das Paket „schlägt auf“
   delle: 0.16,           // Tiefe der Delle am Einschlagpunkt (Welteinheiten, Radius 1,2)
   delleBreite: 0.3,      // Breite der Delle (rad, Gauß σ ≈ 17°)
@@ -273,6 +274,12 @@ function start(el) {
     gefangen(k) { const a = armZ[k % 4]; return !a || a.kennung !== k || a.zustand !== 1; },
     zustand() { return armZ.slice(0, ARME).map((a) => [a.zustand, Math.round(a.L * 1000) / 1000]); },   /* nur zum Prüfen */
     fortschritt(k) { const a = armZ[k % 4]; return a && a.kennung === k && a.zustand === 1 ? Math.max(0, Math.min(1, (performance.now() - a.t0) / KUGEL.hinMs)) : 1; },
+    welle(x, y) {   /* Antippen: eine einzige weiche Welle dort, wo getippt wurde */
+      if (ruhig) return;
+      umkehr.copy(mesh.quaternion).invert();
+      const d = new Vector3(x, -y, 0.35).normalize().applyQuaternion(umkehr);
+      aufschlag(d, KUGEL.tippWelle);
+    },
     puls(x, y) {
       if (ruhig) return;
       umkehr.copy(mesh.quaternion).invert();

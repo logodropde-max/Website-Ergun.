@@ -2,7 +2,8 @@
    Kleine, leuchtende Pakete (Kern + weicher Schein + kurzer Schweif) fliegen im Bogen auf die endo-Kugel zu. Kommen sie in
    Reichweite, schießt die Kugel eine schmale Zunge genau zu ihnen hinaus (ki/js/orb.js, window.endoKugel), sammelt sie an der
    Spitze ein und gleitet seidig zurück – dabei läuft ein leiser Wellenring über die Kugel.
-   Pakete entstehen zufällig am Rand des Bereichs und dort, wo man in #endo tippt/klickt (2–3 pro Tipp, nie blockierend).
+   Pakete entstehen zufällig am Rand des Bereichs, beim Erzeugen im Chat und wenn eine Nachricht in die Kugel fliegt.
+   Antippen der Kugel erzeugt KEINE Pakete mehr (Emre, 27.09.) – nur eine weiche Welle an der Tippstelle (endoKugel.welle).
    Ein Canvas fest über dem Bildschirm, gerechnet in Seitenkoordinaten; läuft nur, wenn #endo im Bild und der Tab sichtbar ist.
    Testansicht: ?kugel=test (Kugel mittig, alle 1–2 s ein Paket). „Bewegung reduzieren“ → keine Pakete.
    Seit 26.09. spät auch auf /ki/ (Hero): dort nur „bei Bedarf“ – beim Erzeugen und wenn eine Nachricht/ein Foto in die
@@ -35,7 +36,7 @@
   function grenzen() { MAX_ZUFALL = TEST ? 2 : (handy ? 5 : 8); MAX_ALLE = handy ? 8 : 12; }
   var MAX_ZUFALL, MAX_ALLE; grenzen();                               /* zufällige / insgesamt (mit Tipps) */
   var W = 0, H = 0, kx = 0, ky = 0, R = 1, halb = 1;                 /* Bildschirm; Kugelmitte (Seite), sichtbarer Radius */
-  var teilchen = [], tipps = [], glanz = [];
+  var teilchen = [], glanz = [];
   var laeuft = false, sichtbar = false, wach = true, letzteZeit = 0, naechster = 0, gemessen = 0;
   var erzeugt = false; /* Schritt 5: solange endo ein Ergebnis erzeugt, fliegen mehr Pakete zur Kugel */
 
@@ -121,10 +122,6 @@
   function zeichnen(sy) {
     ctx.clearRect(0, 0, W, H);
     ctx.globalCompositeOperation = 'lighter';
-    for (var j = 0; j < tipps.length; j++) {                        /* Rückmeldung am Finger: kleiner Lichtpunkt, verblasst sofort */
-      var q = tipps[j], a0 = 0.55 * (1 - q.t), s0 = 26 + q.t * 22;
-      ctx.globalAlpha = a0; ctx.drawImage(SCHEIN, q.x - s0 / 2, q.y - sy - s0 / 2, s0, s0);
-    }
     var K = window.endoKugel;
     for (var i = 0; i < teilchen.length; i++) {
       var p = teilchen[i], x = p.x, y = p.y - sy;
@@ -167,10 +164,9 @@
       naechster = zeit + takt[0] + Math.random() * (takt[1] - takt[0]);
     }
     for (var i = teilchen.length - 1; i >= 0; i--) { schritt(teilchen[i], dt); kugelKontakt(teilchen[i], i); }
-    for (var j = tipps.length - 1; j >= 0; j--) { tipps[j].t += dt / 0.32; if (tipps[j].t >= 1) tipps.splice(j, 1); }
     for (var g = glanz.length - 1; g >= 0; g--) { glanz[g].t += dt / 0.55; if (glanz[g].t >= 1) glanz.splice(g, 1); }
     zeichnen(scrollY());
-    if (nurBeiBedarf && !erzeugt && !teilchen.length && !tipps.length && !glanz.length) { laeuft = false; ctx.clearRect(0, 0, W, H); return; } /* /ki/: ruhen */
+    if (nurBeiBedarf && !erzeugt && !teilchen.length && !glanz.length) { laeuft = false; ctx.clearRect(0, 0, W, H); return; } /* /ki/: ruhen */
     requestAnimationFrame(schleife);
   }
 
@@ -179,20 +175,17 @@
     groesse(); kugelMessen(); laeuft = true; letzteZeit = gemessen = performance.now(); naechster = letzteZeit + 300;
     requestAnimationFrame(schleife);
   }
-  function stopp() { laeuft = false; teilchen.length = 0; tipps.length = 0; glanz.length = 0; ctx.clearRect(0, 0, W, H); }
+  function stopp() { laeuft = false; teilchen.length = 0; glanz.length = 0; ctx.clearRect(0, 0, W, H); }
 
-  /* Tippen/Klicken im endo-Bereich: 2–3 Pakete ab dem Tipp-Punkt. Passiver Listener, blockiert nie einen Klick;
-     Wischen/Scrollen erzeugt keinen click. Tastatur-Klicks (detail 0) zählen nicht. */
+  /* Antippen/Klicken der Kugel: eine einzige weiche Welle an der Tippstelle – keine Datenpakete (Emre, 27.09.).
+     Passiver Listener, blockiert nie einen Klick; Tastatur-Klicks (detail 0) zählen nicht. */
   document.addEventListener('click', function (e) {
-    if (!laeuft || !e.detail || nurBeiBedarf) return;
-    var r = sektion.getBoundingClientRect();
-    if (e.clientY < r.top + H * 0.3 || e.clientY > r.bottom || e.clientX < r.left || e.clientX > r.right) return;
-    var n = 2 + (Math.random() < 0.5 ? 1 : 0), sy = scrollY();
-    tipps.push({ x: e.clientX, y: e.clientY + sy, t: 0 });
-    for (var i = 0; i < n && teilchen.length < MAX_ALLE; i++) {
-      var w = Math.random() * Math.PI * 2, o = 6 + Math.random() * 10;
-      teilchen.push(neu(e.clientX + Math.cos(w) * o, e.clientY + sy + Math.sin(w) * o, true));
-    }
+    var K = window.endoKugel;
+    if (!e.detail || !K || !K.welle) return;
+    kugelMessen();
+    var dx = (e.clientX - kx) / R, dy = (e.clientY + scrollY() - ky) / R;
+    if (dx * dx + dy * dy > 1.44) return;               /* nur auf der Kugel (etwas großzügig) */
+    K.welle(dx, dy);
   }, { passive: true });
 
   /* Schnittstelle für den Chat (ki/js/agent.js):
