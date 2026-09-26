@@ -116,6 +116,8 @@
 .sp-karte__liste li { display: flex; gap: 10px; }
 .sp-karte__liste li::before { content: ""; flex: none; width: 12px; height: 1px; margin-top: 10px; background: rgba(226, 230, 236, 0.5); }
 .sp-karte__liste li.ist-plus { color: var(--sp-text); }
+.sp-karte__liste li.ist-dazu { color: var(--sp-text); }
+.sp-karte__liste li.ist-dazu::before { background: rgba(236, 239, 243, 0.85); }
 .sp-karte__liste li.ist-plus::before { background: var(--sp-premium); box-shadow: 0 0 6px rgba(255, 122, 61, 0.6); }
 
 /* Premium: inklusive Website von Emre – eigene Zeile mit warmem Punkt, Umfang aufklappbar */

@@ -129,14 +129,15 @@
       }
 
       var inkl = el('div', 'sp-karte__inkl');
-      inkl.appendChild(el('p', 'sp-karte__klein', premium ? 'Alles aus Start und Pro, dazu' : 'Enthalten'));
-      if (premium) {
-        var liste = el('ul', 'sp-karte__liste');
-        p.kann.forEach(function (id) { var f = nachId[id]; if (f && f.premium) liste.appendChild(el('li', 'ist-plus', f.name)); });
-        inkl.appendChild(liste);
-      } else {
-        /* Start und Pro enthalten dasselbe: eine kurze Zeile statt einer langen Liste */
+      /* Angebot 27.09.: Start = Grundwerkzeuge, Pro und Premium zeigen nur, was dazukommt */
+      var stufe = premium ? 'premium' : p.name === 'Pro' ? 'pro' : 'start';
+      inkl.appendChild(el('p', 'sp-karte__klein', stufe === 'premium' ? 'Alles aus Start und Pro, dazu' : stufe === 'pro' ? 'Alles aus Start, dazu' : 'Enthalten'));
+      if (stufe === 'start') {
         inkl.appendChild(el('p', 'sp-karte__zeile', p.kann.map(function (id) { return nachId[id] ? nachId[id].name : ''; }).filter(Boolean).join(' · ')));
+      } else {
+        var liste = el('ul', 'sp-karte__liste');
+        p.kann.forEach(function (id) { var f = nachId[id]; if (f && (f.paket || (f.premium ? 'premium' : 'start')) === stufe) liste.appendChild(el('li', stufe === 'premium' ? 'ist-plus' : 'ist-dazu', f.name)); });
+        inkl.appendChild(liste);
       }
       if (web) inkl.appendChild(web);   /* im selben Raster-Feld wie „Enthalten“ – alle Karten bleiben auf einer Linie */
       k.appendChild(inkl);
@@ -192,8 +193,8 @@
     fuss.appendChild(notiz);
     var det = el('details', 'sp__kosten'), sum = el('summary', null, 'So viele Credits braucht ein Ergebnis'), dl = el('dl');
     ALLE.filter(function (f) { return f.credits; }).forEach(function (f) {
-      dl.appendChild(el('dt', null, f.name + (f.premium ? ' · Premium' : '')));
-      dl.appendChild(el('dd', null, f.credits + ' Credits'));
+      dl.appendChild(el('dt', null, f.name + (f.premium ? ' · Premium' : f.paket === 'pro' ? ' · ab Pro' : '')));
+      dl.appendChild(el('dd', null, f.credits + ' Credits' + (f.id === 'formate' ? ' je Format' : '')));
     });
     det.appendChild(sum); det.appendChild(dl); fuss.appendChild(det);
     box.appendChild(fuss);

@@ -153,11 +153,13 @@
     vorschlaege.innerHTML = '';
     liste.forEach(function (k, i) {
       if (k.umbruch) { vorschlaege.appendChild(el('span', 'chip-umbruch')); return; }   /* neue Reihe */
-      if (k.titel) { vorschlaege.appendChild(el('span', 'chip-titel', k.titel)); return; }
+      if (k.titel) { vorschlaege.appendChild(el('span', 'chip-titel' + (k.premium ? ' chip-titel--premium' : ''), k.titel)); return; }
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'chip' + (k.haupt ? ' chip--haupt' : '') + (k.premium ? ' chip--premium' : '') + (k.werkzeug ? ' chip--werkzeug' : '');
-      b.textContent = k.text;
+      if (k.icon && ZEICHEN[k.icon]) { b.classList.add('chip--zeichen'); b.insertAdjacentHTML('beforeend', ZEICHEN[k.icon]); }
+      b.appendChild(document.createTextNode(k.text));
+      if (k.stufe) b.appendChild(el('span', 'chip__stufe', k.stufe));
       if (k.credits != null) b.appendChild(el('span', 'chip__credits', k.credits));
       b.style.animationDelay = (ruhig ? 0 : i * 60) + 'ms';
       b.addEventListener('click', function () { if (beschaeftigt) return; flugStart = { r: b.getBoundingClientRect(), t: Date.now() }; k.aktion(); });
@@ -227,20 +229,63 @@
       { text: 'Neues Produkt', aktion: neuesProdukt }
     ]);
   }
+  /* ---------- Angebotswahl (Angebot 27.09.): Kategorie → Werkzeug → Look → Bestätigung ----------
+     Eigene Linien-Zeichen (24er Raster, 1,5er Strich), keine Emojis. */
+  var ZEICHEN = (function () {
+    function svg(inhalt) { return '<svg class="chip__zeichen" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' + inhalt + '</svg>'; }
+    return {
+      fotos: svg('<path d="M4 8.5h3l1.6-2.5h6.8L17 8.5h3v10H4z"/><circle cx="12" cy="13.2" r="3.4"/>'),
+      werbung: svg('<rect x="5" y="3.5" width="14" height="17" rx="1.5"/><path d="M8 7.5h8M8 10.5h5"/><path d="M8 17l3-3.2 2.2 2 2.8-3.3"/>'),
+      videos: svg('<rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="M10.5 9.5v5l4-2.5z"/>'),
+      verbessern: svg('<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>'),
+      marke: svg('<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 8.5h17"/><circle cx="6.3" cy="6.5" r=".4"/><path d="M8 13h8M8 16h5"/>'),
+      premium: svg('<path d="M7 4.5h10l3.5 5L12 20 3.5 9.5z"/><path d="M3.5 9.5h17M9.5 4.5 8 9.5l4 10.5 4-10.5-1.5-5"/>')
+    };
+  })();
   var WUNSCH = {
-    foto: 'Ich möchte ein Produktfoto.', anzeige: 'Ich möchte eine Werbeanzeige.', shop: 'Ich möchte ein Shop-Bild auf weißem Hintergrund.',
-    video: 'Ich möchte ein Werbevideo mit 5 Sekunden.', web: 'Ich möchte ein Titelbild für meine Website.',
-    video10: 'Ich möchte ein Werbevideo mit 10 Sekunden (Premium).', '3d': 'Ich interessiere mich für ein 3D-Produkt (Premium).',
-    parallax: 'Ich interessiere mich für eine Parallax-Szene (Premium).'
+    foto: 'Ich möchte ein Produktfoto.', shop: 'Ich möchte ein Shop- und Marktplatz-Bild auf weißem Hintergrund.',
+    lifestyle: 'Ich möchte ein Lifestyle-Bild mit Person.', anzeige: 'Ich möchte eine Werbeanzeige.',
+    plakat: 'Ich möchte ein Aktions-Plakat.', formate: 'Ich möchte ein Formate-Set für Feed, Story und Reel.',
+    video: 'Ich möchte ein Werbevideo mit 5 Sekunden.', video10: 'Ich möchte ein Werbevideo mit 10 Sekunden (Premium).',
+    video4k: 'Ich möchte ein Website-Video in 4K (Premium).', aufwerten: 'Ich möchte mein Foto aufwerten.',
+    web: 'Ich möchte ein Titelbild für meine Website.', logo: 'Ich möchte einen Logo-Entwurf.',
+    '3d': 'Ich interessiere mich für ein 3D-Produkt (Premium).', parallax: 'Ich interessiere mich für eine Parallax-Szene (Premium).',
+    emre: 'Ich möchte meinen Look persönlich mit Emre abstimmen (Premium).'
   };
+  var STUFE = { pro: 'ab Pro', premium: 'Premium' };
+  function alleWerkzeuge() { return (E.funktionen || []).concat(E.premium || []); }
   function werkzeugKnoepfe() {
-    var normal = (E.funktionen || []).map(function (f) {
-      return { text: f.name, credits: f.credits, werkzeug: true, aktion: function () { freieFrage(WUNSCH[f.id] || 'Ich möchte ' + f.name + '.'); } };
-    });
-    var premium = (E.premium || []).filter(function (f) { return WUNSCH[f.id]; }).map(function (f) {
-      return { text: f.name, credits: f.credits ? f.credits : 'auf Anfrage', premium: true, werkzeug: true, aktion: function () { freieFrage(WUNSCH[f.id]); } };
-    });
-    return normal.concat([{ umbruch: true }, { titel: 'Premium' }], premium, [{ umbruch: true }]);
+    return (E.kategorien || []).map(function (kat) {
+      return { text: kat.name, icon: kat.id, werkzeug: true, premium: kat.id === 'premium', aktion: function () { kategorieZeigen(kat); } };
+    }).concat([{ umbruch: true }]);
+  }
+  /* Kategorie antippen: nur die Werkzeuge dieser Kategorie, mit Credits und Paket */
+  function kategorieZeigen(kat) {
+    var liste = alleWerkzeuge().filter(function (f) { return f.kategorie === kat.id && WUNSCH[f.id]; });
+    knoepfe([{ titel: kat.name, premium: kat.id === 'premium' }].concat(liste.map(function (f) {
+      return { text: f.name, credits: f.credits ? f.credits + (f.id === 'formate' ? ' je Format' : '') : 'auf Anfrage', stufe: f.credits && f.paket !== 'start' ? STUFE[f.paket] : '',
+        premium: f.paket === 'premium', werkzeug: true, aktion: function () { werkzeugWahl(f); } };
+    }), [{ text: 'Zurück', aktion: zeigeSchritt }]));
+  }
+  /* Werkzeug gewählt: Karte „Was Sie bekommen“ (mit Beispiel), dann führt endo weiter (Look → Bestätigung) */
+  function werkzeugWahl(f) {
+    freieFrage(WUNSCH[f.id] || 'Ich möchte ' + f.name + '.');
+    if (!f.credits) return;   /* auf Anfrage: endo zeigt den Kontakt zu Emre */
+    var aussen = el('div', 'endo-el endo-werkzeug' + (f.paket === 'premium' ? ' endo-werkzeug--premium' : '')), innen = el('div', 'endo-werkzeug__innen');
+    aussen.appendChild(innen);
+    if (f.beispiel) { var img = el('img', 'endo-werkzeug__bild'); img.src = f.beispiel; img.alt = 'Beispiel: ' + f.name; img.loading = 'lazy'; img.addEventListener('error', function () { img.remove(); }); innen.appendChild(img); }
+    var info = el('div', 'endo-werkzeug__info');
+    info.appendChild(el('div', 'endo-werkzeug__titel', f.name));
+    if (f.text) info.appendChild(el('p', 'endo-werkzeug__text', f.text));
+    if (f.bekommen) { var b = el('p', 'endo-werkzeug__bekommen'); b.appendChild(el('span', null, 'Sie bekommen')); b.appendChild(document.createTextNode(f.bekommen)); info.appendChild(b); }
+    var fuss = el('p', 'endo-werkzeug__fuss');
+    fuss.appendChild(el('b', null, f.credits + ' Credits' + (f.id === 'formate' ? ' je Format' : '')));
+    if (f.paket !== 'start') fuss.appendChild(el('span', null, f.paket === 'pro' ? 'enthalten ab Pro' : 'im Premium-Paket'));
+    info.appendChild(fuss);
+    innen.appendChild(info);
+    var letzte = verlauf.lastElementChild;
+    verlauf.insertBefore(aussen, letzte && letzte.classList.contains('blase--du') ? letzte.nextSibling : null);
+    nachUnten();
   }
   function kategorie(k) {
     knoepfe([]); du(k); daten.kategorie = k; schritt = 'look'; sperren(true);
@@ -1051,6 +1096,8 @@
     if (k.look) zeilen.appendChild(el('li', null, 'Look: ' + k.look));
     if (k.format && k.format !== 'auto' && k.format !== 'bild') zeilen.appendChild(el('li', null, 'Format: ' + k.format));
     if (k.ueberschrift) zeilen.appendChild(el('li', null, 'Überschrift: „' + k.ueberschrift + '“'));
+    if (k.markenname) zeilen.appendChild(el('li', null, 'Name: „' + k.markenname + '“'));
+    if (k.branche) zeilen.appendChild(el('li', null, 'Branche: ' + k.branche));
     info.appendChild(zeilen);
     var kosten = el('div', 'endo-karte__credits'); kosten.appendChild(document.createTextNode('Kosten: ')); kosten.appendChild(el('b', null, k.credits + ' Credits'));
     info.appendChild(kosten);
@@ -1060,16 +1107,26 @@
     var aendern = el('button', 'endo-knopf', 'Ändern'); aendern.type = 'button';
     leiste.appendChild(ja); leiste.appendChild(aendern); innen.appendChild(leiste);
     innen.appendChild(el('p', 'endo-karte__hinweis', 'Erst mit „Ja“ wird erzeugt. Klappt es nicht, bekommen Sie die Credits automatisch zurück.'));
-    var auftragId = neueId(); /* bleibt gleich – auch ein zweiter Klick bucht nie doppelt */
+    /* Formate-Set: ein Auftrag je Format (eigene ID, eigene Rückbuchung); IDs bleiben gleich – nie doppelt gebucht */
+    var tokens = e.tokens && e.tokens.length ? e.tokens : [e.token];
+    var teile = e.teile && e.teile.length === tokens.length ? e.teile : [k];
+    var ids = tokens.map(function () { return neueId(); });
     ja.addEventListener('click', function () {
       if (ja.disabled) return;
       ja.disabled = aendern.disabled = true; ja.textContent = 'Wird gestartet …';
       var kf = innen.querySelector('.endo-karte__foto');
       if (kf) saugBild(kf).then(function () { kf.style.opacity = ''; });   /* das Foto wird eingesaugt – die Kugel arbeitet */
-      starteAuftrag(e.token, auftragId, k).then(function (ok) {
-        ja.textContent = ok ? 'Gestartet' : 'Ja, erzeugen';
-        if (!ok) ja.disabled = aendern.disabled = false;
-      });
+      var i = 0, gestartet = 0;
+      (function naechster() {
+        if (i >= tokens.length) {
+          ja.textContent = gestartet ? 'Gestartet' : 'Ja, erzeugen';
+          if (!gestartet) ja.disabled = aendern.disabled = false;
+          return;
+        }
+        var n = i++;
+        var teil = tokens.length > 1 ? Object.assign({}, teile[n] || k, { text: (k.name || '') + ' · ' + ((teile[n] || {}).format || '') }) : k;
+        starteAuftrag(tokens[n], ids[n], teil).then(function (ok) { if (ok) gestartet++; naechster(); });
+      })();
     });
     aendern.addEventListener('click', function () {
       if (beschaeftigt) return;
@@ -1094,7 +1151,7 @@
       });
   }
   function fortschritt(id, karte, erster) {
-    if (!id || (laufend && laufend.id === id)) return;
+    if (!id || (laufend && laufend.ids[id])) return;
     try { history.replaceState(null, '', location.pathname + location.search + '#auftrag=' + id); } catch (err) {}
     var box = el('div', 'endo-el endo-arbeit');
     var zeile1 = el('div', 'endo-arbeit__kopf');
@@ -1112,8 +1169,14 @@
       var s = Math.round((Date.now() - start0) / 1000);
       uhrText.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
     }, 1000);
-    laufend = { id: id };
-    function ende() { clearInterval(uhr); laufend = null; if (window.endoZufluss) window.endoZufluss.erzeugen(false); box.remove(); }
+    laufend = laufend || { ids: {}, n: 0 };
+    laufend.ids[id] = 1; laufend.n++;
+    function ende() {
+      clearInterval(uhr); box.remove();
+      if (!laufend || !laufend.ids[id]) return;
+      delete laufend.ids[id];
+      if (--laufend.n <= 0) { laufend = null; if (window.endoZufluss) window.endoZufluss.erzeugen(false); }
+    }
     function frage() {
       api('/api/endo/status?id=' + encodeURIComponent(id))
         .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { j.http = r.status; return j; }); })
@@ -1174,7 +1237,9 @@
     }, { once: true });
     else medium.addEventListener('load', function () { ausDerKugel(medium); }, { once: true });
     medium.addEventListener('error', entfalten, { once: true });
-    historie.push({ rolle: 'assistant', text: '[Ergebnis fertig: ' + titel + ']' });
+    var weiter = s.art !== 'video' && s.werkzeug !== 'logo' && /^https:\/\//.test(s.ergebnisUrl || '');
+    if (weiter) daten.fotoUrl = s.ergebnisUrl;
+    historie.push({ rolle: 'assistant', text: '[Ergebnis fertig: ' + titel + (weiter ? ' – ist jetzt das aktuelle Bild für weitere Aufträge' : '') + ']' });
     galerieLaden();
     endo('Fertig. Passt es so? Aus dem Ergebnis mache ich Ihnen gern auch ein Werbevideo oder eine Anzeige.');
   }
@@ -1193,7 +1258,7 @@
     var s = t.toLowerCase();
     if (/premium/.test(s)) return 'Premium kostet 100 € für 1.000 Credits und schaltet zusätzlich Videos mit zehn Sekunden frei. 3D-Produkte und Parallax-Szenen setzt Emre auf Anfrage persönlich um. Und: Premium enthält Ihre Website von Emre – im Jahresabo inklusive, monatlich bei 12 Monaten Laufzeit.';
     if (/preis|kost|teuer|günstig|euro|€|paket/.test(s)) return 'Es gibt drei Pakete: ' + paketListe() + '. Ein Produktfoto kostet 12 Credits, ein Video mit fünf Sekunden 20.';
-    if (/credit/.test(s)) return 'Credits sind Ihr Guthaben. Jedes Ergebnis kostet eine feste Zahl: Produktfoto 12, Werbeanzeige 10, Shop-Bild 5, Werbevideo 5 s 20, Website-Titelbild 12. Unter „Funktionen und Pakete“ rechnet die Seite aus, welches Paket zu Ihnen passt.';
+    if (/credit/.test(s)) return 'Credits sind Ihr Guthaben. Jedes Ergebnis kostet eine feste Zahl: ' + (E.funktionen || []).concat(E.premium || []).filter(function (f) { return f.credits; }).map(function (f) { return f.name + ' ' + f.credits + (f.id === 'formate' ? ' je Format' : ''); }).join(', ') + '. Unter „Pakete“ sehen Sie, welches Paket zu Ihnen passt.';
     if (/abo|kündig|laufzeit|monat|jahr/.test(s)) return 'Sie wählen monatlich, jährlich oder einmalig. Im Jahresabo sparen Sie ' + ((E.abrechnung && E.abrechnung.rabattJahr) || 20) + ' %, einmalig gibt es kein Abo und die Credits gelten ' + ((E.abrechnung && E.abrechnung.einmalGueltigMonate) || 12) + ' Monate.';
     if (/video|reel|tiktok|clip/.test(s)) return 'Ja, aus Ihrem Produktfoto mache ich einen Clip mit fünf Sekunden für 20 Credits. Zehn Sekunden gibt es im Premium-Paket.';
     if (/3d|ar\b|drehbar/.test(s)) return 'Ein drehbares 3D-Modell Ihres Produkts setzt Emre im Premium-Paket auf Anfrage persönlich um. Schreiben Sie ihm gern per WhatsApp oder E-Mail.';

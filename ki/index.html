@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://d8j0ntlcm91z4.cloudfront.net" crossorigin>
 <link rel="preload" href="../schriften/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <script>document.documentElement.classList.add('js');</script>
-<link rel="stylesheet" href="pakete.css?v=6">
+<link rel="stylesheet" href="pakete.css?v=7">
 <link rel="stylesheet" href="studio.css?v=1">
 <style>
 @font-face { font-family: "Geist"; src: url("../schriften/Geist-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
@@ -235,8 +235,8 @@ body { isolation: isolate; }
   *, *::before, *::after { transition-duration: 0.01ms !important; }
 }
 </style>
-<script src="js/endo-daten.js?v=8"></script>
-<link rel="stylesheet" href="endo-elemente.css?v=12">
+<script src="js/endo-daten.js?v=9"></script>
+<link rel="stylesheet" href="endo-elemente.css?v=13">
 </head>
 <body>
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
@@ -381,7 +381,7 @@ body { isolation: isolate; }
   var fenster = document.querySelector('[data-credit-fenster]'), kosten = fenster.querySelector('[data-credit-kosten]');
   E.funktionen.concat(E.premium).filter(function (f) { return f.credits; }).forEach(function (f) {
     var dt = document.createElement('dt'), dd = document.createElement('dd');
-    dt.textContent = f.name + (E.premium.indexOf(f) >= 0 ? ' (Premium)' : ''); dd.textContent = f.credits + ' Credits';
+    dt.textContent = f.name + (E.premium.indexOf(f) >= 0 ? ' (Premium)' : f.paket === 'pro' ? ' (ab Pro)' : ''); dd.textContent = f.credits + ' Credits' + (f.id === 'formate' ? ' je Format' : '');
     kosten.appendChild(dt); kosten.appendChild(dd);
   });
   function zu() { if (fenster.close) fenster.close(); else fenster.removeAttribute('open'); }
@@ -397,8 +397,8 @@ body { isolation: isolate; }
   }
 })();
 </script>
-<script src="js/pakete.js?v=7"></script>
-<script src="js/agent.js?v=26" defer></script>
+<script src="js/pakete.js?v=8"></script>
+<script src="js/agent.js?v=27" defer></script>
 <script src="../js/endo-zufluss.js?v=6" defer></script>
 <script src="js/daten.js?v=1" defer></script>
 <script>

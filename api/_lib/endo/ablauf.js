@@ -4,8 +4,8 @@
    3. pruefen:     Status holen → fertig: Ergebnis in eigenen Speicher + abbuchen · failed: 1 kostenloser
                    Neuversuch, danach zurück · nsfw/canceled/Zeitüberschreitung: zurück
    Alle Abhängigkeiten (Speicher, Higgsfield, Blob) werden übergeben – so lässt sich alles testen. */
-import { WERKZEUGE } from './werkzeuge.js';
-import { Abgelehnt, pruefeAuftrag, signiereKarte, pruefeKarte, istAuftragsId, webhookSchluessel } from './pruefen.js';
+import { WERKZEUGE, LOGO_BRANCHEN } from './werkzeuge.js';
+import { Abgelehnt, pruefeAuftrag, signiereKarte, pruefeKarte, istAuftragsId, webhookSchluessel, fotoMasse, naechstesFormat } from './pruefen.js';
 
 export const MAX_VERSUCHE = 2; // erster Versuch + 1 kostenloser Neuversuch
 const START_FRIST_MS = 3 * 60 * 1000;
@@ -35,10 +35,15 @@ function lookName(w, auftrag, presets) {
 }
 
 /* 1. Vorbereiten: Auftrag prüfen, echten Preis holen, Guthaben prüfen, Karte signieren. */
-export async function vorbereiten({ kontoId, roh, hf, speicher, env = process.env, jetzt = Date.now() }) {
+export async function vorbereiten({ kontoId, roh, hf, speicher, masse = fotoMasse, env = process.env, jetzt = Date.now() }) {
   const w = WERKZEUGE[roh && roh.werkzeug];
   const presets = w && w.preset ? await hf.presets() : [];
   const auftrag = pruefeAuftrag(roh, { presetIds: presets.map((p) => p.id) });
+  if (auftrag.format === 'original') {
+    // „Original“: das Seitenverhältnis des Fotos behalten (die Karte zeigt und signiert das echte Format)
+    const m = await masse(auftrag.fotoUrl);
+    auftrag.format = naechstesFormat(m.breite, m.hoehe, w.formate.filter((f) => f !== 'original'));
+  }
   const eingabe = w.eingabe(auftrag);
 
   let preis = null;
@@ -54,9 +59,10 @@ export async function vorbereiten({ kontoId, roh, hf, speicher, env = process.en
 
   const look = lookName(w, auftrag, presets);
   const formatText = auftrag.format === 'auto' || auftrag.format === 'bild' ? '' : auftrag.format;
-  const teile = [w.name, look, formatText, auftrag.ueberschrift ? `„${auftrag.ueberschrift}“` : '', `${w.credits} Credits`].filter(Boolean);
+  const branche = auftrag.branche ? LOGO_BRANCHEN[auftrag.branche].name : '';
+  const teile = [w.name, look, formatText, auftrag.ueberschrift ? `„${auftrag.ueberschrift}“` : '', auftrag.markenname ? `„${auftrag.markenname}“` : '', `${w.credits} Credits`].filter(Boolean);
   return {
-    karte: { werkzeug: auftrag.werkzeug, name: w.name, look, format: auftrag.format, ueberschrift: auftrag.ueberschrift || '', credits: w.credits, text: teile.join(' · '), foto: auftrag.fotoUrl },
+    karte: { werkzeug: auftrag.werkzeug, name: w.name, look, format: auftrag.format, ueberschrift: auftrag.ueberschrift || '', markenname: auftrag.markenname || '', branche, credits: w.credits, text: teile.join(' · '), foto: auftrag.fotoUrl || '' },
     token: signiereKarte({ kontoId, auftrag, credits: w.credits, kostenUsd }, env, jetzt)
   };
 }

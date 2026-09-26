@@ -241,7 +241,8 @@ html .agent__vorschlaege .chip.chip--premium { border-color: rgba(255, 122, 61, 
 html .agent__vorschlaege .chip.chip--premium .chip__credits { color: #FFB08A; background: rgba(255, 122, 61, 0.14); }
 @media (hover: hover) and (pointer: fine) { html .agent__vorschlaege .chip.chip--premium:hover { border-color: rgba(255, 150, 96, 0.9); background: rgba(255, 122, 61, 0.12); } }
 .agent__vorschlaege .chip-umbruch { flex-basis: 100%; height: 0; }
-.agent__vorschlaege .chip-titel { align-self: center; margin-right: 2px; font-size: 11px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #FF9A68; }
+.agent__vorschlaege .chip-titel { align-self: center; margin-right: 2px; font-size: 11px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(238, 240, 243, 0.58); }
+.agent__vorschlaege .chip-titel.chip-titel--premium { color: #FF9A68; }
 
 /* ---------- Sog (Emre, 27.09.): Foto wird eingesaugt / Ergebnis fließt heraus – Overlay aus ki/js/orb.js ---------- */
 .endo-sog { position: fixed; left: 0; top: 0; width: 100vw !important; height: 100vh !important; z-index: 70; pointer-events: none; }
@@ -293,3 +294,34 @@ html .agent__vorschlaege .chip.chip--premium .chip__credits { color: #FFB08A; ba
   .blase.blase--erhalten, .endo-ergebnis.endo-ergebnis--da, .endo-paketfenster[open] { animation: none; }
 }
 .endo-paketfenster:focus { outline: none; }
+
+/* ---------- Angebotswahl (Angebot 27.09.): Kategorie-Knöpfe mit eigenem Linien-Zeichen, Werkzeug-Karte ---------- */
+html .agent__vorschlaege .chip.chip--zeichen { display: inline-flex; align-items: center; gap: 8px; }
+.chip__zeichen { flex: none; width: 17px; height: 17px; opacity: 0.82; }
+html .agent__vorschlaege .chip.chip--premium .chip__zeichen { color: #FFB08A; opacity: 1; }
+html .agent__vorschlaege .chip .chip__stufe { display: inline-block; margin-left: 7px; font-size: 10.5px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(238, 240, 243, 0.56); }
+html .agent__vorschlaege .chip.chip--premium .chip__stufe { color: #FF9A68; }
+
+.endo-werkzeug { position: relative; padding: 1px; border-radius: 18px; background: var(--el-rand); }
+.endo-werkzeug--premium { background: linear-gradient(135deg, rgba(255, 150, 96, 0.7), rgba(255, 122, 61, 0.14) 40%, rgba(255, 255, 255, 0.06) 64%, rgba(255, 150, 96, 0.5)); }
+.endo-werkzeug__innen { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; padding: 12px; border-radius: 17px; background: rgba(12, 13, 15, 0.92); }
+.endo-werkzeug__bild { width: 88px; height: 110px; border-radius: 11px; object-fit: cover; border: 1px solid var(--el-linie); background: #15171A; }
+.endo-werkzeug__info { display: grid; gap: 6px; min-width: 0; }
+.endo-werkzeug__innen:not(:has(.endo-werkzeug__bild)) { grid-template-columns: 1fr; }
+.endo-werkzeug__titel { font-size: 15px; font-weight: 500; }
+.endo-werkzeug__text { margin: 0; font-size: 13px; line-height: 1.45; color: var(--el-leise); text-wrap: pretty; }
+.endo-werkzeug__bekommen { margin: 0; display: grid; gap: 1px; font-size: 13px; }
+.endo-werkzeug__bekommen span { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--el-leise); }
+.endo-werkzeug__fuss { margin: 2px 0 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: 13px; }
+.endo-werkzeug__fuss b { font-weight: 500; font-variant-numeric: tabular-nums; background: var(--el-chrom); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.endo-werkzeug__fuss span { font-size: 12px; color: var(--el-leise); }
+.endo-werkzeug--premium .endo-werkzeug__fuss span { color: #FFB08A; }
+@media (max-width: 640px) { .endo-werkzeug__bild { width: 72px; height: 90px; } }
+
+/* Muster für die neuen Looks, bis echte Vorschaubilder da sind */
+.endo-look__muster[data-look="hand"] { background: linear-gradient(160deg, #F3E6DA 0%, #D9B89A 60%, #9B7355 100%); }
+.endo-look__muster[data-look="zuhause"] { background: linear-gradient(170deg, #F7F1E8 0%, #E2D3BE 55%, #B79C7C 100%); }
+.endo-look__muster[data-look="arbeit"] { background: linear-gradient(170deg, #E7E9EC 0%, #B9BEC6 55%, #6F7682 100%); }
+.endo-look__muster[data-look="modern"] { background: linear-gradient(180deg, #FFFFFF 0%, #F1F2F4 60%, #1C1D20 60.5%, #1C1D20 100%); }
+.endo-look__muster[data-look="kraeftig"] { background: linear-gradient(160deg, #FF5A1F 0%, #FF5A1F 45%, #111214 45.5%, #111214 100%); color: rgba(238, 240, 243, 0.8); }
+.endo-look__muster[data-look="schriftzug"], .endo-look__muster[data-look="zeichen"], .endo-look__muster[data-look="emblem"], .endo-look__muster[data-look="handgemacht"] { background: linear-gradient(180deg, #FFFFFF 0%, #EEF0F2 100%); }

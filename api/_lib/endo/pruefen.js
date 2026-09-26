@@ -2,7 +2,7 @@
    signierte Bestätigungskarten. Alles, was hier nicht ausdrücklich erlaubt ist, wird abgelehnt. */
 import { createHmac, createHash, timingSafeEqual } from 'node:crypto';
 import { imageSize } from 'image-size';
-import { WERKZEUGE } from './werkzeuge.js';
+import { WERKZEUGE, LOGO_BRANCHEN, QWEN_FORMATE } from './werkzeuge.js';
 
 export const FOTO = { maxBytes: 4 * 1024 * 1024, minKante: 800, maxKante: 8000 };
 const FOTO_TYPEN = { jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
@@ -54,12 +54,18 @@ export function erlaubteFotoUrl(url) {
 /* Auftrag prüfen: nur bekannte Felder, nur erlaubte Werte. presetIds = aktuell erlaubte Presets (live geholt). */
 export function pruefeAuftrag(roh, { presetIds = [] } = {}) {
   if (!roh || typeof roh !== 'object' || Array.isArray(roh)) throw new Abgelehnt('ungueltig', 'Ungültiger Auftrag.');
-  const erlaubt = new Set(['werkzeug', 'look', 'format', 'fotoUrl', 'presetId', 'ueberschrift']);
+  const erlaubt = new Set(['werkzeug', 'look', 'format', 'fotoUrl', 'presetId', 'ueberschrift', 'markenname', 'branche']);
   for (const k of Object.keys(roh)) if (!erlaubt.has(k)) throw new Abgelehnt('ungueltig', 'Ungültiger Auftrag.');
   const w = WERKZEUGE[roh.werkzeug];
   if (!w) throw new Abgelehnt('werkzeug', 'Dieses Werkzeug gibt es nicht.');
-  if (!erlaubteFotoUrl(roh.fotoUrl)) throw new Abgelehnt('foto', 'Bitte zuerst ein Foto hochladen.');
-  const auftrag = { werkzeug: roh.werkzeug, fotoUrl: roh.fotoUrl };
+  const auftrag = { werkzeug: roh.werkzeug };
+  if (w.ohneFoto) {
+    // z. B. Logo-Entwurf: braucht kein Foto – eins mitzuschicken ist ein Fehler
+    if (roh.fotoUrl !== undefined && roh.fotoUrl !== '') throw new Abgelehnt('ungueltig', 'Ungültiger Auftrag.');
+  } else {
+    if (!erlaubteFotoUrl(roh.fotoUrl)) throw new Abgelehnt('foto', 'Bitte zuerst ein Foto hochladen.');
+    auftrag.fotoUrl = roh.fotoUrl;
+  }
   if (w.looks) {
     if (!Object.hasOwn(w.looks, roh.look)) throw new Abgelehnt('look', 'Diesen Look gibt es nicht.');
     auftrag.look = roh.look;
@@ -69,25 +75,81 @@ export function pruefeAuftrag(roh, { presetIds = [] } = {}) {
       throw new Abgelehnt('look', 'Diesen Look gibt es nicht (mehr).');
     }
     auftrag.presetId = roh.presetId;
-    if (roh.ueberschrift !== undefined && roh.ueberschrift !== '') auftrag.ueberschrift = pruefeUeberschrift(roh.ueberschrift);
-  } else if (roh.presetId !== undefined || roh.ueberschrift !== undefined) throw new Abgelehnt('ungueltig', 'Ungültiger Auftrag.');
+  } else if (roh.presetId !== undefined) throw new Abgelehnt('ungueltig', 'Ungültiger Auftrag.');
+  // Überschrift: nur bei Werkzeugen, die eine haben (Anzeige optional, Plakat Pflicht)
+  const hatText = roh.ueberschrift !== undefined && roh.ueberschrift !== '';
+  if (w.ueberschrift) {
+    if (hatText) auftrag.ueberschrift = pruefeUeberschrift(roh.ueberschrift, { aktion: !!w.aktion });
+    else if (w.ueberschrift === 'pflicht') throw new Abgelehnt('ueberschrift', 'Für das Plakat fehlt noch die Überschrift.');
+  } else if (roh.ueberschrift !== undefined) throw new Abgelehnt('ungueltig', 'Ungültiger Auftrag.');
+  // Logo: Name + Branche aus fester Liste
+  if (w.marke) {
+    auftrag.markenname = pruefeMarkenname(roh.markenname);
+    if (!Object.hasOwn(LOGO_BRANCHEN, roh.branche)) throw new Abgelehnt('branche', 'Bitte eine Branche aus der Liste wählen.');
+    auftrag.branche = roh.branche;
+  } else if (roh.markenname !== undefined || roh.branche !== undefined) throw new Abgelehnt('ungueltig', 'Ungültiger Auftrag.');
   const format = roh.format === undefined ? w.formate[0] : roh.format;
   if (!w.formate.includes(format)) throw new Abgelehnt('format', 'Dieses Format gibt es für dieses Werkzeug nicht.');
   auftrag.format = format;
   return auftrag;
 }
 
-/* Überschrift für Werbeanzeigen (Emre, 26.09.: endo schlägt deutsch vor, Kunde bestätigt).
-   Einziger Text, der zu Higgsfield darf – deshalb streng: kurz, nur Buchstaben/Ziffern/einfache Satzzeichen,
-   keine Preise, Prozente, Rabatte, Bewertungen, Versprechen oder Links. */
-const UEBERSCHRIFT_ZEICHEN = /^[A-Za-zÄÖÜäöüß0-9 .,!?&'’\-–]+$/;
-const UEBERSCHRIFT_VERBOTEN = /(€|\$|%|prozent|rabatt|sale|gratis|kostenlos|umsonst|gutschein|code|angebot|nur heute|sterne|bewertung|testsieger|garantie|heilt|klinisch|bewiesen|nr\.? ?1|www|http|\.de\b|\.com\b)/i;
-export function pruefeUeberschrift(roh) {
+/* Überschrift (Emre, 26.09.: endo schlägt deutsch vor, Kunde bestätigt). Einziger Satz, der zu Higgsfield darf –
+   deshalb streng: kurz, nur Buchstaben/Ziffern/einfache Satzzeichen, keine Bewertungen, Versprechen oder Links.
+   aktion = Aktions-Plakat: dort sind Preise und Prozente erlaubt („20 % auf alles“), weil der Kunde sie selbst angibt. */
+const UEBERSCHRIFT_ZEICHEN = /^[A-Za-zÀ-ÖØ-öø-ÿ0-9 .,!?&'’\-–]+$/;
+const AKTION_ZEICHEN = /^[A-Za-zÀ-ÖØ-öø-ÿ0-9 .,!?&'’\-–%€:]+$/;
+const IMMER_VERBOTEN = /(sterne|bewertung|testsieger|garantie|heilt|klinisch|bewiesen|nr\.? ?1|www|http|\.de\b|\.com\b)/i;
+const UEBERSCHRIFT_VERBOTEN = /(€|\$|%|prozent|rabatt|sale|gratis|kostenlos|umsonst|gutschein|code|angebot|nur heute)/i;
+export function pruefeUeberschrift(roh, { aktion = false } = {}) {
   const t = String(roh).replace(/\s+/g, ' ').trim();
-  if (t.length < 3 || t.length > 40 || !UEBERSCHRIFT_ZEICHEN.test(t) || UEBERSCHRIFT_VERBOTEN.test(t) || /\d{3,}/.test(t)) {
-    throw new Abgelehnt('ueberschrift', 'Die Überschrift passt so nicht: höchstens 40 Zeichen, ohne Preise, Rabatte, Bewertungen oder Links.');
+  const zeichen = aktion ? AKTION_ZEICHEN : UEBERSCHRIFT_ZEICHEN;
+  const ok = t.length >= 3 && t.length <= 40 && zeichen.test(t) && !IMMER_VERBOTEN.test(t) &&
+    (aktion ? !/\d{5,}/.test(t) : !UEBERSCHRIFT_VERBOTEN.test(t) && !/\d{3,}/.test(t));
+  if (!ok) {
+    throw new Abgelehnt('ueberschrift', aktion
+      ? 'Die Überschrift passt so nicht: höchstens 40 Zeichen, ohne Bewertungen, Versprechen oder Links.'
+      : 'Die Überschrift passt so nicht: höchstens 40 Zeichen, ohne Preise, Rabatte, Bewertungen oder Links.');
   }
   return t;
+}
+
+/* Firmen- oder Markenname für den Logo-Entwurf: kurz, nur Buchstaben/Ziffern/einfache Zeichen, keine Links. */
+const NAME_ZEICHEN = /^[A-Za-zÀ-ÖØ-öø-ÿ0-9 .&'’\-]+$/;
+export function pruefeMarkenname(roh) {
+  const t = String(roh === undefined ? '' : roh).replace(/\s+/g, ' ').trim();
+  if (t.length < 2 || t.length > 30 || !NAME_ZEICHEN.test(t) || /(www|http|\.de\b|\.com\b)/i.test(t)) {
+    throw new Abgelehnt('markenname', 'Der Name passt so nicht: 2–30 Zeichen, nur Buchstaben, Ziffern und einfache Zeichen.');
+  }
+  return t;
+}
+
+/* „Original“-Format: das Seitenverhältnis aus QWEN_FORMATE, das dem Foto am nächsten kommt. */
+export function naechstesFormat(breite, hoehe, formate = QWEN_FORMATE) {
+  const soll = Math.log(breite / hoehe);
+  let best = formate[0], abstand = Infinity;
+  for (const f of formate) {
+    const [a, b] = f.split(':').map(Number);
+    const d = Math.abs(Math.log(a / b) - soll);
+    if (d < abstand) { abstand = d; best = f; }
+  }
+  return best;
+}
+
+/* Maße eines Fotos aus unserem Speicher: erst die ersten 128 KB (reicht fast immer), sonst die ganze Datei. */
+export async function fotoMasse(url, fetchFn = fetch) {
+  if (!erlaubteFotoUrl(url)) throw new Abgelehnt('foto', 'Bitte zuerst ein Foto hochladen.');
+  for (const kopf of [{ Range: 'bytes=0-131071' }, {}]) {
+    try {
+      const r = await fetchFn(url, { headers: kopf });
+      if (!r.ok) continue;
+      const info = imageSize(Buffer.from(await r.arrayBuffer()));
+      let { width: b, height: h } = info;
+      if (info.orientation && info.orientation >= 5) [b, h] = [h, b];
+      if (b > 0 && h > 0) return { breite: b, hoehe: h };
+    } catch (e) { /* nächster Versuch */ }
+  }
+  throw new Abgelehnt('foto', 'Das Foto lässt sich gerade nicht lesen – bitte noch einmal hochladen.');
 }
 
 export function istAuftragsId(id) { return typeof id === 'string' && UUID.test(id); }

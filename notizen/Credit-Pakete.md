@@ -12,9 +12,9 @@ Umschalter „Monatlich | Jährlich −20 %“ über den Karten (Standard: Monat
 
 | Paket | Credits/Monat | Monatlich | Jährlich (pro Monat) | Jährlich abgerechnet | Enthalten |
 |---|---|---|---|---|---|
-| Start | 40 | 5 € | 3,99 € | 47,88 € | alle drei Bereiche |
-| Pro | 200 | 20 € | 16 € | 192 € | alle drei Bereiche |
-| Premium | 1.000 | 100 € | 80 € | 960 € | alle drei Bereiche + Premium-Ordner |
+| Start | 40 | 5 € | 3,99 € | 47,88 € | 7 Werkzeuge (Produktfoto, Shop-Bild, Anzeige, Formate-Set, Aufwerten, Video 5 s, Titelbild) |
+| Pro | 200 | 20 € | 16 € | 192 € | Start + Lifestyle, Aktions-Plakat, Logo-Entwurf |
+| Premium | 1.000 | 100 € | 80 € | 960 € | Pro + Video 10 s, Website-Video 4K, 3D/Parallax/Abstimmung, Website von Emre |
 
 **Gewinn im schlechtesten Fall** (gleiche Rechnung wie unten; Jahresabo = eine Abbuchung pro Jahr, also nur einmal 0,50 € Gebühr):
 | Paket | Monatlich | Jährlich: Netto/Jahr | Kosten/Jahr | Gewinn | Anteil |
@@ -71,8 +71,17 @@ Rechnung mit Listenpreisen der Higgsfield-API (nach Aktionsende), schlechtester 
 | Werbevideo 5 s (1080p, ohne Ton) | **20** | 0,56 $ | kling-video/v3.0/pro/image-to-video | 56 % |
 | Website-Titelbild (4K, 16:9) | **12** | 0,424 $ | marketing-studio/image, Direktmodus | 44 % |
 | **Premium:** Werbevideo 10 s | **40** | 1,12 $ | kling-video/v3.0/pro/image-to-video | 56 % |
+| Shop- & Marktplatz-Bild (umbenannt 27.09.) | **5** | 0,075 $ | alibaba/qwen-image-3/edit | 76 % |
+| **neu 27.09.** Lifestyle mit Person (Pro) | **14** | 0,343 $ (Liste; 26./27.09. rabattiert 0,257 $; gerechnet mit 0,452 $) | marketing-studio/image, Direktmodus 2K | 49 % |
+| **neu 27.09.** Aktions-Plakat (Pro) | **6** | 0,10 $ | ideogram/v4.0, QUALITY | 74 % |
+| **neu 27.09.** Formate-Set (Start) | **3 je Format** | 0,075 $ je Format | alibaba/qwen-image-3/edit, 2K | 60 % |
+| **neu 27.09.** Foto aufwerten (Start) | **4** | 0,075 $ | alibaba/qwen-image-3/edit, 2K | 70 % |
+| **neu 27.09.** Logo-Entwurf (Pro) | **8** | 0,21 $ | recraft/v4.1/pro/text-to-image, 2K | 58 % |
+| **neu 27.09. Premium:** Website-Video 4K | **60** | **2,10 $** Liste (bis 01.10. rabattiert 1,05 $) | kling-video/v3.0/4k/image-to-video, 5 s | 44 % |
 | **Premium:** 3D-Produkt, Parallax-Szene | auf Anfrage | – | nicht über die API – Emre von Hand | – |
 | **Premium:** Abstimmung mit Emre | – | – | Anfrage | – |
+
+**Hinweis 27.09.:** Das Formate-Set ist technisch ein Auftrag je Format (eigene Rückbuchung) → 3 Credits je Format statt 8 für drei (Plan). Der schlechteste Fall pro Credit bleibt das Produktfoto (0,0377 €/Credit), die Paket-Rechnung oben ändert sich nicht. Welches Paket ein Kunde hat, prüft der Server erst, wenn Pakete gekauft werden können (Lemon Squeezy).
 
 ## Verbrauch bis Phase C (alt, 25.09.)
 | Bereich | Credits | Higgsfield-Kosten | Modell |

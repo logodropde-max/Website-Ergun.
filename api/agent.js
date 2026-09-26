@@ -9,7 +9,7 @@
    Antwort: { antwort, elemente: [{ typ: 'looks' | 'karte' | 'kontakt', … }] } */
 import Anthropic from '@anthropic-ai/sdk';
 import { ANWEISUNG, WISSEN, BEISPIELE, STAND } from './_lib/endo/wissen.js';
-import { WERKZEUGE, looksFuer } from './_lib/endo/werkzeuge.js';
+import { WERKZEUGE, LOGO_BRANCHEN, looksFuer } from './_lib/endo/werkzeuge.js';
 import { speicherAusUmgebung } from './_lib/endo/speicher.js';
 import { higgsfieldAusUmgebung } from './_lib/endo/higgsfield.js';
 import { erlaubteFotoUrl, Abgelehnt } from './_lib/endo/pruefen.js';
@@ -49,7 +49,7 @@ const TOOL_LOOKS = {
 };
 const TOOL_AUFTRAG = {
   name: 'auftrag_vorbereiten',
-  description: 'Bereitet einen Auftrag vor und zeigt dem Kunden die Bestätigungskarte „Werkzeug · Look · Format · Credits“. Erzeugt NICHTS – das tut erst der „Ja“-Knopf des Kunden. Nur aufrufen, wenn Werkzeug, Look (bzw. preset_id bei „anzeige“) und Format feststehen und ein Foto hochgeladen ist. „ueberschrift“ nur bei „anzeige“ und nur, wenn der Kunde sie gewählt hat. Look-IDs genau nach dieser Liste wählen – ' + LOOK_TABELLE + '. Nenne danach den Look genau so, wie er auf der Karte steht.',
+  description: 'Bereitet einen Auftrag vor und zeigt dem Kunden die Bestätigungskarte „Werkzeug · Look · Format · Credits“. Erzeugt NICHTS – das tut erst der „Ja“-Knopf des Kunden. Nur aufrufen, wenn Werkzeug, Look (bzw. preset_id bei „anzeige“) und Format feststehen und ein Foto hochgeladen ist (Ausnahme „logo“: kein Foto nötig). „ueberschrift“ bei „anzeige“ (freiwillig) und „plakat“ (Pflicht), nur so, wie der Kunde sie gewählt hat. „logo“ braucht „markenname“ (genau wie vom Kunden geschrieben) und „branche“. „formate“ (Formate-Set): statt „format“ die Liste „formate“ mit 1–3 Formaten; 3 Credits je Format. „aufwerten“: format weglassen (= Original). Look-IDs genau nach dieser Liste wählen – ' + LOOK_TABELLE + '. Nenne danach den Look genau so, wie er auf der Karte steht.',
   input_schema: {
     type: 'object',
     properties: {
@@ -57,7 +57,10 @@ const TOOL_AUFTRAG = {
       look: { type: 'string', enum: ALLE_LOOKS, description: 'Look-ID (nicht bei shop und anzeige)' },
       preset_id: { type: 'string', description: 'Nur bei anzeige: ID aus looks_zeigen' },
       format: { type: 'string', enum: ALLE_FORMATE, description: 'Seitenverhältnis; weglassen bei Videos und Anzeigen' },
-      ueberschrift: { type: 'string', description: 'Nur bei anzeige: vom Kunden gewählte deutsche Überschrift, höchstens 40 Zeichen' }
+      ueberschrift: { type: 'string', description: 'Nur bei anzeige und plakat: vom Kunden gewählte deutsche Überschrift, höchstens 40 Zeichen' },
+      markenname: { type: 'string', description: 'Nur bei logo: Firmen- oder Markenname, genau wie vom Kunden geschrieben, 2–30 Zeichen' },
+      branche: { type: 'string', enum: Object.keys(LOGO_BRANCHEN), description: 'Nur bei logo: ' + Object.entries(LOGO_BRANCHEN).map(([id, b]) => `${id} = ${b.name}`).join(', ') },
+      formate: { type: 'array', items: { type: 'string', enum: WERKZEUGE.formate.formate }, description: 'Nur bei formate (Formate-Set): 1–3 Formate' }
     },
     required: ['werkzeug'],
     additionalProperties: false
@@ -123,6 +126,23 @@ export function modusText({ kontoId, fotoUrl, verfuegbar } = {}) {
   return `Modus: angemeldeter Kunde.${credits} ${foto} Seine Ergebnisse und Fotos findet er 90 Tage lang in seiner Galerie.`;
 }
 
+/* Formate-Set: je Format ein eigener Auftrag (eigene Rückbuchung, falls einer nicht klappt), EINE Karte mit allen.
+   Credits werden vorab für das ganze Set geprüft. */
+async function formateSet(e, roh, w, ctx) {
+  const liste = [...new Set(Array.isArray(e.formate) && e.formate.length ? e.formate : [roh.format || w.formate[0]])];
+  if (liste.length > w.set) return { text: `Nicht möglich: höchstens ${w.set} Formate auf einmal.` };
+  const konto = await ctx.speicher.konto(ctx.kontoId);
+  const gesamt = liste.length * w.credits;
+  if (konto && konto.ok && konto.verfuegbar < gesamt) return { text: `Nicht möglich: Dafür reichen die Credits nicht (${gesamt} nötig, verfügbar: ${konto.verfuegbar}).` };
+  const teile = [];
+  for (const format of liste) teile.push(await vorbereiten({ kontoId: ctx.kontoId, roh: { ...roh, format }, hf: ctx.hf, speicher: ctx.speicher }));
+  const karte = { ...teile[0].karte, format: liste.join(', '), credits: gesamt, text: `${w.name} · ${liste.join(', ')} · ${gesamt} Credits` };
+  return {
+    text: `Karte angezeigt: ${karte.text}. Der Kunde muss jetzt auf „Ja“ tippen – vorher wird nichts erzeugt.`,
+    element: { typ: 'karte', karte, tokens: teile.map((t) => t.token), teile: teile.map((t) => t.karte) }
+  };
+}
+
 /* Ein Werkzeug ausführen. Liefert Text für Claude und optional ein Element für die Seite. */
 export async function werkzeugAusfuehren(name, eingabe, ctx) {
   const e = eingabe || {};
@@ -142,13 +162,19 @@ export async function werkzeugAusfuehren(name, eingabe, ctx) {
   }
   if (name === 'auftrag_vorbereiten') {
     if (!ctx.kontoId) return { text: 'Nicht möglich: Der Kunde ist nicht angemeldet. Bitte ihn, sich über den Knopf „Anmelden“ anzumelden oder zu registrieren.' };
-    if (!ctx.fotoUrl) return { text: 'Nicht möglich: Es ist noch kein Foto hochgeladen. Bitte den Kunden, ein Foto hochzuladen.' };
-    const roh = { werkzeug: e.werkzeug, fotoUrl: ctx.fotoUrl };
+    const w = WERKZEUGE[e.werkzeug];
+    if (!w) return { text: 'Unbekanntes Werkzeug.' };
+    if (!w.ohneFoto && !ctx.fotoUrl) return { text: 'Nicht möglich: Es ist noch kein Foto hochgeladen. Bitte den Kunden, ein Foto hochzuladen.' };
+    const roh = { werkzeug: e.werkzeug };
+    if (!w.ohneFoto) roh.fotoUrl = ctx.fotoUrl;
     if (e.look) roh.look = e.look;
     if (e.preset_id) roh.presetId = e.preset_id;
     if (e.format) roh.format = e.format;
     if (e.ueberschrift) roh.ueberschrift = e.ueberschrift;
+    if (e.markenname !== undefined) roh.markenname = e.markenname;
+    if (e.branche !== undefined) roh.branche = e.branche;
     try {
+      if (w.set) return await formateSet(e, roh, w, ctx);
       const v = await vorbereiten({ kontoId: ctx.kontoId, roh, hf: ctx.hf, speicher: ctx.speicher });
       return { text: `Karte angezeigt: ${v.karte.text}. Der Kunde muss jetzt auf „Ja“ tippen – vorher wird nichts erzeugt.`, element: { typ: 'karte', karte: v.karte, token: v.token } };
     } catch (err) {
