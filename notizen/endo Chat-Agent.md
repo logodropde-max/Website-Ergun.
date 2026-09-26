@@ -30,4 +30,15 @@ Der Assistent „endo" steht auf [[endo-ai|endo.ai]] ganz oben im Vordergrund. E
 - Schutz: nur Anfragen von der eigenen Seite, höchstens 12 Nachrichten mit je 600 Zeichen.
 - endo kennt die Fakten aus [[Credit-Pakete]] und erfindet nichts dazu. Er behauptet nie, selbst ein Bild erzeugt zu haben, solange die echte Erzeugung über die [[Higgsfield API]] noch fehlt.
 
+## Produktfotos erzeugen – Vorgaben (Emre, 26.09.2026, für Phase C)
+Modell: **Marketing Studio Image** (`marketing-studio/image`) über die [[Higgsfield API]] – nur auf dem Server (Vercel-Funktion, Schlüssel `HF_KEY` nur in Vercel).
+1. **Bevorzugt Preset-Modus:** `enhance_prompt: true` + `preset_id` + **1 Produktfoto** in `image_urls` (optional 2. Bild als Model-Referenz), `quality: "high"`.
+   - Die Preset-Liste wird **live** geholt: `GET https://api.higgsfield.ai/marketing-studio/image/presets?size=50` (bei `cursor` weiterblättern) – **nie fest einprogrammieren**, Presets ändern sich.
+   - Im Chat als **Look-Auswahl mit Vorschaubild** zeigen; der Kunde wählt, endo trägt nur die `id` als `preset_id` ein.
+   - Preset-Modus kostet bei Higgsfield **10 % mehr** → in den Credits berücksichtigen ([[Credit-Pakete]]).
+2. **Ohne Preset (eigener Wunsch-Look):** Direktmodus (`enhance_prompt: false`) mit **endos fester Prompt-Vorlage** (Vorlage noch schreiben; Regeln im Skill higgsfield-api-prompts).
+3. **Ergebnis-Status:** `completed` = Erfolg. `failed`, `nsfw` oder `canceled` = kein Erfolg → **Credits automatisch zurück** (Higgsfield berechnet dann auch nichts) und freundliche Meldung; bei `nsfw`: **„Dieses Motiv können wir leider nicht erstellen.“**
+4. **Fotos:** `image_urls` müssen öffentlich erreichbare Links sein → Upload über [[Datei-Upload (Vercel Blob)|Vercel Blob]]; **Kundenfotos nach 30 Tagen löschen** und das im Datenschutz nennen ([[Datenschutz und Recht]]). Ergebnisse bei Higgsfield sind nur mind. 7 Tage abrufbar → sofort in eigenen Speicher kopieren.
+Test von Hand vorab: `node hf.mjs presets` / `preis marketing-studio/image …` (siehe [[Higgsfield API]]).
+
 Offen: [[To-dos]]

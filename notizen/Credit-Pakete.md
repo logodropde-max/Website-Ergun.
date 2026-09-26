@@ -37,6 +37,8 @@ Umschalter „Monatlich | Jährlich −20 %“ über den Karten (Standard: Monat
 | **Premium:** Parallax-Szene | 30 | ca. 17 | 4 Bilder à 4,25 (Annahme Claude) |
 | **Premium:** persönliche Abstimmung mit Emre | – | – | – |
 
+> **Hinweis (26.09.):** Produktfotos laufen bevorzugt im **Preset-Modus** von Marketing Studio Image – der kostet bei Higgsfield **10 % mehr** als der Direktmodus. Beim Nachrechnen berücksichtigen (Spalte „Higgsfield-Kosten“ war in Abo-Credits gerechnet; künftig gilt der API-Preis in $ laut `hf.mjs preis`). Fehlgeschlagene/abgelehnte Aufträge: Credits zurück. Vorgaben: [[endo Chat-Agent]].
+
 ## So gerechnet (Emre, 25.09.)
 - Worst Case 0,052 € pro Higgsfield-Credit (Nachkauf 500 Credits für 26 €), dazu 30 % Fehlversuche.
 - Vom Preis gehen 19 % MwSt und bei Lemon Squeezy ca. 5 % + 0,50 € ab. Netto: Start 3,45 € · Pro 15,31 € · Premium 78,53 €.

@@ -55,5 +55,6 @@ node hf.mjs erzeugen kling-video/v3.0/std/text-to-video --prompt "…" --set dur
 node hf.mjs erzeugen kling-video/v3.0/std/image-to-video --bild C:\pfad\foto.jpg --prompt "slow push-in" --set duration=5 --name … --ok
 node hf.mjs status <request_id> --name … --zweck …
 ```
+- **Marketing Studio Image** (`marketing-studio/image`, für endo: Produktfoto → Werbebild): `node hf.mjs presets` listet die aktuellen Vorlagen (kostenlos). Mit Vorlage: `--bild produkt.jpg --bild-feld image_urls --set preset_id=<ID> --set enhance_prompt=true` (optional zweites `--bild` als Model-Referenz; 10 % teurer). Ohne Vorlage: nur Prompt oder Bilder zum Bearbeiten. Kein öffentlicher Preis → vorher `preis`. Doku: https://dash.higgsfield.ai/models/marketing-studio/image/llms.txt
 - Ohne `--ok` zeigt `erzeugen` nur Modell, Eingabe und Preis. `--bild` lädt eine lokale Datei zu Higgsfield hoch (öffentlich erreichbar, mind. 7 Tage).
 - **Preise laut Modellseite (open.higgsfield.ai, 26.09.):** Z-Image Turbo 0,015 $/Bild · Kling 3.0 Standard 0,0462 $/s (45 % Rabatt bis 01.10., danach 0,084 $/s) → 5 s ≈ 0,23 $ · Kling 3.0 Turbo 720p 0,0616 $/s (danach 0,112 $/s). Endpunkte und Felder je Modell: https://docs.higgsfield.ai.
