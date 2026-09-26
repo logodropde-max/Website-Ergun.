@@ -527,7 +527,7 @@
   function figurLaden(name, folge) {
     var f = FIGUREN[name], b = new Image(); b.decoding = 'async';
     b.onload = function () { f[folge ? 'folge' : 'bild'] = b; f.zuletzt = ''; figurenZeichnen(); };
-    b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=9';
+    b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=6';
   }
   Object.keys(FIGUREN).forEach(function (k) { FIGUREN[k].zuletzt = ''; figurLaden(k, false); });
   /* die Bildfolgen (groß) erst nach dem Laden der Seite */
@@ -728,7 +728,6 @@
     box.innerHTML = '';
     var hoehe = m.H * 0.66, r = zufall(4242), q = Math.min(m.q, 1.5);
     box.style.height = hoehe + 'px';
-    if (!(m.W > 0 && hoehe > 0)) return;  /* während einer 0-Breite (Neuaufbau) nichts zeichnen */
     /* Milchstraße: schräges Band, grob gerechnet und weich hochskaliert */
     var mw = 640, mh = Math.round(mw * hoehe / m.W), mc = document.createElement('canvas');
     mc.width = mw; mc.height = mh; mc.className = 'milchstrasse';

@@ -310,25 +310,6 @@ img { display: block; max-width: 100%; height: auto; }
 }
 @keyframes faden-waechst { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 @keyframes faden-punkt { 0% { opacity: 0; transform: translate3d(0, 0, 0); } 8% { opacity: 1; } 36% { opacity: 1; } 48% { opacity: 0; transform: translate3d(0, calc(var(--faden-h) - 36px), 0); } 100% { opacity: 0; transform: translate3d(0, calc(var(--faden-h) - 36px), 0); } }
-
-/* Linienfeld (26.09., Emre): das Schwarze unter endo im Stil des Lichtfadens füllen – feine senkrechte Lichtlinien,
-   vereinzelt mit wanderndem Punkt, dazu leise pulsierende Knoten. Dezent, nur transform/opacity, im Chat still. */
-.endo__linien { position: absolute; inset: 0; z-index: -2; overflow: hidden; pointer-events: none;
-  -webkit-mask-image: linear-gradient(transparent 0, transparent 12%, #000 24%, #000 95%, transparent 100%); mask-image: linear-gradient(transparent 0, transparent 12%, #000 24%, #000 95%, transparent 100%); }
-.endo__linie { position: absolute; width: 1px; border-radius: 1px; transform-origin: 50% 0;
-  background: linear-gradient(rgba(214, 226, 245, 0), rgba(214, 226, 245, var(--o, 0.12)) 42%, rgba(226, 234, 248, calc(var(--o, 0.12) * 0.7)) 86%, rgba(226, 234, 248, 0)); }
-.endo__linie::after { content: ""; position: absolute; left: -2px; top: 0; width: 5px; height: 28px; border-radius: 3px; opacity: 0;
-  background: radial-gradient(closest-side, rgba(240, 245, 255, 0.85), rgba(200, 216, 245, 0)); }
-.endo__knoten { position: absolute; width: 3px; height: 3px; margin: -1.5px 0 0 -1.5px; border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(226, 236, 252, var(--o, 0.5)), rgba(160, 190, 240, 0)); }
-@media (prefers-reduced-motion: no-preference) {
-  .endo__linie::after { animation: linie-punkt var(--d, 9s) cubic-bezier(0.45, 0, 0.55, 1) var(--delay, 0s) infinite; }
-  .endo__knoten { animation: knoten-atem var(--d, 6s) ease-in-out var(--delay, 0s) infinite; }
-  .endo:not(.endo--sichtbar) .endo__linie::after, .endo:not(.endo--sichtbar) .endo__knoten,
-  .endo-chat .endo__linie::after, .endo-chat .endo__knoten { animation-play-state: paused; }
-}
-@keyframes linie-punkt { 0% { opacity: 0; transform: translateY(0); } 6% { opacity: 0.85; } 40% { opacity: 0.85; } 52% { opacity: 0; transform: translateY(var(--travel, 120px)); } 100% { opacity: 0; transform: translateY(var(--travel, 120px)); } }
-@keyframes knoten-atem { 0%, 100% { opacity: 0.22; transform: scale(0.8); } 50% { opacity: 0.9; transform: scale(1.2); } }
 .endo__orb { position: relative; z-index: -1; width: min(460px, 74vw); aspect-ratio: 1; margin: clamp(-72px, -6svh, -24px) auto clamp(-72px, -7svh, -40px); opacity: 0; pointer-events: none;
   -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent); mask-image: radial-gradient(closest-side, #000 62%, transparent); transition: opacity 1400ms var(--ease), transform 1600ms var(--ease); transform: translateY(14svh) scale(0.86); }
 .endo--da .endo__orb { transform: none; }
@@ -541,7 +522,6 @@ img { display: block; max-width: 100%; height: auto; }
   <!-- endo Studio (früher endo.ai): zweiter Bereich, direkt unter dem Titelbild. Ausführlich mit Funktionen und Paketen: ki/ -->
   <section class="endo" id="endo" aria-labelledby="endo-titel">
     <div class="endo__faden" aria-hidden="true"></div>
-    <div class="endo__linien" data-linien aria-hidden="true"></div>
     <div class="endo__orb" data-orb aria-hidden="true"></div>
     <div class="endo__innen">
       <div class="endo__kopf reveal">
@@ -723,7 +703,7 @@ img { display: block; max-width: 100%; height: auto; }
   </nav>
 </footer>
 
-<script src="js/szene.js?v=29"></script>
+<script src="js/szene.js?v=25"></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {
@@ -915,7 +895,7 @@ img { display: block; max-width: 100%; height: auto; }
   var geladen = false;
   function laden() {
     if (geladen) return; geladen = true;
-    var s = document.createElement('script'); s.src = 'ki/js/orb.js?v=8'; s.async = true; document.body.appendChild(s);
+    var s = document.createElement('script'); s.src = 'ki/js/orb.js?v=7'; s.async = true; document.body.appendChild(s);
   }
   if (!('IntersectionObserver' in window)) { window.addEventListener('load', laden); return; }
   /* erst nach dem Laden der Seite beobachten – der Start bleibt frei von der 500-KB-Kugel */
@@ -924,27 +904,6 @@ img { display: block; max-width: 100%; height: auto; }
     io.observe(buehne);
   }
   if (document.readyState === 'complete') setTimeout(beobachten, 800); else window.addEventListener('load', function () { setTimeout(beobachten, 800); });
-})();
-</script>
-<script>
-/* Linienfeld füllen (dezent): feine Lichtlinien + Knoten, gesät (immer gleich), erst nach dem Laden */
-(function () {
-  var feld = document.querySelector('[data-linien]'); if (!feld) return;
-  function baue() {
-    var a = 20260926, r = function () { a = (a * 16807) % 2147483647; return a / 2147483647; };
-    var teile = [];
-    for (var i = 0; i < 40; i++) {
-      var x = 3 + r() * 94, top = 26 + r() * 68, h = 7 + r() * 24, o = (0.07 + r() * 0.13).toFixed(3);
-      teile.push('<i class="endo__linie" style="left:' + x.toFixed(2) + '%;top:' + top.toFixed(2) + '%;height:' + h.toFixed(2) + '%;--o:' + o +
-        (r() < 0.42 ? ';--d:' + (7 + r() * 8).toFixed(1) + 's;--delay:' + (-r() * 9).toFixed(1) + 's;--travel:' + (40 + r() * 90).toFixed(0) + 'px' : '') + '"></i>');
-    }
-    for (i = 0; i < 34; i++) {
-      teile.push('<i class="endo__knoten" style="left:' + (3 + r() * 94).toFixed(2) + '%;top:' + (30 + r() * 66).toFixed(2) + '%;--o:' + (0.32 + r() * 0.42).toFixed(2) +
-        ';--d:' + (4 + r() * 6).toFixed(1) + 's;--delay:' + (-r() * 8).toFixed(1) + 's"></i>');
-    }
-    feld.innerHTML = teile.join('');
-  }
-  if (window.requestIdleCallback) requestIdleCallback(baue, { timeout: 1500 }); else setTimeout(baue, 400);
 })();
 </script>
 <script src="ki/js/endo-daten.js?v=4"></script>
