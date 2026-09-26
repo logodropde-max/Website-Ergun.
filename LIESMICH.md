@@ -16,6 +16,9 @@
 
 
 
+## endo-Logo in Chrom (26.09.2026, Claude Code)
+`.endo .endo__marke b` (Markup `data-text="endo"`): zwei Hintergrundebenen per `background-clip: text` – Glanzband (`background-size: 320%`) über Chrom-Verlauf, `background-origin: content-box`; Polsterung `0.5em 0.3em` (Platz für Schatten) mit waagerechtem Gegen-Margin (vertikal nicht, sonst verschiebt `translateY(-50%)`). Schatten über `b::before` (Textkopie, `color: transparent`, `text-shadow`, z-index −1) statt `filter`. Glanz wandert per `animation-timeline: view()` (`background-position` 92 % → 8 %), sonst steht er bei 46 %. `.endo__marke` ohne z-index.
+
 ## Sammelauftrag Himmel + endo (26.09.2026, Claude Code)
 `szene.js?v=30`, `pakete.css?v=4`, `endo-daten.js?v=5`, `pakete.js?v=4`, `agent.js?v=11`.
 1. Himmel: `.himmel--tag/--gold/--blau/--nacht` neue Verläufe; `.himmel--korn` (SVG-feTurbulence, Alpha 0,03) gegen Banding; `.sonne .sonne__glut` skaliert mit `--tief`; `.mond__hof` leiser. `?nacht=x` → `festP = x · 0.46 · ZEIT`.

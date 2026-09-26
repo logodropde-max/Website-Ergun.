@@ -310,9 +310,28 @@ img { display: block; max-width: 100%; height: auto; }
 .endo__kopf { display: grid; justify-items: center; gap: 18px; }
 /* Wortmarke an der Lichtlinie (26.09., Emre): „endo" links, „Studio" rechts, gleiche Höhe, gleicher Abstand –
    die Linie selbst ist der Trenner. Schrift, Größe und Chrom wie das Logo (.endo-marke aus ki/studio.css). */
-.endo .endo__marke { position: absolute; z-index: 0; left: 50%; top: calc(30svh + var(--faden-h) * 0.46); width: 0; height: 0; margin: 0; display: block; pointer-events: none; --marke-luft: 20px; }
+.endo .endo__marke { position: absolute; left: 50%; top: calc(30svh + var(--faden-h) * 0.46); width: 0; height: 0; margin: 0; display: block; pointer-events: none; --marke-luft: 20px; }
 .endo .endo__marke b, .endo .endo__marke span { position: absolute; top: 0; white-space: nowrap; transform: translateY(-50%); }
 .endo .endo__marke b { right: var(--marke-luft); padding-bottom: 0; line-height: 1.1; }
+/* Chrom-Logo (26.09., Emre): poliertes Metall – hell oben, kühles Mittelgrau, feine dunklere Unterkante (Töne wie /ki/),
+   feine Kante + weicher Schatten für Tiefe. Glanzstreifen = eigenes Element, wandert nur per transform langsam mit dem
+   Scrollen (overlay: hellt nur das Metall auf, der dunkle Grund bleibt dunkel). Bewegung reduziert: Glanz steht still. */
+.endo .endo__marke b { padding: 0.5em 0.3em; margin: 0 -0.3em;
+  background-image: linear-gradient(100deg, rgba(255, 255, 255, 0) 42%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0) 58%),
+    linear-gradient(180deg, #FFFFFF 0%, #F4F6F8 32%, #D2D7DE 57%, #A7AFB9 80%, #7F8792 100%);
+  background-size: 320% 100%, 100% 100%; background-position: 46% 0, 0 0;
+  background-origin: content-box; background-repeat: no-repeat;
+  -webkit-background-clip: text; background-clip: text; color: transparent; }
+/* Tiefe: Schattenkopie hinter der Schrift – feine dunkle Unterkante + weicher Schatten */
+.endo .endo__marke b::before { content: attr(data-text); position: absolute; left: 0; top: 0; padding: inherit; z-index: -1; color: transparent;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6), 0 4px 10px rgba(0, 0, 0, 0.45); }
+/* Glanz wandert ganz langsam mit dem Scrollen über das Wort (nur im Metall, nie daneben) */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .endo .endo__marke b { animation: marke-glanz linear both; animation-timeline: view(); animation-range: cover 5% cover 95%; }
+  }
+}
+@keyframes marke-glanz { from { background-position: 92% 0, 0 0; } to { background-position: 8% 0, 0 0; } }
 .endo .endo__marke span { left: var(--marke-luft); padding-left: 0; border-left: 0; }
 @media (max-width: 640px) {
   .endo .endo__marke { --marke-luft: 15px; }
@@ -523,7 +542,7 @@ img { display: block; max-width: 100%; height: auto; }
   <!-- endo Studio (früher endo.ai): zweiter Bereich, direkt unter dem Titelbild. Ausführlich mit Funktionen und Paketen: ki/ -->
   <section class="endo" id="endo" aria-labelledby="endo-titel">
     <div class="endo__faden" aria-hidden="true"></div>
-    <p class="endo__marke endo-marke"><b>endo</b> <span>Studio</span></p>
+    <p class="endo__marke endo-marke"><b data-text="endo">endo</b> <span>Studio</span></p>
     <canvas class="endo__daten" aria-hidden="true"></canvas>
     <div class="endo__orb" data-orb aria-hidden="true"></div>
     <div class="endo__innen">
