@@ -116,8 +116,11 @@ export function modusText({ kontoId, fotoUrl, verfuegbar } = {}) {
   const foto = `Foto hochgeladen: ${fotoUrl ? 'ja' : 'nein'}. ${fotoUrl ? 'Du kannst Aufträge vorbereiten.' : 'Bitte zuerst um ein Foto (Knopf „Foto hochladen“), bevor du einen Auftrag vorbereitest.'}`;
   if (kontoId.startsWith('test-')) return `Modus: Testmodus (Emre testet). ${foto}`;
   const credits = typeof verfuegbar === 'number' ? ` Verfügbare Credits: ${verfuegbar}.` : '';
-  const leer = verfuegbar === 0 ? ' Mit 0 Credits kann noch nichts erzeugt werden – sag das ehrlich; Credit-Pakete kommen in Kürze (Vormerken möglich). Beraten und Looks zeigen darfst du trotzdem.' : '';
-  return `Modus: angemeldeter Kunde.${credits}${leer} ${foto} Seine Ergebnisse und Fotos findet er 90 Tage lang unter „Mein Konto“.`;
+  /* Nur mit Guthaben erstellen (Emre, 26.09.): unter 5 Credits kein Foto-Upload und kein Auftrag – erst aufladen */
+  if (typeof verfuegbar === 'number' && verfuegbar < 5) {
+    return `Modus: angemeldeter Kunde.${credits} Ohne Guthaben kann noch nichts erstellt und kein Foto hochgeladen werden – sag das ehrlich: erst ein Paket aufladen (monatlich, jährlich oder einmalig; der Kauf startet in Kürze, bis dahin vormerken). Beraten und Looks zeigen darfst du trotzdem. Bitte NICHT um ein Foto.`;
+  }
+  return `Modus: angemeldeter Kunde.${credits} ${foto} Seine Ergebnisse und Fotos findet er 90 Tage lang in seiner Galerie.`;
 }
 
 /* Ein Werkzeug ausführen. Liefert Text für Claude und optional ein Element für die Seite. */
