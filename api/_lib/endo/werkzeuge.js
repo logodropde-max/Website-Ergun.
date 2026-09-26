@@ -16,10 +16,10 @@ const VIDEO_TREU =
 /* Produktfoto: endos eigene Looks (Direktmodus von Marketing Studio Image) */
 const FOTO_LOOKS = {
   studio: { name: 'Studio weiß', text: 'Klar und hell auf weißem Grund', szene: 'on a seamless pure white studio background, soft diffused key light from above left, subtle natural contact shadow, clean e-commerce catalog quality' },
-  fenster: { name: 'Naturlicht', text: 'Holztisch, weiches Morgenlicht', szene: 'on a light oak table beside a window, soft morning daylight from the left, gentle natural shadows, calm minimal interior softly blurred in the background' },
+  naturlicht: { name: 'Naturlicht', text: 'Holztisch, weiches Morgenlicht', szene: 'on a light oak table beside a window, soft morning daylight from the left, gentle natural shadows, calm minimal interior softly blurred in the background' },
   stein: { name: 'Stein & Wärme', text: 'Travertin-Sockel, warme Töne', szene: 'on a sculptural travertine stone pedestal, warm neutral beige backdrop, soft directional light, premium editorial product photography' },
   nacht: { name: 'Dunkel & edel', text: 'Schiefer, Streiflicht, Luxus', szene: 'on a dark slate surface against a deep charcoal background, low-key lighting with a controlled rim light, subtle reflections, luxury look' },
-  natur: { name: 'Natur', text: 'Moos, Waldlicht, Tiefe', szene: 'on a moss-covered rock in a sunlit forest clearing, dappled natural light, shallow depth of field, fresh organic mood' },
+  wald: { name: 'Wald & Moos', text: 'Moos, Waldlicht, Tiefe', szene: 'on a moss-covered rock in a sunlit forest clearing, dappled natural light, shallow depth of field, fresh organic mood' },
   schwebend: { name: 'Schwebend', text: 'Frei im Raum, pastellig', szene: 'floating mid-air against a soft pastel gradient backdrop, gentle soft shadow on the floor below, clean conceptual studio look' }
 };
 
@@ -28,7 +28,7 @@ const TITEL_LOOKS = {
   hell: { name: 'Hell & minimal', text: 'Viel Weißraum, ruhig', szene: 'bright minimal set with soft white and light grey tones, gentle daylight, lots of calm negative space' },
   warm: { name: 'Warm & wohnlich', text: 'Goldenes Licht, Lifestyle', szene: 'warm lifestyle interior at golden hour, soft sunbeams, natural materials like linen and wood, cozy premium mood' },
   edel: { name: 'Dunkel & edel', text: 'Tiefe Farben, Glanzlichter', szene: 'dark elegant set in deep charcoal and bronze tones, dramatic soft spotlight, refined luxury mood' },
-  natur: { name: 'Natur', text: 'Draußen, frisch, weit', szene: 'wide natural outdoor scene with soft morning light, blurred greenery and sky, fresh and airy mood' }
+  draussen: { name: 'Draußen & frisch', text: 'Draußen, frisch, weit', szene: 'wide natural outdoor scene with soft morning light, blurred greenery and sky, fresh and airy mood' }
 };
 
 /* Werbevideos: nur die Bewegung wird beschrieben (Bild → Video) */

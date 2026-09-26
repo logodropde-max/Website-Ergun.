@@ -35,6 +35,9 @@ Feste Regeln (haben immer Vorrang):
 const WERKZEUG_IDS = Object.keys(WERKZEUGE);
 const ALLE_LOOKS = [...new Set(WERKZEUG_IDS.flatMap((id) => looksFuer(id).map((l) => l.id)))];
 const ALLE_FORMATE = [...new Set(WERKZEUG_IDS.flatMap((id) => WERKZEUGE[id].formate))];
+/* Eindeutige Zuordnung Look-ID → Name je Werkzeug (26.09.: endo hatte „Naturlicht“ und „Natur“ verwechselt) */
+const LOOK_TABELLE = WERKZEUG_IDS.filter((id) => WERKZEUGE[id].looks)
+  .map((id) => `${id}: ` + looksFuer(id).map((l) => `${l.id} = „${l.name}“`).join(', ')).join(' | ');
 
 const TOOL_LOOKS = {
   name: 'looks_zeigen',
@@ -43,7 +46,7 @@ const TOOL_LOOKS = {
 };
 const TOOL_AUFTRAG = {
   name: 'auftrag_vorbereiten',
-  description: 'Bereitet einen Auftrag vor und zeigt dem Kunden die Bestätigungskarte „Werkzeug · Look · Format · Credits“. Erzeugt NICHTS – das tut erst der „Ja“-Knopf des Kunden. Nur aufrufen, wenn Werkzeug, Look (bzw. preset_id bei „anzeige“) und Format feststehen und ein Foto hochgeladen ist. „ueberschrift“ nur bei „anzeige“ und nur, wenn der Kunde sie gewählt hat.',
+  description: 'Bereitet einen Auftrag vor und zeigt dem Kunden die Bestätigungskarte „Werkzeug · Look · Format · Credits“. Erzeugt NICHTS – das tut erst der „Ja“-Knopf des Kunden. Nur aufrufen, wenn Werkzeug, Look (bzw. preset_id bei „anzeige“) und Format feststehen und ein Foto hochgeladen ist. „ueberschrift“ nur bei „anzeige“ und nur, wenn der Kunde sie gewählt hat. Look-IDs genau nach dieser Liste wählen – ' + LOOK_TABELLE + '. Nenne danach den Look genau so, wie er auf der Karte steht.',
   input_schema: {
     type: 'object',
     properties: {
