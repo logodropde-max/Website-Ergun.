@@ -211,7 +211,8 @@ export async function POST(request) {
     return antwort(200, { antwort: erg.text.slice(0, 1200), elemente: erg.elemente, stand: STAND });
   } catch (e) {
     if (e instanceof Anthropic.RateLimitError) return antwort(429, { fehler: 'ausgelastet' });
-    if (e instanceof Anthropic.AuthenticationError) { console.error('endo: API-Schlüssel ungültig'); return antwort(503, { fehler: 'kein-schluessel' }); }
+    if (e instanceof Anthropic.AuthenticationError) { console.error('endo: API-Schlüssel ungültig'); return antwort(503, { fehler: 'schluessel-ungueltig' }); }
+    if (e instanceof Anthropic.PermissionDeniedError || (e instanceof Anthropic.APIError && /credit balance/i.test(e.message || ''))) { console.error('endo: Anthropic-Konto ohne Guthaben/Rechte'); return antwort(503, { fehler: 'anthropic-guthaben' }); }
     if (e instanceof Anthropic.APIError) { console.error('endo: API-Fehler', e.status, e.message); return antwort(502, { fehler: 'api' }); }
     console.error('endo: Fehler', e && e.message);
     return antwort(502, { fehler: 'unbekannt' });
