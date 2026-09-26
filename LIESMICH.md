@@ -16,6 +16,15 @@
 
 
 
+## endo Phase C – Schritt 3: Werkzeuge, Prüfungen, Higgsfield, Ablauf (26.09.2026, Claude Code)
+- `api/_lib/endo/werkzeuge.js`: **eine** Tabelle – Modell, feste englische Prompt-Vorlagen, erlaubte Looks/Formate, Credits (foto 12, anzeige 10, shop 5, video 20, web 12, video10 40), Listenpreis und Preisgrenze `maxUsd`. Gesperrt: Preset-Gruppe „Social Proof“.
+- `pruefen.js`: Testcode (`ENDO_TEST_CODE`, Header `x-endo-code`), Foto (echter Typ über `image-size`, ≥ 800 px, ≤ 4 MB), Auftrag (nur erlaubte Felder/Werte, Foto nur aus eigenem Blob), signierte Karten (HMAC aus dem Supabase-Schlüssel, 10 min), Webhook-Schlüssel je Auftrag.
+- `higgsfield.js` (API: estimate, starten mit `hf_webhook`, status, cancel, Presets 1 h Cache), `ablauf.js` (vorbereiten → starten → pruefen), `blob.js` (Fotos/Ergebnisse), `inhalt.js` (Claude-Bildcheck, ~1 Cent), `http.js`.
+- Schnittstellen `api/endo/`: foto, looks, vorbereiten, auftrag, status, webhook, konto. `api/aufraeumen.js` löscht zusätzlich `endo/fotos/` + `endo/ergebnisse/` nach 30 Tagen und schließt hängende Aufträge ab.
+- Datenbank: neue Funktionen `endo_neuversuch` (nur ein Neuversuch, auch bei gleichzeitigen Aufrufen) und `endo_auftrag_intern` – `schema.sql` in Supabase erneut ausgeführt.
+- Tests: `_code/werkzeuge/endo-datenbank` → `npm test` (37). Neue Abhängigkeit: `image-size` 2.0.4.
+- Noch nicht sichtbar: Oberfläche folgt in Schritt 5, Gehirn in Schritt 4. Ohne `HF_CREDENTIALS`/`ENDO_TEST_CODE` antworten die Schnittstellen mit „noch nicht eingerichtet“ bzw. „nur Testmodus“.
+
 ## endo Phase C – Schritt 2: Speicher + Credit-Logik (26.09.2026, Claude Code)
 - Neu: `api/_lib/endo/speicher.js` (Konten, Credits, Aufträge über Supabase-RPC) und `api/_lib/endo/limits.js` (10 Aufträge/h, 30/Tag, Chat 40/Tag, Tageslimit 10 $ bzw. `ENDO_TAGESLIMIT_USD`). `api/_lib` = keine Vercel-Funktion, nicht öffentlich.
 - Die Logik (Sperren, Reservieren, Abbuchen, Zurückgeben, Doppelbuchen, Limits) steckt in Postgres-Funktionen: `_code/werkzeuge/endo-datenbank/schema.sql` (einmal im Supabase-SQL-Editor ausführen; Funktionen nur für den Server-Schlüssel freigegeben).

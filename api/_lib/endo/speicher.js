@@ -22,6 +22,10 @@ export function erstelleSpeicher(rpc) {
     gestartet(auftragId, hfRequestId, versuch) {
       return rpc('endo_gestartet', { p_auftrag: auftragId, p_hf_request_id: hfRequestId, p_versuch: versuch });
     },
+    /* Kostenlosen Neuversuch beanspruchen – gelingt nur einem Aufrufer je alter Request-ID. */
+    neuversuch(auftragId, alterRequest, maxVersuche = 2) {
+      return rpc('endo_neuversuch', { p_auftrag: auftragId, p_alter_request: alterRequest, p_max_versuche: maxVersuche });
+    },
     /* Erfolg: Credits endgültig abbuchen (mehrfacher Aufruf bucht nur einmal). */
     abschliessen(auftragId, ergebnisUrl) {
       return rpc('endo_abschliessen', { p_auftrag: auftragId, p_ergebnis_url: ergebnisUrl });
@@ -35,6 +39,10 @@ export function erstelleSpeicher(rpc) {
     },
     auftrag(auftragId, kontoId) {
       return rpc('endo_auftrag', { p_auftrag: auftragId, p_konto: kontoId });
+    },
+    /* Nur für Webhook und Cron (kennen kein Konto) – nie mit Browser-Eingaben ohne Prüfung aufrufen. */
+    auftragIntern(auftragId) {
+      return rpc('endo_auftrag_intern', { p_auftrag: auftragId });
     },
     konto(kontoId) {
       return rpc('endo_konto', { p_konto: kontoId });
