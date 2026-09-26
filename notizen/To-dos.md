@@ -20,4 +20,5 @@ Offene Punkte aus [[ERGUN Website (Übersicht)]].
 - [ ] endo an die echte Erzeugung anschließen, sobald Login und Credits stehen → [[endo Chat-Agent]]
 - [ ] Login, Credit-Kauf und echte Erzeugung für [[endo-ai|endo.ai]] bauen (nach den Konten)
 - [x] Credit-Verbrauch an echte Kosten anpassen → [[Credit-Pakete]] (25.09.: Preise von Emre, mind. 47 % Gewinn)
-- [ ] Neues abstraktes Titelbild bauen, Animationen flüssig machen → [[Neustart – hier weitermachen]]
+- [x] ~~Neues abstraktes Titelbild~~ – verworfen; stattdessen gezeichnete Landschaft (Projekt 1, live) → [[Projekt 1 – Abschluss ERGUN. Website]]
+- [ ] Phase B/C aus [[Projekt 2 – Feinschliff + endo Agents]]

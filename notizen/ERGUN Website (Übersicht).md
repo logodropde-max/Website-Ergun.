@@ -8,7 +8,7 @@ Zentrale Notiz für alles rund um die Website und endo.ai. Von hier gehen alle V
 **Live:** https://website-ergun.vercel.app · **endo.ai:** https://website-ergun.vercel.app/ki/
 
 ## Bereiche
-- [[Startseite]]: Hero mit Parallax, Slogan, Aufbau
+- [[Startseite]]: Titelbild, endo Studio, Erstgespräch
 - [[Kontaktformular]]: WhatsApp oder E-Mail, EU-Länder, Anliegen
 - [[Datei-Upload (Vercel Blob)]]: Fotos als Link in der Nachricht
 - [[endo-ai|endo.ai]]: KI-Studio als zweites Einkommen
@@ -29,11 +29,11 @@ Zentrale Notiz für alles rund um die Website und endo.ai. Von hier gehen alle V
 
 ## Im Vault verknüpft
 - [[00 Start]] · [[Agentur-Website]] · [[Marke]] · [[Hero-Ebenen EE Design]] · [[Higgsfield-Galerie]]
-- [[Plan Sonnenuntergang endo]] – nächster Umbau (Sonne → endo.ai)
+- [[Projekt 2 – Feinschliff + endo Agents]] – aktuelles Projekt · [[Neustart – hier weitermachen]] – Stand
 - [[Verlauf]] – alle Entscheidungen, neueste oben
 
 ## Arbeit
 - [[To-dos]]: was noch offen ist
-- [[Verlauf 24.09.2026]]: was heute gebaut wurde
-- [[Deployment]]: Plan zum Online-Stellen
-- [[LIESMICH]]: technische Details zur Website
+- Geschichte (Aufträge, Tagesnotizen, alter Plan): Ordner `_archiv`
+- [[Deployment]]: so wird veröffentlicht
+- `_code/ee-design-website/LIESMICH.md`: technische Details zur Website

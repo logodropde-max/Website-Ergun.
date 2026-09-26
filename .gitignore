@@ -1,2 +1,8 @@
 node_modules/
 .vercel/
+
+# Schlüssel nur lokal – nie ins Repo
+.env
+.env.local
+.env.*.local
+**/.env.local
