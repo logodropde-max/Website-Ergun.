@@ -99,8 +99,13 @@
     b.className = 'blase blase--' + wer;
     if (wer === 'endo') b.appendChild(formatiert(text)); else b.textContent = text;
     verlauf.appendChild(b); nachUnten();
-    if (wer === 'endo') ausKugel(b);
+    if (wer === 'endo' && !b.classList.contains('blase--bild')) { aktuellerAvatar(b); b.classList.add('blase--impuls'); setTimeout(function () { b.classList.remove('blase--impuls'); }, 700); ausKugel(b); }
     return b;
+  }
+  /* Nur die neueste endo-Nachricht hat einen schwebenden Mini-Avatar – die älteren stehen still (ruhig, sparsam) */
+  function aktuellerAvatar(b) {
+    [].forEach.call(verlauf.querySelectorAll('.blase--aktuell'), function (x) { x.classList.remove('blase--aktuell'); });
+    b.classList.add('blase--aktuell');
   }
   function tippt() {
     var b = document.createElement('div');
@@ -108,6 +113,7 @@
     b.setAttribute('aria-label', 'endo schreibt');
     b.innerHTML = '<span class="tippt"><i></i><i></i><i></i></span>';
     verlauf.appendChild(b); nachUnten();
+    aktuellerAvatar(b);
     return b;
   }
   function warte(ms) { return new Promise(function (ok) { setTimeout(ok, ruhig ? 0 : ms); }); }
@@ -616,9 +622,9 @@
       kz.appendChild(el('b', 'endo-konto__credits', Number(k.verfuegbar).toLocaleString('de-DE') + ' Credits'));
       box2.appendChild(kz);
       var breit = window.matchMedia && matchMedia('(min-width: 1180px)').matches;
-      box2.appendChild(el('p', 'endo-konto__leer', 'Ihre Bilder, Videos und Fotos finden Sie in Ihrer Galerie ' + (breit ? 'rechts neben dem Chat' : 'über dem Eingabefeld') + '. Alles bleibt 90 Tage gespeichert.'));
+      box2.appendChild(el('p', 'endo-konto__leer', 'Ihre Bilder und Videos finden Sie in Ihrer Galerie – das Zeichen neben dem Eingabefeld. Alles bleibt 90 Tage gespeichert.'));
       verlauf.appendChild(box2); nachUnten();
-      galerieLaden(true);
+      galerieLaden();
       sperren(false);
       knoepfe([
         { text: 'Weiter im Chat', haupt: true, aktion: function () { knoepfe([]); zeigeSchritt(); feld.focus(); } },
@@ -629,20 +635,48 @@
 
   /* ---------- Galerie (Emre, 26.09.): rechts neben dem Chat, am Handy als Leiste über der Eingabe ---------- */
   var galerie = null, galerieIds = null;
+  var galerieKnopf = box.querySelector('[data-galerie]');
   function galerieBauen() {
     if (galerie) return galerie;
     galerie = el('aside', 'endo-galerie');
+    galerie.id = 'endo-galerie-' + Math.random().toString(36).slice(2, 7);
     galerie.setAttribute('aria-label', 'Ihre Galerie');
-    var k = el('div', 'endo-galerie__kopf');
-    k.appendChild(el('span', null, 'Ihre Galerie'));
-    k.appendChild(el('small', null, '90 Tage gespeichert'));
+    var k = el('div', 'endo-galerie__kopf'), t = el('div');
+    t.appendChild(el('span', null, 'Ihre Galerie'));
+    t.appendChild(el('small', null, 'Bilder und Videos, 90 Tage gespeichert'));
+    k.appendChild(t);
+    var zuK = el('button', 'endo-galerie__zu'); zuK.type = 'button'; zuK.setAttribute('aria-label', 'Galerie schließen');
+    zuK.innerHTML = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg>';
+    zuK.addEventListener('click', function () { galerieZu(); if (galerieKnopf) galerieKnopf.focus(); });
+    k.appendChild(zuK);
     galerie.appendChild(k);
+    var hoch = el('button', 'endo-galerie__hoch'); hoch.type = 'button';
+    hoch.innerHTML = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 11V3M4.8 6.2L8 3l3.2 3.2M3 13h10"/></svg>';
+    hoch.appendChild(document.createTextNode('Foto hochladen'));
+    hoch.addEventListener('click', function () { if (beschaeftigt) return; galerieZu(); datei.click(); });
+    galerie.appendChild(hoch);
+    galerie.appendChild(el('p', 'endo-galerie__titel', 'Ihre Ergebnisse und Fotos'));
     galerie.appendChild(el('div', 'endo-galerie__raster'));
-    galerie.appendChild(el('p', 'endo-galerie__leer', 'Hier erscheinen Ihre Bilder, Videos und Fotos.'));
+    galerie.appendChild(el('p', 'endo-galerie__leer', 'Hier erscheinen Ihre Bilder und Videos.'));
     box.insertBefore(galerie, eingabe);
+    if (galerieKnopf) galerieKnopf.setAttribute('aria-controls', galerie.id);
     return galerie;
   }
-  function galerieWeg() { box.classList.remove('agent--galerie'); if (galerie) galerie.querySelector('.endo-galerie__raster').innerHTML = ''; galerieIds = null; }
+  /* Galerie öffnen/schließen über das Galerie-Zeichen neben dem Eingabefeld */
+  function galerieAuf() {
+    if (!gestartet || zu) los();
+    galerieBauen();
+    box.style.setProperty('--galerie-unten', (box.clientHeight - eingabe.offsetTop + 14) + 'px');   /* Abstand vom unteren Rand – bleibt gleich, auch wenn der Text darüber weicht */
+    box.classList.add('agent--galerie-offen');
+    if (galerieKnopf) { galerieKnopf.setAttribute('aria-expanded', 'true'); galerieKnopf.setAttribute('aria-label', 'Galerie schließen'); galerieKnopf.removeAttribute('data-neu'); }
+    if (angemeldet()) galerieLaden(); else galerieZeigen([]);
+  }
+  function galerieZu() {
+    box.classList.remove('agent--galerie-offen');
+    if (galerieKnopf) { galerieKnopf.setAttribute('aria-expanded', 'false'); galerieKnopf.setAttribute('aria-label', 'Galerie öffnen'); }
+  }
+  if (galerieKnopf) galerieKnopf.addEventListener('click', function () { if (box.classList.contains('agent--galerie-offen')) galerieZu(); else galerieAuf(); });
+  function galerieWeg() { if (galerie) galerie.querySelector('.endo-galerie__raster').innerHTML = ''; galerieIds = null; if (galerie) galerie.classList.add('endo-galerie--leer'); }
   function galerieLaden(hervorheben) {
     if (!angemeldet()) { galerieWeg(); return; }
     api('/api/konto?aktion=dateien').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
@@ -652,6 +686,8 @@
           .concat((d.fotos || []).map(function (x) { return { art: 'foto', id: x.id, url: x.url, t: x.erstellt || '' }; }))
           .filter(function (x) { return x.url && /^https:\/\//.test(x.url); })
           .sort(function (a, b) { return a.t < b.t ? 1 : a.t > b.t ? -1 : 0; });
+        /* Neues dazugekommen, während die Galerie zu ist → feiner Punkt am Galerie-Zeichen */
+        if (galerieIds && galerieKnopf && !box.classList.contains('agent--galerie-offen') && liste.some(function (x) { return !galerieIds[x.art + ':' + x.id]; })) galerieKnopf.setAttribute('data-neu', '');
         galerieZeigen(liste, hervorheben);
       });
   }
@@ -677,8 +713,6 @@
       raster.appendChild(b);
     });
     galerie.classList.toggle('endo-galerie--leer', !liste.length);
-    box.classList.add('agent--galerie');
-    if (hervorheben && !ruhig && galerie.animate) galerie.animate([{ opacity: 0.35 }, { opacity: 1 }], { duration: 520, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
   }
   /* Großansicht: Laden · Weiterverwenden · Löschen */
   function ansicht(x, video, kachel) {
@@ -805,7 +839,7 @@
     b.classList.add('blase--wartet');
     kugelWecken(1800);
     pulsVon(r.left, r.top, z);
-    funke(z.x, z.sichtbarY + z.r * 0.4, r.left + 6, r.top + 12, 460, function () {
+    funke(z.x, z.sichtbarY + z.r * 0.4, r.left - 22, r.top + 14, 460, function () {
       b.classList.remove('blase--wartet'); b.classList.add('blase--aus-kugel');
     });
     setTimeout(function () { b.classList.remove('blase--wartet'); }, 1200); /* Sicherheitsnetz */
@@ -1032,11 +1066,45 @@
   var gestartet = false, offen = false;
   /* Im Chat bewegt sich nichts außer den Nachrichten: keine Sprünge der Seite, Kugel und Nebel halten still (Emre, 25.09.) */
   function los() {
-    if (gestartet) return;
+    if (gestartet) { if (zu) chatOeffnen(); return; }
     gestartet = true;
+    chatOeffnen();
+    start();
+  }
+  /* Chat öffnen (Emre, 27.09.): Überschrift und Satz unter der Kugel blenden weich aus und machen Platz,
+     die große Kugel tritt zurück (dunkler, kleiner, ruht). Schließen holt alles zurück; der Verlauf bleibt erhalten. */
+  var zu = false;
+  var textBlock = box.parentNode.querySelector('.endo__kopf, .hero__kopf');
+  function platzMachen(weg) {
+    if (!textBlock) return;
+    var vorher = box.getBoundingClientRect().top;
+    textBlock.classList.toggle('ist-platz', weg);          /* nimmt den Text aus dem Fluss (bzw. holt ihn zurück) */
+    var nachher = box.getBoundingClientRect().top, d = vorher - nachher;
+    if (!ruhig && Math.abs(d) > 1 && box.animate) {       /* FLIP: der Chat gleitet an seinen neuen Platz, nur per transform */
+      box.animate([{ transform: 'translateY(' + d + 'px)' }, { transform: 'none' }], { duration: 520, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
+    }
+  }
+  var textTimer = null;
+  function chatOeffnen() {
+    zu = false;
+    box.classList.remove('agent--zu');
     document.documentElement.classList.add('endo-chat');
     document.querySelectorAll('[data-orb]').forEach(function (o) { o.dispatchEvent(new Event('orb:halt')); });
-    start();
+    clearTimeout(textTimer);
+    if (textBlock) textBlock.classList.add('ist-weg');                     /* erst ausblenden … */
+    textTimer = setTimeout(function () { platzMachen(true); }, ruhig ? 0 : 260);   /* … dann Platz machen */
+  }
+  function chatSchliessen() {
+    if (!gestartet || zu) return;
+    zu = true;
+    if (typeof galerieZu === 'function') galerieZu();
+    clearTimeout(textTimer);
+    box.classList.add('agent--zu');
+    document.documentElement.classList.remove('endo-chat');
+    platzMachen(false);
+    textTimer = setTimeout(function () { if (textBlock) textBlock.classList.remove('ist-weg'); }, 30);   /* … und wieder einblenden */
+    document.querySelectorAll('[data-orb]').forEach(function (o) { o.classList.remove('orb--wach'); o.dispatchEvent(new Event('orb:weiter')); });
+    feld.blur();
   }
   function setzeOffen(an, fokus) {
     offen = an && handyMq.matches;
@@ -1052,8 +1120,12 @@
   oeffnenKnopf.addEventListener('click', function () { setzeOffen(true, true); });
   feld.addEventListener('focus', los);
   feld.addEventListener('pointerdown', los);
-  zuKnopf.addEventListener('click', function () { setzeOffen(false, true); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && offen) setzeOffen(false, true); });
+  zuKnopf.addEventListener('click', function () { chatSchliessen(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape' || document.querySelector('dialog[open]')) return;
+    if (box.classList.contains('agent--galerie-offen')) { galerieZu(); return; }
+    if (offen) setzeOffen(false, true); else if (gestartet && !zu && box.contains(document.activeElement)) chatSchliessen();
+  });
   document.addEventListener('pointerdown', function (e) { if (offen && !box.contains(e.target)) setzeOffen(false, false); });
 
   /* Tastatur am Handy: Panel über der Tastatur halten und Höhe begrenzen (visualViewport) */

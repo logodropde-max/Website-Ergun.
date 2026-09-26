@@ -139,35 +139,49 @@ html.endo-chat .agent--frei .blase--du { background: rgba(9, 11, 17, 0.35); }
 /* Kugel kurz wach (Flug, Antwort, Erzeugen) – im Chat sonst gedämpft und still */
 html.endo-chat .orb--bereit.orb--wach { opacity: 0.66; }
 
-/* ---------- Galerie: rechts neben dem Chat (ab 1180 px), sonst Leiste über der Eingabe ---------- */
+/* ---------- Galerie (Emre, 27.09.): öffnet sich über das Galerie-Zeichen neben dem Eingabefeld ----------
+   Ab 1180 px ruhige Spalte rechts neben dem Chat, darunter ein Blatt über der Eingabe. Oben „Foto hochladen“. */
 .endo-galerie { display: none; pointer-events: auto; }
-html.endo-chat .agent--galerie .endo-galerie { display: grid; align-content: start; gap: 10px; }
-.endo-galerie__kopf { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 13px; color: #EEF0F3; }
-.endo-galerie__kopf small { font-size: 11.5px; color: rgba(226, 230, 236, 0.55); }
-.endo-galerie__raster { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.endo-galerie__leer { margin: 0; font-size: 12px; line-height: 1.45; color: rgba(226, 230, 236, 0.55); }
+.agent--galerie-offen .endo-galerie { display: grid; align-content: start; gap: 12px; padding: 14px; border: 1px solid rgba(226, 230, 236, 0.14); border-radius: 20px;
+  background: rgba(10, 11, 14, 0.94); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.95);
+  overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: rgba(226, 230, 236, 0.18) transparent; z-index: 6;
+  animation: endo-galerie-rein 420ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes endo-galerie-rein { from { opacity: 0; transform: translateY(10px) scale(0.985); } to { opacity: 1; transform: none; } }
+.endo-galerie__kopf { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; color: #EEF0F3; }
+.endo-galerie__kopf small { display: block; font-size: 11.5px; color: rgba(226, 230, 236, 0.55); }
+.endo-galerie__zu { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 50%; background: rgba(226, 230, 236, 0.06); color: #DCE0E6; cursor: pointer; }
+.endo-galerie__zu svg { width: 14px; height: 14px; }
+.endo-galerie__hoch { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 16px; border: 0; border-radius: 12px; cursor: pointer;
+  color: #0A0B0D; font: inherit; font-size: 14px; font-weight: 500; background: linear-gradient(180deg, #FBFCFD 0%, #DCE0E6 44%, #AAB1BB 52%, #E8EBEF 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 8px 20px -10px rgba(0, 0, 0, 0.7); transition: transform 160ms cubic-bezier(0.22, 1, 0.36, 1); }
+.endo-galerie__hoch:active { transform: scale(0.97); }
+.endo-galerie__hoch svg { width: 16px; height: 16px; }
+.endo-galerie__titel { margin: 4px 0 0; font-size: 11.5px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(226, 230, 236, 0.55); }
+.endo-galerie__raster { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.endo-galerie__leer { margin: 0; padding: 18px 4px; font-size: 13px; line-height: 1.5; text-align: center; color: rgba(226, 230, 236, 0.6); }
 .endo-galerie:not(.endo-galerie--leer) .endo-galerie__leer { display: none; }
 .endo-galerie__bild { position: relative; padding: 0; border: 1px solid rgba(226, 230, 236, 0.14); border-radius: 12px; overflow: hidden; background: #0B0C0E; aspect-ratio: 1; cursor: pointer;
   transition: border-color 200ms cubic-bezier(0.22, 1, 0.36, 1), transform 160ms cubic-bezier(0.22, 1, 0.36, 1); }
 .endo-galerie__bild img, .endo-galerie__bild video { width: 100%; height: 100%; object-fit: cover; display: block; }
 .endo-galerie__bild:active { transform: scale(0.97); }
-.endo-galerie__bild:focus-visible { outline: 2px solid #DCE0E6; outline-offset: 2px; }
+.endo-galerie__bild:focus-visible, .endo-galerie__zu:focus-visible, .endo-galerie__hoch:focus-visible { outline: 2px solid #DCE0E6; outline-offset: 2px; }
 @media (hover: hover) and (pointer: fine) { .endo-galerie__bild:hover { border-color: rgba(226, 230, 236, 0.5); } }
-.endo-galerie__art { position: absolute; left: 6px; bottom: 6px; padding: 1px 7px; border-radius: 999px; background: rgba(9, 11, 17, 0.72); font-size: 10.5px; line-height: 16px; color: rgba(238, 240, 243, 0.85); }
+.endo-galerie__art { position: absolute; left: 5px; bottom: 5px; padding: 1px 6px; border-radius: 999px; background: rgba(9, 11, 17, 0.72); font-size: 10px; line-height: 15px; color: rgba(238, 240, 243, 0.85); }
 .endo-galerie__bild--neu { animation: endo-galerie-neu 560ms cubic-bezier(0.22, 1, 0.36, 1) both; }
 @keyframes endo-galerie-neu { from { opacity: 0; transform: scale(0.82); } to { opacity: 1; transform: none; } }
 @media (min-width: 1180px) {
-  html.endo-chat .agent--galerie .endo-galerie { position: absolute; top: 12px; bottom: 12px; left: calc(100% + 28px); width: 212px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(226, 230, 236, 0.18) transparent;
-    animation: endo-galerie-rein 520ms cubic-bezier(0.22, 1, 0.36, 1) both; }
-  @keyframes endo-galerie-rein { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: none; } }
+  html.endo-chat .agent--galerie-offen .endo-galerie { position: absolute; top: 12px; bottom: 12px; left: calc(100% + 24px); width: 250px; }
+  html.endo-chat .agent--galerie-offen .endo-galerie__raster { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 1179px) {
-  html.endo-chat .agent--galerie .endo-galerie { padding: 0 14px 10px; }
-  html.endo-chat .agent--galerie .endo-galerie--leer, .endo-galerie__kopf { display: none; }
-  html.endo-chat .agent--galerie .endo-galerie__raster { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 56px; overflow-x: auto; scrollbar-width: none; }
-  .endo-galerie__bild { border-radius: 10px; }
-  .endo-galerie__art { left: 3px; bottom: 3px; padding: 0 5px; font-size: 9.5px; line-height: 14px; }
+  .agent--galerie-offen .endo-galerie { position: absolute; left: 0; right: 0; bottom: var(--galerie-unten, 72px); max-height: min(62svh, 460px); }
 }
+
+/* Galerie-Zeichen im Eingabefeld (eigenes, feines Linien-Symbol) + Punkt, wenn etwas Neues dazugekommen ist */
+.agent__galerie-knopf { position: relative; }
+.agent__galerie-knopf svg { width: 20px; height: 20px; }
+.agent--galerie-offen .agent__galerie-knopf { color: #FFFFFF; background: rgba(226, 230, 236, 0.1); }
+.agent__galerie-knopf[data-neu]::after { content: ""; position: absolute; top: 7px; right: 7px; width: 7px; height: 7px; border-radius: 50%; background: #F2F4F7; box-shadow: 0 0 8px rgba(226, 234, 248, 0.8); }
 
 /* Großansicht aus der Galerie */
 .endo-ansicht { width: min(92vw, 720px); max-height: 92svh; padding: 10px; border: 1px solid rgba(226, 230, 236, 0.16); border-radius: 20px; background: rgba(12, 13, 15, 0.96); color: #EEF0F3; }
@@ -178,10 +192,43 @@ html.endo-chat .agent--galerie .endo-galerie { display: grid; align-content: sta
 .endo-ansicht__zu { margin-left: auto; }
 
 @media (prefers-reduced-motion: reduce) {
-  .blase.blase--aus-kugel, .endo-galerie__bild--neu, html.endo-chat .agent--galerie .endo-galerie { animation: none; }
+  .blase.blase--aus-kugel, .endo-galerie__bild--neu, .agent--galerie-offen .endo-galerie { animation: none; }
   .endo-flug, .endo-funke { display: none; }
 }
 
 /* Datenpakete auf /ki/ (Canvas legt js/endo-zufluss.js selbst an; auf der Startseite steht er im HTML) */
 .hero > .endo__daten { position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .hero > .endo__daten { display: none; } }
+
+/* ---------- Chat öffnen (Emre, 27.09.): Text unter der Kugel weicht, Kugel tritt zurück, Schließen holt alles zurück ---------- */
+html .endo__kopf.reveal.ist-weg, html .hero__kopf.ist-weg { opacity: 0; transform: translateY(-10px) scale(0.985); pointer-events: none;
+  transition: opacity 240ms cubic-bezier(0.22, 1, 0.36, 1), transform 240ms cubic-bezier(0.22, 1, 0.36, 1); }
+html .endo__kopf.ist-platz, html .hero__kopf.ist-platz { display: none; }
+html [data-orb] { transition: opacity 1400ms cubic-bezier(0.22, 1, 0.36, 1), scale 800ms cubic-bezier(0.22, 1, 0.36, 1); }
+html.endo-chat [data-orb] { scale: 0.86; }
+html.endo-chat [data-orb].orb--bereit:not(.orb--wach) { opacity: 0.34; }
+html.endo-chat .agent.agent--frei .rund.agent__zu { display: inline-grid; place-items: center; margin-left: auto; }
+.agent.agent--zu .agent__oben, .agent.agent--zu .endo-galerie { display: none; }
+
+/* endo-Nachrichten als Glas-Sprechblase mit Mini-Kugel daneben, eigene Nachrichten schlicht rechts */
+html.endo-chat .agent--frei .blase--endo:not(.blase--bild) { position: relative; margin-left: 38px; max-width: calc(90% - 38px); padding: 10px 15px; color: #EEF0F3; text-shadow: none;
+  border: 1px solid transparent; border-radius: 6px 18px 18px 18px;
+  background: linear-gradient(180deg, rgba(30, 33, 40, 0.74), rgba(15, 17, 21, 0.64)) padding-box,
+    linear-gradient(150deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.06) 40%, rgba(255, 255, 255, 0.16)) border-box;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 12px 30px -20px rgba(0, 0, 0, 0.9); }
+html.endo-chat .agent--frei .blase--du:not(.blase--bild) { padding: 9px 14px; border: 1px solid rgba(226, 230, 236, 0.14); border-radius: 18px 6px 18px 18px; background: rgba(226, 230, 236, 0.07); color: #EEF0F3; }
+html.endo-chat .agent--frei .blase--endo:not(.blase--bild)::before { content: ""; position: absolute; left: -38px; top: 1px; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--endo-mini, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28' fill='none' stroke='%23DCE0E6' stroke-width='.7' stroke-opacity='.85'%3E%3Ccircle cx='14' cy='14' r='10'/%3E%3Cellipse cx='14' cy='14' rx='10' ry='4'/%3E%3Cellipse cx='14' cy='14' rx='4' ry='10'/%3E%3Cellipse cx='14' cy='14' rx='7.5' ry='10'/%3E%3C/svg%3E")) center / 118% no-repeat,
+    radial-gradient(circle at 35% 30%, #30343C, #0B0C0F 72%);
+  box-shadow: 0 0 0 1px rgba(226, 230, 236, 0.14), 0 0 14px rgba(214, 226, 248, 0.16); }
+html.endo-chat .agent--frei .blase--endo.blase--aktuell::before { animation: endo-mini-schweben 3.8s ease-in-out infinite; }
+html.endo-chat .agent--frei .blase--endo.blase--impuls::before { animation: endo-mini-impuls 560ms cubic-bezier(0.22, 1, 0.36, 1), endo-mini-schweben 3.8s ease-in-out 560ms infinite; }
+html.endo-chat .agent--frei .blase--endo:has(.tippt)::before { animation: endo-mini-puls 1.2s ease-in-out infinite; }
+@keyframes endo-mini-schweben { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+@keyframes endo-mini-puls { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.09); opacity: 1; } }
+@keyframes endo-mini-impuls { 0% { transform: scale(0.9); } 35% { transform: scale(1.14); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) {
+  html.endo-chat .agent--frei .blase--endo::before { animation: none !important; }
+  html .endo__kopf.reveal.ist-weg, html .hero__kopf.ist-weg, html [data-orb] { transition: none; }
+}

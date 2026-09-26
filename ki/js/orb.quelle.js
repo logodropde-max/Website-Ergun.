@@ -1,5 +1,7 @@
 /* endo.ai Hero: lebendige Drahtgitter-Kugel (nach Emres Vorlage „Anomalous Matter").
-   26.09. spät: lebendiger – Fliehkraft nach Fängen, Schlucken wie Gelee, Atmen, feinere Oberfläche, Schimmer (Werte in KUGEL).
+   27.09. (Emre): kaum noch Drehung (nur ruhiges Treiben); beim Einsammeln ein Aufschlag wie auf Flüssigmetall:
+   kräftige Delle am Einschlagpunkt, die zurückfedert, 1–2 weiche Wellenringe, Herzschlag der ganzen Kugel, kurzes Aufleuchten.
+   Die Zunge bleibt: sie holt das Paket, der Aufschlag kommt, wenn sie fast eingezogen ist. Alle Werte in KUGEL.
    Quelle für ki/js/orb.js. Neu bauen (three 0.186.1 + esbuild in einem Ordner AUSSERHALB des Vaults installieren):
    NODE_PATH=<ordner>/node_modules <ordner>/node_modules/.bin/esbuild ki/js/orb.quelle.js --bundle --minify --format=iife --target=es2018 --outfile=ki/js/orb.js */
 import { Scene, PerspectiveCamera, WebGLRenderer, IcosahedronGeometry, ShaderMaterial, Color, Vector3, Vector4, Quaternion, Mesh } from 'three';
@@ -13,31 +15,33 @@ const KUGEL = {
   umfeldAnteil: 0.12,    // … mit 12 % der Zungenlänge
   maxLaenge: 0.55,       // weiteste Ausstülpung: 55 % des Radius
   hinMs: 190,            // Ausstrecken zum Paket (Ease-out, Quart)
-  daempfung: 0.58,       // Rückweg: gedämpfte Feder – 26.09. spät weicher (0,58 → sichtbares, elastisches Nachfedern)
-  frequenz: 7.5,         // Eigenfrequenz der Feder (rad/s) → trotzdem nach gut 1 s in Ruhe
+  daempfung: 0.78,       // Rückweg: gedämpfte Feder – weich, ohne Wackeln
+  frequenz: 7.5,         // Eigenfrequenz der Feder (rad/s) → nach knapp 1 s in Ruhe
   zurueckEndeMs: 1250,   // danach ist der Arm sicher wieder ganz eingezogen
   welleK: 38,            // feine Welle entlang der Zunge: Wellenzahl …
   welleW: 44,            // … Tempo (rad/s) …
   welleAmp: 0.018,       // … und Höhe (Welteinheiten, klein)
   welleNachMs: 260,      // die Welle klingt nach dem Einsammeln so schnell aus
   blitzMs: 150,          // Aufglimmen an der Spitze beim Einsammeln
-  ringMs: 1150,          // Wellenring über die Oberfläche (2 Ringe)
-  ringWeg: 2.5,          // so weit (rad) läuft der Ring
-  ringBreite: 0.16,
-  ringAmp: 0.028,        // Ring-Höhe (Welteinheiten, dezent)
+  ringMs: 1300,          // Wellenringe über die Oberfläche (2 Ringe, weich auslaufend)
+  ringWeg: 2.4,          // so weit (rad) laufen die Ringe
+  ringBreite: 0.2,
+  ringAmp: 0.032,        // Ring-Höhe (Welteinheiten, dezent)
   glanz: 0.55,           // wie stark Zunge, Blitz und Ring das Drahtgitter aufhellen
-  /* Lebewesen (Emre, 26.09. spät: „kosmischer, elastischer, wie ein Lebewesen – Zentrifugalkraft“) */
-  drehen: 0.12,          // ruhige Eigendrehung (rad/s)
-  drehStoss: 0.85,       // jedes eingesammelte Paket gibt der Drehung einen Schub (rad/s) …
-  drehMax: 2.2,          // … höchstens so viel zusätzlich
-  drehAbklingen: 1.7,    // … und klingt in ca. 1,7 s wieder ab
-  flieh: 0.03,           // Fliehkraft: Äquator wölbt sich mit (Zusatzdrehung)² nach außen …
-  fliehMax: 0.075,       // … höchstens 7,5 % des Radius
-  fliehFeder: [55, 4.8], // … und folgt elastisch (Federhärte, Dämpfung → leichtes Nachwabbeln)
-  schluck: 0.42,         // Schlucken: nach dem Fang dehnt sie sich kurz in Fangrichtung (Volumen bleibt) …
-  schluckStoss: 1.3,     // … Anstoß pro Paket (Nachricht ohne Arm: 0,6)
-  schluckFeder: [95, 6.5], // … und federt wie Gelee zurück
-  atmen: [0.012, 0.006], // langsames Atmen (zwei überlagerte Wellen, Anteil vom Radius)
+  /* Treiben statt Drehen (Emre, 27.09.): kaum wahrnehmbar */
+  drehen: 0.022,         // Eigendrehung (rad/s) → eine Umdrehung in ca. 5 Minuten
+  /* Aufschlag wie auf Flüssigmetall (Emre, 27.09.) */
+  aufschlagBeiL: 0.12,   // Zunge fast eingezogen (12 % des Radius) → das Paket „schlägt auf“
+  delle: 0.16,           // Tiefe der Delle am Einschlagpunkt (Welteinheiten, Radius 1,2)
+  delleBreite: 0.3,      // Breite der Delle (rad, Gauß σ ≈ 17°)
+  delleFeder: [30, 0.72],// Delle: Eigenfrequenz (rad/s, erster Tiefpunkt nach ~50 ms) und Dämpfung (0,72 → kaum Überschwingen)
+  delleMs: 900,          // danach ist die Delle sicher weg
+  herz: 0.04,            // Herzschlag der ganzen Kugel: 4 % größer …
+  herzHinMs: 150,        // … in 150 ms (weich) …
+  herzZurueckMs: 600,    // … und in ca. 600 ms gedämpft zurück
+  leuchtMs: 260,         // kurzes Aufleuchten am Einschlagpunkt
+  leuchtStaerke: 0.9,
+  atmen: [0.008, 0.004], // ganz leises Atmen (zwei überlagerte Wellen, Anteil vom Radius)
   feinNoise: 0.016,      // zweite, feinere und schnellere Oberflächenbewegung (organisch, bewusst leise)
   schimmer: 0.1          // leise wandernde Lichtflecken im Gitter (kosmisch)
 };
@@ -74,12 +78,13 @@ function start(el) {
   const ARME = klein ? 2 : 3;
   const armU = [0, 1, 2].map(() => new Vector4(0, 0, 1, 0)), infoU = [0, 1, 2].map(() => new Vector4(0, 0, 0, 0));
   const pulsU = [0, 1, 2].map(() => new Vector4(0, 0, 1, -1));
+  const schlagU = [0, 1, 2].map(() => new Vector4(0, 0, 0, 0));   /* je Aufschlag: x = Delle (Welteinheiten), y = Leuchten 0..1 */
   const material = new ShaderMaterial({
     defines: {
       ARME, BREITE: f(klein ? KUGEL.breiteHandy : KUGEL.breite), UMFELD: f(KUGEL.umfeld), UMFELD_ANTEIL: f(KUGEL.umfeldAnteil),
       WELLE_K: f(KUGEL.welleK), WELLE_W: f(KUGEL.welleW), WELLE_AMP: f(KUGEL.welleAmp),
       RING_WEG: f(KUGEL.ringWeg), RING_B: f(KUGEL.ringBreite), RING_AMP: f(KUGEL.ringAmp), GLANZ: f(KUGEL.glanz),
-      FEIN: f(KUGEL.feinNoise), SCHIMMER: f(KUGEL.schimmer)
+      FEIN: f(KUGEL.feinNoise), SCHIMMER: f(KUGEL.schimmer), DELLE_B: f(KUGEL.delleBreite)
     },
     uniforms: {
       arm: { value: armU },
@@ -87,9 +92,7 @@ function start(el) {
       puls: { value: pulsU },
       sek: { value: 0 },
       time: { value: 0 },
-      achse: { value: new Vector3(0, 1, 0) },
-      flieh: { value: 0 },
-      schluck: { value: new Vector4(0, 0, 1, 0) },
+      einschlag: { value: schlagU },
       pointLightPosition: { value: new Vector3(0, 0, 5) },
       color: { value: new Color('#FF5A1F') }
     },
@@ -99,9 +102,7 @@ function start(el) {
       uniform vec4 arm[3];
       uniform vec4 armInfo[3];
       uniform vec4 puls[3];
-      uniform vec3 achse;
-      uniform float flieh;
-      uniform vec4 schluck;
+      uniform vec4 einschlag[3];
       varying vec3 vNormal;
       varying vec3 vPosition;
       varying float vHell;
@@ -155,13 +156,6 @@ function start(el) {
         vec3 newPosition = position + normal * displacement;
         vec3 n0 = normalize(position);
         float hell = 0.0;
-        /* Fliehkraft: dreht sie nach einem Fang schneller, wölbt sich der Äquator elastisch nach außen */
-        float quer = dot(n0, achse);
-        newPosition += n0 * (flieh * (1.0 - quer * quer) * 1.2);
-        /* Schlucken: kurz in Fangrichtung gedehnt, quer dazu gestaucht (Volumen bleibt) – federt wie Gelee zurück */
-        float entlang = dot(newPosition, schluck.xyz);
-        vec3 seitlich = newPosition - schluck.xyz * entlang;
-        newPosition += schluck.xyz * entlang * schluck.w - seitlich * (schluck.w * 0.5);
         /* kosmischer Schimmer: leise wandernde Lichtflecken */
         hell += max(0.0, snoise(n0 * 1.6 + vec3(0.0, time * 2.2, time * 0.7))) * SCHIMMER;
         /* Zunge zum Paket: schmales Gauß-Profil entlang der Paketrichtung (weich zulaufende Spitze), Umgebung leicht mitgezogen;
@@ -189,6 +183,10 @@ function start(el) {
             float ring = exp(-r1 * r1) + 0.55 * exp(-r2 * r2) * step(0.18, ph);
             newPosition += normal * (RING_AMP * a * ring);
             hell += a * ring * 0.4;
+            /* Aufschlag: Delle nach innen am Einschlagpunkt (federt zurück) + kurzes Aufleuchten */
+            float fleck = exp(-(th * th) / (DELLE_B * DELLE_B));
+            newPosition -= n0 * (einschlag[i].x * fleck);
+            hell += einschlag[i].y * fleck;
           }
         }
         vHell = hell;
@@ -236,17 +234,25 @@ function start(el) {
        greifen(x, y, d) → Kennung oder -1 · folgen(k, x, y, d) · gefangen(k) · fortschritt(k) · puls(x, y) */
   const armZ = [0, 1, 2].map(() => ({ zustand: 0, kennung: 0, t0: 0, tLos: 0, L: 0, L0: 0, Lstart: 0, x: 1, y: 0, d: 1,
     blick: new Vector3(0, 0, 1), objekt: new Vector3(0, 0, 1) }));
-  const pulse = [0, 1, 2].map(() => ({ dir: new Vector3(0, 0, 1), t0: -1 }));
+  const pulse = [0, 1, 2].map(() => ({ dir: new Vector3(0, 0, 1), t0: -1, staerke: 1 }));
   const umkehr = new Quaternion();
   let pulsNr = 0, kennungen = 0;
   const zd = KUGEL.daempfung, w0 = KUGEL.frequenz, wd = w0 * Math.sqrt(1 - zd * zd);
-  function pulsStart(dirObjekt) { const p = pulse[pulsNr++ % 3]; p.dir.copy(dirObjekt); p.t0 = performance.now(); }
-  /* Lebewesen: Drehschub (Fliehkraft) und Schlucken nach jedem Fang */
-  let drehExtra = 0, fliehIst = 0, fliehV = 0, schluckS = 0, schluckV = 0, letzt = 0;
-  const schluckDir = new Vector3(0, 0, 1), achseObjekt = new Vector3(0, 1, 0);
-  function stoss(dirObjekt, seite, staerke) {
-    drehExtra = Math.max(-KUGEL.drehMax, Math.min(KUGEL.drehMax, drehExtra + (seite >= 0 ? 1 : -1) * KUGEL.drehStoss * staerke));
-    schluckDir.copy(dirObjekt); schluckV += KUGEL.schluckStoss * staerke;
+  function pulsStart(dirObjekt, staerke = 1) { const p = pulse[pulsNr++ % 3]; p.dir.copy(dirObjekt); p.t0 = performance.now(); p.staerke = staerke; }
+  /* Aufschlag (Flüssigmetall): Delle als gedämpfte Feder (Impulsantwort, geschlossene Form), Herzschlag, Aufleuchten.
+     Jeder Ring-Puls trägt seinen eigenen Aufschlag (gleiche Richtung, gleicher Startzeitpunkt). */
+  let letzt = 0, herzT0 = -1, herzStaerke = 0;
+  const dZ = KUGEL.delleFeder[1], dW = KUGEL.delleFeder[0], dWd = dW * Math.sqrt(1 - dZ * dZ);
+  const dNorm = 1 / (Math.exp(-dZ * dW * (Math.atan(dWd / (dZ * dW)) / dWd)) * Math.sin(Math.atan(dWd / (dZ * dW))));   /* Spitze = 1 */
+  function delleBei(s) { return s < 0 ? 0 : dNorm * Math.exp(-dZ * dW * s) * Math.sin(dWd * s); }
+  function herzBei(ms) {
+    if (ms < 0) return 0;
+    if (ms < KUGEL.herzHinMs) { const p = ms / KUGEL.herzHinMs; return 1 - Math.pow(1 - p, 3); }   /* weich hin */
+    return Math.exp(-(ms - KUGEL.herzHinMs) / (KUGEL.herzZurueckMs / 3.2));                           /* gedämpft zurück, ohne Nachschwingen */
+  }
+  function aufschlag(dirObjekt, staerke) {
+    pulsStart(dirObjekt, staerke);
+    herzT0 = performance.now(); herzStaerke = Math.min(1, Math.max(herzStaerke * 0.5, 0) + staerke);
   }
   function blickRichtung(a) { a.blick.set(a.x, -a.y, 0.15).normalize(); }
   window.endoKugel = {
@@ -271,8 +277,7 @@ function start(el) {
       if (ruhig) return;
       umkehr.copy(mesh.quaternion).invert();
       const d = new Vector3(x, -y, 0.15).normalize().applyQuaternion(umkehr);
-      pulsStart(d);
-      stoss(d, x, 0.45);   /* Nachricht/Foto ohne Arm: sanfter Stoß */
+      aufschlag(d, 0.7);   /* Nachricht/Foto ohne Arm: etwas sanfterer Aufschlag */
     }
   };
 
@@ -288,60 +293,76 @@ function start(el) {
         a.L = a.Lstart + (ziel - a.Lstart) * e;
         a.objekt.copy(a.blick).applyQuaternion(umkehr);
         info.x = 1; info.y = 0;
-        if (p >= 1) { a.zustand = 2; a.tLos = t; a.L0 = a.L; pulsStart(a.objekt); stoss(a.objekt, a.x, 1); }
+        if (p >= 1) { a.zustand = 2; a.tLos = t; a.L0 = a.L; a.geschlagen = false; }
       } else if (a.zustand === 2) {
         /* zurück: gedämpfte Feder (geschlossene Form, bildratenunabhängig); Richtung bleibt am Kugelpunkt, dreht also mit */
         const s = (t - a.tLos) / 1000;
         a.L = a.L0 * Math.exp(-zd * w0 * s) * (Math.cos(wd * s) + (zd * w0 / wd) * Math.sin(wd * s));
         info.x = Math.max(0, 1 - (t - a.tLos) / KUGEL.welleNachMs);
         info.y = Math.exp(-(t - a.tLos) / KUGEL.blitzMs);
+        /* das Paket ist an der Oberfläche angekommen → Aufschlag */
+        if (!a.geschlagen && (a.L < KUGEL.aufschlagBeiL || t - a.tLos > 320)) { a.geschlagen = true; aufschlag(a.objekt, 1); }
         if (t - a.tLos > KUGEL.zurueckEndeMs) { a.zustand = 0; a.L = 0; info.x = info.y = 0; }
       }
       armU[i].set(a.objekt.x, a.objekt.y, a.objekt.z, i < ARME ? a.L : 0);
       const pl = pulse[i], ph = pl.t0 < 0 ? -1 : (t - pl.t0) / KUGEL.ringMs;
       if (ph >= 1) pl.t0 = -1;
       pulsU[i].set(pl.dir.x, pl.dir.y, pl.dir.z, ph >= 1 ? -1 : ph);
+      const ms = pl.t0 < 0 ? -1 : t - pl.t0;
+      schlagU[i].set(ms >= 0 && ms < KUGEL.delleMs ? KUGEL.delle * pl.staerke * delleBei(ms / 1000) : 0,
+        ms >= 0 ? KUGEL.leuchtStaerke * pl.staerke * Math.exp(-ms / KUGEL.leuchtMs) : 0, 0, 0);
     }
   }
 
-  let frameId = 0, laeuft = false, start0 = performance.now();
+  let frameId = 0, laeuft = false, start0 = performance.now(), miniFertig = false;
+  /* Mini-Kugel für den Chat (Emre, 27.09.): EIN kleines Bild der echten Kugel, als CSS-Variable --endo-mini für alle Avatare –
+     kein eigenes three.js pro Nachricht. Direkt nach dem Zeichnen kopiert (danach wäre der WebGL-Puffer leer). */
+  function miniBild() {
+    try {
+      const q = renderer.domElement, seite = Math.min(q.width, q.height), aus = seite * 0.74, px = 96;
+      const c = document.createElement('canvas'); c.width = c.height = px;
+      c.getContext('2d').drawImage(q, (q.width - aus) / 2, (q.height - aus) / 2, aus, aus, 0, 0, px, px);
+      document.documentElement.style.setProperty('--endo-mini', 'url("' + c.toDataURL('image/png') + '")');
+      miniFertig = true;
+    } catch (e) { miniFertig = true; }
+  }
   function bild(t) {
     const zeit = t - start0;
     const dt = Math.min(0.05, Math.max(0, (t - letzt) / 1000)) || 0.016; letzt = t;
     armeRechnen(t);
     material.uniforms.sek.value = (zeit / 1000) % 1000;
     material.uniforms.time.value = zeit * 0.0003;
-    /* Drehung bildratenunabhängig; Schub nach Fängen klingt weich ab */
-    drehExtra *= Math.exp(-dt / KUGEL.drehAbklingen);
-    mesh.rotation.y += (KUGEL.drehen + drehExtra) * dt;
+    /* ruhiges Treiben, bildratenunabhängig */
+    mesh.rotation.y += KUGEL.drehen * dt;
     mesh.rotation.x += KUGEL.drehen * 0.4 * dt;
-    /* Fliehkraft folgt der Drehung über eine weiche Feder (wabbelt leicht nach) */
-    const fliehSoll = Math.min(KUGEL.fliehMax, KUGEL.flieh * drehExtra * drehExtra);
-    fliehV += ((fliehSoll - fliehIst) * KUGEL.fliehFeder[0] - fliehV * KUGEL.fliehFeder[1]) * dt; fliehIst += fliehV * dt;
-    schluckV += (-schluckS * KUGEL.schluckFeder[0] - schluckV * KUGEL.schluckFeder[1]) * dt; schluckS += schluckV * dt;
-    material.uniforms.flieh.value = fliehIst;
-    achseObjekt.set(0, 1, 0).applyQuaternion(umkehr.copy(mesh.quaternion).invert());
-    material.uniforms.achse.value.copy(achseObjekt);
-    material.uniforms.schluck.value.set(schluckDir.x, schluckDir.y, schluckDir.z, Math.max(-0.2, Math.min(0.2, schluckS * KUGEL.schluck)));
-    /* Atmen */
-    const atem = 1 + KUGEL.atmen[0] * Math.sin(zeit * 0.0013) + KUGEL.atmen[1] * Math.sin(zeit * 0.00071 + 1.3);
+    /* Atmen + Herzschlag nach einem Aufschlag */
+    const herz = herzT0 < 0 ? 0 : KUGEL.herz * herzStaerke * herzBei(t - herzT0);
+    if (herzT0 >= 0 && t - herzT0 > KUGEL.herzHinMs + KUGEL.herzZurueckMs * 1.5) { herzT0 = -1; herzStaerke = 0; }
+    const atem = 1 + KUGEL.atmen[0] * Math.sin(zeit * 0.0013) + KUGEL.atmen[1] * Math.sin(zeit * 0.00071 + 1.3) + herz;
     mesh.scale.setScalar(atem);
     if (!feineMaus) { ziel.set(Math.sin(zeit * 0.0004) * 2.2, Math.cos(zeit * 0.0003) * 1.4, 2.5); }
     licht.lerp(ziel, 0.06);
     renderer.render(scene, camera);
+    if (!miniFertig && zeit > 600) miniBild();
     if (laeuft) frameId = requestAnimationFrame(bild);
   }
-  function an() { if (laeuft || ruhig || el.hasAttribute('data-halt')) return; laeuft = true; frameId = requestAnimationFrame(bild); }
+  function an() {
+    if (laeuft || ruhig) return;
+    if (el.hasAttribute('data-halt')) { standbild(); return; }
+    laeuft = true; frameId = requestAnimationFrame(bild);
+  }
+  /* angehalten (Chat offen): trotzdem ein Bild zeigen – sonst bliebe die Kugel leer, wenn der Chat vor dem ersten Bild startet */
+  function standbild() { renderer.render(scene, camera); if (!miniFertig) miniBild(); }
   function aus() { laeuft = false; cancelAnimationFrame(frameId); }
 
-  if (ruhig) { material.uniforms.time.value = 1.3; renderer.render(scene, camera); }
+  if (ruhig) { material.uniforms.time.value = 1.3; renderer.render(scene, camera); miniBild(); }
   /* Nur rechnen, solange der Hero sichtbar und der Tab aktiv ist */
   if ('IntersectionObserver' in window) {
     new IntersectionObserver((e) => { e[0].isIntersecting ? an() : aus(); }).observe(el);
   } else an();
   document.addEventListener('visibilitychange', () => { document.hidden ? aus() : (el.getBoundingClientRect().bottom > 0 && an()); });
   /* Chat aktiv: Kugel hält still (Emre, 25.09.: Hintergrund soll sich im Chat nicht bewegen) */
-  el.addEventListener('orb:halt', () => { el.setAttribute('data-halt', ''); aus(); });
+  el.addEventListener('orb:halt', () => { el.setAttribute('data-halt', ''); const lief = laeuft; aus(); if (!lief) standbild(); });
   el.addEventListener('orb:weiter', () => { el.removeAttribute('data-halt'); if (el.getBoundingClientRect().bottom > 0) an(); });
 
   let rt;
