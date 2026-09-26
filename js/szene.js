@@ -170,11 +170,11 @@
 
   /* Richtung des Lichts: Sonne mittig (Tag, Gold), Mond links (Nacht). +1 = Licht kommt von rechts */
   function lichtX(licht, x) {
-    if (licht === 'nacht') { var mx = m.W * 0.22; return Math.max(-1, Math.min(1, (mx - x) / (m.W * 0.25))); }
+    if (licht === 'nacht') { var mx = m.W * 0.24; return Math.max(-1, Math.min(1, (mx - x) / (m.W * 0.25))); }
     return Math.max(-1, Math.min(1, (m.W * 0.5 - x) / (m.W * 0.22)));
   }
   /* Nähe zur Lichtquelle (für Streiflicht und Kanten im Gegenlicht) */
-  function naehe(licht, x) { var lx = licht === 'nacht' ? m.W * 0.22 : m.W * 0.5; return Math.exp(-Math.pow((x - lx) / (m.W * (licht === 'tag' ? 0.6 : 0.32)), 2)); }
+  function naehe(licht, x) { var lx = licht === 'nacht' ? m.W * 0.24 : m.W * 0.5; return Math.exp(-Math.pow((x - lx) / (m.W * (licht === 'tag' ? 0.6 : 0.32)), 2)); }
 
   /* ---------- Berge ---------- */
   function berg(name, ebene, unten, extra) {
@@ -672,7 +672,7 @@
     for (var i = 0; i < n; i++) {
       var u = wz(), y = hoehe * (0.1 + wz() * 0.28);
       var x = xVon(u < 0.5 ? u * 0.62 : 0.62 + (u - 0.5) * 0.76);
-      if (Math.abs(x - m.W * 0.22) < m.W * 0.08 && y < hoehe * 0.3) continue;
+      if (Math.abs(x - m.W * 0.24) < m.W * 0.08 && y < hoehe * 0.3) continue;
       feld.push({ x: x, y: y, w: m.W * (0.06 + wz() * 0.12), h: m.H * (0.012 + wz() * 0.02) });
     }
     for (i = 0; i < 5; i++) feld.push({ x: m.W * (0.1 + wz() * 0.8), y: hoehe * (0.8 + wz() * 0.12), w: m.W * (0.12 + wz() * 0.2), h: m.H * (0.008 + wz() * 0.01) });
@@ -728,7 +728,6 @@
     box.innerHTML = '';
     var hoehe = m.H * 0.66, r = zufall(4242), q = Math.min(m.q, 1.5);
     box.style.height = hoehe + 'px';
-    if (!(m.W > 0 && hoehe > 0)) return;  /* während einer 0-Breite (Neuaufbau) nichts zeichnen */
     /* Milchstraße: schräges Band, grob gerechnet und weich hochskaliert */
     var mw = 640, mh = Math.round(mw * hoehe / m.W), mc = document.createElement('canvas');
     mc.width = mw; mc.height = mh; mc.className = 'milchstrasse';
@@ -819,7 +818,7 @@
   }
 
   /* ---------- Aufbau ---------- */
-  var ebenen = {}, sonne, mond, saturn, bereit = false, bauzeit = 0, bauNr = 0;
+  var ebenen = {}, sonne, mond, bereit = false, bauzeit = 0, bauNr = 0;
   /* Parallaxe: kann der Browser Scroll-Animationen (Chrome, Edge, Safari 26), verschiebt er die Ebenen selbst –
      synchron zum Scrollen, ohne dass JavaScript ein Bild hinterherläuft (das zitterte auf dem iPhone). Sonst JavaScript. */
   var cssParallaxe = !ruhig && !!(window.CSS && CSS.supports && CSS.supports('animation-timeline: view()'));
@@ -857,9 +856,9 @@
     m.sonneR = Math.max(26, Math.min(44, m.W * 0.026));
     m.sonneStart = m.H * (m.hoch ? 0.13 : 0.1);
     m.sonneEnde = ky('fern', m.W / 2) + (TIEFE.himmel - TIEFE.fern * m.f) * SONNE_BIS * ZEIT * 0.9 * m.H + m.sonneR * 1.4;
-    m.mondX = m.W * (m.hoch ? 0.2 : 0.22);  /* Saturn links oben (Emre, 26.09.) */
+    m.mondX = m.W * (m.hoch ? 0.22 : 0.24);
     m.mondStart = ky('fern', m.mondX) + (TIEFE.himmel - TIEFE.fern * m.f) * 0.3 * ZEIT * m.H + m.sonneR;
-    m.mondEnde = m.H * (m.hoch ? 0.09 : 0.085);  /* weiter oben */
+    m.mondEnde = m.H * (m.hoch ? 0.12 : 0.11);
     held.style.setProperty('--sonne-r', m.sonneR + 'px');
     held.style.setProperty('--titel-oben', (m.H * (m.hoch ? 0.24 : 0.2)) + 'px');
     held.classList.add('szene--bereit');
@@ -934,9 +933,7 @@
     /* Mond steigt links auf */
     var pm = sanft(0.27, 0.62, p), ym = mix(m.mondStart, m.mondEnde, pm);
     mond.style.transform = 'translate3d(' + m.mondX.toFixed(2) + 'px,' + ym.toFixed(2) + 'px,0)';
-    var mondAn = sanft(0.27, 0.4, p); wert('--mond', mondAn.toFixed(3));
-    /* Saturn-Video nur laufen lassen, wenn er sichtbar ist (spart Rechenzeit/Akku am Tag) */
-    if (saturn) { if (mondAn > 0.02 && !held.classList.contains('szene--weg')) { if (saturn.paused) { var pr = saturn.play(); if (pr && pr.catch) pr.catch(function () {}); } } else if (!saturn.paused) saturn.pause(); }
+    wert('--mond', sanft(0.27, 0.4, p).toFixed(3));
     /* Emre und der Hund: Tag-, Abend- und Nachtbild überblenden mit dem Licht */
     lichtGold = gold; lichtBlau = sanft(0.18, 0.3, p); lichtNacht = nacht;
     figurenZeichnen();
@@ -945,7 +942,7 @@
 
   function start() {
     ['himmel', 'weit', 'fern', 'mitte', 'titel', 'huegel', 'wald', 'wiese', 'gras'].forEach(function (k) { ebenen[k] = held.querySelector('[data-ebene="' + k + '"]'); });
-    sonne = held.querySelector('.sonne'); mond = held.querySelector('.mond'); saturn = held.querySelector('.mond__saturn');
+    sonne = held.querySelector('.sonne'); mond = held.querySelector('.mond');
     aufbauen();
     window.addEventListener('scroll', anfordern, { passive: true });
     schnuppePlanen();
