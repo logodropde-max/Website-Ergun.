@@ -27,7 +27,7 @@ Umschalter „Monatlich | Jährlich −20 %“ über den Karten (Standard: Monat
 
 ## Premium inklusive Website von Emre (Emre, 27.09.2026 – Bedingungen noch Platzhalter)
 Auf Seite, Paket-Fenster, Paket-Karten und in endos Wissen: **„Premium: inklusive Ihrer Website von Emre“**. Die Bedingungen stehen in `ki/js/endo-daten.js` → `premiumWebsite` (`bestaetigt: false`). Leere Zahlen erscheinen nicht auf der Seite.
-- **Premium jährlich:** Website inklusive. Onepager aus einer ERGUN.-Vorlage, bis zu **[X] Abschnitte** (Platzhalter `abschnitte`), 1 Korrekturrunde, eigene Bilder und Videos mit endo.
+- **Premium jährlich:** Website inklusive. Onepager aus einer ERGUN.-Vorlage (**Emre, 27.09.: Seitenzahl bleibt wie jetzt – ein Onepager, keine feste Abschnitts-Zahl**), 1 Korrekturrunde, eigene Bilder und Videos mit endo.
 - **Premium monatlich:** Website inklusive bei **12 Monaten Mindestlaufzeit**.
 - **Premium einmalig:** keine Website, dafür **[X] % Rabatt** auf eine Website (Platzhalter `rabattEinmalProzent`).
 - Größere Seiten oder ein Onlineshop: im Erstgespräch.

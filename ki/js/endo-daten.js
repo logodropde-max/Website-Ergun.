@@ -20,7 +20,7 @@ window.ENDO = {
     monat: 'inklusive bei 12 Monaten Mindestlaufzeit',          // Premium monatlich
     einmalTitel: 'Rabatt auf Ihre Website von Emre',            // Premium einmalig …
     einmal: 'keine Website inklusive',                          // … statt Website ein Rabatt
-    abschnitte: null,        // PLATZHALTER: bis zu X Abschnitte
+    abschnitte: null,        // Emre, 27.09.: Seitenzahl bleibt wie jetzt – ein Onepager, keine feste Abschnitts-Zahl
     korrekturrunden: 1,
     rabattEinmalProzent: null, // PLATZHALTER: Rabatt in % bei Premium einmalig
     umfang: ['Onepager aus einer ERGUN.-Vorlage', 'Ihre eigenen Bilder und Videos, erstellt mit endo Studio'],
