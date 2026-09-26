@@ -25,6 +25,11 @@
   var schritt = 'start', kiAus = false, beschaeftigt = false;
   var daten = { kategorie: '', look: '', format: '', credits: 0, premium: false, fotoName: '', fotoUrl: '', email: '' };
   var historie = []; /* für /api/agent: { rolle: 'user' | 'assistant', text } */
+  /* Phase C, Schritt 5: endo führt mit Claude und zeigt Look-Karten, Bestätigung, Fortschritt und Ergebnis.
+     Testmodus: Codewort nur im Arbeitsspeicher dieser Seite (kein Cookie, kein Browser-Speicher).
+     Das alte Drehbuch (Kategorie → Look → Werkzeug → Foto → Vormerken) bleibt als Rückfall ohne Claude. */
+  var testCode = '', laufend = null, vorSchritt = 'ki';
+  var UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
   var KATEGORIEN = ['Mode', 'Kosmetik', 'Elektronik', 'Essen und Getränke', 'Möbel und Deko', 'Etwas anderes'];
   var LOOKS = ['Studio hell', 'Luxus dunkel', 'Natur und Licht', 'Neon Future'];
@@ -141,23 +146,34 @@
     vorschlaege.scrollLeft += e.deltaY;
   }, { passive: false });
   function eingabeArt(art) {
-    feld.type = art === 'mail' ? 'email' : 'text';
+    feld.type = art === 'mail' ? 'email' : art === 'code' ? 'password' : 'text';
     feld.setAttribute('inputmode', art === 'mail' ? 'email' : 'text');
-    feld.setAttribute('autocomplete', art === 'mail' ? 'email' : 'off');
-    feld.placeholder = art === 'mail' ? 'name@shop.de' : PLATZHALTER;
+    feld.setAttribute('autocomplete', art === 'mail' ? 'email' : art === 'code' ? 'one-time-code' : 'off');
+    feld.placeholder = art === 'mail' ? 'name@shop.de' : art === 'code' ? 'Codewort …' : PLATZHALTER;
   }
   function sperren(an) { beschaeftigt = an; senden.disabled = an; }
 
   /* ---------- Gesprächsschritte ---------- */
   function start() {
-    schritt = 'kategorie';
+    schritt = 'ki';
     sperren(true);
-    endo('Hallo, ich bin endo. Aus Ihrem Handyfoto mache ich ein Profi-Produktfoto, ein kurzes Werbevideo oder ein Titelbild für Ihre Website.')
+    endo('Hallo, ich bin endo. Aus Ihrem Handyfoto mache ich Produktfotos, Werbeanzeigen, kurze Werbevideos und Titelbilder für Ihre Website.')
       .then(function () { return endo('Was verkaufen Sie?'); })
-      .then(function () { sperren(false); zeigeSchritt(); });
+      .then(function () { sperren(false); zeigeSchritt(); if (auftragAusAdresse()) fortsetzenAnbieten(); });
   }
   function zeigeSchritt() {
-    eingabeArt(schritt === 'mail' ? 'mail' : 'text');
+    eingabeArt(schritt === 'mail' ? 'mail' : schritt === 'code' ? 'code' : 'text');
+    if (schritt === 'ki') {
+      knoepfe([
+        { text: 'Produktfoto', aktion: function () { freieFrage('Ich möchte ein Produktfoto.'); } },
+        { text: 'Werbeanzeige', aktion: function () { freieFrage('Ich möchte eine Werbeanzeige.'); } },
+        { text: 'Werbevideo', aktion: function () { freieFrage('Ich möchte ein Werbevideo.'); } },
+        { text: 'Foto hochladen', haupt: !!testCode, aktion: function () { datei.click(); } },
+        { text: 'Was kostet das?', aktion: function () { freieFrage('Was kostet das?'); } }
+      ]);
+      return;
+    }
+    if (schritt === 'code') { knoepfe([{ text: 'Abbrechen', aktion: codeAbbrechen }]); return; }
     if (schritt === 'kategorie') knoepfe(KATEGORIEN.map(function (k) { return { text: k, aktion: function () { kategorie(k); } }; }));
     else if (schritt === 'look') knoepfe(LOOKS.map(function (l) { return { text: l, aktion: function () { look(l); } }; }).concat([{ text: 'Ich beschreibe es selbst', aktion: selbstBeschreiben }]));
     else if (schritt === 'format') knoepfe(FORMATE.map(function (f) { return { text: f.name + ' · ' + f.credits + ' Credits' + (f.premium ? ' · Premium' : ''), aktion: function () { format(f); } }; }));
@@ -222,6 +238,7 @@
     datei.value = '';
     if (!f) return;
     if (!/^image\//.test(f.type)) { endo('Das ist leider kein Bild. Laden Sie bitte ein Foto hoch, zum Beispiel ein JPG vom Handy.'); return; }
+    if (testCode) { endoFoto(f); return; }
     knoepfe([]);
     bild('du', URL.createObjectURL(f), f.name);
     historie.push({ rolle: 'user', text: '[Foto hochgeladen: ' + f.name + ']' });
@@ -231,6 +248,21 @@
     endo('Starkes Motiv. Genau so etwas setze ich ins Studio, mache ein kurzes Video daraus oder ein Titelbild für Ihre Website.')
       .then(function () { sperren(false); if (!daten.email) frageMail(); else { schritt = 'senden'; zeigeSchritt(); } });
   });
+  /* Testmodus: Foto über /api/endo/foto (prüft Typ, Größe, Auflösung, Inhalt), dann führt endo weiter */
+  function endoFoto(f) {
+    knoepfe([]); sperren(true);
+    bild('du', URL.createObjectURL(f), f.name);
+    daten.fotoName = f.name;
+    var t0 = tippt();
+    verkleinern(f).then(function (v) {
+      return fetch('/api/endo/foto', { method: 'POST', headers: kopf({ 'content-type': 'application/octet-stream' }), body: v.daten })
+        .then(function (r) { return r.json().catch(function () { return {}; }); });
+    }).catch(function () { return {}; }).then(function (j) {
+      t0.remove(); sperren(false);
+      if (j && j.fotoUrl) { daten.fotoUrl = j.fotoUrl; freieFrage('Ich habe ein Foto meines Produkts hochgeladen.'); }
+      else { endo((j && j.meldung) || 'Das Foto konnte ich leider nicht annehmen. Versuchen Sie es bitte mit einem anderen Bild.').then(zeigeSchritt); }
+    });
+  }
   /* Upload über dieselbe Funktion wie das Kontaktformular (Vercel Blob). Klappt es nicht, bleibt der Dateiname. */
   function hochladen(f) {
     verkleinern(f).then(function (v) {
@@ -281,6 +313,8 @@
     var t = feld.value.trim();
     if (!t || beschaeftigt) return;
     feld.value = '';
+    if (schritt === 'code') { codePruefen(t); return; }
+    if (/^\/?test(modus)?$/i.test(t)) { codeAbfragen(); return; }
     if (schritt === 'mail') {
       if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(t)) {
         du(t); daten.email = t; schritt = 'senden'; knoepfe([]); sperren(true);
@@ -298,33 +332,252 @@
   function freieFrage(t) {
     knoepfe([]); du(t); sperren(true);
     var t0 = tippt();
-    frageKI().then(function (antwort) {
+    frageKI().then(function (erg) {
       t0.remove();
-      var text = antwort || lokaleAntwort(t);
-      var b = blase('endo', text);
-      historie.push({ rolle: 'assistant', text: text });
-      if (/komplette Website|Erstgespräch/.test(text) && !antwort) {
-        b.appendChild(document.createTextNode(' '));
-        var a = document.createElement('a'); a.href = '../#kontakt'; a.textContent = 'Zum Erstgespräch'; b.appendChild(a);
+      /* Claude nicht erreichbar: eingebaute Antwort und zurück zum alten Drehbuch */
+      if (!erg && kiAus && schritt === 'ki') schritt = 'kategorie';
+      var text = erg ? erg.antwort : lokaleAntwort(t);
+      if (text) {
+        var b = blase('endo', text);
+        historie.push({ rolle: 'assistant', text: text });
+        if (/komplette Website|Erstgespräch/.test(text) && !erg) {
+          b.appendChild(document.createTextNode(' '));
+          var a = document.createElement('a'); a.href = '../#kontakt'; a.textContent = 'Zum Erstgespräch'; b.appendChild(a);
+        }
       }
+      if (erg) erg.elemente.forEach(zeigeElement);
       sperren(false); zeigeSchritt();
     });
   }
+  function kopf(h) { h = h || {}; if (testCode) h['x-endo-code'] = testCode; return h; }
   function frageKI() {
-    if (kiAus || !window.fetch) return Promise.resolve('');
+    if (kiAus || !window.fetch) return Promise.resolve(null);
     var ctrl = window.AbortController ? new AbortController() : null;
-    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 20000);
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 45000);
+    var body = { nachrichten: historie.slice(-12) };
+    if (testCode && daten.fotoUrl) body.fotoUrl = daten.fotoUrl;
     return fetch('/api/agent', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ nachrichten: historie.slice(-12) }),
+      headers: kopf({ 'content-type': 'application/json' }),
+      body: JSON.stringify(body),
       signal: ctrl ? ctrl.signal : undefined
     }).then(function (r) {
       clearTimeout(timer);
       if (r.status === 503 || r.status === 404 || r.status === 403 || r.status === 405) kiAus = true;
       return r.ok ? r.json() : null;
-    }).then(function (j) { return j && j.antwort ? String(j.antwort) : ''; })
-      .catch(function () { clearTimeout(timer); return ''; });
+    }).then(function (j) {
+      var elemente = j && Array.isArray(j.elemente) ? j.elemente : [];
+      return j && (j.antwort || elemente.length) ? { antwort: String(j.antwort || ''), elemente: elemente } : null;
+    }).catch(function () { clearTimeout(timer); return null; });
+  }
+
+  /* ---------- Testmodus (Codewort) ---------- */
+  function codeAbfragen() {
+    if (schritt !== 'code') vorSchritt = schritt;
+    schritt = 'code'; knoepfe([]); sperren(true);
+    endo('Testmodus: Bitte geben Sie Ihr Codewort ein. Es bleibt nur in diesem Fenster und wird nirgends gespeichert.')
+      .then(function () { sperren(false); zeigeSchritt(); feld.focus(); });
+  }
+  function codeAbbrechen() { schritt = vorSchritt || 'ki'; knoepfe([]); zeigeSchritt(); }
+  function codePruefen(c) {
+    sperren(true); blase('du', '••••••••'); /* nie in den Verlauf für Claude */
+    fetch('/api/endo/konto', { headers: { 'x-endo-code': c } })
+      .then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+      .then(function (k) {
+        if (!k || k.verfuegbar == null) {
+          schritt = vorSchritt || 'ki';
+          return endo('Das Codewort stimmt leider nicht.').then(function () { sperren(false); zeigeSchritt(); });
+        }
+        testCode = c; kiAus = false; schritt = 'ki';
+        statusZeigen(k.verfuegbar);
+        var id = auftragAusAdresse();
+        return endo(id ? 'Testmodus aktiv. Ich zeige Ihnen den Stand Ihres Auftrags.' : 'Testmodus aktiv. Laden Sie ein Foto Ihres Produkts hoch, dann bereite ich Ihren Auftrag vor.')
+          .then(function () { sperren(false); zeigeSchritt(); if (id && !laufend) fortschritt(id, null, null); });
+      });
+  }
+  function statusZeigen(n) {
+    var s = verlauf.querySelector('.endo-status');
+    if (!s) { s = el('div', 'endo-el endo-status'); s.appendChild(el('i')); s.appendChild(el('span')); verlauf.appendChild(s); nachUnten(); }
+    s.lastChild.textContent = 'Testmodus · ' + Number(n).toLocaleString('de-DE') + ' Credits';
+  }
+  function auftragAusAdresse() {
+    var m = /#auftrag=([0-9a-f-]{36})/i.exec(location.hash || '');
+    return m && UUID_RE.test(m[1]) ? m[1] : null;
+  }
+  function fortsetzenAnbieten() {
+    if (testCode) { if (!laufend) fortschritt(auftragAusAdresse(), null, null); return; }
+    sperren(true);
+    endo('Ihr Auftrag von vorhin ist noch da. Mit Ihrem Codewort zeige ich Ihnen den Stand.').then(function () { sperren(false); codeAbfragen(); });
+  }
+
+  /* ---------- Elemente von endo: Looks, Bestätigung, Fortschritt, Ergebnis, Kontakt ---------- */
+  function el(tag, klasse, text) {
+    var x = document.createElement(tag);
+    if (klasse) x.className = klasse;
+    if (text != null) x.textContent = text;
+    return x;
+  }
+  function zeigeElement(e) {
+    if (!e || !e.typ) return;
+    if (e.typ === 'looks') lookKarten(e);
+    else if (e.typ === 'karte') bestaetigung(e);
+    else if (e.typ === 'kontakt') kontakt(e);
+  }
+  function lookKarten(e) {
+    var reihe = el('div', 'endo-el endo-looks');
+    reihe.setAttribute('role', 'list');
+    reihe.setAttribute('aria-label', 'Looks für ' + (e.name || 'Ihr Ergebnis'));
+    (e.looks || []).slice(0, 30).forEach(function (l) {
+      var b = el('button', 'endo-look'); b.type = 'button'; b.setAttribute('role', 'listitem');
+      if (l.bild && /^https:\/\//.test(l.bild)) { var img = el('img', 'endo-look__bild'); img.src = l.bild; img.alt = ''; img.loading = 'lazy'; b.appendChild(img); }
+      else { var m = el('span', 'endo-look__muster'); m.setAttribute('data-look', l.id || ''); m.setAttribute('aria-hidden', 'true'); b.appendChild(m); }
+      b.appendChild(el('span', 'endo-look__name', l.name));
+      if (l.text) b.appendChild(el('span', 'endo-look__text', l.text));
+      b.addEventListener('click', function () {
+        if (beschaeftigt) return;
+        reihe.querySelectorAll('.endo-look').forEach(function (x) { x.classList.remove('endo-look--gewaehlt'); });
+        b.classList.add('endo-look--gewaehlt');
+        freieFrage('Ich nehme den Look „' + l.name + '“' + (e.name ? ' für ' + e.name : '') + '.');
+      });
+      reihe.appendChild(b);
+    });
+    reihe.addEventListener('wheel', function (ev) {
+      if (Math.abs(ev.deltaY) <= Math.abs(ev.deltaX) || reihe.scrollWidth <= reihe.clientWidth) return;
+      ev.preventDefault(); reihe.scrollLeft += ev.deltaY;
+    }, { passive: false });
+    verlauf.appendChild(reihe); nachUnten();
+  }
+  function neueId() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    var b = crypto.getRandomValues(new Uint8Array(16)); b[6] = (b[6] & 15) | 64; b[8] = (b[8] & 63) | 128;
+    var h = Array.prototype.map.call(b, function (x) { return (x + 256).toString(16).slice(1); }).join('');
+    return h.slice(0, 8) + '-' + h.slice(8, 12) + '-' + h.slice(12, 16) + '-' + h.slice(16, 20) + '-' + h.slice(20);
+  }
+  function bestaetigung(e) {
+    var k = e.karte || {};
+    var aussen = el('div', 'endo-el endo-karte'), innen = el('div', 'endo-karte__innen');
+    aussen.appendChild(innen);
+    if (k.foto) { var img = el('img', 'endo-karte__foto'); img.src = k.foto; img.alt = 'Ihr Foto'; innen.appendChild(img); }
+    var info = el('div');
+    info.appendChild(el('div', 'endo-karte__titel', k.name || 'Ihr Auftrag'));
+    var zeilen = el('ul', 'endo-karte__zeilen');
+    if (k.look) zeilen.appendChild(el('li', null, 'Look: ' + k.look));
+    if (k.format && k.format !== 'auto' && k.format !== 'bild') zeilen.appendChild(el('li', null, 'Format: ' + k.format));
+    if (k.ueberschrift) zeilen.appendChild(el('li', null, 'Überschrift: „' + k.ueberschrift + '“'));
+    info.appendChild(zeilen);
+    var kosten = el('div', 'endo-karte__credits'); kosten.appendChild(document.createTextNode('Kosten: ')); kosten.appendChild(el('b', null, k.credits + ' Credits'));
+    info.appendChild(kosten);
+    innen.appendChild(info);
+    var leiste = el('div', 'endo-karte__knoepfe');
+    var ja = el('button', 'endo-knopf endo-knopf--ja', 'Ja, erzeugen'); ja.type = 'button';
+    var aendern = el('button', 'endo-knopf', 'Ändern'); aendern.type = 'button';
+    leiste.appendChild(ja); leiste.appendChild(aendern); innen.appendChild(leiste);
+    innen.appendChild(el('p', 'endo-karte__hinweis', 'Erst mit „Ja“ wird erzeugt. Klappt es nicht, bekommen Sie die Credits automatisch zurück.'));
+    var auftragId = neueId(); /* bleibt gleich – auch ein zweiter Klick bucht nie doppelt */
+    ja.addEventListener('click', function () {
+      if (ja.disabled) return;
+      ja.disabled = aendern.disabled = true; ja.textContent = 'Wird gestartet …';
+      starteAuftrag(e.token, auftragId, k).then(function (ok) {
+        ja.textContent = ok ? 'Gestartet' : 'Ja, erzeugen';
+        if (!ok) ja.disabled = aendern.disabled = false;
+      });
+    });
+    aendern.addEventListener('click', function () {
+      if (beschaeftigt) return;
+      ja.disabled = aendern.disabled = true;
+      freieFrage('Ich möchte noch etwas ändern.');
+    });
+    verlauf.appendChild(aussen); nachUnten();
+  }
+  function starteAuftrag(token, id, karte) {
+    return fetch('/api/endo/auftrag', { method: 'POST', headers: kopf({ 'content-type': 'application/json' }), body: JSON.stringify({ token: token, auftragId: id }) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (x) {
+        if (!x.ok) { endo(x.j.meldung || 'Der Auftrag konnte nicht gestartet werden.'); return false; }
+        historie.push({ rolle: 'user', text: '[Auftrag bestätigt: ' + (karte.text || karte.name || '') + ']' });
+        if (x.j.status === 'zurueck') { endo(x.j.meldung || 'Der Auftrag konnte nicht gestartet werden. Ihre Credits sind zurückgebucht.'); return true; }
+        fortschritt(id, karte, x.j);
+        return true;
+      }).catch(function () {
+        endo('Keine Verbindung. Tippen Sie gleich noch einmal auf „Ja“ – es wird nichts doppelt gebucht.');
+        return false;
+      });
+  }
+  function fortschritt(id, karte, erster) {
+    if (!id || (laufend && laufend.id === id)) return;
+    try { history.replaceState(null, '', location.pathname + location.search + '#auftrag=' + id); } catch (err) {}
+    var box = el('div', 'endo-el endo-arbeit');
+    var zeile1 = el('div', 'endo-arbeit__kopf');
+    zeile1.appendChild(el('span', null, 'endo arbeitet – ' + (karte && karte.name ? karte.name + (karte.look ? ' · ' + karte.look : '') : 'Ihr Auftrag')));
+    var uhrText = el('span', 'endo-arbeit__zeit', '0:00'); zeile1.appendChild(uhrText);
+    box.appendChild(zeile1);
+    box.appendChild(el('div', 'endo-arbeit__balken'));
+    var hinweis = el('p', 'endo-arbeit__text', 'Bilder brauchen etwa 1–2 Minuten, Videos 2–4. Sie können die Seite neu laden – der Auftrag läuft weiter.');
+    box.appendChild(hinweis);
+    verlauf.appendChild(box); nachUnten();
+    if (window.endoZufluss) window.endoZufluss.erzeugen(true);
+    var start0 = Date.now(), pause = 3000;
+    var uhr = setInterval(function () {
+      var s = Math.round((Date.now() - start0) / 1000);
+      uhrText.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+    }, 1000);
+    laufend = { id: id };
+    function ende() { clearInterval(uhr); laufend = null; if (window.endoZufluss) window.endoZufluss.erzeugen(false); box.remove(); }
+    function frage() {
+      fetch('/api/endo/status?id=' + encodeURIComponent(id), { headers: kopf() })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { j.http = r.status; return j; }); })
+        .then(function (s) {
+          if (s.status === 'fertig') { ende(); ergebnis(s, karte); if (s.verfuegbar != null) statusZeigen(s.verfuegbar); return; }
+          if (s.status === 'zurueck') {
+            ende(); endo(s.meldung || 'Das hat leider nicht geklappt. Ihre Credits sind zurückgebucht.');
+            if (s.verfuegbar != null) statusZeigen(s.verfuegbar);
+            try { history.replaceState(null, '', location.pathname + location.search); } catch (err) {}
+            return;
+          }
+          if (s.http === 403 || s.http === 404) { ende(); endo(s.meldung || 'Diesen Auftrag finde ich leider nicht.'); return; }
+          if (s.versuch > 1) hinweis.textContent = 'Der erste Versuch hat nicht geklappt – endo versucht es kostenlos ein zweites Mal.';
+          pause = Math.min(pause * 1.3, 8000); setTimeout(frage, pause);
+        }).catch(function () { pause = Math.min(pause * 1.5, 10000); setTimeout(frage, pause); });
+    }
+    setTimeout(frage, erster && erster.status === 'fertig' ? 0 : 2500);
+  }
+  function ergebnis(s, karte) {
+    var aussen = el('figure', 'endo-el endo-ergebnis'), innen = el('div', 'endo-ergebnis__innen');
+    aussen.appendChild(innen);
+    var titel = karte && karte.text ? karte.text : 'Ihr Ergebnis';
+    var medium;
+    if (s.art === 'video') {
+      medium = el('video', 'endo-ergebnis__medium');
+      medium.src = s.ergebnisUrl; medium.muted = true; medium.loop = true; medium.controls = true;
+      medium.setAttribute('playsinline', ''); if (!ruhig) medium.autoplay = true;
+      medium.addEventListener('loadeddata', nachUnten);
+    } else {
+      medium = el('img', 'endo-ergebnis__medium'); medium.src = s.ergebnisUrl; medium.alt = titel;
+      medium.addEventListener('load', nachUnten);
+    }
+    /* Lädt die Vorschau nicht, bleibt der Download – statt eines kaputten Bildes ein ruhiger Hinweis */
+    medium.addEventListener('error', function () {
+      medium.replaceWith(el('p', 'endo-arbeit__text', 'Die Vorschau lädt gerade nicht – über „Herunterladen“ öffnen Sie Ihr Ergebnis.'));
+    });
+    innen.appendChild(medium);
+    var fuss = el('figcaption', 'endo-ergebnis__fuss');
+    fuss.appendChild(el('span', 'endo-ergebnis__titel', titel));
+    var laden = el('a', 'endo-knopf endo-knopf--ja', 'Herunterladen');
+    laden.href = s.ergebnisUrl + (s.ergebnisUrl.indexOf('?') < 0 ? '?download=1' : '&download=1');
+    laden.rel = 'noopener'; laden.setAttribute('download', '');
+    fuss.appendChild(laden); innen.appendChild(fuss);
+    verlauf.appendChild(aussen); nachUnten();
+    historie.push({ rolle: 'assistant', text: '[Ergebnis fertig: ' + titel + ']' });
+    endo('Fertig. Passt es so? Aus dem Ergebnis mache ich Ihnen gern auch ein Werbevideo oder eine Anzeige.');
+  }
+  function kontakt(e) {
+    var reihe = el('div', 'endo-el endo-kontakt');
+    var themen = { '3d': 'ein 3D-Produkt', parallax: 'eine Parallax-Szene', abstimmung: 'eine persönliche Abstimmung', website: 'eine komplette Website', sonstiges: 'endo Studio' };
+    var text = 'Hallo Emre, ich interessiere mich für ' + (themen[e.anliegen] || themen.sonstiges) + '.\n\nGesendet über den Chat mit endo';
+    var wa = el('a', 'endo-knopf endo-knopf--ja', 'WhatsApp an Emre'); wa.href = 'https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(text); wa.target = '_blank'; wa.rel = 'noopener';
+    var mail = el('a', 'endo-knopf', 'E-Mail'); mail.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent('Anfrage über endo') + '&body=' + encodeURIComponent(text);
+    reihe.appendChild(wa); reihe.appendChild(mail);
+    verlauf.appendChild(reihe); nachUnten();
   }
 
   /* Eingebaute Antworten, wenn die KI nicht erreichbar ist */

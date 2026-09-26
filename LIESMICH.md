@@ -16,6 +16,12 @@
 
 
 
+## endo Phase C – Schritt 5: Oberfläche (26.09.2026, Claude Code)
+- `ki/js/agent.js` (v=12): Start im KI-Modus (`schritt = 'ki'`), Antworten von `/api/agent` mit `elemente` → `lookKarten`, `bestaetigung` (Auftrags-ID per `crypto.randomUUID`, bleibt je Karte gleich), `starteAuftrag`, `fortschritt` (Status-Abfrage 3→8 s, `#auftrag=` in der Adresse, `endoZufluss.erzeugen`), `ergebnis` (Bild/Video, Download `?download=1`, Rückfall wenn die Vorschau nicht lädt), `kontakt`. Testmodus: Eingabe `/test` → Codewort (Passwortfeld, nur im Arbeitsspeicher) → `x-endo-code` an alle endo-Aufrufe; Foto dann über `/api/endo/foto`. Ohne Claude: altes Drehbuch.
+- `ki/endo-elemente.css` (neu, auf beiden Seiten eingebunden): Look-Karten mit Farbmustern je Look-ID (bis echte Vorschaubilder da sind), Karte/Ergebnis mit Chrom-Verlaufsrand, Fortschrittsbalken nur transform, „Bewegung reduzieren“ ohne Animation.
+- `js/endo-zufluss.js` (v=5): `window.endoZufluss.erzeugen(an)` – mehr Pakete zur Kugel, solange ein Auftrag läuft.
+- `api/_lib/endo/ablauf.js`: Karte enthält `ueberschrift`.
+
 ## endo Phase C – Schritt 4: Gehirn (26.09.2026, Claude Code)
 - `api/agent.js`: Claude Opus 5 (effort low, Fallbacks) mit Werkzeugen `looks_zeigen`, `auftrag_vorbereiten` (nur Testmodus + Foto; Foto-Adresse setzt der Server), `kontakt_emre`. Antwort `{ antwort, elemente: [looks|karte|kontakt], stand }` – die Seite liest bisher nur `antwort`, die Elemente nutzt Schritt 5. Feste Regeln im Code, trainierbarer Teil aus `api/_lib/endo/wissen.js`.
 - `wissen.js` wird von `_code/werkzeuge/endo-wissen/baue-wissen.mjs` aus dem Vault-Ordner `11 endo Agent/` erzeugt (Notizen mit `endo: anweisung|wissen|beispiele`), prüft Credits gegen `werkzeuge.js`; läuft in `jetzt-veroeffentlichen.ps1` vor dem Sync (Abbruch bei Widerspruch).

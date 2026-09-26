@@ -1,0 +1,96 @@
+/* endo Studio – Elemente im Chat (Bauplan Phase C, Schritt 5, 26.09.2026)
+   Look-Karten, Bestätigungskarte mit „Ja“, Fortschritt, Ergebnis im Chrom-Rahmen, Kontakt.
+   Gilt auf der Startseite (#endo) und auf /ki/. Ruhig und silbern wie das endo-Logo; nur transform/opacity animiert. */
+.endo-el {
+  --el-text: #EEF0F3;
+  --el-leise: rgba(226, 230, 236, 0.62);
+  --el-linie: rgba(226, 230, 236, 0.16);
+  --el-flaeche: rgba(226, 230, 236, 0.05);
+  --el-chrom: linear-gradient(180deg, #FBFCFD 0%, #DCE0E6 44%, #AAB1BB 52%, #E8EBEF 100%);
+  --el-rand: linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(170, 177, 187, 0.18) 38%, rgba(255, 255, 255, 0.08) 62%, rgba(226, 230, 236, 0.45));
+  --el-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  align-self: stretch; max-width: 100%; margin: 2px 0; color: var(--el-text); font-size: 14px; line-height: 1.45;
+  animation: endo-el-rein 360ms var(--el-ease) both;
+}
+@keyframes endo-el-rein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Look-Karten ---------- */
+.endo-looks { display: flex; gap: 10px; overflow-x: auto; padding: 2px 2px 10px; scroll-snap-type: x mandatory; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
+.endo-look {
+  flex: 0 0 auto; width: 132px; scroll-snap-align: start; display: flex; flex-direction: column; gap: 6px; padding: 6px 6px 10px;
+  border: 1px solid var(--el-linie); border-radius: 14px; background: var(--el-flaeche); color: inherit; font: inherit; text-align: left; cursor: pointer;
+  transition: border-color 200ms var(--el-ease), background-color 200ms var(--el-ease), transform 160ms var(--el-ease);
+}
+.endo-look:active { transform: scale(0.97); }
+.endo-look:focus-visible { outline: 2px solid #DCE0E6; outline-offset: 2px; }
+.endo-look__bild { width: 100%; aspect-ratio: 3 / 4; border-radius: 9px; object-fit: cover; background: #15171A; display: block; }
+.endo-look__muster { width: 100%; aspect-ratio: 3 / 4; border-radius: 9px; display: grid; place-items: end start; padding: 8px; font-size: 11px; color: rgba(10, 11, 13, 0.62); }
+.endo-look__name { padding: 0 4px; font-size: 13.5px; font-weight: 500; line-height: 1.25; }
+.endo-look__text { padding: 0 4px; font-size: 12px; line-height: 1.3; color: var(--el-leise); }
+.endo-look--gewaehlt { border-color: rgba(226, 230, 236, 0.7); background: rgba(226, 230, 236, 0.1); }
+@media (hover: hover) and (pointer: fine) { .endo-look:hover { border-color: rgba(226, 230, 236, 0.42); background: rgba(226, 230, 236, 0.08); } }
+/* Muster für eigene Looks, bis echte Vorschaubilder da sind */
+.endo-look__muster[data-look="studio"] { background: linear-gradient(180deg, #FFFFFF, #E6E8EC); }
+.endo-look__muster[data-look="naturlicht"] { background: linear-gradient(160deg, #F4EFE6 0%, #E8D9BF 55%, #C9A77A 100%); }
+.endo-look__muster[data-look="stein"] { background: linear-gradient(170deg, #EFE6DA 0%, #D9C8B3 60%, #B89C80 100%); }
+.endo-look__muster[data-look="nacht"] { background: radial-gradient(120% 80% at 30% 20%, #4A4F57 0%, #1B1D21 55%, #0B0C0E 100%); color: rgba(238, 240, 243, 0.7); }
+.endo-look__muster[data-look="wald"] { background: linear-gradient(170deg, #CFE0C3 0%, #6E8F5C 55%, #2F4A2A 100%); color: rgba(238, 240, 243, 0.8); }
+.endo-look__muster[data-look="schwebend"] { background: linear-gradient(160deg, #F6E3EC 0%, #E3E6F7 55%, #D9F0EC 100%); }
+.endo-look__muster[data-look="hell"] { background: linear-gradient(180deg, #FFFFFF 0%, #EEF0F2 100%); }
+.endo-look__muster[data-look="warm"] { background: linear-gradient(160deg, #FBE7C6 0%, #E7B777 60%, #9C6B3C 100%); }
+.endo-look__muster[data-look="edel"] { background: radial-gradient(120% 90% at 70% 20%, #6B5A45 0%, #26221E 55%, #0D0C0B 100%); color: rgba(238, 240, 243, 0.7); }
+.endo-look__muster[data-look="draussen"] { background: linear-gradient(180deg, #CFE3F2 0%, #E9F1E4 55%, #9DBB8A 100%); }
+.endo-look__muster[data-look="heran"], .endo-look__muster[data-look="orbit"], .endo-look__muster[data-look="licht"], .endo-look__muster[data-look="schweben"] { background: radial-gradient(90% 70% at 50% 40%, #3A3F47 0%, #15171A 70%); color: rgba(238, 240, 243, 0.72); }
+
+/* ---------- Bestätigungskarte ---------- */
+.endo-karte { position: relative; padding: 1px; border-radius: 18px; background: var(--el-rand); }
+.endo-karte__innen { display: grid; grid-template-columns: auto 1fr; gap: 12px 14px; align-items: center; padding: 14px; border-radius: 17px; background: rgba(12, 13, 15, 0.92); }
+.endo-karte__foto { width: 64px; height: 80px; border-radius: 10px; object-fit: cover; border: 1px solid var(--el-linie); }
+.endo-karte__titel { font-size: 15px; font-weight: 500; }
+.endo-karte__zeilen { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 2px; font-size: 13px; color: var(--el-leise); }
+.endo-karte__credits { margin-top: 6px; font-size: 13px; }
+.endo-karte__credits b { font-weight: 500; background: var(--el-chrom); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.endo-karte__knoepfe { grid-column: 1 / -1; display: flex; gap: 8px; flex-wrap: wrap; }
+.endo-knopf {
+  min-height: 40px; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--el-linie); background: transparent; color: var(--el-text);
+  font: inherit; font-size: 14px; line-height: 20px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  transition: background-color 200ms var(--el-ease), border-color 200ms var(--el-ease), transform 160ms var(--el-ease), opacity 200ms var(--el-ease);
+}
+.endo-knopf:active { transform: scale(0.97); }
+.endo-knopf:disabled { opacity: 0.45; cursor: default; }
+.endo-knopf--ja { color: #0A0B0D; border-color: transparent; background: var(--el-chrom); font-weight: 500; }
+@media (hover: hover) and (pointer: fine) { .endo-knopf:not(.endo-knopf--ja):not(:disabled):hover { border-color: rgba(226, 230, 236, 0.42); background: rgba(226, 230, 236, 0.06); } }
+.endo-karte__hinweis { grid-column: 1 / -1; margin: 0; font-size: 12px; color: var(--el-leise); }
+
+/* ---------- Fortschritt ---------- */
+.endo-arbeit { display: grid; gap: 8px; padding: 12px 14px; border: 1px solid var(--el-linie); border-radius: 14px; background: var(--el-flaeche); }
+.endo-arbeit__kopf { display: flex; justify-content: space-between; gap: 12px; font-size: 13.5px; }
+.endo-arbeit__zeit { color: var(--el-leise); font-variant-numeric: tabular-nums; }
+.endo-arbeit__balken { position: relative; height: 2px; overflow: hidden; border-radius: 2px; background: rgba(226, 230, 236, 0.12); }
+.endo-arbeit__balken::after { content: ""; position: absolute; inset: 0; width: 38%; background: linear-gradient(90deg, transparent, #F2F4F7, transparent); animation: endo-el-lauf 1.6s var(--el-ease) infinite; }
+@keyframes endo-el-lauf { from { transform: translateX(-100%); } to { transform: translateX(270%); } }
+.endo-arbeit__text { margin: 0; font-size: 12px; color: var(--el-leise); }
+
+/* ---------- Ergebnis im Chrom-Rahmen ---------- */
+.endo-ergebnis { padding: 1px; border-radius: 18px; background: var(--el-rand); }
+.endo-ergebnis__innen { padding: 8px; border-radius: 17px; background: rgba(12, 13, 15, 0.92); display: grid; gap: 10px; }
+.endo-ergebnis__medium { width: 100%; max-height: 62vh; object-fit: contain; border-radius: 11px; background: #0B0C0E; display: block; }
+.endo-ergebnis__fuss { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 0 4px 2px; }
+.endo-ergebnis__titel { font-size: 13px; color: var(--el-leise); }
+
+/* ---------- Kontakt ---------- */
+.endo-kontakt { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ---------- Testmodus-Hinweis ---------- */
+.endo-status { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--el-linie); border-radius: 999px; font-size: 12.5px; color: var(--el-leise); align-self: flex-start; }
+.endo-status i { width: 6px; height: 6px; border-radius: 50%; background: #9FE3B8; }
+
+@media (max-width: 640px) {
+  .endo-look { width: 116px; }
+  .endo-karte__innen { gap: 10px 12px; padding: 12px; }
+  .endo-karte__foto { width: 56px; height: 70px; align-self: start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .endo-el, .endo-look, .endo-knopf { animation: none; transition: none; }
+  .endo-arbeit__balken::after { animation: none; width: 100%; opacity: 0.35; transform: none; }
+}

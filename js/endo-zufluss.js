@@ -33,6 +33,7 @@
   var W = 0, H = 0, kx = 0, ky = 0, R = 1, halb = 1;                 /* Bildschirm; Kugelmitte (Seite), sichtbarer Radius */
   var teilchen = [], tipps = [], glanz = [];
   var laeuft = false, sichtbar = false, wach = true, letzteZeit = 0, naechster = 0, gemessen = 0;
+  var erzeugt = false; /* Schritt 5: solange endo ein Ergebnis erzeugt, fliegen mehr Pakete zur Kugel */
 
   /* Leucht-Stil wie der Punkt am Lichtfaden, einmal vorgezeichnet */
   function sprite(groesse, stopps) {
@@ -153,8 +154,9 @@
     var dt = Math.min(0.05, (zeit - letzteZeit) / 1000) || 0.016; letzteZeit = zeit;
     if (zeit - gemessen > 250) { gemessen = zeit; kugelMessen(); }
     var zufaellige = teilchen.filter(function (p) { return !p.tipp; }).length;
-    if (zeit > naechster && zufaellige < MAX_ZUFALL && teilchen.length < MAX_ALLE) {
-      teilchen.push(zufall()); naechster = zeit + PAKET.takt[0] + Math.random() * (PAKET.takt[1] - PAKET.takt[0]);
+    var takt = erzeugt ? [220, 460] : PAKET.takt, maxZ = erzeugt ? MAX_ALLE : MAX_ZUFALL;
+    if (zeit > naechster && zufaellige < maxZ && teilchen.length < MAX_ALLE) {
+      teilchen.push(zufall()); naechster = zeit + takt[0] + Math.random() * (takt[1] - takt[0]);
     }
     for (var i = teilchen.length - 1; i >= 0; i--) { schritt(teilchen[i], dt); kugelKontakt(teilchen[i], i); }
     for (var j = tipps.length - 1; j >= 0; j--) { tipps[j].t += dt / 0.32; if (tipps[j].t >= 1) tipps.splice(j, 1); }
@@ -183,6 +185,9 @@
       teilchen.push(neu(e.clientX + Math.cos(w) * o, e.clientY + sy + Math.sin(w) * o, true));
     }
   }, { passive: true });
+
+  /* Schnittstelle für den Chat (ki/js/agent.js): endoZufluss.erzeugen(true) während ein Auftrag läuft */
+  window.endoZufluss = { erzeugen: function (an) { erzeugt = !!an; if (an) { naechster = 0; start(); } } };
 
   var io = new IntersectionObserver(function (e) { sichtbar = e[0].isIntersecting; if (sichtbar) start(); else stopp(); }, { threshold: 0.02 });
   io.observe(sektion);
