@@ -218,25 +218,19 @@ html.endo-chat .agent--frei .blase--endo:not(.blase--bild) { position: relative;
   -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 12px 30px -20px rgba(0, 0, 0, 0.9); }
 html.endo-chat .agent--frei .blase--du:not(.blase--bild) { padding: 9px 14px; border: 1px solid rgba(226, 230, 236, 0.14); border-radius: 18px 6px 18px 18px; background: rgba(226, 230, 236, 0.07); color: #EEF0F3; }
-/* Avatar (Emre, 27.09.): ein leuchtendes Datenpaket wie auf der Seite – weicher Schein (::before) und Paket mit
-   hellem Kern + kurzem Schweif (::after), das langsam kreist. Nur die neueste Nachricht bewegt sich, beim Schreiben
-   kreist es schneller und pulsiert, bei einer neuen Antwort springt es kurz auf. Nur transform/opacity. */
+/* Avatar (Emre, 27.09.): die endo-Kugel. Ältere Nachrichten: Standbild der echten Kugel (--endo-mini, ohne WebGL eine feine
+   Linien-Kugel). Neueste Nachricht: die LIVE-Kugel (canvas.blase__kugel aus ki/js/orb.js) schwebt leicht darüber. */
 html.endo-chat .agent--frei .blase--endo:not(.blase--bild)::before { content: ""; position: absolute; left: -38px; top: 1px; width: 28px; height: 28px; border-radius: 50%; pointer-events: none;
-  background: radial-gradient(circle, rgba(236, 244, 255, 0.5) 0%, rgba(206, 222, 248, 0.2) 36%, rgba(196, 212, 244, 0.06) 60%, transparent 72%); }
-html.endo-chat .agent--frei .blase--endo:not(.blase--bild)::after { content: ""; position: absolute; left: -31px; top: 12px; width: 14px; height: 5px; border-radius: 3px; pointer-events: none;
-  background: linear-gradient(90deg, rgba(226, 234, 248, 0) 0%, rgba(226, 234, 248, 0.5) 55%, #FFFFFF 78%, #FFFFFF 100%);
-  box-shadow: 5px 0 7px 1px rgba(236, 244, 255, 0.85), 5px 0 16px 4px rgba(206, 222, 248, 0.4);
-  transform: rotate(0deg) translateY(-6px); transform-origin: 50% 50%; opacity: 0.8; }
-html.endo-chat .agent--frei .blase--endo.blase--aktuell::after { opacity: 1; animation: endo-paket-kreis 3.4s linear infinite; }
-html.endo-chat .agent--frei .blase--endo.blase--aktuell::before { animation: endo-paket-schein 3.4s ease-in-out infinite; }
-html.endo-chat .agent--frei .blase--endo.blase--impuls::before { animation: endo-paket-impuls 620ms cubic-bezier(0.22, 1, 0.36, 1), endo-paket-schein 3.4s ease-in-out 620ms infinite; }
-html.endo-chat .agent--frei .blase--endo:has(.tippt)::after { animation: endo-paket-kreis 1.3s linear infinite; }
-html.endo-chat .agent--frei .blase--endo:has(.tippt)::before { animation: endo-paket-schein 1.1s ease-in-out infinite; }
-@keyframes endo-paket-kreis { from { transform: rotate(0deg) translateY(-6px); } to { transform: rotate(360deg) translateY(-6px); } }
-@keyframes endo-paket-schein { 0%, 100% { transform: scale(0.92); opacity: 0.75; } 50% { transform: scale(1.08); opacity: 1; } }
-@keyframes endo-paket-impuls { 0% { transform: scale(0.7); opacity: 0.6; } 35% { transform: scale(1.35); opacity: 1; } 100% { transform: scale(1); opacity: 0.9; } }
+  background: var(--endo-mini, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28' fill='none' stroke='%23DCE0E6' stroke-width='.7' stroke-opacity='.85'%3E%3Ccircle cx='14' cy='14' r='10'/%3E%3Cellipse cx='14' cy='14' rx='10' ry='4'/%3E%3Cellipse cx='14' cy='14' rx='4' ry='10'/%3E%3Cellipse cx='14' cy='14' rx='7.5' ry='10'/%3E%3C/svg%3E")) center / 118% no-repeat,
+    radial-gradient(circle at 35% 30%, #262A31, #0B0C0F 72%);
+  box-shadow: 0 0 0 1px rgba(226, 230, 236, 0.12), 0 0 12px rgba(214, 226, 248, 0.14); opacity: 0.8; }
+html.endo-chat .agent--frei .blase--endo:has(.blase__kugel)::before { background: radial-gradient(circle at 35% 30%, #262A31, #0B0C0F 72%); opacity: 1; box-shadow: 0 0 0 1px rgba(226, 230, 236, 0.16), 0 0 16px rgba(214, 226, 248, 0.22); }
+.blase__kugel { position: absolute; left: -38px; top: 1px; width: 28px !important; height: 28px !important; pointer-events: none; border-radius: 50%;
+  filter: drop-shadow(0 0 4px rgba(226, 234, 248, 0.35)); animation: endo-mini-schweben 3.8s ease-in-out infinite; }
+@keyframes endo-mini-schweben { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+html:not(.endo-chat) .blase__kugel { display: none; }
 @media (prefers-reduced-motion: reduce) {
-  html.endo-chat .agent--frei .blase--endo::before, html.endo-chat .agent--frei .blase--endo::after { animation: none !important; }
+  html.endo-chat .agent--frei .blase--endo::before, .blase__kugel { animation: none !important; }
   html .endo__kopf.reveal.ist-weg, html .hero__kopf.ist-weg, html [data-orb] { transition: none; }
 }
 

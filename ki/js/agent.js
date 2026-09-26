@@ -99,14 +99,23 @@
     b.className = 'blase blase--' + wer;
     if (wer === 'endo') b.appendChild(formatiert(text)); else b.textContent = text;
     verlauf.appendChild(b); nachUnten();
-    if (wer === 'endo' && !b.classList.contains('blase--bild')) { aktuellerAvatar(b); b.classList.add('blase--impuls'); setTimeout(function () { b.classList.remove('blase--impuls'); }, 700); ausKugel(b); }
+    if (wer === 'endo' && !b.classList.contains('blase--bild')) { aktuellerAvatar(b); if (miniKugel()) miniKugel().impuls(); ausKugel(b); }
     return b;
   }
-  /* Nur die neueste endo-Nachricht hat einen schwebenden Mini-Avatar – die älteren stehen still (ruhig, sparsam) */
+  /* Nur die neueste endo-Nachricht trägt die LIVE-Kugel (ein einziges kleines WebGL-Bild aus ki/js/orb.js);
+     die älteren zeigen ein Standbild der Kugel (--endo-mini). Emre, 27.09.: „Hero-Zeichen, live animiert“. */
+  var aktuelleBlase = null;
+  function miniKugel() { return window.endoKugel && window.endoKugel.mini; }
   function aktuellerAvatar(b) {
     [].forEach.call(verlauf.querySelectorAll('.blase--aktuell'), function (x) { x.classList.remove('blase--aktuell'); });
     b.classList.add('blase--aktuell');
+    aktuelleBlase = b;
+    var k = miniKugel();
+    if (k) { b.appendChild(k.canvas); k.schreibt(!!b.querySelector('.tippt')); k.an(!zu); }
   }
+  /* lädt die große Kugel erst nach dem Chat-Start, bekommt die neueste Nachricht die Live-Kugel nachträglich */
+  document.addEventListener('endo:kugel-bereit', function () { if (aktuelleBlase && aktuelleBlase.isConnected) aktuellerAvatar(aktuelleBlase); });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && gestartet && !zu && miniKugel() && aktuelleBlase && aktuelleBlase.isConnected) miniKugel().an(true); });
   function tippt() {
     var b = document.createElement('div');
     b.className = 'blase blase--endo';
@@ -1104,6 +1113,7 @@
   function chatOeffnen() {
     zu = false;
     box.classList.remove('agent--zu');
+    if (miniKugel() && aktuelleBlase && aktuelleBlase.isConnected) miniKugel().an(true);
     document.documentElement.classList.add('endo-chat');
     document.querySelectorAll('[data-orb]').forEach(function (o) { o.dispatchEvent(new Event('orb:halt')); });
     clearTimeout(textTimer);
@@ -1116,6 +1126,7 @@
     if (typeof galerieZu === 'function') galerieZu();
     clearTimeout(textTimer);
     box.classList.add('agent--zu');
+    if (miniKugel()) miniKugel().an(false);
     document.documentElement.classList.remove('endo-chat');
     platzMachen(false);
     textTimer = setTimeout(function () { if (textBlock) textBlock.classList.remove('ist-weg'); }, 30);   /* … und wieder einblenden */

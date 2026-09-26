@@ -376,5 +376,56 @@ function start(el) {
       if (ruhig) renderer.render(scene, camera);
     }, 120);
   });
+  /* Live-Mini-Kugel für den Chat (Emre, 27.09.: „Hero-Zeichen bei den Nachrichten, live animiert“).
+     EIN kleines zweites WebGL-Bild (gröberes Gitter, gleiche Optik), das agent.js zur neuesten endo-Nachricht hängt.
+     Läuft nur, solange der Chat offen und der Tab sichtbar ist; ~40 Bilder/s reichen bei 28 px. */
+  const miniApi = (function () {
+    let r, sz, cam, kugel, an = false, id = 0, t0 = performance.now(), letzt = 0, impulsT = -1, schreibt = false;
+    try {
+      r = new WebGLRenderer({ antialias: true, alpha: true });
+      r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      r.setSize(28, 28);
+      r.domElement.className = 'blase__kugel';
+      r.domElement.setAttribute('aria-hidden', 'true');
+      sz = new Scene();
+      cam = new PerspectiveCamera(75, 1, 0.1, 100); cam.position.z = 2.75;
+      kugel = new Mesh(new IcosahedronGeometry(1.2, klein ? 8 : 12), material.clone());
+      sz.add(kugel);
+    } catch (e) { return null; }
+    const u = kugel.material.uniforms;
+    function zeichnen(t) {
+      const s = (t - t0) / 1000;
+      u.time.value = s * 0.3; u.sek.value = s % 1000;
+      kugel.rotation.y = s * 0.05; kugel.rotation.x = s * 0.02;
+      const imp = impulsT < 0 ? 0 : Math.max(0, 1 - (t - impulsT) / 700);
+      const herz = imp > 0 ? 0.1 * Math.sin(Math.min(1, (t - impulsT) / 150) * Math.PI / 2) * imp : 0;
+      const puls = schreibt ? 0.05 * (0.5 + 0.5 * Math.sin(s * 7)) : 0;
+      kugel.scale.setScalar(1 + 0.02 * Math.sin(s * 1.3) + herz + puls);
+      r.render(sz, cam);
+    }
+    function lauf(t) {
+      if (!an) return;
+      if (t - letzt > 24) { letzt = t; zeichnen(t); }
+      id = requestAnimationFrame(lauf);
+    }
+    return {
+      canvas: r.domElement,
+      an(ja) {
+        if (ruhig) { zeichnen(performance.now()); return; }
+        ja = !!ja && !document.hidden;
+        zeichnen(performance.now());                 /* sofort ein Bild – nie ein leerer Kreis */
+        if (ja === an) return;
+        an = ja; cancelAnimationFrame(id);
+        if (an) id = requestAnimationFrame(lauf);
+      },
+      impuls() { impulsT = performance.now(); },
+      schreibt(ja) { schreibt = !!ja; }
+    };
+  })();
+  if (miniApi) {
+    window.endoKugel.mini = miniApi;
+    document.addEventListener('visibilitychange', () => { if (document.hidden) miniApi.an(false); });
+    document.dispatchEvent(new Event('endo:kugel-bereit'));
+  }
   el.classList.add('orb--bereit');
 }
