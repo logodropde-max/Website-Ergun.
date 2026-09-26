@@ -16,6 +16,9 @@
 
 
 
+## Lichtlinie nur beim Scrollen + Leuchtpunkt (26.09.2026, Claude Code)
+`szene.js?v=31`, `endo-zufluss.js?v=2`. `.endo { --faden-bis-rand; --faden-h = bis-rand + 0,2 · Kugelbreite }` (Wortmarke nutzt `--faden-bis-rand`). Markup `.endo__faden.ist-still` + `.endo__funke.ist-still` (`i.endo__schein`, `b.endo__schweif`, `i.endo__kern`). `faden(y, tempo)` setzt `scaleY`, Punkt per `translate3d(0, f·fadenH)`, Schweif `scaleY(0.18 + |v|/2600)`, `.ist-null` bei f ≤ 0,002. `fadenBewegt(richtung)` aus dem Takt bei jeder Scrollbewegung: zeigen (außer runter und f ≥ 1), Timer 650 ms → `ist-still`. CSS-Übergänge: ein 150 ms, aus 400 ms. Reduced motion: Klassen beim Start entfernt. Pakete: `SCHEIN`/`KERN`-Sprites via `drawImage`.
+
 ## endo-Logo in Chrom (26.09.2026, Claude Code)
 `.endo .endo__marke b` (Markup `data-text="endo"`): zwei Hintergrundebenen per `background-clip: text` – Glanzband (`background-size: 320%`) über Chrom-Verlauf, `background-origin: content-box`; Polsterung `0.5em 0.3em` (Platz für Schatten) mit waagerechtem Gegen-Margin (vertikal nicht, sonst verschiebt `translateY(-50%)`). Schatten über `b::before` (Textkopie, `color: transparent`, `text-shadow`, z-index −1) statt `filter`. Glanz wandert per `animation-timeline: view()` (`background-position` 92 % → 8 %), sonst steht er bei 46 %. `.endo__marke` ohne z-index.
 

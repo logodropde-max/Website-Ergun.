@@ -758,29 +758,51 @@
   var laeuft = false, zuletztT = 0, stillSeit = 0, lichtP = -1;
   function takt(t) {
     var dt = Math.min(0.05, Math.max(0, (t - zuletztT) / 1000)); zuletztT = t;
-    var y = leseY();
-    if (y !== rohY) { rohY = y; stillSeit = t; }
+    var y = leseY(), richtung = 0;
+    if (y !== rohY) { richtung = y > rohY ? 1 : -1; rohY = y; stillSeit = t; }
     zeichne(false);
+    var vorherW = weichY;
     if (ruhig || !isNaN(festP)) weichY = rohY;
     else { weichY += (rohY - weichY) * (1 - Math.exp(-dt / GLATT)); if (Math.abs(rohY - weichY) < 0.3) weichY = rohY; }
     var lp = fortschritt(weichY);
     if (Math.abs(lp - lichtP) > 0.00005) { lichtP = lp; licht(lp); }
-    faden(weichY);
+    faden(weichY, dt > 0 ? (weichY - vorherW) / dt : 0);
+    if (richtung) fadenBewegt(richtung);
     if (weichY !== rohY) stillSeit = t;
     if (t - stillSeit < 300) requestAnimationFrame(takt); else laeuft = false;
   }
   /* endo-Faden: die Spitze (mit Lichtpunkt) hängt an der Blickhöhe des Betrachters – sie rutscht live mit dem Wischen
      die Linie hinunter bzw. zurück und endet an der Kugel. Nur transform; Maße nur beim Aufbau/Größenwechsel. */
   var fadenEl = document.querySelector('.endo__faden'), fadenOben = 0, fadenH = 1, sichtH = 1, fadenS = -1;
+  /* Leuchtpunkt an der Spitze (eigenes Element, nicht mitgestaucht) und sein Schweif, der mit dem Tempo länger wird */
+  var funkeEl = document.querySelector('.endo__funke'), schweifEl = funkeEl && funkeEl.querySelector('.endo__schweif'), funkeY = -1, schweifS = -1;
   function fadenMessen() {
     if (!fadenEl) return;
     fadenOben = fadenEl.getBoundingClientRect().top + leseY(); fadenH = fadenEl.offsetHeight || 1; sichtH = window.innerHeight || 1;
   }
-  function faden(y) {
+  function faden(y, tempo) {
     if (!fadenEl) return;
     var f = Math.max(0, Math.min(1, (y + sichtH * 0.62 - fadenOben) / fadenH));
     f = Math.round(f * 1000) / 1000;
     if (f !== fadenS) { fadenS = f; fadenEl.style.transform = 'scaleY(' + f + ')'; }
+    if (!funkeEl) return;
+    funkeEl.classList.toggle('ist-null', f <= 0.002);   /* Punkt erst, wenn die Linie wirklich wächst */
+    var ty = Math.round(f * fadenH * 10) / 10;
+    if (ty !== funkeY) { funkeY = ty; funkeEl.style.transform = 'translate3d(0,' + ty + 'px,0)'; }
+    var l = ruhig ? 0.2 : Math.round(Math.min(1, 0.18 + Math.abs(tempo || 0) / 2600) * 100) / 100;
+    if (l !== schweifS && schweifEl) { schweifS = l; schweifEl.style.transform = 'scaleY(' + l + ')'; }
+  }
+  /* Sichtbar nur beim Scrollen: jede Bewegung zeigt Linie und Punkt sofort, nach 0,65 s Stillstand blenden sie weich aus;
+     runter und unten angekommen (Spitze in der Kugel) ebenfalls weg. Bewegung reduziert: immer ruhig sichtbar. */
+  var fadenAn = false, fadenAusT = 0;
+  function fadenZeigen(an) {
+    if (!fadenEl || an === fadenAn) return;
+    fadenAn = an; fadenEl.classList.toggle('ist-still', !an); if (funkeEl) funkeEl.classList.toggle('ist-still', !an);
+  }
+  function fadenBewegt(richtung) {
+    if (ruhig) return;
+    clearTimeout(fadenAusT); fadenAusT = setTimeout(function () { fadenZeigen(false); }, 650);
+    fadenZeigen(!(richtung > 0 && fadenS >= 1));
   }
   var gesetzt = {};
   function wert(name, v) { if (gesetzt[name] !== v) { gesetzt[name] = v; held.style.setProperty(name, v); } }
@@ -813,6 +835,7 @@
     sonne = held.querySelector('.sonne'); mond = held.querySelector('.mond');
     aufbauen();
     window.addEventListener('scroll', anfordern, { passive: true });
+    if (ruhig) { fadenAn = true; if (fadenEl) fadenEl.classList.remove('ist-still'); if (funkeEl) funkeEl.classList.remove('ist-still'); }
     if (document.readyState !== 'complete') window.addEventListener('load', function () { zeichne(true); });
     var breite = window.innerWidth, hoehe = buehne.clientHeight, t;
     window.addEventListener('resize', function () {

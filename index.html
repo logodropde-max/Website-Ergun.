@@ -278,17 +278,27 @@ img { display: block; max-width: 100%; height: auto; }
   background: linear-gradient(180deg, rgba(7, 11, 22, 0) 0, rgba(7, 11, 22, 0) 33svh, #070B16 34svh, #070B16 36svh, #04060D 60svh, #000 98svh); }
 /* oben liegt die Sektion über dem Titelbild (Nebel zieht darüber) – Klicks gehen nur an ihren Inhalt */
 .endo__innen, .endo__pakete { pointer-events: auto; }
-/* Schlichter Übergang (26.09., Emre: Wurzeln waren „zu doll“, bis eine Vorlage kommt): aus dem Dunkel der Erde
-   waechst beim Scrollen ein einzelner feiner Lichtfaden nach unten bis zur Kugel; ein Lichtpunkt sitzt an seiner Spitze und folgt so der Scrollposition.
-   Er endet weich kurz über dem sichtbaren Rand der Kugel (Emre: nicht in die Kugel hinein), gleiche Maße wie .endo__orb. */
-.endo { --faden-h: calc(4svh + clamp(240px, 44svh, 440px) + clamp(-72px, -6svh, -24px) + min(460px, 74vw) * 0.08); }
+/* Lichtfaden (26.09., Emre): wächst live mit dem Scrollen aus dem Dunkel der Erde nach unten und läuft ein Stück in die Kugel
+   hinein. Sichtbar nur, solange gescrollt wird: sofort da (150 ms), nach kurzem Stillhalten bzw. unten angekommen weich weg (400 ms).
+   --faden-bis-rand = alte Länge bis über den Kugelrand (danach richtet sich die Wortmarke), --faden-h = bis in die Kugel. */
+.endo { --faden-bis-rand: calc(4svh + clamp(240px, 44svh, 440px) + clamp(-72px, -6svh, -24px) + min(460px, 74vw) * 0.08);
+  --faden-h: calc(var(--faden-bis-rand) + min(460px, 74vw) * 0.2); }
 .endo__faden { position: absolute; z-index: -2; left: 50%; top: 30svh; width: 1px; margin-left: -0.5px; pointer-events: none; transform-origin: 50% 0; height: var(--faden-h);
-  background: linear-gradient(rgba(214, 226, 245, 0), rgba(214, 226, 245, 0.28) 30%, rgba(226, 234, 248, 0.55) 82%, rgba(226, 234, 248, 0)); }
-.endo__faden::after { content: ""; position: absolute; left: -2px; bottom: -5px; width: 5px; height: 30px; border-radius: 3px; opacity: 0.9;
-  background: radial-gradient(closest-side, rgba(240, 245, 255, 0.95), rgba(200, 216, 245, 0));
-  /* Lichtpunkt sitzt an der Spitze des Fadens; die Spitze folgt ueber die scaleY-Kopplung direkt der Scrollposition */ }
-/* Wachsen/Zurückziehen steuert js/szene.js live am Scrollen (gemeinsamer Takt mit Sonne und Mond, 26.09.) */
+  background: linear-gradient(rgba(214, 226, 245, 0), rgba(214, 226, 245, 0.28) 26%, rgba(226, 234, 248, 0.55) 70%, rgba(226, 234, 248, 0.4) 86%, rgba(226, 234, 248, 0)); }
+/* Wachsen/Zurückziehen und Ein-/Ausblenden steuert js/szene.js am gemeinsamen Scroll-Takt */
 .js .endo__faden { transform: scaleY(0); }
+.endo__faden, .endo__funke { transition: opacity 150ms linear; }
+.endo__faden.ist-still, .endo__funke.ist-still { opacity: 0; transition: opacity 400ms ease-out; }
+.endo__funke.ist-null { opacity: 0; transition: none; }
+/* Leuchtender Punkt an der Spitze: scharfer, fast weißer Kern + großer, weich auslaufender kühler Schein + kurzer Schweif nach oben
+   (länger bei schnellem Scrollen). Eigenes Element, nur transform/opacity, kein filter. */
+.endo__funke { position: absolute; z-index: -1; left: 50%; top: 30svh; width: 0; height: 0; pointer-events: none; will-change: transform, opacity; }
+.endo__funke i { position: absolute; left: 0; top: 0; border-radius: 50%; transform: translate(-50%, -50%); }
+.endo__funke .endo__schein { width: 92px; height: 92px; background: radial-gradient(closest-side, rgba(222, 234, 252, 0.46), rgba(206, 222, 248, 0.2) 32%, rgba(196, 212, 244, 0.06) 62%, rgba(190, 206, 240, 0) 100%); }
+.endo__funke .endo__kern { width: 9px; height: 9px; background: radial-gradient(circle, #FFFFFF 0 34%, rgba(240, 246, 255, 0.92) 50%, rgba(226, 236, 252, 0) 100%); }
+.endo__schweif { position: absolute; left: -1px; bottom: 0; width: 2px; height: 130px; border-radius: 1px; transform-origin: 50% 100%; transform: scaleY(0.2);
+  background: linear-gradient(to top, rgba(240, 246, 255, 0.8), rgba(226, 236, 252, 0.28) 40%, rgba(214, 226, 245, 0)); }
+@media (max-width: 640px) { .endo__funke .endo__schein { width: 72px; height: 72px; } .endo__schweif { height: 100px; } }
 /* Zufliegende Datenpakete: leichtes Canvas hinter Text und Kugel, nur transform/opacity im JS (26.09.) */
 .endo__daten { position: absolute; left: 0; top: 0; width: 100%; height: 0; z-index: -1; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .endo__daten { display: none; } }
@@ -310,7 +320,7 @@ img { display: block; max-width: 100%; height: auto; }
 .endo__kopf { display: grid; justify-items: center; gap: 18px; }
 /* Wortmarke an der Lichtlinie (26.09., Emre): „endo" links, „Studio" rechts, gleiche Höhe, gleicher Abstand –
    die Linie selbst ist der Trenner. Schrift, Größe und Chrom wie das Logo (.endo-marke aus ki/studio.css). */
-.endo .endo__marke { position: absolute; left: 50%; top: calc(30svh + var(--faden-h) * 0.46); width: 0; height: 0; margin: 0; display: block; pointer-events: none; --marke-luft: 20px; }
+.endo .endo__marke { position: absolute; left: 50%; top: calc(30svh + var(--faden-bis-rand) * 0.46); width: 0; height: 0; margin: 0; display: block; pointer-events: none; --marke-luft: 20px; }
 .endo .endo__marke b, .endo .endo__marke span { position: absolute; top: 0; white-space: nowrap; transform: translateY(-50%); }
 .endo .endo__marke b { right: var(--marke-luft); padding-bottom: 0; line-height: 1.1; }
 /* Chrom-Logo (26.09., Emre): poliertes Metall – hell oben, kühles Mittelgrau, feine dunklere Unterkante (Töne wie /ki/),
@@ -541,7 +551,8 @@ img { display: block; max-width: 100%; height: auto; }
 <main id="inhalt" tabindex="-1">
   <!-- endo Studio (früher endo.ai): zweiter Bereich, direkt unter dem Titelbild. Ausführlich mit Funktionen und Paketen: ki/ -->
   <section class="endo" id="endo" aria-labelledby="endo-titel">
-    <div class="endo__faden" aria-hidden="true"></div>
+    <div class="endo__faden ist-still" aria-hidden="true"></div>
+    <div class="endo__funke ist-still" aria-hidden="true"><i class="endo__schein"></i><b class="endo__schweif"></b><i class="endo__kern"></i></div>
     <p class="endo__marke endo-marke"><b data-text="endo">endo</b> <span>Studio</span></p>
     <canvas class="endo__daten" aria-hidden="true"></canvas>
     <div class="endo__orb" data-orb aria-hidden="true"></div>
@@ -724,8 +735,8 @@ img { display: block; max-width: 100%; height: auto; }
   </nav>
 </footer>
 
-<script src="js/szene.js?v=30"></script>
-<script src="js/endo-zufluss.js?v=1" defer></script>
+<script src="js/szene.js?v=31"></script>
+<script src="js/endo-zufluss.js?v=2" defer></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {

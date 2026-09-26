@@ -32,6 +32,16 @@
     R = ow * 0.5 * 0.62;                    // sichtbarer Radius (die Kugel ist auf 62% maskiert)
   }
 
+  /* Leucht-Stil wie der Punkt am Lichtfaden: großer, weicher kühler Schein + kleiner, fast weißer Kern – einmal vorgezeichnet */
+  function sprite(groesse, stopps) {
+    var c = document.createElement('canvas'); c.width = c.height = groesse;
+    var g = c.getContext('2d'), r = groesse / 2, v = g.createRadialGradient(r, r, 0, r, r, r);
+    stopps.forEach(function (s) { v.addColorStop(s[0], s[1]); });
+    g.fillStyle = v; g.fillRect(0, 0, groesse, groesse); return c;
+  }
+  var SCHEIN = sprite(128, [[0, 'rgba(222,234,252,0.5)'], [0.32, 'rgba(206,222,248,0.22)'], [0.62, 'rgba(196,212,244,0.06)'], [1, 'rgba(190,206,240,0)']]);
+  var KERN = sprite(32, [[0, 'rgba(255,255,255,1)'], [0.34, 'rgba(255,255,255,1)'], [0.5, 'rgba(240,246,255,0.9)'], [1, 'rgba(226,236,252,0)']]);
+
   function neu() {
     var reich = R / 0.62;                   // ~ Kugeldurchmesser-Halb, als Feldmass
     var winkel = Math.random() * Math.PI * 2;
@@ -80,11 +90,10 @@
       sg.addColorStop(1, 'rgba(226,234,248,0)');
       ctx.strokeStyle = sg; ctx.lineWidth = Math.max(0.6, gr * 0.7); ctx.lineCap = 'round';
       ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(tx, ty); ctx.stroke();
-      var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, gr * 2.4);
-      g.addColorStop(0, 'rgba(245,249,255,' + a + ')');
-      g.addColorStop(0.4, 'rgba(210,224,246,' + (a * 0.55) + ')');
-      g.addColorStop(1, 'rgba(180,200,230,0)');
-      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, gr * 2.4, 0, 6.2832); ctx.fill();
+      var sg2 = gr * 11, kg = gr * 3.2;                 /* Schein und Kern */
+      ctx.globalAlpha = a; ctx.drawImage(SCHEIN, p.x - sg2 / 2, p.y - sg2 / 2, sg2, sg2);
+      ctx.globalAlpha = Math.min(1, a * 1.15); ctx.drawImage(KERN, p.x - kg / 2, p.y - kg / 2, kg, kg);
+      ctx.globalAlpha = 1;
     }
     for (var j = 0; j < glanz.length; j++) {          // dezentes Aufglimmen am Kugelrand
       var fx = glanz[j], gg = fx.a * (1 - fx.t);
