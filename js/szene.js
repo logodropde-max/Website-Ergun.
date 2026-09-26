@@ -725,8 +725,9 @@
      nehmen den echten Wert; Sonne, Mond, Himmel, Licht auf Landschaft/Figuren und der endo-Faden einen ganz leicht
      geglätteten (~60 ms), damit Mausrad-Schritte nicht ruckeln. Kein Nachlaufen, keine Tempogrenze, hoch = runter. */
   var letztesP = -1, heldOben = 0, rohY = 0, weichY = 0, GLATT = 0.06;
-  /* Zum Prüfen: ?p=0.3 stellt die Tageszeit fest ein */
-  var festP = parseFloat(new URLSearchParams(location.search).get('p'));
+  /* Zum Prüfen: ?p=0.3 stellt die Tageszeit fest ein; ?nacht=0…1 = Anteil des Himmelswegs (0 Tag, 1 volle Nacht) */
+  var suche = new URLSearchParams(location.search), festP = parseFloat(suche.get('p'));
+  if (isNaN(festP) && suche.has('nacht')) festP = Math.max(0, Math.min(1, parseFloat(suche.get('nacht')) || 0)) * 0.46 * ZEIT;
   function leseY() { return Math.max(0, window.pageYOffset || document.documentElement.scrollTop || 0); }
   function fortschritt(y) {
     if (!isNaN(festP)) return festP;
