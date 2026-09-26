@@ -277,6 +277,12 @@ Vier nummerierte Änderungen, je ein Commit. Basis: freigegebener Stand (CSS-Son
 - Bilder: `szene-<ebene>-nacht-*`, `szene-hund-*`, `szene-hund-jault-nacht-*`. Neu bauen: `ebenen.py` und danach `sonne_weg.py` (Reihenfolge wichtig: `ebenen.py` schreibt den Himmel mit Sonne).
 - Intro aus (Kopfskript kehrt sofort zurück, `.loader` entfernt). `h1` ist jetzt `.parallax__claim`.
 
+## endo Studio: Chat ohne Kasten, Galerie, Flüge, lebendige Kugel (26.09.2026 spät, Claude Code)
+- `ki/js/agent.js` v15: Klasse `agent--frei` (Chat ohne Rahmen), Galerie (`.endo-galerie`, ab 1180 px rechts, sonst Leiste über der Eingabe, Großansicht `<dialog class="endo-ansicht">`), Flüge `inKugel()` / `ausKugel()` / `funke()`, Kugel wecken `kugelWecken()` (Ereignisse `orb:weiter`/`orb:halt`, Klasse `orb--wach`).
+- `js/endo-zufluss.js` v6: auch auf `/ki/` (Canvas wird angelegt, dort nur bei Bedarf), `endoZufluss.schicken(x, y, n)`, `erzeugen(an, karte)`.
+- `ki/js/orb.js` v10 aus `orb.quelle.js`: neue `KUGEL`-Werte drehen/drehStoss/flieh/schluck/atmen/feinNoise/schimmer; neue Uniforms `achse`, `flieh`, `schluck`. Bauen: three 0.186.1 + esbuild in einem Ordner außerhalb des Vaults (Befehl oben in der Quelle).
+- `ki/endo-elemente.css` v4. Prüfen: echter Chrome auf `http://localhost:8791` (der Vorschau-Browser zeichnet die Startseite/WebGL oft schwarz).
+
 ## endo Studio: Kundenkonten (26.09.2026 abends, Claude Code)
 - `api/konto.js` (eine Funktion): `GET ?aktion=ich|dateien`, `POST ?aktion=registrieren|anmelden|erneuern|abmelden|passwort-vergessen|passwort-neu|datei-loeschen`. Auth über Supabase (`api/_lib/endo/anmeldung.js`), Konto über `kontoOderNull`/`kontoPflicht` in `api/_lib/endo/http.js` (Test-Codewort `x-endo-code` oder Sitzung `x-endo-sitzung`).
 - Chat (`ki/js/agent.js` v14, `ki/endo-elemente.css` v3): Knopf „Anmelden“/„Mein Konto“, Passwort als ••••, Sitzung in `localStorage` „endo-sitzung“ nur nach Anmeldung, Link aus der Supabase-Mail (`#access_token…&type=signup|recovery`) wird gelesen und aus der Adresse entfernt.
