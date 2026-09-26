@@ -1,6 +1,7 @@
 /* endo Studio: Pakete übersichtlich – gleiches Modul auf der Startseite (#pakete) und auf /ki/.
    Einbinden: <div data-studio-pakete data-kontakt="#kontakt"></div>, vorher ki/js/endo-daten.js laden.
-   Alle Zahlen kommen aus window.ENDO. Hat ein Paket einen Kauf-Link (kaufen), heißt der Knopf „kaufen“,
+   Alle Zahlen kommen aus window.ENDO. Umschalter Monatlich/Jährlich (gilt für alle Karten zugleich).
+   Hat ein Paket für die gewählte Abrechnung einen Kauf-Link (kaufen / kaufenJahr), heißt der Knopf „kaufen“,
    sonst „vormerken“ und darunter öffnet sich das Vormerken (WhatsApp oder E-Mail). Die Seite speichert nichts. */
 (function () {
   var E = window.ENDO;
@@ -11,6 +12,29 @@
   var nachId = {}; ALLE.forEach(function (f) { nachId[f.id] = f; });
   function zahl(n) { return n.toLocaleString('de-DE'); }
   function el(tag, klasse, text) { var e = document.createElement(tag); if (klasse) e.className = klasse; if (text != null) e.textContent = text; return e; }
+  function euro(n) { return (n % 1 ? n.toFixed(2).replace('.', ',') : String(n)) + ' €'; }
+
+  /* Monatlich oder Jährlich (26.09., Emre): ein Zustand für alle Karten und Umschalter der Seite */
+  var RABATT = (E.abrechnung && E.abrechnung.rabattJahr) || 20;
+  var modus = (E.abrechnung && E.abrechnung.standard) || 'monat', beiWechsel = [];
+  function jahr() { return modus === 'jahr'; }
+  function monatspreis(p) { return jahr() && p.jahr ? p.jahr.monat : p.preis; }
+  function kaufLink(p) { return jahr() ? p.kaufenJahr : p.kaufen; }
+  function setzeModus(m) { if (m === modus) return; modus = m; beiWechsel.forEach(function (fn) { fn(); }); }
+  function umschalter() {
+    var s = el('div', 'sp__schalter'); s.setAttribute('role', 'group'); s.setAttribute('aria-label', 'Abrechnung');
+    s.appendChild(el('i', 'sp__schieber'));
+    var bm = el('button', 'sp__wahl', 'Monatlich'), bj = el('button', 'sp__wahl', 'Jährlich ');
+    bj.appendChild(el('span', 'sp__rabatt', '−' + RABATT + ' %'));
+    [['monat', bm], ['jahr', bj]].forEach(function (w) {
+      w[1].type = 'button'; w[1].setAttribute('data-wahl', w[0]);
+      w[1].addEventListener('click', function () { setzeModus(w[0]); });
+      s.appendChild(w[1]);
+    });
+    function zeigen() { s.classList.toggle('ist-jahr', jahr()); bm.setAttribute('aria-pressed', String(!jahr())); bj.setAttribute('aria-pressed', String(jahr())); }
+    beiWechsel.push(zeigen); zeigen();
+    return s;
+  }
 
   document.querySelectorAll('[data-studio-pakete]').forEach(function (box, nr) {
     var kontakt = box.getAttribute('data-kontakt') || '#kontakt';
@@ -19,22 +43,34 @@
     var kopf = el('div', 'sp__kopf');
     kopf.appendChild(el('p', 'sp__label', 'Pakete'));
     kopf.appendChild(el('h3', 'sp__titel', 'Credits für Ihre Bilder und Videos'));
-    kopf.appendChild(el('p', 'sp__satz', 'Kein Abo, keine Laufzeit. Sie kaufen ein Paket und setzen die Credits für das ein, was Sie gerade brauchen.'));
+    kopf.appendChild(el('p', 'sp__satz', 'Monatlich oder im Jahresabo ' + RABATT + ' % günstiger. Sie setzen die Credits für das ein, was Sie gerade brauchen.'));
     box.appendChild(kopf);
+    box.appendChild(umschalter());
 
-    /* ---- drei Karten ---- */
-    var karten = el('div', 'sp__karten'), knoepfe = [];
+    /* ---- drei Karten: Preise wechseln an derselben Stelle, die Kartenhöhe bleibt ---- */
+    var karten = el('div', 'sp__karten'), knoepfe = [], preisZeilen = [];
     E.pakete.forEach(function (p) {
-      var premium = p.name === 'Premium', k = el('article', 'sp-karte' + (premium ? ' sp-karte--premium' : ''));
+      var premium = p.name === 'Premium', pro = p.name === 'Pro', k = el('article', 'sp-karte' + (premium ? ' sp-karte--premium' : pro ? ' sp-karte--pro' : ''));
       var oben = el('div', 'sp-karte__oben');
-      oben.appendChild(el('h4', 'sp-karte__name', p.name));
-      oben.appendChild(el('p', 'sp-karte__preis', p.preis + ' €'));
-      oben.appendChild(el('p', 'sp-karte__credits', zahl(p.credits) + ' Credits'));
+      var zeile = el('div', 'sp-karte__kopfzeile');
+      zeile.appendChild(el('h4', 'sp-karte__name', p.name));
+      zeile.appendChild(el('span', 'sp-karte__badge', '−' + RABATT + ' %'));
+      oben.appendChild(zeile);
+      var preis = el('p', 'sp-karte__preis'), betrag = el('span', 'sp-karte__betrag');
+      preis.appendChild(betrag); preis.appendChild(el('span', 'sp-karte__pro', '/ Monat'));
+      oben.appendChild(preis);
+      var abr = el('p', 'sp-karte__abr');
+      oben.appendChild(abr);
+      oben.appendChild(el('p', 'sp-karte__credits', zahl(p.credits) + ' Credits pro Monat'));
       k.appendChild(oben);
+      preisZeilen.push(function () {
+        betrag.textContent = euro(monatspreis(p));
+        abr.textContent = jahr() && p.jahr ? 'jährlich abgerechnet: ' + euro(p.jahr.gesamt) : 'monatlich abgerechnet';
+      });
 
       /* was man für den Preis bekommt – ausgerechnet, nicht erfunden */
       var bsp = el('div', 'sp-karte__bsp');
-      bsp.appendChild(el('p', 'sp-karte__klein', 'Damit bekommen Sie zum Beispiel'));
+      bsp.appendChild(el('p', 'sp-karte__klein', 'Jeden Monat zum Beispiel'));
       var ul = el('ul', 'sp-karte__mengen');
       ['foto', 'video', 'web'].forEach(function (id, i) {
         var f = nachId[id]; if (!f || !f.credits) return;
@@ -57,18 +93,30 @@
       }
       k.appendChild(inkl);
 
+      /* Kauf-Link je Abrechnung (kaufen / kaufenJahr); solange leer: „… vormerken“ */
       var knopf = el('a', 'sp-knopf');
-      if (p.kaufen) { knopf.href = p.kaufen; knopf.rel = 'noopener'; knopf.textContent = p.name + ' kaufen'; }
-      else {
-        knopf.href = '#sp-vormerken-' + nr; knopf.textContent = p.name + ' vormerken';
-        knopf.addEventListener('click', function (e) { e.preventDefault(); vormerken(p.name); });
-      }
+      knopf.addEventListener('click', function (e) { if (!kaufLink(p)) { e.preventDefault(); vormerken(p.name); } });
+      preisZeilen.push(function () {
+        var link = kaufLink(p);
+        if (link) { knopf.href = link; knopf.rel = 'noopener'; knopf.textContent = p.name + ' kaufen'; }
+        else { knopf.href = '#sp-vormerken-' + nr; knopf.removeAttribute('rel'); knopf.textContent = p.name + ' vormerken'; }
+      });
       knopf.setAttribute('data-paket', p.name);
       knoepfe.push(knopf);
       k.appendChild(knopf);
       karten.appendChild(k);
     });
     box.appendChild(karten);
+    /* Umschalten: Zahlen blenden kurz aus, wechseln und blenden wieder ein – Karten bleiben stehen */
+    function preiseSetzen() { preisZeilen.forEach(function (fn) { fn(); }); box.classList.toggle('sp--jahr', jahr()); }
+    var wechselT;
+    beiWechsel.push(function () {
+      if (ruhig) { preiseSetzen(); return; }
+      clearTimeout(wechselT); box.classList.add('sp--wechsel');
+      /* ohne requestAnimationFrame: auch in gedrosselten Tabs blendet der Preis sicher wieder ein */
+      wechselT = setTimeout(function () { preiseSetzen(); void box.offsetWidth; box.classList.remove('sp--wechsel'); }, 150);
+    });
+    preiseSetzen();
     /* ein Hauptknopf: Pro, bis ein Paket gewählt ist */
     function hauptknopf(name) { knoepfe.forEach(function (b) { b.classList.toggle('sp-knopf--haupt', b.getAttribute('data-paket') === name); }); }
     hauptknopf('Pro');
@@ -76,8 +124,8 @@
     /* ---- Hinweise und Kosten pro Ergebnis (einmal, aufklappbar) ---- */
     var fuss = el('div', 'sp__fuss');
     var notiz = el('p', 'sp__notiz');
-    var alleLinks = E.pakete.every(function (p) { return p.kaufen; });
-    ['Kein Abo, keine Laufzeit', 'Fehlgeschlagene Aufträge kosten keine Credits', alleLinks ? 'Sicherer Kauf über Lemon Squeezy' : 'Kauf startet in Kürze, bis dahin vormerken'].forEach(function (t) { notiz.appendChild(el('span', null, t)); });
+    var alleLinks = E.pakete.every(function (p) { return p.kaufen && p.kaufenJahr; });
+    ['Monatlich oder im Jahresabo ' + RABATT + ' % günstiger', 'Fehlgeschlagene Aufträge kosten keine Credits', alleLinks ? 'Sicherer Kauf über Lemon Squeezy' : 'Kauf startet in Kürze, bis dahin vormerken'].forEach(function (t) { notiz.appendChild(el('span', null, t)); });
     fuss.appendChild(notiz);
     var det = el('details', 'sp__kosten'), sum = el('summary', null, 'So viele Credits braucht ein Ergebnis'), dl = el('dl');
     ALLE.filter(function (f) { return f.credits; }).forEach(function (f) {
@@ -95,10 +143,14 @@
     vmText.appendChild(el('p', null, 'Sie bekommen den Zugang als Erste, sobald der Kauf startet. Unverbindlich und kostenlos.'));
     vm.appendChild(vmText);
     var felder = el('div', 'sp__vm-felder');
+    /* Paketwahl mit demselben Umschalter (Handy: hier wählt man das Paket) */
+    felder.appendChild(umschalter());
     var wahl = el('div', 'sp__vm-wahl'); wahl.setAttribute('role', 'radiogroup'); wahl.setAttribute('aria-label', 'Paket');
     E.pakete.forEach(function (p) {
-      var l = el('label', 'sp__vm-option'), r = el('input'); r.type = 'radio'; r.name = 'sp-paket-' + nr; r.value = p.name;
-      l.appendChild(r); l.appendChild(el('span', null, p.name + ' · ' + p.preis + ' €'));
+      var l = el('label', 'sp__vm-option'), r = el('input'), t = el('span'); r.type = 'radio'; r.name = 'sp-paket-' + nr; r.value = p.name;
+      l.appendChild(r); l.appendChild(t);
+      function beschriften() { t.textContent = p.name + ' · ' + euro(monatspreis(p)) + '/Monat'; }
+      beiWechsel.push(beschriften); beschriften();
       wahl.appendChild(l);
     });
     felder.appendChild(wahl);
@@ -134,7 +186,8 @@
       e.preventDefault();
       if (!pruefe()) { inp.focus(); status.textContent = 'Bitte prüfen Sie Ihre E-Mail-Adresse.'; return; }
       var weg = (e.submitter && e.submitter.value) || 'whatsapp', paket = gewaehlt(), p = E.pakete.filter(function (x) { return x.name === paket; })[0];
-      var text = 'Hallo Emre, ich möchte bei endo Studio ein Paket vormerken.\n\nPaket: ' + paket + ' (' + p.preis + ' €, ' + zahl(p.credits) + ' Credits)\nE-Mail: ' + inp.value.trim() + '\n\nGesendet über endo Studio';
+      var abo = jahr() && p.jahr ? 'Jahresabo, ' + euro(p.jahr.monat) + ' im Monat, jährlich ' + euro(p.jahr.gesamt) : 'monatlich, ' + euro(p.preis) + ' im Monat';
+      var text = 'Hallo Emre, ich möchte bei endo Studio ein Paket vormerken.\n\nPaket: ' + paket + ' (' + abo + ', ' + zahl(p.credits) + ' Credits pro Monat)\nE-Mail: ' + inp.value.trim() + '\n\nGesendet über endo Studio';
       if (weg === 'whatsapp') {
         var link = 'https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(text), win = window.open(link, '_blank');
         if (win) { try { win.opener = null; } catch (err) {} } else location.href = link;

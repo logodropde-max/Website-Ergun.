@@ -13,15 +13,51 @@
 .sp__titel { font-family: "Geist", system-ui, sans-serif; font-weight: 300; font-size: clamp(2rem, 4.2vw, 3.2rem); line-height: 1.04; letter-spacing: -0.04em; padding-bottom: 0.06em; text-wrap: balance; background: var(--sp-chrom); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .sp__satz { color: var(--sp-leise); font-size: 16px; line-height: 1.55; text-wrap: pretty; }
 
-/* Karten */
-.sp__karten { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.sp-karte { display: grid; grid-template-rows: auto auto 1fr auto; gap: 22px; padding: 26px 24px 24px; border-radius: 24px; border: 1px solid transparent;
-  background: linear-gradient(180deg, #111317, #0A0B0E) padding-box, var(--sp-kante) border-box; }
-.sp-karte__oben { display: grid; gap: 6px; padding-bottom: 20px; border-bottom: 1px solid var(--sp-linie); }
+/* Umschalter Monatlich | Jährlich (26.09.): ein Segment-Schalter, Schieber gleitet nur per transform */
+.sp__schalter { position: relative; display: grid; grid-template-columns: 1fr 1fr; justify-self: start; min-width: min(100%, 320px); padding: 4px; border-radius: 14px; border: 1px solid transparent;
+  background: linear-gradient(180deg, rgba(20, 22, 27, 0.9), rgba(11, 12, 15, 0.9)) padding-box, linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.06)) border-box; }
+.sp__schieber { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); border-radius: 10px; background: linear-gradient(180deg, #F7F8FA 0%, #D9DDE3 55%, #BCC2CB 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 4px 14px rgba(0, 0, 0, 0.35); transition: transform 260ms var(--sp-ease); }
+.sp__schalter.ist-jahr .sp__schieber { transform: translateX(100%); }
+.sp__wahl { position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 8px 16px; border: 0; background: none; color: var(--sp-leise); font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; border-radius: 10px; transition: color 200ms var(--sp-ease); white-space: nowrap; }
+.sp__wahl[aria-pressed="true"] { color: #0A0B0D; }
+.sp__wahl:focus-visible { outline: 2px solid #DDE3EA; outline-offset: 2px; }
+.sp__rabatt { font-size: 11px; font-weight: 500; letter-spacing: 0.02em; padding: 2px 6px; border-radius: 6px; background: rgba(255, 122, 61, 0.14); color: #FF9A68; }
+.sp__wahl[aria-pressed="true"] .sp__rabatt { background: rgba(10, 11, 13, 0.1); color: #7A3A1A; }
+
+/* Karten: feiner Chrom-Verlaufsrand (oben heller, unten dunkler), Glaskante oben, gleiche Höhe über subgrid –
+   Name, Preis, Leistungen und Knopf stehen in allen Karten auf derselben Linie. Nur Premium orange, Pro dezent weiß. */
+.sp__karten { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: auto auto 1fr auto; gap: 24px 20px; }
+.sp-karte { --karte-rand: linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.09) 38%, rgba(255, 255, 255, 0.04) 72%, rgba(255, 255, 255, 0.1));
+  position: relative; display: grid; grid-template-rows: auto auto 1fr auto; gap: 24px; padding: 32px 28px 28px; border-radius: 22px; border: 1px solid transparent;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, rgba(26, 28, 34, 0.86), rgba(12, 13, 16, 0.6)) padding-box, linear-gradient(#08090B, #08090B) padding-box, var(--karte-rand) border-box;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: transform 220ms var(--sp-ease), box-shadow 220ms var(--sp-ease); }
+@supports (grid-template-rows: subgrid) {
+  .sp-karte { grid-row: span 4; grid-template-rows: subgrid; }
+}
+.sp-karte--pro { --karte-rand: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.16) 40%, rgba(255, 255, 255, 0.07) 72%, rgba(255, 255, 255, 0.18)); }
+.sp-karte--premium { --karte-rand: linear-gradient(180deg, rgba(255, 150, 96, 0.85), rgba(255, 122, 61, 0.34) 42%, rgba(255, 122, 61, 0.14) 74%, rgba(255, 140, 84, 0.4));
+  box-shadow: inset 0 1px 0 rgba(255, 196, 160, 0.12), 0 0 44px -14px rgba(255, 122, 61, 0.38), 0 1px 2px rgba(0, 0, 0, 0.4); }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .sp-karte:hover { transform: translateY(-3px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.07), 0 22px 44px -22px rgba(0, 0, 0, 0.9); }
+  .sp-karte--premium:hover { box-shadow: inset 0 1px 0 rgba(255, 196, 160, 0.16), 0 0 0 1px rgba(255, 150, 96, 0.22), 0 0 52px -14px rgba(255, 122, 61, 0.46), 0 22px 44px -22px rgba(0, 0, 0, 0.9); }
+}
+.sp-karte__oben { display: grid; gap: 8px; align-content: start; padding-bottom: 24px; border-bottom: 1px solid var(--sp-linie); }
+.sp-karte__kopfzeile { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 24px; }
 .sp-karte__name { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; letter-spacing: 0.02em; }
-.sp-karte--premium .sp-karte__name::after { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--sp-premium); }
-.sp-karte__preis { font-family: "Geist", system-ui, sans-serif; font-weight: 300; font-size: clamp(2.8rem, 4.6vw, 3.8rem); line-height: 1; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; background: var(--sp-chrom); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.sp-karte__credits { font-size: 14px; color: var(--sp-leise); }
+.sp-karte--premium .sp-karte__name::after { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--sp-premium); box-shadow: 0 0 10px rgba(255, 122, 61, 0.6); }
+.sp-karte__badge { font-size: 12px; font-weight: 500; padding: 3px 8px; border-radius: 6px; color: #FFB08A; background: rgba(255, 122, 61, 0.12); box-shadow: inset 0 0 0 1px rgba(255, 140, 84, 0.28); opacity: 0; transition: opacity 200ms var(--sp-ease); }
+.sp--jahr .sp-karte__badge { opacity: 1; }
+.sp-karte__preis { display: flex; align-items: baseline; gap: 8px; margin-top: 8px !important; }
+.sp-karte__betrag { font-family: "Geist", system-ui, sans-serif; font-weight: 300; font-size: clamp(2.8rem, 4.6vw, 3.8rem); line-height: 1; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; background: var(--sp-chrom); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: 0.04em; }
+.sp-karte__pro { font-size: 14px; color: var(--sp-leise); }
+.sp-karte__abr { font-size: 13px; color: var(--sp-leise); font-variant-numeric: tabular-nums; }
+.sp-karte__betrag, .sp-karte__abr { transition: opacity 150ms var(--sp-ease), transform 150ms var(--sp-ease); }
+.sp--wechsel .sp-karte__betrag, .sp--wechsel .sp-karte__abr { opacity: 0; transform: translateY(4px); }
+.sp-karte__credits { font-size: 14px; color: var(--sp-text); }
+.sp-karte .sp-knopf { border-radius: 12px; box-sizing: border-box; text-decoration: none; }
+.sp-knopf { text-decoration: none; }
 .sp-karte__klein { margin-bottom: 10px !important; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sp-leise); }
 .sp-karte__mengen { display: grid; gap: 6px; font-size: 15px; color: var(--sp-leise); }
 .sp-karte__mengen b { color: var(--sp-text); font-weight: 500; font-variant-numeric: tabular-nums; }
@@ -79,9 +115,11 @@
 .sp__weiter { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px 24px; padding-top: 24px; border-top: 1px solid var(--sp-linie); color: var(--sp-leise); }
 
 @media (max-width: 860px) {
-  .sp__karten { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .sp__karten { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; gap: 16px; }
+  .sp-karte { grid-row: auto; grid-template-rows: auto auto 1fr auto; padding: 28px 24px 24px; }
+  .sp__schalter { justify-self: stretch; }
   .sp__vormerken { grid-template-columns: minmax(0, 1fr); }
   .sp__weiter .sp-knopf { width: 100%; }
 }
 @media (max-width: 420px) { .sp__vm-wahl { grid-template-columns: minmax(0, 1fr); } }
-@media (prefers-reduced-motion: reduce) { .sp-knopf, .sp__vm-option span, .sp__kosten summary::after { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .sp-knopf, .sp__vm-option span, .sp__kosten summary::after, .sp-karte, .sp__schieber, .sp-karte__betrag, .sp-karte__abr, .sp-karte__badge { transition: none; } }

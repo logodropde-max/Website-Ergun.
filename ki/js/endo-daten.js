@@ -1,13 +1,16 @@
 /* endo Studio (früher endo.ai, kurz endo Studio): Preise, Funktionen und Kauf-Links an EINER Stelle.
    Lesen von hier: die Studio-Seite (/ki/), der Chat mit endo (Startseite und /ki/) und das Credit-Fenster.
    Preise von Emre (25.09.2026), Rechnung mit mindestens 35 % Gewinn: siehe Vault „Credit-Pakete.md“.
-   kaufen: Checkout-Link von Lemon Squeezy je Paket. Leer = Knopf heißt „Vormerken“ (Kauf startet in Kürze). */
+   26.09.2026 (Emre): Monatlich oder Jahresabo (−20 %), gleiche Credits pro Monat.
+   preis = Monatspreis im Monatsabo · jahr.monat = Monatspreis im Jahresabo · jahr.gesamt = jährlich abgerechnet.
+   kaufen = Lemon-Squeezy-Link Monatsabo, kaufenJahr = Link Jahresabo. Leer = Knopf heißt „… vormerken“. */
 window.ENDO = {
   marke: 'endo Studio',
+  abrechnung: { standard: 'monat', rabattJahr: 20 },
   pakete: [
-    { name: 'Start', preis: 5, credits: 40, kann: ['foto', 'shop', 'video', 'web'], kaufen: '' },
-    { name: 'Pro', preis: 20, credits: 200, kann: ['foto', 'shop', 'video', 'web'], kaufen: '' },
-    { name: 'Premium', preis: 100, credits: 1000, kann: ['foto', 'shop', 'video', 'web', 'video10', '3d', 'parallax', 'emre'], kaufen: '' }
+    { name: 'Start', preis: 5, jahr: { monat: 3.99, gesamt: 47.88 }, credits: 40, kann: ['foto', 'shop', 'video', 'web'], kaufen: '', kaufenJahr: '' },
+    { name: 'Pro', preis: 20, jahr: { monat: 16, gesamt: 192 }, credits: 200, kann: ['foto', 'shop', 'video', 'web'], kaufen: '', kaufenJahr: '' },
+    { name: 'Premium', preis: 100, jahr: { monat: 80, gesamt: 960 }, credits: 1000, kann: ['foto', 'shop', 'video', 'web', 'video10', '3d', 'parallax', 'emre'], kaufen: '', kaufenJahr: '' }
   ],
   funktionen: [
     { id: 'foto', name: 'Produktfoto', mehrzahl: 'Produktfotos', kurz: 'Ihr Produkt im Studiolicht, auf neuer Bühne', text: 'Aus Ihrem Handyfoto wird ein Profi-Produktfoto: Studiolicht, neue Bühne, echte Schatten.', credits: 5 },
