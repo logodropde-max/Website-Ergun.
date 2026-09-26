@@ -206,7 +206,10 @@ export async function gespraech({ client, verlauf, ctx }) {
     messages.push({ role: 'user', content: ergebnisse });
   }
   // Füllsätze wie „Ich warte auf Ihre Auswahl“ weglassen; steht die Frage der Knöpfe nirgends, kommt sie dazu
-  let text = texte.filter((t) => !/^ich warte auf ihre (auswahl|antwort)/i.test(t)).join(' ').trim();
+  let text = texte
+    .map((t) => t.replace(/\(\s*(ich\s+)?warte[^)]*\)/gi, '').trim())            // „(Warte auf Auswahl des Kunden.)“
+    .filter((t) => t && !/^(ich\s+)?warte\s+auf\s+(ihre|die)\s+(auswahl|antwort|wahl)/i.test(t))
+    .join(' ').replace(/\s{2,}/g, ' ').trim();
   const auswahl = elemente.filter((el) => el.typ === 'auswahl').pop();
   if (auswahl && auswahl.frage && !text.toLowerCase().includes(auswahl.frage.toLowerCase().replace(/[?.!]+$/, ''))) {
     text = (text + ' ' + auswahl.frage).trim();
