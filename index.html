@@ -392,11 +392,16 @@ img { display: block; max-width: 100%; height: auto; }
 .endo .agent__hinweis { margin-top: 12px; text-align: center; font-size: 12px; color: var(--muted); }
 .endo-chat .endo .agent__hinweis { display: none; }
 
-.endo__bereiche { list-style: none; margin: 8px 0 0; padding: 0; width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); text-align: left; }
-.endo__bereiche li { display: grid; gap: 6px; align-content: start; padding: 22px 20px 0 0; }
-.endo__bereiche li + li { padding-left: 20px; border-left: 1px solid var(--line); }
-.endo__bereiche b { font-family: var(--endo-schrift); font-size: 19px; line-height: 1.2; font-weight: 400; letter-spacing: -0.02em; }
-.endo__bereiche span { color: var(--muted); font-size: 14px; line-height: 1.5; text-wrap: pretty; }
+/* Die drei Leistungen (26.09., Emre): gesperrte Nummer → Titel in Instrument Serif → ruhige Beschreibung (max. 2 Zeilen).
+   Etwas breiter als der Textblock, damit die Beschreibungen nicht dreizeilig umbrechen; feine 1-px-Linien statt Kästen. */
+.endo__bereiche { list-style: none; margin: 16px 0 0; padding: 0; counter-reset: bereich; justify-self: start;
+  width: min(960px, calc(100vw - 2 * var(--pad))); margin-left: calc(50% - min(480px, calc(50vw - var(--pad))));
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); text-align: left; }
+.endo__bereiche li { display: grid; grid-template-rows: auto auto auto; align-content: start; padding: 28px 32px 4px 0; counter-increment: bereich; }
+.endo__bereiche li + li { padding-left: 32px; border-left: 1px solid var(--line); }
+.endo__bereiche li::before { content: counter(bereich, decimal-leading-zero); font-family: var(--endo-mono); font-size: 11px; line-height: 1; letter-spacing: 0.24em; color: rgba(226, 230, 236, 0.42); margin-bottom: 18px; }
+.endo__bereiche b { font-family: var(--serif); font-size: clamp(25px, 2.2vw, 30px); line-height: 1.1; font-weight: 400; letter-spacing: -0.01em; text-wrap: balance; padding-bottom: 0.06em; margin-bottom: 10px; }
+.endo__bereiche span { color: var(--muted); font-size: 14.5px; line-height: 1.55; letter-spacing: 0.005em; text-wrap: pretty; max-width: 34ch; }
 .endo__pakete { position: relative; width: min(100%, 1120px); margin: clamp(64px, 10svh, 112px) auto 0; padding-top: clamp(48px, 7svh, 80px); border-top: 1px solid var(--line); scroll-margin-top: 24px; }
 .endo__pakete[hidden] { display: none; }
 @media (prefers-reduced-motion: no-preference) { .endo__pakete.ist-offen { animation: pakete-auf 700ms var(--ease) both; } }
@@ -410,8 +415,11 @@ img { display: block; max-width: 100%; height: auto; }
 @media (max-width: 700px) {
   .endo__innen { gap: 28px; }
   .endo__bereiche { grid-template-columns: minmax(0, 1fr); }
-  .endo__bereiche li, .endo__bereiche li + li { padding: 16px 0; border-left: 0; }
+  .endo__bereiche li, .endo__bereiche li + li { padding: 24px 0 22px; border-left: 0; }
   .endo__bereiche li + li { border-top: 1px solid var(--line); }
+  .endo__bereiche li::before { margin-bottom: 14px; }
+  .endo__bereiche b { font-size: 25px; margin-bottom: 8px; }
+  .endo__bereiche span { max-width: none; }
   .endo .agent__verlauf { max-height: min(46svh, 400px); }
   .endo .blase { max-width: 88%; }
 }
