@@ -124,18 +124,19 @@ function start(el) {
   }
   if (feineMaus) window.addEventListener('pointermove', (e) => lichtAuf(e.clientX, e.clientY), { passive: true });
 
+  /* 26.09. (Emre): Kugel dreht auch bei „Bewegung reduzieren" ruhig weiter – nur langsamer, ohne Lichtwandern */
   let frameId = 0, laeuft = false, start0 = performance.now();
   function bild(t) {
     const zeit = t - start0;
     material.uniforms.time.value = zeit * 0.0003;
-    mesh.rotation.y += 0.0005 * 4;
-    mesh.rotation.x += 0.0002 * 4;
-    if (!feineMaus) { ziel.set(Math.sin(zeit * 0.0004) * 2.2, Math.cos(zeit * 0.0003) * 1.4, 2.5); }
+    mesh.rotation.y += 0.0005 * 4 * (ruhig ? 0.5 : 1);
+    mesh.rotation.x += 0.0002 * 4 * (ruhig ? 0.5 : 1);
+    if (!feineMaus && !ruhig) { ziel.set(Math.sin(zeit * 0.0004) * 2.2, Math.cos(zeit * 0.0003) * 1.4, 2.5); }
     licht.lerp(ziel, 0.06);
     renderer.render(scene, camera);
     if (laeuft) frameId = requestAnimationFrame(bild);
   }
-  function an() { if (laeuft || ruhig || el.hasAttribute('data-halt')) return; laeuft = true; frameId = requestAnimationFrame(bild); }
+  function an() { if (laeuft || el.hasAttribute('data-halt')) return; laeuft = true; frameId = requestAnimationFrame(bild); }
   function aus() { laeuft = false; cancelAnimationFrame(frameId); }
 
   if (ruhig) { material.uniforms.time.value = 1.3; renderer.render(scene, camera); }

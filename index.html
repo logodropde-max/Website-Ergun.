@@ -895,7 +895,7 @@ img { display: block; max-width: 100%; height: auto; }
   var geladen = false;
   function laden() {
     if (geladen) return; geladen = true;
-    var s = document.createElement('script'); s.src = 'ki/js/orb.js?v=7'; s.async = true; document.body.appendChild(s);
+    var s = document.createElement('script'); s.src = 'ki/js/orb.js?v=8'; s.async = true; document.body.appendChild(s);
   }
   if (!('IntersectionObserver' in window)) { window.addEventListener('load', laden); return; }
   /* erst nach dem Laden der Seite beobachten – der Start bleibt frei von der 500-KB-Kugel */
