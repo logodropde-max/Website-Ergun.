@@ -2,17 +2,19 @@
    Lesen von hier: die Studio-Seite (/ki/), der Chat mit endo (Startseite und /ki/) und das Credit-Fenster.
    Preise von Emre (25.09.2026), Rechnung mit mindestens 35 % Gewinn: siehe Vault „Credit-Pakete.md“.
    26.09.2026 (Emre): Monatlich oder Jahresabo (−20 %), gleiche Credits pro Monat.
+   26.09.2026 spät (Emre): zusätzlich EINMALIG kaufbar – gleiche Credits, einmal bezahlt, kein Abo, Credits 12 Monate gültig
+   (einmal.preis ≈ Monatspreis + 20 %, Gewinn im schlechtesten Fall 59–65 %, Rechnung in „Credit-Pakete.md“).
    preis = Monatspreis im Monatsabo · jahr.monat = Monatspreis im Jahresabo · jahr.gesamt = jährlich abgerechnet.
-   kaufen = Lemon-Squeezy-Link Monatsabo, kaufenJahr = Link Jahresabo. Leer = Knopf heißt „… vormerken“.
+   kaufen = Lemon-Squeezy-Link Monatsabo, kaufenJahr = Link Jahresabo, kaufenEinmal = Link Einmalkauf. Leer = Knopf heißt „… vormerken“.
    26.09.2026 (Emre, Phase C „alles wie empfohlen“): Credits = echte API-Kosten mit mind. 35 % Gewinn. Die Server-Wahrheit
    steht in api/_lib/endo/werkzeuge.js – ein Test prüft, dass die Zahlen hier gleich sind. */
 window.ENDO = {
   marke: 'endo Studio',
-  abrechnung: { standard: 'monat', rabattJahr: 20 },
+  abrechnung: { standard: 'monat', rabattJahr: 20, einmalGueltigMonate: 12 },
   pakete: [
-    { name: 'Start', preis: 5, jahr: { monat: 3.99, gesamt: 47.88 }, credits: 40, kann: ['foto', 'anzeige', 'shop', 'video', 'web'], kaufen: '', kaufenJahr: '' },
-    { name: 'Pro', preis: 20, jahr: { monat: 16, gesamt: 192 }, credits: 200, kann: ['foto', 'anzeige', 'shop', 'video', 'web'], kaufen: '', kaufenJahr: '' },
-    { name: 'Premium', preis: 100, jahr: { monat: 80, gesamt: 960 }, credits: 1000, kann: ['foto', 'anzeige', 'shop', 'video', 'web', 'video10', '3d', 'parallax', 'emre'], kaufen: '', kaufenJahr: '' }
+    { name: 'Start', preis: 5, jahr: { monat: 3.99, gesamt: 47.88 }, einmal: 6, credits: 40, kann: ['foto', 'anzeige', 'shop', 'video', 'web'], kaufen: '', kaufenJahr: '', kaufenEinmal: '' },
+    { name: 'Pro', preis: 20, jahr: { monat: 16, gesamt: 192 }, einmal: 24, credits: 200, kann: ['foto', 'anzeige', 'shop', 'video', 'web'], kaufen: '', kaufenJahr: '', kaufenEinmal: '' },
+    { name: 'Premium', preis: 100, jahr: { monat: 80, gesamt: 960 }, einmal: 120, credits: 1000, kann: ['foto', 'anzeige', 'shop', 'video', 'web', 'video10', '3d', 'parallax', 'emre'], kaufen: '', kaufenJahr: '', kaufenEinmal: '' }
   ],
   funktionen: [
     { id: 'foto', name: 'Produktfoto', mehrzahl: 'Produktfotos', kurz: 'Ihr Produkt im Studiolicht, auf neuer Bühne', text: 'Aus Ihrem Handyfoto wird ein Profi-Produktfoto: Studiolicht, neue Bühne, echte Schatten.', credits: 12 },

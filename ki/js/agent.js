@@ -46,7 +46,7 @@
     .concat(E.premium.filter(function (f) { return f.credits; }).map(function (f) { return { name: f.name, credits: f.credits, premium: true }; }));
   function paketAb(id) { for (var i = 0; i < E.pakete.length; i++) if (E.pakete[i].kann.indexOf(id) >= 0) return E.pakete[i].name; return 'Premium'; }
   function euro(n) { return (n % 1 ? n.toFixed(2).replace('.', ',') : String(n)) + ' €'; }
-  function paketListe() { return E.pakete.map(function (p) { return p.name + ' ' + euro(p.preis) + ' im Monat' + (p.jahr ? ' (im Jahresabo ' + euro(p.jahr.monat) + ')' : '') + (p.credits ? ' für ' + p.credits.toLocaleString('de-DE') + ' Credits pro Monat' : ''); }).join(', '); }
+  function paketListe() { return E.pakete.map(function (p) { return p.name + ' ' + euro(p.preis) + ' im Monat' + (p.jahr ? ' (im Jahresabo ' + euro(p.jahr.monat) + ')' : '') + (p.credits ? ' für ' + p.credits.toLocaleString('de-DE') + ' Credits pro Monat' : '') + (p.einmal ? ', einmalig ohne Abo ' + euro(p.einmal) : ''); }).join(', '); }
 
   /* ---------- Darstellung ---------- */
   /* Verlauf bleibt vollständig (Emre, 25.09.: „übersichtlich, man soll seine Nachrichten sehen“) – nur nach unten scrollen */
@@ -1015,7 +1015,7 @@
     if (/premium/.test(s)) return 'Premium kostet 100 € für 1.000 Credits und schaltet zusätzlich Videos mit zehn Sekunden frei. 3D-Produkte und Parallax-Szenen setzt Emre auf Anfrage persönlich um, dazu kommt die persönliche Abstimmung mit ihm.';
     if (/preis|kost|teuer|günstig|euro|€|paket/.test(s)) return 'Es gibt drei Pakete: ' + paketListe() + '. Ein Produktfoto kostet 12 Credits, ein Video mit fünf Sekunden 20.';
     if (/credit/.test(s)) return 'Credits sind Ihr Guthaben. Jedes Ergebnis kostet eine feste Zahl: Produktfoto 12, Werbeanzeige 10, Shop-Bild 5, Werbevideo 5 s 20, Website-Titelbild 12. Unter „Funktionen und Pakete“ rechnet die Seite aus, welches Paket zu Ihnen passt.';
-    if (/abo|kündig|laufzeit|monat|jahr/.test(s)) return 'Sie wählen monatlich oder jährlich. Im Jahresabo sparen Sie ' + ((E.abrechnung && E.abrechnung.rabattJahr) || 20) + ' %. Die Credits setzen Sie jeden Monat für das ein, was Sie gerade brauchen.';
+    if (/abo|kündig|laufzeit|monat|jahr/.test(s)) return 'Sie wählen monatlich, jährlich oder einmalig. Im Jahresabo sparen Sie ' + ((E.abrechnung && E.abrechnung.rabattJahr) || 20) + ' %, einmalig gibt es kein Abo und die Credits gelten ' + ((E.abrechnung && E.abrechnung.einmalGueltigMonate) || 12) + ' Monate.';
     if (/video|reel|tiktok|clip/.test(s)) return 'Ja, aus Ihrem Produktfoto mache ich einen Clip mit fünf Sekunden für 20 Credits. Zehn Sekunden gibt es im Premium-Paket.';
     if (/3d|ar\b|drehbar/.test(s)) return 'Ein drehbares 3D-Modell Ihres Produkts setzt Emre im Premium-Paket auf Anfrage persönlich um. Schreiben Sie ihm gern per WhatsApp oder E-Mail.';
     if (/recht|kommerz|werbung|lizenz|nutzen|verwenden/.test(s)) return 'Ja, Sie dürfen alle Ergebnisse kommerziell nutzen, im Shop, in Anzeigen und auf Social Media.';

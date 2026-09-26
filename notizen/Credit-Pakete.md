@@ -7,7 +7,7 @@ Preise von [[endo-ai|endo.ai]], festgelegt von Emre am 25.09.2026. Für die Webd
 Die Zahlen stehen im Code an einer Stelle: `window.ENDO` in `ki/js/endo-daten.js` (Karten, Umschalter, Chat und Credit-Fenster lesen von dort).
 Login und Bezahlung sind noch nicht fertig: alle Knöpfe heißen „… vormerken“. **Kauf-Links von Lemon Squeezy** kommen in `ki/js/endo-daten.js` je Paket ins Feld `kaufen` (Monatsabo) bzw. `kaufenJahr` (Jahresabo) – dann heißt der Knopf in der gewählten Abrechnung automatisch „… kaufen“.
 
-## Pakete (seit 26.09.2026: Monatlich oder Jahresabo −20 %)
+## Pakete (seit 26.09.2026: Monatlich, Jahresabo −20 % oder Einmalig)
 Umschalter „Monatlich | Jährlich −20 %“ über den Karten (Standard: Monatlich), gilt für alle Karten zugleich; gleiche Credits pro Monat.
 
 | Paket | Credits/Monat | Monatlich | Jährlich (pro Monat) | Jährlich abgerechnet | Enthalten |
@@ -24,6 +24,17 @@ Umschalter „Monatlich | Jährlich −20 %“ über den Karten (Standard: Monat
 | Premium | 48 % | 758,22 € | 486,72 € | 271,50 € | **~36 %** |
 
 → Auch mit 20 % Jahresrabatt überall über 35 % (Ziel erfüllt). Texte „kein Abo“ auf Karten, im Chat und in der FAQ von /ki/ entsprechend angepasst.
+
+## Einmalig kaufen (Emre, 26.09.2026 spät)
+Dritter Schalter „Einmalig“: gleiche Credits, **einmal bezahlt, kein Abo, Credits 12 Monate gültig**. Preis ≈ Monatspreis + 20 %, damit das Abo attraktiver bleibt. Kauf-Link je Paket: Feld `kaufenEinmal` in `ki/js/endo-daten.js`.
+
+| Paket | Credits | Einmalig | Netto (−19 % MwSt, −5 % −0,50 € Lemon Squeezy) | Kosten schlechtester Fall (0,0377 €/Credit, Produktfoto) | Gewinn |
+|---|---|---|---|---|---|
+| Start | 40 | 6 € | 4,24 € | 1,51 € | **~64 %** |
+| Pro | 200 | 24 € | 18,47 € | 7,54 € | **~59 %** |
+| Premium | 1.000 | 120 € | 94,34 € | 37,70 € | **~60 %** |
+
+- **Offen für den Kauf-Start:** Die 12-Monats-Gültigkeit muss beim Gutschreiben der Credits (Lemon-Squeezy-Webhook) mit gespeichert und nach Ablauf verrechnet werden – die Datenbank kennt noch kein Ablaufdatum.
 
 ## Verbrauch ab Phase C (beschlossen 26.09.2026, auf der Website ab Schritt 3)
 Rechnung mit Listenpreisen der Higgsfield-API (nach Aktionsende), schlechtester Fall 0,063 € netto je Credit, 1 $ = 1 € → [[endo Phase C – Bauplan]].
