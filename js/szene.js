@@ -837,7 +837,30 @@
      Bild (requestAnimationFrame) scrollY – auch während des Schwungscrollens auf dem iPhone. Parallaxe und Winken
      nehmen den echten Wert; Sonne, Mond, Himmel, Licht auf Landschaft/Figuren und der endo-Faden einen ganz leicht
      geglätteten (~60 ms), damit Mausrad-Schritte nicht ruckeln. Kein Nachlaufen, keine Tempogrenze, hoch = runter. */
-  var letztesP = -1, heldOben = 0, rohY = 0, weichY = 0, GLATT = 0.15;   /* 150 ms: ruhig, aber am Finger (26.09.) */
+  var letztesP = -1, heldOben = 0, rohY = 0, weichY = 0, weichV = 0, FEDER_W = 18;   /* Feder (28.09.) statt 150-ms-Nachziehen */
+  /* ?gestirn=test (28.09.): Bahn der Sonne/des Monds und Geschwindigkeits-Kurve der letzten 4 s (muss glatt sein, ohne Zacken) */
+  var GESTIRN_TEST = /[?&]gestirn=test\b/.test(location.search), kurve = [], kurveLw = null;
+  function gestirnKurve(t) {
+    kurve.push([t, gest.sy, gest.my]); while (kurve.length && t - kurve[0][0] > 4000) kurve.shift();
+    if (!kurveLw) {
+      kurveLw = document.createElement('canvas'); kurveLw.width = 640; kurveLw.height = 240;
+      kurveLw.style.cssText = 'position:fixed;right:12px;bottom:12px;z-index:99;width:320px;height:120px;background:rgba(0,0,0,.75);border-radius:8px';
+      document.body.appendChild(kurveLw);
+    }
+    var g = kurveLw.getContext('2d'); g.setTransform(2, 0, 0, 2, 0, 0); g.clearRect(0, 0, 320, 120);
+    var v = [[], []], max = 1;
+    for (var i = 1; i < kurve.length; i++) {
+      var dtk = (kurve[i][0] - kurve[i - 1][0]) / 1000 || 0.016;
+      for (var k = 0; k < 2; k++) { var w = (kurve[i][k + 1] - kurve[i - 1][k + 1]) / dtk; v[k].push([kurve[i][0], w]); max = Math.max(max, Math.abs(w)); }
+    }
+    g.fillStyle = '#fff'; g.font = '11px system-ui'; g.fillText('Geschwindigkeit Sonne (orange) / Mond (blau) – max ' + Math.round(max) + ' px/s', 8, 14);
+    g.strokeStyle = 'rgba(255,255,255,.25)'; g.beginPath(); g.moveTo(0, 68); g.lineTo(320, 68); g.stroke();
+    ['#FFB870', '#9FB8FF'].forEach(function (farbe, k) {
+      g.strokeStyle = farbe; g.lineWidth = 1.5; g.beginPath();
+      v[k].forEach(function (pt, n) { var x = 320 - (t - pt[0]) / 4000 * 320, yy = 68 - pt[1] / max * 44; if (n) g.lineTo(x, yy); else g.moveTo(x, yy); });
+      g.stroke();
+    });
+  }
   /* Zum Prüfen: ?p=0.3 stellt die Tageszeit fest ein; ?nacht=0…1 = Anteil des Himmelswegs (0 Tag, 1 volle Nacht) */
   var suche = new URLSearchParams(location.search), festP = parseFloat(suche.get('p'));
   if (isNaN(festP) && suche.has('nacht')) festP = Math.max(0, Math.min(1, parseFloat(suche.get('nacht')) || 0)) * 0.46 * ZEIT;
@@ -866,7 +889,7 @@
       else if (!gewunken && p > vorherP) { gewunken = true; winken(); }
     }
     /* Neuaufbau: Licht und Faden sofort auf den aktuellen Stand */
-    if (immer) { weichY = rohY; lichtP = fortschritt(rohY); licht(lichtP); if (window.ergunTakt) window.ergunTakt(weichY, lichtP); }
+    if (immer) { weichY = rohY; weichV = 0; lichtP = fortschritt(rohY); licht(lichtP); if (window.ergunTakt) window.ergunTakt(weichY, lichtP); }
   }
   /* Der Takt läuft, solange gescrollt wird, und noch kurz danach (iPhone-Schwungscrollen) – dann schläft er */
   var laeuft = false, zuletztT = 0, stillSeit = 0, lichtP = -1;
@@ -877,7 +900,14 @@
     zeichne(false);
     var vorherW = weichY;
     if (ruhig || !isNaN(festP)) weichY = rohY;
-    else { weichY += (rohY - weichY) * (1 - Math.exp(-dt / GLATT)); if (Math.abs(rohY - weichY) < 0.3) weichY = rohY; }
+    else {
+      /* 28.09. (Emre: „smooth wie eine Kamerafahrt“): kritisch gedämpfte Feder statt Nachziehen – exakte Lösung je Bild,
+         daher auf 60 und 120 Hz gleich, schwingt nie über. FEDER_W = 18/s → nach ~250 ms praktisch am Ziel. */
+      var ab = weichY - rohY, ex = Math.exp(-FEDER_W * dt), tmp = (weichV + FEDER_W * ab) * dt;
+      weichY = rohY + (ab + tmp) * ex; weichV = (weichV - FEDER_W * tmp) * ex;
+      if (Math.abs(rohY - weichY) < 0.02 && Math.abs(weichV) < 0.5) { weichY = rohY; weichV = 0; }
+    }
+    if (GESTIRN_TEST) gestirnKurve(t);
     var lp = fortschritt(weichY);
     if (Math.abs(lp - lichtP) > 0.00005) { lichtP = lp; licht(lp); }
     /* gemeinsamer Takt für andere Bewegungen (Wurzeln, 27.09.): gleiche Scroll-Quelle, gleiche 150-ms-Glättung */

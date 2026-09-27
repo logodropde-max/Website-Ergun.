@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>ERGUN. – Webdesigner Emre Ergun · Websites, Assistenten & Automatisierung</title>
-<meta name="description" content="ERGUN. ist das Webdesign-Studio von Emre Ergun aus Elmshorn: Websites mit Design und Bewegung, Assistenten und Automatisierung – persönlich, aus einer Hand. Kostenloses Erstgespräch.">
+<title>ERGUN. – Webdesign & Automatisierung · Emre Ergun</title>
+<meta name="description" content="ERGUN. ist das Studio für Webdesign & Automatisierung von Emre Ergun aus Elmshorn: Websites mit Design und Bewegung und Automatisierungen, die Ihnen Arbeit abnehmen – persönlich, aus einer Hand. Kostenloses Erstgespräch.">
 <meta name="theme-color" content="#0E0E0C">
 <meta name="robots" content="noindex, nofollow"><!-- solange die Seite privat ist; beim Livegang entfernen -->
 
 <!-- Teilen in Social Media / Messengern -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="ERGUN. – Webdesigner Emre Ergun">
-<meta property="og:description" content="Websites, Assistenten & Automatisierung – persönlich von Emre. Kostenloses Erstgespräch, aus Elmshorn.">
-<meta property="og:image" content="https://website-ergun.vercel.app/bilder/og.jpg">
+<meta property="og:title" content="ERGUN. – Webdesign & Automatisierung">
+<meta property="og:description" content="Websites und Automatisierungen – persönlich von Emre Ergun. Kostenloses Erstgespräch, aus Elmshorn.">
+<meta property="og:image" content="https://website-ergun.vercel.app/bilder/og.jpg?v=2">
 <meta property="og:url" content="https://website-ergun.vercel.app/">
 <link rel="canonical" href="https://website-ergun.vercel.app/">
 <meta property="og:image:width" content="1200">
@@ -29,7 +29,7 @@
 <link rel="preload" href="schriften/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <!-- Bildfolgen von Emre und dem Hund früh, aber mit niedriger Priorität holen: das Winken (erstes Runterwischen) wartet sonst auf sie -->
 <link rel="preload" href="bilder/hero/figuren/emre-folge.webp?v=10" as="image" fetchpriority="low">
-<link rel="preload" href="bilder/hero/figuren/hund-folge.webp?v=9" as="image" fetchpriority="low">
+<link rel="preload" href="bilder/hero/figuren/hund-folge.webp?v=10" as="image" fetchpriority="low">
 <script>document.documentElement.classList.add('js');</script>
 
 <style>
@@ -212,6 +212,9 @@ img { display: block; max-width: 100%; height: auto; }
 .titel__studio { display: flex; align-items: center; gap: 14px; font-size: clamp(11px, 1vw, 14px); font-weight: 500; letter-spacing: 0.26em; text-transform: uppercase; text-shadow: 0 1px 2px rgba(10, 16, 32, 0.45), 0 0 18px rgba(10, 16, 32, 0.35); }
 .titel__studio::before, .titel__studio::after { content: ""; width: clamp(18px, 2.4vw, 32px); height: 1px; background: rgba(255, 249, 240, 0.6); }
 .titel__haupt { font-family: var(--serif); font-weight: 500; font-size: clamp(3.3rem, 10.5vw, 9.2rem); line-height: 0.92; letter-spacing: -0.035em; text-wrap: balance; text-shadow: 0 2px 6px rgba(10, 16, 32, 0.28), 0 0 42px rgba(10, 16, 32, 0.3); }
+/* Titel-Variante B (?titel=b, 28.09. zum Vergleich): groß „Webdesign & Automatisierung“ in zwei Zeilen, gleiche Schrift */
+.titel--b .titel__haupt { font-size: clamp(2.7rem, 7.4vw, 6.6rem); line-height: 0.98; }
+.titel--b .titel__zeile { display: block; }
 @media (max-width: 700px) { .titel__studio { font-size: 11px; letter-spacing: 0.12em; } .titel__studio::before, .titel__studio::after { display: none; } }
 
 /* Gras im Wind: zwei Gruppen, eigener Takt, nur Neigung (transform) */
@@ -537,9 +540,10 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
     <div class="szene__ebene" data-ebene="mitte" aria-hidden="true"></div>
     <div class="szene__ebene szene__titel" data-ebene="titel">
       <div class="titel">
-        <p class="titel__studio">Digitalstudio für Design</p>
-        <h1 class="titel__haupt"><span class="hinweis-versteckt">ERGUN. </span>Webdesigner</h1>
+        <p class="titel__studio" data-titel-klein>Webdesign &amp; Automatisierung</p>
+        <h1 class="titel__haupt" data-titel-gross><span class="hinweis-versteckt">ERGUN. </span>Webdesigner</h1>
       </div>
+      <script>/* ?titel=b: Variante B zum Vergleich (Emre wählt) */ if (/[?&]titel=b(?![a-z])/.test(location.search)) { var tk = document.querySelector('[data-titel-klein]'), tg = document.querySelector('[data-titel-gross]'); tk.textContent = 'Emre Ergun · Elmshorn'; tg.innerHTML = '<span class="hinweis-versteckt">ERGUN. </span><span class="titel__zeile">Webdesign &amp;</span> <span class="titel__zeile">Automatisierung</span>'; tg.closest('.titel').classList.add('titel--b'); }</script>
     </div>
     <div class="szene__ebene" data-ebene="huegel" aria-hidden="true"></div>
     <div class="szene__ebene" data-ebene="wald" aria-hidden="true"></div>
@@ -560,7 +564,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
         <figcaption><strong>Emre Ergun</strong> · <span class="online">online</span></figcaption>
       </figure>
       <h2 class="contact__big reveal" id="kontakt-titel">Kostenloses Erstgespräch</h2>
-      <p class="contact__intro reveal">Antwort innerhalb von 24&nbsp;Stunden.</p>
+      <p class="contact__intro reveal">Websites und Automatisierungen – persönlich von mir. Antwort innerhalb von 24&nbsp;Stunden.</p>
     </div>
 
     <!-- Eine Karte, alles auf einen Blick (Emre, 25.09. abends: keine Schritte) -->
@@ -651,7 +655,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 </main>
 
 <footer class="footer">
-  <span>ERGUN. · Emre Ergun · Webdesign · © <span data-jahr>2026</span></span>
+  <span>ERGUN. · Emre Ergun · Webdesign &amp; Automatisierung · © <span data-jahr>2026</span></span>
   <nav aria-label="Rechtliches">
     <a href="impressum.html">Impressum</a>
     <a href="datenschutz.html">Datenschutz</a>
@@ -660,7 +664,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 </footer>
 <div class="wechsel" aria-hidden="true"></div>
 
-<script src="js/szene.js?v=45"></script>
+<script src="js/szene.js?v=46"></script>
 <script src="js/wolken.js?v=6" defer></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
