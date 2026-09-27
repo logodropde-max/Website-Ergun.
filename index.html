@@ -140,6 +140,12 @@ img { display: block; max-width: 100%; height: auto; }
 .szene--bereit .szene__bild[data-licht="gold"] { opacity: var(--gold); }
 .szene--bereit .szene__bild[data-licht="nacht"] { opacity: var(--nacht); }
 .szene__hund { position: absolute; display: block; }
+/* Mondlicht hinter Emre + Hund (Nachtlauf): kühler Schein, nur nachts (js/szene.js setzt Lage und Größe) */
+.szene__mondlicht { position: absolute; border-radius: 50%; pointer-events: none; opacity: var(--nacht); background: radial-gradient(closest-side, rgba(150, 178, 235, 0.17), rgba(150, 178, 235, 0.07) 50%, rgba(150, 178, 235, 0) 100%); }
+/* Sterne (Nachtlauf, Emre: „scharfe leuchtende Sterne, wenn es dunkel wird“): Leinwände in der Himmels-Ebene hinter Mond und Wolken */
+.szene__sterne { position: absolute; left: 0; top: 0; width: 100%; display: block; pointer-events: none; opacity: var(--himmel-nacht); }
+@media (prefers-reduced-motion: no-preference) { .szene__sterne--1 { animation: sterne-funkeln 4.8s ease-in-out infinite alternate; } .szene--weg .szene__sterne--1 { animation-play-state: paused; } }
+@keyframes sterne-funkeln { from { opacity: calc(var(--himmel-nacht) * 0.45); } to { opacity: var(--himmel-nacht); } }
 /* Emre und der Hund liegen in einer eigenen Hülle über allen Fassungen der Wiese (Füße, Schatten und Halme davor) */
 .szene__figuren { position: absolute; inset: 0; z-index: 1; }
 /* alles, was beim Scrollen überblendet wird, auf eigene Grafikebene – sonst malt das Handy den Himmel jedes Bild neu */
@@ -163,16 +169,19 @@ img { display: block; max-width: 100%; height: auto; }
 .sonne, .mond { position: absolute; left: 0; top: 0; width: 0; height: 0; will-change: transform; }
 .sonne { opacity: calc(1 - var(--himmel-nacht)); }
 .sonne i, .mond i, .sonne b, .mond b { position: absolute; left: 0; top: 0; border-radius: 50%; transform: translate(-50%, -50%); }
-.sonne__hof { width: calc(var(--sonne-r) * 14); height: calc(var(--sonne-r) * 14); background: radial-gradient(closest-side, rgba(255, 247, 222, 0.46), rgba(255, 236, 196, 0.15) 40%, rgba(255, 232, 186, 0) 100%); opacity: calc(1 - var(--tief) * 0.5); }
+.sonne__hof { width: calc(var(--sonne-r) * 14); height: calc(var(--sonne-r) * 14); background: radial-gradient(closest-side, rgba(255, 247, 222, 0.46), rgba(255, 236, 196, 0.15) 40%, rgba(255, 232, 186, 0) 100%); opacity: calc((1 - var(--tief) * 0.5) * (1 - var(--verdeckt-sonne, 0) * 0.6)); }
+/* Gestirn hinter einer Wolke (js/wolken.js setzt --verdeckt-sonne/--verdeckt-mond): die Scheibe verschwindet, nur der weite Hof bleibt schwach */
 /* Abendschein: je tiefer die Sonne, desto breiter und wärmer (nur transform/opacity) */
 .sonne .sonne__glut { width: calc(var(--sonne-r) * 26); height: calc(var(--sonne-r) * 16); background: radial-gradient(closest-side, rgba(255, 170, 96, 0.5), rgba(255, 124, 66, 0.16) 45%, rgba(255, 104, 56, 0) 100%); opacity: var(--tief);
   transform: translate(-50%, -50%) scale(calc(0.72 + var(--tief) * 0.42), calc(0.85 + var(--tief) * 0.2)); }
-.sonne__kern { width: calc(var(--sonne-r) * 2); height: calc(var(--sonne-r) * 2); background: radial-gradient(circle, #FFFFFA 0 50%, #FFF6D8 62%, rgba(255, 240, 200, 0) 71%); }
-.sonne__kern--abend { background: radial-gradient(circle, #FFF1C8 0 38%, #FFC06A 56%, rgba(255, 150, 70, 0) 71%); opacity: var(--tief); }
+.sonne__kern { width: calc(var(--sonne-r) * 2); height: calc(var(--sonne-r) * 2); background: radial-gradient(circle, #FFFFFA 0 50%, #FFF6D8 62%, rgba(255, 240, 200, 0) 71%); opacity: calc(1 - var(--verdeckt-sonne, 0)); }
+.sonne__kern--abend { background: radial-gradient(circle, #FFF1C8 0 38%, #FFC06A 56%, rgba(255, 150, 70, 0) 71%); opacity: calc(var(--tief) * (1 - var(--verdeckt-sonne, 0))); }
 .mond { opacity: var(--mond); }
 /* 26.09. (Emre): Mond leuchtender – weiter, weicher Schein, dazu ein enger heller Hof */
 .mond__hof { width: calc(var(--sonne-r) * 18); height: calc(var(--sonne-r) * 18); background: radial-gradient(closest-side, rgba(205, 220, 255, 0.24), rgba(175, 195, 248, 0.1) 30%, rgba(165, 185, 242, 0.035) 60%, rgba(160, 180, 240, 0) 100%); }
 .mond__schein { width: calc(var(--sonne-r) * 4.6); height: calc(var(--sonne-r) * 4.6); background: radial-gradient(closest-side, rgba(235, 242, 255, 0.55), rgba(215, 228, 255, 0.22) 45%, rgba(200, 215, 255, 0) 100%); }
+.mond__schein, .mond__kern { opacity: calc(1 - var(--verdeckt-mond, 0)); }
+.mond__hof { opacity: calc(1 - var(--verdeckt-mond, 0) * 0.5); }
 .mond__kern { width: calc(var(--sonne-r) * 1.5); height: calc(var(--sonne-r) * 1.5);
   background: radial-gradient(circle at 36% 40%, rgba(170, 170, 160, 0.35) 0 9%, transparent 10%), radial-gradient(circle at 60% 62%, rgba(170, 170, 160, 0.28) 0 12%, transparent 13%), radial-gradient(circle at 62% 30%, rgba(170, 170, 160, 0.22) 0 6%, transparent 7%), radial-gradient(circle at 44% 44%, #FDFBF3 0 40%, #E9E5D8 60%, #D5D0C3 68%, rgba(210, 205, 190, 0) 71%); }
 
@@ -195,24 +204,32 @@ img { display: block; max-width: 100%; height: auto; }
   .szene--weg .szene__wind { animation-play-state: paused; }
 }
 @keyframes wind { 0% { transform: skewX(-1.4deg); } 55% { transform: skewX(0.6deg); } 100% { transform: skewX(1.6deg); } }
-/* Wolken (27.09., Emre; js/wolken.js): ziehen sehr langsam von links nach rechts, atmen kaum sichtbar, färben sich mit dem Licht.
-   „hoch“ liegt in der Himmels-Ebene, „tief“ in der Ebene der fernsten Bergkette (vor ihr, hinter allen näheren Bergen). */
+/* Wolken (js/wolken.js; Nachtlauf 27./28.09.): Lage per JavaScript (nur transform, endlos), Atmen per CSS, Farbe folgt dem Licht.
+   Sonne/Mond hinter der Wolke: der dichte Kern (.wolke__koerper, Körpermaske) wird undurchsichtig, die Wolke leuchtet von innen
+   (.wolke__licht, radial um das Gestirn, in die Wolkenform maskiert) und bekommt einen hellen Saum zur Lichtseite (.wolke__rand). */
 .wolken { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
-.wolken--hoch { opacity: 0.85; }   /* Federwolken zart – Titel und endo-Schriftzug bleiben lesbar, wenn sie dahinter ziehen */
-.wolke { position: absolute; left: 0; top: 0; opacity: 0; transform: translate3d(var(--x, 0px), 0, 0); will-change: transform; transition: opacity 1600ms var(--ease); }
+.wolken--hoch { opacity: 0.9; }
+.wolke { position: absolute; left: 0; top: 0; opacity: 0; will-change: transform; transition: opacity 1600ms var(--ease); }
 .wolke.ist-da { opacity: 1; }
-.wolke__atem { position: absolute; inset: 0; transform-origin: 50% 70%; }
+.wolke__atem { position: absolute; inset: 0; transform-origin: 50% 70%; isolation: isolate; }
 .wolke__bild { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; display: block; opacity: 0; }
 .wolke__bild[data-licht="tag"] { opacity: var(--tag, 1); }
-.wolke__bild[data-licht="gold"] { opacity: var(--gold, 0); will-change: opacity; }
-.wolke__bild[data-licht="nacht"] { opacity: var(--nacht, 0); will-change: opacity; }
+.wolke__bild[data-licht="gold"] { opacity: var(--gold, 0); }
+.wolke__bild[data-licht="nacht"] { opacity: var(--nacht, 0); }
+.wolke__koerper { position: absolute; inset: 0; opacity: 0; -webkit-mask-image: var(--maske); mask-image: var(--maske); -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.wolke__licht { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen; -webkit-mask-image: var(--maske); mask-image: var(--maske); -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  background: radial-gradient(circle var(--sr, 200px) at var(--sx, -9999px) var(--sy, -9999px), rgba(var(--sf, 255, 248, 228), var(--sa, 0)) 0%, rgba(var(--sf, 255, 248, 228), calc(var(--sa, 0) * 0.45)) 45%, rgba(var(--sf, 255, 248, 228), 0) 100%),
+              radial-gradient(circle var(--mr, 160px) at var(--mx, -9999px) var(--my, -9999px), rgba(var(--mf, 214, 226, 255), var(--ma, 0)) 0%, rgba(var(--mf, 214, 226, 255), calc(var(--ma, 0) * 0.45)) 45%, rgba(var(--mf, 214, 226, 255), 0) 100%); }
+.wolke__rand { position: absolute; inset: 0; pointer-events: none; opacity: var(--la, 0);
+  -webkit-mask-image: var(--maske), var(--maske); mask-image: var(--maske), var(--maske); -webkit-mask-size: 100% 100%, 100% 100%; mask-size: 100% 100%, 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: 0 0, calc(var(--ux, 0) * var(--d, 4px)) calc(var(--uy, 0) * var(--d, 4px)); mask-position: 0 0, calc(var(--ux, 0) * var(--d, 4px)) calc(var(--uy, 0) * var(--d, 4px));
+  -webkit-mask-composite: source-out; mask-composite: subtract;
+  background: radial-gradient(circle var(--lr, 200px) at var(--lx, -9999px) var(--ly, -9999px), rgba(var(--lf, 255, 248, 228), 1) 0%, rgba(var(--lf, 255, 248, 228), 0.6) 40%, rgba(var(--lf, 255, 248, 228), 0) 100%); }
 @media (prefers-reduced-motion: no-preference) {
-  .wolke { animation: wolke-zieht calc(var(--dauer, 600s) / var(--wolken-tempo, 1)) linear var(--versatz, 0s) infinite; }
-  .wolke__atem { animation: wolke-atmet calc(var(--atem, 40s) / var(--wolken-tempo, 1)) ease-in-out var(--atem-versatz, 0s) infinite alternate; }
-  .szene--weg .wolke, .szene--weg .wolke__atem { animation-play-state: paused; }
+  .wolke__atem { animation: wolke-atmet var(--atem, 40s) ease-in-out var(--atem-versatz, 0s) infinite alternate; }
+  .szene--weg .wolke__atem { animation-play-state: paused; }
 }
-@keyframes wolke-zieht { from { transform: translate3d(var(--von, -400px), 0, 0); } to { transform: translate3d(var(--bis, 1600px), 0, 0); } }
-@keyframes wolke-atmet { from { transform: scale(1, 1) translate3d(0, 0, 0); opacity: 0.9; } to { transform: scale(1.035, 1.02) translate3d(0, -1.5%, 0); opacity: 1; } }
+@keyframes wolke-atmet { from { transform: scale(1, 1); } to { transform: scale(1.03, 1.02) translate3d(0, -1.2%, 0); } }
 
 /* Übergang ins Schwarz der Seite: keine Kante zur endo.ai-Sektion */
 /* leichter Bodennebel über der Unterkante, in der Farbe der endo-Sektion */
@@ -456,16 +473,13 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 .anfrage .weg { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 @media (prefers-reduced-motion: reduce) { .anfrage__kontakt.ist-neu { animation: none; } }
 
-/* „endo empfohlen“ (Emre, 27.09.): kleines Etikett oben rechts auf „Website-Redesign“, Tipp-Zeile über dem Absenden */
-.thema__karte--etikett .thema__innen { position: relative; padding-top: 22px; }
-.thema__etikett { position: absolute; top: 7px; right: 8px; padding: 2px 8px; border-radius: 999px; font-style: normal; font-size: 10.5px; font-weight: 500; line-height: 1.5; letter-spacing: 0.02em; white-space: nowrap;
-  color: #FF8A5C; background: rgba(255, 90, 31, 0.12); border: 1px solid rgba(255, 90, 31, 0.32); pointer-events: none; }
-@media (max-width: 460px) { .thema__etikett { top: 6px; right: 6px; font-size: 10px; padding: 1px 7px; } .thema__karte--etikett .thema__innen { padding-top: 24px; } }
-.anfrage__tipp { margin: 0; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255, 90, 31, 0.25); background: rgba(255, 90, 31, 0.06); font-size: 14px; line-height: 1.5; color: var(--muted); }
-.anfrage__tipp a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(242, 239, 232, 0.4); white-space: nowrap; }
+/* endo-Hinweis direkt unter „Anfrage senden“ (Nachtlauf, Emre): ruhige Zeile, gedämpft, „endo“ leicht hervorgehoben, weich ein-/ausblenden */
+.anfrage__tipp { margin: -6px 0 0; font-size: 13.5px; line-height: 1.5; text-align: center; color: var(--muted); opacity: 0; transform: translateY(-4px); transition: opacity 320ms var(--ease), transform 320ms var(--ease); }
+.anfrage__tipp.ist-an { opacity: 1; transform: none; }
 .anfrage__tipp[hidden] { display: none; }
-.anfrage__tipp.ist-neu { animation: feld-rein 420ms var(--ease-out) both; }
-@media (prefers-reduced-motion: reduce) { .anfrage__tipp.ist-neu { animation: none; } }
+.anfrage__tipp b { font-weight: 500; color: var(--text); }
+.anfrage__tipp a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(242, 239, 232, 0.4); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .anfrage__tipp { transition: none; } }
 
 /* Übergang Titelbild → Kontakt: ruhiger, dunkler Grund, weich aus dem Dunkel am Ende des Titelbilds (#070B16).
    Erdschnitt + Wurzeln (js/wurzeln.js) auf Emres Wunsch am 27.09. wieder entfernt – Datei bleibt liegen, wird nicht geladen. */
@@ -582,11 +596,11 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
         <span class="field__error" id="f-ds-err" aria-live="polite"></span>
       </div>
 
-      <p class="anfrage__tipp" data-endo-tipp hidden>Tipp: Mit endo erstellen Sie vorab neue Produktfotos und Bilder für Ihre neue Seite. <a href="https://endo-ergun.vercel.app/" target="_blank" rel="noopener">endo ansehen <span aria-hidden="true">↗</span></a></p>
       <button class="btn btn--wa anfrage__senden" type="submit" data-senden>
         <span data-senden-text>Anfrage senden</span>
         <span class="anfrage__pfeil" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
       </button>
+      <p class="anfrage__tipp" data-endo-tipp hidden>Mit <b>endo</b> können Sie vorab neue Produktfotos und Bilder für Ihre Seite erstellen. <a href="https://endo-ergun.vercel.app/" target="_blank" rel="noopener">endo ansehen <span aria-hidden="true">↗</span></a></p>
       <p class="form__status" data-status aria-live="polite"></p>
       <p class="form__hint">Felder mit * sind Pflicht. „Anfrage senden“ öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Ihre Angaben speichert die Website nicht, nur hochgeladene Dateien liegen bis zu 30 Tage bei Vercel.</p>
       <!-- Honigtopf gegen Spam: für Menschen unsichtbar -->
@@ -623,8 +637,8 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 </footer>
 <div class="wechsel" aria-hidden="true"></div>
 
-<script src="js/szene.js?v=39"></script>
-<script src="js/wolken.js?v=2" defer></script>
+<script src="js/szene.js?v=41"></script>
+<script src="js/wolken.js?v=4" defer></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {
@@ -654,7 +668,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   /* ===== Einstellungen (Emre, 27.09.): Texte der vier Auswahl-Karten hier ändern (seit 27.09. spät nur noch der Titel) ===== */
   var THEMEN = [
     { wert: 'Neue Website', titel: 'Neue Website' },
-    { wert: 'Website-Redesign', titel: 'Website-Redesign', etikett: 'endo empfohlen' },
+    { wert: 'Website-Redesign', titel: 'Website-Redesign' },
     { wert: 'Assistent & Automatisierung', titel: 'Assistent & Automatisierung' },
     { wert: 'Betreuung & Änderungen', titel: 'Betreuung & Änderungen' }
   ];
@@ -677,7 +691,6 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
     var l = document.createElement('label'); l.className = 'thema__karte';
     l.innerHTML = '<input type="radio" name="hilfe"><span class="thema__innen"><b></b></span>';
     l.querySelector('input').value = t.wert; l.querySelector('b').textContent = t.titel;
-    if (t.etikett) { var et = document.createElement('i'); et.className = 'thema__etikett'; et.textContent = t.etikett; l.querySelector('.thema__innen').appendChild(et); l.classList.add('thema__karte--etikett'); }
     themenBox.appendChild(l);
   });
 
@@ -700,11 +713,12 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   });
   /* Redesign gewählt → weicher Tipp zu endo über dem Absenden-Knopf (öffnet in neuem Tab, das Formular bleibt ausgefüllt) */
   var tipp = form.querySelector('[data-endo-tipp]');
+  var tippT;
   function endoTipp() {
-    var an = gewaehlt('hilfe') === 'Website-Redesign';
-    if (an === !tipp.hidden) return;
-    tipp.hidden = !an;
-    if (an && !ruhig) { tipp.classList.remove('ist-neu'); void tipp.offsetWidth; tipp.classList.add('ist-neu'); }
+    var an = gewaehlt('hilfe') === 'Website-Redesign' || gewaehlt('hilfe') === 'Neue Website';
+    clearTimeout(tippT);
+    if (an) { tipp.hidden = false; void tipp.offsetWidth; tipp.classList.add('ist-an'); }
+    else { tipp.classList.remove('ist-an'); tippT = setTimeout(function () { tipp.hidden = true; }, ruhig ? 0 : 320); }
   }
   function w2el() { var w = weg(); return w === 'whatsapp' ? form.elements.tel : w === 'mail' ? form.elements.email : null; }
 

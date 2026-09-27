@@ -527,6 +527,8 @@
   /* Tempo (27.09. spät, Emre): Emre und Hund laufen NUR nach Zeit, jeder in seinem festen Tempo, unabhängig vom Scrollen.
      Emre winkt einmal (FIG_DAUER), der Hund hebt den Kopf in HUND_HOCH und senkt ihn in HUND_RUNTER. */
   var FIG_DAUER = 4.4, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0;
+  /* Lage von Sonne und Mond (für Wolken, js/wolken.js) und wie stark das Gestirn gerade verdeckt ist (0–1, in Zehnteln) */
+  var gest = { sy: 0, my: 0, sonneAn: 1, mondAn: 0 }, verdecktQ = 0, gestTest = null;
   var fig = { phase: 0, ziel: 0, laeuft: false }, hund = { phase: 0, ziel: 0, laeuft: false }, animT = 0, animLaeuft = false;
   var FIG_TEST = /[?&]figuren=test\b/.test(location.search);
   /* Winken (26.09., Emre): sofort beim ersten Runterwischen von ganz oben, einmal – erst nach erneutem
@@ -549,7 +551,7 @@
   function figurLaden(name, folge) {
     var f = FIGUREN[name], b = new Image(); b.decoding = 'async';
     b.onload = function () { f[folge ? 'folge' : 'bild'] = b; f.zuletzt = ''; figurenZeichnen(); if (folge && name === 'emre' && winkenWartet) winken(); if (folge && name === 'hund') hundPruefen(); };
-    b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=6';
+    b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=7';   /* v7 (Nachtlauf): stabilisiert, Finger dicht (stabil.py) */
   }
   Object.keys(FIGUREN).forEach(function (k) { FIGUREN[k].zuletzt = ''; figurLaden(k, false); });
   /* die Bildfolgen (groß) erst nach dem Laden der Seite */
@@ -574,6 +576,7 @@
       }
     });
     l.ra = mix(mix(mix(FIGLICHT.tag.ra, FIGLICHT.gold.ra, lichtGold), FIGLICHT.blau.ra, lichtBlau), FIGLICHT.nacht.ra, lichtNacht);
+    l.ra *= 1 - 0.35 * verdecktQ;   /* Gestirn hinter einer Wolke (js/wolken.js): Lichtsaum ganz leicht schwächer */
     return l;
   }
   function rgbStr(a, s) { return 'rgb(' + Math.round(a[0] * s) + ',' + Math.round(a[1] * s) + ',' + Math.round(a[2] * s) + ')'; }
@@ -587,7 +590,7 @@
     nr = Math.max(0, Math.min(f.anzahl - 1, nr));
     var n0 = Math.floor(nr), t = Math.round((nr - n0) * 8) / 8, n1 = Math.min(f.anzahl - 1, n0 + 1);
     if (t >= 1) { n0 = n1; t = 0; }
-    var schluessel = n0 + '|' + t + '|' + lichtGold.toFixed(2) + '|' + lichtBlau.toFixed(2) + '|' + lichtNacht.toFixed(2);
+    var schluessel = n0 + '|' + t + '|' + lichtGold.toFixed(2) + '|' + lichtBlau.toFixed(2) + '|' + lichtNacht.toFixed(2) + '|' + verdecktQ;
     if (schluessel === f.zuletzt) return;
     f.zuletzt = schluessel;
     var W = c.width, H = c.height;
@@ -650,7 +653,7 @@
   function figurenStellen(ebene) {
     var huelle = ebene.querySelector('.szene__figuren');
     if (!huelle) { huelle = document.createElement('div'); huelle.className = 'szene__figuren'; ebene.appendChild(huelle); }
-    var H = FIGUREN.hund, E = FIGUREN.emre, stand = m.H * (m.hoch ? 0.124 : 0.148);
+    var H = FIGUREN.hund, E = FIGUREN.emre, stand = m.H * (m.hoch ? 0.138 : 0.148);   /* Handy etwas größer (Nachtlauf): Winken und Hundekopf klar zu sehen */
     var hh = stand / (H.fuss - H.oben), hw = hh * H.b / H.h;
     var eh = stand * 1.95 / (E.fuss - E.oben), ew = eh * E.b / E.h;
     var hx = xVon(m.hundU), abstand = stand * 0.1;
@@ -670,6 +673,14 @@
       if (f === E) huelle.insertBefore(c, huelle.firstChild); else huelle.appendChild(c);
       f.leinwand = c; f.zuletzt = '';
       f.fussX = z[1]; f.fussB = z[2] * f.breite; f.fussY = boden + sinken * 0.4; f.stand = z[3] * (f.fuss - f.oben);
+    });
+    /* Mondlicht hinter den Figuren (Nachtlauf 27.09., Emre: „Hand immer gut zu sehen“): schwacher, kühler Schein auf der Wiese
+       hinter Emre und dem Hund – nachts hebt sich der dunkle Umriss (Arm, Hand, Hundekopf) vom Hintergrund ab. Nur opacity (--nacht). */
+    huelle.querySelectorAll('.szene__mondlicht').forEach(function (d) { d.remove(); });
+    [[H, 1.0], [E, 0.8]].forEach(function (z) {
+      var f = z[0], r = f.stand * z[1], d = document.createElement('div'); d.className = 'szene__mondlicht';
+      d.style.left = (f.fussX - r).toFixed(1) + 'px'; d.style.top = (f.fussY - f.stand * 0.5 - r).toFixed(1) + 'px'; d.style.width = d.style.height = (r * 2).toFixed(1) + 'px';
+      huelle.insertBefore(d, huelle.firstChild);
     });
     return huelle;
   }
@@ -704,6 +715,35 @@
     huelle.appendChild(c);
   }
 
+  /* ---------- Sterne (Nachtlauf 27.09., Emre: „scharfe leuchtende Sterne, wenn es dunkel wird“) ----------
+     Zwei Leinwände in der Himmels-Ebene hinter Mond und Wolken: scharfe Punkte, die helleren mit feinem Hof und Lichtkreuz.
+     Deckkraft hängt an --himmel-nacht (kommen mit der Dunkelheit, verschwinden bei Tag); die zweite Leinwand funkelt leise (CSS). */
+  function sterneZeichnen() {
+    ebenen.himmel.querySelectorAll('.szene__sterne').forEach(function (c) { c.remove(); });
+    var r = zufall(4711), q = m.q, n = Math.round(m.W * (m.hoch ? 0.26 : 0.34)), hoehe = m.H * 0.68;
+    var farben = ['255,255,255', '222,232,255', '255,244,224'];
+    [0, 1].forEach(function (k) {
+      var c = document.createElement('canvas'); c.className = 'szene__sterne szene__sterne--' + k;
+      c.width = Math.ceil(m.W * q); c.height = Math.ceil(hoehe * q); c.style.height = hoehe + 'px';
+      var g = c.getContext('2d'); g.setTransform(q, 0, 0, q, 0, 0);
+      for (var i = 0; i < n; i++) {
+        var x = r() * m.W, y = hoehe * Math.pow(r(), 1.35), t = r(), f = farben[Math.floor(r() * 3)];   /* oben dichter */
+        if ((i % 2) !== k) continue;
+        var gross = t > 0.94, mittel = t > 0.74;
+        var rad = gross ? 1.5 + r() * 0.8 : mittel ? 0.95 + r() * 0.45 : 0.5 + r() * 0.4;
+        var hell = gross ? 1 : mittel ? 0.85 : 0.45 + r() * 0.4;
+        if (mittel) {
+          var hr = rad * (gross ? 7 : 4.5), hof = g.createRadialGradient(x, y, 0, x, y, hr);
+          hof.addColorStop(0, 'rgba(' + f + ',' + (0.38 * hell).toFixed(2) + ')'); hof.addColorStop(1, 'rgba(' + f + ',0)');
+          g.fillStyle = hof; g.beginPath(); g.arc(x, y, hr, 0, Math.PI * 2); g.fill();
+        }
+        g.fillStyle = 'rgba(' + f + ',' + hell.toFixed(2) + ')'; g.beginPath(); g.arc(x, y, rad, 0, Math.PI * 2); g.fill();
+        if (gross) { g.fillStyle = 'rgba(' + f + ',' + (0.5 * hell).toFixed(2) + ')'; g.fillRect(x - rad * 3.4, y - 0.35, rad * 6.8, 0.7); g.fillRect(x - 0.35, y - rad * 3.4, 0.7, rad * 6.8); }
+      }
+      ebenen.himmel.insertBefore(c, sonne);
+    });
+  }
+
   /* ---------- Aufbau ---------- */
   var ebenen = {}, sonne, mond, bereit = false, bauzeit = 0, bauNr = 0;
   /* Parallaxe: kann der Browser Scroll-Animationen (Chrome, Edge, Safari 26), verschiebt er die Ebenen selbst –
@@ -731,6 +771,7 @@
     }
     ['weit', 'fern', 'mitte', 'huegel', 'wald', 'wiese', 'gras'].forEach(function (k) { var e = ebenen[k]; e.querySelectorAll('canvas:not(.szene__hund), .szene__wind').forEach(function (c) { c.remove(); }); });
     ebenen.himmel.querySelectorAll('.szene__wolken').forEach(function (c) { c.remove(); });
+    sterneZeichnen();
     windHuellen = [];
     var nr = ++bauNr;
     /* Stufe 1: nur das Tagbild – so steht der Startbildschirm sofort und ohne Ruckeln */
@@ -826,16 +867,23 @@
     /* ist eine Stimmung ganz erreicht, verschwinden die Fassungen darunter (sonst schimmern ihre Kanten an dünnen Halmen durch) */
     wert('--tag', (gold > 0.995 || nacht > 0.995) ? '0' : '1');
     wert('--blau', sanft(0.18, 0.3, p).toFixed(3));
-    wert('--himmel-nacht', sanft(0.28, 0.46, p).toFixed(3));
+    var himmelNacht = sanft(0.28, 0.46, p);
+    wert('--himmel-nacht', himmelNacht.toFixed(3));
+    gest.sonneAn = 1 - himmelNacht;
     /* Sterne: zuerst die hellsten, dann mehr; Milchstraße erst in tiefer Nacht */
     /* Sonne: senkrecht, gleichmäßig mit sanftem Anfang und Ende */
     var ps = sanfter(0, SONNE_BIS, p), ys = mix(m.sonneStart, m.sonneEnde, ps);
-    sonne.style.transform = 'translate3d(' + (m.W / 2).toFixed(2) + 'px,' + ys.toFixed(2) + 'px,0)';
+    if (gestTest && gestTest.was === 'sonne') ys = gestTest.y;
+    gest.sy = ys;
+    sonne.style.transform = 'translate3d(' + (gestTest && gestTest.was === 'sonne' ? gestTest.x : m.W / 2).toFixed(2) + 'px,' + ys.toFixed(2) + 'px,0)';
     wert('--tief', sanft(0.04, 0.24, p).toFixed(3));
     /* Mond steigt links auf */
     var pm = sanft(0.27, 0.62, p), ym = mix(m.mondStart, m.mondEnde, pm);
-    mond.style.transform = 'translate3d(' + m.mondX.toFixed(2) + 'px,' + ym.toFixed(2) + 'px,0)';
-    wert('--mond', sanft(0.27, 0.4, p).toFixed(3));
+    if (gestTest && gestTest.was === 'mond') ym = gestTest.y;
+    gest.my = ym;
+    mond.style.transform = 'translate3d(' + (gestTest && gestTest.was === 'mond' ? gestTest.x : m.mondX).toFixed(2) + 'px,' + ym.toFixed(2) + 'px,0)';
+    gest.mondAn = sanft(0.27, 0.4, p);
+    wert('--mond', gest.mondAn.toFixed(3));
     /* Emre und der Hund: Tag-, Abend- und Nachtbild überblenden mit dem Licht */
     lichtGold = gold; lichtBlau = sanft(0.18, 0.3, p); lichtNacht = nacht;
     if (!FIG_TEST) hundPruefen();
@@ -891,6 +939,20 @@
   window.ergunSzene = Object.freeze({
     palette: F, zufall: zufall, rauschen: rauschen, hex: hex, rgba: rgba, mixHex: mixHex, farbMix: farbMix, korn: korn, halm: halm,
     mondU: 0.24,   /* Mond steht nachts links bei 24 % der Breite (Lichtrichtung) */
-    lichtMix: function () { return { tag: gesetzt['--tag'] == null ? 1 : parseFloat(gesetzt['--tag']), gold: parseFloat(gesetzt['--gold']) || 0, nacht: parseFloat(gesetzt['--nacht']) || 0 }; }
+    lichtMix: function () { return { tag: gesetzt['--tag'] == null ? 1 : parseFloat(gesetzt['--tag']), gold: parseFloat(gesetzt['--gold']) || 0, nacht: parseFloat(gesetzt['--nacht']) || 0 }; },
+    /* Sonne und Mond in Koordinaten der Himmels-Ebene (+ Parallaxe-Wege der Ebenen, damit js/wolken.js die Lage in der Ebene „weit“ umrechnen kann) */
+    gestirne: function () {
+      var sx = gestTest && gestTest.was === 'sonne' ? gestTest.x : m.W / 2, mx = gestTest && gestTest.was === 'mond' ? gestTest.x : m.mondX;
+      return { sonne: { x: sx, y: gest.sy, r: m.sonneR || 30, an: gestTest && gestTest.was === 'sonne' ? 1 : gest.sonneAn },
+        mond: { x: mx, y: gest.my, r: (m.sonneR || 30) * 0.75, an: gestTest && gestTest.was === 'mond' ? 1 : gest.mondAn },
+        p: isNaN(festP) ? Math.max(0, Math.min(1, (rohY - heldOben) / (m.H || 1))) : 0,
+        weg: { himmel: m.H * TIEFE.himmel, weit: m.H * TIEFE.weit * m.f } };
+    },
+    /* wie stark das dominante Gestirn gerade hinter einer Wolke steckt (0–1) → Lichtsaum der Figuren leicht dämpfen, in Zehnteln (kein Flackern) */
+    verdeckt: function (vS, vM) {
+      wert('--verdeckt-sonne', Math.max(0, Math.min(1, vS)).toFixed(2)); wert('--verdeckt-mond', Math.max(0, Math.min(1, vM)).toFixed(2));
+      var q = Math.round(Math.max(0, Math.min(1, Math.max(vS, vM))) * 10) / 10; if (q !== verdecktQ) { verdecktQ = q; figurenZeichnen(); }
+    },
+    gestirnTest: function (t) { gestTest = t; if (bereit) { licht(lichtP < 0 ? 0 : lichtP); } }
   });
 })();

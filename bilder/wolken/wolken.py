@@ -100,9 +100,29 @@ def main():
                 f = lang / max(ww, hh)
                 klein = voll.resize((max(1, round(ww * f)), max(1, round(hh * f))), Image.LANCZOS) if f < 1 else voll
                 klein.save(os.path.join(HIER, '%s-%s-%s.webp' % (name, licht, g)), 'WEBP', quality=62 if licht == 'nacht' else 70, alpha_quality=70, method=6)
-            if licht in ('tag', 'gold', 'nacht'):
-                vorschau.append((name, licht, voll))
-        meta[name] = {'art': art, 'seite': round(ww / hh, 4)}
+            vorschau.append((name, licht, voll))
+        # Koerper-Maske (27.09., Sonne/Mond hinter Wolken): dichter Kern der Wolke, Loecher geschlossen, Rand eingezogen und weich -
+        # damit deckt die Wolke das Gestirn im Inneren voellig ab, die duennen Raender bleiben weich (dort leuchtet die Kante)
+        k = (al > 0.32).astype(np.uint8)
+        k = ndimage.binary_closing(k, iterations=6); k = ndimage.binary_erosion(k, iterations=4)
+        km = ndimage.gaussian_filter(k.astype(np.float32), 2.5)
+        kbild = np.dstack([np.zeros((hh, ww, 3), np.float32), np.clip(km, 0, 1)])
+        kvoll = Image.fromarray((kbild * 255 + 0.5).astype(np.uint8), 'RGBA')
+        for g, lang in GROESSEN.items():
+            f = lang / max(ww, hh)
+            kk = kvoll.resize((max(1, round(ww * f)), max(1, round(hh * f))), Image.LANCZOS) if f < 1 else kvoll
+            kk.save(os.path.join(HIER, '%s-koerper-%s.webp' % (name, g)), 'WEBP', quality=50, alpha_quality=60, method=6)
+        # Deckungsraster (40 Spalten): mittlere Alpha je Zelle, 0-9 - js/wolken.js liest daraus, wie stark ein Gestirn verdeckt ist
+        sp = 40; ze = max(4, round(sp * hh / ww))
+        rast = []
+        for j in range(ze):
+            zeile = ''
+            for i in range(sp):
+                y0, y1 = int(j * hh / ze), max(int(j * hh / ze) + 1, int((j + 1) * hh / ze)); x0, x1 = int(i * ww / sp), max(int(i * ww / sp) + 1, int((i + 1) * ww / sp))
+                zeile += str(min(9, int(al[y0:y1, x0:x1].mean() * 10)))
+            rast.append(zeile)
+        meta_raster = rast
+        meta[name] = {'art': art, 'seite': round(ww / hh, 4), 'raster': meta_raster}
     json.dump(meta, open(os.path.join(HIER, 'wolken.json'), 'w'), indent=1)
     # Vorschau: jede Wolke in jeder Lichtstimmung vor ihrem Himmel
     himmel = {'tag': '#3B79BD', 'gold': '#86709A', 'nacht': '#0D1B38'}
