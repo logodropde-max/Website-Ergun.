@@ -439,19 +439,16 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 .anfrage .weg { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 @media (prefers-reduced-motion: reduce) { .anfrage__kontakt.ist-neu { animation: none; } }
 
-/* ---------- Unter die Erde: Erdschnitt am Übergang Titelbild → Kontakt, Wurzeln bis zum Punkt von ERGUN. ---------- */
-.contact { position: relative; isolation: isolate;
-  background: linear-gradient(#070B16 0, #0F0C0A 70px, #120E0B 180px, #100D0B 420px, var(--bg) 760px); }
-.contact::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 760px; z-index: 0; pointer-events: none; opacity: 0.55;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .52 0 0 0 0 .40 0 0 0 0 .29 0 0 0 .55 -.12'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 0.2), #000 90px, #000 260px, transparent 760px); mask-image: linear-gradient(rgba(0, 0, 0, 0.2), #000 90px, #000 260px, transparent 760px); }
-.contact > :not(.wurzeln) { position: relative; z-index: 1; }
-.wurzeln { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-.wurzeln svg { display: block; position: absolute; left: 0; top: 0; }
-/* der Punkt von ERGUN. leuchtet auf, wenn die Wurzeln ihn erreichen (nur opacity) */
+/* ---------- Unter die Erde (27.09., neu): Erdschnitt + Wurzeln als Canvas in derselben Zeichentechnik wie das Titelbild (js/wurzeln.js) ---------- */
+.contact { position: relative; isolation: isolate; background: var(--bg); }
+.contact > :not(.erdreich) { position: relative; z-index: 1; }
+.erdreich { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.erdreich canvas { position: absolute; left: 0; top: 0; width: 100%; display: block; }
+.erdreich__schnitt { opacity: 0; }
+/* der Punkt von ERGUN. wird sanft etwas heller, wenn die feine Wurzel ihn erreicht (nur opacity, kein Blinken) */
 .agentur__marke .dot { position: relative; display: inline-block; }
-.agentur__marke .dot::after { content: ""; position: absolute; left: 50%; bottom: 0.14em; width: 1.2em; height: 1.2em; margin-left: -0.6em; margin-bottom: -0.5em; border-radius: 50%; pointer-events: none;
-  background: radial-gradient(closest-side, rgba(255, 120, 60, 0.75), rgba(255, 90, 31, 0.28) 45%, rgba(255, 90, 31, 0) 100%); opacity: 0; transition: opacity 700ms var(--ease); }
+.agentur__marke .dot::after { content: ""; position: absolute; left: 50%; bottom: 0.14em; width: 1em; height: 1em; margin-left: -0.5em; margin-bottom: -0.42em; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 150, 90, 0.5), rgba(255, 90, 31, 0.16) 50%, rgba(255, 90, 31, 0) 100%); opacity: 0; transition: opacity 900ms var(--ease); }
 .agentur__marke .dot.dot--glueht::after { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .agentur__marke .dot::after { transition: none; } }
 </style>
@@ -612,8 +609,8 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 </footer>
 <div class="wechsel" aria-hidden="true"></div>
 
-<script src="js/szene.js?v=35"></script>
-<script src="js/wurzeln.js?v=1" defer></script>
+<script src="js/szene.js?v=36"></script>
+<script src="js/wurzeln.js?v=2" defer></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {

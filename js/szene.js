@@ -99,6 +99,12 @@
       nacht: { halm: ['#0A1216', '#0E181C', '#121E23', '#0B1418', '#15232A'], kante: '#5E78A8', kanteA: 0.55 }
     },
     stein: { tag: ['#6E6A60', '#B9B3A2'], gold: ['#4A3F3A', '#E6A77A'], nacht: ['#171D26', '#5F6F93'] },
+    /* Erde unter dem Gras (Erdschnitt + Wurzeln im Kontakt, js/wurzeln.js): warmes Erdbraun am Tag, kühl-dunkel mit Mondkante nachts */
+    erde: {
+      tag: { humus: '#3E3126', unter: '#2A211A', schicht: '#4C3C2E', hell: '#6A5641', kante: '#E8DCC2', kanteA: 0.3, wurzel: '#6A5240', schatten: '#3E2E21', wurzelKante: '#D9C7A6', haar: '#7C6249' },
+      gold: { humus: '#33261E', unter: '#211915', schicht: '#42322A', hell: '#5C4636', kante: '#FFBE74', kanteA: 0.8, wurzel: '#5A4033', schatten: '#32241D', wurzelKante: '#F2B87E', haar: '#6B4F3E' },
+      nacht: { humus: '#0E141C', unter: '#090D13', schicht: '#131B27', hell: '#1D2837', kante: '#5E78A8', kanteA: 0.5, wurzel: '#242D3D', schatten: '#101620', wurzelKante: '#7F95C0', haar: '#2A3444' }
+    },
     bluete: { tag: ['#F4F1E6', '#E7C75A', '#B9A3D6'], gold: ['#F6D9B8', '#F2B45C', '#C79AB8'], nacht: ['#8A93A8', '#7F8496', '#737B94'] },
     hund: { tag: '#231E1A', gold: '#17120F', nacht: '#07090E', kanteTag: '#9C7B55', kanteGold: '#FFB870', kanteNacht: '#8FA4D0' }
   };
@@ -834,4 +840,12 @@
       zustand: function () { return { phase: fig.phase, laeuft: fig.laeuft, gewunken: gewunken, wartet: winkenWartet, rohY: rohY, weichY: weichY, licht: lichtP }; } };
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+
+  /* ---------- Schnittstelle für andere Ebenen (Erdschnitt + Wurzeln, js/wurzeln.js, 27.09.): nur lesen, nichts steuern ----------
+     Dieselben Paletten, derselbe Zufall, dieselbe Körnung und Halm-Form wie hier – so sieht der Boden unter dem Gras aus wie das Titelbild. */
+  window.ergunSzene = Object.freeze({
+    palette: F, zufall: zufall, rauschen: rauschen, hex: hex, rgba: rgba, mixHex: mixHex, farbMix: farbMix, korn: korn, halm: halm,
+    mondU: 0.24,   /* Mond steht nachts links bei 24 % der Breite (Lichtrichtung) */
+    lichtMix: function () { return { tag: gesetzt['--tag'] == null ? 1 : parseFloat(gesetzt['--tag']), gold: parseFloat(gesetzt['--gold']) || 0, nacht: parseFloat(gesetzt['--nacht']) || 0 }; }
+  });
 })();
