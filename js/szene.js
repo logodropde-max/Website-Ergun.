@@ -527,7 +527,7 @@
   var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 245, h: 600, anzahl: 64, spalten: 8, fuss: 0.9964, oben: 0.0531, mitte: 0.5794, breite: 0.7595 } };
   /* Tempo (27.09. spät, Emre): Emre und Hund laufen NUR nach Zeit, jeder in seinem festen Tempo, unabhängig vom Scrollen.
      Emre winkt einmal (FIG_DAUER), der Hund hebt den Kopf in HUND_HOCH und senkt ihn in HUND_RUNTER. */
-  var FIG_DAUER = 4.4, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0, FIG_VERSION = 10;   /* 27.09. (Emre): zurück zum Winken von vorher (64 Bilder, 4,4 s) – v9 passte nicht */
+  var FIG_DAUER = 4.4, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0, FIG_VERSION = 11;   /* 27.09. (Emre): zurück zum Winken von vorher (64 Bilder, 4,4 s) – v9 passte nicht */
   /* Lage von Sonne und Mond (für Wolken, js/wolken.js) und wie stark das Gestirn gerade verdeckt ist (0–1, in Zehnteln) */
   var gest = { sy: 0, my: 0, sonneAn: 1, mondAn: 0 }, verdecktQ = 0, gestTest = null;
   var fig = { phase: 0, ziel: 0, laeuft: false }, hund = { phase: 0, ziel: 0, laeuft: false }, animT = 0, animLaeuft = false;
