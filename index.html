@@ -2,7 +2,6 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<script src="js/schrift-test.js?v=1"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>ERGUN. – Webdesigner Emre Ergun · Websites, Assistenten & Automatisierung</title>
 <meta name="description" content="ERGUN. ist das Webdesign-Studio von Emre Ergun aus Elmshorn: Websites mit Design und Bewegung, Assistenten und Automatisierung – persönlich, aus einer Hand. Kostenloses Erstgespräch.">
@@ -25,8 +24,9 @@
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
+<link rel="preload" href="schriften/ClashDisplay-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="schriften/Satoshi-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="schriften/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="schriften/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <script>document.documentElement.classList.add('js');</script>
 
 <style>
@@ -34,10 +34,12 @@ html, body { touch-action: pan-x pan-y; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
 /* Schriften liegen lokal (SIL Open Font License) – kein Google-Server */
+@font-face { font-family: "Clash Display"; src: url("schriften/ClashDisplay-Variable.woff2") format("woff2"); font-weight: 200 700; font-display: swap; }
+@font-face { font-family: "Satoshi"; src: url("schriften/Satoshi-Variable.woff2") format("woff2"); font-weight: 300 900; font-display: swap; }
+@font-face { font-family: "Satoshi Ersatz"; src: local("Arial"), local("Helvetica"); size-adjust: 96%; ascent-override: 94%; descent-override: 24%; line-gap-override: 0%; }
+@font-face { font-family: "Clash Ersatz"; src: local("Arial"), local("Helvetica"); size-adjust: 93%; ascent-override: 92%; descent-override: 22%; line-gap-override: 0%; }
 @font-face { font-family: "Instrument Serif"; src: url("schriften/InstrumentSerif-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: "Instrument Serif"; src: url("schriften/InstrumentSerif-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
-@font-face { font-family: "Geist"; src: url("schriften/Geist-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
-@font-face { font-family: "Geist"; src: url("schriften/Geist-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
 :root {
   --bg: #000000;
   --text: #F2EFE8;
@@ -45,8 +47,9 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   --accent: #FF5A1F;  /* auf Schwarz 6.6:1 */
   --line: rgba(242, 239, 232, 0.12);
   --pad: clamp(20px, 4vw, 56px);
-  --serif: "Instrument Serif", Georgia, serif;
-  --sans: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --serif: "Clash Display", "Clash Ersatz", system-ui, sans-serif;     /* Schrift B (27.09.): Überschriften */
+  --logo: "Instrument Serif", Georgia, serif;                              /* Logo ERGUN. bleibt */
+  --sans: "Satoshi", "Satoshi Ersatz", system-ui, -apple-system, "Segoe UI", sans-serif;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -66,7 +69,7 @@ img { display: block; max-width: 100%; height: auto; }
 .nav { position: fixed; inset: 0 0 auto 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; padding: 14px 24px; font-size: 14px; color: var(--text); text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45); transition: transform 450ms var(--ease-out); }
 .nav--weg { transform: translateY(-120%); }
 .nav:focus-within { transform: none; }
-.nav__mark { font-family: var(--serif); font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase; }
+.nav__mark { font-family: var(--logo); font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase; }
 .nav__mark .dot { color: var(--accent); }
 .nav__links { display: flex; align-items: center; gap: 28px; }
 .nav__link { position: relative; padding-bottom: 2px; }
@@ -181,7 +184,7 @@ img { display: block; max-width: 100%; height: auto; }
 .titel { position: absolute; left: 0; right: 0; top: var(--titel-oben, 20svh); display: grid; justify-items: center; gap: clamp(10px, 1.4vh, 18px); padding: 0 var(--pad); text-align: center; color: #FFF9F0; }
 .titel__studio { display: flex; align-items: center; gap: 14px; font-size: clamp(11px, 1vw, 14px); font-weight: 500; letter-spacing: 0.26em; text-transform: uppercase; text-shadow: 0 1px 2px rgba(10, 16, 32, 0.45), 0 0 18px rgba(10, 16, 32, 0.35); }
 .titel__studio::before, .titel__studio::after { content: ""; width: clamp(18px, 2.4vw, 32px); height: 1px; background: rgba(255, 249, 240, 0.6); }
-.titel__haupt { font-family: var(--serif); font-size: clamp(3.6rem, 11.5vw, 10rem); line-height: 0.9; letter-spacing: -0.02em; text-shadow: 0 2px 6px rgba(10, 16, 32, 0.28), 0 0 42px rgba(10, 16, 32, 0.3); }
+.titel__haupt { font-family: var(--serif); font-weight: 500; font-size: clamp(3.3rem, 10.5vw, 9.2rem); line-height: 0.92; letter-spacing: -0.035em; text-wrap: balance; text-shadow: 0 2px 6px rgba(10, 16, 32, 0.28), 0 0 42px rgba(10, 16, 32, 0.3); }
 @media (max-width: 700px) { .titel__studio { font-size: 11px; letter-spacing: 0.12em; } .titel__studio::before, .titel__studio::after { display: none; } }
 
 /* Gras im Wind: zwei Gruppen, eigener Takt, nur Neigung (transform) */
@@ -255,7 +258,7 @@ img { display: block; max-width: 100%; height: auto; }
 /* ---------- Kontakt ---------- */
 .contact { display: flex; flex-direction: column; align-items: center; gap: 28px; padding: clamp(88px, 14svh, 144px) var(--pad) 14svh; }
 .contact__kopf { display: grid; gap: 16px; justify-items: center; text-align: center; margin-bottom: 8px; }
-.contact__big { font-family: var(--serif); font-size: clamp(2.8rem, 7.4vw, 5.8rem); line-height: 0.95; letter-spacing: -0.02em; text-wrap: balance; }
+.contact__big { font-family: var(--serif); font-weight: 400; font-size: clamp(2.6rem, 6.6vw, 5.2rem); line-height: 0.98; letter-spacing: -0.03em; text-wrap: balance; }
 .contact__intro { color: var(--muted); max-width: 46ch; text-wrap: pretty; }
 .contact__person { margin: 0 0 6px; display: grid; justify-items: center; gap: 12px; }
 .contact__person img { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255, 140, 60, 0.45); padding: 3px; background: var(--bg); }
@@ -268,7 +271,7 @@ img { display: block; max-width: 100%; height: auto; }
 .contact__meta a { border-bottom: 1px solid transparent; transition: color 200ms var(--ease), border-color 200ms var(--ease); }
 @media (hover: hover) and (pointer: fine) { .contact__meta a:hover { color: var(--text); border-color: var(--line); } }
 .agentur { width: 100%; max-width: 680px; margin: 28px auto 0; padding-top: 44px; border-top: 1px solid var(--line); display: grid; gap: 14px; justify-items: center; text-align: center; }
-.agentur__marke { font-family: var(--serif); font-size: clamp(2.4rem, 6vw, 3.4rem); line-height: 1; letter-spacing: -0.02em; }
+.agentur__marke { font-family: var(--logo); font-size: clamp(2.4rem, 6vw, 3.4rem); line-height: 1; letter-spacing: -0.02em; }
 .agentur__marke .dot { color: var(--accent); }
 .agentur__text { color: var(--muted); font-size: clamp(15px, 1.3vw, 17px); line-height: 1.6; max-width: 50ch; text-wrap: pretty; }
 
@@ -331,7 +334,7 @@ html.zu-endo .endo-marke__wort, html.zu-endo .nav__link--endo { filter: drop-sha
 /* Kontakt folgt direkt auf das Titelbild: Farbe läuft aus der Nacht in den Seitenhintergrund */
 .contact { background: linear-gradient(#070B16, var(--bg) 26%); }
 /* Direktkontakt: drei Wege (Handy oben als große Knöpfe, Desktop als ruhige Zeile) */
-.kt__schnell { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: min(100%, 520px); margin-top: 4px; }
+.kt__schnell { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; width: min(100%, 400px); margin-top: 4px; }
 .kt__schnell a { display: grid; justify-items: center; gap: 8px; min-height: 76px; padding: 14px 6px; border: 1px solid var(--line); border-radius: 16px; background: rgba(242, 239, 232, 0.03); font-size: 14px; color: var(--text); text-decoration: none; transition: border-color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
 .kt__schnell svg { width: 22px; height: 22px; }
 .kt__schnell a:active { transform: scale(0.97); }
@@ -343,7 +346,7 @@ html[data-whatsapp="aus"] [data-wa], html[data-whatsapp="aus"] .weg, html[data-w
 .wege { list-style: none; margin: 8px 0 0; padding: 0; width: min(100%, 980px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); text-align: left; }
 .wege li { display: grid; gap: 6px; align-content: start; padding: 22px 22px 4px 0; }
 .wege li + li { padding-left: 22px; border-left: 1px solid var(--line); }
-.wege b { font-family: var(--serif); font-size: 26px; line-height: 1.1; font-weight: 400; }
+.wege b { font-family: var(--serif); font-size: clamp(22px, 1.8vw, 26px); line-height: 1.1; font-weight: 500; letter-spacing: -0.02em; }
 .wege span { color: var(--muted); font-size: 15px; line-height: 1.5; text-wrap: pretty; }
 .anfrage { width: min(100%, 680px); display: grid; gap: 22px; margin-top: 16px; padding: 30px; text-align: left; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(180deg, rgba(242, 239, 232, 0.035), rgba(242, 239, 232, 0.01)); }
 .anfrage__gruppe { margin: 0; padding: 0; min-width: 0; border: 0; }
@@ -381,6 +384,12 @@ html[data-whatsapp="aus"] [data-wa], html[data-whatsapp="aus"] .weg, html[data-w
 }
 @media (prefers-reduced-motion: reduce) { .anfrage__danke, .anfrage__check, .anfrage__check svg { animation: none; } .anfrage.ist-weg > * { transition: none; } }
 
+/* Schrift B (Emre, 27.09.): Feinheiten – gleichbreite Ziffern, Silbentrennung, ruhige Umbrüche */
+body { font-variant-numeric: tabular-nums; }
+h1, h2, h3 { text-wrap: balance; }
+p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
+.btn, .kt__schnell a { font-weight: 500; }
+.anfrage__danke-titel { font-weight: 400; letter-spacing: -0.02em; }
 /* ---------- Kontakt-Kasten (Emre, 27.09.): altes Formular, nur der Kasten im neuen Stil –
    runde Karte mit feinem Rand, ruhiger Grund, viel Innenabstand, gepunktete Linie, weiche Felder, Fokus-Ring in Akzentfarbe, Pfeil gleitet ---------- */
 .anfrage { width: min(100%, 720px); gap: 24px; padding: clamp(24px, 3.4vw, 40px); border-radius: 24px; border-color: rgba(242, 239, 232, 0.12);
@@ -477,7 +486,6 @@ html[data-whatsapp="aus"] [data-wa], html[data-whatsapp="aus"] .weg, html[data-w
       <nav class="kt__schnell reveal" aria-label="Direkt erreichen">
         <a href="https://wa.me/4915906344961" target="_blank" rel="noopener" data-wa><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5l1.2-3.6A8 8 0 1 1 8.4 18.6Z"/><path d="M9.2 8.6c.3 2.9 2.4 5.2 5.3 5.7l1-1.3-1.8-.9-.7.8a4 4 0 0 1-2.2-2.2l.8-.7-.9-1.8Z"/></svg>WhatsApp</a>
         <a href="mailto:ergun.eu@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/></svg>E-Mail</a>
-        <a href="tel:+4915906344961"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3.5l1.6 4.3-2.2 1.4a10.5 10.5 0 0 0 6.4 6.4l1.4-2.2L20 15.5V19a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1Z"/></svg>Anrufen</a>
       </nav>
     </div>
 
@@ -601,7 +609,6 @@ html[data-whatsapp="aus"] [data-wa], html[data-whatsapp="aus"] .weg, html[data-w
 
     <div class="contact__meta reveal">
       <a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a>
-      <a href="tel:+4915906344961">+49 1590 6344961</a>
     </div>
     <div class="agentur reveal">
       <p class="agentur__marke">ERGUN<span class="dot">.</span></p>
