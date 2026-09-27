@@ -295,7 +295,6 @@ img { display: block; max-width: 100%; height: auto; }
 }
 
 /* ---------- ERGUN. = reine Webdesign-Seite (Emre, 27.09.): Hero → Kontakt → Fußzeile ---------- */
-.titel__zeile { margin: 0; max-width: 34ch; font-size: clamp(15px, 1.5vw, 19px); line-height: 1.45; color: rgba(255, 249, 240, 0.9); text-wrap: balance; text-shadow: 0 1px 2px rgba(10, 16, 32, 0.45), 0 0 18px rgba(10, 16, 32, 0.35); }
 /* Scroll-Hinweis: eine feine Linie, die ruhig nach unten atmet */
 .szene__weiter { position: absolute; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); z-index: 4; display: grid; justify-items: center; gap: 8px; min-width: 44px; min-height: 44px; padding: 6px 10px; translate: -50% 0; color: rgba(242, 239, 232, 0.75); text-decoration: none; }
 .szene__weiter-text { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.85; }
@@ -332,16 +331,7 @@ html.zu-endo .endo-marke__wort, html.zu-endo .nav__link--endo { filter: drop-sha
 @media (prefers-reduced-motion: reduce) { .endo-marke__wort b, .endo-marke__wort small { animation: none; } .wechsel { transition: none; } }
 
 /* Kontakt folgt direkt auf das Titelbild: Farbe läuft aus der Nacht in den Seitenhintergrund */
-.contact { background: linear-gradient(#070B16, var(--bg) 26%); }
 /* Direktkontakt: drei Wege (Handy oben als große Knöpfe, Desktop als ruhige Zeile) */
-.kt__schnell { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; width: min(100%, 400px); margin-top: 4px; }
-.kt__schnell a { display: grid; justify-items: center; gap: 8px; min-height: 76px; padding: 14px 6px; border: 1px solid var(--line); border-radius: 16px; background: rgba(242, 239, 232, 0.03); font-size: 14px; color: var(--text); text-decoration: none; transition: border-color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
-.kt__schnell svg { width: 22px; height: 22px; }
-.kt__schnell a:active { transform: scale(0.97); }
-.kt__schnell a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-@media (hover: hover) and (pointer: fine) { .kt__schnell a:hover { border-color: rgba(242, 239, 232, 0.32); background: rgba(242, 239, 232, 0.06); } }
-@media (min-width: 701px) { .kt__schnell a { grid-auto-flow: column; align-items: center; min-height: 48px; padding: 10px 18px; border-radius: 999px; } .kt__schnell svg { width: 18px; height: 18px; } }
-html[data-whatsapp="aus"] [data-wa], html[data-whatsapp="aus"] .weg, html[data-whatsapp="aus"] .anfrage__gruppe--weg { display: none; }
 /* Drei Wege der Zusammenarbeit */
 .wege { list-style: none; margin: 8px 0 0; padding: 0; width: min(100%, 980px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); text-align: left; }
 .wege li { display: grid; gap: 6px; align-content: start; padding: 22px 22px 4px 0; }
@@ -388,8 +378,7 @@ html[data-whatsapp="aus"] [data-wa], html[data-whatsapp="aus"] .weg, html[data-w
 body { font-variant-numeric: tabular-nums; }
 h1, h2, h3 { text-wrap: balance; }
 p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
-.btn, .kt__schnell a { font-weight: 500; }
-.anfrage__danke-titel { font-weight: 400; letter-spacing: -0.02em; }
+.btn, .anfrage__danke-titel { font-weight: 400; letter-spacing: -0.02em; }
 /* ---------- Kontakt-Kasten (Emre, 27.09.): altes Formular, nur der Kasten im neuen Stil –
    runde Karte mit feinem Rand, ruhiger Grund, viel Innenabstand, gepunktete Linie, weiche Felder, Fokus-Ring in Akzentfarbe, Pfeil gleitet ---------- */
 .anfrage { width: min(100%, 720px); gap: 24px; padding: clamp(24px, 3.4vw, 40px); border-radius: 24px; border-color: rgba(242, 239, 232, 0.12);
@@ -422,6 +411,49 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   .anfrage .weg { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) { .anfrage__pfeil { transition: none; } }
+/* ---------- Kontakt übersichtlich (Emre, 27.09. spät): 4 Auswahl-Karten, Pflichtfelder, Antwort-Weg mit passendem Feld ---------- */
+.pflicht { color: var(--accent); font-weight: 500; margin-left: 2px; }
+.thema { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.thema__karte { position: relative; display: flex; min-width: 0; }
+.thema__karte input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.thema__innen { flex: 1; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 12px; row-gap: 2px; align-items: center; min-height: 76px; padding: 14px 16px; border: 1px solid rgba(242, 239, 232, 0.14); border-radius: 16px; background: rgba(14, 14, 12, 0.45);
+  transition: border-color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
+.thema__innen svg { grid-row: 1 / 3; width: 26px; height: 26px; color: rgba(242, 239, 232, 0.7); transition: color 200ms var(--ease); }
+.thema__innen b { font-weight: 500; font-size: 15.5px; line-height: 1.25; color: var(--text); }
+.thema__innen small { font-size: 13px; line-height: 1.35; color: var(--muted); }
+.thema__karte input:checked + .thema__innen { border-color: var(--accent); background: rgba(255, 90, 31, 0.1); }
+.thema__karte input:checked + .thema__innen svg { color: var(--accent); }
+.thema__karte input:focus-visible + .thema__innen { outline: 2px solid var(--accent); outline-offset: 3px; }
+.thema__karte:active .thema__innen { transform: scale(0.985); }
+@media (hover: hover) and (pointer: fine) { .thema__karte:hover .thema__innen { border-color: rgba(242, 239, 232, 0.32); } .thema__karte input:checked + .thema__innen { border-color: var(--accent); } }
+@media (max-width: 460px) { .thema { grid-template-columns: minmax(0, 1fr); } }
+.anfrage__gruppe .field__error { display: block; margin-top: 8px; }
+.anfrage .anfrage__gruppe.hat-fehler .thema__innen, .anfrage .anfrage__gruppe.hat-fehler .weg__option span { border-color: rgba(255, 138, 92, 0.7); }
+.anfrage .field__error { color: #FF8A5C; font-size: 13.5px; }
+.anfrage__kontakt[hidden] { display: none; }
+.anfrage__kontakt.ist-neu { animation: feld-rein 420ms var(--ease-out) both; }
+@keyframes feld-rein { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+.anfrage__haken { display: flex; gap: 12px; align-items: flex-start; font-size: 14px !important; letter-spacing: 0 !important; text-transform: none !important; line-height: 1.5; color: var(--muted) !important; cursor: pointer; }
+.anfrage__haken input { flex: none; width: 22px; height: 22px; min-height: 0 !important; margin: 1px 0 0; padding: 0 !important; accent-color: var(--accent); cursor: pointer; }
+.anfrage__haken a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(242, 239, 232, 0.4); }
+.anfrage .weg { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+@media (prefers-reduced-motion: reduce) { .anfrage__kontakt.ist-neu { animation: none; } }
+
+/* ---------- Unter die Erde: Erdschnitt am Übergang Titelbild → Kontakt, Wurzeln bis zum Punkt von ERGUN. ---------- */
+.contact { position: relative; isolation: isolate;
+  background: linear-gradient(#070B16 0, #0F0C0A 70px, #120E0B 180px, #100D0B 420px, var(--bg) 760px); }
+.contact::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 760px; z-index: 0; pointer-events: none; opacity: 0.55;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .52 0 0 0 0 .40 0 0 0 0 .29 0 0 0 .55 -.12'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 0.2), #000 90px, #000 260px, transparent 760px); mask-image: linear-gradient(rgba(0, 0, 0, 0.2), #000 90px, #000 260px, transparent 760px); }
+.contact > :not(.wurzeln) { position: relative; z-index: 1; }
+.wurzeln { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.wurzeln svg { display: block; position: absolute; left: 0; top: 0; }
+/* der Punkt von ERGUN. leuchtet auf, wenn die Wurzeln ihn erreichen (nur opacity) */
+.agentur__marke .dot { position: relative; display: inline-block; }
+.agentur__marke .dot::after { content: ""; position: absolute; left: 50%; bottom: 0.14em; width: 1.2em; height: 1.2em; margin-left: -0.6em; margin-bottom: -0.5em; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 120, 60, 0.75), rgba(255, 90, 31, 0.28) 45%, rgba(255, 90, 31, 0) 100%); opacity: 0; transition: opacity 700ms var(--ease); }
+.agentur__marke .dot.dot--glueht::after { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .agentur__marke .dot::after { transition: none; } }
 </style>
 </head>
 <body>
@@ -454,7 +486,6 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
       <div class="titel">
         <p class="titel__studio">Digitalstudio für Design</p>
         <h1 class="titel__haupt"><span class="hinweis-versteckt">ERGUN. </span>Webdesigner</h1>
-        <p class="titel__zeile">Websites, Assistenten &amp; Automatisierung – persönlich von mir.</p>
       </div>
     </div>
     <div class="szene__ebene" data-ebene="huegel" aria-hidden="true"></div>
@@ -482,89 +513,27 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
         <figcaption><strong>Emre Ergun</strong> · <span class="online">online</span></figcaption>
       </figure>
       <h2 class="contact__big reveal" id="kontakt-titel">Kostenloses Erstgespräch</h2>
-      <p class="contact__intro reveal">Erzählen Sie kurz, worum es geht – ich melde mich persönlich innerhalb von 24&nbsp;Stunden.</p>
-      <nav class="kt__schnell reveal" aria-label="Direkt erreichen">
-        <a href="https://wa.me/4915906344961" target="_blank" rel="noopener" data-wa><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5l1.2-3.6A8 8 0 1 1 8.4 18.6Z"/><path d="M9.2 8.6c.3 2.9 2.4 5.2 5.3 5.7l1-1.3-1.8-.9-.7.8a4 4 0 0 1-2.2-2.2l.8-.7-.9-1.8Z"/></svg>WhatsApp</a>
-        <a href="mailto:ergun.eu@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/></svg>E-Mail</a>
-      </nav>
+      <p class="contact__intro reveal">Antwort innerhalb von 24&nbsp;Stunden.</p>
     </div>
-
-    <ul class="wege reveal" aria-label="So arbeiten wir zusammen">
-      <li><b>Neue Website</b><span>Von Grund auf geplant, gestaltet und gebaut, mit Bewegung und eigenen Bildern.</span></li>
-      <li><b>Bestehende Website</b><span>Überarbeiten, modernisieren oder um neue Bereiche erweitern.</span></li>
-      <li><b>Assistent &amp; Automatisierung</b><span>Ein Assistent, der auf Ihrer Website Fragen beantwortet, und Abläufe, die von allein laufen.</span></li>
-    </ul>
-    <p class="wege__beides reveal"><b>Inklusive in der Betreuung:</b> <a href="https://endo-ergun.vercel.app/" data-endo-link>endo Studio ↗</a> für Ihre eigenen Produktfotos &amp; Videos.</p>
 
     <!-- Eine Karte, alles auf einen Blick (Emre, 25.09. abends: keine Schritte) -->
     <form class="anfrage reveal" id="anfrage" novalidate>
-      <fieldset class="anfrage__gruppe">
-        <legend>Worum geht es?</legend>
-        <div class="wahl">
-          <label class="wahl__option"><input type="radio" name="hilfe" value="Website"><span>Website</span></label>
-          <label class="wahl__option"><input type="radio" name="hilfe" value="Website + Assistent"><span>Website + Assistent</span></label>
-          <label class="wahl__option"><input type="radio" name="hilfe" value="Website + Automatisierung"><span>Website + Automatisierung</span></label>
-          <label class="wahl__option"><input type="radio" name="hilfe" value="Betreuung"><span>Betreuung</span></label>
-          <label class="wahl__option"><input type="radio" name="hilfe" value="Weiß ich noch nicht"><span>Weiß ich noch nicht</span></label>
-        </div>
+      <fieldset class="anfrage__gruppe anfrage__gruppe--thema" aria-describedby="f-thema-err">
+        <legend>Worum geht es? <span class="pflicht" aria-hidden="true">*</span></legend>
+        <div class="thema" data-themen><!-- Karten kommen aus THEMEN im Skript unten (Texte dort ändern) --></div>
+        <span class="field__error" id="f-thema-err" aria-live="polite"></span>
       </fieldset>
       <div class="anfrage__punkte" aria-hidden="true"></div>
 
-      <div class="form__row">
-        <div class="field">
-          <label for="f-name">Name</label>
-          <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-err">
-          <span class="field__error" id="f-name-err" aria-live="polite"></span>
-        </div>
-        <div class="field">
-          <label for="f-mail">E-Mail-Adresse</label>
-          <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="f-mail-err">
-          <span class="field__error" id="f-mail-err" aria-live="polite"></span>
-        </div>
-      </div>
-      <div class="form__row">
-        <div class="field">
-          <label for="f-land">Land</label>
-          <select id="f-land" name="land" autocomplete="country-name">
-              <option value="Belgien" data-vorwahl="+32">Belgien</option>
-              <option value="Bulgarien" data-vorwahl="+359">Bulgarien</option>
-              <option value="Dänemark" data-vorwahl="+45">Dänemark</option>
-              <option value="Deutschland" data-vorwahl="+49" selected>Deutschland</option>
-              <option value="Estland" data-vorwahl="+372">Estland</option>
-              <option value="Finnland" data-vorwahl="+358">Finnland</option>
-              <option value="Frankreich" data-vorwahl="+33">Frankreich</option>
-              <option value="Griechenland" data-vorwahl="+30">Griechenland</option>
-              <option value="Irland" data-vorwahl="+353">Irland</option>
-              <option value="Italien" data-vorwahl="+39">Italien</option>
-              <option value="Kroatien" data-vorwahl="+385">Kroatien</option>
-              <option value="Lettland" data-vorwahl="+371">Lettland</option>
-              <option value="Litauen" data-vorwahl="+370">Litauen</option>
-              <option value="Luxemburg" data-vorwahl="+352">Luxemburg</option>
-              <option value="Malta" data-vorwahl="+356">Malta</option>
-              <option value="Niederlande" data-vorwahl="+31">Niederlande</option>
-              <option value="Österreich" data-vorwahl="+43">Österreich</option>
-              <option value="Polen" data-vorwahl="+48">Polen</option>
-              <option value="Portugal" data-vorwahl="+351">Portugal</option>
-              <option value="Rumänien" data-vorwahl="+40">Rumänien</option>
-              <option value="Schweden" data-vorwahl="+46">Schweden</option>
-              <option value="Slowakei" data-vorwahl="+421">Slowakei</option>
-              <option value="Slowenien" data-vorwahl="+386">Slowenien</option>
-              <option value="Spanien" data-vorwahl="+34">Spanien</option>
-              <option value="Tschechien" data-vorwahl="+420">Tschechien</option>
-              <option value="Ungarn" data-vorwahl="+36">Ungarn</option>
-              <option value="Zypern" data-vorwahl="+357">Zypern</option>
-              <option value="Anderes Land" data-vorwahl="">Anderes Land</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="f-tel">Telefon <small>(optional)</small></label>
-          <input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel">
-        </div>
+      <div class="field">
+        <label for="f-name">Name <span class="pflicht" aria-hidden="true">*</span></label>
+        <input id="f-name" name="name" type="text" autocomplete="name" required aria-required="true" aria-describedby="f-name-err">
+        <span class="field__error" id="f-name-err" aria-live="polite"></span>
       </div>
 
       <div class="field">
-        <label for="f-text">Ihre Nachricht <small>(optional)</small></label>
-        <textarea id="f-text" name="text" rows="4" placeholder="Was machen Sie, und was soll die Website können? Ein, zwei Sätze genügen."></textarea>
+        <label for="f-text">Nachricht <small>(optional, kurz)</small></label>
+        <textarea id="f-text" name="text" rows="3" placeholder="Was machen Sie, und was soll die Website können? Ein, zwei Sätze genügen."></textarea>
       </div>
 
       <div class="field field--datei">
@@ -578,21 +547,37 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
           <span class="form__hint">Die Dateien werden beim Auswählen hochgeladen und kommen als Link in die Nachricht. Nach 30 Tagen werden sie automatisch gelöscht.</span>
         </div>
 
-      <fieldset class="anfrage__gruppe">
-        <legend>Antwort per</legend>
+      <fieldset class="anfrage__gruppe anfrage__gruppe--weg" aria-describedby="f-weg-err">
+        <legend>Antwort per <span class="pflicht" aria-hidden="true">*</span></legend>
         <div class="weg">
-          <label class="weg__option"><input type="radio" name="weg" value="whatsapp" checked><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg> WhatsApp</span></label>
+          <label class="weg__option"><input type="radio" name="weg" value="whatsapp"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg> WhatsApp</span></label>
           <label class="weg__option"><input type="radio" name="weg" value="mail"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg> E-Mail</span></label>
         </div>
+        <span class="field__error" id="f-weg-err" aria-live="polite"></span>
       </fieldset>
 
+      <div class="field anfrage__kontakt" data-feld-tel hidden>
+        <label for="f-tel">Telefonnummer <span class="pflicht" aria-hidden="true">*</span></label>
+        <input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="+49 …" aria-required="true" aria-describedby="f-tel-err">
+        <span class="field__error" id="f-tel-err" aria-live="polite"></span>
+      </div>
+      <div class="field anfrage__kontakt" data-feld-mail hidden>
+        <label for="f-mail">E-Mail-Adresse <span class="pflicht" aria-hidden="true">*</span></label>
+        <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@firma.de" aria-required="true" aria-describedby="f-mail-err">
+        <span class="field__error" id="f-mail-err" aria-live="polite"></span>
+      </div>
+
+      <div class="field anfrage__ok">
+        <label class="anfrage__haken"><input type="checkbox" name="datenschutz" aria-required="true" aria-describedby="f-ds-err"><span>Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a> gelesen und bin einverstanden, dass Emre mich zu meiner Anfrage kontaktiert. <span class="pflicht" aria-hidden="true">*</span></span></label>
+        <span class="field__error" id="f-ds-err" aria-live="polite"></span>
+      </div>
+
       <button class="btn btn--wa anfrage__senden" type="submit" data-senden>
-        <span class="anfrage__icon" data-icon-wa><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg></span><span class="anfrage__icon" data-icon-mail hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg></span>
-        <span data-senden-text>Per WhatsApp senden</span>
+        <span data-senden-text>Anfrage senden</span>
         <span class="anfrage__pfeil" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
       </button>
       <p class="form__status" data-status aria-live="polite"></p>
-      <p class="form__hint">Öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Ihre Angaben speichert die Website nicht, nur hochgeladene Dateien liegen bis zu 30 Tage bei Vercel.</p>
+      <p class="form__hint">Felder mit * sind Pflicht. „Anfrage senden“ öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Ihre Angaben speichert die Website nicht, nur hochgeladene Dateien liegen bis zu 30 Tage bei Vercel.</p>
       <!-- Honigtopf gegen Spam: für Menschen unsichtbar -->
       <div class="anfrage__hp" aria-hidden="true"><label>Website <input type="text" name="webseite" tabindex="-1" autocomplete="off"></label></div>
       <div class="anfrage__danke" data-danke hidden tabindex="-1">
@@ -627,7 +612,8 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 </footer>
 <div class="wechsel" aria-hidden="true"></div>
 
-<script src="js/szene.js?v=34"></script>
+<script src="js/szene.js?v=35"></script>
+<script src="js/wurzeln.js?v=1" defer></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {
@@ -654,7 +640,14 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
    und landen als Link in der Nachricht; klappt das nicht, hängt man sie selbst an.
    Ohne JavaScript bleibt das Formular sichtbar und tut nichts Falsches. */
 (function () {
-  var WHATSAPP_AN = true;              /* false = WhatsApp-Knöpfe und -Versand ausblenden (falls keine geschäftliche Nummer) */
+  /* ===== Einstellungen (Emre, 27.09.): Texte der vier Auswahl-Karten hier ändern ===== */
+  var THEMEN = [
+    { wert: 'Neue Website', titel: 'Neue Website', zeile: 'Von Grund auf geplant und gebaut', icon: '<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 8.5h17"/><path d="M12 11.5v5M9.5 14h5"/>' },
+    { wert: 'Website-Redesign', titel: 'Website-Redesign', zeile: 'Bestehende Seite neu und modern', icon: '<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 8.5h17"/><path d="M15.5 12.5a3.5 3.5 0 1 1-1-2.5"/><path d="M15.5 9.5v3h-3"/>' },
+    { wert: 'Assistent & Automatisierung', titel: 'Assistent & Automatisierung', zeile: 'Fragen beantworten, Abläufe automatisch', icon: '<path d="M5 6.5h14a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5H10l-4 3v-3H5A1.5 1.5 0 0 1 3.5 15V8A1.5 1.5 0 0 1 5 6.5Z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/>' },
+    { wert: 'Betreuung & Änderungen', titel: 'Betreuung & Änderungen', zeile: 'Pflege, Änderungen, immer aktuell', icon: '<path d="M14.5 5.5a4 4 0 0 0-5 5L4 16v4h4l5.5-5.5a4 4 0 0 0 5-5l-2.5 2.5-3-.5-.5-3Z"/>' }
+  ];
+  var WHATSAPP_AN = true;              /* false = WhatsApp als Antwort-Weg ausblenden (falls keine geschäftliche Nummer) */
   var WA_NUMMER = '4915906344961';     /* Nummer aus dem Impressum */
   var MAIL = 'ergun.eu@gmail.com';
   if (!WHATSAPP_AN) document.documentElement.setAttribute('data-whatsapp', 'aus');
@@ -663,55 +656,63 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   var danke = form.querySelector('[data-danke]');
   var ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var status = form.querySelector('[data-status]');
-  var sendenKnopf = form.querySelector('[data-senden]'), sendenText = form.querySelector('[data-senden-text]');
   function wert(k) { var el = form.elements[k]; return el && el.value ? el.value.trim() : ''; }
   function gewaehlt(name) { var el = form.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ''; }
-  function alleGewaehlt(name) { return [].map.call(form.querySelectorAll('input[name="' + name + '"]:checked'), function (el) { return el.value; }); }
-  function weg() { return WHATSAPP_AN ? (gewaehlt('weg') || 'whatsapp') : 'mail'; }
+  function weg() { return WHATSAPP_AN ? gewaehlt('weg') : 'mail'; }
 
-  /* ---- Knopf folgt dem gewählten Weg, Telefonfeld zeigt die Vorwahl des Landes ---- */
-  function knopf() {
-    var wa = weg() === 'whatsapp';
-    sendenText.textContent = wa ? 'Per WhatsApp senden' : 'Per E-Mail senden';
-    form.querySelector('[data-icon-wa]').hidden = !wa;
-    form.querySelector('[data-icon-mail]').hidden = wa;
-  }
-  var land = form.elements['land'], tel = form.elements['tel'];
-  function vorwahl() {
-    var o = land.options[land.selectedIndex], v = o ? o.getAttribute('data-vorwahl') : '';
-    tel.placeholder = v ? v + ' …' : 'mit Ländervorwahl';
-  }
-  land.addEventListener('change', vorwahl);
-  knopf(); vorwahl();
-
-  /* „Noch nichts" schließt die anderen Häkchen aus (und umgekehrt) */
-  form.addEventListener('change', function (e) {
-    var t = e.target;
-    if (t.name === 'weg') { knopf(); status.textContent = ''; }
-    if (t.name === 'vorhanden' && t.checked) {
-      form.querySelectorAll('input[name="vorhanden"]').forEach(function (el) {
-        if (el !== t && (t.value === 'Noch nichts' || el.value === 'Noch nichts')) el.checked = false;
-      });
-    }
+  /* ---- Vier Auswahl-Karten aus THEMEN ---- */
+  var themenBox = form.querySelector('[data-themen]');
+  THEMEN.forEach(function (t) {
+    var l = document.createElement('label'); l.className = 'thema__karte';
+    l.innerHTML = '<input type="radio" name="hilfe"><span class="thema__innen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + t.icon + '</svg><b></b><small></small></span>';
+    l.querySelector('input').value = t.wert; l.querySelector('b').textContent = t.titel; l.querySelector('small').textContent = t.zeile;
+    themenBox.appendChild(l);
   });
 
-  /* ---- Prüfung ---- */
-  var regeln = {
-    name: function (v) { return v ? '' : 'Bitte Ihren Namen eintragen.'; },
-    email: function (v) { return !v ? 'Bitte eine E-Mail-Adresse eintragen, damit ich antworten kann.' : (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? '' : 'Bitte geben Sie eine gültige E-Mail ein.'); },
-    tel: function (v) { return !v || /^\+?[\d\s()\/.-]{6,20}$/.test(v) ? '' : 'Bitte geben Sie eine gültige Telefonnummer ein – oder lassen Sie das Feld leer.'; }
-  };
-  function fehler(el, text) {
-    var wrap = el.closest('.field'), out = wrap.querySelector('.field__error');
-    wrap.classList.toggle('hat-fehler', !!text);
-    if (out) out.textContent = text || '';
-    el.setAttribute('aria-invalid', text ? 'true' : 'false');
+  /* ---- Antwort per: nur das passende Feld zeigen ---- */
+  var feldTel = form.querySelector('[data-feld-tel]'), feldMail = form.querySelector('[data-feld-mail]');
+  if (!WHATSAPP_AN) { var waOpt = form.querySelector('input[name="weg"][value="whatsapp"]'); if (waOpt) waOpt.closest('label').hidden = true; form.querySelector('input[name="weg"][value="mail"]').checked = true; }
+  function wegFelder() {
+    var w = weg();
+    feldTel.hidden = w !== 'whatsapp'; feldMail.hidden = w !== 'mail';
   }
-  function pruefeFeld(k) { var el = form.elements[k]; var t = regeln[k](el.value.trim()); fehler(el, t); return !t; }
+  wegFelder();
+  form.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.name === 'weg') {
+      wegFelder(); pruefeFeld('weg'); status.textContent = '';
+      var neu = w2el(); if (neu && !ruhig) { neu.closest('.field').classList.add('ist-neu'); setTimeout(function () { neu.closest('.field').classList.remove('ist-neu'); }, 600); }
+    }
+    if (t.name === 'hilfe') pruefeFeld('hilfe');
+    if (t.name === 'datenschutz') pruefeFeld('datenschutz');
+  });
+  function w2el() { var w = weg(); return w === 'whatsapp' ? form.elements.tel : w === 'mail' ? form.elements.email : null; }
+
+  /* ---- Prüfung: Pflichtfelder, deutsche Meldung direkt am Feld, Fokus auf den ersten Fehler ---- */
+  var regeln = {
+    hilfe: function () { return gewaehlt('hilfe') ? '' : 'Bitte wählen Sie, worum es geht.'; },
+    name: function (v) { return v.length >= 2 ? '' : 'Bitte geben Sie Ihren Namen ein.'; },
+    weg: function () { return weg() ? '' : 'Bitte wählen Sie, wie ich Ihnen antworten soll.'; },
+    tel: function (v) { return !v ? 'Bitte geben Sie Ihre Telefonnummer ein.' : (/^\+?[\d\s()\/.-]{6,20}$/.test(v) && v.replace(/\D/g, '').length >= 6 ? '' : 'Bitte geben Sie eine gültige Telefonnummer ein, z. B. +49 170 1234567.'); },
+    email: function (v) { return !v ? 'Bitte geben Sie Ihre E-Mail-Adresse ein.' : (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? '' : 'Bitte geben Sie eine gültige E-Mail ein.'); },
+    datenschutz: function () { return form.elements.datenschutz.checked ? '' : 'Bitte stimmen Sie der Datenschutzerklärung zu.'; }
+  };
+  var FEHLER_ORT = { hilfe: 'f-thema-err', weg: 'f-weg-err', name: 'f-name-err', tel: 'f-tel-err', email: 'f-mail-err', datenschutz: 'f-ds-err' };
+  function fokusZiel(k) { return k === 'hilfe' ? form.querySelector('input[name="hilfe"]') : k === 'weg' ? form.querySelector('input[name="weg"]') : form.elements[k]; }
+  function pruefeFeld(k) {
+    var el = k === 'hilfe' || k === 'weg' ? null : form.elements[k];
+    var t = regeln[k](el ? el.value.trim() : '');
+    var out = document.getElementById(FEHLER_ORT[k]), wrap = out && out.closest('.field, .anfrage__gruppe');
+    if (wrap) wrap.classList.toggle('hat-fehler', !!t);
+    if (out) out.textContent = t || '';
+    (el ? [el] : [].slice.call(form.querySelectorAll('input[name="' + k + '"]'))).forEach(function (x) { x.setAttribute('aria-invalid', t ? 'true' : 'false'); });
+    return !t;
+  }
+  function pflichtFelder() { var w = weg(); return ['hilfe', 'name', 'weg'].concat(w === 'whatsapp' ? ['tel'] : w === 'mail' ? ['email'] : [], ['datenschutz']); }
   function pruefen() {
     var erster = null;
-    ['name', 'email', 'tel'].forEach(function (k) { if (!pruefeFeld(k) && !erster) erster = form.elements[k]; });
-    if (erster) erster.focus();
+    pflichtFelder().forEach(function (k) { if (!pruefeFeld(k) && !erster) erster = k; });
+    if (erster) { var z = fokusZiel(erster); z.focus({ preventScroll: true }); z.closest('.field, .anfrage__gruppe').scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'center' }); }
     return !erster;
   }
   ['name', 'email', 'tel'].forEach(function (k) {
@@ -779,18 +780,19 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 
   /* ---- Nachricht & Versand ---- */
   function nachricht() {
-    var hilfe = gewaehlt('hilfe'), text = wert('text');
+    var text = wert('text'), wa = weg() === 'whatsapp';
     var mitLink = eintraege.filter(function (e) { return e.stand === 'ok'; });
     var ohneLink = selbstAnhaengen().map(function (e) { return e.name; });
-    return 'Hallo Emre, ich bin ' + wert('name') + ' und möchte ein kostenloses Erstgespräch.\n\n' +
-      (hilfe ? 'Es geht um: ' + hilfe + '\n\n' : '') +
-      (text ? text + '\n\n' : '') +
-      (mitLink.length ? 'Meine Dateien:\n' + mitLink.map(function (e) { return '• ' + e.name + ': ' + e.url; }).join('\n') + '\n\n' : '') +
-      (ohneLink.length ? 'Dateien, die ich hier anhänge: ' + ohneLink.join(', ') + '\n\n' : '') +
-      'E-Mail: ' + wert('email') + '\n' +
-      (wert('tel') ? 'Telefon: ' + wert('tel') + '\n' : '') +
-      'Land: ' + wert('land') + '\n' +
-      'Gesendet über die Website.';
+    var z = ['Hallo Emre, ich möchte ein kostenloses Erstgespräch.', '',
+      'Worum es geht: ' + gewaehlt('hilfe'),
+      'Name: ' + wert('name'),
+      'Antwort per: ' + (wa ? 'WhatsApp' : 'E-Mail'),
+      wa ? 'Telefon: ' + wert('tel') : 'E-Mail: ' + wert('email')];
+    if (text) z.push('', 'Nachricht:', text);
+    if (mitLink.length) z.push('', 'Meine Dateien:', mitLink.map(function (e) { return '• ' + e.name + ': ' + e.url; }).join('\n'));
+    if (ohneLink.length) z.push('', 'Dateien, die ich hier anhänge: ' + ohneLink.join(', '));
+    z.push('', 'Datenschutz: zugestimmt', 'Gesendet über die Website.');
+    return z.join('\n');
   }
   function waLink() { return 'https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(nachricht()); }
   function mailLink() {

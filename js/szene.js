@@ -767,7 +767,7 @@
       else if (!gewunken && p > vorherP) { gewunken = true; winken(); }
     }
     /* Neuaufbau: Licht und Faden sofort auf den aktuellen Stand */
-    if (immer) { weichY = rohY; lichtP = fortschritt(rohY); licht(lichtP); }
+    if (immer) { weichY = rohY; lichtP = fortschritt(rohY); licht(lichtP); if (window.ergunTakt) window.ergunTakt(weichY, lichtP); }
   }
   /* Der Takt läuft, solange gescrollt wird, und noch kurz danach (iPhone-Schwungscrollen) – dann schläft er */
   var laeuft = false, zuletztT = 0, stillSeit = 0, lichtP = -1;
@@ -781,6 +781,8 @@
     else { weichY += (rohY - weichY) * (1 - Math.exp(-dt / GLATT)); if (Math.abs(rohY - weichY) < 0.3) weichY = rohY; }
     var lp = fortschritt(weichY);
     if (Math.abs(lp - lichtP) > 0.00005) { lichtP = lp; licht(lp); }
+    /* gemeinsamer Takt für andere Bewegungen (Wurzeln, 27.09.): gleiche Scroll-Quelle, gleiche 150-ms-Glättung */
+    if (window.ergunTakt) window.ergunTakt(weichY, lp);
     if (weichY !== rohY) stillSeit = t;
     if (t - stillSeit < 300) requestAnimationFrame(takt); else laeuft = false;
   }
