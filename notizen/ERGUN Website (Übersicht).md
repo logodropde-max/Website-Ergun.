@@ -8,12 +8,9 @@ Zentrale Notiz für alles rund um die Website und endo.ai. Von hier gehen alle V
 **Live:** https://website-ergun.vercel.app · **endo.ai:** https://website-ergun.vercel.app/ki/
 
 ## Bereiche
-- [[Startseite]]: Titelbild, endo Studio, Erstgespräch
 - [[Kontaktformular]]: WhatsApp oder E-Mail, EU-Länder, Anliegen
 - [[Datei-Upload (Vercel Blob)]]: Fotos als Link in der Nachricht
-- [[endo-ai|endo.ai]]: KI-Studio als zweites Einkommen
 - [[endo Chat-Agent]]: Assistent, der antwortet und zum Produktfoto einlädt
-- [[KI-Studio mit Higgsfield]]: Plan, Ideen, API erklärt
 
 ## Technik und Dienste
 - [[Vercel]]: Hosting, veröffentlicht automatisch
@@ -28,7 +25,7 @@ Zentrale Notiz für alles rund um die Website und endo.ai. Von hier gehen alle V
 - [[Datenschutz und Recht]]
 
 ## Im Vault verknüpft
-- [[00 Start]] · [[Agentur-Website]] · [[Marke]] · [[Hero-Ebenen EE Design]] · [[Higgsfield-Galerie]]
+- [[00 Start]] · [[Marke]] · [[Higgsfield-Galerie]]
 - [[Projekt 2 – Feinschliff + endo Agents]] – aktuelles Projekt · [[Neustart – hier weitermachen]] – Stand
 - [[Verlauf]] – alle Entscheidungen, neueste oben
 
