@@ -4,14 +4,15 @@
 <meta charset="utf-8">
 <script src="js/schrift-test.js?v=1"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>ERGUN. – Digitalstudio für Webdesign, Produktfotos und Videos</title>
-<meta name="description" content="ERGUN. ist ein Digitalstudio mit zwei Bereichen: Websites mit Design, Bewegung und eigenen Bildern, und endo Studio für Produktfotos und Werbevideos. Kostenloses Erstgespräch, aus Elmshorn.">
-<meta name="theme-color" content="#000000">
+<title>ERGUN. – Webdesigner Emre Ergun · Websites, Assistenten & Automatisierung</title>
+<meta name="description" content="ERGUN. ist das Webdesign-Studio von Emre Ergun aus Elmshorn: Websites mit Design und Bewegung, Assistenten und Automatisierung – persönlich, aus einer Hand. Kostenloses Erstgespräch.">
+<meta name="theme-color" content="#0E0E0C">
+<meta name="robots" content="noindex, nofollow"><!-- solange die Seite privat ist; beim Livegang entfernen -->
 
 <!-- Teilen in Social Media / Messengern -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="ERGUN. – Digitalstudio für Webdesign, Produktfotos und Videos">
-<meta property="og:description" content="Websites mit Design, Bewegung und eigenen Bildern. Kostenloses Erstgespräch, aus Elmshorn.">
+<meta property="og:title" content="ERGUN. – Webdesigner Emre Ergun">
+<meta property="og:description" content="Websites, Assistenten & Automatisierung – persönlich von Emre. Kostenloses Erstgespräch, aus Elmshorn.">
 <meta property="og:image" content="https://website-ergun.vercel.app/bilder/og.jpg">
 <meta property="og:url" content="https://website-ergun.vercel.app/">
 <link rel="canonical" href="https://website-ergun.vercel.app/">
@@ -27,8 +28,6 @@
 <link rel="preload" href="schriften/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="schriften/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <script>document.documentElement.classList.add('js');</script>
-<link rel="stylesheet" href="ki/pakete.css?v=7">
-<link rel="stylesheet" href="ki/studio.css?v=1">
 
 <style>
 html, body { touch-action: pan-x pan-y; }
@@ -292,224 +291,60 @@ img { display: block; max-width: 100%; height: auto; }
   .online::before { animation: none; }
 }
 
-/* ---------- Onepager (25.09., Emre): Hero → endo.ai → Erstgespräch, alles untereinander ---------- */
+/* ---------- ERGUN. = reine Webdesign-Seite (Emre, 27.09.): Hero → Kontakt → Fußzeile ---------- */
+.titel__zeile { margin: 0; max-width: 34ch; font-size: clamp(15px, 1.5vw, 19px); line-height: 1.45; color: rgba(255, 249, 240, 0.9); text-wrap: balance; text-shadow: 0 1px 2px rgba(10, 16, 32, 0.45), 0 0 18px rgba(10, 16, 32, 0.35); }
+/* Scroll-Hinweis: eine feine Linie, die ruhig nach unten atmet */
+.szene__weiter { position: absolute; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); z-index: 4; display: grid; justify-items: center; gap: 8px; min-width: 44px; min-height: 44px; padding: 6px 10px; translate: -50% 0; color: rgba(242, 239, 232, 0.75); text-decoration: none; }
+.szene__weiter-text { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.85; }
+.szene__weiter i { width: 1px; height: 34px; background: linear-gradient(rgba(242, 239, 232, 0.9), rgba(242, 239, 232, 0)); transform-origin: 50% 0; animation: weiter-atmen 2.6s var(--ease) infinite; }
+@keyframes weiter-atmen { 0%, 100% { transform: scaleY(0.55); opacity: 0.5; } 50% { transform: scaleY(1); opacity: 1; } }
+.szene__weiter:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+@media (prefers-reduced-motion: reduce) { .szene__weiter i { animation: none; } }
 
-/* endo.ai: die Nacht der Szene läuft weiter, die Kugel steht dort, wo eben noch der Mond war */
-.endo { position: relative; z-index: 2; isolation: isolate; pointer-events: none; overflow: hidden; margin-top: -34svh; padding: calc(34svh + clamp(240px, 44svh, 440px)) var(--pad) clamp(88px, 14svh, 144px);
-  background: linear-gradient(180deg, rgba(7, 11, 22, 0) 0, rgba(7, 11, 22, 0) 33svh, #070B16 34svh, #070B16 36svh, #04060D 60svh, #000 98svh); }
-/* oben liegt die Sektion über dem Titelbild (Nebel zieht darüber) – Klicks gehen nur an ihren Inhalt */
-.endo__innen, .endo__pakete { pointer-events: auto; }
-/* Lichtfaden (26.09., Emre): wächst live mit dem Scrollen aus dem Dunkel der Erde nach unten und läuft ein Stück in die Kugel
-   hinein. Sichtbar nur, solange gescrollt wird: sofort da (150 ms), nach kurzem Stillhalten bzw. unten angekommen weich weg (400 ms).
-   --faden-bis-rand = alte Länge bis über den Kugelrand (danach richtet sich die Wortmarke), --faden-h = bis in die Kugel. */
-.endo { --faden-bis-rand: calc(4svh + clamp(240px, 44svh, 440px) + clamp(-72px, -6svh, -24px) + min(460px, 74vw) * 0.08);
-  --faden-h: calc(var(--faden-bis-rand) + min(460px, 74vw) * 0.2); }
-.endo__faden { position: absolute; z-index: -2; left: 50%; top: 30svh; width: 1px; margin-left: -0.5px; pointer-events: none; transform-origin: 50% 0; height: var(--faden-h);
-  background: linear-gradient(rgba(214, 226, 245, 0), rgba(214, 226, 245, 0.28) 26%, rgba(226, 234, 248, 0.55) 70%, rgba(226, 234, 248, 0.4) 86%, rgba(226, 234, 248, 0)); }
-/* Wachsen/Zurückziehen und Ein-/Ausblenden steuert js/szene.js am gemeinsamen Scroll-Takt */
-.js .endo__faden { transform: scaleY(0); }
-.endo__faden, .endo__funke { transition: opacity 150ms linear; }
-.endo__faden.ist-still, .endo__funke.ist-still { opacity: 0; transition: opacity 400ms ease-out; }
-.endo__funke.ist-null { opacity: 0; transition: none; }
-/* Der Funke: nur auf der ersten Reise von ganz oben sichtbar (nie zurück nach oben), kurz vor der Kugel wird er schwächer */
-.endo__funke.ist-gesperrt { opacity: 0 !important; transition: opacity 250ms ease-out; }
-.endo__funke > * { opacity: var(--nah, 1); }
-/* Leuchtender Punkt an der Spitze: scharfer, fast weißer Kern + großer, weich auslaufender kühler Schein + kurzer Schweif nach oben
-   (länger bei schnellem Scrollen). Eigenes Element, nur transform/opacity, kein filter. */
-.endo__funke { position: absolute; z-index: -1; left: 50%; top: 30svh; width: 0; height: 0; pointer-events: none; will-change: transform, opacity; }
-.endo__funke i { position: absolute; left: 0; top: 0; border-radius: 50%; transform: translate(-50%, -50%); }
-.endo__funke .endo__schein { width: 92px; height: 92px; background: radial-gradient(closest-side, rgba(222, 234, 252, 0.46), rgba(206, 222, 248, 0.2) 32%, rgba(196, 212, 244, 0.06) 62%, rgba(190, 206, 240, 0) 100%); }
-.endo__funke .endo__kern { width: 9px; height: 9px; background: radial-gradient(circle, #FFFFFF 0 34%, rgba(240, 246, 255, 0.92) 50%, rgba(226, 236, 252, 0) 100%); }
-.endo__schweif { position: absolute; left: -1px; bottom: 0; width: 2px; height: 130px; border-radius: 1px; transform-origin: 50% 100%; transform: scaleY(0.2);
-  background: linear-gradient(to top, rgba(240, 246, 255, 0.8), rgba(226, 236, 252, 0.28) 40%, rgba(214, 226, 245, 0)); }
-@media (max-width: 640px) { .endo__funke .endo__schein { width: 72px; height: 72px; } .endo__schweif { height: 100px; } }
-/* Zufliegende Datenpakete: leichtes Canvas hinter Text und Kugel, nur transform/opacity im JS (26.09.) */
-.endo__daten { position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
-@media (prefers-reduced-motion: reduce) { .endo__daten { display: none; } }
-.endo__orb { position: relative; z-index: -1; width: min(460px, 74vw); aspect-ratio: 1; margin: clamp(-72px, -6svh, -24px) auto clamp(-72px, -7svh, -40px); opacity: 0; pointer-events: none;
-  -webkit-mask-image: radial-gradient(closest-side, #000 78%, transparent); mask-image: radial-gradient(closest-side, #000 78%, transparent); transition: opacity 1400ms var(--ease), transform 1600ms var(--ease); transform: translateY(14svh) scale(0.86); }
-.endo--da .endo__orb { transform: none; }
-.endo { scroll-margin-top: -28svh; }
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .endo__orb { transition: opacity 1400ms var(--ease); animation: orb-steigt linear both; animation-timeline: view(); animation-range: entry 0% cover 42%; }
-  }
-}
-@keyframes orb-steigt { from { transform: translateY(16svh) scale(0.84); } to { transform: none; } }
-@media (prefers-reduced-motion: reduce) { .endo__orb { transform: none; } }
-.endo__orb.orb--bereit { opacity: 0.75; }
-.endo-chat .endo__orb.orb--bereit { opacity: 0.4; }
-.endo__orb canvas { display: block; width: 100%; height: 100%; }
-.endo__innen { position: relative; max-width: 720px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 36px; text-align: center; }
-.endo__innen > * { max-width: 100%; }
-.endo__kopf { display: grid; justify-items: center; gap: 18px; }
-/* Wortmarke an der Lichtlinie (26.09., Emre): „endo" links, „Studio" rechts, gleiche Höhe, gleicher Abstand –
-   die Linie selbst ist der Trenner. Schrift, Größe und Chrom wie das Logo (.endo-marke aus ki/studio.css). */
-.endo .endo__marke { position: absolute; left: 50%; top: calc(30svh + var(--faden-bis-rand) * 0.46); width: 0; height: 0; margin: 0; display: block; pointer-events: none; --marke-luft: 20px; }
-.endo .endo__marke b, .endo .endo__marke span { position: absolute; top: 0; white-space: nowrap; transform: translateY(-50%); }
-.endo .endo__marke b { right: var(--marke-luft); padding-bottom: 0; line-height: 1.1; }
-/* Chrom-Logo (26.09., Emre): poliertes Metall – hell oben, kühles Mittelgrau, feine dunklere Unterkante (Töne wie /ki/),
-   feine Kante + weicher Schatten für Tiefe. Glanzstreifen = eigenes Element, wandert nur per transform langsam mit dem
-   Scrollen (overlay: hellt nur das Metall auf, der dunkle Grund bleibt dunkel). Bewegung reduziert: Glanz steht still. */
-.endo .endo__marke b { padding: 0.5em 0.3em; margin: 0 -0.3em;
-  background-image: linear-gradient(100deg, rgba(255, 255, 255, 0) 42%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0) 58%),
-    linear-gradient(180deg, #FFFFFF 0%, #F4F6F8 32%, #D2D7DE 57%, #A7AFB9 80%, #7F8792 100%);
-  background-size: 320% 100%, 100% 100%; background-position: 46% 0, 0 0;
-  background-origin: content-box; background-repeat: no-repeat;
-  -webkit-background-clip: text; background-clip: text; color: transparent; }
-/* Tiefe: Schattenkopie hinter der Schrift – feine dunkle Unterkante + weicher Schatten */
-.endo .endo__marke b::before { content: attr(data-text); position: absolute; left: 0; top: 0; padding: inherit; z-index: -1; color: transparent;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6), 0 4px 10px rgba(0, 0, 0, 0.45); }
-/* Glanz wandert ganz langsam mit dem Scrollen über das Wort (nur im Metall, nie daneben) */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .endo .endo__marke b { animation: marke-glanz linear both; animation-timeline: view(); animation-range: cover 5% cover 95%; }
-  }
-}
-@keyframes marke-glanz { from { background-position: 92% 0, 0 0; } to { background-position: 8% 0, 0 0; } }
-.endo .endo__marke span { left: var(--marke-luft); padding-left: 0; border-left: 0; }
-@media (max-width: 640px) {
-  .endo .endo__marke { --marke-luft: 15px; }
-  .endo .endo__marke b { font-size: 24px; }
-  .endo .endo__marke span { font-size: 9.5px; letter-spacing: 0.3em; }
-}
-.endo__bereiche b { background: var(--endo-chrom); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.endo .rund--haupt { background: linear-gradient(180deg, #FBFCFD 0%, #D6DBE1 46%, #A9B0BA 54%, #E6E9ED 100%); }
-.endo .blase--du { background: linear-gradient(180deg, #F7F8FA, #D8DCE2); }
-.endo__titel { font-size: clamp(2.5rem, 6.6vw, 5.2rem); }
-.endo__intro { max-width: 44ch; color: var(--muted); font-size: clamp(16px, 1.3vw, 18px); line-height: 1.55; text-wrap: pretty; }
+/* endo-Schriftzug: Chrom mit langsam wanderndem Glanz, Pfeil ↗ + hauchdünne Linie (eigene Seite) */
+.endo-marke { position: absolute; z-index: 4; display: grid; gap: 4px; min-height: 44px; padding: 10px 12px; text-decoration: none; color: #F2EFE8; --glanz-lauf: 14s; }
+.endo-marke__wort { display: inline-flex; align-items: baseline; gap: 6px; line-height: 1; filter: drop-shadow(0 1px 2px rgba(10, 16, 32, 0.6)) drop-shadow(0 0 14px rgba(10, 16, 32, 0.4)); }
+.endo-marke__wort b, .endo-marke__wort small { font-weight: 300; letter-spacing: -0.035em; background: linear-gradient(110deg, #C9CED6 0%, #FFFFFF 22%, #DEE2E8 40%, #9AA2AD 55%, #FFFFFF 78%, #C9CED6 100%); background-size: 260% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: endo-glanz var(--glanz-lauf) linear infinite; }
+.endo-marke__wort b { font-size: 24px; }
+.endo-marke__wort small { font-size: 13px; letter-spacing: 0.02em; }
+@keyframes endo-glanz { from { background-position: 130% 0; } to { background-position: -130% 0; } }
+.endo-marke__pfeil { font-style: normal; font-size: 13px; color: #E8ECF1; transition: transform 300ms var(--ease-out); }
+.endo-marke__linie { display: block; height: 1px; background: linear-gradient(90deg, rgba(232, 236, 241, 0.85), rgba(232, 236, 241, 0.15)); transform: scaleX(0.35); transform-origin: 0 50%; transition: transform 420ms var(--ease-out); }
+.endo-marke__sub { font-size: 11px; letter-spacing: 0.04em; color: rgba(242, 239, 232, 0.72); text-shadow: 0 1px 2px rgba(10, 16, 32, 0.6); }
+.endo-marke:hover .endo-marke__linie, .endo-marke:focus-visible .endo-marke__linie, .endo-marke:active .endo-marke__linie { transform: scaleX(1); }
+.endo-marke:hover .endo-marke__pfeil, .endo-marke:focus-visible .endo-marke__pfeil { transform: translate(2px, -2px); }
+.endo-marke:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 8px; }
+/* Position A: oben rechts unter der Navigation · Position B: unten links */
+.endo-marke { right: max(12px, calc(var(--pad) - 12px)); top: 64px; justify-items: end; text-align: right; }
+.endo-marke .endo-marke__linie { transform-origin: 100% 50%; }
+html[data-endo-pos="b"] .endo-marke { right: auto; top: auto; left: max(8px, calc(var(--pad) - 12px)); bottom: max(22px, env(safe-area-inset-bottom)); justify-items: start; text-align: left; }
+html[data-endo-pos="b"] .endo-marke .endo-marke__linie { transform-origin: 0 50%; }
+@media (max-width: 700px) { .endo-marke { top: 58px; } .endo-marke__wort b { font-size: 21px; } html[data-endo-pos="b"] .endo-marke { bottom: max(70px, calc(env(safe-area-inset-bottom) + 58px)); } }
+/* Übergang zur endo-Seite: Schriftzug leuchtet kurz auf, die Seite blendet in tiefes Schwarz */
+.wechsel { position: fixed; inset: 0; z-index: 100; background: #000; opacity: 0; pointer-events: none; transition: opacity 420ms var(--ease); }
+html.zu-endo .wechsel { opacity: 1; pointer-events: auto; }
+html.zu-endo .endo-marke__wort, html.zu-endo .nav__link--endo { filter: drop-shadow(0 0 10px rgba(226, 234, 248, 0.95)) drop-shadow(0 0 22px rgba(196, 212, 244, 0.7)); }
+.nav__link--endo span { display: inline-block; transition: transform 300ms var(--ease-out); }
+.nav__link--endo:hover span { transform: translate(2px, -2px); }
+@media (prefers-reduced-motion: reduce) { .endo-marke__wort b, .endo-marke__wort small { animation: none; } .wechsel { transition: none; } }
 
-/* Chat: ruhend nur die Eingabe, ab der ersten Nachricht ein ruhiges Fenster, das nach unten wächst */
-.endo .agent { position: relative; width: 100%; max-width: 640px; text-align: left; border: 1px solid transparent; border-radius: 28px; padding: 0;
-  transition: background-color 400ms var(--ease), border-color 400ms var(--ease), padding 400ms var(--ease), box-shadow 400ms var(--ease); }
-.endo-chat .endo .agent { padding: 8px; border-color: rgba(242, 239, 232, 0.1); background: rgba(12, 13, 16, 0.86); box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55); }
-.endo .agent__oben { display: flex; flex-direction: column; }
-.endo .agent__kopf { display: none; align-items: center; gap: 12px; padding: 8px 12px 12px; border-bottom: 1px solid rgba(242, 239, 232, 0.08); }
-.endo-chat .endo .agent__kopf { display: flex; }
-.endo .agent__avatar { position: relative; flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(242, 239, 232, 0.3); background: #000; }
-.endo .agent__avatar::before { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--text); }
-.endo .agent__avatar::after { content: ""; position: absolute; right: 3px; bottom: 3px; width: 6px; height: 6px; border-radius: 50%; background: #3BD16F; }
-.endo .agent__name { display: grid; flex: 1; min-width: 0; }
-.endo .agent__name b { font-size: 14px; line-height: 20px; font-weight: 500; }
-.endo .agent__name small { font-size: 12px; line-height: 16px; color: var(--muted); }
-.endo .agent__name a, .endo .agent__hinweis a { text-decoration: underline; text-decoration-color: rgba(138, 134, 125, 0.6); text-underline-offset: 2px; }
-.endo .rund.agent__zu, .endo .agent__oeffnen { display: none; }
-.endo .agent__verlauf { display: flex; flex-direction: column; gap: 10px; max-height: min(52svh, 480px, calc(var(--sicht, 100svh) - 200px)); overflow-y: auto; overscroll-behavior: contain; padding: 0 12px;
-  scrollbar-width: thin; scrollbar-color: rgba(242, 239, 232, 0.16) transparent; }
-.endo .agent__verlauf:not(:empty) { padding: 16px 12px; }
-@media (prefers-reduced-motion: no-preference) { .endo .agent__verlauf { scroll-behavior: smooth; } }
-.endo .agent { scroll-margin: 24px; }
-.endo .blase { max-width: 82%; margin: 0; padding: 10px 14px; border-radius: 18px; font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; animation: blase-rein 280ms var(--ease-out) both; }
-.endo .blase--endo { align-self: flex-start; background: rgba(242, 239, 232, 0.07); color: var(--text); border-top-left-radius: 6px; }
-.endo .blase--du { align-self: flex-end; background: var(--text); color: #0E0E0C; border-top-right-radius: 6px; }
-.endo .blase a { text-decoration: underline; text-underline-offset: 2px; }
-/* Formatierung in Antworten: Absätze, Listen, Code */
-.endo .blase p { margin: 0; }
-.endo .blase p + p, .endo .blase p + ul, .endo .blase p + ol, .endo .blase ul + p, .endo .blase ol + p, .endo .blase pre + p, .endo .blase p + pre { margin-top: 8px; }
-.endo .blase ul, .endo .blase ol { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
-.endo .blase li::marker { color: var(--muted); }
-.endo .blase strong { font-weight: 500; }
-.endo .blase code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 0.88em; padding: 1px 5px; border-radius: 6px; background: rgba(242, 239, 232, 0.1); }
-.endo .blase pre { margin: 0; padding: 10px 12px; border-radius: 10px; background: rgba(0, 0, 0, 0.45); overflow-x: auto; }
-.endo .blase pre code { padding: 0; background: none; font-size: 13px; line-height: 1.5; }
-.endo .blase--endo:has(.tippt) { padding: 12px 16px; }
-.endo .blase--bild { padding: 6px; }
-.endo .blase--du.blase--bild { background: rgba(242, 239, 232, 0.12); color: var(--text); }
-.endo .blase--bild img { width: 180px; max-width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 12px; }
-.endo .blase--bild figcaption { padding: 6px 6px 2px; font-size: 12px; line-height: 16px; color: var(--muted); }
-.endo .tippt { display: inline-flex; gap: 4px; align-items: center; height: 22px; }
-.endo .tippt i { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: tippen 1100ms ease-in-out infinite; }
-.endo .tippt i:nth-child(2) { animation-delay: 150ms; }
-.endo .tippt i:nth-child(3) { animation-delay: 300ms; }
-@keyframes tippen { 0%, 60%, 100% { opacity: 0.35; transform: none; } 30% { opacity: 1; transform: translateY(-3px); } }
-@keyframes blase-rein { from { opacity: 0; transform: translateY(8px); } }
-.endo .agent__vorschlaege { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 12px 12px; }
-.endo .agent__vorschlaege:empty { display: none; }
-.endo .agent__vorschlaege .chip { min-height: 38px; padding: 8px 14px; border: 1px solid rgba(242, 239, 232, 0.16); border-radius: 999px; background: transparent; color: var(--text); font: inherit; font-size: 14px; line-height: 20px; cursor: pointer;
-  animation: blase-rein 280ms var(--ease-out) both; transition: background-color 200ms var(--ease), border-color 200ms var(--ease), transform 160ms var(--ease-out); }
-.endo .agent__vorschlaege .chip--haupt { background: var(--text); border-color: var(--text); color: #0E0E0C; font-weight: 500; }
-.endo .agent__vorschlaege .chip:active { transform: scale(0.97); }
-@media (hover: hover) and (pointer: fine) { .endo .agent__vorschlaege .chip:hover { border-color: rgba(242, 239, 232, 0.4); background: rgba(242, 239, 232, 0.06); } .endo .agent__vorschlaege .chip--haupt:hover { background: #fff; } }
-.endo .agent__eingabe { position: relative; }
-.endo .agent__feld { display: flex; align-items: center; gap: 4px; height: 56px; padding: 6px; border: 1px solid rgba(242, 239, 232, 0.16); border-radius: 999px; background: rgba(242, 239, 232, 0.05); transition: border-color 200ms var(--ease), background-color 200ms var(--ease); }
-.endo .agent__feld:focus-within { border-color: rgba(242, 239, 232, 0.45); }
-.endo-chat .endo .agent__feld { background: rgba(242, 239, 232, 0.04); }
-.endo .agent__feld input[type="text"], .endo .agent__feld input[type="email"] { flex: 1; min-width: 0; height: 44px; padding: 0 10px; border: 0; background: transparent; color: var(--text); font: inherit; font-size: 16px; }
-.endo .agent__feld input:focus-visible { outline: none; }
-.endo .agent__feld input::placeholder { color: rgba(242, 239, 232, 0.5); }
-.endo .rund { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer; transition: background-color 200ms var(--ease), color 200ms var(--ease), transform 160ms var(--ease-out); }
-.endo .rund svg { width: 20px; height: 20px; }
-.endo .rund--haupt { background: var(--text); color: #0E0E0C; }
-.endo .rund:active { transform: scale(0.94); }
-.endo .rund:disabled { opacity: 0.4; cursor: default; transform: none; }
-@media (hover: hover) and (pointer: fine) { .endo .rund:hover { color: var(--text); background: rgba(242, 239, 232, 0.08); } .endo .rund--haupt:hover { color: #0E0E0C; background: #fff; } }
-.endo .agent__hinweis { margin-top: 12px; text-align: center; font-size: 12px; color: var(--muted); }
-.endo-chat .endo .agent__hinweis { display: none; }
-
-/* Die drei Leistungen (26.09., Emre): gesperrte Nummer → Titel in Instrument Serif → ruhige Beschreibung (max. 2 Zeilen).
-   Etwas breiter als der Textblock, damit die Beschreibungen nicht dreizeilig umbrechen; feine 1-px-Linien statt Kästen. */
-.endo__bereiche { list-style: none; margin: 16px 0 0; padding: 0; counter-reset: bereich; justify-self: start;
-  width: min(960px, calc(100vw - 2 * var(--pad))); margin-left: calc(50% - min(480px, calc(50vw - var(--pad))));
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); text-align: left; }
-.endo__bereiche li { display: grid; grid-template-rows: auto auto auto; align-content: start; padding: 28px 32px 4px 0; counter-increment: bereich; }
-.endo__bereiche li + li { padding-left: 32px; border-left: 1px solid var(--line); }
-.endo__bereiche li::before { content: counter(bereich, decimal-leading-zero); font-family: var(--endo-mono); font-size: 11px; line-height: 1; letter-spacing: 0.24em; color: rgba(226, 230, 236, 0.42); margin-bottom: 18px; }
-.endo__bereiche b { font-family: var(--serif); font-size: clamp(25px, 2.2vw, 30px); line-height: 1.1; font-weight: 400; letter-spacing: -0.01em; text-wrap: balance; padding-bottom: 0.06em; margin-bottom: 10px; }
-.endo__bereiche span { color: var(--muted); font-size: 14.5px; line-height: 1.55; letter-spacing: 0.005em; text-wrap: pretty; max-width: 34ch; }
-.endo__pakete { position: relative; width: min(100%, 1120px); margin: clamp(64px, 10svh, 112px) auto 0; padding-top: clamp(48px, 7svh, 80px); border-top: 1px solid var(--line); scroll-margin-top: 24px; }
-.endo__pakete[hidden] { display: none; }
-@media (prefers-reduced-motion: no-preference) { .endo__pakete.ist-offen { animation: pakete-auf 700ms var(--ease) both; } }
-@keyframes pakete-auf { from { opacity: 0; transform: translateY(24px); } }
-/* „Pakete ansehen“: ein Chrom-Knopf, die Pakete erscheinen erst danach */
-.endo__pakete-knopf { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 14px 28px; border: 0; border-radius: 999px; color: #0A0B0D; font: 500 15px/1 var(--sans); cursor: pointer;
-  background: linear-gradient(180deg, #FBFCFD 0%, #DCE0E6 44%, #AAB1BB 52%, #E8EBEF 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(0, 0, 0, 0.22), 0 10px 28px rgba(0, 0, 0, 0.45); transition: transform 160ms var(--ease-out), filter 200ms var(--ease); }
-.endo__pakete-knopf:active { transform: scale(0.97); }
-@media (hover: hover) and (pointer: fine) { .endo__pakete-knopf:hover { filter: brightness(1.06); } }
-.endo__pakete-knopf[aria-expanded="true"] { color: var(--text); background: transparent; box-shadow: inset 0 0 0 1px rgba(242, 239, 232, 0.28); }
-@media (max-width: 700px) {
-  .endo__innen { gap: 28px; }
-  .endo__bereiche { grid-template-columns: minmax(0, 1fr); }
-  .endo__bereiche li, .endo__bereiche li + li { padding: 24px 0 22px; border-left: 0; }
-  .endo__bereiche li + li { border-top: 1px solid var(--line); }
-  .endo__bereiche li::before { margin-bottom: 14px; }
-  .endo__bereiche b { font-size: 25px; margin-bottom: 8px; }
-  .endo__bereiche span { max-width: none; }
-  .endo .agent__verlauf { max-height: min(46svh, 400px); }
-  .endo .blase { max-width: 88%; }
-}
-@media (prefers-reduced-motion: reduce) { .endo .blase, .endo .agent__vorschlaege .chip { animation: none; } .endo .tippt i { animation: none; opacity: 0.7; } }
-
-/* ---------- Chat im Stil der Seite (25.09. abends, Emre: „mehr im Einklang, nicht so generiert“) ----------
-   Keine bunten Blasen und kein Avatar: endo schreibt wie ein Text mit feiner Linie links, eigene Nachrichten
-   stehen rechts in einer Haarlinie. Feste Höhe, sobald der Chat läuft – nur der Verlauf scrollt, sonst bewegt sich nichts. */
-.endo .agent__avatar { display: none; }
-.endo .agent__kopf { gap: 10px; padding: 10px 14px 12px; }
-.endo .agent__name { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.endo .agent__name b { font-family: var(--endo-schrift); font-size: 21px; font-weight: 300; line-height: 1; letter-spacing: -0.035em; background: var(--endo-chrom); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.endo .agent__name small { font-size: 12px; }
-.endo-chat .endo .agent { padding: 6px 6px 8px; border: 1px solid rgba(226, 230, 236, 0.14); background: rgba(9, 11, 17, 0.62); box-shadow: none; }
-.endo-chat .endo .agent__verlauf { height: min(46svh, 420px, calc(var(--sicht, 100svh) - 220px)); max-height: none; padding: 18px 14px; gap: 14px; }
-.endo .blase { font-size: 15.5px; line-height: 1.6; animation-duration: 360ms; }
-.endo .blase--endo { max-width: 90%; padding: 0 0 0 14px; background: none; border-radius: 0; border-left: 1px solid rgba(226, 230, 236, 0.3); color: #EEF0F3; }
-.endo .blase--du { max-width: 80%; padding: 8px 14px; background: none; border: 1px solid rgba(226, 230, 236, 0.24); border-radius: 16px; color: #EEF0F3; }
-.endo .blase--bild { border-left: 0; padding: 0; }
-.endo .blase--du.blase--bild { border: 0; background: none; }
-.endo .blase--bild img { border-radius: 10px; border: 1px solid rgba(226, 230, 236, 0.18); }
-.endo .blase--endo:has(.tippt) { padding: 4px 0 4px 14px; }
-.endo .agent__vorschlaege { gap: 6px; padding: 0 14px 12px; }
-.endo .agent__vorschlaege .chip { min-height: 34px; padding: 6px 13px; font-size: 13.5px; color: rgba(238, 240, 243, 0.82); border-color: rgba(226, 230, 236, 0.16); background: transparent; }
-.endo .agent__vorschlaege .chip--haupt { color: #0A0B0D; border-color: transparent; background: linear-gradient(180deg, #FBFCFD 0%, #DCE0E6 44%, #AAB1BB 52%, #E8EBEF 100%); }
-.endo .agent__feld { background: rgba(9, 11, 17, 0.4); border: 1px solid rgba(226, 230, 236, 0.18); }
-.endo-chat .endo .agent__feld { background: transparent; border-color: rgba(226, 230, 236, 0.12); }
-@media (prefers-reduced-motion: reduce) { .endo .blase { animation: none; } }
-
-/* Kostenloses Erstgespräch: drei Wege der Zusammenarbeit, darunter eine Karte mit allen Feldern */
+/* Kontakt folgt direkt auf das Titelbild: Farbe läuft aus der Nacht in den Seitenhintergrund */
+.contact { background: linear-gradient(#070B16, var(--bg) 26%); }
+/* Direktkontakt: drei Wege (Handy oben als große Knöpfe, Desktop als ruhige Zeile) */
+.kt__schnell { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: min(100%, 520px); margin-top: 4px; }
+.kt__schnell a { display: grid; justify-items: center; gap: 8px; min-height: 76px; padding: 14px 6px; border: 1px solid var(--line); border-radius: 16px; background: rgba(242, 239, 232, 0.03); font-size: 14px; color: var(--text); text-decoration: none; transition: border-color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
+.kt__schnell svg { width: 22px; height: 22px; }
+.kt__schnell a:active { transform: scale(0.97); }
+.kt__schnell a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .kt__schnell a:hover { border-color: rgba(242, 239, 232, 0.32); background: rgba(242, 239, 232, 0.06); } }
+@media (min-width: 701px) { .kt__schnell a { grid-auto-flow: column; align-items: center; min-height: 48px; padding: 10px 18px; border-radius: 999px; } .kt__schnell svg { width: 18px; height: 18px; } }
+html[data-whatsapp="aus"] [data-wa], html[data-whatsapp="aus"] .weg, html[data-whatsapp="aus"] .anfrage__gruppe--weg { display: none; }
+/* Drei Wege der Zusammenarbeit */
 .wege { list-style: none; margin: 8px 0 0; padding: 0; width: min(100%, 980px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); text-align: left; }
 .wege li { display: grid; gap: 6px; align-content: start; padding: 22px 22px 4px 0; }
 .wege li + li { padding-left: 22px; border-left: 1px solid var(--line); }
 .wege b { font-family: var(--serif); font-size: 26px; line-height: 1.1; font-weight: 400; }
 .wege span { color: var(--muted); font-size: 15px; line-height: 1.5; text-wrap: pretty; }
-.wege a { color: var(--text); border-bottom: 1px solid rgba(242, 239, 232, 0.4); }
 .anfrage { width: min(100%, 680px); display: grid; gap: 22px; margin-top: 16px; padding: 30px; text-align: left; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(180deg, rgba(242, 239, 232, 0.035), rgba(242, 239, 232, 0.01)); }
 .anfrage__gruppe { margin: 0; padding: 0; min-width: 0; border: 0; }
 .anfrage__gruppe legend { margin-bottom: 10px; padding: 0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
@@ -522,12 +357,29 @@ img { display: block; max-width: 100%; height: auto; }
 .wahl__option input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
 .wahl__option:active span { transform: scale(0.98); }
 @media (hover: hover) and (pointer: fine) { .wahl__option:hover span { border-color: rgba(242, 239, 232, 0.32); } .wahl__option input:checked + span { border-color: var(--accent); } }
+/* Honigtopf + Erfolgs-Karte */
+.anfrage__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.anfrage { position: relative; transition: opacity 320ms var(--ease); }
+.anfrage.ist-weg > * { opacity: 0; transition: opacity 260ms var(--ease); }
+.anfrage.ist-gesendet > :not(.anfrage__danke) { display: none; }
+.anfrage__danke { display: grid; justify-items: center; gap: 14px; padding: 18px 0 8px; text-align: center; animation: danke-rein 520ms var(--ease-out) both; }
+.anfrage__danke[hidden] { display: none; }
+@keyframes danke-rein { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.anfrage__danke:focus { outline: none; }
+.anfrage__danke p { margin: 0; max-width: 40ch; color: var(--muted); text-wrap: pretty; }
+.anfrage__danke-titel { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(1.8rem, 3vw, 2.4rem); line-height: 1.1; }
+.anfrage__check { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; color: #0E0E0C; background: var(--text); animation: check-rein 560ms cubic-bezier(0.34, 1.56, 0.64, 1) 200ms both; }
+.anfrage__check svg { width: 30px; height: 30px; animation: haken-rein 420ms var(--ease-out) 520ms both; }
+@keyframes check-rein { from { transform: scale(0.4); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes haken-rein { from { transform: scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
+.anfrage__danke-knoepfe { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 @media (max-width: 700px) {
   .wege { grid-template-columns: minmax(0, 1fr); }
   .wege li, .wege li + li { padding: 16px 0; border-left: 0; }
   .wege li + li { border-top: 1px solid var(--line); }
   .anfrage { padding: 22px 16px; gap: 20px; border-radius: 16px; }
 }
+@media (prefers-reduced-motion: reduce) { .anfrage__danke, .anfrage__check, .anfrage__check svg { animation: none; } .anfrage.ist-weg > * { transition: none; } }
 
 /* ---------- Kontakt-Kasten (Emre, 27.09.): altes Formular, nur der Kasten im neuen Stil –
    runde Karte mit feinem Rand, ruhiger Grund, viel Innenabstand, gepunktete Linie, weiche Felder, Fokus-Ring in Akzentfarbe, Pfeil gleitet ---------- */
@@ -562,7 +414,6 @@ img { display: block; max-width: 100%; height: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .anfrage__pfeil { transition: none; } }
 </style>
-<link rel="stylesheet" href="ki/endo-elemente.css?v=13">
 </head>
 <body>
 
@@ -571,9 +422,8 @@ img { display: block; max-width: 100%; height: auto; }
 <header class="nav">
   <a class="nav__mark" href="#top" aria-label="ERGUN – nach oben">ERGUN<span class="dot">.</span></a>
   <nav class="nav__links" aria-label="Seitennavigation">
-    <a class="nav__link" href="#endo">Studio</a>
-    <a class="nav__link" href="#pakete">Pakete</a>
-    <a class="nav__link" href="#kontakt">Erstgespräch</a>
+    <a class="nav__link" href="#kontakt">Kontakt</a>
+    <a class="nav__link nav__link--endo" href="https://endo-studio.vercel.app/" data-endo-link>endo <span aria-hidden="true">↗</span></a>
   </nav>
 </header>
 
@@ -595,77 +445,27 @@ img { display: block; max-width: 100%; height: auto; }
       <div class="titel">
         <p class="titel__studio">Digitalstudio für Design</p>
         <h1 class="titel__haupt"><span class="hinweis-versteckt">ERGUN. </span>Webdesigner</h1>
+        <p class="titel__zeile">Websites, Assistenten &amp; Automatisierung – persönlich von mir.</p>
       </div>
     </div>
     <div class="szene__ebene" data-ebene="huegel" aria-hidden="true"></div>
     <div class="szene__ebene" data-ebene="wald" aria-hidden="true"></div>
     <div class="szene__ebene" data-ebene="wiese" aria-hidden="true"></div>
-    <div class="gluehwurm ist-aus" aria-hidden="true"><div class="gluehwurm__weg"><div class="gluehwurm__ring"></div><div class="gluehwurm__glimm"><div class="gluehwurm__koerper"><i class="gluehwurm__warm"></i><i class="gluehwurm__kalt"></i><i class="gluehwurm__kern"></i></div></div><i class="gluehwurm__blitz"></i><div class="gluehwurm__spritzer"></div></div></div>
     <div class="szene__ebene" data-ebene="gras" aria-hidden="true"></div>
     <div class="szene__oben" aria-hidden="true"></div>
     <div class="szene__fade" aria-hidden="true"></div>
     <div class="szene__erde" aria-hidden="true"></div>
+    <!-- endo Studio: eigene Seite (Emre, 27.09.). Position A = oben rechts unter der Navigation, B = unten links (?endo=b) -->
+    <a class="endo-marke" href="https://endo-studio.vercel.app/" data-endo-link>
+      <span class="endo-marke__wort"><b>endo</b><small>Studio</small><i class="endo-marke__pfeil" aria-hidden="true">↗</i></span>
+      <span class="endo-marke__linie" aria-hidden="true"></span>
+      <span class="endo-marke__sub">Webdesign mit KI – selbst gestalten</span>
+    </a>
+    <a class="szene__weiter" href="#kontakt" aria-label="Weiter zum Kontakt"><span class="szene__weiter-text">Erstgespräch</span><i aria-hidden="true"></i></a>
   </section>
 </div>
 
 <main id="inhalt" tabindex="-1">
-  <!-- endo Studio (früher endo.ai): zweiter Bereich, direkt unter dem Titelbild. Ausführlich mit Funktionen und Paketen: ki/ -->
-  <section class="endo" id="endo" aria-labelledby="endo-titel">
-    <div class="endo__faden ist-still" aria-hidden="true"></div>
-    <div class="endo__funke ist-still" aria-hidden="true"><i class="endo__schein"></i><b class="endo__schweif"></b><i class="endo__kern"></i></div>
-    <p class="endo__marke endo-marke"><b data-text="endo">endo</b> <span>Studio</span></p>
-    <canvas class="endo__daten" aria-hidden="true"></canvas>
-    <div class="endo__orb" data-orb aria-hidden="true"></div>
-    <div class="endo__innen">
-      <div class="endo__kopf reveal">
-        <h2 class="endo__titel endo-display" id="endo-titel">Zeigen Sie mir Ihr Produkt.</h2>
-        <p class="endo__intro">endo Studio macht aus Ihrem Handyfoto Produktfotos, Werbevideos und Bilder für Ihre Website. Fragen Sie endo, unseren Assistenten, was möglich ist.</p>
-      </div>
-
-      <section class="agent" data-agent aria-label="Chat mit endo">
-        <div class="agent__oben" data-oben>
-          <div class="agent__kopf">
-            <span class="agent__avatar" aria-hidden="true"></span>
-            <div class="agent__name"><b>endo</b><small>KI, kann sich irren · <a href="datenschutz.html#endo">Datenschutz</a></small></div>
-            <button class="rund agent__zu" type="button" data-zu aria-label="Chat schließen">
-              <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128 50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z"/></svg>
-            </button>
-          </div>
-          <div class="agent__verlauf" data-verlauf role="log" aria-live="polite"></div>
-          <div class="agent__vorschlaege" data-vorschlaege></div>
-        </div>
-        <form class="agent__eingabe" data-eingabe novalidate>
-          <div class="agent__feld">
-            <button class="rund" type="button" data-foto aria-label="Produktfoto hochladen">
-              <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208 56h-27.72l-13.63-20.44A8 8 0 0 0 160 32H96a8 8 0 0 0-6.65 3.56L75.71 56H48a24 24 0 0 0-24 24v112a24 24 0 0 0 24 24h160a24 24 0 0 0 24-24V80a24 24 0 0 0-24-24Zm8 136a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V80a8 8 0 0 1 8-8h32a8 8 0 0 0 6.66-3.56L100.28 48h55.43l13.63 20.44A8 8 0 0 0 176 72h32a8 8 0 0 1 8 8ZM128 88a44 44 0 1 0 44 44 44.05 44.05 0 0 0-44-44Zm0 72a28 28 0 1 1 28-28 28 28 0 0 1-28 28Z"/></svg>
-            </button>
-            <button class="rund agent__galerie-knopf" type="button" data-galerie aria-label="Galerie öffnen" aria-expanded="false">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="7.2" height="7.2" rx="1.8"/><rect x="13.2" y="3.6" width="7.2" height="7.2" rx="1.8"/><rect x="3.6" y="13.2" width="7.2" height="7.2" rx="1.8"/><path d="M13.4 19.6l2.3-2.5 1.6 1.6 2.9-3.3"/></svg>
-            </button>
-            <input type="file" accept="image/*" hidden data-datei>
-            <label class="hinweis-versteckt" for="endo-text">Nachricht an endo</label>
-            <input id="endo-text" type="text" maxlength="600" autocomplete="off" enterkeyhint="send" placeholder="Fragen Sie endo …" data-text>
-            <button class="rund rund--haupt" type="submit" aria-label="Senden" data-senden>
-              <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66 117.66a8 8 0 0 1-11.32 0L136 59.31V216a8 8 0 0 1-16 0V59.31l-58.34 58.35a8 8 0 0 1-11.32-11.32l72-72a8 8 0 0 1 11.32 0l72 72a8 8 0 0 1 0 11.32Z"/></svg>
-            </button>
-          </div>
-          <button class="agent__oeffnen" type="button" data-oeffnen aria-expanded="false" aria-label="Chat mit endo öffnen"></button>
-          <p class="agent__hinweis">endo ist eine KI und kann sich irren · <a href="datenschutz.html#endo">Datenschutz</a></p>
-        </form>
-      </section>
-
-      <ul class="endo__bereiche reveal" aria-label="Was endo Studio kann">
-        <li><b>Produktfotos</b><span>Im Studiolicht, auf reinem Weiß für Shop und Marktplatz oder im Alltag mit Person.</span></li>
-        <li><b>Werbung &amp; Videos</b><span>Anzeigen, Plakate mit Ihrer Aktion und kurze Clips für Reels und Stories.</span></li>
-        <li><b>Website &amp; Marke</b><span>Ein großes Titelbild für Ihre Website und eine erste Idee für Ihr Logo.</span></li>
-      </ul>
-      <button class="endo__pakete-knopf reveal" type="button" aria-expanded="false" aria-controls="pakete" data-pakete-auf>Pakete ansehen</button>
-    </div>
-    <!-- Pakete direkt hier (gleiches Modul wie auf ki/), damit niemand die Seite wechseln muss -->
-    <div class="endo__pakete" id="pakete" data-studio-pakete data-kontakt="#kontakt" hidden></div>
-  </section>
-
-  <!-- Kostenloses Erstgespräch: drei Wege der Zusammenarbeit, darunter ein übersichtliches Formular -->
   <section class="contact" id="kontakt" aria-labelledby="kontakt-titel">
     <div class="contact__kopf">
       <figure class="contact__person reveal">
@@ -673,25 +473,31 @@ img { display: block; max-width: 100%; height: auto; }
         <figcaption><strong>Emre Ergun</strong> · <span class="online">online</span></figcaption>
       </figure>
       <h2 class="contact__big reveal" id="kontakt-titel">Kostenloses Erstgespräch</h2>
-      <p class="contact__intro reveal">Erzählen Sie kurz, worum es geht. Ich melde mich persönlich, per WhatsApp oder E-Mail.</p>
+      <p class="contact__intro reveal">Erzählen Sie kurz, worum es geht – ich melde mich persönlich innerhalb von 24&nbsp;Stunden.</p>
+      <nav class="kt__schnell reveal" aria-label="Direkt erreichen">
+        <a href="https://wa.me/4915906344961" target="_blank" rel="noopener" data-wa><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5l1.2-3.6A8 8 0 1 1 8.4 18.6Z"/><path d="M9.2 8.6c.3 2.9 2.4 5.2 5.3 5.7l1-1.3-1.8-.9-.7.8a4 4 0 0 1-2.2-2.2l.8-.7-.9-1.8Z"/></svg>WhatsApp</a>
+        <a href="mailto:ergun.eu@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/></svg>E-Mail</a>
+        <a href="tel:+4915906344961"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3.5l1.6 4.3-2.2 1.4a10.5 10.5 0 0 0 6.4 6.4l1.4-2.2L20 15.5V19a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1Z"/></svg>Anrufen</a>
+      </nav>
     </div>
 
     <ul class="wege reveal" aria-label="So arbeiten wir zusammen">
       <li><b>Neue Website</b><span>Von Grund auf geplant, gestaltet und gebaut, mit Bewegung und eigenen Bildern.</span></li>
       <li><b>Bestehende Website</b><span>Überarbeiten, modernisieren oder um neue Bereiche erweitern.</span></li>
-      <li><b>Selbst mitarbeiten</b><span>Produktfotos, Videos und Website-Bilder selbst erstellen, mit <a href="#endo">endo Studio</a>.</span></li>
+      <li><b>Assistent &amp; Automatisierung</b><span>Ein Assistent, der auf Ihrer Website Fragen beantwortet, und Abläufe, die von allein laufen.</span></li>
     </ul>
-    <p class="wege__beides reveal"><b>Oder beides:</b> <a href="#pakete">Premium</a> – endo Studio mit allen Vorlagen und Ihre Website von Emre.</p>
+    <p class="wege__beides reveal"><b>Inklusive in der Betreuung:</b> <a href="https://endo-studio.vercel.app/" data-endo-link>endo Studio ↗</a> für Ihre eigenen Produktfotos &amp; Videos.</p>
 
     <!-- Eine Karte, alles auf einen Blick (Emre, 25.09. abends: keine Schritte) -->
     <form class="anfrage reveal" id="anfrage" novalidate>
       <fieldset class="anfrage__gruppe">
         <legend>Worum geht es?</legend>
         <div class="wahl">
-          <label class="wahl__option"><input type="radio" name="hilfe" value="Neue Website"><span>Neue Website</span></label>
-          <label class="wahl__option"><input type="radio" name="hilfe" value="Website überarbeiten"><span>Website überarbeiten</span></label>
-          <label class="wahl__option"><input type="radio" name="hilfe" value="Onlineshop"><span>Onlineshop</span></label>
-          <label class="wahl__option"><input type="radio" name="hilfe" value="Etwas anderes"><span>Etwas anderes</span></label>
+          <label class="wahl__option"><input type="radio" name="hilfe" value="Website"><span>Website</span></label>
+          <label class="wahl__option"><input type="radio" name="hilfe" value="Website + Assistent"><span>Website + Assistent</span></label>
+          <label class="wahl__option"><input type="radio" name="hilfe" value="Website + Automatisierung"><span>Website + Automatisierung</span></label>
+          <label class="wahl__option"><input type="radio" name="hilfe" value="Betreuung"><span>Betreuung</span></label>
+          <label class="wahl__option"><input type="radio" name="hilfe" value="Weiß ich noch nicht"><span>Weiß ich noch nicht</span></label>
         </div>
       </fieldset>
       <div class="anfrage__punkte" aria-hidden="true"></div>
@@ -779,6 +585,18 @@ img { display: block; max-width: 100%; height: auto; }
       </button>
       <p class="form__status" data-status aria-live="polite"></p>
       <p class="form__hint">Öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Ihre Angaben speichert die Website nicht, nur hochgeladene Dateien liegen bis zu 30 Tage bei Vercel.</p>
+      <!-- Honigtopf gegen Spam: für Menschen unsichtbar -->
+      <div class="anfrage__hp" aria-hidden="true"><label>Website <input type="text" name="webseite" tabindex="-1" autocomplete="off"></label></div>
+      <div class="anfrage__danke" data-danke hidden tabindex="-1">
+        <span class="anfrage__check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12.5 4 4 8-9"/></svg></span>
+        <h3 class="anfrage__danke-titel" data-danke-titel>Danke!</h3>
+        <p data-danke-text>Ich melde mich persönlich bei Ihnen.</p>
+        <div class="anfrage__danke-knoepfe">
+          <a class="btn btn--wa" href="#" data-nochmal>WhatsApp erneut öffnen</a>
+          <button class="btn" type="button" data-bearbeiten>Nachricht bearbeiten</button>
+        </div>
+        <p class="form__hint">Klappt es nicht? Schreiben Sie mir direkt an <a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a>.</p>
+      </div>
     </form>
 
     <div class="contact__meta reveal">
@@ -787,22 +605,22 @@ img { display: block; max-width: 100%; height: auto; }
     </div>
     <div class="agentur reveal">
       <p class="agentur__marke">ERGUN<span class="dot">.</span></p>
-      <p class="agentur__text">ERGUN. ist ein Digitalstudio mit zwei Bereichen: Webdesign mit Bewegung und eigenen Bildern, und endo Studio für Produktfotos und Werbevideos. Entwurf und Umsetzung aus einer Hand.</p>
+      <p class="agentur__text">ERGUN. ist das Webdesign-Studio von Emre Ergun: Websites mit Design und Bewegung, Assistenten und Automatisierung – Entwurf und Umsetzung aus einer Hand. Produktfotos und Videos zum Selbstgestalten gibt es bei <a href="https://endo-studio.vercel.app/" data-endo-link>endo Studio ↗</a>.</p>
     </div>
   </section>
 </main>
 
 <footer class="footer">
-  <span>ERGUN. · Emre Ergun · Digitalstudio · © 2026</span>
+  <span>ERGUN. · Emre Ergun · Webdesign · © <span data-jahr>2026</span></span>
   <nav aria-label="Rechtliches">
-    <a href="ki/">endo Studio</a>
     <a href="impressum.html">Impressum</a>
     <a href="datenschutz.html">Datenschutz</a>
+    <a href="https://endo-studio.vercel.app/" data-endo-link>endo <span aria-hidden="true">↗</span></a>
   </nav>
 </footer>
+<div class="wechsel" aria-hidden="true"></div>
 
 <script src="js/szene.js?v=34"></script>
-<script src="js/endo-zufluss.js?v=7" defer></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {
@@ -829,17 +647,20 @@ img { display: block; max-width: 100%; height: auto; }
    und landen als Link in der Nachricht; klappt das nicht, hängt man sie selbst an.
    Ohne JavaScript bleibt das Formular sichtbar und tut nichts Falsches. */
 (function () {
-  var WA_NUMMER = '4915906344961';
+  var WHATSAPP_AN = true;              /* false = WhatsApp-Knöpfe und -Versand ausblenden (falls keine geschäftliche Nummer) */
+  var WA_NUMMER = '4915906344961';     /* Nummer aus dem Impressum */
   var MAIL = 'ergun.eu@gmail.com';
+  if (!WHATSAPP_AN) document.documentElement.setAttribute('data-whatsapp', 'aus');
   var form = document.getElementById('anfrage');
   if (!form) return;
+  var danke = form.querySelector('[data-danke]');
   var ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var status = form.querySelector('[data-status]');
   var sendenKnopf = form.querySelector('[data-senden]'), sendenText = form.querySelector('[data-senden-text]');
   function wert(k) { var el = form.elements[k]; return el && el.value ? el.value.trim() : ''; }
   function gewaehlt(name) { var el = form.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ''; }
   function alleGewaehlt(name) { return [].map.call(form.querySelectorAll('input[name="' + name + '"]:checked'), function (el) { return el.value; }); }
-  function weg() { return gewaehlt('weg') || 'whatsapp'; }
+  function weg() { return WHATSAPP_AN ? (gewaehlt('weg') || 'whatsapp') : 'mail'; }
 
   /* ---- Knopf folgt dem gewählten Weg, Telefonfeld zeigt die Vorwahl des Landes ---- */
   function knopf() {
@@ -870,7 +691,8 @@ img { display: block; max-width: 100%; height: auto; }
   /* ---- Prüfung ---- */
   var regeln = {
     name: function (v) { return v ? '' : 'Bitte Ihren Namen eintragen.'; },
-    email: function (v) { return !v ? 'Bitte eine E-Mail-Adresse eintragen, damit ich antworten kann.' : (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? '' : 'Das sieht nicht nach einer E-Mail-Adresse aus.'); }
+    email: function (v) { return !v ? 'Bitte eine E-Mail-Adresse eintragen, damit ich antworten kann.' : (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? '' : 'Bitte geben Sie eine gültige E-Mail ein.'); },
+    tel: function (v) { return !v || /^\+?[\d\s()\/.-]{6,20}$/.test(v) ? '' : 'Bitte geben Sie eine gültige Telefonnummer ein – oder lassen Sie das Feld leer.'; }
   };
   function fehler(el, text) {
     var wrap = el.closest('.field'), out = wrap.querySelector('.field__error');
@@ -881,11 +703,11 @@ img { display: block; max-width: 100%; height: auto; }
   function pruefeFeld(k) { var el = form.elements[k]; var t = regeln[k](el.value.trim()); fehler(el, t); return !t; }
   function pruefen() {
     var erster = null;
-    ['name', 'email'].forEach(function (k) { if (!pruefeFeld(k) && !erster) erster = form.elements[k]; });
+    ['name', 'email', 'tel'].forEach(function (k) { if (!pruefeFeld(k) && !erster) erster = form.elements[k]; });
     if (erster) erster.focus();
     return !erster;
   }
-  ['name', 'email'].forEach(function (k) {
+  ['name', 'email', 'tel'].forEach(function (k) {
     var el = form.elements[k];
     el.addEventListener('blur', function () { if (el.value.trim() || el.getAttribute('aria-invalid') === 'true') pruefeFeld(k); });
     el.addEventListener('input', function () { if (el.getAttribute('aria-invalid') === 'true') pruefeFeld(k); });
@@ -963,74 +785,71 @@ img { display: block; max-width: 100%; height: auto; }
       'Land: ' + wert('land') + '\n' +
       'Gesendet über die Website.';
   }
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    if (!pruefen()) { status.textContent = 'Bitte Name und E-Mail ausfüllen.'; return; }
-    if (laufend()) { status.setAttribute('data-wartet', '1'); status.textContent = 'Ihre Dateien werden noch hochgeladen. Einen Moment, dann bitte erneut auf Senden tippen.'; return; }
-    var m = nachricht(), selbst = selbstAnhaengen().length ? ' Bitte die Dateien, die nicht hochgeladen werden konnten, dort anhängen.' : '';
+  function waLink() { return 'https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(nachricht()); }
+  function mailLink() {
+    var betreff = 'Erstgespräch' + (gewaehlt('hilfe') ? ': ' + gewaehlt('hilfe') : '') + ' über ERGUN.';
+    return 'mailto:' + MAIL + '?subject=' + encodeURIComponent(betreff) + '&body=' + encodeURIComponent(nachricht());
+  }
+  function oeffnen() {
     if (weg() === 'whatsapp') {
       /* Ohne 'noopener': sonst liefert window.open immer null. Verbindung danach per opener = null trennen. */
-      var waLink = 'https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(m);
-      var win = window.open(waLink, '_blank');
-      if (win) { try { win.opener = null; } catch (err) {} }
-      else { location.href = waLink; }
-      status.textContent = 'Danke! WhatsApp ist geöffnet, bitte dort nur noch auf Senden tippen.' + selbst;
-    } else {
-      var betreff = 'Erstgespräch' + (gewaehlt('hilfe') ? ': ' + gewaehlt('hilfe') : '') + ' über ERGUN.';
-      location.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent(betreff) + '&body=' + encodeURIComponent(m);
-      status.textContent = 'Danke! Ihr Mailprogramm öffnet sich mit der fertigen Nachricht.' + selbst;
-    }
+      var link = waLink(), win = window.open(link, '_blank');
+      if (win) { try { win.opener = null; } catch (err) {} } else location.href = link;
+    } else location.href = mailLink();
+  }
+  /* Erfolgs-Karte: Formular blendet aus, „Danke, [Name]!“ mit Häkchen gleitet herein */
+  var nochmal = danke.querySelector('[data-nochmal]');
+  function dankeZeigen(echt) {
+    var vorname = wert('name').split(/\s+/)[0] || '', wa = weg() === 'whatsapp';
+    danke.querySelector('[data-danke-titel]').textContent = 'Danke' + (vorname ? ', ' + vorname : '') + '!';
+    danke.querySelector('[data-danke-text]').textContent = (wa ? 'WhatsApp ist geöffnet – tippen Sie dort nur noch auf Senden.' : 'Ihr Mailprogramm ist geöffnet – bitte dort nur noch auf Senden tippen.') +
+      ' Ich melde mich persönlich bei Ihnen.' + (selbstAnhaengen().length ? ' Hängen Sie die Dateien, die nicht hochgeladen werden konnten, bitte dort an.' : '');
+    nochmal.textContent = wa ? 'WhatsApp erneut öffnen' : 'E-Mail erneut öffnen';
+    nochmal.href = echt ? (wa ? waLink() : mailLink()) : '#';
+    if (wa) { nochmal.target = '_blank'; nochmal.rel = 'noopener'; } else { nochmal.removeAttribute('target'); nochmal.removeAttribute('rel'); }
+    form.classList.add('ist-weg');
+    setTimeout(function () {
+      danke.hidden = false; form.classList.remove('ist-weg'); form.classList.add('ist-gesendet');
+      danke.focus({ preventScroll: true });
+      var r = form.getBoundingClientRect(); if (r.top < 0 || r.top > innerHeight * 0.5) form.scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
+    }, ruhig ? 0 : 280);
+  }
+  danke.querySelector('[data-bearbeiten]').addEventListener('click', function () {
+    form.classList.remove('ist-gesendet'); danke.hidden = true; form.elements['name'].focus();
+  });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    status.textContent = '';
+    if (wert('webseite')) { dankeZeigen(false); return; }   /* Honigtopf: Bots bekommen „Danke“, es wird nichts geöffnet */
+    if (!pruefen()) { status.textContent = 'Bitte prüfen Sie die markierten Felder.'; return; }
+    if (laufend()) { status.setAttribute('data-wartet', '1'); status.textContent = 'Ihre Dateien werden noch hochgeladen. Einen Moment, dann bitte erneut auf Senden tippen.'; return; }
+    try { oeffnen(); dankeZeigen(true); }
+    catch (err) { status.innerHTML = ''; status.append('Das hat leider nicht geklappt. Schreiben Sie mir gern direkt: '); var a = document.createElement('a'); a.href = 'mailto:' + MAIL; a.textContent = MAIL; status.append(a); }
   });
 })();
 </script>
 <script>
-/* endo.ai auf der Startseite: Chat sofort, die Kugel (three.js, gut 500 KB) erst kurz bevor der Bereich ins Bild kommt */
+/* Zur endo-Seite (Emre, 27.09.): Schriftzug leuchtet kurz auf, die Seite blendet weich in Schwarz, dann öffnet sich endo im selben Tab.
+   Zurück-Taste: die Seite kommt aus dem Cache – pageshow nimmt das Schwarz sofort wieder weg. Bewegung reduziert = sofort wechseln.
+   Testen: ?endo=b zeigt den Schriftzug unten links statt oben rechts. */
 (function () {
-  var buehne = document.querySelector('.endo__orb'), sektion = document.getElementById('endo');
-  if (!buehne) return;
-  if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { sektion.classList.toggle('endo--sichtbar', e[0].isIntersecting); }).observe(sektion);
-  if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { if (e[0].isIntersecting) sektion.classList.add('endo--da'); }, { rootMargin: '0px 0px -20% 0px' }).observe(sektion);
-  else sektion.classList.add('endo--da');
-  var geladen = false;
-  function laden() {
-    if (geladen) return; geladen = true;
-    var s = document.createElement('script'); s.src = 'ki/js/orb.js?v=17'; s.async = true; document.body.appendChild(s);
-  }
-  if (!('IntersectionObserver' in window)) { window.addEventListener('load', laden); return; }
-  /* erst nach dem Laden der Seite beobachten – der Start bleibt frei von der 500-KB-Kugel */
-  function beobachten() {
-    var io = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { io.disconnect(); laden(); } }, { rootMargin: '0px 0px 240px 0px' });
-    io.observe(buehne);
-  }
-  if (document.readyState === 'complete') setTimeout(beobachten, 800); else window.addEventListener('load', function () { setTimeout(beobachten, 800); });
-})();
-</script>
-<script src="ki/js/endo-daten.js?v=9"></script>
-<script src="ki/js/pakete.js?v=8"></script>
-<script>
-/* Pakete bleiben zu, bis man „Pakete ansehen“ (oder oben „Pakete“) antippt */
-(function () {
-  var box = document.getElementById('pakete'), knopf = document.querySelector('[data-pakete-auf]');
-  if (!box || !knopf) return;
-  var ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function oeffnen(springen) {
-    var neu = box.hidden;
-    box.hidden = false; box.classList.add('ist-offen');
-    knopf.setAttribute('aria-expanded', 'true'); knopf.textContent = 'Pakete schließen';
-    if (springen || neu) setTimeout(function () { box.scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' }); }, 30);
-  }
-  function schliessen() {
-    box.hidden = true; box.classList.remove('ist-offen');
-    knopf.setAttribute('aria-expanded', 'false'); knopf.textContent = 'Pakete ansehen';
-  }
-  knopf.addEventListener('click', function () { if (box.hidden) oeffnen(true); else { schliessen(); knopf.focus(); } });
-  document.querySelectorAll('a[href="#pakete"]').forEach(function (a) {
-    a.addEventListener('click', function (e) { e.preventDefault(); oeffnen(true); if (history.replaceState) history.replaceState(null, '', '#pakete'); });
+  var pos = new URLSearchParams(location.search).get('endo');
+  if (pos === 'b') document.documentElement.setAttribute('data-endo-pos', 'b');
+  var ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches, unterwegs = false;
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('[data-endo-link]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+    e.preventDefault();
+    if (unterwegs) return; unterwegs = true;
+    var ziel = a.href;
+    if (ruhig) { location.href = ziel; return; }
+    document.documentElement.classList.add('zu-endo');
+    setTimeout(function () { location.href = ziel; }, 520);
   });
-  if (location.hash === '#pakete') oeffnen(true);
+  window.addEventListener('pageshow', function () { unterwegs = false; document.documentElement.classList.remove('zu-endo'); });
+  var jahr = document.querySelector('[data-jahr]'); if (jahr) jahr.textContent = new Date().getFullYear();
 })();
 </script>
-<script src="ki/js/agent.js?v=27"></script>
 <script>
 /* Kein Zoomen: Zwei-Finger-Zoom (Safari-Gesten) sperren. Doppeltippen und Pinch sperrt CSS (touch-action).
    Früher lagen hier auch touchmove/touchend-Sperren – die haben auf dem iPhone das Scrollen gebremst

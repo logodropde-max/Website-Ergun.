@@ -6,15 +6,13 @@
     }
   ],
   "redirects": [
-    {
-      "source": "/studio",
-      "destination": "/ki/",
-      "permanent": false
-    },
-    {
-      "source": "/studio/",
-      "destination": "/ki/",
-      "permanent": false
-    }
+    { "source": "/ki", "destination": "https://endo-studio.vercel.app/", "permanent": true },
+    { "source": "/ki/", "destination": "https://endo-studio.vercel.app/", "permanent": true },
+    { "source": "/ki/:pfad*", "destination": "https://endo-studio.vercel.app/", "permanent": true },
+    { "source": "/studio", "destination": "https://endo-studio.vercel.app/", "permanent": true },
+    { "source": "/studio/", "destination": "https://endo-studio.vercel.app/", "permanent": true },
+    { "source": "/api/agent", "destination": "https://endo-studio.vercel.app/api/agent", "permanent": true },
+    { "source": "/api/konto", "destination": "https://endo-studio.vercel.app/api/konto", "permanent": true },
+    { "source": "/api/endo/:pfad*", "destination": "https://endo-studio.vercel.app/api/endo/:pfad*", "permanent": true }
   ]
 }

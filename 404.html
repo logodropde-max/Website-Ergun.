@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seite nicht gefunden – ERGUN.</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+@font-face { font-family: "Instrument Serif"; src: url("/schriften/InstrumentSerif-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Geist"; src: url("/schriften/Geist-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+:root { --bg: #0E0E0C; --text: #F2EFE8; --muted: #8A867D; --accent: #FF5A1F; --line: rgba(242, 239, 232, 0.14); }
+html { background: var(--bg); }
+body { margin: 0; min-height: 100svh; display: grid; place-items: center; padding: 24px; background: var(--bg); color: var(--text); font: 16px/1.5 "Geist", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+main { display: grid; justify-items: center; gap: 18px; max-width: 34rem; text-align: center; }
+.marke { font-family: "Instrument Serif", Georgia, serif; font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); text-decoration: none; }
+.marke i { font-style: normal; color: var(--accent); }
+h1 { margin: 12px 0 0; font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: clamp(2.4rem, 8vw, 4.4rem); line-height: 1; letter-spacing: -0.02em; text-wrap: balance; }
+p { margin: 0; color: var(--muted); text-wrap: pretty; }
+.knopf { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 13px 22px; border-radius: 999px; border: 1px solid var(--line); color: var(--text); text-decoration: none; }
+.knopf--voll { background: var(--accent); border-color: var(--accent); color: #0E0E0C; }
+.knopf:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.zeile { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px; }
+</style>
+</head>
+<body>
+<main>
+  <a class="marke" href="/">ERGUN<i>.</i></a>
+  <h1>Diese Seite gibt es nicht.</h1>
+  <p>Vielleicht ist der Link alt oder vertippt. Die Startseite und das kostenlose Erstgespräch sind nur einen Klick entfernt.</p>
+  <div class="zeile">
+    <a class="knopf knopf--voll" href="/">Zur Startseite</a>
+    <a class="knopf" href="/#kontakt">Zum Erstgespräch</a>
+  </div>
+</main>
+</body>
+</html>

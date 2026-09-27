@@ -462,3 +462,6 @@ WhatsApp-Links (`wa.me`) können nur Text tragen. Deshalb lädt das Kontaktformu
 - Claude Code pflegt Projekt-Notizen im Ordner `notizen/` (z. B. „KI-Studio mit Higgsfield"). Per `git pull` landen sie im Vault.
 - `.vercelignore` hält `notizen/` und diese LIESMICH von der Live-Website fern. Achtung: Das GitHub-Repo selbst ist öffentlich.
 - Absprache: Änderungen von Claude gehen immer direkt auf `main`, Vercel veröffentlicht sie automatisch.
+
+## Seit 27.09.2026: nur noch Webdesign
+endo Studio hat eine eigene Seite (Vault: `_code/endo-studio/`, GitHub `Globa37/endo-studio`, https://endo-studio.vercel.app). Hier bleiben: Titelbild (`js/szene.js`, ohne Funke/Lichtlinie), Kontakt (Formular im Kasten, `api/upload.js`), Impressum/Datenschutz, `404.html`. Der endo-Schriftzug im Titelbild (`.endo-marke`, Position A/B per `?endo=b`) führt mit Schwarz-Übergang zur endo-Seite. Weiterleitungen alter endo-Adressen in `vercel.json`. Rückweg: Git-Tag `vor-trennung`.
