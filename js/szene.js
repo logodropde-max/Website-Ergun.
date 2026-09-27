@@ -524,10 +524,10 @@
      („Tschüss“). Beides startet gemeinsam, sobald es Nacht ist und man weiterscrollt, und läuft dann in eigener Zeit ab
      (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
   /* 28.09.: Emre mit 96 Einzelbildern (aus 0,3–4,3 s des Kling-Videos, fast jedes Videobild) statt 64 – flüssig ohne Überblendung; Werte aus figuren/emre.json */
-  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 250, h: 600, anzahl: 96, spalten: 8, fuss: 0.9963, oben: 0.0105, mitte: 0.5788, breite: 0.7741 } };
+  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 245, h: 600, anzahl: 64, spalten: 8, fuss: 0.9964, oben: 0.0531, mitte: 0.5794, breite: 0.7595 } };
   /* Tempo (27.09. spät, Emre): Emre und Hund laufen NUR nach Zeit, jeder in seinem festen Tempo, unabhängig vom Scrollen.
      Emre winkt einmal (FIG_DAUER), der Hund hebt den Kopf in HUND_HOCH und senkt ihn in HUND_RUNTER. */
-  var FIG_DAUER = 5.5, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0, FIG_VERSION = 9;   /* 6 s: ruhiges, weiches Winken (Zeit-Umverteilung in winkKurve) */
+  var FIG_DAUER = 4.4, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0, FIG_VERSION = 10;   /* 27.09. (Emre): zurück zum Winken von vorher (64 Bilder, 4,4 s) – v9 passte nicht */
   /* Lage von Sonne und Mond (für Wolken, js/wolken.js) und wie stark das Gestirn gerade verdeckt ist (0–1, in Zehnteln) */
   var gest = { sy: 0, my: 0, sonneAn: 1, mondAn: 0 }, verdecktQ = 0, gestTest = null;
   var fig = { phase: 0, ziel: 0, laeuft: false }, hund = { phase: 0, ziel: 0, laeuft: false }, animT = 0, animLaeuft = false;
@@ -592,11 +592,11 @@
   function figurZeichnen(f, nr, l) {
     var c = f.leinwand; if (!c || !f.bild) return;
     if (!f.folge) nr = 0;
-    /* 28.09. (Emre: „Hand sauber, keine Geisterbilder“): KEINE Überblendung zwischen Einzelbildern mehr – die additive Mischung
-       zweier Bilder ergab bei schneller Armbewegung einen doppelten, unscharfen Arm. Stattdessen mehr Einzelbilder (96, ~21/s). */
+    /* Winken von vorher (Emre, 27.09.: „die davor passt besser“): zwischen zwei Einzelbildern weich überblenden, in Achtelschritten. */
     nr = Math.max(0, Math.min(f.anzahl - 1, nr));
-    var n0 = Math.round(nr);
-    var schluessel = n0 + '|' + lichtGold.toFixed(2) + '|' + lichtBlau.toFixed(2) + '|' + lichtNacht.toFixed(2) + '|' + verdecktQ;
+    var n0 = Math.floor(nr), t = Math.round((nr - n0) * 8) / 8, n1 = Math.min(f.anzahl - 1, n0 + 1);
+    if (t >= 1) { n0 = n1; t = 0; }
+    var schluessel = n0 + '|' + t + '|' + lichtGold.toFixed(2) + '|' + lichtBlau.toFixed(2) + '|' + lichtNacht.toFixed(2) + '|' + verdecktQ;
     if (schluessel === f.zuletzt) return;
     f.zuletzt = schluessel;
     var W = c.width, H = c.height;
@@ -604,7 +604,10 @@
     var ga = A.getContext('2d'), gb = B.getContext('2d'), gc = C.getContext('2d');
     /* 1. Bild */
     ga.globalCompositeOperation = 'source-over'; ga.globalAlpha = 1; ga.clearRect(0, 0, W, H);
-    if (f.folge) ga.drawImage(f.folge, (n0 % f.spalten) * f.b, Math.floor(n0 / f.spalten) * f.h, f.b, f.h, 0, 0, W, H);
+    if (f.folge) {
+      ga.globalAlpha = 1 - t; ga.drawImage(f.folge, (n0 % f.spalten) * f.b, Math.floor(n0 / f.spalten) * f.h, f.b, f.h, 0, 0, W, H);
+      if (t > 0) { ga.globalCompositeOperation = 'lighter'; ga.globalAlpha = t; ga.drawImage(f.folge, (n1 % f.spalten) * f.b, Math.floor(n1 / f.spalten) * f.h, f.b, f.h, 0, 0, W, H); }
+    }
     else ga.drawImage(f.bild, 0, 0, W, H);
     ga.globalCompositeOperation = 'source-over'; ga.globalAlpha = 1;
     /* 2. Umriss merken */
@@ -625,22 +628,14 @@
   }
   /* Emre: sanft anheben, gleichmäßig winken, sanft senken – Tempo steigt am Anfang weich an, bleibt in der Mitte gleich
      und läuft am Ende weich aus (Trapez statt S-Kurve, sonst wäre das Winken in der Mitte schneller). */
-  /* 28.09. (Emre: „smooth und clean, die Geschwindigkeit der Hand nicht deutlich erkennen, passend zum grafischen Stil“):
-     Zeit-Umverteilung der 96 Bilder – das schnelle Heben (Bilder 0–26, im Video mit Bewegungsunschärfe) läuft in 10 % der Zeit
-     fast unsichtbar durch, das ruhige Winken (26–72) bekommt 78 % und wird dadurch langsam und weich, das Senken (72–95) 12 %.
-     Innerhalb jeder Phase weich (Smoothstep) – kein Ruck an den Übergängen. Anteile in WINK_PHASEN (Bildindex, Zeitanteil). */
-  var WINK_PHASEN = [[0, 0], [16, 0.12], [80, 0.88], [95, 1]];   /* v9 (Higgsfield Kling, 28.09.): ruhiges Video, Bilder 16–80 = Winken */
+  /* Emre: sanft anheben, gleichmäßig winken, sanft senken – Tempo steigt am Anfang weich an, bleibt in der Mitte gleich
+     und läuft am Ende weich aus (Trapez statt S-Kurve, sonst wäre das Winken in der Mitte schneller). */
+  var RAMPE = 0.16;
   function winkKurve(p) {
-    p = Math.max(0, Math.min(1, p));
-    for (var i = 1; i < WINK_PHASEN.length; i++) {
-      var a = WINK_PHASEN[i - 1], b = WINK_PHASEN[i];
-      if (p <= b[1] || i === WINK_PHASEN.length - 1) {
-        var t = (p - a[1]) / (b[1] - a[1]); t = Math.max(0, Math.min(1, t));
-        var s = i === 2 ? t : t * t * (3 - 2 * t);   /* Wink-Phase gleichmäßig, Heben/Senken weich an- und auslaufend */
-        return (a[0] + (b[0] - a[0]) * s) / (FIGUREN.emre.anzahl - 1);
-      }
-    }
-    return 1;
+    var v = 1 / (1 - RAMPE);
+    if (p < RAMPE) return v * p * p / (2 * RAMPE);
+    if (p > 1 - RAMPE) return 1 - v * (1 - p) * (1 - p) / (2 * RAMPE);
+    return v * (RAMPE / 2 + p - RAMPE);
   }
   function figurenZeichnen() {
     var l = figurLicht(), E = FIGUREN.emre, H = FIGUREN.hund, h = hund.phase * hund.phase * (3 - 2 * hund.phase);

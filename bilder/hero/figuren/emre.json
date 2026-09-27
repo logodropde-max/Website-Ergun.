@@ -1,11 +1,11 @@
 {
- "b": 250,
+ "b": 245,
  "h": 600,
- "anzahl": 96,
+ "anzahl": 64,
  "spalten": 8,
- "fuss": 0.9963,
- "oben": 0.0105,
- "mitte": 0.5788,
- "breite": 0.7741,
- "quelle": "winken3-ruhig.mp4"
+ "fuss": 0.9964,
+ "oben": 0.0531,
+ "mitte": 0.5794,
+ "breite": 0.7595,
+ "quelle": "winken2-v1-4c32d096.mp4"
 }
