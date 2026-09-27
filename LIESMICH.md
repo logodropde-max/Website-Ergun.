@@ -2,6 +2,11 @@
 
 > Überblick für eine neue Sitzung: Vault-Notiz `08 Projekte/Neustart – hier weitermachen.md`. Hier stehen die technischen Details, neuester Abschnitt oben.
 
+## 27.09.2026 abends – Winken zurück zur Fassung vor Feinschliff 2 (live, `422aa80`)
+- Emre: das v9-Winken (Higgsfield `winken3-ruhig`, 96 Bilder, 5,5 s) passt nicht → zurück auf den Stand von `c06a890`: `bilder/hero/figuren/emre-folge.webp` (64 Bilder aus `winken2-v1-4c32d096.mp4`), `emre.webp`, `emre.json`; `FIGUREN.emre = { b: 245, h: 600, anzahl: 64, spalten: 8, … }`, `FIG_DAUER = 4.4`, `FIG_VERSION = 10`, Trapez-Kurve `winkKurve` (Rampe 0,16), weiche Überblendung zwischen Einzelbildern in `figurZeichnen` wieder an. Vollständiges Dekodieren vor dem Start (aus v9) bleibt.
+- `index.html`: `js/szene.js?v=45`, Vorab-Laden `emre-folge.webp?v=10` (lud vorher doppelt).
+- Die v9-Abschnitte unten sind damit Geschichte (Wolken, Farbverläufe, Sterne, Tipps aus Feinschliff 2 bleiben live).
+
 ## Feinschliff 2, Runde 2 (28.09.2026 später) – Higgsfield-Winken v9, Teilverdeckung, mehr Farbverläufe, ruhigere Sterne
 - **Winken v9:** Quelle `bilder/hero/4k/szene2/video/winken3-ruhig.mp4` (Higgsfield Kling 3.0 Pro, 0,28 $, Prompt in `05 Higgsfield-Assets/Higgsfield-Prompts.md`), `python figuren.py winken video/winken3-ruhig.mp4 0.0 5.0 96` + `stabil.py` → `emre-folge.webp` (8 × 12, 250 × 600, Werte in `emre.json` → `FIGUREN.emre`). `FIG_DAUER` 5,5 s, `WINK_PHASEN` [[0,0],[16,0.12],[80,0.88],[95,1]] (Heben/Senken kurz, Winken lang). Alte Folgen: `emre-folge-v8.webp` (Kling-Video vom 25.09.), `*-original-*`.
 - **Teilverdeckung:** `.wolken--hoch` deckt voll (opacity 1), `deckenAb/Bis` 0,01/0,08 → der Wolkenkern wird dicht, sobald die Scheibe die Wolke berührt; Scheibe + enger Schein werden nicht mehr per `--verdeckt-*` ausgeblendet, nur Hof (× 0,85) und Abendglut.

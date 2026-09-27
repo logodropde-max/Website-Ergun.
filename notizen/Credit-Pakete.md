@@ -7,6 +7,20 @@ Preise von [[endo-ai|endo.ai]], festgelegt von Emre am 25.09.2026. Für die Webd
 Die Zahlen stehen im Code an einer Stelle: `window.ENDO` in `ki/js/endo-daten.js` (Karten, Umschalter, Chat und Credit-Fenster lesen von dort).
 Login und Bezahlung sind noch nicht fertig: alle Knöpfe heißen „… vormerken“. **Kauf-Links von Lemon Squeezy** kommen in `ki/js/endo-daten.js` je Paket ins Feld `kaufen` (Monatsabo) bzw. `kaufenJahr` (Jahresabo) – dann heißt der Knopf in der gewählten Abrechnung automatisch „… kaufen“.
 
+## Geplant: Fotos & Videos statt Credits (Auftrag 3b, 27.09.2026 – noch nicht umgesetzt)
+Emre: Kunden sehen nirgends mehr „Credits“, jedes Paket hat feste Fotos + Videos pro Monat, Rest verfällt am Monatsende. Umsetzung im neuen Chat → [[Auftrag 3 + 3b – endo Mini-Chat und Fotos statt Credits]].
+**Margen-Prüfung** (gleiche Rechnung wie unten; schlechtester Fall = jedes Foto ein Produktfoto 0,452 €, jedes Video 5 s 0,56 €; Netto/Monat monatlich · jährlich: Start 7,48 · 6,35 €, Pro 23,45 · 19,92 €, Premium 78,53 · 63,86 €):
+
+| Paket | Emres Vorschlag | Gewinn (mon. · jähr.) | **Vorschlag Claude** | Kosten | Gewinn (mon. · jähr.) |
+|---|---|---|---|---|---|
+| Start 10 € / 8 € | 15 Fotos + 1 Video | 2 % · **−16 %** | **7 Fotos + 1 Video** | 3,72 € | 50 % · 41 % |
+| Pro 30 € / 25 € | 50 Fotos + 5 Videos | **−8 % · −28 %** | **25 Fotos + 2 Videos** | 12,42 € | 47 % · 38 % |
+| Premium 100 € / 80 € | 150 Fotos + 20 Videos | **−1 % · −24 %** | **70 Fotos + 10 Videos** | 37,24 € | 53 % · 42 % |
+
+- Jedes Bild-Werkzeug = 1 Foto (Formate-Set: 1 Foto je Format). Werbevideo 5 s = 1 Video, **Werbevideo 10 s zählt als 2 Videos**, **Website-Video 4K zählt als 4 Videos** – beide nur in Premium.
+- Premium bleibt beim bisherigen Kostenniveau (1.000 Credits ≈ 37,70 €) – vor Emres Arbeitszeit für die Website.
+- Bestandskonten: 75 % des Guthabens → Fotos (÷ 12), 25 % → Videos (÷ 20); Test-Konto mit ca. 889 Credits → 55 Fotos + 11 Videos.
+
 ## Pakete (seit 28.09.2026: nur Monatlich oder Jährlich −20 %, runde Zahlen – Ausnahme auf Emres Wunsch)
 Umschalter „Monatlich | Jährlich −20 %“ über den Karten (**Standard: Jährlich**), gilt für alle Karten zugleich; gleiche Credits pro Monat. **Einmalkauf entfernt** (28.09.). Zahlen im Code: `_code/endo-studio/test/js/endo-daten.js`.
 
