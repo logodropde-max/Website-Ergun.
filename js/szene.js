@@ -524,22 +524,31 @@
      („Tschüss“). Beides startet gemeinsam, sobald es Nacht ist und man weiterscrollt, und läuft dann in eigener Zeit ab
      (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
   var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 245, h: 600, anzahl: 64, spalten: 8, fuss: 0.9964, oben: 0.0531, mitte: 0.5794, breite: 0.7595 } };
-  var fig = { phase: 0, ziel: 0, laeuft: false, t: 0 }, FIG_DAUER = 4.4, lichtGold = 0, lichtBlau = 0, lichtNacht = 0;
+  /* Tempo (27.09. spät, Emre): Emre und Hund laufen NUR nach Zeit, jeder in seinem festen Tempo, unabhängig vom Scrollen.
+     Emre winkt einmal (FIG_DAUER), der Hund hebt den Kopf in HUND_HOCH und senkt ihn in HUND_RUNTER. */
+  var FIG_DAUER = 4.4, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0;
+  var fig = { phase: 0, ziel: 0, laeuft: false }, hund = { phase: 0, ziel: 0, laeuft: false }, animT = 0, animLaeuft = false;
+  var FIG_TEST = /[?&]figuren=test\b/.test(location.search);
   /* Winken (26.09., Emre): sofort beim ersten Runterwischen von ganz oben, einmal – erst nach erneutem
-     Seitenanfang wieder. Sind die Einzelbilder noch nicht geladen, wartet das Winken kurz auf sie. */
+     Seitenanfang wieder. Sind die Einzelbilder noch nicht geladen, wartet das Winken kurz auf sie. Läuft immer im selben
+     Tempo zu Ende (auch wenn man wegscrollt) und endet in der Ruhepose. */
   var gewunken = false, winkenWartet = false;
   function folgenDa() { return Object.keys(FIGUREN).every(function (k) { return !!FIGUREN[k].folge; }); }
   function winken() {
     if (fig.laeuft) return;                         /* läuft noch – nicht neu ansetzen (kein Sprung) */
-    if (!folgenDa()) { winkenWartet = true; return; }
-    winkenWartet = false; fig.phase = 0; fig.ziel = 0; winkStartP = Math.max(0, letztesP); figStart(1);
+    if (!FIGUREN.emre.folge) { winkenWartet = true; return; }
+    winkenWartet = false; fig.phase = 0; fig.ziel = 1; fig.laeuft = true; animStart();
   }
-  /* Das Winken läuft nach Zeit (4,4 s) – scrollt man zügig weiter, läuft es mit dem Scrollweg schneller mit und ist
-     spätestens nach 55 % Bildhöhe fertig, solange Emre noch ganz im Bild steht. Nur vorwärts, nie rückwärts. */
-  var winkStartP = -1, WINK_WEG = 0.55;
+  /* Hund: die Scrollposition entscheidet nur OB (Nacht erreicht → Kopf hoch und jaulen, zurück Richtung Tag → Kopf senken),
+     das Tempo ist fest. Richtungswechsel mitten drin: aus der aktuellen Pose weich umkehren. */
+  function hundZiel(z) {
+    if (ruhig || !FIGUREN.hund.folge || hund.ziel === z) return;
+    hund.ziel = z; hund.laeuft = true; animStart();
+  }
+  function hundPruefen() { if (lichtNacht >= 0.9) hundZiel(1); else if (lichtNacht <= 0.5) hundZiel(0); }
   function figurLaden(name, folge) {
     var f = FIGUREN[name], b = new Image(); b.decoding = 'async';
-    b.onload = function () { f[folge ? 'folge' : 'bild'] = b; f.zuletzt = ''; figurenZeichnen(); if (folge && winkenWartet && folgenDa()) winken(); };
+    b.onload = function () { f[folge ? 'folge' : 'bild'] = b; f.zuletzt = ''; figurenZeichnen(); if (folge && name === 'emre' && winkenWartet) winken(); if (folge && name === 'hund') hundPruefen(); };
     b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=6';
   }
   Object.keys(FIGUREN).forEach(function (k) { FIGUREN[k].zuletzt = ''; figurLaden(k, false); });
@@ -552,8 +561,8 @@
   var FIGLICHT = {
     tag:   { mul: [0.9, 0.91, 0.93], lift: [0, 0, 0], rim: [255, 246, 216], ra: 0.32 },
     gold:  { mul: [0.6, 0.46, 0.4], lift: [0.04, 0.02, 0.03], rim: [255, 182, 100], ra: 0.9 },
-    blau:  { mul: [0.3, 0.34, 0.44], lift: [0.02, 0.03, 0.06], rim: [176, 196, 240], ra: 0.35 },
-    nacht: { mul: [0.27, 0.32, 0.45], lift: [0.035, 0.05, 0.085], rim: [170, 196, 255], ra: 0.6 }
+    blau:  { mul: [0.3, 0.34, 0.44], lift: [0.02, 0.03, 0.06], rim: [176, 196, 240], ra: 0.5 },
+    nacht: { mul: [0.27, 0.32, 0.45], lift: [0.035, 0.05, 0.085], rim: [176, 202, 255], ra: 0.68 }   /* 27.09.: kräftigere Mondkante – Umriss, Arm, Hand und Hundekopf heben sich ab */
   };
   function figurLicht() {
     var l = { mul: [0, 0, 0], lift: [0, 0, 0], rim: [0, 0, 0], ra: 0 };
@@ -573,8 +582,11 @@
   function figurZeichnen(f, nr, l) {
     var c = f.leinwand; if (!c || !f.bild) return;
     if (!f.folge) nr = 0;
-    /* kein Überblenden zwischen Einzelbildern (das zeigte beim schnellen Heben zwei halbdurchsichtige Arme) – bei 64 Bildern läuft es so flüssig */
-    var n0 = Math.min(f.anzahl - 1, Math.round(nr)), t = 0, n1 = n0;
+    /* 27.09. spät (Emre): zwischen zwei Einzelbildern weich überblenden, damit nichts stottert. Seit das Tempo fest ist (nie mehr
+       vom Scrollen beschleunigt), liegen Nachbarbilder dicht beieinander – kein doppelter Arm. Überblendung in Achtelschritten. */
+    nr = Math.max(0, Math.min(f.anzahl - 1, nr));
+    var n0 = Math.floor(nr), t = Math.round((nr - n0) * 8) / 8, n1 = Math.min(f.anzahl - 1, n0 + 1);
+    if (t >= 1) { n0 = n1; t = 0; }
     var schluessel = n0 + '|' + t + '|' + lichtGold.toFixed(2) + '|' + lichtBlau.toFixed(2) + '|' + lichtNacht.toFixed(2);
     if (schluessel === f.zuletzt) return;
     f.zuletzt = schluessel;
@@ -596,7 +608,7 @@
     ga.globalCompositeOperation = 'destination-in'; ga.drawImage(B, 0, 0);
     /* 4. Lichtsaum: Umriss minus nach rechts unten versetzter Umriss = schmaler Streifen links oben, in Saumfarbe */
     if (l.ra > 0.02) {
-      var d = Math.max(1, H * 0.0045);
+      var d = Math.max(1, H * 0.003);   /* 27.09.: schmaler – schmale Teile (Hand) bleiben erkennbar */
       gc.globalCompositeOperation = 'source-over'; gc.globalAlpha = 1; gc.clearRect(0, 0, W, H); gc.drawImage(B, d, d * 0.45);
       gb.globalCompositeOperation = 'destination-out'; gb.drawImage(C, 0, 0);
       gb.globalCompositeOperation = 'source-in'; gb.fillStyle = rgbStr(l.rim, 1); gb.fillRect(0, 0, W, H);
@@ -604,26 +616,35 @@
     }
     var g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H); g.drawImage(A, 0, 0);
   }
+  /* Emre: sanft anheben, gleichmäßig winken, sanft senken – Tempo steigt am Anfang weich an, bleibt in der Mitte gleich
+     und läuft am Ende weich aus (Trapez statt S-Kurve, sonst wäre das Winken in der Mitte schneller). */
+  var RAMPE = 0.16;
+  function winkKurve(p) {
+    var v = 1 / (1 - RAMPE);
+    if (p < RAMPE) return v * p * p / (2 * RAMPE);
+    if (p > 1 - RAMPE) return 1 - v * (1 - p) * (1 - p) / (2 * RAMPE);
+    return v * (RAMPE / 2 + p - RAMPE);
+  }
   function figurenZeichnen() {
-    var l = figurLicht(), e = fig.phase * fig.phase * (3 - 2 * fig.phase);
-    /* Emre: Einzelbilder vorwärts (heben, winken, senken). Hund jault mit und senkt am Ende den Kopf wieder –
-       Hin- und Rückweg seiner Folge, oben kurz gehalten, damit beide weich in der Ruhepose ankommen. */
-    var h = Math.min(1, Math.sin(Math.PI * e) * 1.25);
-    Object.keys(FIGUREN).forEach(function (k) { var f = FIGUREN[k]; figurZeichnen(f, (k === 'hund' ? h : e) * (f.anzahl - 1), l); });
+    var l = figurLicht(), E = FIGUREN.emre, H = FIGUREN.hund, h = hund.phase * hund.phase * (3 - 2 * hund.phase);
+    figurZeichnen(H, h * (H.anzahl - 1), l);
+    figurZeichnen(E, winkKurve(fig.phase) * (E.anzahl - 1), l);
   }
-  function figStart(z) {
-    if (fig.ziel === z) return;
-    fig.ziel = z;
-    if (!fig.laeuft) { fig.laeuft = true; fig.t = performance.now(); requestAnimationFrame(figLauf); }
-  }
-  function figLauf(t) {
-    var dt = Math.min(0.1, Math.max(0, (t - fig.t) / 1000)), r = fig.ziel > fig.phase ? 1 : -1; fig.t = t;
-    fig.phase = Math.max(0, Math.min(1, fig.phase + r * dt / FIG_DAUER));
-    if (r > 0 && winkStartP >= 0) fig.phase = Math.max(fig.phase, Math.min(1, (letztesP - winkStartP) / WINK_WEG));
-    if ((r > 0 && fig.phase >= fig.ziel) || (r < 0 && fig.phase <= fig.ziel)) { fig.phase = fig.ziel; fig.laeuft = false; }
+  /* eine Bildschleife für beide, nur solange sich etwas bewegt; Delta-Zeit → gleich schnell auf 60 und 120 Hz */
+  function animStart() { if (!animLaeuft) { animLaeuft = true; animT = performance.now(); requestAnimationFrame(animLauf); } }
+  function animLauf(t) {
+    var dt = Math.min(0.1, Math.max(0, (t - animT) / 1000)); animT = t;
+    if (fig.laeuft) { fig.phase = Math.min(1, fig.phase + dt / FIG_DAUER); if (fig.phase >= 1) fig.laeuft = false; }
+    if (hund.laeuft) {
+      var r = hund.ziel > hund.phase ? 1 : -1;
+      hund.phase = Math.max(0, Math.min(1, hund.phase + r * dt / (r > 0 ? HUND_HOCH : HUND_RUNTER)));
+      if ((r > 0 && hund.phase >= hund.ziel) || (r < 0 && hund.phase <= hund.ziel)) { hund.phase = hund.ziel; hund.laeuft = false; }
+    }
     figurenZeichnen();
-    if (fig.laeuft) requestAnimationFrame(figLauf);
+    if (FIG_TEST && testAnzeige) testAnzeige();
+    if (fig.laeuft || hund.laeuft) requestAnimationFrame(animLauf); else animLaeuft = false;
   }
+  var testAnzeige = null;
   /* Emre und der Hund stehen nebeneinander auf der Kuppe – gleiche Entfernung, beide Füße auf dem Boden.
      Hund bis zu den Ohren ca. 0,9 m, Emre ca. 1,8 m → Emre knapp doppelt so hoch wie der stehende Hund. */
   function figurenStellen(ebene) {
@@ -642,7 +663,9 @@
     [[H, hx, hw, hh], [E, ex, ew, eh]].forEach(function (z) {
       var f = z[0], x = z[1] - z[2] * f.mitte, y = boden + sinken - z[3] * f.fuss;
       var c = f.leinwand || document.createElement('canvas');
-      c.className = 'szene__hund'; c.width = Math.ceil(z[2] * m.q); c.height = Math.ceil(z[3] * m.q);
+      /* volle Schärfe (27.09.): so viele Pixel wie der Bildschirm hat (bis 3×), aber nie mehr als die Bildfolge selbst hergibt */
+      var qf = Math.max(1, Math.min(window.devicePixelRatio || 1, 3, f.h / z[3]));
+      c.className = 'szene__hund'; c.width = Math.ceil(z[2] * qf); c.height = Math.ceil(z[3] * qf);
       c.style.left = x + 'px'; c.style.top = y + 'px'; c.style.width = z[2] + 'px'; c.style.height = z[3] + 'px';
       if (f === E) huelle.insertBefore(c, huelle.firstChild); else huelle.appendChild(c);
       f.leinwand = c; f.zuletzt = '';
@@ -766,7 +789,8 @@
       /* Parallaxe: direkt am echten Scrollwert, sonst schwimmt die Landschaft gegen die Seite (Bewegung reduziert: keine) */
       if (!(cssParallaxe && isNaN(festP))) Object.keys(ebenen).forEach(function (k) { setze(ebenen[k], s * TIEFE[k] * (k === 'himmel' ? 1 : m.f)); });
       /* Winken: sofort beim ersten Runterwischen von ganz oben; erst ganz oben wird es wieder freigegeben */
-      if (!isNaN(festP)) { fig.phase = sanft(0.4, 0.58, p / ZEIT); figurenZeichnen(); }
+      if (!isNaN(festP) && !FIG_TEST) { fig.phase = sanft(0.4, 0.58, p / ZEIT); figurenZeichnen(); }   /* Standbild zum Prüfen (?p / ?nacht) */
+      else if (!isNaN(festP)) { /* ?figuren=test: Knöpfe steuern die Figuren */ }
       else if (ruhig) { /* Bewegung reduziert: kein Winken */ }
       else if (vorherP < 0) gewunken = p > 0.003;            /* erster Aufbau: nur ganz oben ist das Winken frei */
       else if (p <= 0.003) { gewunken = false; winkenWartet = false; }
@@ -814,6 +838,7 @@
     wert('--mond', sanft(0.27, 0.4, p).toFixed(3));
     /* Emre und der Hund: Tag-, Abend- und Nachtbild überblenden mit dem Licht */
     lichtGold = gold; lichtBlau = sanft(0.18, 0.3, p); lichtNacht = nacht;
+    if (!FIG_TEST) hundPruefen();
     figurenZeichnen();
   }
   function anfordern() { if (!laeuft) { laeuft = true; zuletztT = stillSeit = performance.now(); requestAnimationFrame(takt); } }
@@ -837,7 +862,27 @@
     /* Wind nur, solange das Startbild zu sehen ist */
     if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { held.classList.toggle('szene--weg', !e[0].isIntersecting); }).observe(held);
     window.__szene = { p: function (x) { window.scrollTo(0, x * m.H); }, bauzeit: function () { return bauzeit; },
-      zustand: function () { return { phase: fig.phase, laeuft: fig.laeuft, gewunken: gewunken, wartet: winkenWartet, rohY: rohY, weichY: weichY, licht: lichtP }; } };
+      zustand: function () { return { phase: fig.phase, laeuft: fig.laeuft, hund: hund.phase, hundZiel: hund.ziel, hundLaeuft: hund.laeuft, gewunken: gewunken, wartet: winkenWartet, rohY: rohY, weichY: weichY, licht: lichtP }; },
+      winken: function () { fig.laeuft = false; winken(); }, hund: function (z) { hund.ziel = -1; hundZiel(z); } };
+    if (FIG_TEST) figurenTest();
+  }
+  /* ?figuren=test (27.09.): Knöpfe „Winken“, „Hund hoch“, „Hund runter“ + Anzeige der gestoppten Zeit; ?p= / ?nacht= gehen weiter */
+  function figurenTest() {
+    var box = document.createElement('div');
+    box.style.cssText = 'position:fixed;left:12px;bottom:12px;z-index:99;display:grid;gap:8px;padding:10px 12px;background:rgba(0,0,0,.75);color:#fff;font:12px/1.35 system-ui;border-radius:8px';
+    box.innerHTML = '<div style="display:flex;gap:6px"><button data-f="w">Winken</button><button data-f="h1">Hund hoch</button><button data-f="h0">Hund runter</button></div><span data-anz>–</span>';
+    document.body.appendChild(box);
+    var anz = box.querySelector('[data-anz]'), t0w = 0, t0h = 0, dw = '', dh = '';
+    box.querySelector('[data-f="w"]').addEventListener('click', function () { t0w = performance.now(); dw = ''; window.__szene.winken(); });
+    box.querySelector('[data-f="h1"]').addEventListener('click', function () { t0h = performance.now(); dh = ''; window.__szene.hund(1); });
+    box.querySelector('[data-f="h0"]').addEventListener('click', function () { t0h = performance.now(); dh = ''; window.__szene.hund(0); });
+    testAnzeige = function () {
+      var j = performance.now();
+      if (t0w && !fig.laeuft && !dw) dw = ((j - t0w) / 1000).toFixed(2) + ' s';
+      if (t0h && !hund.laeuft && !dh) dh = ((j - t0h) / 1000).toFixed(2) + ' s';
+      anz.textContent = 'Emre ' + (fig.laeuft ? Math.round(fig.phase * 100) + ' %' : (dw || 'Ruhe')) + ' (Soll ' + FIG_DAUER + ' s) · Hund ' + (hund.laeuft ? Math.round(hund.phase * 100) + ' %' : (dh || (hund.phase ? 'oben' : 'unten'))) + ' (Soll ' + HUND_HOCH + ' / ' + HUND_RUNTER + ' s)';
+    };
+    testAnzeige();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 

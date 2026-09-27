@@ -195,6 +195,24 @@ img { display: block; max-width: 100%; height: auto; }
   .szene--weg .szene__wind { animation-play-state: paused; }
 }
 @keyframes wind { 0% { transform: skewX(-1.4deg); } 55% { transform: skewX(0.6deg); } 100% { transform: skewX(1.6deg); } }
+/* Wolken (27.09., Emre; js/wolken.js): ziehen sehr langsam von links nach rechts, atmen kaum sichtbar, färben sich mit dem Licht.
+   „hoch“ liegt in der Himmels-Ebene, „tief“ in der Ebene der fernsten Bergkette (vor ihr, hinter allen näheren Bergen). */
+.wolken { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.wolken--hoch { opacity: 0.85; }   /* Federwolken zart – Titel und endo-Schriftzug bleiben lesbar, wenn sie dahinter ziehen */
+.wolke { position: absolute; left: 0; top: 0; opacity: 0; transform: translate3d(var(--x, 0px), 0, 0); will-change: transform; transition: opacity 1600ms var(--ease); }
+.wolke.ist-da { opacity: 1; }
+.wolke__atem { position: absolute; inset: 0; transform-origin: 50% 70%; }
+.wolke__bild { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; display: block; opacity: 0; }
+.wolke__bild[data-licht="tag"] { opacity: var(--tag, 1); }
+.wolke__bild[data-licht="gold"] { opacity: var(--gold, 0); will-change: opacity; }
+.wolke__bild[data-licht="nacht"] { opacity: var(--nacht, 0); will-change: opacity; }
+@media (prefers-reduced-motion: no-preference) {
+  .wolke { animation: wolke-zieht calc(var(--dauer, 600s) / var(--wolken-tempo, 1)) linear var(--versatz, 0s) infinite; }
+  .wolke__atem { animation: wolke-atmet calc(var(--atem, 40s) / var(--wolken-tempo, 1)) ease-in-out var(--atem-versatz, 0s) infinite alternate; }
+  .szene--weg .wolke, .szene--weg .wolke__atem { animation-play-state: paused; }
+}
+@keyframes wolke-zieht { from { transform: translate3d(var(--von, -400px), 0, 0); } to { transform: translate3d(var(--bis, 1600px), 0, 0); } }
+@keyframes wolke-atmet { from { transform: scale(1, 1) translate3d(0, 0, 0); opacity: 0.9; } to { transform: scale(1.035, 1.02) translate3d(0, -1.5%, 0); opacity: 1; } }
 
 /* Übergang ins Schwarz der Seite: keine Kante zur endo.ai-Sektion */
 /* leichter Bodennebel über der Unterkante, in der Farbe der endo-Sektion */
@@ -304,31 +322,19 @@ img { display: block; max-width: 100%; height: auto; }
 @media (prefers-reduced-motion: reduce) { .szene__weiter i { animation: none; } }
 
 /* endo-Schriftzug: Chrom mit langsam wanderndem Glanz, Pfeil ↗ + hauchdünne Linie (eigene Seite) */
-.endo-marke { position: absolute; z-index: 4; display: grid; gap: 4px; min-height: 44px; padding: 10px 12px; text-decoration: none; color: #F2EFE8; --glanz-lauf: 14s; }
-.endo-marke__wort { display: inline-flex; align-items: baseline; gap: 6px; line-height: 1; filter: drop-shadow(0 1px 2px rgba(10, 16, 32, 0.6)) drop-shadow(0 0 14px rgba(10, 16, 32, 0.4)); }
-.endo-marke__wort b, .endo-marke__wort small { font-weight: 300; letter-spacing: -0.035em; background: linear-gradient(110deg, #C9CED6 0%, #FFFFFF 22%, #DEE2E8 40%, #9AA2AD 55%, #FFFFFF 78%, #C9CED6 100%); background-size: 260% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: endo-glanz var(--glanz-lauf) linear infinite; }
-.endo-marke__wort b { font-size: 24px; }
-.endo-marke__wort small { font-size: 13px; letter-spacing: 0.02em; }
 @keyframes endo-glanz { from { background-position: 130% 0; } to { background-position: -130% 0; } }
-.endo-marke__pfeil { font-style: normal; font-size: 13px; color: #E8ECF1; transition: transform 300ms var(--ease-out); }
-.endo-marke__linie { display: block; height: 1px; background: linear-gradient(90deg, rgba(232, 236, 241, 0.85), rgba(232, 236, 241, 0.15)); transform: scaleX(0.35); transform-origin: 0 50%; transition: transform 420ms var(--ease-out); }
-.endo-marke__sub { font-size: 11px; letter-spacing: 0.04em; color: rgba(242, 239, 232, 0.72); text-shadow: 0 1px 2px rgba(10, 16, 32, 0.6); }
-.endo-marke:hover .endo-marke__linie, .endo-marke:focus-visible .endo-marke__linie, .endo-marke:active .endo-marke__linie { transform: scaleX(1); }
-.endo-marke:hover .endo-marke__pfeil, .endo-marke:focus-visible .endo-marke__pfeil { transform: translate(2px, -2px); }
-.endo-marke:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 8px; }
 /* Position A: oben rechts unter der Navigation · Position B: unten links */
-.endo-marke { right: max(12px, calc(var(--pad) - 12px)); top: 64px; justify-items: end; text-align: right; }
-.endo-marke .endo-marke__linie { transform-origin: 100% 50%; }
-html[data-endo-pos="b"] .endo-marke { right: auto; top: auto; left: max(8px, calc(var(--pad) - 12px)); bottom: max(22px, env(safe-area-inset-bottom)); justify-items: start; text-align: left; }
-html[data-endo-pos="b"] .endo-marke .endo-marke__linie { transform-origin: 0 50%; }
-@media (max-width: 700px) { .endo-marke { top: 58px; } .endo-marke__wort b { font-size: 21px; } html[data-endo-pos="b"] .endo-marke { bottom: max(70px, calc(env(safe-area-inset-bottom) + 58px)); } }
 /* Übergang zur endo-Seite: Schriftzug leuchtet kurz auf, die Seite blendet in tiefes Schwarz */
 .wechsel { position: fixed; inset: 0; z-index: 100; background: #000; opacity: 0; pointer-events: none; transition: opacity 420ms var(--ease); }
 html.zu-endo .wechsel { opacity: 1; pointer-events: auto; }
-html.zu-endo .endo-marke__wort, html.zu-endo .nav__link--endo { filter: drop-shadow(0 0 10px rgba(226, 234, 248, 0.95)) drop-shadow(0 0 22px rgba(196, 212, 244, 0.7)); }
+html.zu-endo .nav__link--endo { filter: drop-shadow(0 0 10px rgba(226, 234, 248, 0.95)) drop-shadow(0 0 22px rgba(196, 212, 244, 0.7)); }
 .nav__link--endo span { display: inline-block; transition: transform 300ms var(--ease-out); }
 .nav__link--endo:hover span { transform: translate(2px, -2px); }
-@media (prefers-reduced-motion: reduce) { .endo-marke__wort b, .endo-marke__wort small { animation: none; } .wechsel { transition: none; } }
+/* endo nur noch oben rechts (Emre, 27.09.): schlichter Link wie die Navigation, beim Hover ein ruhiger Chrom-Glanz, Tippfläche 44 px */
+.nav__link--endo { display: inline-flex; align-items: center; min-height: 44px; }
+.nav__link--endo::after { background: linear-gradient(90deg, #C9CED6, #FFFFFF 45%, #9AA2AD 70%, #E8ECF1); }
+@media (hover: hover) and (pointer: fine) { .nav__link--endo:hover { background: linear-gradient(110deg, #DDE1E7 0%, #FFFFFF 30%, #AEB5BF 55%, #FFFFFF 80%); -webkit-background-clip: text; background-clip: text; color: transparent; } .nav__link--endo:hover span { color: #F2EFE8; } }
+@media (prefers-reduced-motion: reduce) { .wechsel { transition: none; } }
 
 /* Kontakt folgt direkt auf das Titelbild: Farbe läuft aus der Nacht in den Seitenhintergrund */
 /* Direktkontakt: drei Wege (Handy oben als große Knöpfe, Desktop als ruhige Zeile) */
@@ -416,28 +422,50 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 .thema { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .thema__karte { position: relative; display: flex; min-width: 0; }
 .thema__karte input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
-.thema__innen { flex: 1; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 12px; row-gap: 2px; align-items: center; min-height: 76px; padding: 14px 16px; border: 1px solid rgba(242, 239, 232, 0.14); border-radius: 16px; background: rgba(14, 14, 12, 0.45);
-  transition: border-color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
-.thema__innen svg { grid-row: 1 / 3; width: 26px; height: 26px; color: rgba(242, 239, 232, 0.7); transition: color 200ms var(--ease); }
-.thema__innen b { font-weight: 500; font-size: 15.5px; line-height: 1.25; color: var(--text); }
-.thema__innen small { font-size: 13px; line-height: 1.35; color: var(--muted); }
+/* 27.09. (Emre): nur noch die Überschrift – kompakt, gleich hoch, 2×2 auch am Handy, Text zentriert (darf umbrechen) */
+.thema { grid-auto-rows: 1fr; }
+.thema__innen { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 64px; padding: 12px 14px; text-align: center; border: 1px solid rgba(242, 239, 232, 0.14); border-radius: 14px; background: rgba(14, 14, 12, 0.45);
+  transition: border-color 220ms var(--ease), background-color 220ms var(--ease), transform 160ms var(--ease-out); }
+.thema__innen b { font-weight: 500; font-size: 15px; line-height: 1.3; color: var(--text); text-wrap: balance; }
 .thema__karte input:checked + .thema__innen { border-color: var(--accent); background: rgba(255, 90, 31, 0.1); }
-.thema__karte input:checked + .thema__innen svg { color: var(--accent); }
 .thema__karte input:focus-visible + .thema__innen { outline: 2px solid var(--accent); outline-offset: 3px; }
-.thema__karte:active .thema__innen { transform: scale(0.985); }
+.thema__karte:active .thema__innen { transform: scale(0.97); }
 @media (hover: hover) and (pointer: fine) { .thema__karte:hover .thema__innen { border-color: rgba(242, 239, 232, 0.32); } .thema__karte input:checked + .thema__innen { border-color: var(--accent); } }
-@media (max-width: 460px) { .thema { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 460px) { .thema { gap: 8px; } .thema__innen { min-height: 60px; padding: 10px; } .thema__innen b { font-size: 14px; } }
 .anfrage__gruppe .field__error { display: block; margin-top: 8px; }
 .anfrage .anfrage__gruppe.hat-fehler .thema__innen, .anfrage .anfrage__gruppe.hat-fehler .weg__option span { border-color: rgba(255, 138, 92, 0.7); }
 .anfrage .field__error { color: #FF8A5C; font-size: 13.5px; }
 .anfrage__kontakt[hidden] { display: none; }
 .anfrage__kontakt.ist-neu { animation: feld-rein 420ms var(--ease-out) both; }
 @keyframes feld-rein { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
-.anfrage__haken { display: flex; gap: 12px; align-items: flex-start; font-size: 14px !important; letter-spacing: 0 !important; text-transform: none !important; line-height: 1.5; color: var(--muted) !important; cursor: pointer; }
-.anfrage__haken input { flex: none; width: 22px; height: 22px; min-height: 0 !important; margin: 1px 0 0; padding: 0 !important; accent-color: var(--accent); cursor: pointer; }
+/* Datenschutz-Haken (27.09., Emre): eigene Box, das echte Kästchen liegt unsichtbar darüber (Tastatur, Vorleser, Formular bleiben gleich).
+   Ganze Zeile antippbar (mind. 44 px), der Link bleibt eigenständig. Angehakt: Fläche in Akzentfarbe, Häkchen zeichnet sich in 0,25 s. */
+.anfrage__haken { position: relative; display: flex; gap: 12px; align-items: flex-start; min-height: 44px; padding: 10px 0; font-size: 14px !important; letter-spacing: 0 !important; text-transform: none !important; line-height: 1.5; color: var(--muted) !important; cursor: pointer; }
+.anfrage__haken input { position: absolute; left: 0; top: 11px; width: 22px; height: 22px; min-height: 0 !important; margin: 0; padding: 0 !important; opacity: 0; cursor: pointer; }
+.haken__box { flex: none; display: grid; place-items: center; width: 22px; height: 22px; margin-top: 1px; border-radius: 6px; border: 1.5px solid rgba(242, 239, 232, 0.32); background: rgba(14, 14, 12, 0.45);
+  transition: background-color 220ms var(--ease), border-color 220ms var(--ease), box-shadow 220ms var(--ease), transform 160ms var(--ease-out); }
+.haken__box svg { width: 15px; height: 15px; fill: none; stroke: #0E0E0C; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 21; stroke-dashoffset: 21; transition: stroke-dashoffset 250ms var(--ease-out) 40ms; }
+.anfrage__haken input:checked + .haken__box { background: var(--accent); border-color: var(--accent); }
+.anfrage__haken input:checked + .haken__box svg { stroke-dashoffset: 0; }
+.anfrage__haken input:focus-visible + .haken__box { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.2); }
+.anfrage__haken:active .haken__box { transform: scale(0.94); }
+@media (hover: hover) and (pointer: fine) { .anfrage__haken:hover input:not(:checked) + .haken__box { border-color: rgba(242, 239, 232, 0.6); } }
+.anfrage .field.hat-fehler .haken__box { border-color: #FF8A5C; }
+@media (prefers-reduced-motion: reduce) { .haken__box, .haken__box svg { transition: none; } }
 .anfrage__haken a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(242, 239, 232, 0.4); }
 .anfrage .weg { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 @media (prefers-reduced-motion: reduce) { .anfrage__kontakt.ist-neu { animation: none; } }
+
+/* „endo empfohlen“ (Emre, 27.09.): kleines Etikett oben rechts auf „Website-Redesign“, Tipp-Zeile über dem Absenden */
+.thema__karte--etikett .thema__innen { position: relative; padding-top: 22px; }
+.thema__etikett { position: absolute; top: 7px; right: 8px; padding: 2px 8px; border-radius: 999px; font-style: normal; font-size: 10.5px; font-weight: 500; line-height: 1.5; letter-spacing: 0.02em; white-space: nowrap;
+  color: #FF8A5C; background: rgba(255, 90, 31, 0.12); border: 1px solid rgba(255, 90, 31, 0.32); pointer-events: none; }
+@media (max-width: 460px) { .thema__etikett { top: 6px; right: 6px; font-size: 10px; padding: 1px 7px; } .thema__karte--etikett .thema__innen { padding-top: 24px; } }
+.anfrage__tipp { margin: 0; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255, 90, 31, 0.25); background: rgba(255, 90, 31, 0.06); font-size: 14px; line-height: 1.5; color: var(--muted); }
+.anfrage__tipp a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(242, 239, 232, 0.4); white-space: nowrap; }
+.anfrage__tipp[hidden] { display: none; }
+.anfrage__tipp.ist-neu { animation: feld-rein 420ms var(--ease-out) both; }
+@media (prefers-reduced-motion: reduce) { .anfrage__tipp.ist-neu { animation: none; } }
 
 /* Übergang Titelbild → Kontakt: ruhiger, dunkler Grund, weich aus dem Dunkel am Ende des Titelbilds (#070B16).
    Erdschnitt + Wurzeln (js/wurzeln.js) auf Emres Wunsch am 27.09. wieder entfernt – Datei bleibt liegen, wird nicht geladen. */
@@ -483,12 +511,6 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
     <div class="szene__oben" aria-hidden="true"></div>
     <div class="szene__fade" aria-hidden="true"></div>
     <div class="szene__erde" aria-hidden="true"></div>
-    <!-- endo Studio: eigene Seite (Emre, 27.09.). Position A = oben rechts unter der Navigation, B = unten links (?endo=b) -->
-    <a class="endo-marke" href="https://endo-ergun.vercel.app/" data-endo-link>
-      <span class="endo-marke__wort"><b>endo</b><small>Studio</small><i class="endo-marke__pfeil" aria-hidden="true">↗</i></span>
-      <span class="endo-marke__linie" aria-hidden="true"></span>
-      <span class="endo-marke__sub">Webdesign mit KI – selbst gestalten</span>
-    </a>
     <a class="szene__weiter" href="#kontakt" aria-label="Weiter zum Kontakt"><span class="szene__weiter-text">Erstgespräch</span><i aria-hidden="true"></i></a>
   </section>
 </div>
@@ -556,10 +578,11 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
       </div>
 
       <div class="field anfrage__ok">
-        <label class="anfrage__haken"><input type="checkbox" name="datenschutz" aria-required="true" aria-describedby="f-ds-err"><span>Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a> gelesen und bin einverstanden, dass Emre mich zu meiner Anfrage kontaktiert. <span class="pflicht" aria-hidden="true">*</span></span></label>
+        <label class="anfrage__haken"><input type="checkbox" name="datenschutz" aria-required="true" aria-describedby="f-ds-err"><span class="haken__box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.5 4.5L18.5 7.5"/></svg></span><span>Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a> gelesen und bin einverstanden, dass Emre mich zu meiner Anfrage kontaktiert. <span class="pflicht" aria-hidden="true">*</span></span></label>
         <span class="field__error" id="f-ds-err" aria-live="polite"></span>
       </div>
 
+      <p class="anfrage__tipp" data-endo-tipp hidden>Tipp: Mit endo erstellen Sie vorab neue Produktfotos und Bilder für Ihre neue Seite. <a href="https://endo-ergun.vercel.app/" target="_blank" rel="noopener">endo ansehen <span aria-hidden="true">↗</span></a></p>
       <button class="btn btn--wa anfrage__senden" type="submit" data-senden>
         <span data-senden-text>Anfrage senden</span>
         <span class="anfrage__pfeil" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
@@ -585,7 +608,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
     </div>
     <div class="agentur reveal">
       <p class="agentur__marke">ERGUN<span class="dot">.</span></p>
-      <p class="agentur__text">ERGUN. ist das Webdesign-Studio von Emre Ergun: Websites mit Design und Bewegung, Assistenten und Automatisierung – Entwurf und Umsetzung aus einer Hand. Produktfotos und Videos zum Selbstgestalten gibt es bei <a href="https://endo-ergun.vercel.app/" data-endo-link>endo Studio ↗</a>.</p>
+      <p class="agentur__text">ERGUN. ist das Webdesign-Studio von Emre Ergun: Websites mit Design und Bewegung, Assistenten und Automatisierung – Entwurf und Umsetzung aus einer Hand.</p>
     </div>
   </section>
 </main>
@@ -600,7 +623,8 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 </footer>
 <div class="wechsel" aria-hidden="true"></div>
 
-<script src="js/szene.js?v=36"></script>
+<script src="js/szene.js?v=39"></script>
+<script src="js/wolken.js?v=2" defer></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {
@@ -627,12 +651,12 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
    und landen als Link in der Nachricht; klappt das nicht, hängt man sie selbst an.
    Ohne JavaScript bleibt das Formular sichtbar und tut nichts Falsches. */
 (function () {
-  /* ===== Einstellungen (Emre, 27.09.): Texte der vier Auswahl-Karten hier ändern ===== */
+  /* ===== Einstellungen (Emre, 27.09.): Texte der vier Auswahl-Karten hier ändern (seit 27.09. spät nur noch der Titel) ===== */
   var THEMEN = [
-    { wert: 'Neue Website', titel: 'Neue Website', zeile: 'Von Grund auf geplant und gebaut', icon: '<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 8.5h17"/><path d="M12 11.5v5M9.5 14h5"/>' },
-    { wert: 'Website-Redesign', titel: 'Website-Redesign', zeile: 'Bestehende Seite neu und modern', icon: '<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 8.5h17"/><path d="M15.5 12.5a3.5 3.5 0 1 1-1-2.5"/><path d="M15.5 9.5v3h-3"/>' },
-    { wert: 'Assistent & Automatisierung', titel: 'Assistent & Automatisierung', zeile: 'Fragen beantworten, Abläufe automatisch', icon: '<path d="M5 6.5h14a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5H10l-4 3v-3H5A1.5 1.5 0 0 1 3.5 15V8A1.5 1.5 0 0 1 5 6.5Z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/>' },
-    { wert: 'Betreuung & Änderungen', titel: 'Betreuung & Änderungen', zeile: 'Pflege, Änderungen, immer aktuell', icon: '<path d="M14.5 5.5a4 4 0 0 0-5 5L4 16v4h4l5.5-5.5a4 4 0 0 0 5-5l-2.5 2.5-3-.5-.5-3Z"/>' }
+    { wert: 'Neue Website', titel: 'Neue Website' },
+    { wert: 'Website-Redesign', titel: 'Website-Redesign', etikett: 'endo empfohlen' },
+    { wert: 'Assistent & Automatisierung', titel: 'Assistent & Automatisierung' },
+    { wert: 'Betreuung & Änderungen', titel: 'Betreuung & Änderungen' }
   ];
   var WHATSAPP_AN = true;              /* false = WhatsApp als Antwort-Weg ausblenden (falls keine geschäftliche Nummer) */
   var WA_NUMMER = '4915906344961';     /* Nummer aus dem Impressum */
@@ -651,8 +675,9 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   var themenBox = form.querySelector('[data-themen]');
   THEMEN.forEach(function (t) {
     var l = document.createElement('label'); l.className = 'thema__karte';
-    l.innerHTML = '<input type="radio" name="hilfe"><span class="thema__innen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + t.icon + '</svg><b></b><small></small></span>';
-    l.querySelector('input').value = t.wert; l.querySelector('b').textContent = t.titel; l.querySelector('small').textContent = t.zeile;
+    l.innerHTML = '<input type="radio" name="hilfe"><span class="thema__innen"><b></b></span>';
+    l.querySelector('input').value = t.wert; l.querySelector('b').textContent = t.titel;
+    if (t.etikett) { var et = document.createElement('i'); et.className = 'thema__etikett'; et.textContent = t.etikett; l.querySelector('.thema__innen').appendChild(et); l.classList.add('thema__karte--etikett'); }
     themenBox.appendChild(l);
   });
 
@@ -670,9 +695,17 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
       wegFelder(); pruefeFeld('weg'); status.textContent = '';
       var neu = w2el(); if (neu && !ruhig) { neu.closest('.field').classList.add('ist-neu'); setTimeout(function () { neu.closest('.field').classList.remove('ist-neu'); }, 600); }
     }
-    if (t.name === 'hilfe') pruefeFeld('hilfe');
+    if (t.name === 'hilfe') { pruefeFeld('hilfe'); endoTipp(); }
     if (t.name === 'datenschutz') pruefeFeld('datenschutz');
   });
+  /* Redesign gewählt → weicher Tipp zu endo über dem Absenden-Knopf (öffnet in neuem Tab, das Formular bleibt ausgefüllt) */
+  var tipp = form.querySelector('[data-endo-tipp]');
+  function endoTipp() {
+    var an = gewaehlt('hilfe') === 'Website-Redesign';
+    if (an === !tipp.hidden) return;
+    tipp.hidden = !an;
+    if (an && !ruhig) { tipp.classList.remove('ist-neu'); void tipp.offsetWidth; tipp.classList.add('ist-neu'); }
+  }
   function w2el() { var w = weg(); return w === 'whatsapp' ? form.elements.tel : w === 'mail' ? form.elements.email : null; }
 
   /* ---- Prüfung: Pflichtfelder, deutsche Meldung direkt am Feld, Fokus auf den ersten Fehler ---- */
@@ -771,7 +804,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
     var mitLink = eintraege.filter(function (e) { return e.stand === 'ok'; });
     var ohneLink = selbstAnhaengen().map(function (e) { return e.name; });
     var z = ['Hallo Emre, ich möchte ein kostenloses Erstgespräch.', '',
-      'Worum es geht: ' + gewaehlt('hilfe'),
+      'Worum es geht: ' + gewaehlt('hilfe') + (gewaehlt('hilfe') === 'Website-Redesign' ? ' (endo empfohlen)' : ''),
       'Name: ' + wert('name'),
       'Antwort per: ' + (wa ? 'WhatsApp' : 'E-Mail'),
       wa ? 'Telefon: ' + wert('tel') : 'E-Mail: ' + wert('email')];
@@ -827,10 +860,8 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 <script>
 /* Zur endo-Seite (Emre, 27.09.): Schriftzug leuchtet kurz auf, die Seite blendet weich in Schwarz, dann öffnet sich endo im selben Tab.
    Zurück-Taste: die Seite kommt aus dem Cache – pageshow nimmt das Schwarz sofort wieder weg. Bewegung reduziert = sofort wechseln.
-   Testen: ?endo=b zeigt den Schriftzug unten links statt oben rechts. */
+   Seit 27.09. spät nur noch über den Link „endo ↗“ oben rechts (und klein in der Fußzeile). */
 (function () {
-  var pos = new URLSearchParams(location.search).get('endo');
-  if (pos === 'b') document.documentElement.setAttribute('data-endo-pos', 'b');
   var ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches, unterwegs = false;
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('[data-endo-link]');
