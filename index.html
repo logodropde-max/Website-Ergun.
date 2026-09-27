@@ -439,18 +439,9 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 .anfrage .weg { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 @media (prefers-reduced-motion: reduce) { .anfrage__kontakt.ist-neu { animation: none; } }
 
-/* ---------- Unter die Erde (27.09., neu): Erdschnitt + Wurzeln als Canvas in derselben Zeichentechnik wie das Titelbild (js/wurzeln.js) ---------- */
-.contact { position: relative; isolation: isolate; background: var(--bg); }
-.contact > :not(.erdreich) { position: relative; z-index: 1; }
-.erdreich { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-.erdreich canvas { position: absolute; left: 0; top: 0; width: 100%; display: block; }
-.erdreich__schnitt { opacity: 0; }
-/* der Punkt von ERGUN. wird sanft etwas heller, wenn die feine Wurzel ihn erreicht (nur opacity, kein Blinken) */
-.agentur__marke .dot { position: relative; display: inline-block; }
-.agentur__marke .dot::after { content: ""; position: absolute; left: 50%; bottom: 0.14em; width: 1em; height: 1em; margin-left: -0.5em; margin-bottom: -0.42em; border-radius: 50%; pointer-events: none;
-  background: radial-gradient(closest-side, rgba(255, 150, 90, 0.5), rgba(255, 90, 31, 0.16) 50%, rgba(255, 90, 31, 0) 100%); opacity: 0; transition: opacity 900ms var(--ease); }
-.agentur__marke .dot.dot--glueht::after { opacity: 1; }
-@media (prefers-reduced-motion: reduce) { .agentur__marke .dot::after { transition: none; } }
+/* Übergang Titelbild → Kontakt: ruhiger, dunkler Grund, weich aus dem Dunkel am Ende des Titelbilds (#070B16).
+   Erdschnitt + Wurzeln (js/wurzeln.js) auf Emres Wunsch am 27.09. wieder entfernt – Datei bleibt liegen, wird nicht geladen. */
+.contact { position: relative; background: linear-gradient(#070B16 0, var(--bg) 420px); }
 </style>
 </head>
 <body>
@@ -610,7 +601,6 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 <div class="wechsel" aria-hidden="true"></div>
 
 <script src="js/szene.js?v=36"></script>
-<script src="js/wurzeln.js?v=2" defer></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {
