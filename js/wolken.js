@@ -31,12 +31,12 @@
     wiederkehr: 0.015,    // bei der Wiederkehr: Höhe ± 1,5 % der Bildhöhe, Größe ± 3 %
     leuchten: 5,          // Reichweite des Leuchtens in Sonnenradien (Mond etwas kürzer)
     saum: 0.035,          // Breite des Lichtsaums als Anteil der Wolkenhöhe
-    deckenAb: 0.08, deckenBis: 0.5,   // Deckungsgrad (0–1), ab dem der Kern undurchsichtig wird / voll ist
+    deckenAb: 0.03, deckenBis: 0.22,  // Deckungsgrad (0–1), ab dem der Kern undurchsichtig wird / voll ist (28.09.: früh – keine durchscheinende Scheibe)
     glaetten: 0.18        // pro Bild aufgeholter Anteil (weiche Übergänge beim Vorbeiziehen)
   };
   var LICHT = {
     sonneTag: '255,248,228', sonneGold: '255,178,96', mond: '214,226,255',
-    sonneTagA: 0.7, sonneGoldA: 0.95, mondA: 0.75
+    sonneTagA: 0.85, sonneGoldA: 1, mondA: 1   /* 28.09.: kräftiger – das Gestirn selbst ist hinter der Wolke unsichtbar, nur die Wolke leuchtet */
   };
   var WOLKEN = {
     breit: [
@@ -61,7 +61,7 @@
   });
   function klemme(v, a, b) { return Math.min(b, Math.max(a, v)); }
   function sanft(a, b, x) { var t = klemme((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); }
-  function pfad(name, was) { return 'bilder/wolken/' + name + '-' + was + '-' + g + '.webp?v=3'; }
+  function pfad(name, was) { return 'bilder/wolken/' + name + '-' + was + '-' + g + '.webp?v=4'; }
 
   function bauen() {
     W = buehne.clientWidth; H = buehne.clientHeight;
@@ -73,16 +73,19 @@
         var w = document.createElement('div'); w.className = 'wolke';
         var atem = document.createElement('div'); atem.className = 'wolke__atem';
         var bilder = {}, koerper = document.createElement('div'); koerper.className = 'wolke__koerper';
-        ['tag', 'gold', 'nacht'].forEach(function (licht) {
+        /* 28.09.: vier deckende Farb-Fassungen (Tag, Gold, blaue Stunde, Nacht) in der Form-Maske der Wolke (<name>-form-*.webp):
+           die Fassungen mischen linear mit denselben Variablen wie der Himmel – keine dichteren Ränder, kein Sprung */
+        ['tag', 'gold', 'blau', 'nacht'].forEach(function (licht) {
           [atem, koerper].forEach(function (ziel, k) {
             var b = new Image(); b.alt = ''; b.decoding = 'async'; b.className = 'wolke__bild'; b.setAttribute('data-licht', licht);
             b.setAttribute('data-src', pfad(c.name, licht));
             ziel.appendChild(b); if (!k) bilder[licht] = b;
           });
         });
-        var maske = 'url("' + pfad(c.name, 'tag') + '")';
+        var maske = 'url("' + pfad(c.name, 'form') + '")';
+        atem.style.setProperty('--form', maske);
         koerper.style.setProperty('--maske', 'url("' + pfad(c.name, 'koerper') + '")');
-        var licht = document.createElement('div'); licht.className = 'wolke__licht'; licht.style.setProperty('--maske', maske);
+        var licht = document.createElement('div'); licht.className = 'wolke__licht';
         var rand = document.createElement('div'); rand.className = 'wolke__rand'; rand.style.setProperty('--maske', maske);
         atem.appendChild(koerper); atem.appendChild(licht); atem.appendChild(rand);
         w.appendChild(atem); huellen[c.ebene].appendChild(w);
@@ -115,7 +118,7 @@
       b.src = b.getAttribute('data-src');
       o.koerper.querySelector('[data-licht="tag"]').src = b.getAttribute('data-src');
     });
-    function rest() { wolken.forEach(function (o) { ['gold', 'nacht'].forEach(function (l) { o.el.querySelectorAll('[data-licht="' + l + '"]').forEach(function (b) { b.src = b.getAttribute('data-src'); }); }); }); }
+    function rest() { wolken.forEach(function (o) { ['gold', 'blau', 'nacht'].forEach(function (l) { o.el.querySelectorAll('[data-licht="' + l + '"]').forEach(function (b) { b.src = b.getAttribute('data-src'); }); }); }); }
   }
   function spaeter(fn) { if (window.requestIdleCallback) requestIdleCallback(fn, { timeout: 1200 }); else setTimeout(fn, 200); }
 
@@ -181,7 +184,7 @@
         var ux = haupt.x - o.ww / 2, uy = haupt.y - o.hh / 2, ul = Math.hypot(ux, uy) || 1;
         rs.setProperty('--ux', (-ux / ul).toFixed(3)); rs.setProperty('--uy', (-uy / ul).toFixed(3));
         rs.setProperty('--lx', haupt.x.toFixed(1) + 'px'); rs.setProperty('--ly', haupt.y.toFixed(1) + 'px');
-        rs.setProperty('--lr', (haupt.r * haupt.reich * 1.15).toFixed(1) + 'px'); rs.setProperty('--lf', haupt.f); rs.setProperty('--la', Math.min(1, hauptWert * 1.35).toFixed(3));
+        rs.setProperty('--lr', (haupt.r * haupt.reich * 1.15).toFixed(1) + 'px'); rs.setProperty('--lf', haupt.f); rs.setProperty('--la', Math.min(1, hauptWert * 1.8).toFixed(3));
       } else rs.setProperty('--la', '0');
     });
     verdecktGesamt = Math.max(maxDeck[0], maxDeck[1]);
@@ -224,7 +227,7 @@
     box.innerHTML = '<label>Tempo <select data-t><option value="1">normal</option><option value="10">10×</option><option value="40">40×</option></select></label>' +
       '<label><input type="checkbox" data-e="hoch" checked> Ebene hoch (Federwolken)</label>' +
       '<label><input type="checkbox" data-e="tief" checked> Ebene tief (Horizont)</label>' +
-      '<label>Licht Wolken <select data-l><option value="">wie die Szene</option><option value="tag">Tag</option><option value="gold">Gold</option><option value="nacht">Nacht</option></select></label>' +
+      '<label>Licht Wolken <select data-l><option value="">wie die Szene</option><option value="tag">Tag</option><option value="gold">Gold</option><option value="blau">blaue Stunde</option><option value="nacht">Nacht</option></select></label>' +
       '<div>Gestirn hinter Wolke: <button data-g="sonne">Sonne</button> <button data-g="mond">Mond</button> <button data-g="">frei</button></div>' +
       '<span>Szene: <a style="color:#9cf" href="?wolken=test&nacht=0">Tag</a> · <a style="color:#9cf" href="?wolken=test&nacht=0.3">Gold</a> · <a style="color:#9cf" href="?wolken=test&nacht=0.55">blaue Stunde</a> · <a style="color:#9cf" href="?wolken=test&nacht=1">Nacht</a></span>';
     document.body.appendChild(box);
@@ -234,8 +237,8 @@
       var l = this.value;
       Object.keys(huellen).forEach(function (k) {
         var s = huellen[k].style;
-        if (!l) { s.removeProperty('--tag'); s.removeProperty('--gold'); s.removeProperty('--nacht'); return; }
-        s.setProperty('--tag', l === 'tag' ? 1 : 0); s.setProperty('--gold', l === 'gold' ? 1 : 0); s.setProperty('--nacht', l === 'nacht' ? 1 : 0);
+        if (!l) { s.removeProperty('--gold'); s.removeProperty('--blau'); s.removeProperty('--himmel-nacht'); return; }
+        s.setProperty('--gold', l === 'gold' ? 1 : 0); s.setProperty('--blau', l === 'nacht' || l === 'blau' ? 1 : 0); s.setProperty('--himmel-nacht', l === 'nacht' ? 1 : 0);
       });
     });
     /* Gestirn per Knopf in die Mitte der ersten Wolke der Ebene „tief“ (Sonne) bzw. „hoch“ (Mond) setzen */

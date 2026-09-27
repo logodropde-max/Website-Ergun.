@@ -7,14 +7,29 @@ Preise von [[endo-ai|endo.ai]], festgelegt von Emre am 25.09.2026. Für die Webd
 Die Zahlen stehen im Code an einer Stelle: `window.ENDO` in `ki/js/endo-daten.js` (Karten, Umschalter, Chat und Credit-Fenster lesen von dort).
 Login und Bezahlung sind noch nicht fertig: alle Knöpfe heißen „… vormerken“. **Kauf-Links von Lemon Squeezy** kommen in `ki/js/endo-daten.js` je Paket ins Feld `kaufen` (Monatsabo) bzw. `kaufenJahr` (Jahresabo) – dann heißt der Knopf in der gewählten Abrechnung automatisch „… kaufen“.
 
-## Pakete (seit 26.09.2026: Monatlich, Jahresabo −20 % oder Einmalig)
-Umschalter „Monatlich | Jährlich −20 %“ über den Karten (Standard: Monatlich), gilt für alle Karten zugleich; gleiche Credits pro Monat.
+## Pakete (seit 28.09.2026: nur Monatlich oder Jährlich −20 %, runde Zahlen – Ausnahme auf Emres Wunsch)
+Umschalter „Monatlich | Jährlich −20 %“ über den Karten (**Standard: Jährlich**), gilt für alle Karten zugleich; gleiche Credits pro Monat. **Einmalkauf entfernt** (28.09.). Zahlen im Code: `_code/endo-studio/test/js/endo-daten.js`.
 
-| Paket | Credits/Monat | Monatlich | Jährlich (pro Monat) | Jährlich abgerechnet | Enthalten |
-|---|---|---|---|---|---|
-| Start | 40 | 5 € | 3,99 € | 47,88 € | 7 Werkzeuge (Produktfoto, Shop-Bild, Anzeige, Formate-Set, Aufwerten, Video 5 s, Titelbild) |
-| Pro | 200 | 20 € | 16 € | 192 € | Start + Lifestyle, Aktions-Plakat, Logo-Entwurf |
-| Premium | 1.000 | 100 € | 80 € | 960 € | Pro + Video 10 s, Website-Video 4K, 3D/Parallax/Abstimmung, Website von Emre |
+| Paket | Credits/Monat | Monatlich | Jährlich (pro Monat) | Jährlich abgerechnet | Ersparnis/Jahr | Enthalten |
+|---|---|---|---|---|---|---|
+| Start | 40 | 10 € | 8 € | 96 € | 24 € | 7 Werkzeuge (Produktfoto, Shop-Bild, Anzeige, Formate-Set, Aufwerten, Video 5 s, Titelbild) |
+| Pro | 200 | 30 € | 25 € | 300 € | 60 € | Start + Lifestyle, Aktions-Plakat, Logo-Entwurf |
+| Premium | 1.000 | 100 € | 80 € | 960 € | 240 € | Pro + Video 10 s, Website-Video 4K, 3D/Parallax/Abstimmung, Website von Emre |
+
+**Margen-Prüfung 28.09.** (Netto = Preis ÷ 1,19 − 5 % − 0,50 € Lemon Squeezy; schlechtester Fall 0,0377 €/Credit = Produktfoto):
+| Paket | Monatlich: Netto / Kosten / Gewinn | Jährlich: Netto / Kosten / Gewinn |
+|---|---|---|
+| Start | 7,48 € / 1,51 € / **~80 %** | 76,14 € / 18,10 € / **~76 %** |
+| Pro | 23,45 € / 7,54 € / **~68 %** | 239,03 € / 90,48 € / **~62 %** |
+| Premium | 78,53 € / 37,70 € / **~52 %** | 766,32 € / 452,40 € / **~41 %** (vor Emres Arbeitszeit für die Website) |
+→ Alle Stufen deutlich über 35 %, die Credits bleiben wie sie sind. Spielraum: Start und Pro könnten später mehr Credits bekommen (z. B. 60 / 300), Marge bliebe über 50 %.
+
+### Alte Preise (25.–27.09., nur zur Geschichte)
+| Paket | Credits/Monat | Monatlich | Jährlich (pro Monat) | Jährlich abgerechnet |
+|---|---|---|---|---|
+| Start | 40 | 5 € | 3,99 € | 47,88 € |
+| Pro | 200 | 20 € | 16 € | 192 € |
+| Premium | 1.000 | 100 € | 80 € | 960 € |
 
 **Gewinn im schlechtesten Fall** (gleiche Rechnung wie unten; Jahresabo = eine Abbuchung pro Jahr, also nur einmal 0,50 € Gebühr):
 | Paket | Monatlich | Jährlich: Netto/Jahr | Kosten/Jahr | Gewinn | Anteil |

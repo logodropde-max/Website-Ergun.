@@ -523,10 +523,11 @@
      je Figur ein Tag- und ein Abendbild und für die Nacht die Bildfolge – der Hund hebt den Kopf und jault, Emre winkt
      („Tschüss“). Beides startet gemeinsam, sobald es Nacht ist und man weiterscrollt, und läuft dann in eigener Zeit ab
      (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
-  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 245, h: 600, anzahl: 64, spalten: 8, fuss: 0.9964, oben: 0.0531, mitte: 0.5794, breite: 0.7595 } };
+  /* 28.09.: Emre mit 96 Einzelbildern (aus 0,3–4,3 s des Kling-Videos, fast jedes Videobild) statt 64 – flüssig ohne Überblendung; Werte aus figuren/emre.json */
+  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 244, h: 600, anzahl: 96, spalten: 8, fuss: 0.9964, oben: 0.0489, mitte: 0.5828, breite: 0.7639 } };
   /* Tempo (27.09. spät, Emre): Emre und Hund laufen NUR nach Zeit, jeder in seinem festen Tempo, unabhängig vom Scrollen.
      Emre winkt einmal (FIG_DAUER), der Hund hebt den Kopf in HUND_HOCH und senkt ihn in HUND_RUNTER. */
-  var FIG_DAUER = 4.4, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0;
+  var FIG_DAUER = 4.2, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0, FIG_VERSION = 8;   /* 4,2 s ≈ natürliches Tempo des Videos (96 Bilder, ~23/s) */
   /* Lage von Sonne und Mond (für Wolken, js/wolken.js) und wie stark das Gestirn gerade verdeckt ist (0–1, in Zehnteln) */
   var gest = { sy: 0, my: 0, sonneAn: 1, mondAn: 0 }, verdecktQ = 0, gestTest = null;
   var fig = { phase: 0, ziel: 0, laeuft: false }, hund = { phase: 0, ziel: 0, laeuft: false }, animT = 0, animLaeuft = false;
@@ -550,8 +551,14 @@
   function hundPruefen() { if (lichtNacht >= 0.9) hundZiel(1); else if (lichtNacht <= 0.5) hundZiel(0); }
   function figurLaden(name, folge) {
     var f = FIGUREN[name], b = new Image(); b.decoding = 'async';
-    b.onload = function () { f[folge ? 'folge' : 'bild'] = b; f.zuletzt = ''; figurenZeichnen(); if (folge && name === 'emre' && winkenWartet) winken(); if (folge && name === 'hund') hundPruefen(); };
-    b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=7';   /* v7 (Nachtlauf): stabilisiert, Finger dicht (stabil.py) */
+    b.onload = function () {
+      var fertig = function (bild) { f[folge ? 'folge' : 'bild'] = bild; f.zuletzt = ''; figurenZeichnen(); if (folge && name === 'emre' && winkenWartet) winken(); if (folge && name === 'hund') hundPruefen(); };
+      /* 28.09. (Emre): Die Bildfolge wird erst VOLLSTÄNDIG dekodiert (createImageBitmap bzw. decode) und dann freigegeben –
+         das Winken startet nie mit halben oder leeren Bildern und ruckelt nicht beim ersten Zeichnen. */
+      var p = folge && window.createImageBitmap ? createImageBitmap(b) : (b.decode ? b.decode().then(function () { return b; }) : Promise.resolve(b));
+      p.then(fertig, function () { fertig(b); });
+    };
+    b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=' + FIG_VERSION;
   }
   Object.keys(FIGUREN).forEach(function (k) { FIGUREN[k].zuletzt = ''; figurLaden(k, false); });
   /* die Bildfolgen (groß) erst nach dem Laden der Seite */
@@ -585,12 +592,11 @@
   function figurZeichnen(f, nr, l) {
     var c = f.leinwand; if (!c || !f.bild) return;
     if (!f.folge) nr = 0;
-    /* 27.09. spät (Emre): zwischen zwei Einzelbildern weich überblenden, damit nichts stottert. Seit das Tempo fest ist (nie mehr
-       vom Scrollen beschleunigt), liegen Nachbarbilder dicht beieinander – kein doppelter Arm. Überblendung in Achtelschritten. */
+    /* 28.09. (Emre: „Hand sauber, keine Geisterbilder“): KEINE Überblendung zwischen Einzelbildern mehr – die additive Mischung
+       zweier Bilder ergab bei schneller Armbewegung einen doppelten, unscharfen Arm. Stattdessen mehr Einzelbilder (96, ~21/s). */
     nr = Math.max(0, Math.min(f.anzahl - 1, nr));
-    var n0 = Math.floor(nr), t = Math.round((nr - n0) * 8) / 8, n1 = Math.min(f.anzahl - 1, n0 + 1);
-    if (t >= 1) { n0 = n1; t = 0; }
-    var schluessel = n0 + '|' + t + '|' + lichtGold.toFixed(2) + '|' + lichtBlau.toFixed(2) + '|' + lichtNacht.toFixed(2) + '|' + verdecktQ;
+    var n0 = Math.round(nr);
+    var schluessel = n0 + '|' + lichtGold.toFixed(2) + '|' + lichtBlau.toFixed(2) + '|' + lichtNacht.toFixed(2) + '|' + verdecktQ;
     if (schluessel === f.zuletzt) return;
     f.zuletzt = schluessel;
     var W = c.width, H = c.height;
@@ -598,10 +604,8 @@
     var ga = A.getContext('2d'), gb = B.getContext('2d'), gc = C.getContext('2d');
     /* 1. Bild */
     ga.globalCompositeOperation = 'source-over'; ga.globalAlpha = 1; ga.clearRect(0, 0, W, H);
-    if (f.folge) {
-      ga.globalAlpha = 1 - t; ga.drawImage(f.folge, (n0 % f.spalten) * f.b, Math.floor(n0 / f.spalten) * f.h, f.b, f.h, 0, 0, W, H);
-      if (t > 0) { ga.globalCompositeOperation = 'lighter'; ga.globalAlpha = t; ga.drawImage(f.folge, (n1 % f.spalten) * f.b, Math.floor(n1 / f.spalten) * f.h, f.b, f.h, 0, 0, W, H); }
-    } else ga.drawImage(f.bild, 0, 0, W, H);
+    if (f.folge) ga.drawImage(f.folge, (n0 % f.spalten) * f.b, Math.floor(n0 / f.spalten) * f.h, f.b, f.h, 0, 0, W, H);
+    else ga.drawImage(f.bild, 0, 0, W, H);
     ga.globalCompositeOperation = 'source-over'; ga.globalAlpha = 1;
     /* 2. Umriss merken */
     gb.globalCompositeOperation = 'source-over'; gb.globalAlpha = 1; gb.clearRect(0, 0, W, H); gb.drawImage(A, 0, 0);
@@ -718,30 +722,42 @@
   /* ---------- Sterne (Nachtlauf 27.09., Emre: „scharfe leuchtende Sterne, wenn es dunkel wird“) ----------
      Zwei Leinwände in der Himmels-Ebene hinter Mond und Wolken: scharfe Punkte, die helleren mit feinem Hof und Lichtkreuz.
      Deckkraft hängt an --himmel-nacht (kommen mit der Dunkelheit, verschwinden bei Tag); die zweite Leinwand funkelt leise (CSS). */
+  /* 28.09. (Emre: „weniger, edler“): ca. 60–80 kleine, klare Punkte (Radius 0,55–1,35 px) mit zartem Schein, wenige heller,
+     etwa ein Drittel funkelt sehr sanft auf zwei Leinwänden mit verschiedenem Takt (nicht synchron). Keine Kreuze, kein Rauschen.
+     Die Hülle bekommt eine leichte Parallaxe (licht()), die Sternschnuppe zieht sehr selten (schnuppeStart). */
+  var sternHuelle = null, schnuppe = null, schnuppeT = 0;
   function sterneZeichnen() {
-    ebenen.himmel.querySelectorAll('.szene__sterne').forEach(function (c) { c.remove(); });
-    var r = zufall(4711), q = m.q, n = Math.round(m.W * (m.hoch ? 0.26 : 0.34)), hoehe = m.H * 0.68;
-    var farben = ['255,255,255', '222,232,255', '255,244,224'];
-    [0, 1].forEach(function (k) {
+    ebenen.himmel.querySelectorAll('.szene__sternhuelle, .szene__schnuppe').forEach(function (c) { c.remove(); });
+    var r = zufall(4711), q = m.q, n = m.hoch ? 54 : 74, hoehe = m.H * 0.62;
+    var farben = ['255,255,255', '226,235,255', '255,246,230'];
+    sternHuelle = document.createElement('div'); sternHuelle.className = 'szene__sternhuelle'; sternHuelle.style.height = hoehe + 'px';
+    var lw = [0, 1, 2].map(function (k) {
       var c = document.createElement('canvas'); c.className = 'szene__sterne szene__sterne--' + k;
       c.width = Math.ceil(m.W * q); c.height = Math.ceil(hoehe * q); c.style.height = hoehe + 'px';
-      var g = c.getContext('2d'); g.setTransform(q, 0, 0, q, 0, 0);
-      for (var i = 0; i < n; i++) {
-        var x = r() * m.W, y = hoehe * Math.pow(r(), 1.35), t = r(), f = farben[Math.floor(r() * 3)];   /* oben dichter */
-        if ((i % 2) !== k) continue;
-        var gross = t > 0.94, mittel = t > 0.74;
-        var rad = gross ? 1.5 + r() * 0.8 : mittel ? 0.95 + r() * 0.45 : 0.5 + r() * 0.4;
-        var hell = gross ? 1 : mittel ? 0.85 : 0.45 + r() * 0.4;
-        if (mittel) {
-          var hr = rad * (gross ? 7 : 4.5), hof = g.createRadialGradient(x, y, 0, x, y, hr);
-          hof.addColorStop(0, 'rgba(' + f + ',' + (0.38 * hell).toFixed(2) + ')'); hof.addColorStop(1, 'rgba(' + f + ',0)');
-          g.fillStyle = hof; g.beginPath(); g.arc(x, y, hr, 0, Math.PI * 2); g.fill();
-        }
-        g.fillStyle = 'rgba(' + f + ',' + hell.toFixed(2) + ')'; g.beginPath(); g.arc(x, y, rad, 0, Math.PI * 2); g.fill();
-        if (gross) { g.fillStyle = 'rgba(' + f + ',' + (0.5 * hell).toFixed(2) + ')'; g.fillRect(x - rad * 3.4, y - 0.35, rad * 6.8, 0.7); g.fillRect(x - 0.35, y - rad * 3.4, 0.7, rad * 6.8); }
-      }
-      ebenen.himmel.insertBefore(c, sonne);
+      var g = c.getContext('2d'); g.setTransform(q, 0, 0, q, 0, 0); sternHuelle.appendChild(c); return g;
     });
+    for (var i = 0; i < n; i++) {
+      var x = r() * m.W, y = hoehe * Math.pow(r(), 1.25), t = r(), f = farben[Math.floor(r() * 3)];   /* oben etwas dichter */
+      var hell = t > 0.86, k = r() < 0.34 ? 1 + Math.floor(r() * 2) : 0;
+      var rad = hell ? 1.0 + r() * 0.35 : 0.55 + r() * 0.4, a = hell ? 1 : 0.55 + r() * 0.35, g = lw[k];
+      if (hell || r() < 0.35) {
+        var hr = rad * (hell ? 5 : 3.5), hof = g.createRadialGradient(x, y, 0, x, y, hr);
+        hof.addColorStop(0, 'rgba(' + f + ',' + (0.3 * a).toFixed(2) + ')'); hof.addColorStop(1, 'rgba(' + f + ',0)');
+        g.fillStyle = hof; g.beginPath(); g.arc(x, y, hr, 0, Math.PI * 2); g.fill();
+      }
+      g.fillStyle = 'rgba(' + f + ',' + a.toFixed(2) + ')'; g.beginPath(); g.arc(x, y, rad, 0, Math.PI * 2); g.fill();
+    }
+    ebenen.himmel.insertBefore(sternHuelle, sonne);
+    schnuppe = document.createElement('div'); schnuppe.className = 'szene__schnuppe'; ebenen.himmel.insertBefore(schnuppe, sonne);
+  }
+  /* Sternschnuppe: alle 25–50 s eine, nur in voller Nacht, nur wenn das Titelbild zu sehen ist (nie bei „Bewegung reduzieren“) */
+  function schnuppePlanen() { clearTimeout(schnuppeT); if (ruhig) return; schnuppeT = setTimeout(schnuppeStart, 25000 + Math.random() * 25000); }
+  function schnuppeStart() {
+    if (schnuppe && isNaN(festP) && lichtP / ZEIT > 0.46 && !held.classList.contains('szene--weg') && !document.hidden) {
+      schnuppe.style.left = (m.W * (0.35 + Math.random() * 0.5)).toFixed(0) + 'px'; schnuppe.style.top = (m.H * (0.04 + Math.random() * 0.2)).toFixed(0) + 'px';
+      schnuppe.classList.remove('ist-an'); void schnuppe.offsetWidth; schnuppe.classList.add('ist-an');
+    }
+    schnuppePlanen();
   }
 
   /* ---------- Aufbau ---------- */
@@ -860,6 +876,7 @@
   var gesetzt = {};
   function wert(name, v) { if (gesetzt[name] !== v) { gesetzt[name] = v; held.style.setProperty(name, v); } }
   function licht(p) {
+    if (sternHuelle) sternHuelle.style.transform = 'translate3d(0,' + (p * m.H * 0.05).toFixed(1) + 'px,0)';   /* Sterne: leichte Parallaxe gegen den Himmel */
     p = p / ZEIT;
     var gold = sanft(0.05, 0.19, p), nacht = sanft(0.22, 0.42, p);
     wert('--gold', (nacht > 0.995 ? 0 : gold).toFixed(3));
@@ -909,7 +926,8 @@
     });
     /* Wind nur, solange das Startbild zu sehen ist */
     if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { held.classList.toggle('szene--weg', !e[0].isIntersecting); }).observe(held);
-    window.__szene = { p: function (x) { window.scrollTo(0, x * m.H); }, bauzeit: function () { return bauzeit; },
+    schnuppePlanen();
+    window.__szene = { schnuppe: schnuppeStart, p: function (x) { window.scrollTo(0, x * m.H); }, bauzeit: function () { return bauzeit; },
       zustand: function () { return { phase: fig.phase, laeuft: fig.laeuft, hund: hund.phase, hundZiel: hund.ziel, hundLaeuft: hund.laeuft, gewunken: gewunken, wartet: winkenWartet, rohY: rohY, weichY: weichY, licht: lichtP }; },
       winken: function () { fig.laeuft = false; winken(); }, hund: function (z) { hund.ziel = -1; hundZiel(z); } };
     if (FIG_TEST) figurenTest();

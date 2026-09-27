@@ -30,8 +30,10 @@ def hx(h): h = h.lstrip('#'); return np.array([int(h[i:i + 2], 16) for i in (0, 
 KARTEN = {
     'tag':   [(0.0, '#7F95B4'), (0.45, '#C3D1E2'), (0.8, '#EEF3F8'), (1.0, '#FFFFFF')],   # weiß, Schatten leicht blau (Himmel #3B79BD)
     'gold':  [(0.0, '#7A6788'), (0.4, '#B98A98'), (0.75, '#EBAE8E'), (1.0, '#FFE2BC')],   # Schatten violett, Licht pfirsich/rosa
-    'nacht': [(0.0, '#161E33'), (0.5, '#243350'), (0.85, '#36476B'), (1.0, '#4A5C86')],   # dunkles Blaugrau, leise
+    'blau':  [(0.0, '#353B5C'), (0.45, '#585E85'), (0.8, '#8B86AA'), (1.0, '#B9AFC6')],   # blaue Stunde: kühles Grauviolett (Himmel #2A4380 … #7C77A0)
+    'nacht': [(0.0, '#242E48'), (0.5, '#384866'), (0.85, '#53658B'), (1.0, '#7A8FB6')],   # mondbeschienen: dunkles Blaugrau, gut sichtbar (Emre, 28.09.)
 }
+LICHTER = ('tag', 'gold', 'blau', 'nacht')   # vier Stufen wie der Himmel (--tag/--gold/--blau/--himmel-nacht) – kein Sprung mehr von Gold zu Nacht
 def karte(L, stufen):
     out = np.zeros(L.shape + (3,))
     xs = [s[0] for s in stufen]; cs = [hx(s[1]) for s in stufen]
@@ -83,24 +85,38 @@ def main():
         grob = ndimage.gaussian_filter(al, 6)   # nur die große Form bekommt die Mondkante, nicht jede Flocke
         rand = np.clip(grob - ndimage.shift(grob, (10, 10), order=1, mode='nearest'), 0, 1) * al   # Kanten, die nach oben links zeigen
         rand = ndimage.gaussian_filter(rand, 3)
-        for licht in ('tag', 'gold', 'nacht'):
+        # 28.09. (Feinschliff 2): Die Form der Wolke liegt NUR in <name>-form-*.webp (Alpha). Die vier Licht-Fassungen sind
+        # deckende Farbbilder (Farbe außerhalb der Wolke = nächste Wolkenfarbe): So mischt CSS die Fassungen linear, ohne
+        # dass sich die weichen Ränder beim Überblenden verdichten oder aufhellen (kein „abruptes Dunkelwerden“).
+        innen = al > 0.02
+        naechst = ndimage.distance_transform_edt(~innen, return_distances=False, return_indices=True)
+        def fuellen(c):
+            return c[naechst[0], naechst[1]]
+        for licht in LICHTER:
             c = karte(L, KARTEN[licht])
-            alpha = al.copy()
             if licht == 'gold':
                 unten = np.clip((yy - 0.35) / 0.65, 0, 1) * L
                 c = c * (1 - 0.35 * unten[..., None]) + hx('#FFB07A') * (0.35 * unten[..., None])
+            if licht == 'blau':
+                unten = np.clip((yy - 0.45) / 0.55, 0, 1) * L
+                c = c * (1 - 0.14 * unten[..., None]) + hx('#C99A8E') * (0.14 * unten[..., None])   # letzter warmer Rest am Horizont
+                c = c + hx('#B9C6E8') * (np.clip(rand * 2.4, 0, 1) * 0.28)[..., None]
             if licht == 'nacht':
-                c = c + hx('#9DB2DE') * (np.clip(rand * 2.4, 0, 1) * 0.5)[..., None]
-                alpha = alpha * 0.62
-            if licht == 'tag':
-                alpha = alpha * 0.96
-            bild = np.dstack([np.clip(c, 0, 1), np.clip(alpha, 0, 1)])
-            voll = Image.fromarray((bild * 255 + 0.5).astype(np.uint8), 'RGBA')
+                c = c + hx('#D6E2FA') * (np.clip(rand * 2.4, 0, 1) * 0.62)[..., None]   # silberner Mondsaum (oben links)
+            bild = fuellen(np.clip(c, 0, 1))
+            voll = Image.fromarray((bild * 255 + 0.5).astype(np.uint8), 'RGB')
             for g, lang in GROESSEN.items():
                 f = lang / max(ww, hh)
                 klein = voll.resize((max(1, round(ww * f)), max(1, round(hh * f))), Image.LANCZOS) if f < 1 else voll
-                klein.save(os.path.join(HIER, '%s-%s-%s.webp' % (name, licht, g)), 'WEBP', quality=62 if licht == 'nacht' else 70, alpha_quality=70, method=6)
-            vorschau.append((name, licht, voll))
+                klein.save(os.path.join(HIER, '%s-%s-%s.webp' % (name, licht, g)), 'WEBP', quality=66, method=6)
+            vorschau.append((name, licht, Image.fromarray((np.dstack([bild, np.clip(al * 0.96, 0, 1)]) * 255 + 0.5).astype(np.uint8), 'RGBA')))
+        # Form (Alpha der Wolke) – Maske für die ganze Wolke, das Leuchten und den Saum
+        fbild = np.dstack([np.zeros((hh, ww, 3), np.float32), np.clip(al * 0.96, 0, 1)])
+        fvoll = Image.fromarray((fbild * 255 + 0.5).astype(np.uint8), 'RGBA')
+        for g, lang in GROESSEN.items():
+            f = lang / max(ww, hh)
+            ff = fvoll.resize((max(1, round(ww * f)), max(1, round(hh * f))), Image.LANCZOS) if f < 1 else fvoll
+            ff.save(os.path.join(HIER, '%s-form-%s.webp' % (name, g)), 'WEBP', quality=50, alpha_quality=80, method=6)
         # Koerper-Maske (27.09., Sonne/Mond hinter Wolken): dichter Kern der Wolke, Loecher geschlossen, Rand eingezogen und weich -
         # damit deckt die Wolke das Gestirn im Inneren voellig ab, die duennen Raender bleiben weich (dort leuchtet die Kante)
         k = (al > 0.32).astype(np.uint8)
@@ -125,14 +141,14 @@ def main():
         meta[name] = {'art': art, 'seite': round(ww / hh, 4), 'raster': meta_raster}
     json.dump(meta, open(os.path.join(HIER, 'wolken.json'), 'w'), indent=1)
     # Vorschau: jede Wolke in jeder Lichtstimmung vor ihrem Himmel
-    himmel = {'tag': '#3B79BD', 'gold': '#86709A', 'nacht': '#0D1B38'}
+    himmel = {'tag': '#3B79BD', 'gold': '#86709A', 'blau': '#2A4380', 'nacht': '#0D1B38'}
     zellen = []
     for name, licht, im in vorschau:
         f = 300 / max(im.size); t = im.resize((round(im.width * f), round(im.height * f)))
         z = Image.new('RGBA', (320, 190), himmel[licht]); z.alpha_composite(t, ((320 - t.width) // 2, (190 - t.height) // 2)); zellen.append(z)
-    spalten = 3; zeilen = (len(zellen) + 2) // 3
+    spalten = 4; zeilen = (len(zellen) + 3) // 4
     blatt = Image.new('RGB', (spalten * 324, zeilen * 194), (20, 20, 20))
-    for i, z in enumerate(zellen): blatt.paste(z.convert('RGB'), ((i % 3) * 324, (i // 3) * 194))
+    for i, z in enumerate(zellen): blatt.paste(z.convert('RGB'), ((i % 4) * 324, (i // 4) * 194))
     blatt.save(os.path.join(HIER, '_vorschau.jpg'), quality=82)
     print(json.dumps(meta))
 
