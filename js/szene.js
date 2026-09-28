@@ -524,10 +524,10 @@
      („Tschüss“). Beides startet gemeinsam, sobald es Nacht ist und man weiterscrollt, und läuft dann in eigener Zeit ab
      (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
   /* 28.09. später (Emre: „flüssig und sauber“): winken_fluss.py – winken2-v1 0,75–4,45 s, BiRefNet, feste Figur + Armzone, echte Zwischenbilder (48/s), ohne Überblendung; Werte aus figuren/emre.json */
-  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 248, h: 600, anzahl: 177, spalten: 12, fuss: 0.9965, oben: 0.0622, mitte: 0.6131, breite: 0.7397, einzeln: true, ausschnitt: [0, 0, 172, 490] } };   /* 28.09. nachts: winken_fest.py – Oberkörper steht, nur der Arm winkt; Grundbild + Armzone, 48 Bilder/s (Werte aus figuren/emre.json) */
+  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 215, h: 600, anzahl: 163, spalten: 12, fuss: 0.9964, oben: 0.0054, mitte: 0.5588, breite: 0.842, einzeln: true, ausschnitt: [0, 8, 151, 374] } };   /* 28.09. nachts: NEUE Figur (Higgsfield-Bild V1, Gesicht aus Emres Foto mit blauem Hemd, auf seinen Wunsch) + Kling-Winken; winken_neu.py + winken_fest.py (PLATTE=0), 48 Bilder/s (Werte aus figuren/emre.json) */
   /* Tempo (27.09. spät, Emre): Emre und Hund laufen NUR nach Zeit, jeder in seinem festen Tempo, unabhängig vom Scrollen.
      Emre winkt einmal (FIG_DAUER), der Hund hebt den Kopf in HUND_HOCH und senkt ihn in HUND_RUNTER. */
-  var FIG_DAUER = 3.7, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0, FIG_VERSION = 16;   /* 28.09. später (Emre: „flüssig und sauber“): winken_fluss.py – 0,75–4,45 s aus winken2-v1, 48 Bilder/s mit echten Zwischenbildern, echte Geschwindigkeit (3,7 s) */
+  var FIG_DAUER = 3.4, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0, FIG_VERSION = 17;   /* 28.09. später (Emre: „flüssig und sauber“): winken_fluss.py – 0,75–4,45 s aus winken2-v1, 48 Bilder/s mit echten Zwischenbildern, echte Geschwindigkeit (3,7 s) */
   /* Lage von Sonne und Mond (für Wolken, js/wolken.js) und wie stark das Gestirn gerade verdeckt ist (0–1, in Zehnteln) */
   var gest = { sy: 0, my: 0, sonneAn: 1, mondAn: 0 }, verdecktQ = 0, gestTest = null;
   var fig = { phase: 0, ziel: 0, laeuft: false }, hund = { phase: 0, ziel: 0, laeuft: false }, animT = 0, animLaeuft = false;

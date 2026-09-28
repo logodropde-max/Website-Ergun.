@@ -1,24 +1,24 @@
 {
- "b": 215,
+ "b": 248,
  "h": 600,
- "anzahl": 163,
+ "anzahl": 177,
  "spalten": 12,
- "fuss": 0.9964,
- "oben": 0.0054,
- "mitte": 0.5588,
- "breite": 0.842,
+ "fuss": 0.9965,
+ "oben": 0.0622,
+ "mitte": 0.6131,
+ "breite": 0.7397,
  "ausschnitt": [
   0,
-  8,
-  151,
-  374
+  0,
+  172,
+  490
  ],
  "grund": true,
  "bps": 48,
- "quelle": "neue-figur-winken-9306a5ff.mp4",
+ "quelle": "winken2-v1-4c32d096.mp4",
  "zeit": [
-  0.5,
-  3.9
+  0.75,
+  4.45
  ],
  "modell": "birefnet-general",
  "skript": "winken_fluss.py + winken_fest.py"
