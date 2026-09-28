@@ -2,6 +2,10 @@
 
 > Überblick für eine neue Sitzung: Vault-Notiz `08 Projekte/Neustart – hier weitermachen.md`. Hier stehen die technischen Details, neuester Abschnitt oben.
 
+## 29.09.2026 nachts – Auftrag 10: ERGUN. = Website, endo = Automatisierung & KI
+- `PREISE.mehr` = endo-Optionen (`faehigkeit` ab 1.000 €, `komplett` ab 4.000 €, je `monat` 200), `mehrTitel`, `mehrSatz`, `endoKarte` („Automatisierung & KI mit endo“ = EINE Formular-Karte, Preis der günstigsten Option), `endoStart`/`endoSeite` für „endo ansehen“.
+- Formular: `THEMEN` = Website + endo-Karte (`.thema` zwei Spalten), `TIPPS['Automatisierung & KI mit endo']`. Keine Karte/kein Tipp „Automatisierung“ mehr.
+
 ## 29.09.2026 nachts – Auftrag 9: Arm-Fix (Figur v18) + Preis-Bereich in 4 Schritten
 - **Preise ändern:** `js/preise.js` ganz oben – `PREISE.stufen` (Name, Preis, ab, für, punkte mit `b` = Begriff fürs ⓘ), `PREISE.extras` (Gruppen), `PREISE.aufAnfrage`, `PREISE.betreuung` (Satz, `selbst` = Rabatt bei eigenem Hosting, `stufen` Basis/Aktiv/Rundum), `PREISE.mehr` (+ `mehrStufe` = Betreuung, die „Für mehr“ setzt), `klein`, `steuer`; darunter `BEGRIFFE` (Erklärungen). Danach `npm test` in `_code/werkzeuge/endo-datenbank` (vergleicht mit der Obsidian-Notiz) und veröffentlichen.
 - **Rechnen:** `PREISE.rechnen({ stufe, extras, betreuung, selbst, mehr, anfrage })` → einmalig, monatlich, jahr, ab; `betreuungStandard()` (Start/Business → Basis, Pro + Terminbuchung/Funktion → Aktiv, Für mehr → Rundum); `anfrageText()` für das Formular.

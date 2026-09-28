@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>ERGUN. – Websites, Automatisierung & KI</title>
-<meta name="description" content="ERGUN.: Websites mit Design und Bewegung, Automatisierungen, die Ihnen Arbeit abnehmen, und eigene KI-Lösungen für Ihr Unternehmen – persönlich und aus einer Hand. Kostenloses Erstgespräch.">
+<meta name="description" content="ERGUN.: Websites mit Design und Bewegung, persönlich geplant und gebaut – Automatisierung und eigene KI für Ihren Betrieb über endo. Kostenloses Erstgespräch.">
 <meta name="theme-color" content="#0E0E0C">
 <meta name="robots" content="noindex, nofollow"><!-- solange die Seite privat ist; beim Livegang entfernen -->
 
 <!-- Teilen in Social Media / Messengern -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="ERGUN. – Websites, Automatisierung & KI">
-<meta property="og:description" content="Websites, Automatisierungen und eigene KI-Lösungen für Unternehmen – persönlich und aus einer Hand. Kostenloses Erstgespräch.">
+<meta property="og:description" content="ERGUN. baut Ihre Website. endo automatisiert Ihren Betrieb. Kostenloses Erstgespräch.">
 <meta property="og:image" content="https://website-ergun.vercel.app/bilder/og.jpg?v=7">
 <meta property="og:url" content="https://website-ergun.vercel.app/">
 <link rel="canonical" href="https://website-ergun.vercel.app/">
@@ -470,7 +470,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 /* ---------- Kontakt übersichtlich (ERGUN., 27.09. spät): Auswahl-Karten, Pflichtfelder, Antwort-Weg mit passendem Feld ---------- */
 .pflicht { color: var(--accent); font-weight: 500; margin-left: 2px; }
 /* 28.09. (ERGUN., feste Regel): Kartenreihen immer voll und gleichmäßig – nie 3 + 1, 2 + 1 o. Ä.
-   Auftrag 6 (28.09. nachts): DREI Karten mit festem Preis (Website · Automatisierung · endo für Ihr Unternehmen). Schmal (Handy): Liste
+   Auftrag 10 (28.09. nachts): ZWEI Karten mit festem Preis (Website · Automatisierung & KI mit endo); vorher Auftrag 6 drei. Schmal (Handy): Liste
    untereinander; ab 480 px Formularbreite (Tablet/Desktop): alle drei nebeneinander – gleich breit, gleich hoch, kein Sprung beim Wählen. */
 .anfrage { container-type: inline-size; container-name: anfrage; }
 .thema { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
@@ -495,7 +495,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 /* Liste (Handy): Titel links, Preis darunter */
 .thema__innen { min-height: 64px; }
 @container anfrage (min-width: 480px) {
-  .thema { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .thema { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }   /* Auftrag 10: zwei Karten nebeneinander = volle Reihe */
   .thema__innen { justify-content: center; text-align: center; min-height: 96px; padding: 12px 10px; }
   .thema__text { justify-items: center; gap: 4px; }
   .thema__innen::before { display: none; }
@@ -661,11 +661,14 @@ input:focus-visible + .pschalter { outline: 2px solid var(--accent); outline-off
 .pmehr-box__titel { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
 .pmehr-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .pmehr { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; }
-.pmehr__zeile { position: relative; display: inline-flex; align-items: center; gap: 12px; min-height: 44px; cursor: pointer; }
-.pmehr__zeile::before { content: ""; flex: none; width: 18px; height: 18px; border: 1.5px solid rgba(242, 239, 232, 0.36); border-radius: 5px; transition: background-color 220ms var(--ease), border-color 220ms var(--ease); }
+.pmehr__zeile { position: relative; display: flex; align-items: flex-start; gap: 12px; min-height: 44px; padding: 6px 0; cursor: pointer; }
+.pmehr__zeile::before { content: ""; flex: none; width: 18px; height: 18px; margin-top: 3px; border: 1.5px solid rgba(242, 239, 232, 0.36); border-radius: 5px; transition: background-color 220ms var(--ease), border-color 220ms var(--ease); }
 .pmehr__zeile:has(input:checked)::before { border-color: var(--accent); background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230E0E0C' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5.5 12.5l4.5 4.5L18.5 7.5'/%3E%3C/svg%3E") center / 12px no-repeat; }
 .pmehr__zeile:has(input:focus-visible)::before { outline: 2px solid var(--accent); outline-offset: 3px; }
+.pmehr__text { display: grid; gap: 0 8px; grid-template-columns: auto 1fr; align-items: baseline; }
 .pmehr__text b { font-weight: 500; } .pmehr__preis { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pmehr__satz { grid-column: 1 / -1; font-size: 14px; line-height: 20px; color: var(--muted); text-wrap: pretty; }
+@media (max-width: 519px) { .pmehr__text { grid-template-columns: 1fr; } }
 .pmehr__link { font-size: 14px; color: var(--muted); border-bottom: 1px solid var(--line); }
 .pmehr-box__klein { font-size: 12px; line-height: 16px; color: var(--muted); }
 /* ④ Einschätzung */
@@ -804,9 +807,9 @@ input:focus-visible + .pschalter { outline: 2px solid var(--accent); outline-off
           <div class="pbetreuung" data-betreuung></div>
           <label class="pselbst"><span data-selbst-text></span><input type="checkbox" role="switch" data-selbst><span class="pschalter"></span></label>
           <div class="pmehr-box">
-            <p class="pmehr-box__titel">Für mehr</p>
+            <p class="pmehr-box__titel" data-mehr-titel>Automatisierung &amp; KI → endo</p>
             <ul class="pmehr-liste" data-mehr role="list"></ul>
-            <p class="pmehr-box__klein" data-mehr-hinweis></p>
+            <p class="pmehr-box__klein"><span data-mehr-hinweis></span> <a class="pmehr__link" href="https://endo-ergun.vercel.app/" target="_blank" rel="noopener" data-endo-ansehen>endo ansehen <span aria-hidden="true">↗</span></a></p>
           </div>
         </fieldset>
       </div>
@@ -855,7 +858,7 @@ input:focus-visible + .pschalter { outline: 2px solid var(--accent); outline-off
         <figcaption><strong>Ihr Ansprechpartner</strong> · <span class="online">online</span></figcaption>
       </figure>
       <h2 class="contact__big reveal" id="kontakt-titel">Kostenloses Erstgespräch</h2>
-      <p class="contact__intro reveal">Websites, Automatisierungen und KI für Ihr Unternehmen – persönlich von mir. Antwort innerhalb von 24&nbsp;Stunden.</p>
+      <p class="contact__intro reveal">Ihre Website plane und baue ich persönlich. Automatisierung und KI für Ihren Betrieb kommen über endo. Antwort innerhalb von 24&nbsp;Stunden.</p>
     </div>
 
     <!-- Eine Karte, alles auf einen Blick (ERGUN., 25.09. abends: keine Schritte) -->
@@ -941,7 +944,7 @@ input:focus-visible + .pschalter { outline: 2px solid var(--accent); outline-off
     </div>
     <div class="agentur reveal">
       <p class="agentur__marke">ERGUN<span class="dot">.</span></p>
-      <p class="agentur__text">ERGUN. ist ein Digitalstudio für Unternehmen: Websites mit Design und Bewegung, Automatisierungen, die Arbeit abnehmen, und eigene KI-Lösungen – Entwurf und Umsetzung aus einer Hand.</p>
+      <p class="agentur__text">ERGUN. ist ein Digitalstudio für Unternehmen: Websites mit Design und Bewegung, Entwurf und Umsetzung aus einer Hand. Automatisierung und eigene KI kommen über endo – ebenfalls von ERGUN.</p>
     </div>
   </section>
 </main>
@@ -978,7 +981,7 @@ input:focus-visible + .pschalter { outline: 2px solid var(--accent); outline-off
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
-<script src="js/preise.js?v=2"></script>
+<script src="js/preise.js?v=3"></script>
 <script>
 /* Kostenloses Erstgespräch: eine Karte mit allen Feldern (seit 25.09. abends keine Schritte mehr).
    Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)
@@ -990,9 +993,12 @@ input:focus-visible + .pschalter { outline: 2px solid var(--accent); outline-off
      Anordnung: CSS .thema – Handy Liste, ab Tablet drei nebeneinander (immer volle Reihen) ===== */
   /* Auftrag 7/9: Zahlen kommen aus PREISE (js/preise.js) – Website „ab“ günstigster Stufe + „ab“ Betreuung Basis, dazu Automatisierung und endo */
   var P = window.PREISE, ab = function (n) { return 'ab ' + P.euro(n).replace('\u00a0', ' '); }, mon = function (n) { return P.euro(n).replace('\u00a0', ' ') + '/Monat'; };
+  /* Auftrag 10 (28.09.2026): ZWEI Karten – Website (ERGUN.) · Automatisierung & KI mit endo (günstigste endo-Option) */
+  var endoAb = P.mehr.reduce(function (a, m) { return m.preis < a.preis ? m : a; });
   var THEMEN = [
-    { wert: 'Website', titel: 'Website', preis: ab(Math.min.apply(null, P.stufen.map(function (x) { return x.preis; }))), monat: 'ab ' + mon(P.betreuung.stufen[0].monat) }
-  ].concat(P.mehr.map(function (m) { return { wert: m.karte, titel: m.karte, preis: ab(m.preis), monat: mon(m.monat) }; }));
+    { wert: 'Website', titel: 'Website', preis: ab(Math.min.apply(null, P.stufen.map(function (x) { return x.preis; }))), monat: 'ab ' + mon(P.betreuung.stufen[0].monat) },
+    { wert: P.endoKarte, titel: P.endoKarte, preis: ab(endoAb.preis), monat: mon(endoAb.monat) }
+  ];
   function preisVon(wert) { var t = THEMEN.filter(function (x) { return x.wert === wert; })[0]; return t ? t.preis + ' + ' + t.monat : ''; }
   var WHATSAPP_AN = true;              /* false = WhatsApp als Antwort-Weg ausblenden (falls keine geschäftliche Nummer) */
   var WA_NUMMER = '4915906344961';     /* Nummer aus dem Impressum */
@@ -1042,8 +1048,7 @@ input:focus-visible + .pschalter { outline: 2px solid var(--accent); outline-off
   var ENDO_DEMO = ENDO_DEMO_OEFFENTLICH ? { text: 'Demo ansehen', href: 'https://endo-ergun.vercel.app/unternehmen' } : ENDO_LINK;
   var TIPPS = {
     'Website': { text: 'Mit endo können Sie vorab neue Produktfotos und Bilder für Ihre Seite erstellen.', link: ENDO_LINK },
-    'Automatisierung': { text: 'Ich automatisiere Anfragen per E-Mail und WhatsApp – ein einfacher Start, der sofort Zeit spart.' },
-    'endo für Ihr Unternehmen': { text: 'Ihr eigener endo: beantwortet Fragen Ihrer Kunden, zeigt Visualisierungen und leitet Anfragen an Sie weiter.', link: ENDO_DEMO }
+    'Automatisierung & KI mit endo': { text: 'endo beantwortet Anfragen per E-Mail und WhatsApp, nimmt Termine an und plant Ihre Posts – einzeln oder komplett.', link: ENDO_DEMO }
   };
   var tipp = form.querySelector('[data-endo-tipp]'), tippText = tipp.querySelector('[data-tipp-text]'), tippT, tippAktuell = '';
   function tippFuellen(t) {

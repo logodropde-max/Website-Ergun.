@@ -59,16 +59,22 @@ window.PREISE = {
         punkte: ['Alles aus Aktiv', 'Betrieb & Sicherung der Datenbank', 'Betreuung von Automatisierung/endo', 'Bevorzugte Bearbeitung', 'Weiterentwicklung nach Absprache'] }
     ]
   },
-  /* Für mehr – wählbar, setzt die Betreuung auf Rundum (dort ist der laufende Betrieb enthalten; monat = Anzeige auf der Formular-Karte).
-     karte = Karte im Kontaktformular, die dazu vorausgewählt wird. */
+  /* Automatisierung & KI → endo (Auftrag 10, ERGUN. 28.09.2026: „ERGUN. baut Ihre Website. endo automatisiert Ihren Betrieb.“ –
+     Automatisierung gibt es nur noch über endo). Eine Option wählbar (oder keine); setzt die Betreuung auf Rundum (dort ist der
+     laufende Betrieb enthalten; monat = Anzeige auf Karte und Formular). endo wird gemietet: Einrichtung einmalig + monatlich. */
   mehr: [
-    { id: 'automatisierung', name: 'Automatisierung E-Mail & WhatsApp', satz: 'Anfragen per E-Mail und WhatsApp automatisch beantworten, sortieren und weiterleiten.', preis: 1000, monat: 200, ab: true, karte: 'Automatisierung' },
-    { id: 'endo', name: 'endo für Ihr Unternehmen', satz: 'Ihr eigener KI-Assistent für Ihre Kunden, mit Ihrem Namen und Design.', preis: 4000, monat: 200, ab: true, karte: 'endo für Ihr Unternehmen' }
+    { id: 'faehigkeit', name: 'Eine Fähigkeit', satz: 'Zum Beispiel Empfang: Anfragen per E-Mail und WhatsApp automatisch beantworten, sortieren und weiterleiten.', preis: 1000, monat: 200, ab: true },
+    { id: 'komplett', name: 'endo komplett', satz: 'Alle Fähigkeiten: Empfang, Termine, Social, Studio und Übersicht.', preis: 4000, monat: 200, ab: true }
   ],
+  mehrTitel: 'Automatisierung & KI → endo',
+  mehrSatz: 'Automatisierung und KI für Ihren Betrieb laufen über endo – ebenfalls von ERGUN.',
+  /* EINE Karte im Kontaktformular für alles aus „mehr“ (Preis = günstigste Option) */
+  endoKarte: 'Automatisierung & KI mit endo',
   mehrStufe: 'rundum',
-  /* endo-Seite „Für Unternehmen“ erst verlinken, wenn sie öffentlich ist (heute gesperrt) – sonst führt der Link zum Kontakt */
+  /* „endo ansehen“: /unternehmen erst, wenn die Seite öffentlich ist (heute gesperrt) – sonst die endo-Startseite */
   endoSeiteOeffentlich: false,
   endoSeite: 'https://endo-ergun.vercel.app/unternehmen',
+  endoStart: 'https://endo-ergun.vercel.app/',
   klein: 'Unverbindliche Einschätzung, kein Festpreis. Die genaue Kalkulation klären wir im kostenlosen Erstgespräch.',
   steuer: 'Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.'   /* Kleinunternehmer laut Impressum;   = kein Zeilenumbruch */
 };
@@ -122,7 +128,7 @@ window.BEGRIFFE = {
     if (e.stufe) z.push('• Website: ' + e.stufe.name + ' (' + P.betrag(e.stufe) + ')');
     if (e.extras.length) z.push('• Extras: ' + e.extras.map(function (m) { return m.name + ' (' + P.betrag(m) + ')'; }).join(', '));
     if (e.anfrage.length) z.push('• Im Erstgespräch besprechen: ' + e.anfrage.map(function (x) { return x.name; }).join(', '));
-    if (e.mehr.length) z.push('• Dazu: ' + e.mehr.map(function (m) { return m.name + ' (' + P.betrag(m) + ')'; }).join(', '));
+    if (e.mehr.length) z.push('• Automatisierung & KI mit endo: ' + e.mehr.map(function (m) { return m.name + ' (' + P.betrag(m) + ' + ' + P.euro(m.monat) + '/Monat)'; }).join(', '));
     z.push('• Betreuung: ' + (e.betreuung ? e.betreuung.name + ' (' + P.euro(e.monatlich) + '/Monat' + (e.selbst ? ', Hosting & Domain stelle ich selbst' : '') + ')' : 'keine'));
     z.push('Einmalig ' + ab + P.euro(e.einmalig) + ' · monatlich ' + P.euro(e.monatlich) + ' · erstes Jahr ' + ab + P.euro(e.jahr) + ' (unverbindliche Einschätzung)');
     return z.join('\n').replace(/ /g, ' ');
@@ -215,14 +221,18 @@ window.BEGRIFFE = {
     l.appendChild(innen); bBox.appendChild(l);
   });
   q('[data-selbst-text]').textContent = P.betreuung.selbstText + ' (je Stufe ' + P.euro(P.betreuung.selbst) + ' günstiger)';
+  /* Automatisierung & KI → endo: zwei Optionen, höchstens eine (Checkboxen, die sich gegenseitig abwählen – „keine“ bleibt möglich) */
+  q('[data-mehr-titel]').textContent = P.mehrTitel;
   var mehrBox = q('[data-mehr]');
   P.mehr.forEach(function (m) {
     var li = el('li', 'pmehr'), l = el('label', 'pmehr__zeile'); var i = el('input'); i.type = 'checkbox'; i.name = 'mehr'; i.value = m.id; l.appendChild(i);
-    var t = el('span', 'pmehr__text'); t.appendChild(el('b', '', m.name)); t.appendChild(el('span', 'pmehr__preis', ' ' + P.betrag(m))); l.appendChild(t); li.appendChild(l);
-    if (m.id === 'endo') { var a = el('a', 'pmehr__link', P.endoSeiteOeffentlich ? 'endo ansehen' : 'Mehr im Erstgespräch'); a.href = P.endoSeiteOeffentlich ? P.endoSeite : '#kontakt'; if (P.endoSeiteOeffentlich) { a.target = '_blank'; a.rel = 'noopener'; } li.appendChild(a); }
+    var t = el('span', 'pmehr__text'); t.appendChild(el('b', '', m.name)); t.appendChild(el('span', 'pmehr__preis', ' ' + P.betrag(m) + ' + ' + P.euro(m.monat) + '/Monat'));
+    t.appendChild(el('span', 'pmehr__satz', m.satz)); l.appendChild(t); li.appendChild(l);
+    i.addEventListener('change', function () { if (i.checked) qa('input[name="mehr"]').forEach(function (x) { if (x !== i) x.checked = false; }); });
     mehrBox.appendChild(li);
   });
-  q('[data-mehr-hinweis]').textContent = 'Setzt die Betreuung auf ' + P.betreuung.stufen.filter(function (b) { return b.id === P.mehrStufe; })[0].name + '.';
+  var endoA = q('[data-endo-ansehen]'); endoA.href = P.endoSeiteOeffentlich ? P.endoSeite : P.endoStart;
+  q('[data-mehr-hinweis]').textContent = P.mehrSatz + ' Setzt die Betreuung auf ' + P.betreuung.stufen.filter(function (b) { return b.id === P.mehrStufe; })[0].name + '.';
 
   /* Begriffe erklärt */
   var bl = q('[data-begriffe]');
@@ -305,7 +315,7 @@ window.BEGRIFFE = {
   function anfragen() {
     var e = P.rechnen(auswahl()), form = document.getElementById('anfrage');
     if (!form) return;
-    var karteWert = e.mehr.length ? e.mehr[e.mehr.length - 1].karte : 'Website';
+    var karteWert = e.mehr.length ? P.endoKarte : 'Website';
     var r = form.querySelector('input[name="hilfe"][value="' + karteWert + '"]');
     if (r && !r.checked) { r.checked = true; r.dispatchEvent(new Event('change', { bubbles: true })); }
     var feld = form.elements.text;
