@@ -2,6 +2,10 @@
 
 > Überblick für eine neue Sitzung: Vault-Notiz `08 Projekte/Neustart – hier weitermachen.md`. Hier stehen die technischen Details, neuester Abschnitt oben.
 
+## 28.09.2026 nachts – Auftrag 6: feste Preise im Kontaktformular, Redesign raus
+- `THEMEN` (Skript im Kontakt-Teil von `index.html`) = **die Preisstelle**: `{ wert, titel, preis: 'ab 1.000 €', monat: '50 €/Monat' }` × 3 (Website · Automatisierung · endo für Ihr Unternehmen). Karten-Markup `.thema__text` mit `b` (Titel), `.thema__preis`, `.thema__monat`; `preisVon()` schreibt den Preis in die Nachricht. CSS `.thema`: Liste, ab 480 px Formularbreite (Container-Abfrage) drei nebeneinander, Höhe 96 px. Kleingedrucktes `.thema__klein` unter den Karten.
+- `TIPPS` neu; `ENDO_DEMO_OEFFENTLICH = false` → Tipp-Link auf die endo-Startseite; auf `true` stellen, sobald `/unternehmen` öffentlich ist.
+
 ## 28.09.2026 nachts – Neue Figur v17 (Higgsfield, Emres Wunsch)
 - Emre: „Mach einfach ein Hero, das dazu passt – nimm mein Gesicht aus Higgsfield … es sieht nicht gut aus auf der Seite.“ Vorlage fürs Gesicht: Foto mit blauem Hemd (Emres Wahl; große Fassung `bilder/hero/4k/emre-portrait-blau-gross.jpg`), Körper wie vorher. In Emres Higgsfield-Konto gab es keinen gespeicherten Charakter/Element.
 - Higgsfield-API (Cashback): 2 Bilder `marketing-studio/image` 4k (je 0,33 $) → Emre wählt **V1**; Winken `kling-video/v3.0/pro/image-to-video` 5 s, Start = Ende = V1 (0,28 $). Zusammen 0,94 $. Prompts: `05 Higgsfield-Assets/Higgsfield-Prompts.md`.

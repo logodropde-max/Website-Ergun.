@@ -9,7 +9,7 @@ Zentrale Notiz für alles rund um die Website und endo. Von hier gehen alle Verb
 **Live:** https://website-ergun.vercel.app · **endo Studio (eigene Seite):** https://endo-ergun.vercel.app
 
 ## Bereiche
-- [[Kontaktformular]]: 4 Karten (Neue Website · Website-Redesign · Automatisierung · KI für Ihr Unternehmen), Antwort per WhatsApp oder E-Mail
+- [[Kontaktformular]]: 3 Karten mit festen Preisen (Website ab 1.000 € + 50 €/Monat · Automatisierung ab 1.000 € + 200 €/Monat · endo für Ihr Unternehmen ab 4.000 € + 200 €/Monat, seit 28.09. nachts), Antwort per WhatsApp oder E-Mail
 - [[Datei-Upload (Vercel Blob)]]: Fotos als Link in der Nachricht
 - [[endo Chat-Agent]]: Assistent, der antwortet und zum Produktfoto einlädt
 

@@ -5,10 +5,12 @@ tags: [website]
 
 Teil der [[Startseite]]. Seit 24.09. abends ein übersichtliches Formular in einer Karte (vorher Fragebogen mit Schritten).
 
+**Stand 28.09.2026 nachts (Auftrag 6):** „Worum geht es?“ hat 3 Karten mit festem Preis: **Website** ab 1.000 € + 50 €/Monat · **Automatisierung** ab 1.000 € + 200 €/Monat · **endo für Ihr Unternehmen** ab 4.000 € + 200 €/Monat. Kleingedruckt: „Alle Preise ab, Endpreis nach kostenlosem Erstgespräch …“ + § 19 UStG. Die Nachricht an Emre enthält die Karte mit Preis. Preise im Code: `THEMEN` in `_code/ee-design-website/index.html`. Die Liste unten ist Geschichte.
+
 1. Weg wählen: WhatsApp oder E-Mail (Knopf passt sich an)
 2. Name und E-Mail-Adresse (Pflicht)
 3. Land (alle 27 EU-Länder + „Anderes Land") und Telefon (Vorwahl je Land)
-4. „Wobei brauchen Sie Hilfe?": Neue Website · Website-Redesign · Onlineshop (E-Commerce) · Anderes
+4. „Wobei brauchen Sie Hilfe?": (damals vier Auswahlpunkte, heute siehe Stand oben)
 5. „Ihre Anfrage", optional Dateien ([[Datei-Upload (Vercel Blob)]]), Senden
 6. Darunter E-Mail/Telefon und der Agentur-Text „ERGUN. ist eine Premium-Digitalagentur …"
 

@@ -469,8 +469,9 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 @media (prefers-reduced-motion: reduce) { .anfrage__pfeil { transition: none; } }
 /* ---------- Kontakt übersichtlich (Emre, 27.09. spät): Auswahl-Karten, Pflichtfelder, Antwort-Weg mit passendem Feld ---------- */
 .pflicht { color: var(--accent); font-weight: 500; margin-left: 2px; }
-/* 28.09. (Emre, feste Regel): Kartenreihen immer voll und gleichmäßig – nie 3 + 1, 2 + 1 o. Ä. Vier Karten: alle nebeneinander, wenn jede
-   mindestens 150 px hat (Container-Abfrage auf das Formular), sonst 2 × 2, nur sehr schmal eine Liste – alle gleich breit und gleich hoch. */
+/* 28.09. (Emre, feste Regel): Kartenreihen immer voll und gleichmäßig – nie 3 + 1, 2 + 1 o. Ä.
+   Auftrag 6 (28.09. nachts): DREI Karten mit festem Preis (Website · Automatisierung · endo für Ihr Unternehmen). Schmal (Handy): Liste
+   untereinander; ab 480 px Formularbreite (Tablet/Desktop): alle drei nebeneinander – gleich breit, gleich hoch, kein Sprung beim Wählen. */
 .anfrage { container-type: inline-size; container-name: anfrage; }
 .thema { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
 .thema__karte { position: relative; display: flex; min-width: 0; }
@@ -479,6 +480,11 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 .thema__innen { flex: 1; display: flex; align-items: center; justify-content: flex-start; gap: 12px; min-height: 52px; padding: 12px 16px; text-align: left; border: 1px solid rgba(242, 239, 232, 0.14); border-radius: 14px; background: rgba(14, 14, 12, 0.45);
   transition: border-color 220ms var(--ease), background-color 220ms var(--ease), transform 160ms var(--ease-out); }
 .thema__innen b { font-weight: 500; font-size: 15px; line-height: 1.3; color: var(--text); text-wrap: balance; }
+.thema__text { display: grid; gap: 2px; min-width: 0; }
+.thema__preis { font-family: var(--serif); font-weight: 400; font-size: 14px; line-height: 20px; letter-spacing: 0.01em; color: var(--text); font-variant-numeric: tabular-nums; }
+.thema__monat { font-size: 12px; line-height: 16px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.thema__karte input:checked + .thema__innen .thema__preis { color: var(--accent); }
+.thema__klein { margin: 10px 0 0; font-size: 12px; line-height: 16px; color: var(--muted); text-wrap: pretty; }
 .thema__karte input:checked + .thema__innen { border-color: var(--accent); background: rgba(255, 90, 31, 0.1); }
 .thema__karte input:focus-visible + .thema__innen { outline: 2px solid var(--accent); outline-offset: 3px; }
 .thema__karte:active .thema__innen { transform: scale(0.97); }
@@ -486,14 +492,13 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 /* Liste: kleiner Auswahlkreis links (zeigt die Wahl auch ohne Farbe) */
 .thema__innen::before { content: ""; flex: none; width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid rgba(242, 239, 232, 0.36); transition: border-color 220ms var(--ease), background-color 220ms var(--ease); }
 .thema__karte input:checked + .thema__innen::before { border-color: var(--accent); background: radial-gradient(circle, var(--accent) 0 38%, transparent 42%); }
-@container anfrage (min-width: 280px) {
-  .thema { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-  .thema__innen { justify-content: center; text-align: center; min-height: 60px; padding: 10px; }
+/* Liste (Handy): Titel links, Preis darunter */
+.thema__innen { min-height: 64px; }
+@container anfrage (min-width: 480px) {
+  .thema { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .thema__innen { justify-content: center; text-align: center; min-height: 96px; padding: 12px 10px; }
+  .thema__text { justify-items: center; gap: 4px; }
   .thema__innen::before { display: none; }
-}
-@container anfrage (min-width: 630px) {
-  .thema { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
-  .thema__innen { min-height: 64px; padding: 12px 10px; }
 }
 @media (prefers-reduced-motion: reduce) { .thema__innen::before { transition: none; } }
 .anfrage__gruppe .field__error { display: block; margin-top: 8px; }
@@ -594,8 +599,9 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
     <form class="anfrage reveal" id="anfrage" novalidate>
       <fieldset class="anfrage__gruppe anfrage__gruppe--thema" aria-describedby="f-thema-err">
         <legend>Worum geht es? <span class="pflicht" aria-hidden="true">*</span></legend>
-        <div class="thema" data-themen><!-- Karten kommen aus THEMEN im Skript unten (Texte dort ändern) --></div>
+        <div class="thema" data-themen><!-- Karten kommen aus THEMEN im Skript unten (Texte und Preise dort ändern) --></div>
         <span class="field__error" id="f-thema-err" aria-live="polite"></span>
+        <p class="thema__klein">Alle Preise ab, Endpreis nach kostenlosem Erstgespräch. Monatlich: Betreuung, Updates und laufende Kosten. Gemäß §&nbsp;19&nbsp;UStG wird keine Umsatzsteuer berechnet.</p>
       </fieldset>
       <div class="anfrage__punkte" aria-hidden="true"></div>
 
@@ -715,14 +721,15 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
    und landen als Link in der Nachricht; klappt das nicht, hängt man sie selbst an.
    Ohne JavaScript bleibt das Formular sichtbar und tut nichts Falsches. */
 (function () {
-  /* ===== Einstellungen: Texte der Auswahl-Karten hier ändern (nur der Titel). 28.09. (Emre): vier Karten – Automatisierung und KI getrennt,
-     „Betreuung & Änderungen“ raus. Anordnung: immer volle, gleichmäßige Reihen (CSS .thema: 4 nebeneinander, sonst 2 × 2, sehr schmal Liste) ===== */
+  /* ===== PREISE UND KARTEN – hier ändern (Auftrag 6, Emre 28.09.2026: feste Preise sichtbar, Quelle Obsidian „02 Preise/Webdesign-Pakete
+     (Erstgespräch)“). titel = Karte, preis = einmalig, monat = monatlich. Die Preise stehen auf den Karten und in der Nachricht an Emre.
+     Anordnung: CSS .thema – Handy Liste, ab Tablet drei nebeneinander (immer volle Reihen) ===== */
   var THEMEN = [
-    { wert: 'Neue Website', titel: 'Neue Website' },
-    { wert: 'Website-Redesign', titel: 'Website-Redesign' },
-    { wert: 'Automatisierung', titel: 'Automatisierung' },
-    { wert: 'KI für Ihr Unternehmen', titel: 'KI für Ihr Unternehmen' }
+    { wert: 'Website', titel: 'Website', preis: 'ab 1.000 €', monat: '50 €/Monat' },
+    { wert: 'Automatisierung', titel: 'Automatisierung', preis: 'ab 1.000 €', monat: '200 €/Monat' },
+    { wert: 'endo für Ihr Unternehmen', titel: 'endo für Ihr Unternehmen', preis: 'ab 4.000 €', monat: '200 €/Monat' }
   ];
+  function preisVon(wert) { var t = THEMEN.filter(function (x) { return x.wert === wert; })[0]; return t ? t.preis + ' + ' + t.monat : ''; }
   var WHATSAPP_AN = true;              /* false = WhatsApp als Antwort-Weg ausblenden (falls keine geschäftliche Nummer) */
   var WA_NUMMER = '4915906344961';     /* Nummer aus dem Impressum */
   var MAIL = 'ergun.eu@gmail.com';
@@ -740,8 +747,10 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   var themenBox = form.querySelector('[data-themen]');
   THEMEN.forEach(function (t) {
     var l = document.createElement('label'); l.className = 'thema__karte';
-    l.innerHTML = '<input type="radio" name="hilfe"><span class="thema__innen"><b></b></span>';
+    l.innerHTML = '<input type="radio" name="hilfe"><span class="thema__innen"><span class="thema__text"><b></b><span class="thema__preis"></span><span class="thema__monat"></span></span></span>';
     l.querySelector('input').value = t.wert; l.querySelector('b').textContent = t.titel;
+    l.querySelector('.thema__preis').textContent = t.preis; l.querySelector('.thema__monat').textContent = '+ ' + t.monat;
+    l.querySelector('input').setAttribute('aria-label', t.titel + ', ' + t.preis + ' einmalig plus ' + t.monat);
     themenBox.appendChild(l);
   });
 
@@ -764,11 +773,13 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   });
   /* ===== Tipps unter „Anfrage senden“ (Emre, 28.09.): Texte hier ändern. link ist optional (öffnet in neuem Tab). ===== */
   var ENDO_LINK = { text: 'endo ansehen', href: 'https://endo-ergun.vercel.app/' };
+  /* endo für Ihr Unternehmen: Link auf die Demo /unternehmen erst, wenn diese Seite öffentlich ist (heute gesperrt) → bis dahin endo-Startseite */
+  var ENDO_DEMO_OEFFENTLICH = false;
+  var ENDO_DEMO = ENDO_DEMO_OEFFENTLICH ? { text: 'Demo ansehen', href: 'https://endo-ergun.vercel.app/unternehmen' } : ENDO_LINK;
   var TIPPS = {
-    'Neue Website': { text: 'Mit endo können Sie vorab neue Produktfotos und Bilder für Ihre Seite erstellen.', link: ENDO_LINK },
-    'Website-Redesign': { text: 'Mit endo können Sie vorab neue Produktfotos und Bilder für Ihre Seite erstellen.', link: ENDO_LINK },
-    'Automatisierung': { text: 'Ich automatisiere z. B. Anfragen, E-Mails und WhatsApp-Nachrichten, damit Sie weniger von Hand erledigen müssen.' },
-    'KI für Ihr Unternehmen': { text: 'Beschreiben Sie kurz Ihre Branche und welche Aufgabe eine KI übernehmen soll – ich schaue, was sinnvoll ist.' }
+    'Website': { text: 'Mit endo können Sie vorab neue Produktfotos und Bilder für Ihre Seite erstellen.', link: ENDO_LINK },
+    'Automatisierung': { text: 'Ich automatisiere Anfragen per E-Mail und WhatsApp – ein einfacher Start, der sofort Zeit spart.' },
+    'endo für Ihr Unternehmen': { text: 'Ihr eigener endo: beantwortet Fragen Ihrer Kunden, zeigt Visualisierungen und leitet Anfragen an Sie weiter.', link: ENDO_DEMO }
   };
   var tipp = form.querySelector('[data-endo-tipp]'), tippText = tipp.querySelector('[data-tipp-text]'), tippT, tippAktuell = '';
   function tippFuellen(t) {
@@ -883,7 +894,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
     var mitLink = eintraege.filter(function (e) { return e.stand === 'ok'; });
     var ohneLink = selbstAnhaengen().map(function (e) { return e.name; });
     var z = ['Hallo Emre, ich möchte ein kostenloses Erstgespräch.', '',
-      'Worum es geht: ' + gewaehlt('hilfe') + (gewaehlt('hilfe') === 'Website-Redesign' ? ' (endo empfohlen)' : ''),
+      'Worum es geht: ' + gewaehlt('hilfe') + (preisVon(gewaehlt('hilfe')) ? ' (' + preisVon(gewaehlt('hilfe')) + ')' : ''),
       'Name: ' + wert('name'),
       'Antwort per: ' + (wa ? 'WhatsApp' : 'E-Mail'),
       wa ? 'Telefon: ' + wert('tel') : 'E-Mail: ' + wert('email')];
