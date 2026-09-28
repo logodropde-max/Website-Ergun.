@@ -8,10 +8,10 @@
  "mitte": 0.6131,
  "breite": 0.7397,
  "ausschnitt": [
-  0,
-  0,
-  149,
-  479
+  2,
+  2,
+  135,
+  488
  ],
  "grund": true,
  "bps": 48,
@@ -21,5 +21,6 @@
   4.45
  ],
  "modell": "birefnet-general",
- "skript": "winken_fluss.py"
+ "platte_aus_bild": 24,
+ "skript": "winken_fluss.py + winken_platte.py"
 }

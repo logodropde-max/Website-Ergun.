@@ -524,10 +524,10 @@
      („Tschüss“). Beides startet gemeinsam, sobald es Nacht ist und man weiterscrollt, und läuft dann in eigener Zeit ab
      (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
   /* 28.09. später (Emre: „flüssig und sauber“): winken_fluss.py – winken2-v1 0,75–4,45 s, BiRefNet, feste Figur + Armzone, echte Zwischenbilder (48/s), ohne Überblendung; Werte aus figuren/emre.json */
-  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 248, h: 600, anzahl: 177, spalten: 12, fuss: 0.9965, oben: 0.0622, mitte: 0.6131, breite: 0.7397, einzeln: true, ausschnitt: [0, 0, 149, 479] } };   /* 28.09. später: winken_fluss.py – Grundbild + Armzone, 48 Bilder/s (Werte aus figuren/emre.json) */
+  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 248, h: 600, anzahl: 177, spalten: 12, fuss: 0.9965, oben: 0.0622, mitte: 0.6131, breite: 0.7397, einzeln: true, ausschnitt: [2, 2, 135, 488] } };   /* 28.09. später: winken_fluss.py – Grundbild + Armzone, 48 Bilder/s (Werte aus figuren/emre.json) */
   /* Tempo (27.09. spät, Emre): Emre und Hund laufen NUR nach Zeit, jeder in seinem festen Tempo, unabhängig vom Scrollen.
      Emre winkt einmal (FIG_DAUER), der Hund hebt den Kopf in HUND_HOCH und senkt ihn in HUND_RUNTER. */
-  var FIG_DAUER = 3.7, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0, FIG_VERSION = 13;   /* 28.09. später (Emre: „flüssig und sauber“): winken_fluss.py – 0,75–4,45 s aus winken2-v1, 48 Bilder/s mit echten Zwischenbildern, echte Geschwindigkeit (3,7 s) */
+  var FIG_DAUER = 3.7, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0, FIG_VERSION = 14;   /* 28.09. später (Emre: „flüssig und sauber“): winken_fluss.py – 0,75–4,45 s aus winken2-v1, 48 Bilder/s mit echten Zwischenbildern, echte Geschwindigkeit (3,7 s) */
   /* Lage von Sonne und Mond (für Wolken, js/wolken.js) und wie stark das Gestirn gerade verdeckt ist (0–1, in Zehnteln) */
   var gest = { sy: 0, my: 0, sonneAn: 1, mondAn: 0 }, verdecktQ = 0, gestTest = null;
   var fig = { phase: 0, ziel: 0, laeuft: false }, hund = { phase: 0, ziel: 0, laeuft: false }, animT = 0, animLaeuft = false;
@@ -613,7 +613,7 @@
       if (f.grundBild) {
         var z = f.ausschnitt, sx = W / f.b, sy = H / f.h;
         ga.drawImage(f.grundBild, 0, 0, W, H);
-        ga.globalCompositeOperation = 'lighter';
+        ga.globalCompositeOperation = f.modus === 'arm' ? 'source-over' : 'lighter';   /* 'arm': feste Körperplatte, nur der Arm darüber */
         ga.drawImage(f.folge, (n0 % f.spalten) * z[2], Math.floor(n0 / f.spalten) * z[3], z[2], z[3], z[0] * sx, z[1] * sy, z[2] * sx, z[3] * sy);
       } else ga.drawImage(f.bild, 0, 0, W, H);
     }
