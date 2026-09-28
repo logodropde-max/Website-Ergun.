@@ -2,6 +2,12 @@
 
 > Überblick für eine neue Sitzung: Vault-Notiz `08 Projekte/Neustart – hier weitermachen.md`. Hier stehen die technischen Details, neuester Abschnitt oben.
 
+## 29.09.2026 nachts – Auftrag 9: Arm-Fix (Figur v18) + Preis-Bereich in 4 Schritten
+- **Preise ändern:** `js/preise.js` ganz oben – `PREISE.stufen` (Name, Preis, ab, für, punkte mit `b` = Begriff fürs ⓘ), `PREISE.extras` (Gruppen), `PREISE.aufAnfrage`, `PREISE.betreuung` (Satz, `selbst` = Rabatt bei eigenem Hosting, `stufen` Basis/Aktiv/Rundum), `PREISE.mehr` (+ `mehrStufe` = Betreuung, die „Für mehr“ setzt), `klein`, `steuer`; darunter `BEGRIFFE` (Erklärungen). Danach `npm test` in `_code/werkzeuge/endo-datenbank` (vergleicht mit der Obsidian-Notiz) und veröffentlichen.
+- **Rechnen:** `PREISE.rechnen({ stufe, extras, betreuung, selbst, mehr, anfrage })` → einmalig, monatlich, jahr, ab; `betreuungStandard()` (Start/Business → Basis, Pro + Terminbuchung/Funktion → Aktiv, Für mehr → Rundum); `anfrageText()` für das Formular.
+- **Markup** in `index.html` (`.preise` mit `.preise__innen`, `.schritte`, `#p-website`, `#p-extras`, `#p-betreuung`, `#p-einschaetzung`, `.pbegriffe`, `.preise-leiste`), CSS-Block „Preis-Bereich (Auftrag 9 …)“ (Klassen `pst`, `pex`, `pbe`, `pmehr`, `pzeilen`, `pschalter`, `pinfo`). Verlauf aus dem Titelbild liegt jetzt auf `.preise`.
+- **Figur v18:** `winken_fest.py` angepasst (Schleier hart statt 80 % durchsichtig, Handgelenk-Stücke bleiben, W = 1 wo Bild 0 leer ist). Neu bauen: `PLATTE=0 WINKEN_Q=80 WINKEN_QA=100 python winken_fest.py` (braucht `%TEMP%/winken-zellen.npz` aus `winken_neu.py`). Sicherung `bilder/hero/figuren/emre-*-vor-armfix.*`. `FIG_VERSION` 18, Preloads `?v=18`.
+
 ## 28.09.2026 nachts – Auftrag 7: Preis-Bereich `#preise` mit Rechner
 - **`js/preise.js`** – ganz oben `window.PREISE` (die EINE Preisstelle: `stufen`, `ueberall`, `module`, `betreuung`, `mehr`, `endoSeiteOeffentlich`, `klein`, `steuer`), darunter `rechnen(auswahl)` → `{ einmalig, monatlich, jahr }`, `anfrageText()`, dann der Aufbau des Abschnitts (Karten = echte Radio/Checkbox-Felder, Summe, Leiste unten am Handy, „Anfrage mit dieser Auswahl“).
 - **Preis ändern:** Zahl in `PREISE` ändern (z. B. `{ id: 'termin', …, preis: 250 }`), Obsidian-Notiz `02 Preise/Webdesign-Pakete (Erstgespräch)` gleich anpassen, `npm test` in `_code/werkzeuge/endo-datenbank`, veröffentlichen.

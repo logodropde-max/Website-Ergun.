@@ -28,9 +28,9 @@
 <link rel="preload" href="schriften/Satoshi-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="schriften/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <!-- Bildfolgen von ERGUN. und dem Hund früh, aber mit niedriger Priorität holen: das Winken (erstes Runterwischen) wartet sonst auf sie -->
-<link rel="preload" href="bilder/hero/figuren/emre-folge.webp?v=17" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
-<link rel="preload" href="bilder/hero/figuren/emre-grund.webp?v=17" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
-<link rel="preload" href="bilder/hero/figuren/hund-folge.webp?v=17" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
+<link rel="preload" href="bilder/hero/figuren/emre-folge.webp?v=18" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
+<link rel="preload" href="bilder/hero/figuren/emre-grund.webp?v=18" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
+<link rel="preload" href="bilder/hero/figuren/hund-folge.webp?v=18" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
 <script>document.documentElement.classList.add('js');</script>
 
 <style>
@@ -535,78 +535,189 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 .anfrage__tipp a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(242, 239, 232, 0.4); white-space: nowrap; }
 @media (prefers-reduced-motion: reduce) { .anfrage__tipp { transition: none; } }
 
-/* Übergang Titelbild → Kontakt: ruhiger, dunkler Grund, weich aus dem Dunkel am Ende des Titelbilds (#070B16).
+/* Übergang Titelbild → erster Bereich (seit Auftrag 9: Preise): ruhiger, dunkler Grund, weich aus dem Dunkel am Ende des Titelbilds (#070B16).
    Erdschnitt + Wurzeln (js/wurzeln.js) auf ERGUNs Wunsch am 27.09. wieder entfernt – Datei bleibt liegen, wird nicht geladen. */
-.contact { position: relative; background: linear-gradient(#070B16 0, var(--bg) 420px); }
+.contact { position: relative; background: var(--bg); }   /* Auftrag 9: Verlauf aus dem Titelbild liegt jetzt auf .preise (erster Bereich danach) */
 
-/* ---------- Preis-Bereich (Auftrag 7, ERGUN. 28.09.2026): Stufe wählen, Extras, Betreuung, Rechner – Zahlen nur in js/preise.js (PREISE) ----------
-   Ruhig, viel Luft, Akzent nur für die Wahl und den einen Knopf. Karten = echte Radio/Checkbox-Felder. Reihen immer voll (3 Stufen, 8 Extras → 1/2/4 Spalten). */
-.preise { -webkit-hyphens: manual; hyphens: manual; }
-.preise { width: min(100% - 2 * var(--pad), 1180px); margin: 0 auto; padding: clamp(88px, 14svh, 144px) 0 32px; }
-.preise__kopf { display: grid; gap: 16px; justify-items: center; text-align: center; margin-bottom: clamp(40px, 6vw, 64px); }
+/* ---------- Preis-Bereich (Auftrag 9 Gesamtfassung, ERGUN. 28.09.2026): 4 Schritte + Einschätzung – Zahlen/Texte nur in js/preise.js (PREISE, BEGRIFFE) ----------
+   Übergang vom Titelbild genau wie vorher zum Kontakt (Verlauf aus #070B16), Einblenden wie überall (.reveal). Akzent sparsam: Wahl, „Empfehlung“, ein Knopf.
+   Karten = echte Radio/Checkbox-Felder. Handy: Stufen wischbar, Extras als Akkordeon, Einschätzung als Leiste unten (antippen → aufklappen). */
+.preise { position: relative; background: linear-gradient(#070B16 0, var(--bg) 420px); -webkit-hyphens: manual; hyphens: manual; }
+.preise__innen { width: min(100% - 2 * var(--pad), 1180px); margin: 0 auto; padding: clamp(88px, 14svh, 144px) 0 64px; }
+.preise__kopf { display: grid; gap: 16px; justify-items: center; text-align: center; margin-bottom: 40px; }
 .preise__marke { font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
 .preise__titel { font-family: var(--serif); font-weight: 400; font-size: clamp(2.3rem, 5.6vw, 4.4rem); line-height: 1; letter-spacing: -0.03em; text-wrap: balance; }
-.preise__intro { max-width: 46ch; color: var(--muted); text-wrap: pretty; }
-.preise__raster { display: grid; gap: 32px; align-items: start; }
+.preise__intro { max-width: 52ch; color: var(--muted); text-wrap: pretty; }
+/* Schritt-Leiste */
+.schritte { position: sticky; top: 8px; z-index: 12; display: flex; justify-content: center; margin: 0 auto 40px; width: max-content; max-width: 100%; }
+.schritte ol { list-style: none; margin: 0; padding: 4px; display: flex; gap: 2px; border: 1px solid var(--line); border-radius: 999px; background: rgba(14, 14, 12, 0.86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); overflow-x: auto; scrollbar-width: none; }
+.schritte a { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px 0 6px; border-radius: 999px; font-size: 14px; color: var(--muted); white-space: nowrap; transition: color 220ms var(--ease), background-color 220ms var(--ease); }
+.schritte__nr { display: inline-grid; place-items: center; width: 26px; height: 26px; border: 1px solid var(--line); border-radius: 50%; font-size: 12px; font-variant-numeric: tabular-nums; transition: background-color 220ms var(--ease), border-color 220ms var(--ease), color 220ms var(--ease); }
+.schritte a.ist-aktiv { color: var(--text); background: rgba(242, 239, 232, 0.08); }
+.schritte a.ist-erledigt .schritte__nr { border-color: transparent; background: rgba(242, 239, 232, 0.9); color: var(--bg); }
+@media (hover: hover) and (pointer: fine) { .schritte a:hover { color: var(--text); } }
+@media (max-width: 699px) { .schritte a { padding: 0 10px 0 4px; font-size: 13px; gap: 6px; } .schritte__lang { display: none; } }
+/* sehr schmal: nur Nummern, der aktuelle Schritt mit Namen – nichts wird abgeschnitten */
+@media (max-width: 459px) { .schritte a:not(.ist-aktiv) .schritte__text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } .schritte a:not(.ist-aktiv) { padding: 0 4px; } }
+.preise__raster { display: grid; gap: 48px; align-items: start; }
 @media (min-width: 1024px) { .preise__raster { grid-template-columns: minmax(0, 1fr) 340px; gap: 48px; } }
-.preise__wahl { display: grid; gap: 48px; min-width: 0; }
-.preise__gruppe { margin: 0; padding: 0; border: 0; min-width: 0; container-type: inline-size; container-name: preisgruppe; }
-.preise__gruppe legend { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px; padding: 0; font-family: var(--serif); font-size: 24px; line-height: 32px; letter-spacing: -0.01em; }
-.preise__gruppe legend small { font-family: var(--sans); font-size: 14px; letter-spacing: 0; color: var(--muted); }
+.preise__wahl { display: grid; gap: 64px; min-width: 0; }
+.preise__gruppe { margin: 0; padding: 0; border: 0; min-width: 0; scroll-margin-top: 80px; container-type: inline-size; container-name: preisgruppe; }
+.preise__schritt { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; padding: 0; font-family: var(--serif); font-size: 24px; line-height: 32px; letter-spacing: -0.01em; }
 .preise__nr { display: inline-grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--line); border-radius: 50%; font-family: var(--sans); font-size: 13px; color: var(--muted); transform: translateY(-3px); }
-.preise__hinweis { margin-top: 12px; font-size: 14px; line-height: 20px; color: var(--muted); }
-.preise__hinweis[hidden] { display: none; }
-.pk-reihe { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
-@container preisgruppe (min-width: 640px) { .pk-reihe--stufen { grid-template-columns: repeat(3, minmax(0, 1fr)); } .pk-reihe--module, .pk-reihe--mehr { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.pk { position: relative; display: flex; min-width: 0; cursor: pointer; }
-.pk__feld { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
-.pk__innen { flex: 1; display: flex; gap: 12px; padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: rgba(242, 239, 232, 0.025);
-  transition: border-color 220ms var(--ease), background-color 220ms var(--ease), transform 160ms var(--ease-out); }
-.pk--stufe .pk__innen { padding: 24px 20px; }
-@media (hover: hover) and (pointer: fine) { .pk:hover .pk__innen { border-color: rgba(242, 239, 232, 0.3); } }
-.pk:active .pk__innen { transform: scale(0.99); }
-.pk__feld:checked + .pk__innen { border-color: var(--accent); background: rgba(255, 90, 31, 0.06); }
-.pk__feld:focus-visible + .pk__innen { outline: 2px solid var(--accent); outline-offset: 3px; }
-.pk__marke { flex: none; width: 18px; height: 18px; margin-top: 3px; border: 1.5px solid rgba(242, 239, 232, 0.36); border-radius: 50%; transition: border-color 220ms var(--ease), background-color 220ms var(--ease); }
-.pk input[type="checkbox"] + .pk__innen .pk__marke { border-radius: 5px; }
-.pk__feld:checked + .pk__innen .pk__marke { border-color: var(--accent); background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230E0E0C' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5.5 12.5l4.5 4.5L18.5 7.5'/%3E%3C/svg%3E") center / 12px no-repeat; }
-.pk__inhalt { flex: 1; display: grid; align-content: start; gap: 4px; min-width: 0; }
-.pk__inhalt--zeile { grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 16px; }
-.pk__text { display: grid; gap: 2px; min-width: 0; }
-.pk__name { font-family: var(--serif); font-size: 24px; line-height: 32px; letter-spacing: -0.01em; }
-.pk__name--klein { font-family: var(--sans); font-size: 16px; line-height: 24px; font-weight: 500; letter-spacing: 0; }
-.pk__preis { font-family: var(--serif); font-size: 30px; line-height: 36px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.pk__preis--klein { font-family: var(--sans); font-size: 16px; line-height: 24px; font-weight: 500; letter-spacing: 0; }
-.pk__monat { color: var(--muted); font-weight: 400; }
-.pk__art { font-size: 12px; line-height: 16px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-.pk__satz { font-size: 14px; line-height: 20px; color: var(--muted); text-wrap: pretty; }
-.pk__liste { list-style: none; margin: 16px 0 0; padding: 16px 0 0; border-top: 1px solid var(--line); display: grid; gap: 8px; font-size: 14px; line-height: 20px; color: rgba(242, 239, 232, 0.86); }
-.pk__liste li { display: flex; gap: 8px; }
-.pk__liste svg { flex: none; width: 16px; height: 16px; margin-top: 2px; color: var(--muted); }
-.pk--mehr .pk__preis { margin-top: 8px; }
-.pk__link { position: relative; z-index: 1; justify-self: start; margin-top: 4px; font-size: 14px; color: var(--text); border-bottom: 1px solid var(--line); }
-/* Summe: auf dem Desktop klebt sie rechts mit, auf dem Handy steht sie unter der Auswahl (+ kompakte Leiste unten) */
-.preise__summe { display: grid; gap: 12px; padding: 24px; border: 1px solid var(--line); border-radius: 24px; background: linear-gradient(180deg, rgba(242, 239, 232, 0.04), rgba(242, 239, 232, 0.012)); }
-@media (min-width: 1024px) { .preise__summe { position: sticky; top: 96px; } }
-.preise__zeilen { margin: 0; display: grid; gap: 8px; }
-.preise__zeilen div { display: flex; justify-content: space-between; gap: 12px; font-size: 16px; line-height: 24px; }
-.preise__zeilen dt { color: var(--muted); }
-.preise__zeilen dd { margin: 0; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.preise__jahr-titel { margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
-.preise__jahr { font-family: var(--serif); font-size: clamp(2.6rem, 4vw, 3.4rem); line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.preise__satz { margin: 0 0 20px; font-size: 14px; line-height: 20px; color: var(--muted); text-wrap: pretty; }
+/* ① Stufen-Karten */
+.pstufen { display: grid; grid-auto-flow: column; grid-auto-columns: min(84%, 320px); gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 12px 2px 8px; margin: -12px -2px 0; scrollbar-width: none; }
+.pstufen::-webkit-scrollbar { display: none; }
+@container preisgruppe (min-width: 720px) { .pstufen { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; } }
+.pst { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 20px; border: 1px solid var(--line); border-radius: 20px; background: rgba(242, 239, 232, 0.025); scroll-snap-align: start;
+  transition: border-color 220ms var(--ease), background-color 220ms var(--ease); }
+.pst--empf { border-color: rgba(242, 239, 232, 0.24); background: rgba(242, 239, 232, 0.045); }
+.pst:has(.pst__feld:checked) { border-color: var(--accent); background: rgba(255, 90, 31, 0.05); }
+.pst:has(.pst__feld:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .pst:hover { border-color: rgba(242, 239, 232, 0.36); } .pst:has(.pst__feld:checked):hover { border-color: var(--accent); } }
+.pst__feld { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.pst__name { font-family: var(--serif); font-size: 24px; line-height: 32px; letter-spacing: -0.01em; cursor: pointer; }
+.pst__name::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }   /* ganze Karte wählt aus */
+.pst__schild { position: absolute; top: -11px; left: 20px; padding: 2px 10px; border-radius: 999px; background: var(--text); color: var(--bg); font-size: 12px; line-height: 18px; font-weight: 600; letter-spacing: 0.02em; }
+.pst__vorschau { margin: 0 -4px 4px; color: var(--text); }
+.pv { display: block; width: 100%; height: auto; max-height: 96px; }
+.pv-rahmen { fill: rgba(242, 239, 232, 0.03); stroke: rgba(242, 239, 232, 0.28); stroke-width: 1; }
+.pv-punkt { fill: rgba(242, 239, 232, 0.3); }
+.pv-tab { fill: rgba(242, 239, 232, 0.18); } .pv-tab--an { fill: rgba(242, 239, 232, 0.55); }
+.pv-flaeche { fill: rgba(242, 239, 232, 0.1); }
+.pv-karte { fill: rgba(242, 239, 232, 0.07); stroke: rgba(242, 239, 232, 0.16); stroke-width: 0.6; }
+.pv-linie { fill: rgba(242, 239, 232, 0.22); } .pv-linie--hell { fill: rgba(242, 239, 232, 0.5); }
+.pv-kugel { fill: rgba(255, 90, 31, 0.8); }
+.pv-bewegt { animation: pv-schweben 3.2s var(--ease) infinite alternate; transform-box: fill-box; transform-origin: center; }
+@keyframes pv-schweben { from { transform: translate3d(-6px, 2px, 0) scale(0.92); } to { transform: translate3d(2px, -3px, 0) scale(1.04); } }
+.pst__preis { font-family: var(--serif); font-size: 30px; line-height: 36px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pst__fuer { font-size: 14px; line-height: 20px; color: var(--muted); text-wrap: pretty; }
+.pst__liste { list-style: none; margin: 8px 0 0; padding: 16px 0 0; border-top: 1px solid var(--line); display: grid; align-content: start; gap: 8px; font-size: 14px; line-height: 20px; color: rgba(242, 239, 232, 0.88); flex: 1; }
+.pst__liste li { display: flex; align-items: flex-start; gap: 8px; }
+.pst__liste li > span { flex: 1; min-width: 0; }
+.pst__liste svg { flex: none; width: 16px; height: 16px; margin-top: 2px; color: var(--muted); }
+.pst__knopf { margin-top: 12px; display: grid; place-items: center; min-height: 44px; border: 1px solid var(--line); border-radius: 999px; font-size: 14px; font-weight: 500; transition: background-color 220ms var(--ease), color 220ms var(--ease), border-color 220ms var(--ease); }
+.pst:has(.pst__feld:checked) .pst__knopf { background: var(--accent); border-color: var(--accent); color: #0E0E0C; }
+.pst:has(.pst__feld:checked) .pst__knopf::before { content: "Ausgewählt"; }
+.pst:has(.pst__feld:checked) .pst__knopf { font-size: 0; } .pst:has(.pst__feld:checked) .pst__knopf::before { font-size: 14px; }
+/* ⓘ */
+.pinfo { position: relative; z-index: 1; flex: none; display: inline-grid; place-items: center; width: 20px; height: 20px; margin: 0 0 0 4px; padding: 0; border: 1px solid rgba(242, 239, 232, 0.3); border-radius: 50%;
+  background: none; color: var(--muted); font: 600 11px/1 var(--sans); font-style: normal; cursor: pointer; }
+.pinfo::before { content: ""; position: absolute; inset: -12px; }   /* Tippfläche 44 px */
+@media (hover: hover) and (pointer: fine) { .pinfo:hover { color: var(--text); border-color: var(--text); } }
+/* ② Extras */
+.pextras { border: 1px solid var(--line); border-radius: 20px; background: rgba(242, 239, 232, 0.02); }
+.pextras > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; padding: 0 20px; cursor: pointer; list-style: none; font-size: 16px; font-weight: 500; }
+.pextras > summary::-webkit-details-marker, .pex-gruppe > summary::-webkit-details-marker { display: none; }
+.pextras > summary::after, .pex-gruppe > summary::after { content: ""; width: 10px; height: 10px; border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted); transform: translateY(-3px) rotate(45deg); transition: transform 220ms var(--ease); }
+.pextras[open] > summary::after, .pex-gruppe[open] > summary::after { transform: translateY(2px) rotate(-135deg); }
+.pextras__zahl { margin-left: auto; color: var(--muted); font-weight: 400; font-size: 14px; }
+.pextras__innen { display: grid; gap: 8px; padding: 0 20px 20px; }
+.pex-gruppe { border-top: 1px solid var(--line); }
+.pex-gruppe > summary { display: flex; align-items: center; justify-content: space-between; min-height: 52px; cursor: pointer; list-style: none; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.pex-liste { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 4px; }
+.pex { position: relative; display: flex; align-items: center; gap: 4px; }
+.pex__zeile { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 16px; min-height: 56px; padding: 8px 0; cursor: pointer; }
+.pex__text { display: grid; gap: 2px; min-width: 0; }
+.pex__name { font-size: 16px; line-height: 24px; font-weight: 500; }
+.pex__satz { font-size: 14px; line-height: 20px; color: var(--muted); text-wrap: pretty; }
+.pex__preis { font-size: 16px; line-height: 24px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pex__feld, .pmehr input, .pex-anfrage__punkt input, .pselbst input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.pex .pinfo { order: 2; }
+.pex:not(:has(.pinfo))::after { content: ""; flex: none; width: 24px; order: 2; }   /* Platz fürs ⓘ freihalten → Schalter stehen in einer Linie */
+.pschalter { position: relative; flex: none; width: 44px; height: 26px; border-radius: 999px; background: rgba(242, 239, 232, 0.14); transition: background-color 220ms var(--ease); }
+.pschalter::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--text); transition: transform 220ms var(--ease-out); }
+input:checked + .pschalter { background: var(--accent); }
+input:checked + .pschalter::after { transform: translateX(18px); background: #0E0E0C; }
+input:focus-visible + .pschalter { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (max-width: 519px) { .pex__zeile { grid-template-columns: minmax(0, 1fr) auto; } .pex__preis { grid-column: 1; grid-row: 2; font-size: 14px; color: var(--text); } .pschalter { grid-column: 2; grid-row: 1 / 3; } }
+.pex-anfrage { border-top: 1px solid var(--line); padding-top: 16px; display: grid; gap: 12px; }
+.pex-anfrage__titel { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.pex-anfrage__liste { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.pex-anfrage__punkt { position: relative; display: inline-flex; }
+.pex-anfrage__punkt span { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border: 1px dashed rgba(242, 239, 232, 0.3); border-radius: 999px; font-size: 14px; cursor: pointer; transition: border-color 220ms var(--ease), background-color 220ms var(--ease); }
+.pex-anfrage__punkt input:checked + span { border-style: solid; border-color: var(--text); background: rgba(242, 239, 232, 0.08); }
+.pex-anfrage__punkt input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
+.pex-anfrage__knopf { justify-self: start; min-height: 44px; padding: 0 18px; border: 1px solid var(--line); border-radius: 999px; background: none; color: var(--text); font: 500 14px/1 var(--sans); cursor: pointer; }
+.pex-anfrage__klein { font-size: 12px; line-height: 16px; color: var(--muted); }
+/* ③ Betreuung */
+.pbetreuung { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+@container preisgruppe (min-width: 720px) { .pbetreuung { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.pbe { position: relative; display: flex; cursor: pointer; }
+.pbe__feld { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.pbe__innen { flex: 1; display: grid; align-content: start; gap: 6px; padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: rgba(242, 239, 232, 0.02); transition: border-color 220ms var(--ease), background-color 220ms var(--ease); }
+.pbe__feld:checked + .pbe__innen { border-color: var(--accent); background: rgba(255, 90, 31, 0.05); }
+.pbe__feld:focus-visible + .pbe__innen { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .pbe:hover .pbe__innen { border-color: rgba(242, 239, 232, 0.36); } .pbe:hover .pbe__feld:checked + .pbe__innen { border-color: var(--accent); } }
+.pbe__kopf { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.pbe__name { font-family: var(--serif); font-size: 20px; line-height: 28px; }
+.pbe__preis { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pbe__fuer { font-size: 14px; line-height: 20px; color: var(--muted); text-wrap: pretty; }
+.pbe__liste { display: grid; gap: 6px; margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 14px; line-height: 20px; }
+.pbe__punkt { display: flex; gap: 8px; } .pbe__punkt svg { flex: none; width: 16px; height: 16px; margin-top: 2px; color: var(--muted); }
+.pselbst { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; margin-top: 12px; padding: 8px 0; cursor: pointer; font-size: 14px; line-height: 20px; }
+.pmehr-box { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); display: grid; gap: 8px; }
+.pmehr-box__titel { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.pmehr-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.pmehr { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; }
+.pmehr__zeile { position: relative; display: inline-flex; align-items: center; gap: 12px; min-height: 44px; cursor: pointer; }
+.pmehr__zeile::before { content: ""; flex: none; width: 18px; height: 18px; border: 1.5px solid rgba(242, 239, 232, 0.36); border-radius: 5px; transition: background-color 220ms var(--ease), border-color 220ms var(--ease); }
+.pmehr__zeile:has(input:checked)::before { border-color: var(--accent); background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230E0E0C' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5.5 12.5l4.5 4.5L18.5 7.5'/%3E%3C/svg%3E") center / 12px no-repeat; }
+.pmehr__zeile:has(input:focus-visible)::before { outline: 2px solid var(--accent); outline-offset: 3px; }
+.pmehr__text b { font-weight: 500; } .pmehr__preis { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pmehr__link { font-size: 14px; color: var(--muted); border-bottom: 1px solid var(--line); }
+.pmehr-box__klein { font-size: 12px; line-height: 16px; color: var(--muted); }
+/* ④ Einschätzung */
+.preise__summe { display: grid; gap: 16px; padding: 24px; border: 1px solid var(--line); border-radius: 24px; background: rgba(242, 239, 232, 0.03); scroll-margin-top: 80px; }
+@media (min-width: 1024px) { .preise__summe { position: sticky; top: 72px; } }
+.preise__summe-titel { font-family: var(--serif); font-size: 20px; line-height: 28px; display: flex; align-items: center; gap: 12px; }
+.pzeilen { margin: 0; display: grid; gap: 12px; }
+.pzeilen > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; }
+.pzeilen dt { font-size: 14px; line-height: 20px; color: var(--muted); }
+.pzeilen dd { margin: 0; font-size: 16px; line-height: 20px; font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; min-width: 9ch; }
+.pzeilen small { grid-column: 1 / -1; font-size: 12px; line-height: 16px; color: var(--muted); }
+.pjahr { padding-top: 16px; border-top: 1px solid var(--line); display: grid; gap: 4px; }
+.pjahr__titel { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.pjahr__zahl { font-family: var(--serif); font-size: clamp(2.4rem, 4vw, 3.2rem); line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pjahr small { font-size: 12px; line-height: 16px; color: var(--muted); }
 .preise__klein { font-size: 12px; line-height: 16px; color: var(--muted); text-wrap: pretty; }
-.preise__knopf { width: 100%; margin-top: 8px; }
-/* kompakte Leiste unten (Handy) */
-.preise-leiste { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 15; display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 10px 10px 10px 18px; border: 1px solid rgba(242, 239, 232, 0.16); border-radius: 999px; background: rgba(14, 14, 12, 0.88); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); opacity: 0; transform: translateY(16px); pointer-events: none; transition: opacity 300ms var(--ease), transform 300ms var(--ease); }
+.preise__knopf { width: 100%; }
+/* Begriffe erklärt */
+.pbegriffe { margin-top: 48px; border-top: 1px solid var(--line); }
+.pbegriffe > summary { display: flex; align-items: center; gap: 12px; min-height: 56px; cursor: pointer; list-style: none; color: var(--muted); font-size: 14px; }
+.pbegriffe > summary::-webkit-details-marker { display: none; }
+.pbegriffe > summary::after { content: ""; width: 8px; height: 8px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-2px) rotate(45deg); transition: transform 220ms var(--ease); }
+.pbegriffe[open] > summary::after { transform: translateY(2px) rotate(-135deg); }
+.pbegriffe dl { margin: 0 0 16px; display: grid; gap: 4px 32px; }
+@media (min-width: 760px) { .pbegriffe dl { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.pbeg { padding: 12px; border-radius: 12px; transition: background-color 400ms var(--ease); scroll-margin-top: 96px; }
+.pbeg dt { font-size: 14px; line-height: 20px; font-weight: 600; } .pbeg dd { margin: 2px 0 0; font-size: 14px; line-height: 20px; color: var(--muted); }
+.pbeg.ist-markiert { background: rgba(242, 239, 232, 0.07); }
+.pbeg:focus { outline: none; }
+/* Handy-Leiste unten: antippen → aufklappen */
+.preise-leiste { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 15; display: grid; gap: 0; padding: 8px 8px 8px 18px; border: 1px solid rgba(242, 239, 232, 0.16); border-radius: 28px;
+  background: rgba(14, 14, 12, 0.92); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  opacity: 0; transform: translateY(16px); pointer-events: none; transition: opacity 300ms var(--ease), transform 300ms var(--ease); }
 .preise-leiste.ist-an { opacity: 1; transform: none; pointer-events: auto; }
-.preise-leiste__zahlen { display: grid; gap: 0; min-width: 0; }
-.preise-leiste__zahlen small { font-size: 12px; line-height: 16px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.preise-leiste__zahlen b { font-family: var(--serif); font-weight: 400; font-size: 20px; line-height: 28px; font-variant-numeric: tabular-nums; }
+.preise-leiste__kopf { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.preise-leiste__klappen { flex: 1; display: grid; justify-items: start; gap: 0; min-height: 48px; padding: 0; border: 0; background: none; color: var(--text); text-align: left; cursor: pointer; font: inherit; }
+.preise-leiste__klappen small { font-size: 12px; line-height: 16px; color: var(--muted); }
+.preise-leiste__klappen b { font-family: var(--serif); font-weight: 400; font-size: 20px; line-height: 28px; font-variant-numeric: tabular-nums; }
+.preise-leiste__klappen small span { display: inline-block; margin-left: 6px; transition: transform 220ms var(--ease); }
+.preise-leiste.ist-offen .preise-leiste__klappen small span { transform: rotate(180deg); }
 .preise-leiste .btn { min-height: 44px; padding: 10px 16px; font-size: 14px; }
+.preise-leiste__mehr { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms var(--ease); }
+.preise-leiste.ist-offen .preise-leiste__mehr { grid-template-rows: 1fr; }
+.preise-leiste__mehr > div { overflow: hidden; }
+.preise-leiste__mehr .pzeilen { padding: 12px 10px 8px 0; }
 @media (min-width: 1024px) { .preise-leiste { display: none; } }
-@media (prefers-reduced-motion: reduce) { .pk__innen, .pk__marke, .preise-leiste { transition: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .pst, .pst__knopf, .pbe__innen, .pschalter, .pschalter::after, .schritte a, .schritte__nr, .preise-leiste, .preise-leiste__mehr, .pbeg { transition: none; }
+  .pv-bewegt { animation: none; }
+}
+/* Übergang Preise → Kontakt: ruhig, gleicher Grund, nur eine feine Linie */
+.contact::before { content: ""; position: absolute; left: 50%; top: 0; width: min(100% - 2 * var(--pad), 1180px); height: 1px; transform: translateX(-50%); background: linear-gradient(90deg, transparent, var(--line) 20%, var(--line) 80%, transparent); }
 </style>
 </head>
 <body>
@@ -655,51 +766,86 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 </div>
 
 <main id="inhalt" tabindex="-1">
-  <!-- PREISE (Auftrag 7, 28.09.2026): Stufe · Extras · Betreuung · Für mehr · Rechner. Inhalt baut js/preise.js aus PREISE – Zahlen nur dort ändern. -->
+  <!-- PREISE (Auftrag 9 Gesamtfassung, 28.09.2026): ① Website · ② Extras · ③ Betreuung · ④ Ihre Einschätzung. Inhalt baut js/preise.js
+       aus PREISE + BEGRIFFE – Zahlen und Texte nur dort ändern. Nichts wird gespeichert oder gesendet. -->
   <section class="preise" id="preise" aria-labelledby="preise-titel" data-preise>
+   <div class="preise__innen">
     <div class="preise__kopf">
       <p class="preise__marke reveal">Preise</p>
-      <h2 class="preise__titel reveal" id="preise-titel">Was es kostet, steht hier.</h2>
-      <p class="preise__intro reveal">Stufe wählen, Extras ergänzen: Einmalige und monatliche Kosten rechnen sich sofort mit, dazu die Summe im ersten Jahr.</p>
+      <h2 class="preise__titel reveal" id="preise-titel">Was es kostet – auf&nbsp;einen&nbsp;Blick</h2>
+      <p class="preise__intro reveal">Stufe wählen, bei Bedarf ergänzen – die Summe rechnet sich sofort mit. Am Ende steht eine unverbindliche Anfrage, kein Kauf.</p>
     </div>
+    <nav class="schritte reveal" aria-label="Schritte">
+      <ol>
+        <li><a href="#p-website" data-schritt="1"><span class="schritte__nr">1</span><span class="schritte__text">Website</span></a></li>
+        <li><a href="#p-extras" data-schritt="2"><span class="schritte__nr">2</span><span class="schritte__text">Extras</span></a></li>
+        <li><a href="#p-betreuung" data-schritt="3"><span class="schritte__nr">3</span><span class="schritte__text">Betreuung</span></a></li>
+        <li><a href="#p-einschaetzung" data-schritt="4"><span class="schritte__nr">4</span><span class="schritte__text"><span class="schritte__lang">Ihre </span>Einschätzung</span></a></li>
+      </ol>
+    </nav>
     <div class="preise__raster">
       <div class="preise__wahl">
-        <fieldset class="preise__gruppe reveal">
-          <legend><span class="preise__nr" aria-hidden="true">1</span>Website</legend>
-          <div class="pk-reihe pk-reihe--stufen" data-stufen></div>
-          <p class="preise__hinweis" data-ueberall></p>
+        <fieldset class="preise__gruppe reveal" id="p-website" data-schritt-ziel="1">
+          <legend class="preise__schritt"><span class="preise__nr" aria-hidden="true">1</span>Website</legend>
+          <p class="preise__satz">Eine Stufe wählen – die Preise sind Startwerte, der Umfang wird im Erstgespräch genau festgelegt.</p>
+          <div class="pstufen" data-stufen></div>
         </fieldset>
-        <fieldset class="preise__gruppe reveal">
-          <legend><span class="preise__nr" aria-hidden="true">2</span>Extras <small>mehrere möglich</small></legend>
-          <div class="pk-reihe pk-reihe--module" data-module></div>
-        </fieldset>
-        <fieldset class="preise__gruppe reveal">
-          <legend><span class="preise__nr" aria-hidden="true">3</span>Betreuung <small>monatlich</small></legend>
-          <div class="pk-reihe" data-betreuung></div>
-          <p class="preise__hinweis" data-betreuung-ohne hidden></p>
-        </fieldset>
-        <fieldset class="preise__gruppe reveal">
-          <legend><span class="preise__nr" aria-hidden="true">4</span>Für mehr <small>optional</small></legend>
-          <div class="pk-reihe pk-reihe--mehr" data-mehr></div>
+        <section class="preise__gruppe reveal" id="p-extras" data-schritt-ziel="2" aria-labelledby="p-extras-titel">
+          <h3 class="preise__schritt" id="p-extras-titel"><span class="preise__nr" aria-hidden="true">2</span>Extras</h3>
+          <p class="preise__satz">Nur wenn Sie mehr brauchen. Im Rechner zählt der „ab“-Wert.</p>
+          <details class="pextras" data-extras>
+            <summary>Extras hinzufügen <span class="pextras__zahl" data-extras-zahl>0 gewählt</span></summary>
+            <div class="pextras__innen" data-extras-gruppen></div>
+          </details>
+        </section>
+        <fieldset class="preise__gruppe reveal" id="p-betreuung" data-schritt-ziel="3">
+          <legend class="preise__schritt"><span class="preise__nr" aria-hidden="true">3</span>Betreuung</legend>
+          <p class="preise__satz" data-betreuung-satz></p>
+          <div class="pbetreuung" data-betreuung></div>
+          <label class="pselbst"><span data-selbst-text></span><input type="checkbox" role="switch" data-selbst><span class="pschalter"></span></label>
+          <div class="pmehr-box">
+            <p class="pmehr-box__titel">Für mehr</p>
+            <ul class="pmehr-liste" data-mehr role="list"></ul>
+            <p class="pmehr-box__klein" data-mehr-hinweis></p>
+          </div>
         </fieldset>
       </div>
-      <aside class="preise__summe reveal" data-preise-summe aria-labelledby="preise-summe-titel">
-        <p class="hinweis-versteckt" id="preise-summe-titel">Ihre Summe</p>
-        <dl class="preise__zeilen">
-          <div><dt>Einmalig</dt><dd data-summe="einmalig">0&nbsp;€</dd></div>
-          <div><dt>Monatlich</dt><dd data-summe="monatlich">0&nbsp;€/Monat</dd></div>
+      <aside class="preise__summe reveal" id="p-einschaetzung" data-schritt-ziel="4" data-preise-summe aria-labelledby="preise-summe-titel">
+        <h3 class="preise__summe-titel" id="preise-summe-titel"><span class="preise__nr" aria-hidden="true">4</span>Ihre Einschätzung</h3>
+        <dl class="pzeilen">
+          <div><dt>Einmalige Entwicklung</dt><dd data-summe="einmalig">0&nbsp;€</dd></div>
+          <div><dt>Laufend an ERGUN.</dt><dd data-summe="monatlich">0&nbsp;€&nbsp;/ Monat</dd></div>
+          <div><dt>Externe Anbieter</dt><dd data-extern>0&nbsp;€</dd><small data-extern-klein>Hosting, Domain und SSL sind im Monatspreis enthalten.</small></div>
         </dl>
-        <p class="preise__jahr-titel">Summe im ersten Jahr</p>
-        <p class="preise__jahr" data-summe="jahr">0&nbsp;€</p>
+        <div class="pjahr">
+          <p class="pjahr__titel">Gesamt im ersten Jahr</p>
+          <p class="pjahr__zahl" data-summe="jahr">0&nbsp;€</p>
+          <small>Einmalige Entwicklung plus zwölf Monate Betreuung.</small>
+        </div>
         <p class="preise__klein" data-klein-preis></p>
         <button class="btn btn--wa preise__knopf" type="button" data-preise-anfrage>Anfrage mit dieser Auswahl <span aria-hidden="true">→</span></button>
         <p class="hinweis-versteckt" aria-live="polite" data-preise-live></p>
       </aside>
     </div>
+    <details class="pbegriffe" id="p-begriffe" data-begriffe-box>
+      <summary>Begriffe erklärt</summary>
+      <dl data-begriffe></dl>
+    </details>
     <div class="preise-leiste" data-preise-leiste aria-hidden="true" inert>
-      <span class="preise-leiste__zahlen"><small>Erstes Jahr</small><b data-summe="jahr">0&nbsp;€</b></span>
-      <button class="btn btn--wa" type="button" data-preise-anfrage>Anfrage <span aria-hidden="true">→</span></button>
+      <div class="preise-leiste__kopf">
+        <button class="preise-leiste__klappen" type="button" aria-expanded="false" aria-controls="preise-leiste-mehr" data-leiste-klappen><small>Gesamt im ersten Jahr<span aria-hidden="true">⌃</span></small><b data-summe="jahr">0&nbsp;€</b></button>
+        <button class="btn btn--wa" type="button" data-preise-anfrage>Anfrage <span aria-hidden="true">→</span></button>
+      </div>
+      <div class="preise-leiste__mehr" id="preise-leiste-mehr"><div>
+        <dl class="pzeilen">
+          <div><dt>Einmalige Entwicklung</dt><dd data-summe="einmalig">0&nbsp;€</dd></div>
+          <div><dt>Laufend an ERGUN.</dt><dd data-summe="monatlich">0&nbsp;€&nbsp;/ Monat</dd></div>
+          <div><dt>Externe Anbieter</dt><dd data-extern>0&nbsp;€</dd><small data-extern-klein></small></div>
+        </dl>
+        <p class="preise__klein" data-klein-preis></p>
+      </div></div>
     </div>
+   </div>
   </section>
 
   <section class="contact" id="kontakt" aria-labelledby="kontakt-titel">
@@ -810,7 +956,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 </footer>
 <div class="wechsel" aria-hidden="true"></div>
 
-<script src="js/szene.js?v=53"></script>
+<script src="js/szene.js?v=54"></script>
 <script src="js/wolken.js?v=6" defer></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
@@ -832,7 +978,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
-<script src="js/preise.js?v=1"></script>
+<script src="js/preise.js?v=2"></script>
 <script>
 /* Kostenloses Erstgespräch: eine Karte mit allen Feldern (seit 25.09. abends keine Schritte mehr).
    Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)
@@ -842,10 +988,10 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   /* ===== KARTEN im Formular (Auftrag 6/7): Titel hier, PREISE in js/preise.js (eine Stelle für Karten und Preis-Bereich).
      preis = einmalig, monat = monatlich. Die Preise stehen auf den Karten und in der Nachricht.
      Anordnung: CSS .thema – Handy Liste, ab Tablet drei nebeneinander (immer volle Reihen) ===== */
-  /* Auftrag 7: Zahlen kommen aus PREISE (js/preise.js) – Website „ab“ günstigster Stufe + Betreuung, dazu Automatisierung und endo */
+  /* Auftrag 7/9: Zahlen kommen aus PREISE (js/preise.js) – Website „ab“ günstigster Stufe + „ab“ Betreuung Basis, dazu Automatisierung und endo */
   var P = window.PREISE, ab = function (n) { return 'ab ' + P.euro(n).replace('\u00a0', ' '); }, mon = function (n) { return P.euro(n).replace('\u00a0', ' ') + '/Monat'; };
   var THEMEN = [
-    { wert: 'Website', titel: 'Website', preis: ab(Math.min.apply(null, P.stufen.map(function (x) { return x.preis; }))), monat: mon(P.betreuung.monat) }
+    { wert: 'Website', titel: 'Website', preis: ab(Math.min.apply(null, P.stufen.map(function (x) { return x.preis; }))), monat: 'ab ' + mon(P.betreuung.stufen[0].monat) }
   ].concat(P.mehr.map(function (m) { return { wert: m.karte, titel: m.karte, preis: ab(m.preis), monat: mon(m.monat) }; }));
   function preisVon(wert) { var t = THEMEN.filter(function (x) { return x.wert === wert; })[0]; return t ? t.preis + ' + ' + t.monat : ''; }
   var WHATSAPP_AN = true;              /* false = WhatsApp als Antwort-Weg ausblenden (falls keine geschäftliche Nummer) */
