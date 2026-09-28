@@ -3,6 +3,7 @@ tags: [recht, todo]
 ---
 # Recht & Pflichten (To-do-Liste, Stand 27.09.2026)
 
+> **Entwürfe (28.09.):** [[Rechtstexte endo Studio (Entwurf)]] (Nutzungsbedingungen, Widerruf, Kauf-Kästchen, Datenschutz Lemon Squeezy) · [[Rechtstexte ERGUN Webdesign (Entwurf)]] (AGB, Widerruf, Angebots-Bausteine, AV-Vertrag). Vor dem Verwenden prüfen lassen.
 > Keine Rechtsberatung – eine Merkliste, was Emre vor dem Livegang und vor den ersten Kunden klären sollte. Am besten einmal mit Steuerberater/IHK bzw. einem Anwalt durchgehen.
 
 - [ ] **Gewerbe:** Gewerbeanmeldung (Webdesign + Online-Dienst endo Studio), Finanzamt-Fragebogen, Steuernummer auf Rechnungen.

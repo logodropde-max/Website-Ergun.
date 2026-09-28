@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>ERGUN. – Webdesign & Automatisierung · Emre Ergun</title>
-<meta name="description" content="ERGUN. ist das Studio für Webdesign & Automatisierung von Emre Ergun aus Elmshorn: Websites mit Design und Bewegung und Automatisierungen, die Ihnen Arbeit abnehmen – persönlich, aus einer Hand. Kostenloses Erstgespräch.">
+<title>ERGUN. – Websites, Automatisierung & KI · Emre Ergun</title>
+<meta name="description" content="ERGUN. von Emre Ergun aus Elmshorn: Websites mit Design und Bewegung, Automatisierungen, die Ihnen Arbeit abnehmen, und eigene KI-Lösungen für Ihr Unternehmen – persönlich und aus einer Hand. Kostenloses Erstgespräch.">
 <meta name="theme-color" content="#0E0E0C">
 <meta name="robots" content="noindex, nofollow"><!-- solange die Seite privat ist; beim Livegang entfernen -->
 
 <!-- Teilen in Social Media / Messengern -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="ERGUN. – Webdesign & Automatisierung">
-<meta property="og:description" content="Websites und Automatisierungen – persönlich von Emre Ergun. Kostenloses Erstgespräch, aus Elmshorn.">
-<meta property="og:image" content="https://website-ergun.vercel.app/bilder/og.jpg?v=2">
+<meta property="og:title" content="ERGUN. – Websites, Automatisierung & KI">
+<meta property="og:description" content="Websites, Automatisierungen und eigene KI-Lösungen für Unternehmen – persönlich von Emre Ergun aus Elmshorn. Kostenloses Erstgespräch.">
+<meta property="og:image" content="https://website-ergun.vercel.app/bilder/og.jpg?v=3">
 <meta property="og:url" content="https://website-ergun.vercel.app/">
 <link rel="canonical" href="https://website-ergun.vercel.app/">
 <meta property="og:image:width" content="1200">
@@ -28,8 +28,9 @@
 <link rel="preload" href="schriften/Satoshi-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="schriften/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <!-- Bildfolgen von Emre und dem Hund früh, aber mit niedriger Priorität holen: das Winken (erstes Runterwischen) wartet sonst auf sie -->
-<link rel="preload" href="bilder/hero/figuren/emre-folge.webp?v=11" as="image" fetchpriority="low">
-<link rel="preload" href="bilder/hero/figuren/hund-folge.webp?v=11" as="image" fetchpriority="low">
+<link rel="preload" href="bilder/hero/figuren/emre-folge.webp?v=13" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
+<link rel="preload" href="bilder/hero/figuren/emre-grund.webp?v=13" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
+<link rel="preload" href="bilder/hero/figuren/hund-folge.webp?v=13" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
 <script>document.documentElement.classList.add('js');</script>
 
 <style>
@@ -212,9 +213,6 @@ img { display: block; max-width: 100%; height: auto; }
 .titel__studio { display: flex; align-items: center; gap: 14px; font-size: clamp(11px, 1vw, 14px); font-weight: 500; letter-spacing: 0.26em; text-transform: uppercase; text-shadow: 0 1px 2px rgba(10, 16, 32, 0.45), 0 0 18px rgba(10, 16, 32, 0.35); }
 .titel__studio::before, .titel__studio::after { content: ""; width: clamp(18px, 2.4vw, 32px); height: 1px; background: rgba(255, 249, 240, 0.6); }
 .titel__haupt { font-family: var(--serif); font-weight: 500; font-size: clamp(3.3rem, 10.5vw, 9.2rem); line-height: 0.92; letter-spacing: -0.035em; text-wrap: balance; text-shadow: 0 2px 6px rgba(10, 16, 32, 0.28), 0 0 42px rgba(10, 16, 32, 0.3); }
-/* Titel-Variante B (?titel=b, 28.09. zum Vergleich): groß „Webdesign & Automatisierung“ in zwei Zeilen, gleiche Schrift */
-.titel--b .titel__haupt { font-size: clamp(2.7rem, 7.4vw, 6.6rem); line-height: 0.98; }
-.titel--b .titel__zeile { display: block; }
 @media (max-width: 700px) { .titel__studio { font-size: 11px; letter-spacing: 0.12em; } .titel__studio::before, .titel__studio::after { display: none; } }
 
 /* Gras im Wind: zwei Gruppen, eigener Takt, nur Neigung (transform) */
@@ -458,21 +456,35 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   .anfrage .weg { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) { .anfrage__pfeil { transition: none; } }
-/* ---------- Kontakt übersichtlich (Emre, 27.09. spät): 4 Auswahl-Karten, Pflichtfelder, Antwort-Weg mit passendem Feld ---------- */
+/* ---------- Kontakt übersichtlich (Emre, 27.09. spät): Auswahl-Karten, Pflichtfelder, Antwort-Weg mit passendem Feld ---------- */
 .pflicht { color: var(--accent); font-weight: 500; margin-left: 2px; }
-.thema { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+/* 28.09. (Emre, feste Regel): Kartenreihen immer voll und gleichmäßig – nie 3 + 1, 2 + 1 o. Ä. Vier Karten: alle nebeneinander, wenn jede
+   mindestens 150 px hat (Container-Abfrage auf das Formular), sonst 2 × 2, nur sehr schmal eine Liste – alle gleich breit und gleich hoch. */
+.anfrage { container-type: inline-size; container-name: anfrage; }
+.thema { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
 .thema__karte { position: relative; display: flex; min-width: 0; }
 .thema__karte input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
-/* 27.09. (Emre): nur noch die Überschrift – kompakt, gleich hoch, 2×2 auch am Handy, Text zentriert (darf umbrechen) */
 .thema { grid-auto-rows: 1fr; }
-.thema__innen { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 64px; padding: 12px 14px; text-align: center; border: 1px solid rgba(242, 239, 232, 0.14); border-radius: 14px; background: rgba(14, 14, 12, 0.45);
+.thema__innen { flex: 1; display: flex; align-items: center; justify-content: flex-start; gap: 12px; min-height: 52px; padding: 12px 16px; text-align: left; border: 1px solid rgba(242, 239, 232, 0.14); border-radius: 14px; background: rgba(14, 14, 12, 0.45);
   transition: border-color 220ms var(--ease), background-color 220ms var(--ease), transform 160ms var(--ease-out); }
 .thema__innen b { font-weight: 500; font-size: 15px; line-height: 1.3; color: var(--text); text-wrap: balance; }
 .thema__karte input:checked + .thema__innen { border-color: var(--accent); background: rgba(255, 90, 31, 0.1); }
 .thema__karte input:focus-visible + .thema__innen { outline: 2px solid var(--accent); outline-offset: 3px; }
 .thema__karte:active .thema__innen { transform: scale(0.97); }
 @media (hover: hover) and (pointer: fine) { .thema__karte:hover .thema__innen { border-color: rgba(242, 239, 232, 0.32); } .thema__karte input:checked + .thema__innen { border-color: var(--accent); } }
-@media (max-width: 460px) { .thema { gap: 8px; } .thema__innen { min-height: 60px; padding: 10px; } .thema__innen b { font-size: 14px; } }
+/* Liste: kleiner Auswahlkreis links (zeigt die Wahl auch ohne Farbe) */
+.thema__innen::before { content: ""; flex: none; width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid rgba(242, 239, 232, 0.36); transition: border-color 220ms var(--ease), background-color 220ms var(--ease); }
+.thema__karte input:checked + .thema__innen::before { border-color: var(--accent); background: radial-gradient(circle, var(--accent) 0 38%, transparent 42%); }
+@container anfrage (min-width: 280px) {
+  .thema { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .thema__innen { justify-content: center; text-align: center; min-height: 60px; padding: 10px; }
+  .thema__innen::before { display: none; }
+}
+@container anfrage (min-width: 630px) {
+  .thema { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  .thema__innen { min-height: 64px; padding: 12px 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .thema__innen::before { transition: none; } }
 .anfrage__gruppe .field__error { display: block; margin-top: 8px; }
 .anfrage .anfrage__gruppe.hat-fehler .thema__innen, .anfrage .anfrage__gruppe.hat-fehler .weg__option span { border-color: rgba(255, 138, 92, 0.7); }
 .anfrage .field__error { color: #FF8A5C; font-size: 13.5px; }
@@ -540,10 +552,9 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
     <div class="szene__ebene" data-ebene="mitte" aria-hidden="true"></div>
     <div class="szene__ebene szene__titel" data-ebene="titel">
       <div class="titel">
-        <p class="titel__studio" data-titel-klein>Webdesign &amp; Automatisierung</p>
+        <p class="titel__studio" data-titel-klein>Websites, Automatisierung &amp; KI</p>
         <h1 class="titel__haupt" data-titel-gross><span class="hinweis-versteckt">ERGUN. </span>Webdesigner</h1>
       </div>
-      <script>/* ?titel=b: Variante B zum Vergleich (Emre wählt) */ if (/[?&]titel=b(?![a-z])/.test(location.search)) { var tk = document.querySelector('[data-titel-klein]'), tg = document.querySelector('[data-titel-gross]'); tk.textContent = 'Emre Ergun · Elmshorn'; tg.innerHTML = '<span class="hinweis-versteckt">ERGUN. </span><span class="titel__zeile">Webdesign &amp;</span> <span class="titel__zeile">Automatisierung</span>'; tg.closest('.titel').classList.add('titel--b'); }</script>
     </div>
     <div class="szene__ebene" data-ebene="huegel" aria-hidden="true"></div>
     <div class="szene__ebene" data-ebene="wald" aria-hidden="true"></div>
@@ -564,7 +575,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
         <figcaption><strong>Emre Ergun</strong> · <span class="online">online</span></figcaption>
       </figure>
       <h2 class="contact__big reveal" id="kontakt-titel">Kostenloses Erstgespräch</h2>
-      <p class="contact__intro reveal">Websites und Automatisierungen – persönlich von mir. Antwort innerhalb von 24&nbsp;Stunden.</p>
+      <p class="contact__intro reveal">Websites, Automatisierungen und KI für Ihr Unternehmen – persönlich von mir. Antwort innerhalb von 24&nbsp;Stunden.</p>
     </div>
 
     <!-- Eine Karte, alles auf einen Blick (Emre, 25.09. abends: keine Schritte) -->
@@ -584,7 +595,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 
       <div class="field">
         <label for="f-text">Nachricht <small>(optional, kurz)</small></label>
-        <textarea id="f-text" name="text" rows="3" placeholder="Was machen Sie, und was soll die Website können? Ein, zwei Sätze genügen."></textarea>
+        <textarea id="f-text" name="text" rows="3" placeholder="Was machen Sie, und wobei soll ich helfen? Ein, zwei Sätze genügen."></textarea>
       </div>
 
       <div class="field field--datei">
@@ -649,13 +660,13 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
     </div>
     <div class="agentur reveal">
       <p class="agentur__marke">ERGUN<span class="dot">.</span></p>
-      <p class="agentur__text">ERGUN. ist das Webdesign-Studio von Emre Ergun: Websites mit Design und Bewegung, Assistenten und Automatisierung – Entwurf und Umsetzung aus einer Hand.</p>
+      <p class="agentur__text">ERGUN. ist das Studio von Emre Ergun für die Digitalisierung von Unternehmen: Websites mit Design und Bewegung, Automatisierungen, die Arbeit abnehmen, und eigene KI-Lösungen – Entwurf und Umsetzung aus einer Hand.</p>
     </div>
   </section>
 </main>
 
 <footer class="footer">
-  <span>ERGUN. · Emre Ergun · Webdesign &amp; Automatisierung · © <span data-jahr>2026</span></span>
+  <span>ERGUN. · Emre Ergun · Websites, Automatisierung &amp; KI · © <span data-jahr>2026</span></span>
   <nav aria-label="Rechtliches">
     <a href="impressum.html">Impressum</a>
     <a href="datenschutz.html">Datenschutz</a>
@@ -664,7 +675,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 </footer>
 <div class="wechsel" aria-hidden="true"></div>
 
-<script src="js/szene.js?v=47"></script>
+<script src="js/szene.js?v=49"></script>
 <script src="js/wolken.js?v=6" defer></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
@@ -692,12 +703,13 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
    und landen als Link in der Nachricht; klappt das nicht, hängt man sie selbst an.
    Ohne JavaScript bleibt das Formular sichtbar und tut nichts Falsches. */
 (function () {
-  /* ===== Einstellungen (Emre, 27.09.): Texte der vier Auswahl-Karten hier ändern (seit 27.09. spät nur noch der Titel) ===== */
+  /* ===== Einstellungen: Texte der Auswahl-Karten hier ändern (nur der Titel). 28.09. (Emre): vier Karten – Automatisierung und KI getrennt,
+     „Betreuung & Änderungen“ raus. Anordnung: immer volle, gleichmäßige Reihen (CSS .thema: 4 nebeneinander, sonst 2 × 2, sehr schmal Liste) ===== */
   var THEMEN = [
     { wert: 'Neue Website', titel: 'Neue Website' },
     { wert: 'Website-Redesign', titel: 'Website-Redesign' },
-    { wert: 'Assistent & Automatisierung', titel: 'Assistent & Automatisierung' },
-    { wert: 'Betreuung & Änderungen', titel: 'Betreuung & Änderungen' }
+    { wert: 'Automatisierung', titel: 'Automatisierung' },
+    { wert: 'KI für Ihr Unternehmen', titel: 'KI für Ihr Unternehmen' }
   ];
   var WHATSAPP_AN = true;              /* false = WhatsApp als Antwort-Weg ausblenden (falls keine geschäftliche Nummer) */
   var WA_NUMMER = '4915906344961';     /* Nummer aus dem Impressum */
@@ -712,7 +724,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   function gewaehlt(name) { var el = form.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ''; }
   function weg() { return WHATSAPP_AN ? gewaehlt('weg') : 'mail'; }
 
-  /* ---- Vier Auswahl-Karten aus THEMEN ---- */
+  /* ---- Auswahl-Karten aus THEMEN ---- */
   var themenBox = form.querySelector('[data-themen]');
   THEMEN.forEach(function (t) {
     var l = document.createElement('label'); l.className = 'thema__karte';
@@ -743,8 +755,8 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   var TIPPS = {
     'Neue Website': { text: 'Mit endo können Sie vorab neue Produktfotos und Bilder für Ihre Seite erstellen.', link: ENDO_LINK },
     'Website-Redesign': { text: 'Mit endo können Sie vorab neue Produktfotos und Bilder für Ihre Seite erstellen.', link: ENDO_LINK },
-    'Assistent & Automatisierung': { text: 'Ich richte Ihnen E-Mail- und WhatsApp-Automatisierung direkt mit ein.' },
-    'Betreuung & Änderungen': { text: 'Betreuung ab 200 €/Monat – Änderungen, neue Wünsche und alle Premium-Vorlagen inklusive.' }
+    'Automatisierung': { text: 'Ich automatisiere z. B. Anfragen, E-Mails und WhatsApp-Nachrichten, damit Sie weniger von Hand erledigen müssen.' },
+    'KI für Ihr Unternehmen': { text: 'Beschreiben Sie kurz Ihre Branche und welche Aufgabe eine KI übernehmen soll – ich schaue, was sinnvoll ist.' }
   };
   var tipp = form.querySelector('[data-endo-tipp]'), tippText = tipp.querySelector('[data-tipp-text]'), tippT, tippAktuell = '';
   function tippFuellen(t) {

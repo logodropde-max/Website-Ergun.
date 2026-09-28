@@ -3,7 +3,7 @@ tags: [endo, ergun, regeln]
 ---
 # Kunden-Brücke ERGUN. ↔ endo (Emre, 27.09.2026)
 
-> Teil von [[Projekt 2 – Feinschliff + endo Agents]]. Grundsatz: **endo macht INHALTE** (Produktfotos, Werbevideos, Social-/Werbe-/Website-Bilder). **endo baut NIEMALS Websites.** Websites, Assistenten, Automatisierung und Betreuung macht nur Emre (ERGUN.).
+> Teil von [[Projekt 2 – Feinschliff + endo Agents]]. Grundsatz: **endo macht INHALTE** (Produktfotos, Werbevideos, Social-/Werbe-/Website-Bilder). **endo baut NIEMALS Websites.** Websites, Automatisierungen und KI-Systeme macht nur Emre (ERGUN. – Websites, Automatisierung & KI).
 
 ## Regeln (umgesetzt)
 - **endo-Landingpage** (`endo-ergun.vercel.app`): Hero-Satz „endo macht die Inhalte; Ihre Website baut Emre persönlich.“ Abschnitt neben der Warteliste: „Ihre Bilder verdienen eine eigene Website – Emre baut sie persönlich.“ mit Knopf zum ERGUN.-Kontakt (`https://website-ergun.vercel.app/#kontakt`).

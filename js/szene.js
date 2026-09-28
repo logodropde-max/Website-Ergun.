@@ -523,11 +523,11 @@
      je Figur ein Tag- und ein Abendbild und für die Nacht die Bildfolge – der Hund hebt den Kopf und jault, Emre winkt
      („Tschüss“). Beides startet gemeinsam, sobald es Nacht ist und man weiterscrollt, und läuft dann in eigener Zeit ab
      (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
-  /* 28.09.: Emre mit 96 Einzelbildern (aus 0,3–4,3 s des Kling-Videos, fast jedes Videobild) statt 64 – flüssig ohne Überblendung; Werte aus figuren/emre.json */
-  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 245, h: 600, anzahl: 64, spalten: 8, fuss: 0.9964, oben: 0.0531, mitte: 0.5794, breite: 0.7595 } };
+  /* 28.09. später (Emre: „flüssig und sauber“): winken_fluss.py – winken2-v1 0,75–4,45 s, BiRefNet, feste Figur + Armzone, echte Zwischenbilder (48/s), ohne Überblendung; Werte aus figuren/emre.json */
+  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 248, h: 600, anzahl: 177, spalten: 12, fuss: 0.9965, oben: 0.0622, mitte: 0.6131, breite: 0.7397, einzeln: true, ausschnitt: [0, 0, 149, 479] } };   /* 28.09. später: winken_fluss.py – Grundbild + Armzone, 48 Bilder/s (Werte aus figuren/emre.json) */
   /* Tempo (27.09. spät, Emre): Emre und Hund laufen NUR nach Zeit, jeder in seinem festen Tempo, unabhängig vom Scrollen.
      Emre winkt einmal (FIG_DAUER), der Hund hebt den Kopf in HUND_HOCH und senkt ihn in HUND_RUNTER. */
-  var FIG_DAUER = 4.4, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0, FIG_VERSION = 11;   /* 27.09. (Emre): zurück zum Winken von vorher (64 Bilder, 4,4 s) – v9 passte nicht */
+  var FIG_DAUER = 3.7, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0, FIG_VERSION = 13;   /* 28.09. später (Emre: „flüssig und sauber“): winken_fluss.py – 0,75–4,45 s aus winken2-v1, 48 Bilder/s mit echten Zwischenbildern, echte Geschwindigkeit (3,7 s) */
   /* Lage von Sonne und Mond (für Wolken, js/wolken.js) und wie stark das Gestirn gerade verdeckt ist (0–1, in Zehnteln) */
   var gest = { sy: 0, my: 0, sonneAn: 1, mondAn: 0 }, verdecktQ = 0, gestTest = null;
   var fig = { phase: 0, ziel: 0, laeuft: false }, hund = { phase: 0, ziel: 0, laeuft: false }, animT = 0, animLaeuft = false;
@@ -561,6 +561,8 @@
     b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=' + FIG_VERSION;
   }
   Object.keys(FIGUREN).forEach(function (k) { FIGUREN[k].zuletzt = ''; figurLaden(k, false); });
+  /* Grundbild für Emre (Figur ohne Armzone, klein) gleich mit dem Standbild laden */
+  if (FIGUREN.emre.ausschnitt && !ruhig) { var gb = new Image(); gb.decoding = 'async'; gb.onload = function () { FIGUREN.emre.grundBild = gb; FIGUREN.emre.zuletzt = ''; figurenZeichnen(); }; gb.src = 'bilder/hero/figuren/emre-grund.webp?v=' + FIG_VERSION; }
   /* die Bildfolgen (groß) erst nach dem Laden der Seite */
   function folgenLaden() { if (!ruhig) Object.keys(FIGUREN).forEach(function (k) { figurLaden(k, true); }); }
   if (document.readyState === 'complete') setTimeout(folgenLaden, 200); else window.addEventListener('load', function () { setTimeout(folgenLaden, 200); });
@@ -594,6 +596,7 @@
     if (!f.folge) nr = 0;
     /* Winken von vorher (Emre, 27.09.: „die davor passt besser“): zwischen zwei Einzelbildern weich überblenden, in Achtelschritten. */
     nr = Math.max(0, Math.min(f.anzahl - 1, nr));
+    if (f.einzeln) nr = Math.round(nr);   /* Emre (28.09.): jedes Videobild einzeln, keine Überblendung */
     var n0 = Math.floor(nr), t = Math.round((nr - n0) * 8) / 8, n1 = Math.min(f.anzahl - 1, n0 + 1);
     if (t >= 1) { n0 = n1; t = 0; }
     var schluessel = n0 + '|' + t + '|' + lichtGold.toFixed(2) + '|' + lichtBlau.toFixed(2) + '|' + lichtNacht.toFixed(2) + '|' + verdecktQ;
@@ -604,7 +607,17 @@
     var ga = A.getContext('2d'), gb = B.getContext('2d'), gc = C.getContext('2d');
     /* 1. Bild */
     ga.globalCompositeOperation = 'source-over'; ga.globalAlpha = 1; ga.clearRect(0, 0, W, H);
-    if (f.folge) {
+    if (f.folge && f.ausschnitt) {
+      /* 28.09. später (winken_fluss.py): festes Grundbild (Kopf/Oberkörper still) + je Bild nur der Armzonen-Ausschnitt, additiv
+         ('lighter' addiert vormultipliert: Grund · (1 − w) + Bild · w = genau das Einzelbild, ohne Naht). Fehlt das Grundbild noch: Standbild. */
+      if (f.grundBild) {
+        var z = f.ausschnitt, sx = W / f.b, sy = H / f.h;
+        ga.drawImage(f.grundBild, 0, 0, W, H);
+        ga.globalCompositeOperation = 'lighter';
+        ga.drawImage(f.folge, (n0 % f.spalten) * z[2], Math.floor(n0 / f.spalten) * z[3], z[2], z[3], z[0] * sx, z[1] * sy, z[2] * sx, z[3] * sy);
+      } else ga.drawImage(f.bild, 0, 0, W, H);
+    }
+    else if (f.folge) {
       ga.globalAlpha = 1 - t; ga.drawImage(f.folge, (n0 % f.spalten) * f.b, Math.floor(n0 / f.spalten) * f.h, f.b, f.h, 0, 0, W, H);
       if (t > 0) { ga.globalCompositeOperation = 'lighter'; ga.globalAlpha = t; ga.drawImage(f.folge, (n1 % f.spalten) * f.b, Math.floor(n1 / f.spalten) * f.h, f.b, f.h, 0, 0, W, H); }
     }
@@ -626,21 +639,13 @@
     }
     var g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H); g.drawImage(A, 0, 0);
   }
-  /* Emre: sanft anheben, gleichmäßig winken, sanft senken – Tempo steigt am Anfang weich an, bleibt in der Mitte gleich
-     und läuft am Ende weich aus (Trapez statt S-Kurve, sonst wäre das Winken in der Mitte schneller). */
-  /* Emre: sanft anheben, gleichmäßig winken, sanft senken – Tempo steigt am Anfang weich an, bleibt in der Mitte gleich
-     und läuft am Ende weich aus (Trapez statt S-Kurve, sonst wäre das Winken in der Mitte schneller). */
-  var RAMPE = 0.16;
-  function winkKurve(p) {
-    var v = 1 / (1 - RAMPE);
-    if (p < RAMPE) return v * p * p / (2 * RAMPE);
-    if (p > 1 - RAMPE) return 1 - v * (1 - p) * (1 - p) / (2 * RAMPE);
-    return v * (RAMPE / 2 + p - RAMPE);
-  }
+  /* 28.09. (Emre: „smoother, nicht wie editiert“): Emre winkt jetzt mit JEDEM Videobild (24 pro Sekunde, winken_voll.py) und in
+     echter Geschwindigkeit – gleichmäßig durch die Zeit, ohne eigene Tempokurve (das Video bringt sein natürliches Anheben und
+     Senken selbst mit; eine zusätzliche Kurve hat die Mitte beschleunigt) und ohne Überblendung zweier Bilder (Geisterbild). */
   function figurenZeichnen() {
     var l = figurLicht(), E = FIGUREN.emre, H = FIGUREN.hund, h = hund.phase * hund.phase * (3 - 2 * hund.phase);
     figurZeichnen(H, h * (H.anzahl - 1), l);
-    figurZeichnen(E, winkKurve(fig.phase) * (E.anzahl - 1), l);
+    figurZeichnen(E, fig.phase * (E.anzahl - 1), l);
   }
   /* eine Bildschleife für beide, nur solange sich etwas bewegt; Delta-Zeit → gleich schnell auf 60 und 120 Hz */
   function animStart() { if (!animLaeuft) { animLaeuft = true; animT = performance.now(); requestAnimationFrame(animLauf); } }
@@ -971,7 +976,9 @@
     schnuppePlanen();
     window.__szene = { schnuppe: schnuppeStart, p: function (x) { window.scrollTo(0, x * m.H); }, bauzeit: function () { return bauzeit; },
       zustand: function () { return { phase: fig.phase, laeuft: fig.laeuft, hund: hund.phase, hundZiel: hund.ziel, hundLaeuft: hund.laeuft, gewunken: gewunken, wartet: winkenWartet, rohY: rohY, weichY: weichY, licht: lichtP }; },
-      winken: function () { fig.laeuft = false; winken(); }, hund: function (z) { hund.ziel = -1; hundZiel(z); } };
+      winken: function () { fig.laeuft = false; winken(); }, hund: function (z) { hund.ziel = -1; hundZiel(z); },
+      /* Prüfen (28.09.): Winken auf festen Stand 0–1 setzen und zeichnen (bildgenaue Aufnahmen) */
+      emre: function (x) { fig.laeuft = false; fig.phase = Math.max(0, Math.min(1, x)); FIGUREN.emre.zuletzt = ''; figurenZeichnen(); return Math.round(fig.phase * (FIGUREN.emre.anzahl - 1)); } };
     if (FIG_TEST) figurenTest();
   }
   /* ?figuren=test (27.09.): Knöpfe „Winken“, „Hund hoch“, „Hund runter“ + Anzeige der gestoppten Zeit; ?p= / ?nacht= gehen weiter */

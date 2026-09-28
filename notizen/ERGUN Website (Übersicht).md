@@ -3,12 +3,13 @@ tags: [website, uebersicht]
 ---
 # ERGUN Website (Übersicht)
 
-Zentrale Notiz für alles rund um die Website und endo.ai. Von hier gehen alle Verbindungen in der Graph-Ansicht aus.
+Zentrale Notiz für alles rund um die Website und endo. Von hier gehen alle Verbindungen in der Graph-Ansicht aus.
 
-**Live:** https://website-ergun.vercel.app · **endo.ai:** https://website-ergun.vercel.app/ki/
+**ERGUN. – Websites, Automatisierung & KI** (seit 28.09.2026): Digitalisierung für Unternehmen – Websites, Automatisierungen (n8n: E-Mail, Nachrichten, WhatsApp Business) und eigene KI-Systeme, siehe [[Marke]].
+**Live:** https://website-ergun.vercel.app · **endo Studio (eigene Seite):** https://endo-ergun.vercel.app
 
 ## Bereiche
-- [[Kontaktformular]]: WhatsApp oder E-Mail, EU-Länder, Anliegen
+- [[Kontaktformular]]: 4 Karten (Neue Website · Website-Redesign · Automatisierung · KI für Ihr Unternehmen), Antwort per WhatsApp oder E-Mail
 - [[Datei-Upload (Vercel Blob)]]: Fotos als Link in der Nachricht
 - [[endo Chat-Agent]]: Assistent, der antwortet und zum Produktfoto einlädt
 
