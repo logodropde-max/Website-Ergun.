@@ -2,6 +2,11 @@
 
 > Überblick für eine neue Sitzung: Vault-Notiz `08 Projekte/Neustart – hier weitermachen.md`. Hier stehen die technischen Details, neuester Abschnitt oben.
 
+## 29.09.2026 nachts – Auftrag 9b: Preis-Assistent (ein Schritt nach dem anderen) + Formular ohne Themen-Karten
+- **Assistent** (`js/preise.js`, Teil „Bereich auf der Seite“): Panels `[data-panel="1…4"]` in `[data-buehne]` (Höhe gleitet), Fortschritt `[data-schritt]`, `[data-weiter]`/`[data-zurueck]`, Zusammenfassung `.passi__kurz` (`[data-kurz]`, `[data-summe]`), Handy-Leiste `.preise-leiste`. Kein vorgewählter Schritt-Inhalt: Stufe muss gewählt werden, Betreuung erst danach vorgewählt. `PREISE.auswahlJetzt()` / Ereignis `preise:auswahl` für das Formular, `PREISE.zeigeSchritt(n)`.
+- **Formular:** `[data-ihre-auswahl]` (wird aus `preise:auswahl` gefüllt), `[data-endo-hilfe]` (Chips aus `PREISE.endoHilfe`, Name `endo`), Pflicht nur Name, Antwort-Weg, Telefon/E-Mail, Datenschutz. Nachricht: `P.anfrageText(e)` + „endo soll helfen bei: …“.
+- CSS-Block „Preis-Bereich als geführter Assistent (Auftrag 9b …)“ – Klassen `passi…`, `pst`, `pex`, `pbe`, `pmehr`, `peinsch`, `pkurz`, `auswahl`, `chip-wahl`.
+
 ## 29.09.2026 nachts – Auftrag 10: ERGUN. = Website, endo = Automatisierung & KI
 - `PREISE.mehr` = endo-Optionen (`faehigkeit` ab 1.000 €, `komplett` ab 4.000 €, je `monat` 200), `mehrTitel`, `mehrSatz`, `endoKarte` („Automatisierung & KI mit endo“ = EINE Formular-Karte, Preis der günstigsten Option), `endoStart`/`endoSeite` für „endo ansehen“.
 - Formular: `THEMEN` = Website + endo-Karte (`.thema` zwei Spalten), `TIPPS['Automatisierung & KI mit endo']`. Keine Karte/kein Tipp „Automatisierung“ mehr.

@@ -14,7 +14,8 @@ window.PREISE = {
     { id: 'start', name: 'Start', preis: 500, ab: false, fuer: 'Für Selbstständige, Handwerker und kleine Betriebe',
       punkte: [{ t: 'Website für Handy & PC' }, { t: 'Bis zu 3 Seiten' }, { t: 'Kontaktformular (WhatsApp & E-Mail)' }, { t: 'SEO-Grundlagen', b: ['seo'] },
         { t: 'DSGVO-Grundlagen', b: ['dsgvo'] }, { t: 'Hosting-Einrichtung & SSL', b: ['hosting', 'ssl'] }, { t: '3 eigene Bilder' }, { t: '1 Korrekturrunde', b: ['korrektur'] }] },
-    { id: 'business', name: 'Business', preis: 1000, ab: true, empfehlung: true, fuer: 'Für Unternehmen, die professionell auftreten wollen',
+    { id: 'business', name: 'Business', preis: 1000, ab: true, empfehlung: true,   /* Schild „Empfehlung“ – seit 9b keine Vorauswahl */
+      fuer: 'Für Unternehmen, die professionell auftreten wollen',
       punkte: [{ t: 'Bis zu 8 Seiten' }, { t: 'Individuelles Design' }, { t: 'Animationen & Parallax', b: ['parallax'] }, { t: 'Leistungsseiten & Referenzen' },
         { t: 'Anfrage-Formular' }, { t: '10 eigene Bilder + Video-Loop', b: ['loop'] }, { t: 'SEO-Grundlagen', b: ['seo'] }, { t: 'Schnelle Ladezeit', b: ['ladezeit'] }, { t: '2 Korrekturrunden', b: ['korrektur'] }] },
     { id: 'pro', name: 'Pro', preis: 1900, ab: true, fuer: 'Für Unternehmen mit höheren Ansprüchen',
@@ -71,6 +72,9 @@ window.PREISE = {
   /* EINE Karte im Kontaktformular für alles aus „mehr“ (Preis = günstigste Option) */
   endoKarte: 'Automatisierung & KI mit endo',
   mehrStufe: 'rundum',
+  /* Auftrag 9b: ruhige endo-Zeile in Schritt ② und ③ und die Auswahl „Wo soll endo helfen?“ im Kontaktformular */
+  endoHinweis: 'Automatisierung & KI? endo übernimmt Anfragen, Termine, Social Media und mehr.',
+  endoHilfe: ['Empfang (Anfragen per E-Mail & WhatsApp)', 'Termine', 'Social Media', 'Übersicht', 'Kontakte (CRM)', 'Bilder & Videos (Studio)'],
   /* „endo ansehen“: /unternehmen erst, wenn die Seite öffentlich ist (heute gesperrt) – sonst die endo-Startseite */
   endoSeiteOeffentlich: false,
   endoSeite: 'https://endo-ergun.vercel.app/unternehmen',
@@ -128,14 +132,19 @@ window.BEGRIFFE = {
     if (e.stufe) z.push('• Website: ' + e.stufe.name + ' (' + P.betrag(e.stufe) + ')');
     if (e.extras.length) z.push('• Extras: ' + e.extras.map(function (m) { return m.name + ' (' + P.betrag(m) + ')'; }).join(', '));
     if (e.anfrage.length) z.push('• Im Erstgespräch besprechen: ' + e.anfrage.map(function (x) { return x.name; }).join(', '));
-    if (e.mehr.length) z.push('• Automatisierung & KI mit endo: ' + e.mehr.map(function (m) { return m.name + ' (' + P.betrag(m) + ' + ' + P.euro(m.monat) + '/Monat)'; }).join(', '));
-    z.push('• Betreuung: ' + (e.betreuung ? e.betreuung.name + ' (' + P.euro(e.monatlich) + '/Monat' + (e.selbst ? ', Hosting & Domain stelle ich selbst' : '') + ')' : 'keine'));
+    if (e.mehr.length) z.push('• Automatisierung & KI mit endo: ' + e.mehr.map(function (m) { return m.name + ' (' + P.betrag(m) + ' + ' + P.euro(m.monat) + ' / Monat)'; }).join(', '));
+    z.push('• Betreuung: ' + (e.betreuung ? e.betreuung.name + ' (' + P.euro(e.monatlich) + ' / Monat' + (e.selbst ? ', Hosting & Domain stelle ich selbst' : '') + ')' : 'keine'));
     z.push('Einmalig ' + ab + P.euro(e.einmalig) + ' · monatlich ' + P.euro(e.monatlich) + ' · erstes Jahr ' + ab + P.euro(e.jahr) + ' (unverbindliche Einschätzung)');
     return z.join('\n').replace(/ /g, ' ');
   };
 })(window.PREISE);
 
-/* ---------- Bereich auf der Seite ---------- */
+/* ---------- Bereich auf der Seite: geführter Assistent (Auftrag 9b, ERGUN. 29.09.2026) ----------
+   Immer nur EIN Schritt sichtbar: ① Website → ② Extras → ③ Betreuung → ④ Ihre Einschätzung. Oben die Fortschrittsleiste
+   (erledigte Schritte mit Haken, anklickbar zum Zurückgehen), unten Zurück/Weiter; „Weiter“ erst nach der Wahl einer Stufe.
+   Die Höhe gleitet weich (Seite springt nicht), „Bewegung reduzieren“ = nur Einblenden. Die kompakte Zusammenfassung steht
+   am Desktop rechts, am Handy unten (antippen → aufklappen). Das Kontaktformular liest die Auswahl über PREISE.auswahlJetzt()
+   und das Ereignis „preise:auswahl“ (Box „Ihre Auswahl“). Nichts wird gespeichert. */
 (function () {
   if (typeof document === 'undefined') return;
   var P = window.PREISE, B = window.BEGRIFFE, box = document.querySelector('[data-preise]');
@@ -145,7 +154,7 @@ window.BEGRIFFE = {
   function q(s) { return box.querySelector(s); }
   function qa(s) { return [].slice.call(box.querySelectorAll(s)); }
   var HAKEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 12.5l4.5 4.5L18.5 7.5"/></svg>';
-  var nr = 0;
+  var MONAT = ' / Monat';
 
   /* ⓘ-Knopf: öffnet „Begriffe erklärt“ und hebt den Begriff hervor */
   function info(schluessel) {
@@ -167,11 +176,12 @@ window.BEGRIFFE = {
       '<rect x="78" y="22" width="16" height="30" rx="4" class="pv-rahmen"/><rect x="81" y="27" width="10" height="7" rx="1.5" class="pv-flaeche"/><rect x="81" y="37" width="10" height="2" rx="1" class="pv-linie"/><rect x="81" y="41" width="7" height="2" rx="1" class="pv-linie"/></svg>';
   }
 
-  /* ① Stufen: Karte = echtes Radio-Feld; die ganze Fläche wählt aus (Label über die Karte gespannt), ⓘ-Knöpfe liegen darüber */
+  /* ① Stufen: Karte = echtes Radio-Feld; die ganze Fläche wählt aus (Label über die Karte gespannt), ⓘ-Knöpfe liegen darüber.
+     Keine Vorauswahl – „Weiter“ gibt es erst nach der Wahl. */
   var stufenBox = q('[data-stufen]');
   P.stufen.forEach(function (s) {
     var id = 'pst-' + s.id, k = el('div', 'pst' + (s.empfehlung ? ' pst--empf' : ''));
-    var i = el('input', 'pst__feld'); i.type = 'radio'; i.name = 'stufe'; i.value = s.id; i.id = id; i.checked = !!s.empfehlung;
+    var i = el('input', 'pst__feld'); i.type = 'radio'; i.name = 'stufe'; i.value = s.id; i.id = id;
     k.appendChild(i);
     if (s.empfehlung) k.appendChild(el('span', 'pst__schild', 'Empfehlung'));
     var v = el('div', 'pst__vorschau'); v.innerHTML = vorschau(s.id); k.appendChild(v);
@@ -181,35 +191,36 @@ window.BEGRIFFE = {
     var ul = el('ul', 'pst__liste');
     s.punkte.forEach(function (p) { var li = el('li'); li.innerHTML = HAKEN; li.appendChild(el('span', '', p.t)); if (p.b) li.appendChild(info(p.b)); ul.appendChild(li); });
     k.appendChild(ul);
-    k.appendChild(el('span', 'pst__knopf', 'Auswählen'));
+    k.appendChild(el('span', 'pst__marke', 'Auswählen'));
     stufenBox.appendChild(k);
   });
 
-  /* ② Extras: Zeile = Titel · Satz · Preis · Schalter (Checkbox mit role="switch"); Gruppen auf dem Handy als Akkordeon */
-  var gruppenBox = q('[data-extras-gruppen]'), schmal = window.matchMedia && matchMedia('(max-width: 699px)').matches;
-  P.extras.forEach(function (g, gi) {
-    var d = el('details', 'pex-gruppe'); d.open = !schmal || gi === 0;
-    var sm = el('summary', 'pex-gruppe__kopf', g.gruppe); d.appendChild(sm);
+  /* ② Extras: Zeile = Titel + Preis · Satz · Schalter (Checkbox mit role="switch"), in Gruppen; dazu „Auf Anfrage“ */
+  var gruppenBox = q('[data-extras-gruppen]');
+  P.extras.forEach(function (g) {
+    var d = el('div', 'pex-gruppe'); d.appendChild(el('h4', 'pex-gruppe__titel', g.gruppe));
     var ul = el('ul', 'pex-liste'); ul.setAttribute('role', 'list');
     g.eintraege.forEach(function (m) {
       var li = el('li', 'pex'), l = el('label', 'pex__zeile');
       var i = el('input', 'pex__feld'); i.type = 'checkbox'; i.name = 'extra'; i.value = m.id; i.setAttribute('role', 'switch');
-      var t = el('span', 'pex__text'); t.appendChild(el('span', 'pex__name', m.name)); t.appendChild(el('span', 'pex__satz', m.satz));
-      l.appendChild(t); l.appendChild(el('span', 'pex__preis', '+ ' + P.betrag(m))); l.appendChild(i); l.appendChild(el('span', 'pschalter')); li.appendChild(l);
+      var t = el('span', 'pex__text'); var kopf = el('span', 'pex__kopf'); kopf.appendChild(el('span', 'pex__name', m.name)); kopf.appendChild(el('span', 'pex__preis', '+ ' + P.betrag(m)));
+      t.appendChild(kopf); t.appendChild(el('span', 'pex__satz', m.satz));
+      l.appendChild(t); l.appendChild(i); l.appendChild(el('span', 'pschalter')); li.appendChild(l);
       if (m.b) li.appendChild(info(m.b));
       ul.appendChild(li);
     });
     d.appendChild(ul); gruppenBox.appendChild(d);
   });
-  var anf = el('div', 'pex-anfrage'); anf.appendChild(el('p', 'pex-anfrage__titel', 'Auf Anfrage'));
+  var anf = el('div', 'pex-anfrage'); anf.appendChild(el('h4', 'pex-gruppe__titel', 'Auf Anfrage'));
   var anfL = el('ul', 'pex-anfrage__liste'); anfL.setAttribute('role', 'list');
   P.aufAnfrage.forEach(function (x) { var li = el('li'), l = el('label', 'pex-anfrage__punkt'); var i = el('input'); i.type = 'checkbox'; i.name = 'anfrage'; i.value = x.id; l.appendChild(i); l.appendChild(el('span', '', x.name)); li.appendChild(l); anfL.appendChild(li); });
   anf.appendChild(anfL);
-  var anfK = el('button', 'pex-anfrage__knopf', 'Im Erstgespräch besprechen'); anfK.type = 'button'; anfK.setAttribute('data-preise-anfrage', ''); anf.appendChild(anfK);
-  anf.appendChild(el('p', 'pex-anfrage__klein', 'Ohne Preis, nicht im Rechner – wir klären es gemeinsam.'));
+  anf.appendChild(el('p', 'pex-anfrage__klein', 'Ohne Preis, nicht im Rechner – wir klären es im Erstgespräch.'));
   gruppenBox.appendChild(anf);
+  qa('[data-endo-hinweis]').forEach(function (x) { x.firstChild.textContent = P.endoHinweis + ' '; });
+  qa('[data-endo-ansehen]').forEach(function (a) { a.href = P.endoSeiteOeffentlich ? P.endoSeite : P.endoStart; });
 
-  /* ③ Betreuung: drei Stufen (Radio), Schalter „Hosting & Domain selbst“, darunter „Für mehr“ */
+  /* ③ Betreuung: drei Stufen (Radio), Schalter „Hosting & Domain selbst“, darunter Automatisierung & KI → endo */
   q('[data-betreuung-satz]').textContent = P.betreuung.satz;
   var bBox = q('[data-betreuung]');
   P.betreuung.stufen.forEach(function (b) {
@@ -221,20 +232,18 @@ window.BEGRIFFE = {
     l.appendChild(innen); bBox.appendChild(l);
   });
   q('[data-selbst-text]').textContent = P.betreuung.selbstText + ' (je Stufe ' + P.euro(P.betreuung.selbst) + ' günstiger)';
-  /* Automatisierung & KI → endo: zwei Optionen, höchstens eine (Checkboxen, die sich gegenseitig abwählen – „keine“ bleibt möglich) */
   q('[data-mehr-titel]').textContent = P.mehrTitel;
   var mehrBox = q('[data-mehr]');
   P.mehr.forEach(function (m) {
     var li = el('li', 'pmehr'), l = el('label', 'pmehr__zeile'); var i = el('input'); i.type = 'checkbox'; i.name = 'mehr'; i.value = m.id; l.appendChild(i);
-    var t = el('span', 'pmehr__text'); t.appendChild(el('b', '', m.name)); t.appendChild(el('span', 'pmehr__preis', ' ' + P.betrag(m) + ' + ' + P.euro(m.monat) + '/Monat'));
+    var t = el('span', 'pmehr__text'); t.appendChild(el('b', '', m.name)); t.appendChild(el('span', 'pmehr__preis', P.betrag(m) + ' + ' + P.euro(m.monat) + MONAT));
     t.appendChild(el('span', 'pmehr__satz', m.satz)); l.appendChild(t); li.appendChild(l);
     i.addEventListener('change', function () { if (i.checked) qa('input[name="mehr"]').forEach(function (x) { if (x !== i) x.checked = false; }); });
     mehrBox.appendChild(li);
   });
-  var endoA = q('[data-endo-ansehen]'); endoA.href = P.endoSeiteOeffentlich ? P.endoSeite : P.endoStart;
   q('[data-mehr-hinweis]').textContent = P.mehrSatz + ' Setzt die Betreuung auf ' + P.betreuung.stufen.filter(function (b) { return b.id === P.mehrStufe; })[0].name + '.';
 
-  /* Begriffe erklärt */
+  /* Begriffe erklärt (unter dem Assistenten, immer erreichbar) */
   var bl = q('[data-begriffe]');
   Object.keys(B).forEach(function (k) { var d = el('div', 'pbeg'); d.id = 'begriff-' + k; d.appendChild(el('dt', '', B[k].name)); d.appendChild(el('dd', '', B[k].text)); bl.appendChild(d); });
   var begriffe = q('[data-begriffe-box]');
@@ -248,103 +257,152 @@ window.BEGRIFFE = {
   });
 
   /* ---------- Rechner ---------- */
-  var manuell = false;   /* hat der Besucher die Betreuung selbst gewählt? Dann nicht mehr automatisch umstellen (außer bei Automatisierung/endo) */
+  var manuell = false;   /* Betreuung selbst gewählt? Dann nicht mehr automatisch umstellen (außer bei endo) */
   function werte(n) { return qa('input[name="' + n + '"]:checked').map(function (i) { return i.value; }); }
   function auswahl() {
-    return { stufe: werte('stufe')[0], extras: werte('extra'), betreuung: werte('betreuung')[0], selbst: !!q('[data-selbst]').checked, mehr: werte('mehr'), anfrage: werte('anfrage') };
+    return { stufe: werte('stufe')[0], extras: werte('extra'), betreuung: werte('betreuung')[0] || null, selbst: !!q('[data-selbst]').checked, mehr: werte('mehr'), anfrage: werte('anfrage') };
   }
   function betreuungSetzen(id) { var r = q('input[name="betreuung"][value="' + id + '"]'); if (r) r.checked = true; }
+  function leer(e) { return !e.stufe && !e.extras.length && !e.mehr.length && !e.anfrage.length; }
+  /* für das Kontaktformular: aktuelle Auswahl (null, wenn noch nichts gewählt ist) */
+  P.auswahlJetzt = function () { var e = P.rechnen(auswahl()); return leer(e) ? null : e; };
   var zahlen = [].slice.call(document.querySelectorAll('[data-summe]')), live = q('[data-preise-live]'), liveT, alt = {};
   function text(k, e, w) {
-    if (k === 'monatlich') return P.euro(w) + ' / Monat';
+    if (!e.stufe && !e.mehr.length && !e.extras.length) return '–';   /* noch nichts gewählt */
+    if (k === 'monatlich') return P.euro(w) + MONAT;
     return (e.ab && (k === 'einmalig' || k === 'jahr') ? 'ab ' : '') + P.euro(w);
+  }
+  function kurzSetzen(e) {
+    var n = e.extras.length;
+    var werteK = {
+      stufe: e.stufe ? e.stufe.name : '–',
+      extras: n ? n + (n === 1 ? ' Extra' : ' Extras') : 'keine',
+      betreuung: e.betreuung ? e.betreuung.name + (e.selbst ? ' (Hosting selbst)' : '') : '–',
+      endo: e.mehr.length ? e.mehr[0].name : ''
+    };
+    Object.keys(werteK).forEach(function (k) {
+      [].forEach.call(document.querySelectorAll('[data-kurz="' + k + '"]'), function (x) {
+        x.textContent = werteK[k];
+        var zeile = x.closest('[data-kurz-zeile]'); if (zeile && k === 'endo') zeile.hidden = !werteK.endo;
+      });
+    });
+    [].forEach.call(document.querySelectorAll('[data-kurz-zeile-text]'), function (x) {
+      x.textContent = e.stufe ? [werteK.stufe, werteK.extras, werteK.betreuung].concat(werteK.endo ? ['endo'] : []).join(' · ') : 'Noch keine Stufe gewählt';
+    });
   }
   function zeigen(e) {
     zahlen.forEach(function (z) {
       var k = z.getAttribute('data-summe'), von = alt[k] == null ? e[k] : alt[k], bis = e[k];
       if (ruhig || von === bis) { z.textContent = text(k, e, bis); return; }
       var t0 = null;
-      (function schritt(t) {                       /* dezent hochzählen (320 ms); Tabellenziffern + feste Breite → nichts springt */
-        if (!t0) t0 = t; var p = Math.min(1, (t - t0) / 320), w = von + (bis - von) * (1 - Math.pow(1 - p, 3));
+      (function schritt(t) {                       /* dezent hochzählen (240 ms); Tabellenziffern + feste Breite → nichts springt */
+        if (!t0) t0 = t; var p = Math.min(1, (t - t0) / 240), w = von + (bis - von) * (1 - Math.pow(1 - p, 3));
         z.textContent = text(k, e, w); if (p < 1) requestAnimationFrame(schritt);
       })(performance.now());
-      setTimeout(function () { if (alt[k] === bis) z.textContent = text(k, e, bis); }, 400);   /* sicher: Endwert steht auch ohne Bildwechsel (Hintergrund-Tab) */
+      setTimeout(function () { if (alt[k] === bis) z.textContent = text(k, e, bis); }, 320);   /* Endwert auch ohne Bildwechsel */
     });
     alt = { einmalig: e.einmalig, monatlich: e.monatlich, jahr: e.jahr };
     qa('[data-extern]').forEach(function (x) { x.textContent = e.selbst ? 'nach Ihrem Anbieter' : P.euro(0); });
     qa('[data-extern-klein]').forEach(function (x) { x.textContent = e.selbst ? 'Hosting und Domain zahlen Sie direkt an Ihren Anbieter.' : 'Hosting, Domain und SSL sind im Monatspreis enthalten.'; });
-    P.betreuung.stufen.forEach(function (b) { var pr = q('[data-bmonat="' + b.id + '"]'); pr.textContent = P.euro(b.monat - (e.selbst ? P.betreuung.selbst : 0)) + ' / Monat'; });
-    var n = e.extras.length; q('[data-extras-zahl]').textContent = n + ' gewählt';
-    /* Schritt-Leiste: erledigt-Häkchen */
-    schrittErledigt(1, !!e.stufe); schrittErledigt(2, n > 0 || e.anfrage.length > 0); schrittErledigt(3, !!e.betreuung); schrittErledigt(4, !!e.stufe || e.mehr.length > 0);
+    P.betreuung.stufen.forEach(function (b) { q('[data-bmonat="' + b.id + '"]').textContent = P.euro(b.monat - (e.selbst ? P.betreuung.selbst : 0)) + MONAT; });
+    kurzSetzen(e);
     clearTimeout(liveT);
     liveT = setTimeout(function () { live.textContent = 'Einmalig ' + text('einmalig', e, e.einmalig) + ', laufend ' + text('monatlich', e, e.monatlich) + ', erstes Jahr ' + text('jahr', e, e.jahr) + '.'; }, 450);
+    document.dispatchEvent(new CustomEvent('preise:auswahl', { detail: leer(e) ? null : e }));
   }
   function rechnen(ev) {
     var a = auswahl(), t = ev && ev.target;
     if (t && t.name === 'betreuung') manuell = true;
     if (t && t.name === 'mehr' && t.checked) { betreuungSetzen(P.mehrStufe); manuell = false; }
-    else if (!manuell && !(t && t.name === 'betreuung')) betreuungSetzen(P.betreuungStandard(a));
-    var e = P.rechnen(auswahl()); zeigen(e); return e;
+    else if (!manuell && !(t && t.name === 'betreuung')) {
+      /* vor der Wahl einer Stufe (oder endo) keine Betreuung vorwählen – sonst stünde „600 €“ da, obwohl noch nichts gewählt ist */
+      if (!a.stufe && !a.mehr.length) qa('input[name="betreuung"]').forEach(function (i) { i.checked = false; });
+      else betreuungSetzen(P.betreuungStandard(a));
+    }
+    var e = P.rechnen(auswahl()); zeigen(e); knoepfeSetzen(); return e;
   }
-  box.addEventListener('change', rechnen);
   qa('[data-klein-preis]').forEach(function (x) { x.textContent = P.klein + ' ' + P.steuer; });
 
-  /* Schritt-Leiste: aktueller Schritt (IntersectionObserver, kein scroll-Listener) + Häkchen */
-  var leisteS = [].slice.call(document.querySelectorAll('[data-schritt]'));
-  function schrittErledigt(n, ja) { leisteS.forEach(function (a) { if (+a.getAttribute('data-schritt') === n) a.classList.toggle('ist-erledigt', ja); }); }
-  if ('IntersectionObserver' in window) {
-    var sichtbar = {};
-    var ioS = new IntersectionObserver(function (xs) {
-      xs.forEach(function (x) { sichtbar[x.target.getAttribute('data-schritt-ziel')] = x.isIntersecting; });
-      var an = null; for (var i = 1; i <= 4; i++) if (sichtbar[i]) { an = i; break; }
-      if (an) leisteS.forEach(function (a) { var ist = +a.getAttribute('data-schritt') === an; a.classList.toggle('ist-aktiv', ist); if (ist) a.setAttribute('aria-current', 'step'); else a.removeAttribute('aria-current'); });
-    }, { rootMargin: '-35% 0px -45% 0px' });
-    qa('[data-schritt-ziel]').forEach(function (z) { ioS.observe(z); });
-  }
-  leisteS.forEach(function (a) {
-    a.addEventListener('click', function (ev) {
-      var z = document.querySelector(a.getAttribute('href')); if (!z) return; ev.preventDefault();
-      if (a.getAttribute('data-schritt') === '2') q('[data-extras]').open = true;
-      if (a.getAttribute('data-schritt') === '4' && leisteUnten && getComputedStyle(leisteUnten).display !== 'none' && !summeImBlick) { klappen(true); return; }
-      z.scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
+  /* ---------- Schritte ---------- */
+  var buehne = q('[data-buehne]'), panels = qa('[data-panel]'), leiste = qa('[data-schritt]');
+  var zurueck = q('[data-zurueck]'), weiter = q('[data-weiter]');
+  var aktiv = 1, erreicht = 1, hoeheT;
+  var WEITER_TEXT = { 1: 'Weiter zu den Extras', 2: 'Weiter zur Betreuung', 3: 'Zur Einschätzung' };
+  function knoepfeSetzen() {
+    var a = auswahl();
+    weiter.hidden = aktiv === 4;
+    weiter.disabled = aktiv === 1 && !a.stufe;
+    weiter.textContent = aktiv === 2 && !a.extras.length ? 'Ohne Extras weiter' : WEITER_TEXT[aktiv] || '';
+    zurueck.hidden = aktiv === 1;
+    leisteSetzen();
+    leiste.forEach(function (k) {
+      var n = +k.getAttribute('data-schritt'), fertig = n < aktiv || (n <= erreicht && n !== aktiv && (n > 1 || !!a.stufe));
+      k.classList.toggle('ist-fertig', n !== aktiv && fertig && n <= erreicht);
+      k.classList.toggle('ist-aktiv', n === aktiv);
+      k.disabled = n > erreicht || (n > 1 && !a.stufe);
+      if (n === aktiv) k.setAttribute('aria-current', 'step'); else k.removeAttribute('aria-current');
     });
+  }
+  function gehe(n, vonNutzer) {
+    n = Math.max(1, Math.min(4, n));
+    if (n === aktiv) return;
+    if (n > 1 && !auswahl().stufe) return;
+    var vor = n > aktiv, altPanel = panels[aktiv - 1], neuPanel = panels[n - 1];
+    var hAlt = buehne.offsetHeight;
+    clearTimeout(hoeheT);
+    buehne.style.height = hAlt + 'px';
+    altPanel.hidden = true; altPanel.classList.remove('ist-rein', 'ist-rein--zurueck');
+    neuPanel.hidden = false;
+    aktiv = n; erreicht = Math.max(erreicht, n);
+    if (!ruhig) { neuPanel.classList.remove('ist-rein', 'ist-rein--zurueck'); void neuPanel.offsetWidth; neuPanel.classList.add(vor ? 'ist-rein' : 'ist-rein--zurueck'); }
+    var hNeu = neuPanel.offsetHeight;
+    if (ruhig) buehne.style.height = '';
+    else { requestAnimationFrame(function () { buehne.style.height = hNeu + 'px'; }); hoeheT = setTimeout(function () { buehne.style.height = ''; }, 280); }
+    knoepfeSetzen();
+    /* Anfang des Schritts sichtbar halten – aber nie springen, wenn er schon im Bild ist */
+    var oben = box.querySelector('.passi').getBoundingClientRect().top;
+    if (oben < 0 || oben > window.innerHeight * 0.6) box.querySelector('.passi').scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
+    if (vonNutzer) { var h = neuPanel.querySelector('[data-panel-titel]'); if (h) h.focus({ preventScroll: true }); }
+  }
+  weiter.addEventListener('click', function () { gehe(aktiv + 1, true); });
+  zurueck.addEventListener('click', function () { gehe(aktiv - 1, true); });
+  leiste.forEach(function (k) { k.addEventListener('click', function () { gehe(+k.getAttribute('data-schritt'), true); }); });
+  /* Nach der Wahl einer Stufe (Klick/Tippen) gleitet ② herein; mit der Tastatur (Pfeiltasten) bleibt man und nimmt „Weiter“ */
+  var perZeiger = false, weiterT;
+  stufenBox.addEventListener('pointerdown', function () { perZeiger = true; });
+  box.addEventListener('change', function (ev) {
+    rechnen(ev);
+    if (ev.target.name === 'stufe' && aktiv === 1 && perZeiger) { clearTimeout(weiterT); weiterT = setTimeout(function () { gehe(2, false); }, ruhig ? 0 : 420); }
+    perZeiger = false;
   });
 
-  /* „Anfrage mit dieser Auswahl“ → Kontakt vorbereiten (nichts wird gesendet) */
+  /* „Anfrage mit dieser Auswahl“ → zum Kontakt (die Box „Ihre Auswahl“ dort zeigt alles; gesendet wird erst beim Abschicken) */
   function anfragen() {
-    var e = P.rechnen(auswahl()), form = document.getElementById('anfrage');
-    if (!form) return;
-    var karteWert = e.mehr.length ? P.endoKarte : 'Website';
-    var r = form.querySelector('input[name="hilfe"][value="' + karteWert + '"]');
-    if (r && !r.checked) { r.checked = true; r.dispatchEvent(new Event('change', { bubbles: true })); }
-    var feld = form.elements.text;
-    if (feld) {
-      var neu = P.anfrageText(e), vorher = feld.value.replace(/Meine Auswahl aus dem Preis-Rechner:[\s\S]*?\(unverbindliche Einschätzung\)\n*/g, '').trim();
-      feld.value = neu + (vorher ? '\n\n' + vorher : '');
-      feld.rows = Math.max(feld.rows, Math.min(10, feld.value.split('\n').length + 1));   /* Auswahl ganz sichtbar */
-      feld.dispatchEvent(new Event('input', { bubbles: true }));
-    }
     klappen(false);
     document.getElementById('kontakt').scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
-    setTimeout(function () { var n = form.elements.name; if (n) n.focus({ preventScroll: true }); }, ruhig ? 0 : 700);
+    var form = document.getElementById('anfrage');
+    setTimeout(function () { var n = form && form.elements.name; if (n) n.focus({ preventScroll: true }); }, ruhig ? 0 : 700);
   }
   [].forEach.call(document.querySelectorAll('[data-preise-anfrage]'), function (k) { k.addEventListener('click', anfragen); });
+  /* von außen (Kontakt-Box „ändern“): zum Assistenten, auf Wunsch zu einem bestimmten Schritt */
+  P.zeigeSchritt = function (n) { if (n) gehe(n, false); };
 
-  /* Handy: kompakte Leiste unten (antippen → aufklappen), solange der Preis-Bereich zu sehen ist und die große Einschätzung nicht */
-  var leisteUnten = q('[data-preise-leiste]'), summe = q('[data-preise-summe]'), klapp = q('[data-leiste-klappen]'), summeImBlick = false;
+  /* Handy: kompakte Leiste unten (antippen → aufklappen), solange der Preis-Bereich zu sehen ist */
+  var leisteUnten = q('[data-preise-leiste]'), klapp = q('[data-leiste-klappen]'), imBild = false;
+  /* sichtbar, solange der Assistent im Bild ist – außer in Schritt ④ (dort steht die volle Einschätzung mit Anfrage-Knopf) */
+  function leisteSetzen() {
+    if (!leisteUnten) return;
+    var an = imBild && aktiv !== 4;
+    leisteUnten.classList.toggle('ist-an', an); leisteUnten.setAttribute('aria-hidden', String(!an));
+    if (an) leisteUnten.removeAttribute('inert'); else { leisteUnten.setAttribute('inert', ''); klappen(false); }   /* unsichtbar = nicht per Tab erreichbar */
+  }
   function klappen(auf) { if (!leisteUnten) return; leisteUnten.classList.toggle('ist-offen', auf); klapp.setAttribute('aria-expanded', String(auf)); }
   if (klapp) klapp.addEventListener('click', function () { klappen(!leisteUnten.classList.contains('ist-offen')); });
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && leisteUnten && leisteUnten.classList.contains('ist-offen')) { klappen(false); klapp.focus(); } });
-  if (leisteUnten && summe && 'IntersectionObserver' in window) {
-    var imBereich = false;
-    function leisteSetzen() {
-      var an = imBereich && !summeImBlick;
-      leisteUnten.classList.toggle('ist-an', an); leisteUnten.setAttribute('aria-hidden', String(!an));
-      if (an) leisteUnten.removeAttribute('inert'); else { leisteUnten.setAttribute('inert', ''); klappen(false); }   /* unsichtbar = nicht per Tab erreichbar */
-    }
-    new IntersectionObserver(function (x) { imBereich = x[0].isIntersecting; leisteSetzen(); }, { rootMargin: '-30% 0px -10% 0px' }).observe(box);
-    new IntersectionObserver(function (x) { summeImBlick = x[0].isIntersecting; leisteSetzen(); }).observe(summe);
+  if (leisteUnten && 'IntersectionObserver' in window) {
+    var assi = q('.passi');
+    new IntersectionObserver(function (x) { imBild = x[0].isIntersecting; leisteSetzen(); }, { rootMargin: '-20% 0px -20% 0px' }).observe(assi);
   }
+  panels.forEach(function (p, i) { p.hidden = i !== 0; });
   rechnen();
 })();
