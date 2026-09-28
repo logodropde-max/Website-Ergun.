@@ -1,4 +1,4 @@
-/* Unter die Erde (Emre, 27.09.2026, komplett neu): Erdschnitt am Übergang Titelbild → Kontakt und Wurzeln bis zur Fußzeile,
+/* Unter die Erde (ERGUN., 27.09.2026, komplett neu): Erdschnitt am Übergang Titelbild → Kontakt und Wurzeln bis zur Fußzeile,
    gemalt mit derselben Technik wie die Landschaft: Canvas 2D, gefüllte Formen, Paletten, Zufall, Körnung und Lichtkante aus
    js/szene.js (window.ergunSzene, nur lesen).
    · Erdschnitt: beginnt oben exakt in dem Dunkel, in dem das Titelbild endet (#070B16, .szene__fade) – so gibt es keine Naht –,

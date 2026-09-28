@@ -27,7 +27,7 @@
 <link rel="preload" href="schriften/ClashDisplay-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="schriften/Satoshi-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="schriften/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<!-- Bildfolgen von Emre und dem Hund früh, aber mit niedriger Priorität holen: das Winken (erstes Runterwischen) wartet sonst auf sie -->
+<!-- Bildfolgen von ERGUN. und dem Hund früh, aber mit niedriger Priorität holen: das Winken (erstes Runterwischen) wartet sonst auf sie -->
 <link rel="preload" href="bilder/hero/figuren/emre-folge.webp?v=17" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
 <link rel="preload" href="bilder/hero/figuren/emre-grund.webp?v=17" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
 <link rel="preload" href="bilder/hero/figuren/hund-folge.webp?v=17" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
@@ -100,7 +100,7 @@ img { display: block; max-width: 100%; height: auto; }
 }
 @keyframes ebene-weg { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, var(--weg, 0px), 0); } }
 
-/* Abstieg zur Erde (25.09. abends, Emre): nach der Nacht kommt die Wiese mit dem Hund näher, das Gras wächst ins Bild,
+/* Abstieg zur Erde (25.09. abends, ERGUN.): nach der Nacht kommt die Wiese mit dem Hund näher, das Gras wächst ins Bild,
    der Schriftzug blendet aus, und von unten steigt das Dunkel der Erde auf – in genau der Farbe, mit der endo Studio
    beginnt. So endet das Titelbild ohne Kante. Alles über die Scroll-Animation des Browsers (kein Nachlauf). */
 .szene__erde { position: absolute; left: 0; right: 0; bottom: -1px; height: 100%; z-index: 3; pointer-events: none; transform: translate3d(0, 100%, 0);
@@ -115,7 +115,7 @@ img { display: block; max-width: 100%; height: auto; }
   }
 }
 @keyframes erde-steigt { from { transform: translate3d(0, 100%, 0); } to { transform: translate3d(0, 0, 0); } }
-/* Der Funke (27.09., Emre): Glühwürmchen im Gras → lädt sich mit der Tageszeit auf → taucht in die Erde → wird zum Lichtpunkt der
+/* Der Funke (27.09., ERGUN.): Glühwürmchen im Gras → lädt sich mit der Tageszeit auf → taucht in die Erde → wird zum Lichtpunkt der
    Linie. Bahn, Größe und Leuchten hängen an derselben Scroll-Animation wie die Wiese; die Keyframes rechnet js/szene.js. */
 .gluehwurm { position: absolute; left: 0; top: 0; width: 0; height: 0; pointer-events: none; transition: opacity 400ms var(--ease); }
 .gluehwurm.ist-aus, .szene:not(.szene--bereit) .gluehwurm { opacity: 0; transition: opacity 280ms ease-out; }
@@ -144,9 +144,9 @@ img { display: block; max-width: 100%; height: auto; }
 .szene--bereit .szene__bild[data-licht="gold"] { opacity: var(--gold); }
 .szene--bereit .szene__bild[data-licht="nacht"] { opacity: var(--nacht); }
 .szene__hund { position: absolute; display: block; }
-/* Mondlicht hinter Emre + Hund (Nachtlauf): kühler Schein, nur nachts (js/szene.js setzt Lage und Größe) */
+/* Mondlicht hinter ERGUN. + Hund (Nachtlauf): kühler Schein, nur nachts (js/szene.js setzt Lage und Größe) */
 .szene__mondlicht { position: absolute; border-radius: 50%; pointer-events: none; opacity: var(--nacht); background: radial-gradient(closest-side, rgba(150, 178, 235, 0.17), rgba(150, 178, 235, 0.07) 50%, rgba(150, 178, 235, 0) 100%); }
-/* Sterne (28.09., Emre: „weniger, edler“ – ca. 60–80 kleine klare Punkte): drei Leinwände in der Himmels-Ebene hinter Mond und Wolken,
+/* Sterne (28.09., ERGUN.: „weniger, edler“ – ca. 60–80 kleine klare Punkte): drei Leinwände in der Himmels-Ebene hinter Mond und Wolken,
    die Hülle bekommt eine leichte Parallaxe (js/szene.js), zwei Leinwände funkeln sehr sanft und nicht synchron */
 .szene__sternhuelle { position: absolute; left: 0; top: 0; width: 100%; pointer-events: none; opacity: var(--himmel-nacht); will-change: transform, opacity; }
 .szene__sterne { position: absolute; left: 0; top: 0; width: 100%; display: block; pointer-events: none; }
@@ -161,7 +161,7 @@ img { display: block; max-width: 100%; height: auto; }
   background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(226, 236, 255, 0.55) 60%, #FFFFFF 100%); border-radius: 2px; }
 .szene__schnuppe.ist-an { animation: schnuppe 1.1s cubic-bezier(0.2, 0.7, 0.3, 1) 1; }
 @keyframes schnuppe { 0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-24deg) scaleX(0.2); } 12% { opacity: 1; } 100% { opacity: 0; transform: translate3d(-260px, 116px, 0) rotate(-24deg) scaleX(1.2); } }
-/* Emre und der Hund liegen in einer eigenen Hülle über allen Fassungen der Wiese (Füße, Schatten und Halme davor) */
+/* ERGUN. und der Hund liegen in einer eigenen Hülle über allen Fassungen der Wiese (Füße, Schatten und Halme davor) */
 .szene__figuren { position: absolute; inset: 0; z-index: 1; }
 /* alles, was beim Scrollen überblendet wird, auf eigene Grafikebene – sonst malt das Handy den Himmel jedes Bild neu */
 .szene__bild[data-licht="gold"], .szene__bild[data-licht="nacht"], .himmel--gold, .himmel--blau, .himmel--nacht, .sonne__glut, .sonne__hof, .sonne__kern--abend, .sonne, .mond { will-change: opacity; }
@@ -169,12 +169,12 @@ img { display: block; max-width: 100%; height: auto; }
 
 /* Himmel: Farbverlauf hängt an der Sonnenhöhe – Tag, Goldene Stunde, blaue Stunde, Nacht */
 /* Himmel reicht 60 % über den oberen Rand hinaus (gleiche Farbe wie ganz oben) – beim Scrollen auf dem iPhone
-   entsteht oben hinter der Navigation sonst eine Lücke, durch die die Grundfarbe schien (Emre, 25.09.) */
+   entsteht oben hinter der Navigation sonst eine Lücke, durch die die Grundfarbe schien (ERGUN., 25.09.) */
 .himmel { position: absolute; inset: -60% 0 0 0; }
-/* 26.09. (Emre): dezenter und edler – Tag ruhig-satt und zum Horizont dunstig, Gold Pfirsich → Blau-Violett,
+/* 26.09. (ERGUN.): dezenter und edler – Tag ruhig-satt und zum Horizont dunstig, Gold Pfirsich → Blau-Violett,
    blaue Stunde mit schmalem, erlöschendem Warmstreifen, Nacht tiefes Nachtblau statt Schwarz (Horizont minimal heller).
    Alle vier hängen per opacity am gemeinsamen Scroll-Takt; darüber feines Korn gegen Streifen (Banding). */
-/* 28.09. (Emre: „mehr Farbverläufe“): mehr Stufen je Himmel – Tag mit tiefem Zenit-Blau, Türkis-Hauch und warmem Dunst am Horizont,
+/* 28.09. (ERGUN.: „mehr Farbverläufe“): mehr Stufen je Himmel – Tag mit tiefem Zenit-Blau, Türkis-Hauch und warmem Dunst am Horizont,
    Gold mit Violett → Magenta → Pfirsich → Gelb, blaue Stunde mit Indigo → Purpur → Rosarest, Nacht mit Tiefblau → Stahlblau → Horizontschein */
 .himmel--tag { background: linear-gradient(180deg, #17509A 0%, #1F5CA3 30%, #2C6DB4 44%, #4488C6 55%, #6FA9D4 63%, #92C0DE 69%, #B7D4E7 74.5%, #D2E3EC 78.5%, #E6ECEB 81.5%, #F0EFE8 83%); }
 .himmel--gold { opacity: var(--gold); background: linear-gradient(180deg, #1F2D5A 0%, #283863 30%, #3F4478 44%, #5B5288 52%, #7E6392 58%, #A47A92 63.5%, #C98B8C 68%, #E39C80 71.5%, #F0B47F 74.5%, #F7CE96 77.5%, #FAE0B4 80.5%, #FBEBCB 83%); }
@@ -187,7 +187,7 @@ img { display: block; max-width: 100%; height: auto; }
 .sonne { opacity: calc(1 - var(--himmel-nacht)); }
 .sonne i, .mond i, .sonne b, .mond b { position: absolute; left: 0; top: 0; border-radius: 50%; transform: translate(-50%, -50%); }
 .sonne__hof { width: calc(var(--sonne-r) * 14); height: calc(var(--sonne-r) * 14); background: radial-gradient(closest-side, rgba(255, 247, 222, 0.46), rgba(255, 236, 196, 0.15) 40%, rgba(255, 232, 186, 0) 100%); opacity: calc((1 - var(--tief) * 0.5) * (1 - var(--verdeckt-sonne, 0) * 0.85)); }
-/* Gestirn hinter einer Wolke (28.09., Emre: „der Teil, der hinter der Wolke ist, wird verdeckt“): Die Wolke liegt VOR dem Gestirn und ihr
+/* Gestirn hinter einer Wolke (28.09., ERGUN.: „der Teil, der hinter der Wolke ist, wird verdeckt“): Die Wolke liegt VOR dem Gestirn und ihr
    Kern (.wolke__koerper) wird dicht, sobald die Scheibe sie berührt – so verdeckt sie genau den Teil dahinter, der Rest bleibt sichtbar.
    Scheibe und enger Schein werden deshalb NICHT mehr ausgeblendet; nur der weite Hof und die Abendglut verschwinden mit der Verdeckung
    (--verdeckt-* aus js/wolken.js), und die Wolke leuchtet von innen (.wolke__licht) und am Saum (.wolke__rand). */
@@ -197,7 +197,7 @@ img { display: block; max-width: 100%; height: auto; }
 .sonne__kern { width: calc(var(--sonne-r) * 2); height: calc(var(--sonne-r) * 2); background: radial-gradient(circle, #FFFFFA 0 50%, #FFF6D8 62%, rgba(255, 240, 200, 0) 71%); }
 .sonne__kern--abend { background: radial-gradient(circle, #FFF1C8 0 38%, #FFC06A 56%, rgba(255, 150, 70, 0) 71%); opacity: var(--tief); }
 .mond { opacity: var(--mond); }
-/* 26.09. (Emre): Mond leuchtender – weiter, weicher Schein, dazu ein enger heller Hof */
+/* 26.09. (ERGUN.): Mond leuchtender – weiter, weicher Schein, dazu ein enger heller Hof */
 .mond__hof { width: calc(var(--sonne-r) * 18); height: calc(var(--sonne-r) * 18); background: radial-gradient(closest-side, rgba(205, 220, 255, 0.24), rgba(175, 195, 248, 0.1) 30%, rgba(165, 185, 242, 0.035) 60%, rgba(160, 180, 240, 0) 100%); }
 .mond__schein { width: calc(var(--sonne-r) * 4.6); height: calc(var(--sonne-r) * 4.6); background: radial-gradient(closest-side, rgba(235, 242, 255, 0.55), rgba(215, 228, 255, 0.22) 45%, rgba(200, 215, 255, 0) 100%); }
 .mond__hof { opacity: calc(1 - var(--verdeckt-mond, 0) * 0.85); }   /* Scheibe + enger Schein bleiben: die Wolke deckt den Teil dahinter selbst ab */
@@ -207,14 +207,14 @@ img { display: block; max-width: 100%; height: auto; }
 
 /* Titel */
 .szene__titel { display: flex; flex-direction: column; align-items: center; padding: 0 var(--pad); }
-/* „Webdesigner“ groß im Himmel, darüber die Einordnung (zwei Bereiche). Kein Slogan (Emre, 25.09. nachmittags).
+/* „Webdesigner“ groß im Himmel, darüber die Einordnung (zwei Bereiche). Kein Slogan (ERGUN., 25.09. nachmittags).
    Die Sonne startet dahinter und sinkt durch den Schriftzug; ein leichter Schatten hält ihn auf hellem Grund lesbar. */
 .titel { position: absolute; left: 0; right: 0; top: var(--titel-oben, 20svh); display: grid; justify-items: center; gap: clamp(10px, 1.4vh, 18px); padding: 0 var(--pad); text-align: center; color: #FFF9F0; }
 .titel__studio { display: flex; align-items: center; gap: 14px; font-size: clamp(11px, 1vw, 14px); font-weight: 500; letter-spacing: 0.26em; text-transform: uppercase; text-shadow: 0 1px 2px rgba(10, 16, 32, 0.45), 0 0 18px rgba(10, 16, 32, 0.35); }
 .titel__studio::before, .titel__studio::after { content: ""; width: clamp(18px, 2.4vw, 32px); height: 1px; background: rgba(255, 249, 240, 0.6); }
-/* 28.09. abends (Emre, Ausnahme auf seinen Wunsch): groß „Websites · Automatisierung · KI“ statt „Webdesigner“ (bald Kunden in allen drei
-   Bereichen), klein „Digitalstudio für Unternehmen“ (Emre: Name und Ort nicht nennen).
-   28.09. nachts (Emre): immer nebeneinander – auch auf dem Handy eine Zeile; statt Punkt eine kleine Wolke, die sanft zieht wie die
+/* 28.09. abends (ERGUN., Ausnahme auf seinen Wunsch): groß „Websites · Automatisierung · KI“ statt „Webdesigner“ (bald Kunden in allen drei
+   Bereichen), klein „Digitalstudio für Unternehmen“ (ERGUN.: Name und Ort nicht nennen).
+   28.09. nachts (ERGUN.): immer nebeneinander – auch auf dem Handy eine Zeile; statt Punkt eine kleine Wolke, die sanft zieht wie die
    Wolken im Bild. Schriftgröße passt sich der Breite an (Zeile ≈ 14,9 em inkl. Wolken, Rand je Seite 5 % der Breite, 18–80 px).
    Alte Fassung zum Vergleich: ?titel=a. */
 .titel__haupt.titel__haupt--drei { font-size: min(7rem, calc((100vw - 2 * clamp(18px, 5vw, 80px)) / 15.2)); line-height: 1; letter-spacing: -0.03em; white-space: nowrap; }
@@ -362,7 +362,7 @@ img { display: block; max-width: 100%; height: auto; }
   .online::before { animation: none; }
 }
 
-/* ---------- ERGUN. = reine Webdesign-Seite (Emre, 27.09.): Hero → Kontakt → Fußzeile ---------- */
+/* ---------- ERGUN. = reine Webdesign-Seite (ERGUN., 27.09.): Hero → Kontakt → Fußzeile ---------- */
 /* Scroll-Hinweis: eine feine Linie, die ruhig nach unten atmet */
 .szene__weiter { position: absolute; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); z-index: 4; display: grid; justify-items: center; gap: 8px; min-width: 44px; min-height: 44px; padding: 6px 10px; translate: -50% 0; color: rgba(242, 239, 232, 0.75); text-decoration: none; }
 .szene__weiter-text { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.85; }
@@ -380,7 +380,7 @@ html.zu-endo .wechsel { opacity: 1; pointer-events: auto; }
 html.zu-endo .nav__link--endo { filter: drop-shadow(0 0 10px rgba(226, 234, 248, 0.95)) drop-shadow(0 0 22px rgba(196, 212, 244, 0.7)); }
 .nav__link--endo span { display: inline-block; transition: transform 300ms var(--ease-out); }
 .nav__link--endo:hover span { transform: translate(2px, -2px); }
-/* endo nur noch oben rechts (Emre, 27.09.): schlichter Link wie die Navigation, beim Hover ein ruhiger Chrom-Glanz, Tippfläche 44 px */
+/* endo nur noch oben rechts (ERGUN., 27.09.): schlichter Link wie die Navigation, beim Hover ein ruhiger Chrom-Glanz, Tippfläche 44 px */
 .nav__link--endo { display: inline-flex; align-items: center; min-height: 44px; }
 .nav__link--endo::after { background: linear-gradient(90deg, #C9CED6, #FFFFFF 45%, #9AA2AD 70%, #E8ECF1); }
 @media (hover: hover) and (pointer: fine) { .nav__link--endo:hover { background: linear-gradient(110deg, #DDE1E7 0%, #FFFFFF 30%, #AEB5BF 55%, #FFFFFF 80%); -webkit-background-clip: text; background-clip: text; color: transparent; } .nav__link--endo:hover span { color: #F2EFE8; } }
@@ -430,12 +430,12 @@ html.zu-endo .nav__link--endo { filter: drop-shadow(0 0 10px rgba(226, 234, 248,
 }
 @media (prefers-reduced-motion: reduce) { .anfrage__danke, .anfrage__check, .anfrage__check svg { animation: none; } .anfrage.ist-weg > * { transition: none; } }
 
-/* Schrift B (Emre, 27.09.): Feinheiten – gleichbreite Ziffern, Silbentrennung, ruhige Umbrüche */
+/* Schrift B (ERGUN., 27.09.): Feinheiten – gleichbreite Ziffern, Silbentrennung, ruhige Umbrüche */
 body { font-variant-numeric: tabular-nums; }
 h1, h2, h3 { text-wrap: balance; }
 p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 .btn, .anfrage__danke-titel { font-weight: 400; letter-spacing: -0.02em; }
-/* ---------- Kontakt-Kasten (Emre, 27.09.): altes Formular, nur der Kasten im neuen Stil –
+/* ---------- Kontakt-Kasten (ERGUN., 27.09.): altes Formular, nur der Kasten im neuen Stil –
    runde Karte mit feinem Rand, ruhiger Grund, viel Innenabstand, gepunktete Linie, weiche Felder, Fokus-Ring in Akzentfarbe, Pfeil gleitet ---------- */
 .anfrage { width: min(100%, 720px); gap: 24px; padding: clamp(24px, 3.4vw, 40px); border-radius: 24px; border-color: rgba(242, 239, 232, 0.12);
   background: linear-gradient(180deg, rgba(242, 239, 232, 0.045), rgba(242, 239, 232, 0.012)); box-shadow: 0 40px 90px -50px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(242, 239, 232, 0.05); }
@@ -467,9 +467,9 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   .anfrage .weg { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) { .anfrage__pfeil { transition: none; } }
-/* ---------- Kontakt übersichtlich (Emre, 27.09. spät): Auswahl-Karten, Pflichtfelder, Antwort-Weg mit passendem Feld ---------- */
+/* ---------- Kontakt übersichtlich (ERGUN., 27.09. spät): Auswahl-Karten, Pflichtfelder, Antwort-Weg mit passendem Feld ---------- */
 .pflicht { color: var(--accent); font-weight: 500; margin-left: 2px; }
-/* 28.09. (Emre, feste Regel): Kartenreihen immer voll und gleichmäßig – nie 3 + 1, 2 + 1 o. Ä.
+/* 28.09. (ERGUN., feste Regel): Kartenreihen immer voll und gleichmäßig – nie 3 + 1, 2 + 1 o. Ä.
    Auftrag 6 (28.09. nachts): DREI Karten mit festem Preis (Website · Automatisierung · endo für Ihr Unternehmen). Schmal (Handy): Liste
    untereinander; ab 480 px Formularbreite (Tablet/Desktop): alle drei nebeneinander – gleich breit, gleich hoch, kein Sprung beim Wählen. */
 .anfrage { container-type: inline-size; container-name: anfrage; }
@@ -507,7 +507,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 .anfrage__kontakt[hidden] { display: none; }
 .anfrage__kontakt.ist-neu { animation: feld-rein 420ms var(--ease-out) both; }
 @keyframes feld-rein { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
-/* Datenschutz-Haken (27.09., Emre): eigene Box, das echte Kästchen liegt unsichtbar darüber (Tastatur, Vorleser, Formular bleiben gleich).
+/* Datenschutz-Haken (27.09., ERGUN.): eigene Box, das echte Kästchen liegt unsichtbar darüber (Tastatur, Vorleser, Formular bleiben gleich).
    Ganze Zeile antippbar (mind. 44 px), der Link bleibt eigenständig. Angehakt: Fläche in Akzentfarbe, Häkchen zeichnet sich in 0,25 s. */
 .anfrage__haken { position: relative; display: flex; gap: 12px; align-items: flex-start; min-height: 44px; padding: 10px 0; font-size: 14px !important; letter-spacing: 0 !important; text-transform: none !important; line-height: 1.5; color: var(--muted) !important; cursor: pointer; }
 .anfrage__haken input { position: absolute; left: 0; top: 11px; width: 22px; height: 22px; min-height: 0 !important; margin: 0; padding: 0 !important; opacity: 0; cursor: pointer; }
@@ -525,8 +525,8 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 .anfrage .weg { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 @media (prefers-reduced-motion: reduce) { .anfrage__kontakt.ist-neu { animation: none; } }
 
-/* endo-Hinweis direkt unter „Anfrage senden“ (Nachtlauf, Emre): ruhige Zeile, gedämpft, „endo“ leicht hervorgehoben, weich ein-/ausblenden */
-/* Tipps unter „Anfrage senden“ (28.09., Emre): je Auswahl ein Satz mit Pill „Tipp:“; Platz ist reserviert (kein Springen), weich ein-/ausblenden */
+/* endo-Hinweis direkt unter „Anfrage senden“ (Nachtlauf, ERGUN.): ruhige Zeile, gedämpft, „endo“ leicht hervorgehoben, weich ein-/ausblenden */
+/* Tipps unter „Anfrage senden“ (28.09., ERGUN.): je Auswahl ein Satz mit Pill „Tipp:“; Platz ist reserviert (kein Springen), weich ein-/ausblenden */
 .anfrage__tipp { margin: -6px 0 0; min-height: 2.6em; font-size: 13.5px; line-height: 1.5; text-align: center; color: var(--muted); text-wrap: pretty; opacity: 0; transform: translateY(-4px); transition: opacity 320ms var(--ease), transform 320ms var(--ease); }
 .anfrage__tipp.ist-an { opacity: 1; transform: none; }
 .anfrage__tipp b { font-weight: 500; color: var(--text); }
@@ -536,10 +536,10 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 @media (prefers-reduced-motion: reduce) { .anfrage__tipp { transition: none; } }
 
 /* Übergang Titelbild → Kontakt: ruhiger, dunkler Grund, weich aus dem Dunkel am Ende des Titelbilds (#070B16).
-   Erdschnitt + Wurzeln (js/wurzeln.js) auf Emres Wunsch am 27.09. wieder entfernt – Datei bleibt liegen, wird nicht geladen. */
+   Erdschnitt + Wurzeln (js/wurzeln.js) auf ERGUNs Wunsch am 27.09. wieder entfernt – Datei bleibt liegen, wird nicht geladen. */
 .contact { position: relative; background: linear-gradient(#070B16 0, var(--bg) 420px); }
 
-/* ---------- Preis-Bereich (Auftrag 7, Emre 28.09.2026): Stufe wählen, Extras, Betreuung, Rechner – Zahlen nur in js/preise.js (PREISE) ----------
+/* ---------- Preis-Bereich (Auftrag 7, ERGUN. 28.09.2026): Stufe wählen, Extras, Betreuung, Rechner – Zahlen nur in js/preise.js (PREISE) ----------
    Ruhig, viel Luft, Akzent nur für die Wahl und den einen Knopf. Karten = echte Radio/Checkbox-Felder. Reihen immer voll (3 Stufen, 8 Extras → 1/2/4 Spalten). */
 .preise { -webkit-hyphens: manual; hyphens: manual; }
 .preise { width: min(100% - 2 * var(--pad), 1180px); margin: 0 auto; padding: clamp(88px, 14svh, 144px) 0 32px; }
@@ -712,7 +712,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
       <p class="contact__intro reveal">Websites, Automatisierungen und KI für Ihr Unternehmen – persönlich von mir. Antwort innerhalb von 24&nbsp;Stunden.</p>
     </div>
 
-    <!-- Eine Karte, alles auf einen Blick (Emre, 25.09. abends: keine Schritte) -->
+    <!-- Eine Karte, alles auf einen Blick (ERGUN., 25.09. abends: keine Schritte) -->
     <form class="anfrage reveal" id="anfrage" novalidate>
       <fieldset class="anfrage__gruppe anfrage__gruppe--thema" aria-describedby="f-thema-err">
         <legend>Worum geht es? <span class="pflicht" aria-hidden="true">*</span></legend>
@@ -889,7 +889,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
     if (t.name === 'hilfe') { pruefeFeld('hilfe'); endoTipp(); }
     if (t.name === 'datenschutz') pruefeFeld('datenschutz');
   });
-  /* ===== Tipps unter „Anfrage senden“ (Emre, 28.09.): Texte hier ändern. link ist optional (öffnet in neuem Tab). ===== */
+  /* ===== Tipps unter „Anfrage senden“ (ERGUN., 28.09.): Texte hier ändern. link ist optional (öffnet in neuem Tab). ===== */
   var ENDO_LINK = { text: 'endo ansehen', href: 'https://endo-ergun.vercel.app/' };
   /* endo für Ihr Unternehmen: Link auf die Demo /unternehmen erst, wenn diese Seite öffentlich ist (heute gesperrt) → bis dahin endo-Startseite */
   var ENDO_DEMO_OEFFENTLICH = false;
@@ -1066,7 +1066,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 })();
 </script>
 <script>
-/* Zur endo-Seite (Emre, 27.09.): Schriftzug leuchtet kurz auf, die Seite blendet weich in Schwarz, dann öffnet sich endo im selben Tab.
+/* Zur endo-Seite (ERGUN., 27.09.): Schriftzug leuchtet kurz auf, die Seite blendet weich in Schwarz, dann öffnet sich endo im selben Tab.
    Zurück-Taste: die Seite kommt aus dem Cache – pageshow nimmt das Schwarz sofort wieder weg. Bewegung reduziert = sofort wechseln.
    Seit 27.09. spät nur noch über den Link „endo ↗“ oben rechts (und klein in der Fußzeile). */
 (function () {
@@ -1088,7 +1088,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 <script>
 /* Kein Zoomen: Zwei-Finger-Zoom (Safari-Gesten) sperren. Doppeltippen und Pinch sperrt CSS (touch-action).
    Früher lagen hier auch touchmove/touchend-Sperren – die haben auf dem iPhone das Scrollen gebremst
-   und schnelles Nachwischen abgebrochen (Emre, 25.09. abends: „oben buggt es beim Scrollen“). */
+   und schnelles Nachwischen abgebrochen (ERGUN., 25.09. abends: „oben buggt es beim Scrollen“). */
 (function () {
   ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (t) { document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false }); });
 })();

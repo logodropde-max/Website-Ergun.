@@ -1,5 +1,5 @@
-/* ERGUN. – Preis-Bereich mit Stufen, Extras, Betreuung und Rechner (Auftrag 7, Emre 28.09.2026).
-   Ausnahme auf Emres Wunsch: Preise stehen offen auf der Seite („Was es kostet, steht hier – nicht erst im Angebot“).
+/* ERGUN. – Preis-Bereich mit Stufen, Extras, Betreuung und Rechner (Auftrag 7, ERGUN. 28.09.2026).
+   Ausnahme auf ERGUNs Wunsch: Preise stehen offen auf der Seite („Was es kostet, steht hier – nicht erst im Angebot“).
    Nichts wird gespeichert (keine Cookies, kein localStorage) – die Auswahl lebt nur in dieser Seite.
 
    ========================================================================================================

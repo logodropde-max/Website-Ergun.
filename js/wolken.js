@@ -1,18 +1,18 @@
-/* Wolken im Titelbild (Emre, 27.09.2026; Nachtlauf 27./28.09.: Sonne + Mond hinter den Wolken, Endlosschleife, 8 % schneller)
-   Emres Higgsfield-Wolken (bilder/wolken/, erzeugt mit bilder/wolken/wolken.py), je Wolke drei Fassungen: Tag, Gold, Nacht,
+/* Wolken im Titelbild (ERGUN., 27.09.2026; Nachtlauf 27./28.09.: Sonne + Mond hinter den Wolken, Endlosschleife, 8 % schneller)
+   ERGUNs Higgsfield-Wolken (bilder/wolken/, erzeugt mit bilder/wolken/wolken.py), je Wolke drei Fassungen: Tag, Gold, Nacht,
    dazu eine Körpermaske (dichter Kern) und ein Deckungsraster (wolken.json).
    · Zwei Tiefen: „hoch“ = Federwolken in der Himmels-Ebene, „tief“ = flache Wolken in der Ebene der fernsten Bergkette.
-     Nie vor Emre + Hund, dem Titel oder der Navigation.
+     Nie vor ERGUN. + Hund, dem Titel oder der Navigation.
    · Bewegung: JavaScript setzt die Lage jedes Bildes (nur transform), sehr langsam von links nach rechts, je Ebene anders
      schnell, endlos: rechts raus = links wieder rein (Position modulo Bildbreite + Wolkenbreite), bei jeder Wiederkehr minimal
      andere Höhe und Größe. Atmen per CSS. Pause, wenn das Titelbild nicht zu sehen ist. „Bewegung reduzieren“: Wolken stehen,
      die Verdeckung wird trotzdem beim Scrollen berechnet.
-   · Sonne und Mond hinter den Wolken (Vorbild: Emres Bild „Wolkenmeer“ – Wolken leuchten von innen): Die Wolke liegt in der
+   · Sonne und Mond hinter den Wolken (Vorbild: ERGUNs Bild „Wolkenmeer“ – Wolken leuchten von innen): Die Wolke liegt in der
      Zeichenreihenfolge vor dem Gestirn. Ihr dichter Kern (Körpermaske) wird undurchsichtig, sobald das Gestirn dahinter steht
      (Deckungsgrad aus dem Raster) – kein Durchblitzen. Dafür leuchtet sie: weiches Licht von innen (radial um die Gestirnslage,
      in die Wolkenform maskiert) und ein heller Saum an den Kanten zum Gestirn hin (Wolkenform minus versetzte Wolkenform).
      Sonne: warm-weiß (Tag) bis Gold/Orange (Abend), Mond: kühles Silber. Alles weich, synchron zum Licht der Szene.
-     Ist ein Gestirn verdeckt, dämpft js/szene.js den Lichtsaum auf Emre + Hund ganz leicht (ergunSzene.verdeckt).
+     Ist ein Gestirn verdeckt, dämpft js/szene.js den Lichtsaum auf ERGUN. + Hund ganz leicht (ergunSzene.verdeckt).
    · Test: ?wolken=test → Tempo, Ebenen, Licht, Gestirn per Knopf hinter eine Wolke setzen. */
 (function () {
   var held = document.querySelector('[data-szene]'), S = window.ergunSzene;
@@ -27,11 +27,11 @@
      h = Höhe der Wolke (Anteil der Bildhöhe) · y = Mitte (Anteil der Bildhöhe) · x = Startlage der Mitte (Anteil der Breite)
      dauer = Sekunden für einmal quer über das Bild (vor dem Tempo-Faktor) · atem = Sekunden für einmal ein- und ausatmen */
   var EINST = {
-    tempo: 1.08,          // alle Wolken 8 % schneller (Emre; Bereich 5–10 %)
+    tempo: 1.08,          // alle Wolken 8 % schneller (ERGUN.; Bereich 5–10 %)
     wiederkehr: 0.015,    // bei der Wiederkehr: Höhe ± 1,5 % der Bildhöhe, Größe ± 3 %
     leuchten: 5,          // Reichweite des Leuchtens in Sonnenradien (Mond etwas kürzer)
     saum: 0.035,          // Breite des Lichtsaums als Anteil der Wolkenhöhe
-    deckenAb: 0.01, deckenBis: 0.08,  // Deckungsgrad (0–1), ab dem der Kern undurchsichtig wird / voll ist (28.09., Emre: die Wolke deckt den Teil des Gestirns hinter ihr wirklich ab – der Kern wird sofort dicht, sobald die Scheibe die Wolke berührt)
+    deckenAb: 0.01, deckenBis: 0.08,  // Deckungsgrad (0–1), ab dem der Kern undurchsichtig wird / voll ist (28.09., ERGUN.: die Wolke deckt den Teil des Gestirns hinter ihr wirklich ab – der Kern wird sofort dicht, sobald die Scheibe die Wolke berührt)
     glaetten: 0.18        // pro Bild aufgeholter Anteil (weiche Übergänge beim Vorbeiziehen)
   };
   var LICHT = {

@@ -123,9 +123,9 @@
   /* Tiefe: hinten viel Weg (fast stehend), vorne wenig – so entsteht beim Scrollen die Parallaxe */
   /* bis hierhin (Anteil des Startbilds) ist die Sonne hinter dem Sattel – ca. 10 % mehr Strecke als vorher */
   var SONNE_BIS = 0.31;
-  /* ganzer Tag → Nacht auf 60 % der Strecke (Emre, 25.09. abends): volle Nacht und jaulender Hund,
+  /* ganzer Tag → Nacht auf 60 % der Strecke (ERGUN., 25.09. abends): volle Nacht und jaulender Hund,
      solange das Titelbild noch gut zu sehen ist. Alle Werte unten gelten für die ungestauchte Strecke. */
-  /* 26.09. (Emre): Sonnenuntergang → Mond etwas langsamer, auf 75 % der Strecke (vorher 60 %) */
+  /* 26.09. (ERGUN.): Sonnenuntergang → Mond etwas langsamer, auf 75 % der Strecke (vorher 60 %) */
   var ZEIT = 0.75;
   var TIEFE = { himmel: 0.84, weit: 0.8, fern: 0.74, mitte: 0.62, titel: 0.52, huegel: 0.48, wald: 0.33, wiese: 0.17, gras: 0 };
 
@@ -518,21 +518,21 @@
     }
   }
 
-  /* ---------- Emre und sein Hund (26.09.2026, Emre: „erkennbar, im Stil der Seite, richtig stehen“) ----------
+  /* ---------- ERGUN. und sein Hund (26.09.2026, ERGUN.: „erkennbar, im Stil der Seite, richtig stehen“) ----------
      Echte Freistellungen im Licht der Szene (bilder/hero/figuren/, erstellt mit bilder/hero/4k/szene2/figuren.py):
-     je Figur ein Tag- und ein Abendbild und für die Nacht die Bildfolge – der Hund hebt den Kopf und jault, Emre winkt
+     je Figur ein Tag- und ein Abendbild und für die Nacht die Bildfolge – der Hund hebt den Kopf und jault, ERGUN. winkt
      („Tschüss“). Beides startet gemeinsam, sobald es Nacht ist und man weiterscrollt, und läuft dann in eigener Zeit ab
      (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
-  /* 28.09. später (Emre: „flüssig und sauber“): winken_fluss.py – winken2-v1 0,75–4,45 s, BiRefNet, feste Figur + Armzone, echte Zwischenbilder (48/s), ohne Überblendung; Werte aus figuren/emre.json */
-  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 215, h: 600, anzahl: 163, spalten: 12, fuss: 0.9964, oben: 0.0054, mitte: 0.5588, breite: 0.842, einzeln: true, ausschnitt: [0, 8, 151, 374] } };   /* 28.09. nachts: NEUE Figur (Higgsfield-Bild V1, Gesicht aus Emres Foto mit blauem Hemd, auf seinen Wunsch) + Kling-Winken; winken_neu.py + winken_fest.py (PLATTE=0), 48 Bilder/s (Werte aus figuren/emre.json) */
-  /* Tempo (27.09. spät, Emre): Emre und Hund laufen NUR nach Zeit, jeder in seinem festen Tempo, unabhängig vom Scrollen.
-     Emre winkt einmal (FIG_DAUER), der Hund hebt den Kopf in HUND_HOCH und senkt ihn in HUND_RUNTER. */
-  var FIG_DAUER = 3.4, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0, FIG_VERSION = 17;   /* 28.09. später (Emre: „flüssig und sauber“): winken_fluss.py – 0,75–4,45 s aus winken2-v1, 48 Bilder/s mit echten Zwischenbildern, echte Geschwindigkeit (3,7 s) */
+  /* 28.09. später (ERGUN.: „flüssig und sauber“): winken_fluss.py – winken2-v1 0,75–4,45 s, BiRefNet, feste Figur + Armzone, echte Zwischenbilder (48/s), ohne Überblendung; Werte aus figuren/emre.json */
+  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 215, h: 600, anzahl: 163, spalten: 12, fuss: 0.9964, oben: 0.0054, mitte: 0.5588, breite: 0.842, einzeln: true, ausschnitt: [0, 8, 151, 374] } };   /* 28.09. nachts: NEUE Figur (Higgsfield-Bild V1, Gesicht aus ERGUNs Foto mit blauem Hemd, auf seinen Wunsch) + Kling-Winken; winken_neu.py + winken_fest.py (PLATTE=0), 48 Bilder/s (Werte aus figuren/emre.json) */
+  /* Tempo (27.09. spät, ERGUN.): ERGUN. und Hund laufen NUR nach Zeit, jeder in seinem festen Tempo, unabhängig vom Scrollen.
+     ERGUN. winkt einmal (FIG_DAUER), der Hund hebt den Kopf in HUND_HOCH und senkt ihn in HUND_RUNTER. */
+  var FIG_DAUER = 3.4, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0, FIG_VERSION = 17;   /* 28.09. später (ERGUN.: „flüssig und sauber“): winken_fluss.py – 0,75–4,45 s aus winken2-v1, 48 Bilder/s mit echten Zwischenbildern, echte Geschwindigkeit (3,7 s) */
   /* Lage von Sonne und Mond (für Wolken, js/wolken.js) und wie stark das Gestirn gerade verdeckt ist (0–1, in Zehnteln) */
   var gest = { sy: 0, my: 0, sonneAn: 1, mondAn: 0 }, verdecktQ = 0, gestTest = null;
   var fig = { phase: 0, ziel: 0, laeuft: false }, hund = { phase: 0, ziel: 0, laeuft: false }, animT = 0, animLaeuft = false;
   var FIG_TEST = /[?&]figuren=test\b/.test(location.search);
-  /* Winken (26.09., Emre): sofort beim ersten Runterwischen von ganz oben, einmal – erst nach erneutem
+  /* Winken (26.09., ERGUN.): sofort beim ersten Runterwischen von ganz oben, einmal – erst nach erneutem
      Seitenanfang wieder. Sind die Einzelbilder noch nicht geladen, wartet das Winken kurz auf sie. Läuft immer im selben
      Tempo zu Ende (auch wenn man wegscrollt) und endet in der Ruhepose. */
   var gewunken = false, winkenWartet = false;
@@ -553,7 +553,7 @@
     var f = FIGUREN[name], b = new Image(); b.decoding = 'async';
     b.onload = function () {
       var fertig = function (bild) { f[folge ? 'folge' : 'bild'] = bild; f.zuletzt = ''; figurenZeichnen(); if (folge && name === 'emre' && winkenWartet) winken(); if (folge && name === 'hund') hundPruefen(); };
-      /* 28.09. (Emre): Die Bildfolge wird erst VOLLSTÄNDIG dekodiert (createImageBitmap bzw. decode) und dann freigegeben –
+      /* 28.09. (ERGUN.): Die Bildfolge wird erst VOLLSTÄNDIG dekodiert (createImageBitmap bzw. decode) und dann freigegeben –
          das Winken startet nie mit halben oder leeren Bildern und ruckelt nicht beim ersten Zeichnen. */
       var p = folge && window.createImageBitmap ? createImageBitmap(b) : (b.decode ? b.decode().then(function () { return b; }) : Promise.resolve(b));
       p.then(fertig, function () { fertig(b); });
@@ -561,12 +561,12 @@
     b.src = 'bilder/hero/figuren/' + name + (folge ? '-folge' : '') + '.webp?v=' + FIG_VERSION;
   }
   Object.keys(FIGUREN).forEach(function (k) { FIGUREN[k].zuletzt = ''; figurLaden(k, false); });
-  /* Grundbild für Emre (Figur ohne Armzone, klein) gleich mit dem Standbild laden */
+  /* Grundbild für ERGUN. (Figur ohne Armzone, klein) gleich mit dem Standbild laden */
   if (FIGUREN.emre.ausschnitt && !ruhig) { var gb = new Image(); gb.decoding = 'async'; gb.onload = function () { FIGUREN.emre.grundBild = gb; FIGUREN.emre.zuletzt = ''; figurenZeichnen(); }; gb.src = 'bilder/hero/figuren/emre-grund.webp?v=' + FIG_VERSION; }
   /* die Bildfolgen (groß) erst nach dem Laden der Seite */
   function folgenLaden() { if (!ruhig) Object.keys(FIGUREN).forEach(function (k) { figurLaden(k, true); }); }
   if (document.readyState === 'complete') setTimeout(folgenLaden, 200); else window.addEventListener('load', function () { setTimeout(folgenLaden, 200); });
-  /* Licht auf den Figuren, live aus denselben Werten wie die Landschaft (26.09., Emre: „der Realität entsprechen, Stück für Stück“):
+  /* Licht auf den Figuren, live aus denselben Werten wie die Landschaft (26.09., ERGUN.: „der Realität entsprechen, Stück für Stück“):
      Tag → Abend (gold) → blaue Stunde (blau) → Nacht, in beide Richtungen. mul = Belichtung und Farbe (multiplikativ),
      lift = Aufhellung der Schatten durch Himmels- bzw. Mondlicht, rim = Lichtsaum links oben (Sonne bzw. Mond stehen links). */
   var FIGLICHT = {
@@ -594,9 +594,9 @@
   function figurZeichnen(f, nr, l) {
     var c = f.leinwand; if (!c || !f.bild) return;
     if (!f.folge) nr = 0;
-    /* Winken von vorher (Emre, 27.09.: „die davor passt besser“): zwischen zwei Einzelbildern weich überblenden, in Achtelschritten. */
+    /* Winken von vorher (ERGUN., 27.09.: „die davor passt besser“): zwischen zwei Einzelbildern weich überblenden, in Achtelschritten. */
     nr = Math.max(0, Math.min(f.anzahl - 1, nr));
-    if (f.einzeln) nr = Math.round(nr);   /* Emre (28.09.): jedes Videobild einzeln, keine Überblendung */
+    if (f.einzeln) nr = Math.round(nr);   /* ERGUN. (28.09.): jedes Videobild einzeln, keine Überblendung */
     var n0 = Math.floor(nr), t = Math.round((nr - n0) * 8) / 8, n1 = Math.min(f.anzahl - 1, n0 + 1);
     if (t >= 1) { n0 = n1; t = 0; }
     var schluessel = n0 + '|' + t + '|' + lichtGold.toFixed(2) + '|' + lichtBlau.toFixed(2) + '|' + lichtNacht.toFixed(2) + '|' + verdecktQ;
@@ -639,7 +639,7 @@
     }
     var g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H); g.drawImage(A, 0, 0);
   }
-  /* 28.09. (Emre: „smoother, nicht wie editiert“): Emre winkt jetzt mit JEDEM Videobild (24 pro Sekunde, winken_voll.py) und in
+  /* 28.09. (ERGUN.: „smoother, nicht wie editiert“): ERGUN. winkt jetzt mit JEDEM Videobild (24 pro Sekunde, winken_voll.py) und in
      echter Geschwindigkeit – gleichmäßig durch die Zeit, ohne eigene Tempokurve (das Video bringt sein natürliches Anheben und
      Senken selbst mit; eine zusätzliche Kurve hat die Mitte beschleunigt) und ohne Überblendung zweier Bilder (Geisterbild). */
   function figurenZeichnen() {
@@ -662,8 +662,8 @@
     if (fig.laeuft || hund.laeuft) requestAnimationFrame(animLauf); else animLaeuft = false;
   }
   var testAnzeige = null;
-  /* Emre und der Hund stehen nebeneinander auf der Kuppe – gleiche Entfernung, beide Füße auf dem Boden.
-     Hund bis zu den Ohren ca. 0,9 m, Emre ca. 1,8 m → Emre knapp doppelt so hoch wie der stehende Hund. */
+  /* ERGUN. und der Hund stehen nebeneinander auf der Kuppe – gleiche Entfernung, beide Füße auf dem Boden.
+     Hund bis zu den Ohren ca. 0,9 m, ERGUN. ca. 1,8 m → ERGUN. knapp doppelt so hoch wie der stehende Hund. */
   function figurenStellen(ebene) {
     var huelle = ebene.querySelector('.szene__figuren');
     if (!huelle) { huelle = document.createElement('div'); huelle.className = 'szene__figuren'; ebene.appendChild(huelle); }
@@ -688,8 +688,8 @@
       f.leinwand = c; f.zuletzt = '';
       f.fussX = z[1]; f.fussB = z[2] * f.breite; f.fussY = boden + sinken * 0.4; f.stand = z[3] * (f.fuss - f.oben);
     });
-    /* Mondlicht hinter den Figuren (Nachtlauf 27.09., Emre: „Hand immer gut zu sehen“): schwacher, kühler Schein auf der Wiese
-       hinter Emre und dem Hund – nachts hebt sich der dunkle Umriss (Arm, Hand, Hundekopf) vom Hintergrund ab. Nur opacity (--nacht). */
+    /* Mondlicht hinter den Figuren (Nachtlauf 27.09., ERGUN.: „Hand immer gut zu sehen“): schwacher, kühler Schein auf der Wiese
+       hinter ERGUN. und dem Hund – nachts hebt sich der dunkle Umriss (Arm, Hand, Hundekopf) vom Hintergrund ab. Nur opacity (--nacht). */
     huelle.querySelectorAll('.szene__mondlicht').forEach(function (d) { d.remove(); });
     [[H, 1.0], [E, 0.8]].forEach(function (z) {
       var f = z[0], r = f.stand * z[1], d = document.createElement('div'); d.className = 'szene__mondlicht';
@@ -729,16 +729,16 @@
     huelle.appendChild(c);
   }
 
-  /* ---------- Sterne (Nachtlauf 27.09., Emre: „scharfe leuchtende Sterne, wenn es dunkel wird“) ----------
+  /* ---------- Sterne (Nachtlauf 27.09., ERGUN.: „scharfe leuchtende Sterne, wenn es dunkel wird“) ----------
      Zwei Leinwände in der Himmels-Ebene hinter Mond und Wolken: scharfe Punkte, die helleren mit feinem Hof und Lichtkreuz.
      Deckkraft hängt an --himmel-nacht (kommen mit der Dunkelheit, verschwinden bei Tag); die zweite Leinwand funkelt leise (CSS). */
-  /* 28.09. (Emre: „weniger, edler“): ca. 60–80 kleine, klare Punkte (Radius 0,55–1,35 px) mit zartem Schein, wenige heller,
+  /* 28.09. (ERGUN.: „weniger, edler“): ca. 60–80 kleine, klare Punkte (Radius 0,55–1,35 px) mit zartem Schein, wenige heller,
      etwa ein Drittel funkelt sehr sanft auf zwei Leinwänden mit verschiedenem Takt (nicht synchron). Keine Kreuze, kein Rauschen.
      Die Hülle bekommt eine leichte Parallaxe (licht()), die Sternschnuppe zieht sehr selten (schnuppeStart). */
   var sternHuelle = null, schnuppe = null, schnuppeT = 0;
   function sterneZeichnen() {
     ebenen.himmel.querySelectorAll('.szene__sternhuelle, .szene__schnuppe').forEach(function (c) { c.remove(); });
-    /* 28.09. (Emre): weniger und realistischer – 46 Sterne Desktop / 32 Handy, viele ganz schwach, wenige hell mit weichem Hof,
+    /* 28.09. (ERGUN.): weniger und realistischer – 46 Sterne Desktop / 32 Handy, viele ganz schwach, wenige hell mit weichem Hof,
        leichte Farbtemperaturen (weiß, kühl, warm) wie am echten Nachthimmel */
     var r = zufall(4711), q = m.q, n = m.hoch ? 32 : 46, hoehe = m.H * 0.62;
     var farben = ['255,255,255', '220,230,255', '255,240,222', '255,250,240'];
@@ -813,7 +813,7 @@
     spaeter(function () { if (nr !== bauNr) return; AKTIV = ['gold']; landschaft(); AKTIV = LICHTER;
       spaeter(function () { if (nr !== bauNr) return; AKTIV = ['nacht']; landschaft(); AKTIV = LICHTER;
         spaeter(function () { if (nr !== bauNr) return; zeichne(true); }); }); });
-    /* Sonne startet direkt unter dem Titel (26.09., Emre), sinkt senkrecht und verschwindet hinter dem Sattel in der Mitte */
+    /* Sonne startet direkt unter dem Titel (26.09., ERGUN.), sinkt senkrecht und verschwindet hinter dem Sattel in der Mitte */
     m.sonneR = Math.max(26, Math.min(44, m.W * 0.026));
     m.sonneEnde = ky('fern', m.W / 2) + (TIEFE.himmel - TIEFE.fern * m.f) * SONNE_BIS * ZEIT * 0.9 * m.H + m.sonneR * 1.4;
     m.mondX = m.W * (m.hoch ? 0.22 : 0.24);
@@ -838,7 +838,7 @@
   }
 
   /* ---------- Scrollen ----------
-     Eine gemeinsame Scroll-Quelle (26.09., Emre: alles live am Finger, in beide Richtungen): ein Takt liest pro
+     Eine gemeinsame Scroll-Quelle (26.09., ERGUN.: alles live am Finger, in beide Richtungen): ein Takt liest pro
      Bild (requestAnimationFrame) scrollY – auch während des Schwungscrollens auf dem iPhone. Parallaxe und Winken
      nehmen den echten Wert; Sonne, Mond, Himmel, Licht auf Landschaft/Figuren und der endo-Faden einen ganz leicht
      geglätteten (~60 ms), damit Mausrad-Schritte nicht ruckeln. Kein Nachlaufen, keine Tempogrenze, hoch = runter. */
@@ -906,7 +906,7 @@
     var vorherW = weichY;
     if (ruhig || !isNaN(festP)) weichY = rohY;
     else {
-      /* 28.09. (Emre: „smooth wie eine Kamerafahrt“): kritisch gedämpfte Feder statt Nachziehen – exakte Lösung je Bild,
+      /* 28.09. (ERGUN.: „smooth wie eine Kamerafahrt“): kritisch gedämpfte Feder statt Nachziehen – exakte Lösung je Bild,
          daher auf 60 und 120 Hz gleich, schwingt nie über. FEDER_W = 18/s → nach ~250 ms praktisch am Ziel. */
       var ab = weichY - rohY, ex = Math.exp(-FEDER_W * dt), tmp = (weichV + FEDER_W * ab) * dt;
       weichY = rohY + (ab + tmp) * ex; weichV = (weichV - FEDER_W * tmp) * ex;
@@ -948,7 +948,7 @@
     mond.style.transform = 'translate3d(' + (gestTest && gestTest.was === 'mond' ? gestTest.x : m.mondX).toFixed(2) + 'px,' + ym.toFixed(2) + 'px,0)';
     gest.mondAn = sanft(0.27, 0.4, p);
     wert('--mond', gest.mondAn.toFixed(3));
-    /* Emre und der Hund: Tag-, Abend- und Nachtbild überblenden mit dem Licht */
+    /* ERGUN. und der Hund: Tag-, Abend- und Nachtbild überblenden mit dem Licht */
     lichtGold = gold; lichtBlau = sanft(0.18, 0.3, p); lichtNacht = nacht;
     if (!FIG_TEST) hundPruefen();
     figurenZeichnen();
@@ -995,7 +995,7 @@
       var j = performance.now();
       if (t0w && !fig.laeuft && !dw) dw = ((j - t0w) / 1000).toFixed(2) + ' s';
       if (t0h && !hund.laeuft && !dh) dh = ((j - t0h) / 1000).toFixed(2) + ' s';
-      anz.textContent = 'Emre ' + (fig.laeuft ? Math.round(fig.phase * 100) + ' %' : (dw || 'Ruhe')) + ' (Soll ' + FIG_DAUER + ' s) · Hund ' + (hund.laeuft ? Math.round(hund.phase * 100) + ' %' : (dh || (hund.phase ? 'oben' : 'unten'))) + ' (Soll ' + HUND_HOCH + ' / ' + HUND_RUNTER + ' s)';
+      anz.textContent = 'Figur ' + (fig.laeuft ? Math.round(fig.phase * 100) + ' %' : (dw || 'Ruhe')) + ' (Soll ' + FIG_DAUER + ' s) · Hund ' + (hund.laeuft ? Math.round(hund.phase * 100) + ' %' : (dh || (hund.phase ? 'oben' : 'unten'))) + ' (Soll ' + HUND_HOCH + ' / ' + HUND_RUNTER + ' s)';
     };
     testAnzeige();
   }
