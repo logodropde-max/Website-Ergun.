@@ -2,8 +2,12 @@
 
 > Überblick für eine neue Sitzung: Vault-Notiz `08 Projekte/Neustart – hier weitermachen.md`. Hier stehen die technischen Details, neuester Abschnitt oben.
 
+## 28.09.2026 nachts – ohne Name und Ort
+- Emre: „Nicht erwähnen, dass ich aus Elmshorn komme, und meinen Namen auch nicht.“ Entfernt aus `<title>`, Meta-/OG-Beschreibung, Titelzeile (jetzt „Digitalstudio für Unternehmen“), Kontakt-Porträt (`alt` „Porträt Ihres Ansprechpartners“, Beschriftung „Ihr Ansprechpartner · online“), Einwilligung („dass ich zu meiner Anfrage kontaktiert werde“), Agentur-Text („ERGUN. ist ein Digitalstudio für Unternehmen: …“), Fußzeile. `og.jpg?v=5` neu gerendert.
+- **Bleibt (Pflicht):** Name und Anschrift in `impressum.html` (§ 5 DDG) und Verantwortlicher in `datenschutz.html` (Art. 13 DSGVO).
+
 ## 28.09.2026 spätabends – Titel „Websites · Automatisierung · KI“ + Winken v15 aus einem Guss
-- **Titel:** `[data-titel-klein]` „Emre Ergun · Elmshorn“, h1 `.titel__haupt--drei` mit drei `.titel__zeile` („Websites“, „Automatisierung“, „KI“) und `.titel__punkt` (·, 55 % Deckkraft); Desktop/Tablet eine Zeile (`clamp(2.4rem, 6.4vw, 7rem)`), unter 640 px drei Zeilen ohne Punkte (`clamp(2.3rem, 11.2vw, 3.6rem)`). Gemessen 375/768/1280/1440 px: 3/1/1/1 Zeilen, nichts abgeschnitten, Emre/Hund nicht verdeckt. Alte Fassung `?titel=a`. Vorschaubild `og.jpg?v=4` neu. Screenshots `08 Projekte/KI-Angebot-2026-09-28/titel-neu-*`.
+- **Titel:** `[data-titel-klein]` „Digitalstudio für Unternehmen“ (erst „Emre Ergun · Elmshorn“, dann auf Emres Wunsch ohne Name/Ort), h1 `.titel__haupt--drei` mit drei `.titel__zeile` („Websites“, „Automatisierung“, „KI“) und `.titel__punkt` (·, 55 % Deckkraft); Desktop/Tablet eine Zeile (`clamp(2.4rem, 6.4vw, 7rem)`), unter 640 px drei Zeilen ohne Punkte (`clamp(2.3rem, 11.2vw, 3.6rem)`). Gemessen 375/768/1280/1440 px: 3/1/1/1 Zeilen, nichts abgeschnitten, Emre/Hund nicht verdeckt. Alte Fassung `?titel=a`. Vorschaubild `og.jpg?v=4` neu. Screenshots `08 Projekte/KI-Angebot-2026-09-28/titel-neu-*`.
 - **Winken v15 (`winken_ganz.py`):** Emre zu v14: „links unvollständig, Schulter passt nicht, am Bauch Streifen – Hauptsache einheitliche saubere Bewegung“. Jetzt ganzer Oberkörper (Schultern, Brust, Arm) aus demselben Videobild, Emres echter Kopf fest; Beine zeilenweise festgehalten (6 Bänder, Rest 0,2 px), Naht in der Hose; Lichtkante links und halbdurchsichtige Randpixel von innen gefüllt; heller Rest am rechten Schuh entfernt. `emre-folge.webp` 1,45 MB (Ausschnitt 248 × 494, q72, `alpha_quality` 60), `FIG_VERSION` 15, `szene.js?v=51`.
 - Gemessen: 0 Einbrüche, 0 am Zellrand, Kopf 0,5 px, Oberkörper bewegt sich natürlich mit (max 2,7 px), Sprung max 8,7 % (vorher 17,4 %).
 
