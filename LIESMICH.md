@@ -2,6 +2,11 @@
 
 > Überblick für eine neue Sitzung: Vault-Notiz `08 Projekte/Neustart – hier weitermachen.md`. Hier stehen die technischen Details, neuester Abschnitt oben.
 
+## 28.09.2026 nachts – Auftrag 7: Preis-Bereich `#preise` mit Rechner
+- **`js/preise.js`** – ganz oben `window.PREISE` (die EINE Preisstelle: `stufen`, `ueberall`, `module`, `betreuung`, `mehr`, `endoSeiteOeffentlich`, `klein`, `steuer`), darunter `rechnen(auswahl)` → `{ einmalig, monatlich, jahr }`, `anfrageText()`, dann der Aufbau des Abschnitts (Karten = echte Radio/Checkbox-Felder, Summe, Leiste unten am Handy, „Anfrage mit dieser Auswahl“).
+- **Preis ändern:** Zahl in `PREISE` ändern (z. B. `{ id: 'termin', …, preis: 250 }`), Obsidian-Notiz `02 Preise/Webdesign-Pakete (Erstgespräch)` gleich anpassen, `npm test` in `_code/werkzeuge/endo-datenbank`, veröffentlichen.
+- Abschnitt-Markup in `index.html` vor `#kontakt` (`[data-preise]`, `[data-stufen]`, `[data-module]`, `[data-betreuung]`, `[data-mehr]`, `[data-summe]`), CSS-Block „Preis-Bereich (Auftrag 7 …)“ (`.preise`, `.pk`, `.preise-leiste`). `THEMEN` im Formular-Skript wird aus `PREISE` gebaut; `preise.js` lädt direkt davor.
+
 ## 28.09.2026 nachts – Auftrag 6: feste Preise im Kontaktformular, Redesign raus
 - `THEMEN` (Skript im Kontakt-Teil von `index.html`) = **die Preisstelle**: `{ wert, titel, preis: 'ab 1.000 €', monat: '50 €/Monat' }` × 3 (Website · Automatisierung · endo für Ihr Unternehmen). Karten-Markup `.thema__text` mit `b` (Titel), `.thema__preis`, `.thema__monat`; `preisVon()` schreibt den Preis in die Nachricht. CSS `.thema`: Liste, ab 480 px Formularbreite (Container-Abfrage) drei nebeneinander, Höhe 96 px. Kleingedrucktes `.thema__klein` unter den Karten.
 - `TIPPS` neu; `ENDO_DEMO_OEFFENTLICH = false` → Tipp-Link auf die endo-Startseite; auf `true` stellen, sobald `/unternehmen` öffentlich ist.

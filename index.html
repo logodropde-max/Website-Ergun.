@@ -538,6 +538,75 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 /* Übergang Titelbild → Kontakt: ruhiger, dunkler Grund, weich aus dem Dunkel am Ende des Titelbilds (#070B16).
    Erdschnitt + Wurzeln (js/wurzeln.js) auf Emres Wunsch am 27.09. wieder entfernt – Datei bleibt liegen, wird nicht geladen. */
 .contact { position: relative; background: linear-gradient(#070B16 0, var(--bg) 420px); }
+
+/* ---------- Preis-Bereich (Auftrag 7, Emre 28.09.2026): Stufe wählen, Extras, Betreuung, Rechner – Zahlen nur in js/preise.js (PREISE) ----------
+   Ruhig, viel Luft, Akzent nur für die Wahl und den einen Knopf. Karten = echte Radio/Checkbox-Felder. Reihen immer voll (3 Stufen, 8 Extras → 1/2/4 Spalten). */
+.preise { -webkit-hyphens: manual; hyphens: manual; }
+.preise { width: min(100% - 2 * var(--pad), 1180px); margin: 0 auto; padding: clamp(88px, 14svh, 144px) 0 32px; }
+.preise__kopf { display: grid; gap: 16px; justify-items: center; text-align: center; margin-bottom: clamp(40px, 6vw, 64px); }
+.preise__marke { font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
+.preise__titel { font-family: var(--serif); font-weight: 400; font-size: clamp(2.3rem, 5.6vw, 4.4rem); line-height: 1; letter-spacing: -0.03em; text-wrap: balance; }
+.preise__intro { max-width: 46ch; color: var(--muted); text-wrap: pretty; }
+.preise__raster { display: grid; gap: 32px; align-items: start; }
+@media (min-width: 1024px) { .preise__raster { grid-template-columns: minmax(0, 1fr) 340px; gap: 48px; } }
+.preise__wahl { display: grid; gap: 48px; min-width: 0; }
+.preise__gruppe { margin: 0; padding: 0; border: 0; min-width: 0; container-type: inline-size; container-name: preisgruppe; }
+.preise__gruppe legend { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px; padding: 0; font-family: var(--serif); font-size: 24px; line-height: 32px; letter-spacing: -0.01em; }
+.preise__gruppe legend small { font-family: var(--sans); font-size: 14px; letter-spacing: 0; color: var(--muted); }
+.preise__nr { display: inline-grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--line); border-radius: 50%; font-family: var(--sans); font-size: 13px; color: var(--muted); transform: translateY(-3px); }
+.preise__hinweis { margin-top: 12px; font-size: 14px; line-height: 20px; color: var(--muted); }
+.preise__hinweis[hidden] { display: none; }
+.pk-reihe { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+@container preisgruppe (min-width: 640px) { .pk-reihe--stufen { grid-template-columns: repeat(3, minmax(0, 1fr)); } .pk-reihe--module, .pk-reihe--mehr { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.pk { position: relative; display: flex; min-width: 0; cursor: pointer; }
+.pk__feld { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.pk__innen { flex: 1; display: flex; gap: 12px; padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: rgba(242, 239, 232, 0.025);
+  transition: border-color 220ms var(--ease), background-color 220ms var(--ease), transform 160ms var(--ease-out); }
+.pk--stufe .pk__innen { padding: 24px 20px; }
+@media (hover: hover) and (pointer: fine) { .pk:hover .pk__innen { border-color: rgba(242, 239, 232, 0.3); } }
+.pk:active .pk__innen { transform: scale(0.99); }
+.pk__feld:checked + .pk__innen { border-color: var(--accent); background: rgba(255, 90, 31, 0.06); }
+.pk__feld:focus-visible + .pk__innen { outline: 2px solid var(--accent); outline-offset: 3px; }
+.pk__marke { flex: none; width: 18px; height: 18px; margin-top: 3px; border: 1.5px solid rgba(242, 239, 232, 0.36); border-radius: 50%; transition: border-color 220ms var(--ease), background-color 220ms var(--ease); }
+.pk input[type="checkbox"] + .pk__innen .pk__marke { border-radius: 5px; }
+.pk__feld:checked + .pk__innen .pk__marke { border-color: var(--accent); background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230E0E0C' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5.5 12.5l4.5 4.5L18.5 7.5'/%3E%3C/svg%3E") center / 12px no-repeat; }
+.pk__inhalt { flex: 1; display: grid; align-content: start; gap: 4px; min-width: 0; }
+.pk__inhalt--zeile { grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 16px; }
+.pk__text { display: grid; gap: 2px; min-width: 0; }
+.pk__name { font-family: var(--serif); font-size: 24px; line-height: 32px; letter-spacing: -0.01em; }
+.pk__name--klein { font-family: var(--sans); font-size: 16px; line-height: 24px; font-weight: 500; letter-spacing: 0; }
+.pk__preis { font-family: var(--serif); font-size: 30px; line-height: 36px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pk__preis--klein { font-family: var(--sans); font-size: 16px; line-height: 24px; font-weight: 500; letter-spacing: 0; }
+.pk__monat { color: var(--muted); font-weight: 400; }
+.pk__art { font-size: 12px; line-height: 16px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.pk__satz { font-size: 14px; line-height: 20px; color: var(--muted); text-wrap: pretty; }
+.pk__liste { list-style: none; margin: 16px 0 0; padding: 16px 0 0; border-top: 1px solid var(--line); display: grid; gap: 8px; font-size: 14px; line-height: 20px; color: rgba(242, 239, 232, 0.86); }
+.pk__liste li { display: flex; gap: 8px; }
+.pk__liste svg { flex: none; width: 16px; height: 16px; margin-top: 2px; color: var(--muted); }
+.pk--mehr .pk__preis { margin-top: 8px; }
+.pk__link { position: relative; z-index: 1; justify-self: start; margin-top: 4px; font-size: 14px; color: var(--text); border-bottom: 1px solid var(--line); }
+/* Summe: auf dem Desktop klebt sie rechts mit, auf dem Handy steht sie unter der Auswahl (+ kompakte Leiste unten) */
+.preise__summe { display: grid; gap: 12px; padding: 24px; border: 1px solid var(--line); border-radius: 24px; background: linear-gradient(180deg, rgba(242, 239, 232, 0.04), rgba(242, 239, 232, 0.012)); }
+@media (min-width: 1024px) { .preise__summe { position: sticky; top: 96px; } }
+.preise__zeilen { margin: 0; display: grid; gap: 8px; }
+.preise__zeilen div { display: flex; justify-content: space-between; gap: 12px; font-size: 16px; line-height: 24px; }
+.preise__zeilen dt { color: var(--muted); }
+.preise__zeilen dd { margin: 0; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.preise__jahr-titel { margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.preise__jahr { font-family: var(--serif); font-size: clamp(2.6rem, 4vw, 3.4rem); line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.preise__klein { font-size: 12px; line-height: 16px; color: var(--muted); text-wrap: pretty; }
+.preise__knopf { width: 100%; margin-top: 8px; }
+/* kompakte Leiste unten (Handy) */
+.preise-leiste { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 15; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 10px 10px 18px; border: 1px solid rgba(242, 239, 232, 0.16); border-radius: 999px; background: rgba(14, 14, 12, 0.88); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); opacity: 0; transform: translateY(16px); pointer-events: none; transition: opacity 300ms var(--ease), transform 300ms var(--ease); }
+.preise-leiste.ist-an { opacity: 1; transform: none; pointer-events: auto; }
+.preise-leiste__zahlen { display: grid; gap: 0; min-width: 0; }
+.preise-leiste__zahlen small { font-size: 12px; line-height: 16px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.preise-leiste__zahlen b { font-family: var(--serif); font-weight: 400; font-size: 20px; line-height: 28px; font-variant-numeric: tabular-nums; }
+.preise-leiste .btn { min-height: 44px; padding: 10px 16px; font-size: 14px; }
+@media (min-width: 1024px) { .preise-leiste { display: none; } }
+@media (prefers-reduced-motion: reduce) { .pk__innen, .pk__marke, .preise-leiste { transition: none; } }
 </style>
 </head>
 <body>
@@ -547,6 +616,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 <header class="nav">
   <a class="nav__mark" href="#top" aria-label="ERGUN – nach oben">ERGUN<span class="dot">.</span></a>
   <nav class="nav__links" aria-label="Seitennavigation">
+    <a class="nav__link" href="#preise">Preise</a>
     <a class="nav__link" href="#kontakt">Kontakt</a>
     <a class="nav__link nav__link--endo" href="https://endo-ergun.vercel.app/" data-endo-link>endo <span aria-hidden="true">↗</span></a>
   </nav>
@@ -585,6 +655,53 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 </div>
 
 <main id="inhalt" tabindex="-1">
+  <!-- PREISE (Auftrag 7, 28.09.2026): Stufe · Extras · Betreuung · Für mehr · Rechner. Inhalt baut js/preise.js aus PREISE – Zahlen nur dort ändern. -->
+  <section class="preise" id="preise" aria-labelledby="preise-titel" data-preise>
+    <div class="preise__kopf">
+      <p class="preise__marke reveal">Preise</p>
+      <h2 class="preise__titel reveal" id="preise-titel">Was es kostet, steht hier.</h2>
+      <p class="preise__intro reveal">Stufe wählen, Extras ergänzen: Einmalige und monatliche Kosten rechnen sich sofort mit, dazu die Summe im ersten Jahr.</p>
+    </div>
+    <div class="preise__raster">
+      <div class="preise__wahl">
+        <fieldset class="preise__gruppe reveal">
+          <legend><span class="preise__nr" aria-hidden="true">1</span>Website</legend>
+          <div class="pk-reihe pk-reihe--stufen" data-stufen></div>
+          <p class="preise__hinweis" data-ueberall></p>
+        </fieldset>
+        <fieldset class="preise__gruppe reveal">
+          <legend><span class="preise__nr" aria-hidden="true">2</span>Extras <small>mehrere möglich</small></legend>
+          <div class="pk-reihe pk-reihe--module" data-module></div>
+        </fieldset>
+        <fieldset class="preise__gruppe reveal">
+          <legend><span class="preise__nr" aria-hidden="true">3</span>Betreuung <small>monatlich</small></legend>
+          <div class="pk-reihe" data-betreuung></div>
+          <p class="preise__hinweis" data-betreuung-ohne hidden></p>
+        </fieldset>
+        <fieldset class="preise__gruppe reveal">
+          <legend><span class="preise__nr" aria-hidden="true">4</span>Für mehr <small>optional</small></legend>
+          <div class="pk-reihe pk-reihe--mehr" data-mehr></div>
+        </fieldset>
+      </div>
+      <aside class="preise__summe reveal" data-preise-summe aria-labelledby="preise-summe-titel">
+        <p class="hinweis-versteckt" id="preise-summe-titel">Ihre Summe</p>
+        <dl class="preise__zeilen">
+          <div><dt>Einmalig</dt><dd data-summe="einmalig">0&nbsp;€</dd></div>
+          <div><dt>Monatlich</dt><dd data-summe="monatlich">0&nbsp;€/Monat</dd></div>
+        </dl>
+        <p class="preise__jahr-titel">Summe im ersten Jahr</p>
+        <p class="preise__jahr" data-summe="jahr">0&nbsp;€</p>
+        <p class="preise__klein" data-klein-preis></p>
+        <button class="btn btn--wa preise__knopf" type="button" data-preise-anfrage>Anfrage mit dieser Auswahl <span aria-hidden="true">→</span></button>
+        <p class="hinweis-versteckt" aria-live="polite" data-preise-live></p>
+      </aside>
+    </div>
+    <div class="preise-leiste" data-preise-leiste aria-hidden="true" inert>
+      <span class="preise-leiste__zahlen"><small>Erstes Jahr</small><b data-summe="jahr">0&nbsp;€</b></span>
+      <button class="btn btn--wa" type="button" data-preise-anfrage>Anfrage <span aria-hidden="true">→</span></button>
+    </div>
+  </section>
+
   <section class="contact" id="kontakt" aria-labelledby="kontakt-titel">
     <div class="contact__kopf">
       <figure class="contact__person reveal">
@@ -715,20 +832,21 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
+<script src="js/preise.js?v=1"></script>
 <script>
 /* Kostenloses Erstgespräch: eine Karte mit allen Feldern (seit 25.09. abends keine Schritte mehr).
    Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)
    und landen als Link in der Nachricht; klappt das nicht, hängt man sie selbst an.
    Ohne JavaScript bleibt das Formular sichtbar und tut nichts Falsches. */
 (function () {
-  /* ===== PREISE UND KARTEN – hier ändern (Auftrag 6, Emre 28.09.2026: feste Preise sichtbar, Quelle Obsidian „02 Preise/Webdesign-Pakete
-     (Erstgespräch)“). titel = Karte, preis = einmalig, monat = monatlich. Die Preise stehen auf den Karten und in der Nachricht an Emre.
+  /* ===== KARTEN im Formular (Auftrag 6/7): Titel hier, PREISE in js/preise.js (eine Stelle für Karten und Preis-Bereich).
+     preis = einmalig, monat = monatlich. Die Preise stehen auf den Karten und in der Nachricht.
      Anordnung: CSS .thema – Handy Liste, ab Tablet drei nebeneinander (immer volle Reihen) ===== */
+  /* Auftrag 7: Zahlen kommen aus PREISE (js/preise.js) – Website „ab“ günstigster Stufe + Betreuung, dazu Automatisierung und endo */
+  var P = window.PREISE, ab = function (n) { return 'ab ' + P.euro(n).replace('\u00a0', ' '); }, mon = function (n) { return P.euro(n).replace('\u00a0', ' ') + '/Monat'; };
   var THEMEN = [
-    { wert: 'Website', titel: 'Website', preis: 'ab 1.000 €', monat: '50 €/Monat' },
-    { wert: 'Automatisierung', titel: 'Automatisierung', preis: 'ab 1.000 €', monat: '200 €/Monat' },
-    { wert: 'endo für Ihr Unternehmen', titel: 'endo für Ihr Unternehmen', preis: 'ab 4.000 €', monat: '200 €/Monat' }
-  ];
+    { wert: 'Website', titel: 'Website', preis: ab(Math.min.apply(null, P.stufen.map(function (x) { return x.preis; }))), monat: mon(P.betreuung.monat) }
+  ].concat(P.mehr.map(function (m) { return { wert: m.karte, titel: m.karte, preis: ab(m.preis), monat: mon(m.monat) }; }));
   function preisVon(wert) { var t = THEMEN.filter(function (x) { return x.wert === wert; })[0]; return t ? t.preis + ' + ' + t.monat : ''; }
   var WHATSAPP_AN = true;              /* false = WhatsApp als Antwort-Weg ausblenden (falls keine geschäftliche Nummer) */
   var WA_NUMMER = '4915906344961';     /* Nummer aus dem Impressum */
