@@ -73,7 +73,7 @@ window.PREISE = {
   endoKarte: 'Automatisierung & KI mit endo',
   mehrStufe: 'rundum',
   /* „endo ansehen“: /unternehmen erst, wenn die Seite öffentlich ist (heute gesperrt) – sonst die endo-Startseite */
-  endoSeiteOeffentlich: false,
+  endoSeiteOeffentlich: true,   /* Auftrag 32 (29.09.2026): /unternehmen ist öffentlich */
   endoSeite: 'https://endo-ergun.vercel.app/unternehmen',
   endoStart: 'https://endo-ergun.vercel.app/',
   klein: 'Unverbindliche Einschätzung, kein Festpreis. Die genaue Kalkulation klären wir im kostenlosen Erstgespräch.',
