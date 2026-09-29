@@ -1,4 +1,10 @@
-# Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 25 minimal)
+# Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
+
+## Stand 29.09.2026 – Auftrag 28: Farbwelt aus dem Titelbild, Schritt ① auf einen Blick, Betreuung abwählbar, Extras als Liste (Rückweg Tag `vor-auftrag-28`)
+- **Farben nur an EINER Stelle:** `:root` in `index.html`, Variablen `--f-grund-oben/-grund/-grund-tief`, `--f-blau`, `--f-flaeche(-hover)`, `--f-kante` (Verlauf für die 1-px-Kante), `--f-linie`, `--f-text`, `--f-gedaempft`, `--f-gold(-hell)`, `--f-bernstein`, `--f-rosa`/`--f-hof`, `--f-wahl` (Gewählt), `--f-schein`, `--f-tiefe`, `--f-knopf`/`--f-knopf-text`, `--f-fehler`, `--f-marke` (Orange nur im Logo-Punkt). `--bg/--text/--muted/--accent/--line` zeigen darauf. Variante B: `html[data-farbe="b"]` (gesetzt vom Kopf-Skript bei `?farbe=b`).
+- Kartenkante = `::before` mit Maske (`mask-composite: exclude`), weil `border-image` keine Rundung kann. CSS-Block „Auftrag 28“ am Ende des `<style>`.
+- `js/preise.js`: Extras = `A.extras` (Liste mit `hakenKnopf`, `role="checkbox"`, `data-fokus="ex-<id>"`), `LEITFADEN.fragen` gibt es nicht mehr. Betreuung: `A.betreuungAn` (Haken `data-fokus="betreuung-an"`), `betreuungAn()` = mit endo immer an; `auswahl().betreuung` = `null` → „ohne Betreuung“ (`PREISE.rechnen` rechnet 0 € monatlich, `anfrageText` schreibt „ohne Betreuung (…)“, das Formular zeigt `.auswahl__ohne`). Schritt ①: Pfeiltasten wandern zwischen `.mf-karte`.
+- Prüfen im Browser: `node _code/werkzeuge/ergun-ansicht-check.mjs` (braucht `node werkzeuge/range-server.mjs ee-design-website 8793`).
 
 ## Stand 29.09.2026 – Auftrag 25 minimal: ein Ablauf „Website · Automatisierung · Beides“ → Ihre Anfrage (Rückweg Tag `vor-minimal`)
 - EIN Abschnitt `section.preise.mf#preise` (mit `span#kontakt` als Anker für Schritt ③). Markup in `index.html`: `.mf__oben` (`[data-mf-zurueck]`, `[data-mf-stand]`, `[data-mf-linie]`), `[data-mf-dyn]` (Schritte ① ② baut `js/preise.js`), `[data-mf-anfrage]` (Schritt ③ = Kopf + bisheriges Formular `#anfrage`), `[data-mf-weiter]`, `aside[data-mf-summe]` (Desktop klebend, unter 1024 px feste Leiste unten, nur in Schritt ②).

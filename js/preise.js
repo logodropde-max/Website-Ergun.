@@ -23,24 +23,24 @@ window.PREISE = {
         { t: 'Individuelle Funktion (z. B. Terminbuchung, Rechner)', b: ['funktion'] }, { t: 'Erweiterte Formulare' }, { t: 'Mehrsprachig möglich' },
         { t: 'Besucherstatistik ohne Cookies', b: ['statistik'] }, { t: 'Schnelle Ladezeit', b: ['ladezeit'] }, { t: '3 Korrekturrunden', b: ['korrektur'] }] }
   ],
-  /* ② Extras – in Gruppen. Im Rechner zählt der „ab“-Wert. */
+  /* ② Extras – in Gruppen. Im Rechner zählt der „ab“-Wert. Seit Auftrag 28 (29.09.2026) deutlich günstiger, passend zum Aufwand (alte Preise: Preis-Notiz). */
   extras: [
     { gruppe: 'Seiten & Inhalte', eintraege: [
-      { id: 'unterseite', name: 'Zusätzliche Unterseite', satz: 'Zum Beispiel für ein neues Angebot oder einen Standort.', preis: 100, ab: true },
-      { id: 'sprache', name: 'Zusätzliche Sprache', satz: 'Komplett übersetzt, mit Sprachumschalter.', preis: 300, ab: true },
-      { id: 'bilder', name: '10 weitere eigene Bilder', satz: 'Zehn zusätzliche Bilder, eigens für Sie gestaltet.', preis: 100 }] },
+      { id: 'unterseite', name: 'Zusätzliche Unterseite', satz: 'Zum Beispiel für ein neues Angebot oder einen Standort.', preis: 50, ab: true },
+      { id: 'sprache', name: 'Zusätzliche Sprache', satz: 'Komplett übersetzt, mit Sprachumschalter.', preis: 150, ab: true },
+      { id: 'bilder', name: '10 weitere eigene Bilder', satz: 'Zehn zusätzliche Bilder, eigens für Sie gestaltet.', preis: 40 }] },
     { gruppe: 'Design & Bewegung', eintraege: [
-      { id: 'animation', name: 'Premium-Animation', satz: 'Aufwendige Scroll- und Bewegungseffekte.', preis: 150, ab: true },
-      { id: 'loop', name: 'Video-Loop', satz: 'Kurzes, lautloses Video in Schleife.', preis: 150, b: ['loop'] },
-      { id: '3d', name: '3D-Element', satz: 'Ein Objekt, zum Beispiel Ihr Produkt, zum Drehen.', preis: 200, ab: true, b: ['3d'] }] },
+      { id: 'animation', name: 'Premium-Animation', satz: 'Aufwendige Scroll- und Bewegungseffekte.', preis: 80, ab: true },
+      { id: 'loop', name: 'Video-Loop', satz: 'Kurzes, lautloses Video in Schleife.', preis: 60, b: ['loop'] },
+      { id: '3d', name: '3D-Element', satz: 'Ein Objekt, zum Beispiel Ihr Produkt, zum Drehen.', preis: 120, ab: true, b: ['3d'] }] },
     { gruppe: 'Funktionen', eintraege: [
-      { id: 'formular', name: 'Erweitertes Anfrage-Formular', satz: 'Mit Wunschtermin und Datei-Upload.', preis: 150, ab: true },
-      { id: 'termin', name: 'Terminbuchung', satz: 'Ihre Kunden buchen Termine direkt auf der Website.', preis: 250, ab: true },
-      { id: 'regler', name: 'Vorher/Nachher-Regler', satz: 'Zwei Bilder zum Vergleichen, per Schieberegler.', preis: 100 },
-      { id: 'funktion', name: 'Individuelle Funktion', satz: 'Zum Beispiel ein Rechner oder Konfigurator.', preis: 250, ab: true, b: ['funktion'] }] },
+      { id: 'formular', name: 'Erweitertes Anfrage-Formular', satz: 'Mit Wunschtermin und Datei-Upload.', preis: 60, ab: true },
+      { id: 'termin', name: 'Terminbuchung', satz: 'Ihre Kunden buchen Termine direkt auf der Website.', preis: 120, ab: true },
+      { id: 'regler', name: 'Vorher/Nachher-Regler', satz: 'Zwei Bilder zum Vergleichen, per Schieberegler.', preis: 40 },
+      { id: 'funktion', name: 'Individuelle Funktion', satz: 'Zum Beispiel ein Rechner oder Konfigurator.', preis: 150, ab: true, b: ['funktion'] }] },
     { gruppe: 'Sichtbarkeit', eintraege: [
-      { id: 'seo', name: 'SEO-Paket', satz: 'Ausrichtung auf Ihre Suchbegriffe, strukturierte Daten.', preis: 300, b: ['seoPaket'] },
-      { id: 'google', name: 'Google-Unternehmensprofil', satz: 'Eintrag in Suche und Maps einrichten und pflegen.', preis: 150, b: ['google'] }] }
+      { id: 'seo', name: 'SEO-Paket', satz: 'Ausrichtung auf Ihre Suchbegriffe, strukturierte Daten.', preis: 150, b: ['seoPaket'] },
+      { id: 'google', name: 'Google-Unternehmensprofil', satz: 'Eintrag in Suche und Maps einrichten und pflegen.', preis: 60, b: ['google'] }] }
   ],
   /* Auf Anfrage: ohne Preis, nicht im Rechner – nur für die Anfrage vormerken */
   aufAnfrage: [
@@ -104,25 +104,20 @@ window.LEITFADEN = {
     optionen: [
       { id: 'website', titel: 'Website', satz: 'Eine Website, die zu Ihrem Betrieb passt.' },
       { id: 'endo', titel: 'Automatisierung', satz: 'endo beantwortet Anfragen, bucht Termine und mehr.' },
-      { id: 'beides', titel: 'Beides', satz: 'Website und endo aus einer Hand.' }] },
+      { id: 'beides', titel: 'Beides', satz: 'Ihre Website und endo zusammen.', dezent: 'alles aus einer Hand' }] },
   website: { titel: 'Welche Website passt?', satz: 'Der Preis ist ein Startwert.', alles: 'Alles, was drin ist', extras: 'Extras hinzufügen (optional)' },
   /* höchstens 3 Stichpunkte je Stufe (Auszug aus PREISE.stufen[].punkte, in Alltagssprache) */
   stufenKurz: {
     start: ['Bis zu 3 Seiten', 'Für Handy und PC', 'Kontaktformular'],
     business: ['Bis zu 8 Seiten', 'Eigenes Design mit Bewegung', '10 eigene Bilder und Video'],
     pro: ['Eigenes Konzept', 'Aufwendige Animationen und 3D', 'Terminbuchung oder eigene Funktion'] },
-  /* Ja/Nein-Fragen unter „Extras hinzufügen“ → Extra aus PREISE (bewegung: Video-Loop oder 3D-Element) */
-  fragen: [
-    { id: 'termin', extra: 'termin', icon: 'termin', frage: 'Sollen Kunden online Termine buchen?', kurz: 'Terminbuchung' },
-    { id: 'seo', extra: 'seo', icon: 'seo', frage: 'Sollen Sie bei Google besser gefunden werden?', kurz: 'bessere Auffindbarkeit', begriff: 'seoPaket' },
-    { id: 'sprache', extra: 'sprache', icon: 'sprache', frage: 'Brauchen Sie die Seite in einer weiteren Sprache?', kurz: 'weitere Sprache' },
-    { id: 'bewegung', extra: null, icon: 'bewegung', frage: 'Soll sich etwas bewegen – Video oder 3D?', kurz: 'Video bzw. 3D', begriff: 'loop' },
-    { id: 'formular', extra: 'formular', icon: 'formular', frage: 'Sollen Kunden Fotos oder Dateien mitschicken können?', kurz: 'Formular mit Dateien' },
-    { id: 'unterseite', extra: 'unterseite', icon: 'unterseite', frage: 'Brauchen Sie mehr Seiten als in Ihrer Größe?', kurz: 'zusätzliche Seiten' }],
-  googleFrage: 'Auch in Google Maps?',
-  bewegungPreis: function (P) { var l = P.alleExtras().filter(function (x) { return x.id === 'loop'; })[0]; return 'ab ' + P.euro(l.preis); },
+  /* Extras (Auftrag 28): ruhige Liste mit Haken in den 4 Gruppen aus PREISE.extras (Name, Satz, Preis rechtsbündig) – nichts als „beliebt“ markiert */
+  extrasSchon: 'enthalten', extrasJeSeite: 'je Seite', extrasAnzahl: 'Wie viele zusätzliche Seiten?',
+  /* Betreuung (Auftrag 28): Haken = mit Betreuung (Stufe vorgewählt, „ändern“ öffnet die Stufen), Haken weg = ohne Betreuung, 0 € im Monat.
+     Mit endo bleibt sie gesetzt (Rundum), weil der Betrieb von endo darin steckt. */
   betreuung: { titel: 'Betreuung', grund: { basis: 'Passt für eine Website ohne eigene Funktionen.', aktiv: 'Passt, weil Ihre Website Termine oder Formulare verarbeitet.', rundum: 'Passt, weil Ihre Website viel Eigenes kann.' },
-    endo: 'Mit endo ist Rundum nötig, weil endo laufend betreut wird.', selbst: 'Ich habe eigenes Hosting und eine eigene Domain', aendern: 'ändern' },
+    endo: 'Bleibt gesetzt: Der laufende Betrieb von endo ist darin enthalten.', selbst: 'Ich habe eigenes Hosting und eine eigene Domain', aendern: 'ändern',
+    ohne: 'Ohne Betreuung', ohneSatz: 'Hosting, Domain und Updates übernehmen Sie dann selbst.' },
   /* endo-Fähigkeiten mit ehrlichem Status – Stand aus endo (_code/endo-studio/js/assistenten.js), dort ändern und hier nachziehen */
   endo: { titel: 'Wo soll endo helfen?', satz: 'Wählen Sie eine oder mehrere Aufgaben.', ansehen: 'So sieht das aus: endo ansehen',
     faehigkeiten: [
@@ -192,7 +187,7 @@ window.LEITFADEN = {
     if (e.extras.length) z.push('• Extras: ' + e.extras.map(function (m) { return m.name + (m.anzahl > 1 ? ' × ' + m.anzahl : '') + ' (' + P.betrag(m) + ')'; }).join(', '));
     if (e.anfrage.length) z.push('• Im Erstgespräch besprechen: ' + e.anfrage.map(function (x) { return x.name; }).join(', '));
     if (e.mehr.length) z.push('• Automatisierung & KI mit endo: ' + e.mehr.map(function (m) { return m.name + (m.faehigkeiten && m.anzahl > 1 && m.id !== 'komplett' ? ' – ' + m.faehigkeiten.join(', ') : m.faehigkeiten && m.anzahl === 1 ? ' – ' + m.faehigkeiten.join(', ') : '') + ' (' + P.betrag(m) + ' + ' + P.euro(m.monat) + ' / Monat)'; }).join(', '));
-    z.push('• Betreuung: ' + (e.betreuung ? e.betreuung.name + ' (' + P.euro(e.monatlich) + ' / Monat' + (e.selbst ? ', Hosting & Domain stelle ich selbst' : '') + ')' : 'keine'));
+    z.push('• Betreuung: ' + (e.betreuung ? e.betreuung.name + ' (' + P.euro(e.monatlich) + ' / Monat' + (e.selbst ? ', Hosting & Domain stelle ich selbst' : '') + ')' : 'ohne Betreuung (Hosting, Domain und Updates übernehme ich selbst)'));
     z.push('Einmalig ' + ab + P.euro(e.einmalig) + ' · monatlich ' + P.euro(e.monatlich) + ' · erstes Jahr ' + ab + P.euro(e.jahr) + ' (unverbindliche Einschätzung)');
     return z.join('\n').replace(/ /g, ' ');   /* feste Leerzeichen → normale (WhatsApp/Mail) */
   };
@@ -227,27 +222,18 @@ window.LEITFADEN = {
   var HAKEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 12.5l4.5 4.5L18.5 7.5"/></svg>';
 
   /* ---------- Antworten (nur Arbeitsspeicher) ---------- */
-  var A = { art: null, stufe: null, ja: {}, bewegung: 'loop', seiten: 1, endo: [], betreuung: null, selbst: false, extrasOffen: false, betreuungOffen: false };
+  var A = { art: null, stufe: null, extras: [], seiten: 1, endo: [], betreuung: null, betreuungAn: true, selbst: false, extrasOffen: false, betreuungOffen: false };
   function mitWebsite() { return A.art === 'website' || A.art === 'beides'; }
   function mitEndo() { return A.art === 'endo' || A.art === 'beides'; }
   function stufeDaten() { return P.stufen.filter(function (x) { return x.id === A.stufe; })[0] || null; }
   function enthalten(id) { var s = stufeDaten(); return !!(s && (s.enthaelt || []).indexOf(id) >= 0); }
-  function extrasIds() {
-    if (!mitWebsite()) return [];
-    var l = [];
-    L.fragen.forEach(function (f) {
-      if (!A.ja[f.id]) return;
-      var ids = f.id === 'bewegung' ? [A.bewegung] : [f.extra];
-      if (f.id === 'seo' && A.ja.google) ids.push('google');
-      ids.forEach(function (x) { if (x && !enthalten(x)) l.push(x); });
-    });
-    return l;
-  }
+  function extrasIds() { return mitWebsite() ? A.extras.filter(function (x) { return !enthalten(x); }) : []; }   /* Enthaltenes zählt nicht doppelt */
   function ohneBetreuung() { return { stufe: mitWebsite() ? A.stufe : null, extras: extrasIds(), endo: mitEndo() ? A.endo : [] }; }
   function betreuungJetzt() { var e = P.betreuungStandard(ohneBetreuung());   /* vorausgewählt wie im Rechner: meist Basis */ return mitEndo() ? P.mehrStufe : (A.betreuung || e); }
+  function betreuungAn() { return mitEndo() || A.betreuungAn; }   /* mit endo immer gesetzt */
   function auswahl() {
     return { stufe: mitWebsite() ? A.stufe : null, extras: extrasIds(), anzahl: { unterseite: A.seiten }, endo: mitEndo() ? A.endo.slice() : [],
-      betreuung: betreuungJetzt(), selbst: mitWebsite() && A.selbst };
+      betreuung: betreuungAn() ? betreuungJetzt() : null, selbst: mitWebsite() && A.selbst && betreuungAn() };
   }
   function leer() { return !A.art || (mitWebsite() && !A.stufe) || (!mitWebsite() && !A.endo.length); }
   /* Anfrage-Box: Auswahl ist fertig, sobald die nötigen Teile gewählt sind (bei „Beides“ reicht die Website, endo kommt dazu) */
@@ -264,13 +250,6 @@ window.LEITFADEN = {
     s.appendChild(el('span', 'lf-schalter__ja', 'Ja')); s.appendChild(el('span', 'lf-schalter__nein', 'Nein'));
     s.addEventListener('click', fn); return s;
   }
-  function info(schluessel) {
-    var w = el('span', 'lf-info'), k = el('button', 'lf-info__knopf', 'i'); k.type = 'button';
-    var t = el('span', 'lf-info__text', B[schluessel].text); t.hidden = true; t.id = 'mf-info-' + schluessel;
-    k.setAttribute('aria-expanded', 'false'); k.setAttribute('aria-controls', t.id); k.setAttribute('aria-label', 'Was heißt „' + B[schluessel].name + '“?');
-    k.addEventListener('click', function (e) { e.stopPropagation(); t.hidden = !t.hidden; k.setAttribute('aria-expanded', String(!t.hidden)); });
-    w.appendChild(k); return { knopf: w, text: t };
-  }
   function neuZeichnen(key) { neu(); zeigen(aktiv, 0, true, key); }
   function aufklapper(klasse, titel, offen, inhalt, beiToggle) {
     var d = el('details', 'mf-auf ' + klasse); d.open = !!offen;
@@ -282,7 +261,7 @@ window.LEITFADEN = {
   var BAU = {
     art: function (w) {
       w.titel = L.art.titel; w.satz = L.art.satz;
-      var g = el('div', 'mf-karten');
+      var g = el('div', 'mf-karten'); g.setAttribute('role', 'group'); g.setAttribute('aria-label', L.art.titel);
       var f = P.mehr[0], preis = {
         website: 'ab ' + P.euro(P.stufen[0].preis),
         endo: P.betrag(f) + ' + ' + P.euro(f.monat) + MONAT,
@@ -291,8 +270,15 @@ window.LEITFADEN = {
       L.art.optionen.forEach(function (o) {
         var b = el('button', 'mf-karte'); b.type = 'button'; b.setAttribute('aria-pressed', String(A.art === o.id)); b.setAttribute('data-fokus', 'art-' + o.id);
         var bild = el('span', 'mf-karte__bild'); bild.innerHTML = icon(o.id); b.appendChild(bild);
-        b.appendChild(el('span', 'mf-karte__titel', o.titel)); b.appendChild(el('span', 'mf-karte__satz', o.satz)); b.appendChild(el('span', 'mf-karte__preis', preis[o.id]));
-        b.addEventListener('click', function () { if (A.art !== o.id) { A.art = o.id; A.betreuung = null; } neu(); gehe(schritte()[1], 1); });
+        var txt = el('span', 'mf-karte__text'), kopf = el('span', 'mf-karte__kopf');
+        kopf.appendChild(el('span', 'mf-karte__titel', o.titel)); if (o.dezent) kopf.appendChild(el('span', 'mf-karte__dezent', o.dezent));
+        txt.appendChild(kopf); txt.appendChild(el('span', 'mf-karte__satz', o.satz)); txt.appendChild(el('span', 'mf-karte__preis', preis[o.id])); b.appendChild(txt);
+        b.addEventListener('click', function () { if (A.art !== o.id) { A.art = o.id; A.betreuung = null; A.betreuungAn = true; } neu(); gehe(schritte()[1], 1); });
+        b.addEventListener('keydown', function (e) {   /* Pfeiltasten wandern zwischen den drei Karten, Enter/Leertaste wählt (Knopf) */
+          var k = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key]; if (!k) return;
+          var alle = [].slice.call(g.querySelectorAll('.mf-karte')), i = alle.indexOf(b); e.preventDefault();
+          alle[(i + k + alle.length) % alle.length].focus();
+        });
         g.appendChild(b);
       });
       w.inhalt.appendChild(g);
@@ -347,65 +333,66 @@ window.LEITFADEN = {
       if (!mitWebsite()) w.inhalt.appendChild(betreuungZeile());
     }
   };
-  function extrasListe() {
-    var ul = el('ul', 'lf-fragen'); ul.setAttribute('role', 'list');
-    L.fragen.forEach(function (f) {
-      var li = el('li', 'lf-frage'), kopf = el('div', 'lf-frage__kopf');
-      var bild = el('span', 'lf-frage__bild'); bild.innerHTML = icon(f.icon); kopf.appendChild(bild);
-      var t = el('span', 'lf-frage__text'); t.appendChild(el('span', 'lf-frage__was', f.frage));
-      var extra = f.extra && P.alleExtras().filter(function (x) { return x.id === f.extra; })[0], s = stufeDaten();
-      var schon = f.extra && enthalten(f.extra) || (f.id === 'bewegung' && enthalten('loop') && enthalten('3d'));
-      t.appendChild(el('span', 'lf-frage__preis', schon ? 'Schon in ' + s.name + ' enthalten' : extra ? '+ ' + P.betrag(extra) + (f.id === 'unterseite' ? ' je Seite' : '') : '+ ' + L.bewegungPreis(P)));
-      kopf.appendChild(t);
-      var inf = f.begriff ? info(f.begriff) : null; if (inf) kopf.appendChild(inf.knopf);
-      if (schon) kopf.appendChild(el('span', 'lf-frage__schon', 'enthalten'));
-      else kopf.appendChild(schalter(A.ja[f.id], f.frage, function () { A.ja[f.id] = !A.ja[f.id]; neuZeichnen('ja-' + f.id); }, 'ja-' + f.id));
-      li.appendChild(kopf); if (inf) li.appendChild(inf.text);
-      if (!schon && A.ja[f.id] && f.id === 'seo') {
-        var g = el('div', 'lf-unter'), gp = P.alleExtras().filter(function (x) { return x.id === 'google'; })[0];
-        g.appendChild(el('span', 'lf-frage__was', L.googleFrage)); g.appendChild(el('span', 'lf-frage__preis', '+ ' + P.betrag(gp)));
-        g.appendChild(schalter(A.ja.google, L.googleFrage, function () { A.ja.google = !A.ja.google; neuZeichnen('ja-google'); }, 'ja-google'));
-        li.appendChild(g);
-      }
-      if (!schon && A.ja[f.id] && f.id === 'bewegung') {
-        var c = el('div', 'lf-unter lf-chips'); c.setAttribute('role', 'group'); c.setAttribute('aria-label', 'Was soll sich bewegen?');
-        [['loop', 'Video'], ['3d', '3D-Element']].forEach(function (x) {
-          var m = P.alleExtras().filter(function (y) { return y.id === x[0]; })[0];
-          var b = el('button', 'lf-chip', x[1] + (enthalten(x[0]) ? ' · enthalten' : ' · ' + P.betrag(m))); b.type = 'button'; b.setAttribute('aria-pressed', String(A.bewegung === x[0])); b.setAttribute('data-fokus', 'bw-' + x[0]);
-          b.addEventListener('click', function () { A.bewegung = x[0]; neuZeichnen('bw-' + x[0]); });
-          c.appendChild(b);
-        });
-        li.appendChild(c);
-      }
-      if (!schon && A.ja[f.id] && f.id === 'unterseite') {
-        var z = el('div', 'lf-unter lf-zahl'); z.appendChild(el('span', 'lf-frage__was', 'Wie viele zusätzliche Seiten?'));
-        var minus = el('button', 'lf-zahl__knopf', '−'), wert = el('output', 'lf-zahl__wert', String(A.seiten)), plus = el('button', 'lf-zahl__knopf', '+');
-        minus.type = plus.type = 'button'; minus.setAttribute('aria-label', 'Eine Seite weniger'); plus.setAttribute('aria-label', 'Eine Seite mehr');
-        minus.disabled = A.seiten <= 1; plus.disabled = A.seiten >= 10; minus.setAttribute('data-fokus', 'minus'); plus.setAttribute('data-fokus', 'plus');
-        minus.addEventListener('click', function () { A.seiten = Math.max(1, A.seiten - 1); neuZeichnen('minus'); });
-        plus.addEventListener('click', function () { A.seiten = Math.min(10, A.seiten + 1); neuZeichnen('plus'); });
-        z.appendChild(minus); z.appendChild(wert); z.appendChild(plus); li.appendChild(z);
-      }
-      ul.appendChild(li);
-    });
-    return ul;
+  /* Extras (Auftrag 28): ruhige Liste mit Haken in den 4 Gruppen, Preis rechtsbündig, je ein kurzer Satz. Enthaltenes = „enthalten“. */
+  function hakenKnopf(an, label, key, gesperrt) {
+    var k = el('button', 'mf-haken'); k.type = 'button'; k.setAttribute('role', 'checkbox'); k.setAttribute('aria-checked', String(!!an)); k.setAttribute('aria-label', label);
+    if (key) k.setAttribute('data-fokus', key);
+    if (gesperrt) { k.disabled = true; k.setAttribute('aria-disabled', 'true'); }
+    k.innerHTML = '<span class="mf-haken__box" aria-hidden="true">' + HAKEN + '</span>';
+    return k;
   }
-  /* Betreuung: eine Zeile „Betreuung Basis · 50 € / Monat · ändern“, aufgeklappt drei Stufen + Hosting selbst */
+  function extrasListe() {
+    var w = el('div', 'mf-extras');
+    P.extras.forEach(function (g) {
+      var grp = el('div', 'mf-extras__gruppe'); grp.setAttribute('role', 'group'); grp.setAttribute('aria-label', g.gruppe);
+      grp.appendChild(el('p', 'mf-extras__titel', g.gruppe));
+      var ul = el('ul', 'mf-extras__liste'); ul.setAttribute('role', 'list');
+      g.eintraege.forEach(function (m) {
+        var schon = enthalten(m.id), an = schon || A.extras.indexOf(m.id) >= 0, li = el('li', 'mf-extra' + (an ? ' ist-an' : '') + (schon ? ' ist-schon' : ''));
+        var k = hakenKnopf(an, m.name + (schon ? ' – ' + L.extrasSchon : ''), 'ex-' + m.id, schon);
+        var t = el('span', 'mf-extra__text'); t.appendChild(el('span', 'mf-extra__name', m.name)); t.appendChild(el('span', 'mf-extra__satz', m.satz));
+        k.appendChild(t);
+        k.appendChild(el('span', 'mf-extra__preis', schon ? L.extrasSchon : '+ ' + P.betrag(m) + (m.id === 'unterseite' ? ' ' + L.extrasJeSeite : '')));
+        if (!schon) k.addEventListener('click', function () { var i = A.extras.indexOf(m.id); if (i >= 0) A.extras.splice(i, 1); else A.extras.push(m.id); neuZeichnen('ex-' + m.id); });
+        li.appendChild(k);
+        if (!schon && an && m.id === 'unterseite') {
+          var z = el('div', 'lf-unter lf-zahl mf-extra__zahl'); z.appendChild(el('span', 'lf-frage__was', L.extrasAnzahl));
+          var minus = el('button', 'lf-zahl__knopf', '−'), wert = el('output', 'lf-zahl__wert', String(A.seiten)), plus = el('button', 'lf-zahl__knopf', '+');
+          minus.type = plus.type = 'button'; minus.setAttribute('aria-label', 'Eine Seite weniger'); plus.setAttribute('aria-label', 'Eine Seite mehr');
+          minus.disabled = A.seiten <= 1; plus.disabled = A.seiten >= 10; minus.setAttribute('data-fokus', 'minus'); plus.setAttribute('data-fokus', 'plus');
+          minus.addEventListener('click', function () { A.seiten = Math.max(1, A.seiten - 1); neuZeichnen('minus'); });
+          plus.addEventListener('click', function () { A.seiten = Math.min(10, A.seiten + 1); neuZeichnen('plus'); });
+          z.appendChild(minus); z.appendChild(wert); z.appendChild(plus); li.appendChild(z);
+        }
+        ul.appendChild(li);
+      });
+      grp.appendChild(ul); w.appendChild(grp);
+    });
+    return w;
+  }
+  /* Betreuung (Auftrag 28): eine Zeile mit Haken „☑ Betreuung Basis · 50 € / Monat · ändern“. Haken weg = ohne Betreuung (0 € im Monat).
+     Mit endo gesetzt und gesperrt (Rundum), mit kurzem Grund. „ändern“ öffnet die drei Stufen + Hosting selbst. */
   function betreuungZeile() {
-    var id = betreuungJetzt(), b = P.betreuung.stufen.filter(function (x) { return x.id === id; })[0], selbst = A.selbst && mitWebsite();
-    var wrap = el('div', 'mf-betreuung');
+    var an = betreuungAn(), gesperrt = mitEndo(), id = betreuungJetzt(), b = P.betreuung.stufen.filter(function (x) { return x.id === id; })[0], selbst = A.selbst && mitWebsite();
+    var wrap = el('div', 'mf-betreuung' + (an ? '' : ' ist-aus'));
     var zeile = el('div', 'mf-betreuung__zeile');
-    zeile.appendChild(el('span', 'mf-betreuung__text', L.betreuung.titel + ' ' + b.name + ' · ' + P.euro(b.monat - (selbst ? P.betreuung.selbst : 0)) + MONAT));
-    var k = el('button', 'mf-link mf-link--klein', A.betreuungOffen ? 'fertig' : L.betreuung.aendern); k.type = 'button'; k.setAttribute('aria-expanded', String(A.betreuungOffen)); k.setAttribute('data-fokus', 'betreuung');
-    k.addEventListener('click', function () { A.betreuungOffen = !A.betreuungOffen; zeigen(aktiv, 0, true, 'betreuung'); });
-    zeile.appendChild(k); wrap.appendChild(zeile);
-    wrap.appendChild(el('p', 'mf-betreuung__grund', mitEndo() ? L.betreuung.endo : L.betreuung.grund[id]));
-    if (A.betreuungOffen) {
+    var k = hakenKnopf(an, L.betreuung.titel, 'betreuung-an', gesperrt);
+    k.appendChild(el('span', 'mf-betreuung__text', an ? L.betreuung.titel + ' ' + b.name + ' · ' + P.euro(b.monat - (selbst ? P.betreuung.selbst : 0)) + MONAT : L.betreuung.ohne + ' · ' + P.euro(0) + MONAT));
+    if (!gesperrt) k.addEventListener('click', function () { A.betreuungAn = !A.betreuungAn; if (!A.betreuungAn) A.betreuungOffen = false; neuZeichnen('betreuung-an'); });
+    zeile.appendChild(k);
+    if (an) {
+      var ae = el('button', 'mf-link mf-link--klein', A.betreuungOffen ? 'fertig' : L.betreuung.aendern); ae.type = 'button'; ae.setAttribute('aria-expanded', String(A.betreuungOffen)); ae.setAttribute('data-fokus', 'betreuung');
+      ae.addEventListener('click', function () { A.betreuungOffen = !A.betreuungOffen; zeigen(aktiv, 0, true, 'betreuung'); });
+      zeile.appendChild(ae);
+    }
+    wrap.appendChild(zeile);
+    wrap.appendChild(el('p', 'mf-betreuung__grund', !an ? L.betreuung.ohneSatz : gesperrt ? L.betreuung.endo : L.betreuung.grund[id]));
+    if (an && A.betreuungOffen) {
       var g = el('div', 'mf-betreuung__wahl'); g.setAttribute('role', 'group'); g.setAttribute('aria-label', L.betreuung.titel);
       P.betreuung.stufen.forEach(function (x) {
         var o = el('button', 'lf-chip lf-chip--gross'); o.type = 'button'; o.setAttribute('aria-pressed', String(id === x.id)); o.setAttribute('data-fokus', 'b-' + x.id);
         o.appendChild(el('b', '', x.name + ' · ' + P.euro(x.monat - (selbst ? P.betreuung.selbst : 0)) + MONAT)); o.appendChild(el('span', '', x.fuer));
-        if (mitEndo() && x.id !== P.mehrStufe) { o.disabled = true; }
+        if (gesperrt && x.id !== P.mehrStufe) { o.disabled = true; }
         o.addEventListener('click', function () { A.betreuung = x.id; neuZeichnen('b-' + x.id); });
         g.appendChild(o);
       });

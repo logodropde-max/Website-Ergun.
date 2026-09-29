@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>ERGUN. – Websites, Automatisierung & KI</title>
 <meta name="description" content="ERGUN.: Websites mit Design und Bewegung, persönlich geplant und gebaut – Automatisierung und eigene KI für Ihren Betrieb über endo. Kostenloses Erstgespräch.">
-<meta name="theme-color" content="#0E0E0C">
+<meta name="theme-color" content="#0C162C">
 <meta name="robots" content="noindex, nofollow"><!-- solange die Seite privat ist; beim Livegang entfernen -->
 
 <!-- Teilen in Social Media / Messengern -->
@@ -31,7 +31,7 @@
 <link rel="preload" href="bilder/hero/figuren/emre-folge.webp?v=18" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
 <link rel="preload" href="bilder/hero/figuren/emre-grund.webp?v=18" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
 <link rel="preload" href="bilder/hero/figuren/hund-folge.webp?v=18" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
-<script>document.documentElement.classList.add('js');</script>
+<script>document.documentElement.classList.add('js'); if (new URLSearchParams(location.search).get('farbe') === 'b') document.documentElement.setAttribute('data-farbe', 'b');   /* Auftrag 28: vorsichtigere Farbe zum Vergleich */</script>
 
 <style>
 html, body { touch-action: pan-x pan-y; }
@@ -45,11 +45,37 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 @font-face { font-family: "Instrument Serif"; src: url("schriften/InstrumentSerif-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: "Instrument Serif"; src: url("schriften/InstrumentSerif-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
 :root {
-  --bg: #000000;
-  --text: #F2EFE8;
-  --muted: #8A867D;   /* auf Schwarz 5.9:1 */
-  --accent: #FF5A1F;  /* auf Schwarz 6.6:1 */
-  --line: rgba(242, 239, 232, 0.12);
+  /* FARBWELT AUS DEM TITELBILD (Auftrag 28, 29.09.2026 – Ausnahme auf ERGUNs Wunsch: „zu viel Schwarz, Weiß und Orange“).
+     EINE Stelle für alle Farben unter dem Titelbild. Werte aus js/szene.js + Titelbild-CSS (Himmel/Sonne), Kontraste im Test geprüft.
+     Variante B (vorsichtiger: dunkler, weniger Gold) = ?farbe=b → html[data-farbe="b"] weiter unten. */
+  --f-grund-oben: #070B16;   /* Ende des Titelbilds (.szene__fade) – nahtloser Übergang */
+  --f-grund: #0C162C;        /* Nachtblau (Nachthimmel #0A1630 · #0E1D3C) */
+  --f-grund-tief: #060A14;   /* nach unten leicht dunkler */
+  --f-blau: #5E78A8;         /* Dämmerungsblau (Kante nachts) */
+  --f-blau-tief: #28334C;    /* tiefes Blau (Berge nachts) */
+  --f-flaeche: rgba(94, 120, 168, 0.12);        /* Karten: Dämmerungsblau, leicht durchscheinend */
+  --f-flaeche-hover: rgba(94, 120, 168, 0.18);
+  --f-kante: linear-gradient(180deg, rgba(242, 180, 92, 0.42), rgba(94, 120, 168, 0.24) 55%, rgba(94, 120, 168, 0.12));   /* 1 px: oben Gold-Schimmer, unten Blau */
+  --f-linie: rgba(148, 169, 197, 0.18);
+  --f-text: #F4F1E6;         /* Creme (Blüte Tag) – auf Grund 15.9:1 */
+  --f-gedaempft: #94A9C5;    /* helles Blaugrau (Wolkenschatten) – auf Grund 7.5:1, auf Karte 6.6:1 */
+  --f-gold: #F2B45C;         /* Gold (Blüte Abend) – Auswahl, Fokus, Haken – auf Grund 9.8:1 */
+  --f-gold-hell: #FFBE74;    /* Gold (Gras-Kante Abend) */
+  --f-bernstein: #FFAA60;    /* Abendsonne (Glut) */
+  --f-rosa: #C79AB8;         /* Dämmerungsrosa – nur als weicher Lichthof */
+  --f-hof: rgba(199, 154, 184, 0.13);
+  --f-wahl: #F2B45C;         /* Gewählt-Zustand (Rand, Haken) */
+  --f-schein: 0 0 0 1px rgba(242, 180, 92, 0.6), 0 0 32px -8px rgba(242, 180, 92, 0.5);
+  --f-tiefe: 0 28px 56px -36px rgba(2, 5, 16, 0.95);
+  --f-knopf: linear-gradient(120deg, #FFBE74 0%, #F2B45C 50%, #FFAA60 100%);   /* Sonnenuntergang: Gold → Bernstein */
+  --f-knopf-text: #0C162C;   /* auf dem Knopf 9.6–11:1 */
+  --f-fehler: #F2A08A;       /* Hinweis bei Fehlern – auf Grund 8.7:1 */
+  --f-marke: #FF5A1F;        /* Orange nur noch als Markenpunkt „ERGUN.“ */
+  --bg: var(--f-grund-tief);
+  --text: var(--f-text);
+  --muted: var(--f-gedaempft);
+  --accent: var(--f-gold);
+  --line: var(--f-linie);
   --pad: clamp(20px, 4vw, 56px);
   --serif: "Clash Display", "Clash Ersatz", system-ui, sans-serif;     /* Schrift B (27.09.): Überschriften */
   --logo: "Instrument Serif", Georgia, serif;                              /* Logo ERGUN. bleibt */
@@ -74,7 +100,7 @@ img { display: block; max-width: 100%; height: auto; }
 .nav--weg { transform: translateY(-120%); }
 .nav:focus-within { transform: none; }
 .nav__mark { font-family: var(--logo); font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase; }
-.nav__mark .dot { color: var(--accent); }
+.nav__mark .dot { color: var(--f-marke); }   /* Orange nur als Markenpunkt (Auftrag 28) */
 .nav__links { display: flex; align-items: center; gap: 28px; }
 .nav__link { position: relative; padding-bottom: 2px; }
 .nav__link::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 300ms var(--ease); }
@@ -272,9 +298,9 @@ img { display: block; max-width: 100%; height: auto; }
 /* ---------- Buttons ---------- */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 13px 22px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--text); font: 500 15px/1 var(--sans); cursor: pointer; transition: transform 160ms var(--ease-out), border-color 300ms var(--ease), background-color 300ms var(--ease), color 300ms var(--ease); }
 .btn:active { transform: scale(0.97); }
-.btn--wa { background: var(--accent); border-color: var(--accent); color: #0E0E0C; }
+.btn--wa { background: var(--accent); border-color: var(--accent); color: var(--f-knopf-text); }
 .btn svg { width: 18px; height: 18px; }
-@media (hover: hover) and (pointer: fine) { .btn:hover { border-color: var(--text); } .btn--wa:hover { border-color: var(--accent); background: #ff6d3a; } }
+@media (hover: hover) and (pointer: fine) { .btn:hover { border-color: var(--text); }  }
 
 /* ---------- Formularfelder ---------- */
 .form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -285,23 +311,23 @@ img { display: block; max-width: 100%; height: auto; }
 .field textarea { resize: vertical; min-height: 96px; }
 .field select { width: 100%; appearance: none; -webkit-appearance: none; color-scheme: dark; background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238A867D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 2px center / 16px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; color: var(--text); font: inherit; font-size: 17px; padding: 10px 26px 10px 0; cursor: pointer; transition: border-color 300ms var(--ease); }
 .field select:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 1px 0 var(--accent); }
-.field select option { background: #0E0E0C; color: var(--text); }
+.field select option { background: var(--f-knopf-text); color: var(--text); }
 .field.hat-fehler input, .field.hat-fehler textarea { border-color: var(--accent); }
 .field__error { min-height: 1.2em; font-size: 13px; color: var(--accent); }
 .upload { position: relative; display: flex; align-items: center; gap: 16px; padding: 14px 16px; border: 1.5px dashed rgba(242, 239, 232, 0.22); border-radius: 12px; background: rgba(242, 239, 232, 0.02); transition: border-color 200ms var(--ease), background-color 200ms var(--ease); }
-.upload__symbol { width: 38px; height: 38px; flex: none; padding: 9px; border-radius: 50%; color: var(--accent); background: rgba(255, 90, 31, 0.12); transition: transform 200ms var(--ease-out); }
+.upload__symbol { width: 38px; height: 38px; flex: none; padding: 9px; border-radius: 50%; color: var(--accent); background: rgba(242, 180, 92, 0.12); transition: transform 200ms var(--ease-out); }
 .upload__text b { display: block; font-weight: 500; font-size: 15px; color: var(--text); }
 .upload__text small { display: block; margin-top: 3px; font-size: 13px; color: var(--muted); }
 .upload input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 .upload:focus-within { border-color: var(--accent); }
-.upload.ist-drueber { border-color: var(--accent); background: rgba(255, 90, 31, 0.08); }
+.upload.ist-drueber { border-color: var(--accent); background: rgba(242, 180, 92, 0.08); }
 .upload.ist-drueber .upload__symbol { transform: translateY(-3px); }
-@media (hover: hover) and (pointer: fine) { .upload:hover { border-color: rgba(255, 90, 31, 0.6); } .upload:hover .upload__symbol { transform: translateY(-2px); } }
+@media (hover: hover) and (pointer: fine) { .upload:hover { border-color: rgba(242, 180, 92, 0.6); } .upload:hover .upload__symbol { transform: translateY(-2px); } }
 .datei__liste { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .datei__liste:empty { display: none; }
 .datei__liste li { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px 5px 5px; }
 .datei__liste img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; }
-.datei__liste i { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 90, 31, 0.14); color: var(--accent); font-style: normal; font-size: 11px; font-weight: 500; }
+.datei__liste i { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: rgba(242, 180, 92, 0.14); color: var(--accent); font-style: normal; font-size: 11px; font-weight: 500; }
 .datei__stand { font-size: 12px; color: var(--muted); }
 .datei__stand.ist-ok { color: #3fb96b; }
 .datei__stand.ist-fehler { color: var(--accent); }
@@ -310,12 +336,12 @@ img { display: block; max-width: 100%; height: auto; }
 .weg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .wege__beides { max-width: 720px; margin: 20px auto 0; text-align: center; font-size: 15px; line-height: 1.55; color: var(--muted); }
 .wege__beides b { color: var(--text); font-weight: 500; }
-.wege__beides a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255, 122, 61, 0.7); }
+.wege__beides a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(242, 180, 92, 0.7); }
 .weg__option { position: relative; display: block; }
 .weg__option input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
 .weg__option span { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; font-size: 15px; color: var(--muted); transition: border-color 200ms var(--ease), color 200ms var(--ease), background-color 200ms var(--ease); }
 .weg__option svg { width: 20px; height: 20px; flex: none; }
-.weg__option input:checked + span { border-color: var(--accent); color: var(--text); background: rgba(255, 90, 31, 0.12); }
+.weg__option input:checked + span { border-color: var(--accent); color: var(--text); background: rgba(242, 180, 92, 0.12); }
 .weg__option input:checked + span svg { color: var(--accent); }
 .weg__option input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) { .weg__option:hover span { border-color: rgba(242, 239, 232, 0.35); color: var(--text); } }
@@ -404,7 +430,7 @@ html.zu-endo .nav__link--endo { filter: drop-shadow(0 0 10px rgba(226, 234, 248,
 .wahl__option { position: relative; display: flex; min-width: 0; }
 .wahl__option input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .wahl__option span { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 52px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; font-size: 15px; line-height: 1.3; text-align: center; color: var(--text); transition: border-color 200ms var(--ease), background-color 200ms var(--ease), transform 160ms var(--ease-out); }
-.wahl__option input:checked + span { border-color: var(--accent); background: rgba(255, 90, 31, 0.12); }
+.wahl__option input:checked + span { border-color: var(--accent); background: rgba(242, 180, 92, 0.12); }
 .wahl__option input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
 .wahl__option:active span { transform: scale(0.98); }
 @media (hover: hover) and (pointer: fine) { .wahl__option:hover span { border-color: rgba(242, 239, 232, 0.32); } .wahl__option input:checked + span { border-color: var(--accent); } }
@@ -419,7 +445,7 @@ html.zu-endo .nav__link--endo { filter: drop-shadow(0 0 10px rgba(226, 234, 248,
 .anfrage__danke:focus { outline: none; }
 .anfrage__danke p { margin: 0; max-width: 40ch; color: var(--muted); text-wrap: pretty; }
 .anfrage__danke-titel { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(1.8rem, 3vw, 2.4rem); line-height: 1.1; }
-.anfrage__check { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; color: #0E0E0C; background: var(--text); animation: check-rein 560ms cubic-bezier(0.34, 1.56, 0.64, 1) 200ms both; }
+.anfrage__check { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; color: var(--f-knopf-text); background: var(--text); animation: check-rein 560ms cubic-bezier(0.34, 1.56, 0.64, 1) 200ms both; }
 .anfrage__check svg { width: 30px; height: 30px; animation: haken-rein 420ms var(--ease-out) 520ms both; }
 @keyframes check-rein { from { transform: scale(0.4); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes haken-rein { from { transform: scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
@@ -444,13 +470,13 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 .anfrage__punkte { height: 2px; margin: -2px 0; background-image: radial-gradient(circle, rgba(242, 239, 232, 0.3) 1px, transparent 1.4px); background-size: 8px 2px; background-repeat: repeat-x; }
 .anfrage .field { gap: 8px; }
 .anfrage .field input, .anfrage .field textarea, .anfrage .field select {
-  min-height: 50px; padding: 12px 14px; border: 1px solid rgba(242, 239, 232, 0.14); border-radius: 12px; background-color: rgba(14, 14, 12, 0.55); font-size: 16px; line-height: 1.4;
+  min-height: 50px; padding: 12px 14px; border: 1px solid rgba(242, 239, 232, 0.14); border-radius: 12px; background-color: rgba(6, 10, 20, 0.55); font-size: 16px; line-height: 1.4;
   transition: border-color 200ms var(--ease), box-shadow 200ms var(--ease), background-color 200ms var(--ease); }
 .anfrage .field select { padding-right: 40px; background-position: right 14px center; }
 .anfrage .field textarea { min-height: 112px; }
 .anfrage .field input::placeholder, .anfrage .field textarea::placeholder { color: rgba(242, 239, 232, 0.36); }
 .anfrage .field input:focus-visible, .anfrage .field textarea:focus-visible, .anfrage .field select:focus-visible {
-  outline: none; border-color: var(--accent); background-color: rgba(14, 14, 12, 0.8); box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.2); }
+  outline: none; border-color: var(--accent); background-color: rgba(6, 10, 20, 0.8); box-shadow: 0 0 0 3px rgba(242, 180, 92, 0.2); }
 .anfrage .field.hat-fehler input, .anfrage .field.hat-fehler textarea { border-color: var(--accent); }
 .anfrage .field__error { min-height: 0; }
 .anfrage .field__error:empty { display: none; }
@@ -470,8 +496,8 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 /* Auftrag 9b (29.09.2026): keine Themen-Karten mehr – oben „Ihre Auswahl“ + „Wo soll endo helfen?“ (Chips). */
 .anfrage { container-type: inline-size; container-name: anfrage; }
 .anfrage__gruppe .field__error { display: block; margin-top: 8px; }
-.anfrage .anfrage__gruppe.hat-fehler .weg__option span { border-color: rgba(255, 138, 92, 0.7); }
-.anfrage .field__error { color: #FF8A5C; font-size: 13.5px; }
+.anfrage .anfrage__gruppe.hat-fehler .weg__option span { border-color: rgba(242, 160, 138, 0.7); }
+.anfrage .field__error { color: var(--f-fehler); font-size: 13.5px; }
 .anfrage__kontakt[hidden] { display: none; }
 .anfrage__kontakt.ist-neu { animation: feld-rein 420ms var(--ease-out) both; }
 @keyframes feld-rein { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
@@ -479,15 +505,15 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
    Ganze Zeile antippbar (mind. 44 px), der Link bleibt eigenständig. Angehakt: Fläche in Akzentfarbe, Häkchen zeichnet sich in 0,25 s. */
 .anfrage__haken { position: relative; display: flex; gap: 12px; align-items: flex-start; min-height: 44px; padding: 10px 0; font-size: 14px !important; letter-spacing: 0 !important; text-transform: none !important; line-height: 1.5; color: var(--muted) !important; cursor: pointer; }
 .anfrage__haken input { position: absolute; left: 0; top: 11px; width: 22px; height: 22px; min-height: 0 !important; margin: 0; padding: 0 !important; opacity: 0; cursor: pointer; }
-.haken__box { flex: none; display: grid; place-items: center; width: 22px; height: 22px; margin-top: 1px; border-radius: 6px; border: 1.5px solid rgba(242, 239, 232, 0.32); background: rgba(14, 14, 12, 0.45);
+.haken__box { flex: none; display: grid; place-items: center; width: 22px; height: 22px; margin-top: 1px; border-radius: 6px; border: 1.5px solid rgba(242, 239, 232, 0.32); background: rgba(6, 10, 20, 0.45);
   transition: background-color 220ms var(--ease), border-color 220ms var(--ease), box-shadow 220ms var(--ease), transform 160ms var(--ease-out); }
-.haken__box svg { width: 15px; height: 15px; fill: none; stroke: #0E0E0C; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 21; stroke-dashoffset: 21; transition: stroke-dashoffset 250ms var(--ease-out) 40ms; }
+.haken__box svg { width: 15px; height: 15px; fill: none; stroke: var(--f-knopf-text); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 21; stroke-dashoffset: 21; transition: stroke-dashoffset 250ms var(--ease-out) 40ms; }
 .anfrage__haken input:checked + .haken__box { background: var(--accent); border-color: var(--accent); }
 .anfrage__haken input:checked + .haken__box svg { stroke-dashoffset: 0; }
-.anfrage__haken input:focus-visible + .haken__box { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.2); }
+.anfrage__haken input:focus-visible + .haken__box { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(242, 180, 92, 0.2); }
 .anfrage__haken:active .haken__box { transform: scale(0.94); }
 @media (hover: hover) and (pointer: fine) { .anfrage__haken:hover input:not(:checked) + .haken__box { border-color: rgba(242, 239, 232, 0.6); } }
-.anfrage .field.hat-fehler .haken__box { border-color: #FF8A5C; }
+.anfrage .field.hat-fehler .haken__box { border-color: var(--f-fehler); }
 @media (prefers-reduced-motion: reduce) { .haken__box, .haken__box svg { transition: none; } }
 .anfrage__haken a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(242, 239, 232, 0.4); }
 .anfrage .weg { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
@@ -502,7 +528,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 /* ---------- Ein Ablauf: Auswahl + Anfrage (Auftrag 25 ERGUN. minimal, 29.09.2026) ----------
    Pro Schritt eine Überschrift, höchstens ein Satz. Wenig Rahmen, viel Luft. Eine Summenanzeige ab Schritt ② (Desktop klebend rechts,
    Handy schmale Leiste unten). Orange nur für „Anfrage senden“. Übergang 200 ms, „Bewegung reduzieren“ = sofort. Texte: js/preise.js. */
-.preise { position: relative; background: linear-gradient(#070B16 0, var(--bg) 420px); -webkit-hyphens: manual; hyphens: manual; }
+.preise { position: relative; background: linear-gradient(180deg, var(--f-grund-oben) 0, var(--f-grund) 380px, #0A1326 70%, var(--f-grund-tief) 100%); -webkit-hyphens: manual; hyphens: manual; }   /* Auftrag 28: aus dem Ende des Titelbilds ins Nachtblau, nach unten dunkler */
 .preise__innen { width: min(100% - 2 * var(--pad), 1040px); margin: 0 auto; padding: clamp(88px, 14svh, 136px) 0 48px; }
 .mf-anker { position: absolute; top: 0; }
 .mf__oben { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px 16px; margin-bottom: 36px; }
@@ -582,7 +608,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 .mf-chip__kopf { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; }
 .mf-chip__kopf b { font-size: 15px; font-weight: 600; }
 .mf-chip__status { padding: 1px 8px; border-radius: 999px; border: 1px solid rgba(242, 239, 232, 0.18); font-size: 11px; line-height: 16px; color: var(--muted); }
-.mf-chip__status--live { color: #0E0E0C; background: var(--text); border-color: var(--text); }
+.mf-chip__status--live { color: var(--f-knopf-text); background: var(--text); border-color: var(--text); }
 .mf-chip__satz { font-size: 13px; line-height: 18px; color: var(--muted); }
 .mf-stand { margin: 0; font-size: 14px; line-height: 20px; }
 
@@ -601,7 +627,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 .mf-summe b { font-family: var(--serif); font-weight: 400; font-size: 26px; line-height: 32px; font-variant-numeric: tabular-nums; }
 @media (min-width: 1024px) { .mf-summe { position: sticky; top: 96px; padding: 20px 0 0; border-top: 2px solid var(--text); } }
 @media (max-width: 1023px) {
-  .mf-summe { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 15; grid-template-columns: 1fr 1fr; gap: 12px; padding: 10px 16px; border-radius: 16px; background: rgba(14, 14, 12, 0.94); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); }
+  .mf-summe { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 15; grid-template-columns: 1fr 1fr; gap: 12px; padding: 10px 16px; border-radius: 16px; background: rgba(6, 10, 20, 0.94); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); }
   .mf-summe b { font-size: 18px; line-height: 24px; }
   .mit-summe .preise__innen { padding-bottom: 104px; }
 }
@@ -676,6 +702,202 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 .anfrage__mehr[open] > summary::before { transform: rotate(45deg); }
 .anfrage__mehr[open] > summary { margin-bottom: 8px; }
 @media (prefers-reduced-motion: reduce) { .anfrage__mehr > summary::before { transition: none; } }
+
+/* ---------- Auftrag 28 (29.09.2026): premium & farbig – Farbwelt aus dem Titelbild (Variablen --f-… oben in :root) ----------
+   Typografie in 4 Stufen: ① Schritt-Überschrift (groß, leicht, eng) ② Karten-Namen ③ Fließtext 15–16 px ④ Klein 13 px. Preise in Tabellenziffern.
+   8er-Raster, gleiche Innenabstände (Karten 20/24 px), Radien konzentrisch (Karte 20 · Steuerelemente 12 · Pillen rund).
+   Karten: Dämmerungsblau durchscheinend + 1-px-Verlaufskante (Gold oben → Blau unten), weiche Tiefe. Gewählt = sanfter Gold-Schein.
+   Hover hebt 2 px (200 ms), Fokus-Ring Gold, Tippflächen ≥ 44 px, „Bewegung reduzieren“ = sofort. */
+body { background: var(--f-grund-tief); }
+.preise__innen { position: relative; isolation: isolate; padding-top: clamp(72px, 10svh, 136px); }
+@media (min-width: 720px) { .preise__innen { padding-top: clamp(88px, 14svh, 136px); } }
+.preise__innen::before { content: ""; position: absolute; z-index: -1; left: -12%; top: 24px; width: min(72%, 680px); height: 360px; pointer-events: none;
+  background: radial-gradient(closest-side, var(--f-hof), rgba(199, 154, 184, 0)); }   /* weicher Lichthof (Dämmerungsrosa) hinter der Überschrift */
+:where(a, button, input, select, textarea, summary):focus-visible { outline: 2px solid var(--f-gold); outline-offset: 3px; }
+
+/* Typografie */
+.mf-titel { font-weight: 400; font-size: clamp(2.125rem, 4.4vw, 3.25rem); line-height: 1.04; letter-spacing: -0.035em; color: var(--f-text); }
+.mf-satz { font-size: 16px; line-height: 24px; color: var(--f-gedaempft); max-width: 52ch; margin-bottom: 24px; }
+.mf__oben { margin-bottom: 24px; }
+@media (min-width: 720px) { .mf__oben { margin-bottom: 40px; } }
+.mf__stand { color: var(--f-gedaempft); }
+.mf__linie { background: rgba(148, 169, 197, 0.16); }
+.mf__linie i { background: linear-gradient(90deg, var(--f-gold), var(--f-gold-hell)); }
+.mf-zurueck { color: var(--f-text); }
+
+/* Karten: eine Optik für Schritt ①, Stufen, endo-Aufgaben, endo komplett, Zusammenfassung */
+.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .mf .auswahl { position: relative; border: 0; border-radius: 20px; background: var(--f-flaeche); box-shadow: var(--f-tiefe); color: var(--f-text);
+  transition: transform 200ms var(--ease-out), background-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out); }
+.mf-karte::before, .mf-stufe::before, .mf-chip::before, .mf-komplett::before, .mf .auswahl::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: var(--f-kante); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.mf-karte[aria-pressed="true"], .mf-stufe[aria-pressed="true"], .mf-chip[aria-pressed="true"], .mf-komplett[aria-pressed="true"] { background: rgba(94, 120, 168, 0.2); box-shadow: var(--f-schein), var(--f-tiefe); }
+.mf-karte[aria-pressed="true"]::before, .mf-stufe[aria-pressed="true"]::before, .mf-chip[aria-pressed="true"]::before, .mf-komplett[aria-pressed="true"]::before { background: linear-gradient(180deg, var(--f-wahl), rgba(242, 180, 92, 0.55)); }
+@media (hover: hover) and (pointer: fine) {
+  .mf-karte:hover, .mf-stufe:hover, .mf-chip:hover, .mf-komplett:hover { transform: translateY(-2px); background-color: var(--f-flaeche-hover); }
+  .mf-karte[aria-pressed="true"]:hover, .mf-stufe[aria-pressed="true"]:hover, .mf-chip[aria-pressed="true"]:hover { background-color: rgba(94, 120, 168, 0.24); }
+}
+.mf-karte:active, .mf-stufe:active, .mf-chip:active, .mf-komplett:active { transform: scale(0.98); }
+:where(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .mf-haken, .lf-schalter, .lf-chip, .mf-link, .mf-zurueck):focus-visible { outline: 2px solid var(--f-gold); outline-offset: 3px; }
+
+/* ① Was brauchen Sie? – alle drei auf einen Blick. Handy: drei kompakte Zeilen (Symbol links), Desktop: drei gleich große Karten */
+.mf-karten { gap: 8px; }
+.mf-karte { grid-template-columns: 36px minmax(0, 1fr); align-items: start; gap: 14px; min-height: 0; padding: 16px; }
+.mf-karte__bild { margin: 2px 0 0; color: var(--f-gold-hell); }
+.mf-karte__bild .lf-icon { width: 36px; height: 36px; stroke-width: 1.5; }
+.mf-karte__text { display: grid; gap: 2px; min-width: 0; }
+.mf-karte__kopf { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.mf-karte__titel { font-size: 21px; line-height: 28px; font-weight: 450; letter-spacing: -0.02em; }
+.mf-karte__dezent { font-size: 13px; line-height: 18px; color: var(--f-gold-hell); }
+.mf-karte__satz { font-size: 14px; line-height: 20px; color: var(--f-gedaempft); }
+.mf-karte__preis { margin-top: 6px; font-size: 15px; line-height: 20px; font-weight: 600; color: var(--f-text); font-variant-numeric: tabular-nums; }
+@media (min-width: 720px) {
+  .mf-karten { gap: 16px; }
+  .mf-karte { grid-template-columns: minmax(0, 1fr); align-content: start; gap: 24px; min-height: 232px; padding: 24px; }
+  .mf-karte__bild .lf-icon { width: 44px; height: 44px; }
+  .mf-karte { grid-template-rows: auto 1fr; }
+  .mf-karte__text { display: flex; flex-direction: column; gap: 6px; }
+  .mf-karte__preis { margin-top: auto; padding-top: 12px; }   /* Preise auf einer gemeinsamen Linie unten */
+  .mf-karte__titel { font-size: 26px; line-height: 32px; }
+  .mf-karte__satz { font-size: 15px; line-height: 22px; }
+  .mf-karte__preis { font-size: 16px; }
+}
+.mf-schritt > .mf-inhalt > .mf-link { color: var(--f-gedaempft); text-decoration-color: rgba(148, 169, 197, 0.4); }
+.mf-link { color: var(--f-text); text-decoration-color: rgba(242, 180, 92, 0.55); }
+
+/* ② Website-Stufen */
+.mf-stufe { gap: 16px; padding: 24px 20px 20px; }
+.mf-stufe__name { font-size: 24px; line-height: 30px; font-weight: 450; letter-spacing: -0.02em; }
+.mf-stufe__preis { font-weight: 600; color: var(--f-text); }
+.mf-stufe__punkte { color: rgba(244, 241, 230, 0.86); }
+.mf-stufe__punkt svg { color: var(--f-gold); }
+.mf-stufe__schild { border-color: rgba(242, 180, 92, 0.45); background: var(--f-grund); color: var(--f-gold-hell); }
+.mf-stufe__haken { background: var(--f-wahl); color: var(--f-knopf-text); }
+.mf-auf { border-top-color: var(--f-linie); }
+.mf-auf > summary::before { border-color: rgba(242, 180, 92, 0.5); color: var(--f-gold-hell); }
+.mf-alles ul { color: var(--f-gedaempft); }
+
+/* ② Extras: ruhige Liste mit Haken in 4 Gruppen, Preis rechtsbündig */
+.mf-extras { display: grid; gap: 24px; padding: 4px 0 16px; }
+@media (min-width: 900px) { .mf-extras { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 40px; } }
+.mf-extras__titel { margin: 0 0 4px; font-size: 13px; line-height: 18px; font-weight: 500; color: var(--f-gold-hell); }
+.mf-extras__liste { list-style: none; margin: 0; padding: 0; }
+.mf-extra { border-bottom: 1px solid var(--f-linie); }
+.mf-haken { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: start; gap: 14px; width: 100%; min-height: 56px; padding: 14px 0; border: 0; background: none; color: var(--f-text); font: inherit; text-align: left; cursor: pointer; }
+.mf-haken:disabled { cursor: default; }
+.mf-haken__box { display: grid; place-items: center; width: 22px; height: 22px; margin-top: 1px; border-radius: 6px; border: 1.5px solid rgba(148, 169, 197, 0.55); color: var(--f-knopf-text);
+  transition: background-color 150ms var(--ease-out), border-color 150ms var(--ease-out); }
+.mf-haken__box svg { width: 14px; height: 14px; opacity: 0; transition: opacity 150ms var(--ease-out); }
+.mf-haken[aria-checked="true"] .mf-haken__box { background: var(--f-wahl); border-color: var(--f-wahl); }
+.mf-haken[aria-checked="true"] .mf-haken__box svg { opacity: 1; }
+.mf-extra.ist-schon .mf-haken__box { background: rgba(242, 180, 92, 0.18); border-color: transparent; color: var(--f-gold-hell); }
+.mf-extra__text { display: grid; gap: 2px; min-width: 0; }
+.mf-extra__name { font-size: 15px; line-height: 21px; font-weight: 500; }
+.mf-extra__satz { font-size: 13px; line-height: 18px; color: var(--f-gedaempft); text-wrap: pretty; }
+.mf-extra__preis { font-size: 14px; line-height: 21px; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--f-text); }
+.mf-extra.ist-schon .mf-extra__preis { color: var(--f-gedaempft); }
+.mf-extra__zahl { margin: 0 0 14px 36px; }
+@media (hover: hover) and (pointer: fine) { .mf-haken:not(:disabled):hover .mf-haken__box { border-color: var(--f-gold); } }
+
+/* ② Betreuung: Haken + eine Zeile, „ändern“ klein daneben */
+.mf-betreuung { gap: 2px; border-top-color: var(--f-linie); }
+.mf-betreuung .mf-haken { width: auto; grid-template-columns: 22px auto; align-items: center; min-height: 44px; padding: 8px 0; }
+.mf-betreuung .mf-haken__box { margin-top: 0; }
+.mf-betreuung .mf-haken:disabled .mf-haken__box { opacity: 0.75; }
+.mf-betreuung__text { font-size: 16px; line-height: 24px; font-weight: 500; }
+.mf-betreuung.ist-aus .mf-betreuung__text { color: var(--f-gedaempft); }
+.mf-betreuung__grund { margin-left: 36px; color: var(--f-gedaempft); }
+.mf-betreuung__wahl { margin-top: 12px; }
+
+/* ② endo-Aufgaben */
+.mf-chip { padding: 16px; border-radius: 16px; }
+.mf-chip__status { border-color: rgba(148, 169, 197, 0.35); color: var(--f-gedaempft); }
+.mf-chip__status--demo { border-color: rgba(242, 180, 92, 0.5); color: var(--f-gold-hell); }
+.mf-chip__status--live { background: var(--f-gold); border-color: var(--f-gold); color: var(--f-knopf-text); }
+.mf-chip__satz { color: var(--f-gedaempft); }
+.mf-komplett { padding: 20px; }
+
+/* Bausteine: Schalter, Chips, Anzahl */
+.lf-schalter { border-color: rgba(148, 169, 197, 0.35); color: var(--f-gedaempft); }
+.lf-schalter::before { background: rgba(148, 169, 197, 0.16); }
+.lf-schalter[aria-checked="true"]::before { background: var(--f-wahl); }
+.lf-schalter[aria-checked="true"] .lf-schalter__ja { color: var(--f-knopf-text); }
+.lf-chip { border-color: rgba(148, 169, 197, 0.3); border-radius: 12px; }
+.lf-chip[aria-pressed="true"] { border-color: var(--f-wahl); background: rgba(242, 180, 92, 0.12); }
+.lf-chip--gross { border-radius: 16px; background: var(--f-flaeche); }
+.lf-zahl__knopf { border-color: rgba(148, 169, 197, 0.35); }
+.lf-frage__preis { color: var(--f-gedaempft); }
+
+/* Summenanzeige */
+@media (min-width: 1024px) { .mf-summe { border-top: 1px solid rgba(242, 180, 92, 0.55); } }
+.mf-summe span { color: var(--f-gedaempft); }
+.mf-summe b { color: var(--f-text); }
+@media (max-width: 1023px) { body:has(.mit-summe) .footer { padding-bottom: 112px; } }   /* Handy: Summenleiste verdeckt Impressum/Datenschutz nicht */
+@media (max-width: 1023px) { .mf-summe { background: rgba(12, 22, 44, 0.94); box-shadow: 0 0 0 1px rgba(148, 169, 197, 0.2), 0 16px 40px rgba(2, 5, 16, 0.6); } }
+
+/* ③ Ihre Anfrage: Zusammenfassung als Karte, Felder im Nachtblau, Hauptknopf im Sonnenuntergang */
+.mf .auswahl { padding: 20px; gap: 8px; }
+.auswahl__titel, .auswahl__liste dt, .auswahl__summen span, .auswahl__jahr { color: var(--f-gedaempft); }
+.auswahl__aendern, .auswahl__leer a { color: var(--f-text); text-decoration-color: rgba(242, 180, 92, 0.55); }
+.auswahl__summen { border-top-color: var(--f-linie); }
+.auswahl__summen b { color: var(--f-text); }
+.auswahl__ohne dd { display: grid; gap: 2px; justify-items: end; }
+.auswahl__ohne small { font-size: 12px; line-height: 16px; color: var(--f-gedaempft); text-align: right; }
+.anfrage .field input, .anfrage .field textarea, .anfrage .field select { border-color: rgba(148, 169, 197, 0.24); background-color: rgba(6, 10, 20, 0.5); }
+.anfrage .field input::placeholder, .anfrage .field textarea::placeholder { color: rgba(148, 169, 197, 0.62); }
+.anfrage .field input:focus-visible, .anfrage .field textarea:focus-visible, .anfrage .field select:focus-visible { border-color: var(--f-gold); background-color: rgba(6, 10, 20, 0.75); box-shadow: 0 0 0 3px rgba(242, 180, 92, 0.2); }
+.anfrage .field.hat-fehler input, .anfrage .field.hat-fehler textarea, .field.hat-fehler input, .field.hat-fehler textarea { border-color: var(--f-fehler); }
+.anfrage .field__error, .field__error { color: var(--f-fehler); }
+.anfrage .anfrage__gruppe.hat-fehler .weg__option span, .anfrage .field.hat-fehler .haken__box { border-color: var(--f-fehler); }
+.weg__option span { border-color: rgba(148, 169, 197, 0.28); color: var(--f-gedaempft); }
+.weg__option input:checked + span { border-color: var(--f-wahl); color: var(--f-text); background: rgba(242, 180, 92, 0.12); }
+.weg__option input:checked + span svg { color: var(--f-gold); }
+.haken__box { border-color: rgba(148, 169, 197, 0.5); background: rgba(6, 10, 20, 0.45); }
+.haken__box svg { stroke: var(--f-knopf-text); }
+.anfrage__haken input:checked + .haken__box { background: var(--f-wahl); border-color: var(--f-wahl); }
+.anfrage__haken input:focus-visible + .haken__box { border-color: var(--f-gold); box-shadow: 0 0 0 3px rgba(242, 180, 92, 0.22); }
+.pflicht { color: var(--f-gold); }
+.upload { border-color: rgba(148, 169, 197, 0.3); background: rgba(94, 120, 168, 0.06); }
+.upload__symbol { color: var(--f-gold); background: rgba(242, 180, 92, 0.12); }
+.upload:focus-within, .upload.ist-drueber { border-color: var(--f-gold); }
+.upload.ist-drueber { background: rgba(242, 180, 92, 0.08); }
+@media (hover: hover) and (pointer: fine) { .upload:hover { border-color: rgba(242, 180, 92, 0.6); } }
+.datei__liste i { background: rgba(242, 180, 92, 0.14); color: var(--f-gold); }
+.datei__stand.ist-fehler { color: var(--f-fehler); }
+.anfrage__mehr > summary::before { border-color: rgba(242, 180, 92, 0.5); color: var(--f-gold-hell); }
+.anfrage__check { background: var(--f-gold); color: var(--f-knopf-text); }
+.btn { border-color: rgba(148, 169, 197, 0.35); transition: transform 160ms var(--ease-out), border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out), filter 200ms var(--ease-out); }
+.btn--wa { border: 0; background: var(--f-knopf); color: var(--f-knopf-text); font-weight: 600; box-shadow: 0 10px 28px -12px rgba(255, 170, 96, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.35); }
+.btn--hell { background: rgba(244, 241, 230, 0.06); border-color: rgba(244, 241, 230, 0.4); color: var(--f-text); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover { border-color: var(--f-gold); }
+  .btn--wa:hover { background: var(--f-knopf); filter: brightness(1.05); box-shadow: 0 14px 34px -12px rgba(255, 170, 96, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.35); }
+}
+.mf-agentur, .mf-agentur a { color: var(--f-gedaempft); }
+.mf-agentur a { text-decoration: underline; text-decoration-color: rgba(148, 169, 197, 0.4); text-underline-offset: 3px; }
+
+/* Navigation + Fußzeile in derselben Farbwelt, schlank */
+.footer { background: var(--f-grund-tief); border-top: 1px solid var(--f-linie); color: var(--f-gedaempft); padding: 32px var(--pad) 32px; }
+@media (hover: hover) and (pointer: fine) { .footer a:hover { color: var(--f-text); } }
+.nav__link::after { background: var(--f-gold); }
+
+/* Variante B zum Vergleich (?farbe=b): dunkler, weniger Gold – Gewählt in Creme, Knopf ohne Verlauf, kein Rosa-Hof */
+html[data-farbe="b"] {
+  --f-grund: #0A1020; --f-grund-tief: #05080F;
+  --f-flaeche: rgba(94, 120, 168, 0.07); --f-flaeche-hover: rgba(94, 120, 168, 0.11);
+  --f-kante: linear-gradient(180deg, rgba(244, 241, 230, 0.16), rgba(94, 120, 168, 0.12));
+  --f-hof: rgba(199, 154, 184, 0);
+  --f-wahl: #E8DCC2;
+  --f-schein: 0 0 0 1px rgba(232, 220, 194, 0.55);
+  --f-knopf: linear-gradient(180deg, #F2B45C, #F2B45C);
+}
+html[data-farbe="b"] .mf-karte__bild, html[data-farbe="b"] .mf-karte__dezent, html[data-farbe="b"] .mf-extras__titel { color: var(--f-text); }
+html[data-farbe="b"] .mf__linie i { background: var(--f-text); }
+
+@media (prefers-reduced-motion: reduce) {
+  .mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .mf-haken__box, .mf-haken__box svg, .btn { transition: none; }
+  .mf-karte:hover, .mf-stufe:hover, .mf-chip:hover, .mf-komplett:hover { transform: none; }
+}
 </style>
 </head>
 <body>
@@ -870,7 +1092,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
-<script src="js/preise.js?v=6"></script>
+<script src="js/preise.js?v=7"></script>
 <script>
 /* Kostenloses Erstgespräch: eine Karte mit allen Feldern (seit 25.09. abends keine Schritte mehr).
    Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)
@@ -896,6 +1118,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   /* ---- „Ihre Auswahl“ (aus dem Preis-Assistenten) ---- */
   var auswahlBox = form.querySelector('[data-auswahl-inhalt]'), aendern = form.querySelector('[data-auswahl-aendern]'), leerHtml = auswahlBox.innerHTML;
   function aktuell() { return P && P.auswahlJetzt ? P.auswahlJetzt() : null; }
+  var L = window.LEITFADEN;
   function zeile(dt, dd) { var d = document.createElement('div'), t = document.createElement('dt'), v = document.createElement('dd'); t.textContent = dt; v.textContent = dd; d.appendChild(t); d.appendChild(v); return d; }
   function auswahlZeigen() {
     var e = aktuell(), M = '\u00a0/ Monat';
@@ -907,6 +1130,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
     if (e.anfrage.length) dl.appendChild(zeile('Auf Anfrage', e.anfrage.map(function (x) { return x.name; }).join(', ')));
     if (e.mehr.length) dl.appendChild(zeile('endo', e.mehr[0].name + (e.mehr[0].faehigkeiten && e.mehr[0].id !== 'komplett' ? ': ' + e.mehr[0].faehigkeiten.join(', ') : '') + ' · ' + P.betrag(e.mehr[0])));
     if (e.betreuung) dl.appendChild(zeile('Betreuung', e.betreuung.name + ' · ' + P.euro(e.monatlich) + M + (e.selbst ? ' (Hosting selbst)' : '')));
+    else if (e.stufe) { var ob = zeile('Betreuung', L.betreuung.ohne); ob.className = 'auswahl__ohne'; var os = document.createElement('small'); os.textContent = L.betreuung.ohneSatz; ob.querySelector('dd').appendChild(os); dl.appendChild(ob); }   /* Auftrag 28: ohne Betreuung + was der Kunde selbst übernimmt */
     var ab = e.ab ? 'ab ' : '';
     auswahlBox.innerHTML = ''; auswahlBox.appendChild(dl);
     /* nur zwei Summen (einmalig · monatlich), das erste Jahr klein darunter */
