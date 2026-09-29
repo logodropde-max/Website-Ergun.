@@ -601,8 +601,9 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 .mf-selbst { margin-left: 0; }
 
 /* ② Automatisierung: endo-Aufgaben mit ehrlichem Status */
-.mf-endo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 10px; }
-@media (min-width: 720px) { .mf-endo { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+/* Auftrag 30: 5 Aufgaben → Liste untereinander (Kartenreihen-Regel: nie 2 + 2 + 1 oder 3 + 2); ab 720 px Name + Stand links, Satz rechts */
+.mf-endo { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+@media (min-width: 720px) { .mf-endo .mf-chip { grid-template-columns: minmax(170px, 0.8fr) minmax(0, 1.2fr); align-items: center; column-gap: 16px; } }
 .mf-chip { display: grid; align-content: start; gap: 4px; padding: 14px 16px; border: 1px solid rgba(242, 239, 232, 0.1); border-radius: 16px; background: rgba(242, 239, 232, 0.03); color: var(--text); font: inherit; text-align: left; cursor: pointer; transition: border-color 150ms var(--ease-out), transform 160ms var(--ease-out); }
 .mf-chip[aria-pressed="true"] { border-color: rgba(242, 239, 232, 0.6); background: rgba(242, 239, 232, 0.07); }
 .mf-chip__kopf { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; }
@@ -1092,7 +1093,7 @@ html[data-farbe="b"] .mf__linie i { background: var(--f-text); }
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
-<script src="js/preise.js?v=7"></script>
+<script src="js/preise.js?v=8"></script>
 <script>
 /* Kostenloses Erstgespräch: eine Karte mit allen Feldern (seit 25.09. abends keine Schritte mehr).
    Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)

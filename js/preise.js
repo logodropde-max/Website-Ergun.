@@ -65,7 +65,7 @@ window.PREISE = {
      laufende Betrieb enthalten; monat = Anzeige auf Karte und Formular). endo wird gemietet: Einrichtung einmalig + monatlich. */
   mehr: [
     { id: 'faehigkeit', name: 'Eine Fähigkeit', satz: 'Zum Beispiel Empfang: Anfragen per E-Mail und WhatsApp automatisch beantworten, sortieren und weiterleiten.', preis: 1000, monat: 200, ab: true },
-    { id: 'komplett', name: 'endo komplett', satz: 'Alle Fähigkeiten: Empfang, Termine, Social, Studio und Übersicht.', preis: 4000, monat: 200, ab: true }
+    { id: 'komplett', name: 'endo komplett', satz: 'Alle Fähigkeiten: Empfang, Termine, Kontakte, Übersicht und Studio.', preis: 4000, monat: 200, ab: true }
   ],
   mehrTitel: 'Automatisierung & KI → endo',
   mehrSatz: 'Automatisierung und KI für Ihren Betrieb laufen über endo – ebenfalls von ERGUN.',
@@ -118,13 +118,12 @@ window.LEITFADEN = {
   betreuung: { titel: 'Betreuung', grund: { basis: 'Passt für eine Website ohne eigene Funktionen.', aktiv: 'Passt, weil Ihre Website Termine oder Formulare verarbeitet.', rundum: 'Passt, weil Ihre Website viel Eigenes kann.' },
     endo: 'Bleibt gesetzt: Der laufende Betrieb von endo ist darin enthalten.', selbst: 'Ich habe eigenes Hosting und eine eigene Domain', aendern: 'ändern',
     ohne: 'Ohne Betreuung', ohneSatz: 'Hosting, Domain und Updates übernehmen Sie dann selbst.' },
-  /* endo-Fähigkeiten mit ehrlichem Status – Stand aus endo (_code/endo-studio/js/assistenten.js), dort ändern und hier nachziehen */
+  /* endo-Fähigkeiten (5 seit Auftrag 30, 29.09.2026: Social entfernt) mit ehrlichem Status – Stand aus endo (_code/endo-studio/js/assistenten.js), dort ändern und hier nachziehen */
   endo: { titel: 'Wo soll endo helfen?', satz: 'Wählen Sie eine oder mehrere Aufgaben.', ansehen: 'So sieht das aus: endo ansehen',
     faehigkeiten: [
       { id: 'empfang', name: 'Empfang', satz: 'beantwortet Anfragen rund um die Uhr', status: 'Demo' },
       { id: 'termine', name: 'Termine', satz: 'Kunden buchen selbst, mit Erinnerung', status: 'In Arbeit' },
       { id: 'kontakte', name: 'Kontakte', satz: 'Ihre Kundenkartei mit Erinnerungen', status: 'In Arbeit' },
-      { id: 'social', name: 'Social', satz: 'Posts für den ganzen Monat', status: 'In Arbeit' },
       { id: 'uebersicht', name: 'Übersicht', satz: 'Ihr Wochenbericht', status: 'In Arbeit' },
       { id: 'studio', name: 'Studio', satz: 'Bilder und Videos aus Handyfotos', status: 'Live' }],
     komplett: 'Alle Aufgaben zum Paketpreis.', leer: 'Bitte wählen Sie mindestens eine Aufgabe.',
