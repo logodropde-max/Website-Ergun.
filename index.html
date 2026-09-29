@@ -136,6 +136,7 @@ img { display: block; max-width: 100%; height: auto; }
     .szene--css .szene__erde { animation: erde-steigt linear both; animation-timeline: --szene; animation-range: exit 30% exit 92%; }
     .szene--css .szene__ebene[data-ebene="gras"] { animation-name: gras-nah; transform-origin: 50% 100%; }
     .szene--css .szene__ebene[data-ebene="wiese"] { animation-name: wiese-nah; transform-origin: 56% 100%; }
+    .szene--css .szene__ebene[data-ebene="vorn"] { animation-name: vorn-nah; }   /* Auftrag 34: ERGUN.s 3D-Figur über der Erde – Weg wie die Wiese, aber ohne Vergrößern (sonst rutscht sie am Handy rechts aus dem Bild) */
     .szene--css .szene__ebene[data-ebene="wald"] { animation-name: wald-nah; transform-origin: 50% 100%; }
     .szene--css .szene__ebene[data-ebene="titel"] { animation-name: ebene-weg, titel-aus; animation-timeline: --szene, --szene; animation-range: exit 0% exit 100%, exit 32% exit 62%; }
   }
@@ -159,6 +160,7 @@ img { display: block; max-width: 100%; height: auto; }
 @media (max-width: 640px) { .gluehwurm__warm, .gluehwurm__kalt { width: 72px; height: 72px; } }
 @media (prefers-reduced-motion: reduce) { .gluehwurm { display: none; } }
 @keyframes gras-nah { 0%, 30% { transform: translate3d(0, 0, 0) scale(1); } 100% { transform: translate3d(0, -10svh, 0) scale(1.6); } }
+@keyframes vorn-nah { 0% { transform: translate3d(0, 0, 0); } 38% { transform: translate3d(0, calc(var(--weg, 0px) * 0.38), 0); } 100% { transform: translate3d(0, calc(var(--weg, 0px) - 3svh), 0); } }
 @keyframes wiese-nah { 0% { transform: translate3d(0, 0, 0) scale(1); } 38% { transform: translate3d(0, calc(var(--weg, 0px) * 0.38), 0) scale(1); } 100% { transform: translate3d(0, calc(var(--weg, 0px) - 3svh), 0) scale(1.28); } }
 @keyframes wald-nah { 0% { transform: translate3d(0, 0, 0) scale(1); } 38% { transform: translate3d(0, calc(var(--weg, 0px) * 0.38), 0) scale(1); } 100% { transform: translate3d(0, var(--weg, 0px), 0) scale(1.1); } }
 @keyframes titel-aus { from { opacity: 1; } to { opacity: 0; } }
@@ -189,6 +191,7 @@ img { display: block; max-width: 100%; height: auto; }
 @keyframes schnuppe { 0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-24deg) scaleX(0.2); } 12% { opacity: 1; } 100% { opacity: 0; transform: translate3d(-260px, 116px, 0) rotate(-24deg) scaleX(1.2); } }
 /* ERGUN. und der Hund liegen in einer eigenen Hülle über allen Fassungen der Wiese (Füße, Schatten und Halme davor) */
 .szene__figuren { position: absolute; inset: 0; z-index: 1; }
+.szene__vorn { z-index: 3; }   /* Auftrag 34: nach .szene__erde im Code = darüber; die Figur wird zur Unterkante hin per Maske ausgeblendet wie .szene__fade */
 /* alles, was beim Scrollen überblendet wird, auf eigene Grafikebene – sonst malt das Handy den Himmel jedes Bild neu */
 .szene__bild[data-licht="gold"], .szene__bild[data-licht="nacht"], .himmel--gold, .himmel--blau, .himmel--nacht, .sonne__glut, .sonne__hof, .sonne__kern--abend, .sonne, .mond { will-change: opacity; }
 .sonne, .mond { will-change: transform, opacity; }
@@ -941,6 +944,7 @@ html[data-farbe="b"] .mf__linie i { background: var(--f-text); }
     <div class="szene__oben" aria-hidden="true"></div>
     <div class="szene__fade" aria-hidden="true"></div>
     <div class="szene__erde" aria-hidden="true"></div>
+    <div class="szene__ebene szene__vorn" data-ebene="vorn" aria-hidden="true"></div>
     <a class="szene__weiter" href="#preise" aria-label="Weiter: Ihr Preis in 4 Fragen"><span class="szene__weiter-text">Ihr Preis</span><i aria-hidden="true"></i></a>
   </section>
 </div>
@@ -1071,7 +1075,7 @@ html[data-farbe="b"] .mf__linie i { background: var(--f-text); }
 </footer>
 <div class="wechsel" aria-hidden="true"></div>
 
-<script src="js/szene.js?v=56"></script>
+<script src="js/szene.js?v=60"></script>
 <script src="js/wolken.js?v=6" defer></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
