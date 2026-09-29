@@ -1,5 +1,8 @@
 # Agentur-Website ERGUN. – Stand 28.09.2026 (Feinschliff 2)
 
+## Stand 29.09.2026 – Auftrag 27: „Ihr Preis in 4 Fragen“ (Rückweg Tag `vor-auftrag-27`)
+- `#preise` ist ein Fragen-Leitfaden: Markup schlank in `index.html` (`[data-lf]`), alles andere baut `js/preise.js` (unten: Leitfaden-Oberfläche; oben `PREISE` = Zahlen, `BEGRIFFE` = ⓘ-Texte, `LEITFADEN` = Fragen und Texte ohne Zahlen). Rechnen: `PREISE.rechnen({ stufe, extras, anzahl: { unterseite }, endo: [...], betreuung, selbst })`, `PREISE.endoPaket`, `PREISE.betreuungEmpfehlung`. Formular liest `PREISE.auswahlJetzt()` + Ereignis `preise:auswahl`; „ändern“ ruft `PREISE.zeigeSchritt('art')`. CSS `lf-…` im `<style>` von `index.html`.
+
 > Überblick für eine neue Sitzung: Vault-Notiz `08 Projekte/Neustart – hier weitermachen.md`. Hier stehen die technischen Details, neuester Abschnitt oben.
 
 ## 29.09.2026 nachts – Auftrag 9b: Preis-Assistent (ein Schritt nach dem anderen) + Formular ohne Themen-Karten
