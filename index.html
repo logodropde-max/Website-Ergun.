@@ -81,7 +81,7 @@ img { display: block; max-width: 100%; height: auto; }
 .nav__link:focus-visible::after { transform: scaleX(1); transform-origin: left; }
 @media (hover: hover) and (pointer: fine) { .nav__link:hover::after { transform: scaleX(1); transform-origin: left; } }
 @media (max-width: 700px) { .nav { padding: 8px 16px; } .nav__links { gap: 20px; } .nav__link { font-size: 13px; } }
-@media (pointer: coarse) { .nav__mark, .nav__link, .footer a, .contact__meta a { display: inline-flex; align-items: center; min-height: 44px; } }
+@media (pointer: coarse) { .nav__mark, .nav__link, .footer a { display: inline-flex; align-items: center; min-height: 44px; } }
 
 /* ---------- Startbild: gezeichnete Landschaft (js/szene.js) ---------- */
 /* Jede Ebene liegt in drei Lichtstimmungen übereinander (Tag, Gold, Nacht); das Skript setzt nur
@@ -324,24 +324,9 @@ img { display: block; max-width: 100%; height: auto; }
 .anfrage__icon[hidden] { display: none; }
 
 /* ---------- Kontakt ---------- */
-.contact { display: flex; flex-direction: column; align-items: center; gap: 28px; padding: clamp(88px, 14svh, 144px) var(--pad) 14svh; }
-.contact__kopf { display: grid; gap: 16px; justify-items: center; text-align: center; margin-bottom: 8px; }
-.contact__big { font-family: var(--serif); font-weight: 400; font-size: clamp(2.6rem, 6.6vw, 5.2rem); line-height: 0.98; letter-spacing: -0.03em; text-wrap: balance; }
-.contact__intro { color: var(--muted); max-width: 46ch; text-wrap: pretty; }
-.contact__person { margin: 0 0 6px; display: grid; justify-items: center; gap: 12px; }
-.contact__person img { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255, 140, 60, 0.45); padding: 3px; background: var(--bg); }
-.contact__person figcaption { font-size: 14px; color: var(--muted); }
-.contact__person strong { font-weight: 500; color: var(--text); }
 .online { display: inline-flex; align-items: center; gap: 7px; color: #5BE38A; }
 .online::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #2FD161; box-shadow: 0 0 0 0 rgba(47, 209, 97, 0.5); animation: online-puls 2.4s ease-out infinite; }
 @keyframes online-puls { 0% { box-shadow: 0 0 0 0 rgba(47, 209, 97, 0.5); } 70%, 100% { box-shadow: 0 0 0 7px rgba(47, 209, 97, 0); } }
-.contact__meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 32px; margin-top: 12px; color: var(--muted); font-size: 15px; }
-.contact__meta a { border-bottom: 1px solid transparent; transition: color 200ms var(--ease), border-color 200ms var(--ease); }
-@media (hover: hover) and (pointer: fine) { .contact__meta a:hover { color: var(--text); border-color: var(--line); } }
-.agentur { width: 100%; max-width: 680px; margin: 28px auto 0; padding-top: 44px; border-top: 1px solid var(--line); display: grid; gap: 14px; justify-items: center; text-align: center; }
-.agentur__marke { font-family: var(--logo); font-size: clamp(2.4rem, 6vw, 3.4rem); line-height: 1; letter-spacing: -0.02em; }
-.agentur__marke .dot { color: var(--accent); }
-.agentur__text { color: var(--muted); font-size: clamp(15px, 1.3vw, 17px); line-height: 1.6; max-width: 50ch; text-wrap: pretty; }
 
 /* ---------- Footer ---------- */
 .footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; padding: 40px var(--pad) 32px; color: var(--muted); font-size: 13px; }
@@ -355,7 +340,6 @@ img { display: block; max-width: 100%; height: auto; }
 
 @media (max-width: 700px) {
   .form__row { grid-template-columns: 1fr; }
-  .agentur { padding-top: 36px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .js .reveal { opacity: 1; transform: none; transition: none; }
@@ -514,161 +498,177 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 
 /* Übergang Titelbild → erster Bereich (seit Auftrag 9: Preise): ruhiger, dunkler Grund, weich aus dem Dunkel am Ende des Titelbilds (#070B16).
    Erdschnitt + Wurzeln (js/wurzeln.js) auf ERGUNs Wunsch am 27.09. wieder entfernt – Datei bleibt liegen, wird nicht geladen. */
-.contact { position: relative; background: var(--bg); }   /* Auftrag 9: Verlauf aus dem Titelbild liegt jetzt auf .preise (erster Bereich danach) */
 
-/* ---------- „Ihr Preis in 4 Fragen“ (Auftrag 27, ERGUN. 29.09.2026; ersetzt den 4-Schritte-Assistenten 9/9b) ----------
-   Immer nur EINE Frage. Große Karten (Handy: Zeilen für den Daumen, Desktop: drei Spalten), Fortschritt oben, Betrag dezent,
-   Zurück/Weiter unten (Handy: klebt am unteren Rand). Akzent-Orange nur für „Angebot anfragen“. Übergang 200 ms ease-out.
-   Texte: js/preise.js → LEITFADEN, Zahlen: PREISE. Audit + Vorher/Nachher: 08 Projekte/Auftrag27-2026-09-29/. */
+/* ---------- Ein Ablauf: Auswahl + Anfrage (Auftrag 25 ERGUN. minimal, 29.09.2026) ----------
+   Pro Schritt eine Überschrift, höchstens ein Satz. Wenig Rahmen, viel Luft. Eine Summenanzeige ab Schritt ② (Desktop klebend rechts,
+   Handy schmale Leiste unten). Orange nur für „Anfrage senden“. Übergang 200 ms, „Bewegung reduzieren“ = sofort. Texte: js/preise.js. */
 .preise { position: relative; background: linear-gradient(#070B16 0, var(--bg) 420px); -webkit-hyphens: manual; hyphens: manual; }
-.preise__innen { width: min(100% - 2 * var(--pad), 920px); margin: 0 auto; padding: clamp(88px, 14svh, 144px) 0 72px; }
-.preise__kopf { display: grid; gap: 12px; justify-items: center; text-align: center; margin-bottom: 40px; }
-.preise__titel { font-family: var(--serif); font-weight: 400; font-size: clamp(2.3rem, 5.6vw, 4.2rem); line-height: 1; letter-spacing: -0.03em; text-wrap: balance; }
-.preise__intro { max-width: 44ch; color: var(--muted); text-wrap: pretty; }
-.lf { scroll-margin-top: 80px; }
-.lf__oben { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 8px 16px; margin-bottom: 28px; }
-.lf__stand { font-size: 14px; line-height: 20px; font-weight: 500; font-variant-numeric: tabular-nums; }
-.lf__betrag { justify-self: end; font-size: 14px; line-height: 20px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.lf__betrag[hidden] { display: none; }
-.lf__balken { grid-column: 1 / -1; height: 2px; border-radius: 2px; background: var(--line); overflow: hidden; }
-.lf__balken i { display: block; height: 100%; background: var(--text); transform-origin: left; transform: scaleX(0); transition: transform 250ms var(--ease-out); }
-.lf-schritt { display: grid; gap: 8px; }
-.lf-schritt.ist-rein { animation: lf-rein 200ms var(--ease-out) both; }
-.lf-schritt.ist-rein--zurueck { animation: lf-rein-zurueck 200ms var(--ease-out) both; }
-@keyframes lf-rein { from { opacity: 0; transform: translateY(8px); } }
-@keyframes lf-rein-zurueck { from { opacity: 0; transform: translateY(-8px); } }
-.lf-titel { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(1.75rem, 3.4vw, 2.25rem); line-height: 1.15; letter-spacing: -0.02em; text-wrap: balance; }
-.lf-titel:focus { outline: none; }
-.lf-satz { max-width: 56ch; margin: 0 0 16px; color: var(--muted); text-wrap: pretty; }
-.lf-frage-inhalt { display: grid; gap: 16px; }
-.lf-icon { width: 40px; height: 40px; }
+.preise__innen { width: min(100% - 2 * var(--pad), 1040px); margin: 0 auto; padding: clamp(88px, 14svh, 136px) 0 48px; }
+.mf-anker { position: absolute; top: 0; }
+.mf__oben { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px 16px; margin-bottom: 36px; }
+.mf__stand { grid-column: 2; justify-self: end; font-size: 13px; line-height: 20px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.mf-zurueck { grid-column: 1; grid-row: 1; justify-self: start; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 4px; border: 0; background: none; color: var(--text); font: 500 15px/1 var(--sans); cursor: pointer; }
+.mf-zurueck[hidden] { display: none; }
+.mf__linie { grid-column: 1 / -1; height: 2px; border-radius: 2px; background: rgba(242, 239, 232, 0.08); overflow: hidden; }
+.mf__linie i { display: block; height: 100%; background: var(--text); transform-origin: left; transform: scaleX(0); transition: transform 250ms var(--ease-out); }
+.mf__raster { display: grid; gap: 40px; align-items: start; }
+@media (min-width: 1024px) { .mit-summe .mf__raster { grid-template-columns: minmax(0, 1fr) 232px; gap: 56px; } }
+.mf__haupt { min-width: 0; }
+.mf-schritt, .mf-anfrage { display: grid; gap: 10px; }
+.mf-schritt.ist-rein, .mf-anfrage.ist-rein { animation: mf-rein 200ms var(--ease-out) both; }
+.mf-schritt.ist-rein--zurueck, .mf-anfrage.ist-rein--zurueck { animation: mf-rein-zurueck 200ms var(--ease-out) both; }
+@keyframes mf-rein { from { opacity: 0; transform: translateY(8px); } }
+@keyframes mf-rein-zurueck { from { opacity: 0; transform: translateY(-8px); } }
+.mf-anfrage[hidden] { display: none; }
+.mf-titel { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(2rem, 4.6vw, 3.2rem); line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; }
+.mf-titel:focus { outline: none; }
+.mf-satz { margin: 0 0 20px; max-width: 48ch; color: var(--muted); text-wrap: pretty; }
+.mf-inhalt { display: grid; gap: 20px; }
+.lf-icon { width: 36px; height: 36px; }
 
-/* Karten: Handy = Zeilen (Bild · Text · Preis), ab 720 px = drei gleiche Spalten */
-.lf-karten { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
-@media (min-width: 720px) { .lf-karten--drei { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
-.lf-karte { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 4px 16px; min-height: 88px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 20px; background: rgba(242, 239, 232, 0.02); color: var(--text); font: inherit; text-align: left; cursor: pointer; transition: border-color 180ms var(--ease-out), background-color 180ms var(--ease-out), transform 160ms var(--ease-out); }
-.lf-karte:active { transform: scale(0.98); }
-.lf-karte[aria-pressed="true"] { border-color: rgba(242, 239, 232, 0.7); background: rgba(242, 239, 232, 0.06); }
-.lf-karte:disabled { opacity: 0.4; cursor: not-allowed; }
-.lf-karte:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.lf-karte__bild { grid-row: span 2; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: rgba(242, 239, 232, 0.05); color: var(--text); }
-.lf-karte__text { display: grid; gap: 2px; min-width: 0; }
-.lf-karte__titel { font-family: var(--serif); font-size: 20px; line-height: 26px; letter-spacing: -0.01em; }
-.lf-karte__satz { font-size: 14px; line-height: 20px; color: var(--muted); text-wrap: pretty; }
-.lf-karte__preis { font-size: 15px; line-height: 20px; font-variant-numeric: tabular-nums; white-space: nowrap; }
-@media (max-width: 719px) { .lf-karte__preis { max-width: 9ch; white-space: normal; text-align: right; } }
-.lf-karte__haken { position: absolute; top: 12px; right: 12px; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--text); color: var(--bg); opacity: 0; transform: scale(0.8); transition: opacity 180ms var(--ease-out), transform 180ms var(--ease-out); }
-.lf-karte__haken svg { width: 14px; height: 14px; }
-.lf-karte[aria-pressed="true"] .lf-karte__haken { opacity: 1; transform: none; }
-.lf-karte__schild { position: absolute; top: -11px; left: 18px; padding: 2px 10px; border-radius: 999px; border: 1px solid rgba(242, 239, 232, 0.28); background: var(--bg); font-size: 12px; line-height: 18px; font-weight: 500; }
-@media (max-width: 719px) { .lf-karte[aria-pressed="true"] .lf-karte__preis { visibility: hidden; } }
-@media (min-width: 720px) {
-  .lf-karte { grid-template-columns: minmax(0, 1fr); align-content: start; gap: 12px; min-height: 240px; padding: 24px 22px; }
-  .lf-karte__bild { grid-row: auto; width: 64px; height: 64px; }
-  .lf-karte__titel { font-size: 22px; line-height: 28px; }
-  .lf-karte__preis { margin-top: auto; font-family: var(--serif); font-size: 22px; line-height: 28px; white-space: normal; text-wrap: balance; }
-  .lf-karte--klein { min-height: 200px; }
+/* ① drei gleich breite Karten (Handy untereinander, volle Breite) */
+.mf-karten { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+@media (min-width: 720px) { .mf-karten { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
+.mf-karte { display: grid; align-content: start; gap: 6px; min-height: 96px; padding: 22px; border: 1px solid rgba(242, 239, 232, 0.1); border-radius: 22px; background: rgba(242, 239, 232, 0.03); color: var(--text); font: inherit; text-align: left; cursor: pointer; transition: border-color 180ms var(--ease-out), background-color 180ms var(--ease-out), transform 160ms var(--ease-out); }
+.mf-karte:active, .mf-stufe:active, .mf-chip:active, .mf-komplett:active { transform: scale(0.98); }
+.mf-karte[aria-pressed="true"] { border-color: rgba(242, 239, 232, 0.6); }
+.mf-karte__bild { margin-bottom: 10px; color: var(--text); }
+.mf-karte__titel { font-family: var(--serif); font-size: 26px; line-height: 32px; letter-spacing: -0.015em; }
+.mf-karte__satz { font-size: 15px; line-height: 22px; color: var(--muted); text-wrap: pretty; }
+.mf-karte__preis { margin-top: 10px; font-size: 15px; line-height: 20px; font-variant-numeric: tabular-nums; }
+@media (min-width: 720px) { .mf-karte { min-height: 200px; } .mf-karte__preis { margin-top: auto; padding-top: 12px; } }
+.mf-link { justify-self: start; display: inline-flex; align-items: center; min-height: 44px; padding: 0; border: 0; background: none; color: var(--text); font: 500 15px/1.3 var(--sans); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(242, 239, 232, 0.3); cursor: pointer; }
+.mf-link--klein { min-height: 32px; font-size: 14px; }
+
+/* ② Website: Stufen mit höchstens drei Stichpunkten */
+.mf-stufen { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+@media (min-width: 720px) { .mf-stufen { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
+.mf-stufe, .mf-komplett { position: relative; display: grid; align-content: start; gap: 12px; padding: 20px; border: 1px solid rgba(242, 239, 232, 0.1); border-radius: 20px; background: rgba(242, 239, 232, 0.03); color: var(--text); font: inherit; text-align: left; cursor: pointer; transition: border-color 180ms var(--ease-out), transform 160ms var(--ease-out); }
+.mf-stufe[aria-pressed="true"], .mf-komplett[aria-pressed="true"] { border-color: rgba(242, 239, 232, 0.6); }
+.mf-stufe__kopf { display: grid; gap: 2px; padding-right: 28px; }
+.mf-stufe__name { font-family: var(--serif); font-size: 24px; line-height: 30px; }
+.mf-stufe__preis { font-size: 15px; font-variant-numeric: tabular-nums; }
+.mf-stufe__punkte { display: grid; gap: 6px; font-size: 14px; line-height: 20px; color: rgba(242, 239, 232, 0.8); }
+.mf-stufe__punkt { display: flex; gap: 8px; } .mf-stufe__punkt svg { flex: none; width: 16px; height: 16px; margin-top: 2px; color: var(--muted); }
+.mf-stufe__schild { position: absolute; top: -11px; left: 18px; padding: 2px 10px; border-radius: 999px; border: 1px solid rgba(242, 239, 232, 0.28); background: var(--bg); font-size: 12px; line-height: 18px; font-weight: 500; }
+.mf-stufe__haken { position: absolute; top: 18px; right: 16px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--text); color: var(--bg); opacity: 0; transition: opacity 180ms var(--ease-out); }
+.mf-stufe__haken svg { width: 13px; height: 13px; }
+.mf-stufe[aria-pressed="true"] .mf-stufe__haken { opacity: 1; }
+/* Aufklapper (Alles, was drin ist · Extras) */
+.mf-auf { border-top: 1px solid rgba(242, 239, 232, 0.08); }
+.mf-auf > summary { display: flex; align-items: center; gap: 10px; min-height: 52px; cursor: pointer; list-style: none; font-size: 15px; }
+.mf-auf--klein > summary { color: var(--muted); font-size: 14px; min-height: 44px; }
+.mf-auf > summary::-webkit-details-marker { display: none; }
+.mf-auf > summary::before { content: "+"; display: grid; place-items: center; width: 22px; height: 22px; border: 1px solid rgba(242, 239, 232, 0.2); border-radius: 50%; font-size: 14px; line-height: 1; transition: transform 200ms var(--ease-out); }
+.mf-auf[open] > summary::before { transform: rotate(45deg); }
+.mf-auf[open] > summary { margin-bottom: 8px; }
+.mf-alles { display: grid; gap: 16px; padding-bottom: 16px; font-size: 14px; line-height: 20px; }
+@media (min-width: 720px) { .mf-alles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.mf-alles ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); display: grid; gap: 4px; }
+/* Betreuung als eine Zeile */
+.mf-betreuung { display: grid; gap: 4px; padding-top: 16px; border-top: 1px solid rgba(242, 239, 232, 0.08); }
+.mf-betreuung__zeile { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+.mf-betreuung__text { font-size: 15px; font-variant-numeric: tabular-nums; }
+.mf-betreuung__grund { margin: 0; font-size: 14px; line-height: 20px; color: var(--muted); }
+.mf-betreuung__wahl { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; margin-top: 10px; }
+@media (min-width: 720px) { .mf-betreuung__wahl { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.mf-selbst { margin-left: 0; }
+
+/* ② Automatisierung: endo-Aufgaben mit ehrlichem Status */
+.mf-endo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 10px; }
+@media (min-width: 720px) { .mf-endo { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.mf-chip { display: grid; align-content: start; gap: 4px; padding: 14px 16px; border: 1px solid rgba(242, 239, 232, 0.1); border-radius: 16px; background: rgba(242, 239, 232, 0.03); color: var(--text); font: inherit; text-align: left; cursor: pointer; transition: border-color 150ms var(--ease-out), transform 160ms var(--ease-out); }
+.mf-chip[aria-pressed="true"] { border-color: rgba(242, 239, 232, 0.6); background: rgba(242, 239, 232, 0.07); }
+.mf-chip__kopf { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; }
+.mf-chip__kopf b { font-size: 15px; font-weight: 600; }
+.mf-chip__status { padding: 1px 8px; border-radius: 999px; border: 1px solid rgba(242, 239, 232, 0.18); font-size: 11px; line-height: 16px; color: var(--muted); }
+.mf-chip__status--live { color: #0E0E0C; background: var(--text); border-color: var(--text); }
+.mf-chip__satz { font-size: 13px; line-height: 18px; color: var(--muted); }
+.mf-stand { margin: 0; font-size: 14px; line-height: 20px; }
+
+/* Unten: Hinweis + Weiter */
+.mf__nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px 16px; margin-top: 28px; }
+.mf__hinweis { margin: 0; font-size: 13px; color: var(--muted); }
+.mf__hinweis:empty { display: none; }
+.mf-weiter { min-width: 180px; }
+.mf-weiter[hidden] { display: none; }
+
+/* Eine Summenanzeige: Desktop klebend rechts, Handy schmale Leiste unten */
+.mf-summe { display: grid; gap: 14px; }
+.mf-summe[hidden] { display: none; }
+.mf-summe div { display: grid; gap: 2px; }
+.mf-summe span { font-size: 13px; color: var(--muted); }
+.mf-summe b { font-family: var(--serif); font-weight: 400; font-size: 26px; line-height: 32px; font-variant-numeric: tabular-nums; }
+@media (min-width: 1024px) { .mf-summe { position: sticky; top: 96px; padding: 20px 0 0; border-top: 2px solid var(--text); } }
+@media (max-width: 1023px) {
+  .mf-summe { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 15; grid-template-columns: 1fr 1fr; gap: 12px; padding: 10px 16px; border-radius: 16px; background: rgba(14, 14, 12, 0.94); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); }
+  .mf-summe b { font-size: 18px; line-height: 24px; }
+  .mit-summe .preise__innen { padding-bottom: 104px; }
 }
 
-/* „Was ist enthalten?“ */
-.lf-mehr { border-top: 1px solid var(--line); }
-.lf-mehr > summary { display: flex; align-items: center; gap: 10px; min-height: 48px; cursor: pointer; list-style: none; font-size: 14px; color: var(--muted); }
-.lf-mehr > summary::-webkit-details-marker { display: none; }
-.lf-mehr > summary::after { content: ""; width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-2px) rotate(45deg); transition: transform 200ms var(--ease-out); }
-.lf-mehr[open] > summary::after { transform: translateY(2px) rotate(-135deg); }
-.lf-mehr__raster { display: grid; gap: 20px; padding: 4px 0 16px; font-size: 14px; line-height: 20px; }
-@media (min-width: 720px) { .lf-mehr__raster { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.lf-mehr__raster ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); display: grid; gap: 4px; }
+/* ③ Ihre Anfrage */
+.mf-anfrage__kopf { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+.mf-anfrage__kopf .mf-satz { margin: 4px 0 0; }
+.mf-person img { display: block; width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+.mf .anfrage { max-width: 680px; }
+.auswahl__summen { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.auswahl__summen p { margin: 0; display: grid; gap: 2px; }
+.auswahl__summen span { font-size: 13px; color: var(--muted); }
+.auswahl__summen b { font-family: var(--serif); font-weight: 400; font-size: clamp(20px, 5.4vw, 26px); line-height: 30px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mf .auswahl__liste div:last-child { padding-top: 0; border-top: 0; }
+.mf .auswahl__liste div:last-child dd { font-family: var(--sans); font-size: 14px; }
+.mf .anfrage { padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.mf .anfrage__punkte { display: none; }
+.mf-anfrage__kopf .mf-satz { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+.auswahl__jahr { display: block; margin-top: 8px; font-size: 12px; line-height: 18px; color: var(--muted); }
+.mf-agentur { margin: 56px 0 0; font-size: 14px; line-height: 20px; color: var(--muted); text-align: center; text-wrap: balance; }
+.mf-agentur a { color: var(--text); }
 
-/* Frage 3: Ja/Nein-Fragen als ruhige Zeilen */
-.lf-fragen { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-.lf-frage { display: grid; gap: 12px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 18px; background: rgba(242, 239, 232, 0.02); }
+/* Bausteine aus Auftrag 27: Ja/Nein-Fragen, Schalter, ⓘ, Chips, Anzahl */
+.lf-fragen { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 10px; }
+.lf-frage { display: grid; gap: 12px; padding: 12px 14px; border-radius: 16px; background: rgba(242, 239, 232, 0.03); }
 .lf-frage__kopf { display: flex; align-items: center; gap: 14px; }
-.lf-frage__bild { flex: none; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: rgba(242, 239, 232, 0.05); }
-.lf-frage__bild .lf-icon { width: 32px; height: 32px; }
+.lf-frage__bild { flex: none; display: grid; place-items: center; width: 40px; height: 40px; }
+.lf-frage__bild .lf-icon { width: 28px; height: 28px; }
 .lf-frage__text { flex: 1; min-width: 0; display: grid; gap: 2px; }
-.lf-frage__was { font-size: 16px; line-height: 22px; font-weight: 500; text-wrap: pretty; }
-.lf-frage__preis { font-size: 14px; line-height: 20px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.lf-frage__schon { flex: none; padding: 6px 12px; border-radius: 999px; background: rgba(242, 239, 232, 0.08); font-size: 13px; font-weight: 500; }
-.lf-unter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-left: 62px; padding-top: 12px; border-top: 1px solid var(--line); }
+.lf-frage__was { font-size: 15px; line-height: 21px; font-weight: 500; text-wrap: pretty; }
+.lf-frage__preis { font-size: 13px; line-height: 18px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.lf-frage__schon { flex: none; padding: 5px 11px; border-radius: 999px; background: rgba(242, 239, 232, 0.08); font-size: 13px; font-weight: 500; }
+.lf-unter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-left: 54px; padding-top: 10px; border-top: 1px solid rgba(242, 239, 232, 0.08); }
 .lf-unter .lf-frage__was { flex: 1; min-width: 12ch; }
-@media (max-width: 479px) { .lf-unter { margin-left: 0; } .lf-frage__bild { display: none; } .lf-schalter { width: 92px; } .lf-frage { padding: 14px; } }
-/* Ja/Nein-Schalter: zwei Hälften, die gewählte ist hell */
-.lf-schalter { flex: none; position: relative; display: grid; grid-template-columns: 1fr 1fr; width: 104px; height: 44px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--muted); font: 500 14px/1 var(--sans); cursor: pointer; }
+.lf-schalter { flex: none; position: relative; display: grid; grid-template-columns: 1fr 1fr; width: 100px; height: 44px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--muted); font: 500 14px/1 var(--sans); cursor: pointer; }
 .lf-schalter span { position: relative; z-index: 1; display: grid; place-items: center; transition: color 180ms var(--ease-out); }
 .lf-schalter::before { content: ""; position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: 999px; background: rgba(242, 239, 232, 0.12); transform: translateX(100%); transition: transform 200ms var(--ease-out), background-color 200ms var(--ease-out); }
 .lf-schalter[aria-checked="true"]::before { transform: none; background: var(--text); }
 .lf-schalter[aria-checked="true"] .lf-schalter__ja { color: var(--bg); }
 .lf-schalter[aria-checked="false"] .lf-schalter__nein { color: var(--text); }
-.lf-schalter:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-/* ⓘ nur bei Fachbegriffen, klappt die Erklärung auf */
 .lf-info__knopf { position: relative; flex: none; display: grid; place-items: center; width: 22px; height: 22px; padding: 0; border: 1px solid rgba(242, 239, 232, 0.24); border-radius: 50%; background: none; color: var(--muted); font: 600 11px/1 var(--sans); cursor: pointer; }
 .lf-info__knopf::before { content: ""; position: absolute; inset: -11px; }
 .lf-info__knopf[aria-expanded="true"] { color: var(--bg); background: var(--text); border-color: var(--text); }
-.lf-info__text { margin-left: 62px; font-size: 14px; line-height: 20px; color: var(--muted); text-wrap: pretty; }
+.lf-info__text { margin-left: 54px; font-size: 14px; line-height: 20px; color: var(--muted); }
 .lf-info__text[hidden] { display: none; }
-@media (max-width: 479px) { .lf-info__text { margin-left: 0; } }
-/* Auswahl-Chips (Video/3D, endo-Aufgaben) */
 .lf-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .lf-chip { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--text); font: 500 14px/1.2 var(--sans); cursor: pointer; transition: border-color 150ms var(--ease-out), background-color 150ms var(--ease-out); }
 .lf-chip[aria-pressed="true"] { border-color: var(--text); background: rgba(242, 239, 232, 0.1); }
-.lf-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.lf-chips--endo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; }
-@media (min-width: 720px) { .lf-chips--endo { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.lf-chip:disabled { opacity: 0.4; cursor: not-allowed; }
 .lf-chip--gross { display: grid; align-content: center; gap: 2px; padding: 12px 16px; border-radius: 16px; text-align: left; }
-.lf-chip--gross b { font-size: 15px; line-height: 20px; font-weight: 600; }
+.lf-chip--gross b { font-size: 15px; line-height: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .lf-chip--gross span { font-size: 13px; line-height: 18px; color: var(--muted); }
-.lf-endo { display: grid; gap: 10px; }
-.lf-endo__titel { margin: 12px 0 0; font-family: var(--serif); font-weight: 400; font-size: 22px; line-height: 28px; }
-.lf-endo__satz, .lf-endo__stand, .lf-grund { margin: 0; font-size: 14px; line-height: 20px; color: var(--muted); text-wrap: pretty; }
-.lf-endo__stand { color: var(--text); }
-.lf-zahl { justify-content: flex-start; }
 .lf-zahl__knopf { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 50%; background: none; color: var(--text); font: 500 20px/1 var(--sans); cursor: pointer; }
 .lf-zahl__knopf:disabled { opacity: 0.35; cursor: default; }
 .lf-zahl__wert { min-width: 2ch; text-align: center; font-family: var(--serif); font-size: 22px; font-variant-numeric: tabular-nums; }
-
-/* Unten: Zurück / Weiter – am Handy in Daumen-Reichweite (klebt unten) */
-.lf__nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 28px; }
-.lf__nav [hidden] { display: none; }
-.lf__weiter { margin-left: auto; min-width: 160px; }
-.lf__hinweis { flex-basis: 100%; order: 3; margin: 0; font-size: 13px; line-height: 18px; color: var(--muted); text-align: right; }
-.lf__hinweis:empty { display: none; }
-@media (max-width: 719px) {
-  .lf__nav { position: sticky; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 5; margin-top: 20px; padding: 10px; border: 1px solid var(--line); border-radius: 999px; background: rgba(10, 10, 10, 0.88); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); flex-wrap: wrap; }
-  .lf__nav:has(> [hidden] + [hidden]) { display: none; }
-  .lf__hinweis { text-align: center; }
-  .ist-ergebnis .lf__nav { display: none; }
+@media (max-width: 479px) {
+  .lf-frage__bild { display: none; } .lf-unter, .lf-info__text { margin-left: 0; } .lf-schalter { width: 92px; }
 }
-
-/* Ergebnis „Ihr Preis“ */
-.lf-summen { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
-@media (min-width: 720px) { .lf-summen { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
-.lf-summe { display: grid; gap: 4px; padding: 20px 22px; border: 1px solid var(--line); border-radius: 20px; background: rgba(242, 239, 232, 0.02); }
-.lf-summe__was { font-size: 14px; line-height: 20px; color: var(--muted); }
-.lf-summe__zahl { font-family: var(--serif); font-size: clamp(1.9rem, 4.4vw, 2.6rem); line-height: 1.05; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.lf-summe__zahl small { margin-left: 4px; font-family: var(--sans); font-size: 16px; letter-spacing: 0; color: var(--muted); }
-.lf-summe--haupt { border-color: rgba(242, 239, 232, 0.5); background: rgba(242, 239, 232, 0.05); }
-.lf-teile { margin: 8px 0 0; display: grid; }
-.lf-teile > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
-.lf-teile dt { font-size: 16px; line-height: 22px; font-weight: 500; }
-.lf-teile dt small { display: block; margin-top: 2px; font-size: 14px; line-height: 20px; font-weight: 400; color: var(--muted); text-wrap: pretty; }
-.lf-teile dd { margin: 0; font-size: 16px; line-height: 22px; font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
-.lf-klein { margin: 4px 0 0; font-size: 13px; line-height: 18px; color: var(--muted); text-wrap: pretty; }
-.lf-ende { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
-.lf-ende .btn { min-height: 52px; }
-@media (max-width: 479px) { .lf-ende .btn { flex: 1 1 100%; } }
-
+:where(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-schalter, .lf-chip, .mf-link, .mf-zurueck):focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) {
-  .lf-karte:not(:disabled):hover { border-color: rgba(242, 239, 232, 0.36); }
-  .lf-karte[aria-pressed="true"]:hover { border-color: rgba(242, 239, 232, 0.7); }
-  .lf-chip:hover, .lf-zahl__knopf:not(:disabled):hover, .lf-schalter:hover { border-color: rgba(242, 239, 232, 0.36); }
+  .mf-karte:hover, .mf-stufe:hover, .mf-chip:hover, .mf-komplett:hover { border-color: rgba(242, 239, 232, 0.32); }
+  .mf-karte[aria-pressed="true"]:hover, .mf-stufe[aria-pressed="true"]:hover, .mf-chip[aria-pressed="true"]:hover { border-color: rgba(242, 239, 232, 0.6); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .lf-schritt.ist-rein, .lf-schritt.ist-rein--zurueck { animation: none; }
-  .lf__balken i, .lf-karte, .lf-karte__haken, .lf-schalter::before, .lf-schalter span, .lf-chip, .lf-mehr > summary::after { transition: none; }
+  .mf-schritt.ist-rein, .mf-schritt.ist-rein--zurueck, .mf-anfrage.ist-rein, .mf-anfrage.ist-rein--zurueck { animation: none; }
+  .mf__linie i, .mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .mf-stufe__haken, .lf-schalter::before, .lf-schalter span, .lf-chip, .mf-auf > summary::before { transition: none; }
 }
-/* Übergang Preise → Kontakt: ruhig, gleicher Grund, nur eine feine Linie */
-.contact::before { content: ""; position: absolute; left: 50%; top: 0; width: min(100% - 2 * var(--pad), 1180px); height: 1px; transform: translateX(-50%); background: linear-gradient(90deg, transparent, var(--line) 20%, var(--line) 80%, transparent); }
 /* Auftrag 27: Dateien im Formular eingeklappt (weniger Ablenkung) */
 .anfrage__mehr > summary { display: flex; align-items: center; gap: 10px; min-height: 48px; cursor: pointer; list-style: none; font-size: 15px; color: var(--muted); }
 .anfrage__mehr > summary::-webkit-details-marker { display: none; }
@@ -685,8 +685,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 <header class="nav">
   <a class="nav__mark" href="#top" aria-label="ERGUN – nach oben">ERGUN<span class="dot">.</span></a>
   <nav class="nav__links" aria-label="Seitennavigation">
-    <a class="nav__link" href="#preise">Preis berechnen</a>
-    <a class="nav__link" href="#kontakt">Kontakt</a>
+    <a class="nav__link" href="#preise">Anfrage</a>
     <a class="nav__link nav__link--endo" href="https://endo-ergun.vercel.app/" data-endo-link>endo <span aria-hidden="true">↗</span></a>
   </nav>
 </header>
@@ -724,127 +723,118 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 </div>
 
 <main id="inhalt" tabindex="-1">
-  <!-- „Ihr Preis in 4 Fragen“ (Auftrag 27, 29.09.2026): immer nur EINE Frage – ① Was brauchen Sie? ② Wie groß? ③ Was soll sie können?
-       ④ Wer kümmert sich danach? → „Ihr Preis“. Inhalt baut js/preise.js aus PREISE (Zahlen) + LEITFADEN (Texte). Nichts wird gespeichert. -->
-  <section class="preise" id="preise" aria-labelledby="preise-titel" data-preise>
+  <!-- EIN ABLAUF (Auftrag 25 ERGUN. minimal, 29.09.2026 – Ausnahme auf Emres Wunsch: Preis-Bereich und Kontakt sind ein Ablauf):
+       ① Was brauchen Sie? (Website · Automatisierung · Beides) → ② nur das Passende → ③ Ihre Anfrage (Zusammenfassung + Formular).
+       Schritt ① und ② baut js/preise.js (Zahlen PREISE, Texte LEITFADEN), Schritt ③ steht hier. Alte Anker: #preise = Ablauf, #kontakt = Schritt ③. -->
+  <section class="preise mf" id="preise" aria-label="Anfrage an ERGUN." data-preise>
+   <span class="mf-anker" id="kontakt" aria-hidden="true"></span>
    <div class="preise__innen">
-    <div class="preise__kopf">
-      <h2 class="preise__titel reveal" id="preise-titel">Ihr Preis in 4&nbsp;Fragen</h2>
-      <p class="preise__intro reveal">Ein paar Antworten, dann sehen Sie Ihren Preis. Unverbindlich und ohne Anmeldung.</p>
+    <div class="mf__oben">
+      <button class="mf-zurueck" type="button" data-mf-zurueck hidden><span aria-hidden="true">←</span> Zurück</button>
+      <p class="mf__stand" data-mf-stand>Schritt 1 von 3</p>
+      <div class="mf__linie" aria-hidden="true"><i data-mf-linie></i></div>
     </div>
-    <div class="lf reveal" data-lf>
-      <div class="lf__oben">
-        <p class="lf__stand" data-lf-stand>Frage 1 von 4</p>
-        <p class="lf__betrag" data-lf-betrag hidden></p>
-        <div class="lf__balken" aria-hidden="true"><i data-lf-balken></i></div>
+    <div class="mf__raster">
+      <div class="mf__haupt">
+        <div data-mf-dyn></div>
+        <div class="mf-anfrage" data-mf-anfrage hidden>
+          <div class="mf-anfrage__kopf">
+            <span class="mf-person"><img src="bilder/kontakt/emre-264.webp" width="48" height="48" alt="Porträt Ihres Ansprechpartners" loading="lazy" decoding="async"></span>
+            <div>
+              <h2 class="mf-titel" id="mf-anfrage-titel" tabindex="-1">Ihre Anfrage</h2>
+              <p class="mf-satz">Antwort innerhalb von 24&nbsp;Stunden <span class="online">online</span></p>
+            </div>
+          </div>
+        <form class="anfrage" id="anfrage" novalidate>
+          <div class="auswahl" data-ihre-auswahl aria-live="polite">
+            <div class="auswahl__kopf"><p class="auswahl__titel">Ihre Auswahl</p><a class="auswahl__aendern" href="#preise" data-auswahl-aendern>ändern</a></div>
+            <div class="auswahl__inhalt" data-auswahl-inhalt><p class="auswahl__leer">Nichts ausgewählt – schreiben Sie einfach, worum es geht. <a href="#preise" data-auswahl-treffen>Auswahl treffen</a></p></div>
+          </div>
+          <div class="anfrage__punkte" aria-hidden="true"></div>
+
+          <div class="field">
+            <label for="f-name">Name <span class="pflicht" aria-hidden="true">*</span></label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required aria-required="true" aria-describedby="f-name-err">
+            <span class="field__error" id="f-name-err" aria-live="polite"></span>
+          </div>
+
+          <fieldset class="anfrage__gruppe anfrage__gruppe--weg" aria-describedby="f-weg-err">
+            <legend>Antwort per <span class="pflicht" aria-hidden="true">*</span></legend>
+            <div class="weg">
+              <label class="weg__option"><input type="radio" name="weg" value="whatsapp"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg> WhatsApp</span></label>
+              <label class="weg__option"><input type="radio" name="weg" value="mail"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg> E-Mail</span></label>
+            </div>
+            <span class="field__error" id="f-weg-err" aria-live="polite"></span>
+          </fieldset>
+
+          <div class="field anfrage__kontakt" data-feld-tel hidden>
+            <label for="f-tel">Telefonnummer <span class="pflicht" aria-hidden="true">*</span></label>
+            <input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="+49 …" aria-required="true" aria-describedby="f-tel-err">
+            <span class="field__error" id="f-tel-err" aria-live="polite"></span>
+          </div>
+          <div class="field anfrage__kontakt" data-feld-mail hidden>
+            <label for="f-mail">E-Mail-Adresse <span class="pflicht" aria-hidden="true">*</span></label>
+            <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@firma.de" aria-required="true" aria-describedby="f-mail-err">
+            <span class="field__error" id="f-mail-err" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="f-text">Nachricht <small>(optional)</small></label>
+            <textarea id="f-text" name="text" rows="3" placeholder="Was machen Sie? Ein, zwei Sätze genügen."></textarea>
+          </div>
+
+          <details class="field field--datei anfrage__mehr">
+              <summary>Logo oder Fotos anhängen <small>(optional)</small></summary>
+              <label class="hinweis-versteckt" for="f-datei">Dateien auswählen</label>
+              <div class="upload" data-upload>
+                <svg class="upload__symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4"/><path d="m7 9 5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+                <span class="upload__text"><b>Dateien auswählen</b><small>Antippen oder hierher ziehen · Bilder, PDF, Word, ZIP</small></span>
+                <input id="f-datei" name="dateien" type="file" multiple accept="image/*,.pdf,.doc,.docx,.svg,.ai,.zip">
+              </div>
+              <ul class="datei__liste" data-datei-liste aria-live="polite"></ul>
+              <span class="form__hint">Die Dateien werden beim Auswählen hochgeladen und kommen als Link in die Nachricht. Nach 30 Tagen werden sie automatisch gelöscht.</span>
+            </details>
+
+
+
+          <div class="field anfrage__ok">
+            <label class="anfrage__haken"><input type="checkbox" name="datenschutz" aria-required="true" aria-describedby="f-ds-err"><span class="haken__box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.5 4.5L18.5 7.5"/></svg></span><span>Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a> gelesen und bin einverstanden, dass ich zu meiner Anfrage kontaktiert werde. <span class="pflicht" aria-hidden="true">*</span></span></label>
+            <span class="field__error" id="f-ds-err" aria-live="polite"></span>
+          </div>
+
+          <button class="btn btn--wa anfrage__senden" type="submit" data-senden>
+            <span data-senden-text>Anfrage senden</span>
+            <span class="anfrage__pfeil" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+          </button>
+          <p class="form__status" data-status aria-live="polite"></p>
+          <p class="form__hint">Felder mit * sind Pflicht. „Anfrage senden“ öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Ihre Angaben speichert die Website nicht, nur hochgeladene Dateien liegen bis zu 30 Tage bei Vercel.</p>
+          <!-- Honigtopf gegen Spam: für Menschen unsichtbar -->
+          <div class="anfrage__hp" aria-hidden="true"><label>Website <input type="text" name="webseite" tabindex="-1" autocomplete="off"></label></div>
+          <div class="anfrage__danke" data-danke hidden tabindex="-1">
+            <span class="anfrage__check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12.5 4 4 8-9"/></svg></span>
+            <h3 class="anfrage__danke-titel" data-danke-titel>Danke!</h3>
+            <p data-danke-text>Ich melde mich persönlich bei Ihnen.</p>
+            <div class="anfrage__danke-knoepfe">
+              <a class="btn btn--wa" href="#" data-nochmal>WhatsApp erneut öffnen</a>
+              <button class="btn" type="button" data-bearbeiten>Nachricht bearbeiten</button>
+            </div>
+            <p class="form__hint">Klappt es nicht? Schreiben Sie mir direkt an <a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a>.</p>
+          </div>
+        </form>
+        </div>
+        <div class="mf__nav">
+          <p class="mf__hinweis" data-mf-hinweis aria-live="polite"></p>
+          <button class="btn btn--hell mf-weiter" type="button" data-mf-weiter hidden>Weiter</button>
+        </div>
       </div>
-      <div class="lf__buehne" data-lf-buehne></div>
-      <div class="lf__nav">
-        <button class="btn lf__zurueck" type="button" data-lf-zurueck hidden><span aria-hidden="true">←</span> Zurück</button>
-        <button class="btn btn--hell lf__weiter" type="button" data-lf-weiter hidden>Weiter</button>
-        <p class="lf__hinweis" data-lf-hinweis aria-live="polite"></p>
-      </div>
+      <aside class="mf-summe" data-mf-summe hidden aria-label="Ihre Summe">
+        <div><span>Einmalig</span><b data-mf-summe-einmalig>–</b></div>
+        <div><span>Monatlich</span><b data-mf-summe-monatlich>–</b></div>
+      </aside>
     </div>
     <p class="hinweis-versteckt" aria-live="polite" data-preise-live></p>
+    <p class="mf-agentur">ERGUN. baut Websites, Automatisierung und KI kommen über endo · <a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a></p>
    </div>
-  </section>
-
-  <section class="contact" id="kontakt" aria-labelledby="kontakt-titel">
-    <div class="contact__kopf">
-      <figure class="contact__person reveal">
-        <span class="contact__bild"><img src="bilder/kontakt/emre-264.webp" width="88" height="88" alt="Porträt Ihres Ansprechpartners" loading="lazy" decoding="async"></span>
-        <figcaption><strong>Ihr Ansprechpartner</strong> · <span class="online">online</span></figcaption>
-      </figure>
-      <h2 class="contact__big reveal" id="kontakt-titel">Kostenloses Erstgespräch</h2>
-      <p class="contact__intro reveal">Ihre Website plane und baue ich persönlich. Automatisierung und KI für Ihren Betrieb kommen über endo. Antwort innerhalb von 24&nbsp;Stunden.</p>
-    </div>
-
-    <!-- Formular (Auftrag 27, 29.09.2026): geplant wird im Leitfaden – hier nur „Ihre Auswahl“ (aus js/preise.js) + Name, Antwort-Weg, Nachricht, Datenschutz;
-         Dateien sind eingeklappt. Keine Frage wird wiederholt. -->
-    <form class="anfrage reveal" id="anfrage" novalidate>
-      <div class="auswahl" data-ihre-auswahl aria-live="polite">
-        <div class="auswahl__kopf"><p class="auswahl__titel">Ihre Auswahl</p><a class="auswahl__aendern" href="#preise" data-auswahl-aendern>ändern</a></div>
-        <div class="auswahl__inhalt" data-auswahl-inhalt><p class="auswahl__leer">Noch nichts ausgewählt – <a href="#preise">Preis berechnen</a> oder einfach schreiben.</p></div>
-      </div>
-      <div class="anfrage__punkte" aria-hidden="true"></div>
-
-      <div class="field">
-        <label for="f-name">Name <span class="pflicht" aria-hidden="true">*</span></label>
-        <input id="f-name" name="name" type="text" autocomplete="name" required aria-required="true" aria-describedby="f-name-err">
-        <span class="field__error" id="f-name-err" aria-live="polite"></span>
-      </div>
-
-      <fieldset class="anfrage__gruppe anfrage__gruppe--weg" aria-describedby="f-weg-err">
-        <legend>Antwort per <span class="pflicht" aria-hidden="true">*</span></legend>
-        <div class="weg">
-          <label class="weg__option"><input type="radio" name="weg" value="whatsapp"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.7.1 2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg> WhatsApp</span></label>
-          <label class="weg__option"><input type="radio" name="weg" value="mail"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg> E-Mail</span></label>
-        </div>
-        <span class="field__error" id="f-weg-err" aria-live="polite"></span>
-      </fieldset>
-
-      <div class="field anfrage__kontakt" data-feld-tel hidden>
-        <label for="f-tel">Telefonnummer <span class="pflicht" aria-hidden="true">*</span></label>
-        <input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="+49 …" aria-required="true" aria-describedby="f-tel-err">
-        <span class="field__error" id="f-tel-err" aria-live="polite"></span>
-      </div>
-      <div class="field anfrage__kontakt" data-feld-mail hidden>
-        <label for="f-mail">E-Mail-Adresse <span class="pflicht" aria-hidden="true">*</span></label>
-        <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@firma.de" aria-required="true" aria-describedby="f-mail-err">
-        <span class="field__error" id="f-mail-err" aria-live="polite"></span>
-      </div>
-
-      <div class="field">
-        <label for="f-text">Nachricht <small>(optional)</small></label>
-        <textarea id="f-text" name="text" rows="3" placeholder="Was machen Sie? Ein, zwei Sätze genügen."></textarea>
-      </div>
-
-      <details class="field field--datei anfrage__mehr">
-          <summary>Logo oder Fotos mitschicken <small>(optional)</small></summary>
-          <label class="hinweis-versteckt" for="f-datei">Dateien auswählen</label>
-          <div class="upload" data-upload>
-            <svg class="upload__symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4"/><path d="m7 9 5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-            <span class="upload__text"><b>Dateien auswählen</b><small>Antippen oder hierher ziehen · Bilder, PDF, Word, ZIP</small></span>
-            <input id="f-datei" name="dateien" type="file" multiple accept="image/*,.pdf,.doc,.docx,.svg,.ai,.zip">
-          </div>
-          <ul class="datei__liste" data-datei-liste aria-live="polite"></ul>
-          <span class="form__hint">Die Dateien werden beim Auswählen hochgeladen und kommen als Link in die Nachricht. Nach 30 Tagen werden sie automatisch gelöscht.</span>
-        </details>
-
-
-
-      <div class="field anfrage__ok">
-        <label class="anfrage__haken"><input type="checkbox" name="datenschutz" aria-required="true" aria-describedby="f-ds-err"><span class="haken__box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.5 4.5L18.5 7.5"/></svg></span><span>Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a> gelesen und bin einverstanden, dass ich zu meiner Anfrage kontaktiert werde. <span class="pflicht" aria-hidden="true">*</span></span></label>
-        <span class="field__error" id="f-ds-err" aria-live="polite"></span>
-      </div>
-
-      <button class="btn btn--wa anfrage__senden" type="submit" data-senden>
-        <span data-senden-text>Anfrage senden</span>
-        <span class="anfrage__pfeil" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
-      </button>
-      <p class="form__status" data-status aria-live="polite"></p>
-      <p class="form__hint">Felder mit * sind Pflicht. „Anfrage senden“ öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Ihre Angaben speichert die Website nicht, nur hochgeladene Dateien liegen bis zu 30 Tage bei Vercel.</p>
-      <!-- Honigtopf gegen Spam: für Menschen unsichtbar -->
-      <div class="anfrage__hp" aria-hidden="true"><label>Website <input type="text" name="webseite" tabindex="-1" autocomplete="off"></label></div>
-      <div class="anfrage__danke" data-danke hidden tabindex="-1">
-        <span class="anfrage__check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12.5 4 4 8-9"/></svg></span>
-        <h3 class="anfrage__danke-titel" data-danke-titel>Danke!</h3>
-        <p data-danke-text>Ich melde mich persönlich bei Ihnen.</p>
-        <div class="anfrage__danke-knoepfe">
-          <a class="btn btn--wa" href="#" data-nochmal>WhatsApp erneut öffnen</a>
-          <button class="btn" type="button" data-bearbeiten>Nachricht bearbeiten</button>
-        </div>
-        <p class="form__hint">Klappt es nicht? Schreiben Sie mir direkt an <a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a>.</p>
-      </div>
-    </form>
-
-    <div class="contact__meta reveal">
-      <a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a>
-    </div>
-    <div class="agentur reveal">
-      <p class="agentur__marke">ERGUN<span class="dot">.</span></p>
-      <p class="agentur__text">ERGUN. ist ein Digitalstudio für Unternehmen: Websites mit Design und Bewegung, Entwurf und Umsetzung aus einer Hand. Automatisierung und eigene KI kommen über endo – ebenfalls von ERGUN.</p>
-    </div>
   </section>
 </main>
 
@@ -880,7 +870,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
-<script src="js/preise.js?v=5"></script>
+<script src="js/preise.js?v=6"></script>
 <script>
 /* Kostenloses Erstgespräch: eine Karte mit allen Feldern (seit 25.09. abends keine Schritte mehr).
    Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)
@@ -913,19 +903,22 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
     if (!e) { auswahlBox.innerHTML = leerHtml; return; }
     var dl = document.createElement('dl'); dl.className = 'auswahl__liste';
     if (e.stufe) dl.appendChild(zeile('Website', e.stufe.name + ' · ' + P.betrag(e.stufe)));
-    if (e.extras.length) dl.appendChild(zeile('Extras', e.extras.map(function (m) { return m.name + (m.anzahl > 1 ? ' × ' + m.anzahl : ''); }).join(', ')));
+    e.extras.forEach(function (m) { dl.appendChild(zeile(m.name + (m.anzahl > 1 ? ' × ' + m.anzahl : ''), P.betrag(m))); });
     if (e.anfrage.length) dl.appendChild(zeile('Auf Anfrage', e.anfrage.map(function (x) { return x.name; }).join(', ')));
-    if (e.mehr.length) dl.appendChild(zeile('endo', e.mehr[0].name + (e.mehr[0].faehigkeiten && e.mehr[0].id !== 'komplett' ? ': ' + e.mehr[0].faehigkeiten.join(', ') : '')));
-    if (e.betreuung) dl.appendChild(zeile('Betreuung', e.betreuung.name + (e.selbst ? ' (Hosting selbst)' : '')));
+    if (e.mehr.length) dl.appendChild(zeile('endo', e.mehr[0].name + (e.mehr[0].faehigkeiten && e.mehr[0].id !== 'komplett' ? ': ' + e.mehr[0].faehigkeiten.join(', ') : '') + ' · ' + P.betrag(e.mehr[0])));
+    if (e.betreuung) dl.appendChild(zeile('Betreuung', e.betreuung.name + ' · ' + P.euro(e.monatlich) + M + (e.selbst ? ' (Hosting selbst)' : '')));
     var ab = e.ab ? 'ab ' : '';
-    dl.appendChild(zeile('Einmalig', ab + P.euro(e.einmalig)));
-    dl.appendChild(zeile('Monatlich', P.euro(e.monatlich) + M));
-    dl.appendChild(zeile('Erstes Jahr', ab + P.euro(e.jahr)));
     auswahlBox.innerHTML = ''; auswahlBox.appendChild(dl);
+    /* nur zwei Summen (einmalig · monatlich), das erste Jahr klein darunter */
+    var su = document.createElement('div'); su.className = 'auswahl__summen';
+    [['einmalig', ab + P.euro(e.einmalig)], ['monatlich', P.euro(e.monatlich) + M]].forEach(function (x) { var d = document.createElement('p'), t = document.createElement('span'), b = document.createElement('b'); t.textContent = x[0]; b.textContent = x[1]; d.appendChild(t); d.appendChild(b); su.appendChild(d); });
+    auswahlBox.appendChild(su);
+    var j = document.createElement('small'); j.className = 'auswahl__jahr'; j.textContent = 'Im ersten Jahr ' + ab + P.euro(e.jahr) + '. ' + P.klein + ' ' + P.steuer; auswahlBox.appendChild(j);
   }
   document.addEventListener('preise:auswahl', auswahlZeigen);
   auswahlZeigen();
-  aendern.addEventListener('click', function (ev) { if (P.zeigeSchritt) { ev.preventDefault(); P.zeigeSchritt('art'); } });   /* zurück in den Leitfaden */
+  aendern.addEventListener('click', function (ev) { if (P.zeigeSchritt) { ev.preventDefault(); P.zeigeSchritt(); } });   /* zurück zu Schritt ② */
+  form.addEventListener('click', function (ev) { var t = ev.target.closest && ev.target.closest('[data-auswahl-treffen]'); if (t && P.zeigeSchritt) { ev.preventDefault(); P.zeigeSchritt('art'); } });
 
   /* ---- Antwort per: nur das passende Feld zeigen ---- */
   var feldTel = form.querySelector('[data-feld-tel]'), feldMail = form.querySelector('[data-feld-mail]');

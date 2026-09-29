@@ -1,4 +1,4 @@
-/* ERGUN. – „Ihr Preis in 4 Fragen“ (Auftrag 27, 29.09.2026: Fragen-Leitfaden statt 4-Schritte-Assistent; Zahlen unverändert seit Auftrag 9/10).
+/* ERGUN. – ein Ablauf „Website · Automatisierung · Beides“ → Ihre Anfrage (Auftrag 25 ERGUN. minimal, 29.09.2026; vorher Auftrag 27/9b; Zahlen unverändert seit Auftrag 9/10).
    Ausnahme auf ERGUNs Wunsch: Preise stehen offen auf der Seite. Nichts wird gespeichert (keine Cookies, kein localStorage) –
    die Auswahl lebt nur in dieser Seite, gesendet wird erst, wenn der Besucher das Kontaktformular selbst abschickt.
 
@@ -97,20 +97,21 @@ window.BEGRIFFE = {
   funktion: { name: 'Individuelle Funktion', text: 'Etwas, das genau Ihr Betrieb braucht, zum Beispiel ein Preisrechner.' }
 };
 
-/* Texte des Leitfadens (Auftrag 27). Keine Zahlen hier – Preise kommen immer aus PREISE. Kurz, freundlich, ohne Fachbegriffe. */
+/* Texte des Ablaufs „Website · Automatisierung · Beides“ (Auftrag 25 ERGUN. minimal, 29.09.2026; Grundlage Auftrag 27).
+   Keine Zahlen hier – Preise kommen immer aus PREISE. Pro Schritt eine Überschrift und höchstens ein kurzer Satz, ohne Fachbegriffe. */
 window.LEITFADEN = {
-  art: { titel: 'Was brauchen Sie?', satz: 'Wählen Sie, was am besten passt. Sie können alles später ändern.',
+  art: { titel: 'Was brauchen Sie?', satz: 'Tippen Sie auf das, was passt. Den Rest klären wir im Gespräch.', direkt: 'Lieber gleich schreiben',
     optionen: [
-      { id: 'website', icon: 'website', titel: 'Neue Website', satz: 'Eine Website, die zu Ihrem Betrieb passt.', preis: function (P) { return 'ab ' + P.euro(P.stufen[0].preis); } },
-      { id: 'beides', icon: 'beides', titel: 'Website + Automatisierung', satz: 'Website und endo, der Anfragen und Termine übernimmt.', preis: function (P) { return 'ab ' + P.euro(P.stufen[0].preis + P.mehr[0].preis); } },
-      { id: 'endo', icon: 'endo', titel: 'Nur Automatisierung', satz: 'endo für Ihren Betrieb, ohne neue Website.', preis: function (P) { return P.betrag(P.mehr[0]) + ' + ' + P.euro(P.mehr[0].monat) + '\u00a0/ Monat'; } }] },
-  stufe: { titel: 'Wie groß soll Ihre Website sein?', satz: 'Der Preis ist ein Startwert. Den genauen Umfang klären wir im Gespräch.',
-    optionen: [
-      { id: 'start', icon: 'klein', titel: 'Eine Seite reicht', satz: 'Kurz und klar: wer Sie sind, was Sie anbieten, wie man Sie erreicht.' },
-      { id: 'business', icon: 'mittel', titel: 'Mehrere Seiten', satz: 'Zum Beispiel Leistungen, Team und Referenzen.' },
-      { id: 'pro', icon: 'gross', titel: 'Groß und besonders', satz: 'Eigenes Konzept, viel Bewegung, besondere Funktionen.' }] },
-  koennen: { titel: 'Was soll Ihre Website können?', satz: 'Tippen Sie auf „Ja“, wenn Sie es brauchen. Alles andere bleibt aus.' },
-  /* Ja/Nein-Fragen → Extra aus PREISE (bewegung: Video-Loop oder 3D-Element) */
+      { id: 'website', titel: 'Website', satz: 'Eine Website, die zu Ihrem Betrieb passt.' },
+      { id: 'endo', titel: 'Automatisierung', satz: 'endo beantwortet Anfragen, bucht Termine und mehr.' },
+      { id: 'beides', titel: 'Beides', satz: 'Website und endo aus einer Hand.' }] },
+  website: { titel: 'Welche Website passt?', satz: 'Der Preis ist ein Startwert.', alles: 'Alles, was drin ist', extras: 'Extras hinzufügen (optional)' },
+  /* höchstens 3 Stichpunkte je Stufe (Auszug aus PREISE.stufen[].punkte, in Alltagssprache) */
+  stufenKurz: {
+    start: ['Bis zu 3 Seiten', 'Für Handy und PC', 'Kontaktformular'],
+    business: ['Bis zu 8 Seiten', 'Eigenes Design mit Bewegung', '10 eigene Bilder und Video'],
+    pro: ['Eigenes Konzept', 'Aufwendige Animationen und 3D', 'Terminbuchung oder eigene Funktion'] },
+  /* Ja/Nein-Fragen unter „Extras hinzufügen“ → Extra aus PREISE (bewegung: Video-Loop oder 3D-Element) */
   fragen: [
     { id: 'termin', extra: 'termin', icon: 'termin', frage: 'Sollen Kunden online Termine buchen?', kurz: 'Terminbuchung' },
     { id: 'seo', extra: 'seo', icon: 'seo', frage: 'Sollen Sie bei Google besser gefunden werden?', kurz: 'bessere Auffindbarkeit', begriff: 'seoPaket' },
@@ -120,21 +121,20 @@ window.LEITFADEN = {
     { id: 'unterseite', extra: 'unterseite', icon: 'unterseite', frage: 'Brauchen Sie mehr Seiten als in Ihrer Größe?', kurz: 'zusätzliche Seiten' }],
   googleFrage: 'Auch in Google Maps?',
   bewegungPreis: function (P) { var l = P.alleExtras().filter(function (x) { return x.id === 'loop'; })[0]; return 'ab ' + P.euro(l.preis); },
-  endo: { titel: 'Wo soll endo helfen?', satz: 'Wählen Sie eine oder mehrere Aufgaben. endo erledigt sie für Sie.',
+  betreuung: { titel: 'Betreuung', grund: { basis: 'Passt für eine Website ohne eigene Funktionen.', aktiv: 'Passt, weil Ihre Website Termine oder Formulare verarbeitet.', rundum: 'Passt, weil Ihre Website viel Eigenes kann.' },
+    endo: 'Mit endo ist Rundum nötig, weil endo laufend betreut wird.', selbst: 'Ich habe eigenes Hosting und eine eigene Domain', aendern: 'ändern' },
+  /* endo-Fähigkeiten mit ehrlichem Status – Stand aus endo (_code/endo-studio/js/assistenten.js), dort ändern und hier nachziehen */
+  endo: { titel: 'Wo soll endo helfen?', satz: 'Wählen Sie eine oder mehrere Aufgaben.', ansehen: 'So sieht das aus: endo ansehen',
     faehigkeiten: [
-      { id: 'empfang', name: 'Empfang', satz: 'beantwortet Anfragen rund um die Uhr' },
-      { id: 'termine', name: 'Termine', satz: 'Kunden buchen selbst, mit Erinnerung' },
-      { id: 'kontakte', name: 'Kontakte', satz: 'Ihre Kundenkartei mit Erinnerungen' },
-      { id: 'social', name: 'Social', satz: 'Posts für den ganzen Monat' },
-      { id: 'studio', name: 'Studio', satz: 'Bilder und Videos aus Handyfotos' },
-      { id: 'uebersicht', name: 'Übersicht', satz: 'Ihr Wochenbericht' }],
-    leer: 'Bitte wählen Sie mindestens eine Aufgabe für endo.',
-    komplettSatz: 'Ab 4 Aufgaben ist endo komplett günstiger: alle Fähigkeiten zum Paketpreis.' },
-  betreuung: { titel: 'Wer kümmert sich danach?', satz: 'Wir halten alles sicher und aktuell, zum festen Monatspreis. Hosting, Domain und SSL sind dabei.',
-    grund: { basis: 'Für eine Website ohne eigene Funktionen reicht Basis.', aktiv: 'Aktiv passt, weil Ihre Website Termine oder Formulare verarbeitet.', rundum: 'Rundum passt, weil Ihre Website viel Eigenes kann.' },
-    endo: 'Mit endo ist Rundum nötig: endo wird laufend betreut.',
-    selbst: 'Ich habe eigenes Hosting und eine eigene Domain' },
-  ergebnis: { titel: 'Ihr Preis', satz: 'So setzt sich Ihr Preis zusammen.' }
+      { id: 'empfang', name: 'Empfang', satz: 'beantwortet Anfragen rund um die Uhr', status: 'Demo' },
+      { id: 'termine', name: 'Termine', satz: 'Kunden buchen selbst, mit Erinnerung', status: 'In Arbeit' },
+      { id: 'kontakte', name: 'Kontakte', satz: 'Ihre Kundenkartei mit Erinnerungen', status: 'In Arbeit' },
+      { id: 'social', name: 'Social', satz: 'Posts für den ganzen Monat', status: 'In Arbeit' },
+      { id: 'uebersicht', name: 'Übersicht', satz: 'Ihr Wochenbericht', status: 'In Arbeit' },
+      { id: 'studio', name: 'Studio', satz: 'Bilder und Videos aus Handyfotos', status: 'Live' }],
+    komplett: 'Alle Aufgaben zum Paketpreis.', leer: 'Bitte wählen Sie mindestens eine Aufgabe.',
+    komplettSatz: 'Ab 4 Aufgaben ist endo komplett günstiger.' },
+  anfrage: { titel: 'Ihre Anfrage', satz: 'Antwort innerhalb von 24 Stunden.', leer: 'Nichts ausgewählt – schreiben Sie einfach, worum es geht.', auswahl: 'Auswahl treffen' }
 };
 
 /* ---------- Rechnen (auch für die Tests) ---------- */
@@ -198,11 +198,12 @@ window.LEITFADEN = {
   };
 })(window.PREISE);
 
-/* ---------- Bereich auf der Seite: „Ihr Preis in 4 Fragen“ (Auftrag 27, ERGUN. 29.09.2026; ersetzt den 4-Schritte-Assistenten 9/9b) ----------
-   Immer nur EINE Frage: ① Was brauchen Sie? ② Wie groß? (übersprungen bei „Nur endo“) ③ Was soll sie können? (+ „Wo soll endo helfen?“)
-   ④ Wer kümmert sich danach? → „Ihr Preis“. Große antippbare Karten, Fortschritt „Frage 2 von 4“, Zurück, oben dezent der laufende Betrag.
-   Fachbegriffe nur hinter ⓘ. Übergang 200 ms, „Bewegung reduzieren“ = sofort. Das Kontaktformular liest die Auswahl über
-   PREISE.auswahlJetzt() und das Ereignis „preise:auswahl“. Nichts wird gespeichert oder gesendet. */
+/* ---------- Ein Ablauf: Auswahl und Anfrage in einem (Auftrag 25 ERGUN. minimal, 29.09.2026; ersetzt „Ihr Preis in 4 Fragen“) ----------
+   ① „Was brauchen Sie?“ Website · Automatisierung · Beides (Tippen = weiter, dazu „Lieber gleich schreiben“)
+   ② nur das Passende: Website (3 Stufen, Extras eingeklappt, Betreuung als eine Zeile) und/oder Automatisierung (endo-Aufgaben)
+   ③ „Ihre Anfrage“: Zusammenfassung + Formular (statisches HTML in index.html, das Formular-Skript dort liest PREISE.auswahlJetzt()).
+   Eine Summenanzeige ab Schritt ②: Desktop klebend rechts, Handy schmale Leiste unten (mit „Weiter“). Alte Anker #preise/#kontakt
+   führen in den Ablauf (#kontakt = Schritt ③). Übergang 200 ms, „Bewegung reduzieren“ = sofort. Nichts wird gespeichert. */
 (function () {
   if (typeof document === 'undefined') return;
   var P = window.PREISE, B = window.BEGRIFFE, L = window.LEITFADEN, box = document.querySelector('[data-preise]');
@@ -211,35 +212,26 @@ window.LEITFADEN = {
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function q(s) { return box.querySelector(s); }
   var MONAT = ' / Monat';
-
-  /* Schlichte Linien-Zeichnungen (48er Raster, currentColor) */
   var ICON = {
-    website: '<rect x="6" y="9" width="36" height="28" rx="4"/><path d="M6 16h36"/><circle cx="11" cy="12.5" r=".8"/><circle cx="14.5" cy="12.5" r=".8"/><path d="M12 23h14M12 28h9"/><rect x="30" y="22" width="7" height="9" rx="1.5"/>',
-    beides: '<rect x="4" y="11" width="30" height="24" rx="4"/><path d="M4 17h30M10 24h12M10 28h8"/><path d="M40 6v8M36 10h8"/><circle cx="38" cy="30" r="6"/><path d="M38 27v3l2 1.5"/>',
-    endo: '<circle cx="24" cy="24" r="8"/><ellipse cx="24" cy="24" rx="18" ry="7" transform="rotate(-20 24 24)"/><circle cx="40" cy="17" r="2"/>',
-    klein: '<rect x="14" y="7" width="20" height="34" rx="3"/><path d="M18 14h12M18 19h9M18 24h12M18 29h7"/>',
-    mittel: '<rect x="8" y="12" width="18" height="28" rx="3"/><rect x="15" y="9" width="18" height="28" rx="3"/><rect x="22" y="6" width="18" height="28" rx="3"/><path d="M26 13h10M26 18h7"/>',
-    gross: '<rect x="8" y="8" width="32" height="32" rx="4"/><path d="M8 16h32"/><path d="M24 22l2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.5-.8z"/>',
     termin: '<rect x="8" y="10" width="32" height="30" rx="4"/><path d="M8 18h32M16 6v8M32 6v8"/><path d="m18 29 4 4 8-8"/>',
     seo: '<circle cx="21" cy="21" r="11"/><path d="m29 29 11 11"/><path d="M16 21h10M21 16v10"/>',
-    google: '<path d="M24 42s13-12.5 13-22a13 13 0 0 0-26 0c0 9.5 13 22 13 22z"/><circle cx="24" cy="20" r="4.5"/>',
     sprache: '<circle cx="24" cy="24" r="16"/><path d="M8 24h32M24 8c5 5 5 27 0 32M24 8c-5 5-5 27 0 32"/>',
     bewegung: '<rect x="6" y="10" width="36" height="28" rx="4"/><path d="m21 18 9 6-9 6z"/>',
     formular: '<path d="M30 14 16.5 27.5a4 4 0 0 0 5.7 5.7L36 19.4a7 7 0 0 0-9.9-9.9L12 23.6a10 10 0 0 0 14.1 14.1L38 25.8"/>',
     unterseite: '<rect x="10" y="6" width="22" height="30" rx="3"/><path d="M15 13h12M15 18h9"/><circle cx="34" cy="34" r="8"/><path d="M34 30v8M30 34h8"/>',
-    basis: '<path d="M24 6 10 12v10c0 9 6 16 14 20 8-4 14-11 14-20V12z"/><path d="m18 24 4 4 8-8"/>',
-    aktiv: '<path d="M38 24a14 14 0 1 1-4.1-9.9"/><path d="M38 8v7h-7"/><path d="M24 17v7l5 3"/>',
-    rundum: '<circle cx="24" cy="24" r="6"/><circle cx="24" cy="24" r="16"/><path d="M24 4v6M24 38v6M4 24h6M38 24h6"/>',
-    hosting: '<rect x="8" y="9" width="32" height="12" rx="3"/><rect x="8" y="27" width="32" height="12" rx="3"/><circle cx="14" cy="15" r="1.2"/><circle cx="14" cy="33" r="1.2"/><path d="M22 15h12M22 33h12"/>'
+    website: '<rect x="6" y="9" width="36" height="28" rx="4"/><path d="M6 16h36"/><path d="M12 23h14M12 28h9"/>',
+    endo: '<circle cx="24" cy="24" r="8"/><ellipse cx="24" cy="24" rx="18" ry="7" transform="rotate(-20 24 24)"/>',
+    beides: '<rect x="4" y="11" width="28" height="22" rx="4"/><path d="M4 17h28"/><circle cx="37" cy="30" r="7"/><ellipse cx="37" cy="30" rx="11" ry="4" transform="rotate(-20 37 30)"/>'
   };
   function icon(n) { return '<svg class="lf-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICON[n] || '') + '</svg>'; }
   var HAKEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 12.5l4.5 4.5L18.5 7.5"/></svg>';
 
   /* ---------- Antworten (nur Arbeitsspeicher) ---------- */
-  var A = { art: null, stufe: null, ja: {}, bewegung: 'loop', seiten: 1, endo: [], betreuung: null, betreuungSelbst: false, selbst: false };
+  var A = { art: null, stufe: null, ja: {}, bewegung: 'loop', seiten: 1, endo: [], betreuung: null, selbst: false, extrasOffen: false, betreuungOffen: false };
   function mitWebsite() { return A.art === 'website' || A.art === 'beides'; }
   function mitEndo() { return A.art === 'endo' || A.art === 'beides'; }
-  function enthalten(id) { var s = P.stufen.filter(function (x) { return x.id === A.stufe; })[0]; return !!(s && (s.enthaelt || []).indexOf(id) >= 0); }
+  function stufeDaten() { return P.stufen.filter(function (x) { return x.id === A.stufe; })[0] || null; }
+  function enthalten(id) { var s = stufeDaten(); return !!(s && (s.enthaelt || []).indexOf(id) >= 0); }
   function extrasIds() {
     if (!mitWebsite()) return [];
     var l = [];
@@ -251,244 +243,243 @@ window.LEITFADEN = {
     });
     return l;
   }
+  function ohneBetreuung() { return { stufe: mitWebsite() ? A.stufe : null, extras: extrasIds(), endo: mitEndo() ? A.endo : [] }; }
+  function betreuungJetzt() { var e = P.betreuungStandard(ohneBetreuung());   /* vorausgewählt wie im Rechner: meist Basis */ return mitEndo() ? P.mehrStufe : (A.betreuung || e); }
   function auswahl() {
     return { stufe: mitWebsite() ? A.stufe : null, extras: extrasIds(), anzahl: { unterseite: A.seiten }, endo: mitEndo() ? A.endo.slice() : [],
-      betreuung: A.betreuung || P.betreuungEmpfehlung(auswahlOhneBetreuung()), selbst: mitWebsite() && A.selbst };
+      betreuung: betreuungJetzt(), selbst: mitWebsite() && A.selbst };
   }
-  function auswahlOhneBetreuung() { return { stufe: mitWebsite() ? A.stufe : null, extras: extrasIds(), endo: mitEndo() ? A.endo : [] }; }
-  function leer() { return !A.art || (mitWebsite() && !A.stufe) || (!mitWebsite() && !A.endo.length); }   /* erst mit einem echten Preis */
+  function leer() { return !A.art || (mitWebsite() && !A.stufe) || (!mitWebsite() && !A.endo.length); }
+  /* Anfrage-Box: Auswahl ist fertig, sobald die nötigen Teile gewählt sind (bei „Beides“ reicht die Website, endo kommt dazu) */
   P.auswahlJetzt = function () { return leer() ? null : P.rechnen(auswahl()); };
 
-  /* ---------- Fragen ---------- */
-  function fragenListe() { return ['art'].concat(A.art === 'endo' ? [] : ['stufe'], ['koennen', 'betreuung']); }
-  var aktiv = 'art', buehne = q('[data-lf-buehne]'), stand = q('[data-lf-stand]'), balken = q('[data-lf-balken]'), betrag = q('[data-lf-betrag]');
-  var zurueck = q('[data-lf-zurueck]'), weiter = q('[data-lf-weiter]'), live = q('[data-preise-live]'), liveT;
-  function karte(opt) {   /* große antippbare Karte = echter Knopf mit aria-pressed */
-    var b = el('button', 'lf-karte' + (opt.klein ? ' lf-karte--klein' : '')); b.type = 'button'; b.setAttribute('aria-pressed', String(!!opt.an));
-    if (opt.schild) b.appendChild(el('span', 'lf-karte__schild', opt.schild));
-    var i = el('span', 'lf-karte__bild'); i.innerHTML = icon(opt.icon); b.appendChild(i);
-    var t = el('span', 'lf-karte__text'); t.appendChild(el('span', 'lf-karte__titel', opt.titel)); if (opt.satz) t.appendChild(el('span', 'lf-karte__satz', opt.satz)); b.appendChild(t);
-    if (opt.preis) b.appendChild(el('span', 'lf-karte__preis', opt.preis));
-    var h = el('span', 'lf-karte__haken'); h.innerHTML = HAKEN; b.appendChild(h);
-    b.addEventListener('click', opt.wahl);
-    return b;
-  }
-  function info(schluessel) {   /* ⓘ klappt die Erklärung direkt darunter auf */
-    var w = el('span', 'lf-info'), k = el('button', 'lf-info__knopf', 'i'); k.type = 'button';
-    var t = el('span', 'lf-info__text', B[schluessel].text); t.hidden = true; t.id = 'lf-info-' + schluessel;
-    k.setAttribute('aria-expanded', 'false'); k.setAttribute('aria-controls', t.id); k.setAttribute('aria-label', 'Was heißt „' + B[schluessel].name + '“?');
-    k.addEventListener('click', function (e) { e.stopPropagation(); t.hidden = !t.hidden; k.setAttribute('aria-expanded', String(!t.hidden)); });
-    w.appendChild(k); return { knopf: w, text: t };
-  }
+  /* ---------- Schritte ---------- */
+  function schritte() { return ['art'].concat(A.art === 'website' ? ['website'] : A.art === 'endo' ? ['endo'] : A.art === 'beides' ? ['website', 'endo'] : [], ['anfrage']); }
+  var aktiv = 'art', dyn = q('[data-mf-dyn]'), anfrageBox = q('[data-mf-anfrage]'), stand = q('[data-mf-stand]'), linie = q('[data-mf-linie]');
+  var zurueck = q('[data-mf-zurueck]'), weiter = q('[data-mf-weiter]'), hinweis = q('[data-mf-hinweis]'), summe = q('[data-mf-summe]'), live = q('[data-preise-live]'), liveT;
+
   function schalter(an, label, fn, key) {
     var s = el('button', 'lf-schalter'); s.type = 'button'; s.setAttribute('role', 'switch'); s.setAttribute('aria-checked', String(!!an)); s.setAttribute('aria-label', label);
     if (key) s.setAttribute('data-fokus', key);
     s.appendChild(el('span', 'lf-schalter__ja', 'Ja')); s.appendChild(el('span', 'lf-schalter__nein', 'Nein'));
     s.addEventListener('click', fn); return s;
   }
+  function info(schluessel) {
+    var w = el('span', 'lf-info'), k = el('button', 'lf-info__knopf', 'i'); k.type = 'button';
+    var t = el('span', 'lf-info__text', B[schluessel].text); t.hidden = true; t.id = 'mf-info-' + schluessel;
+    k.setAttribute('aria-expanded', 'false'); k.setAttribute('aria-controls', t.id); k.setAttribute('aria-label', 'Was heißt „' + B[schluessel].name + '“?');
+    k.addEventListener('click', function (e) { e.stopPropagation(); t.hidden = !t.hidden; k.setAttribute('aria-expanded', String(!t.hidden)); });
+    w.appendChild(k); return { knopf: w, text: t };
+  }
+  function neuZeichnen(key) { neu(); zeigen(aktiv, 0, true, key); }
+  function aufklapper(klasse, titel, offen, inhalt, beiToggle) {
+    var d = el('details', 'mf-auf ' + klasse); d.open = !!offen;
+    var s = el('summary', '', titel); d.appendChild(s); d.appendChild(inhalt);
+    d.addEventListener('toggle', function () { beiToggle(d.open); });
+    return d;
+  }
 
   var BAU = {
     art: function (w) {
       w.titel = L.art.titel; w.satz = L.art.satz;
-      var g = el('div', 'lf-karten lf-karten--drei');
+      var g = el('div', 'mf-karten');
+      var f = P.mehr[0], preis = {
+        website: 'ab ' + P.euro(P.stufen[0].preis),
+        endo: P.betrag(f) + ' + ' + P.euro(f.monat) + MONAT,
+        beides: 'ab ' + P.euro(P.stufen[0].preis + f.preis) + ' + ' + P.euro(f.monat) + MONAT
+      };
       L.art.optionen.forEach(function (o) {
-        g.appendChild(karte({ icon: o.icon, titel: o.titel, satz: o.satz, preis: o.preis(P), an: A.art === o.id, wahl: function () {
-          var wechsel = A.art !== o.id; A.art = o.id; if (wechsel) A.betreuung = null;
-          weiterNach(true);
-        } }));
+        var b = el('button', 'mf-karte'); b.type = 'button'; b.setAttribute('aria-pressed', String(A.art === o.id)); b.setAttribute('data-fokus', 'art-' + o.id);
+        var bild = el('span', 'mf-karte__bild'); bild.innerHTML = icon(o.id); b.appendChild(bild);
+        b.appendChild(el('span', 'mf-karte__titel', o.titel)); b.appendChild(el('span', 'mf-karte__satz', o.satz)); b.appendChild(el('span', 'mf-karte__preis', preis[o.id]));
+        b.addEventListener('click', function () { if (A.art !== o.id) { A.art = o.id; A.betreuung = null; } neu(); gehe(schritte()[1], 1); });
+        g.appendChild(b);
       });
       w.inhalt.appendChild(g);
+      var d = el('button', 'mf-link', L.art.direkt + ' →'); d.type = 'button';
+      d.addEventListener('click', function () { A.art = null; neu(); gehe('anfrage', 1); });
+      w.inhalt.appendChild(d);
     },
-    stufe: function (w) {
-      w.titel = L.stufe.titel; w.satz = L.stufe.satz;
-      var g = el('div', 'lf-karten lf-karten--drei');
-      L.stufe.optionen.forEach(function (o) {
-        var s = P.stufen.filter(function (x) { return x.id === o.id; })[0];
-        g.appendChild(karte({ icon: o.icon, titel: o.titel, satz: o.satz, preis: P.betrag(s), schild: s.empfehlung ? 'Empfehlung' : '', an: A.stufe === o.id, wahl: function () { A.stufe = o.id; if (!A.betreuungSelbst) A.betreuung = null; weiterNach(true); } }));
-      });
-      w.inhalt.appendChild(g);
-      var d = el('details', 'lf-mehr'); d.appendChild(el('summary', '', 'Was ist in jeder Größe enthalten?'));
-      var r = el('div', 'lf-mehr__raster');
+    website: function (w) {
+      w.titel = L.website.titel; w.satz = L.website.satz;
+      var g = el('div', 'mf-stufen'); g.setAttribute('role', 'group'); g.setAttribute('aria-label', L.website.titel);
       P.stufen.forEach(function (s) {
-        var sp = el('div'); sp.appendChild(el('b', '', s.name + ' · ' + P.betrag(s)));
-        var ul = el('ul'); s.punkte.forEach(function (p) { ul.appendChild(el('li', '', p.t)); }); sp.appendChild(ul); r.appendChild(sp);
-      });
-      d.appendChild(r); w.inhalt.appendChild(d);
-    },
-    koennen: function (w) {
-      w.titel = mitWebsite() ? L.koennen.titel : L.endo.titel; w.satz = mitWebsite() ? L.koennen.satz : L.endo.satz;
-      if (mitWebsite()) {
-        var ul = el('ul', 'lf-fragen'); ul.setAttribute('role', 'list');
-        L.fragen.forEach(function (f) {
-          var li = el('li', 'lf-frage'), kopf = el('div', 'lf-frage__kopf');
-          var bild = el('span', 'lf-frage__bild'); bild.innerHTML = icon(f.icon); kopf.appendChild(bild);
-          var t = el('span', 'lf-frage__text'); t.appendChild(el('span', 'lf-frage__was', f.frage));
-          var extra = f.extra && P.alleExtras().filter(function (x) { return x.id === f.extra; })[0];
-          var schon = f.extra && enthalten(f.extra) || (f.id === 'bewegung' && enthalten('loop') && enthalten('3d'));
-          t.appendChild(el('span', 'lf-frage__preis', schon ? 'Schon in ' + stufeName() + ' enthalten' : extra ? '+ ' + P.betrag(extra) + (f.id === 'unterseite' ? ' je Seite' : '') : '+ ' + L.bewegungPreis(P)));
-          kopf.appendChild(t);
-          var inf = f.begriff ? info(f.begriff) : null; if (inf) kopf.appendChild(inf.knopf);
-          if (schon) kopf.appendChild(el('span', 'lf-frage__schon', 'enthalten'));
-          else kopf.appendChild(schalter(A.ja[f.id], f.frage, function () { A.ja[f.id] = !A.ja[f.id]; neu(); zeigen(aktiv, 0, true, 'ja-' + f.id); }, 'ja-' + f.id));
-          li.appendChild(kopf); if (inf) li.appendChild(inf.text);
-          if (!schon && A.ja[f.id] && f.id === 'seo') {   /* Nachfrage: auch in Google Maps? */
-            var g = el('div', 'lf-unter'), gi = el('span', 'lf-frage__was', L.googleFrage), gp = P.alleExtras().filter(function (x) { return x.id === 'google'; })[0];
-            g.appendChild(gi); g.appendChild(el('span', 'lf-frage__preis', '+ ' + P.betrag(gp)));
-            g.appendChild(schalter(A.ja.google, L.googleFrage, function () { A.ja.google = !A.ja.google; neu(); zeigen(aktiv, 0, true, 'ja-google'); }, 'ja-google'));
-            li.appendChild(g);
-          }
-          if (!schon && A.ja[f.id] && f.id === 'bewegung') {   /* Video oder 3D */
-            var c = el('div', 'lf-unter lf-chips'); c.setAttribute('role', 'group'); c.setAttribute('aria-label', 'Was soll sich bewegen?');
-            [['loop', 'Video'], ['3d', '3D-Element']].forEach(function (x) {
-              var m = P.alleExtras().filter(function (y) { return y.id === x[0]; })[0], dabei = enthalten(x[0]);
-              var b = el('button', 'lf-chip', x[1] + (dabei ? ' · enthalten' : ' · ' + P.betrag(m))); b.type = 'button'; b.setAttribute('aria-pressed', String(A.bewegung === x[0]));
-              b.setAttribute('data-fokus', 'bw-' + x[0]);
-              b.addEventListener('click', function () { A.bewegung = x[0]; neu(); zeigen(aktiv, 0, true, 'bw-' + x[0]); });
-              c.appendChild(b);
-            });
-            li.appendChild(c);
-          }
-          if (!schon && A.ja[f.id] && f.id === 'unterseite') {   /* Anzahl */
-            var z = el('div', 'lf-unter lf-zahl'); z.appendChild(el('span', 'lf-frage__was', 'Wie viele zusätzliche Seiten?'));
-            var minus = el('button', 'lf-zahl__knopf', '−'), wert = el('output', 'lf-zahl__wert', String(A.seiten)), plus = el('button', 'lf-zahl__knopf', '+');
-            minus.type = plus.type = 'button'; minus.setAttribute('aria-label', 'Eine Seite weniger'); plus.setAttribute('aria-label', 'Eine Seite mehr');
-            minus.disabled = A.seiten <= 1; plus.disabled = A.seiten >= 10;
-            minus.addEventListener('click', function () { A.seiten = Math.max(1, A.seiten - 1); neu(); zeigen(aktiv, 0, true, 'minus'); });
-            plus.addEventListener('click', function () { A.seiten = Math.min(10, A.seiten + 1); neu(); zeigen(aktiv, 0, true, 'plus'); });
-            minus.setAttribute('data-fokus', 'minus'); plus.setAttribute('data-fokus', 'plus');
-            z.appendChild(minus); z.appendChild(wert); z.appendChild(plus); li.appendChild(z);
-          }
-          ul.appendChild(li);
-        });
-        w.inhalt.appendChild(ul);
-      }
-      if (mitEndo()) {
-        var e = el('div', 'lf-endo');
-        if (mitWebsite()) { e.appendChild(el('h4', 'lf-endo__titel', L.endo.titel)); e.appendChild(el('p', 'lf-endo__satz', L.endo.satz)); }
-        var c = el('div', 'lf-chips lf-chips--endo'); c.setAttribute('role', 'group'); c.setAttribute('aria-label', L.endo.titel);
-        L.endo.faehigkeiten.forEach(function (f) {
-          var b = el('button', 'lf-chip lf-chip--gross'); b.type = 'button'; b.setAttribute('aria-pressed', String(A.endo.indexOf(f.id) >= 0));
-          b.appendChild(el('b', '', f.name)); b.appendChild(el('span', '', f.satz));
-          b.addEventListener('click', function () { var i = A.endo.indexOf(f.id); if (i >= 0) A.endo.splice(i, 1); else A.endo.push(f.id); neu(); zeigen(aktiv, 0, true, 'endo-' + f.id); });
-          b.setAttribute('data-fokus', 'endo-' + f.id);
-          c.appendChild(b);
-        });
-        e.appendChild(c);
-        var n = A.endo.length, m = P.endoPaket(A.endo);
-        e.appendChild(el('p', 'lf-endo__stand', n ? (n >= 4 ? L.endo.komplettSatz : n + (n === 1 ? ' Fähigkeit' : ' Fähigkeiten') + ': ' + P.betrag(m) + ' + ' + P.euro(m.monat) + MONAT + (n === 3 ? ' – ab 4 Fähigkeiten ist endo komplett günstiger.' : '.')) : L.endo.leer));
-        w.inhalt.appendChild(e);
-      }
-    },
-    betreuung: function (w) {
-      w.titel = L.betreuung.titel; w.satz = L.betreuung.satz;
-      var empf = P.betreuungEmpfehlung(auswahlOhneBetreuung()), gew = A.betreuung || empf, endoPflicht = mitEndo();
-      var g = el('div', 'lf-karten lf-karten--drei');
-      P.betreuung.stufen.forEach(function (b) {
-        var gesperrt = endoPflicht && b.id !== P.mehrStufe;
-        var k = karte({ icon: b.id, titel: b.name, satz: b.fuer, preis: P.euro(b.monat - (A.selbst && mitWebsite() ? P.betreuung.selbst : 0)) + MONAT, klein: true,
-          schild: b.id === empf ? 'Passt zu Ihrer Auswahl' : '', an: gew === b.id, wahl: function () { if (gesperrt) return; A.betreuung = b.id; A.betreuungSelbst = true; neu(); zeigen(aktiv, 0, true, 'b-' + b.id); } });
-        k.setAttribute('data-fokus', 'b-' + b.id);
-        if (gesperrt) { k.disabled = true; k.setAttribute('aria-disabled', 'true'); }
-        g.appendChild(k);
+        var b = el('button', 'mf-stufe'); b.type = 'button'; b.setAttribute('aria-pressed', String(A.stufe === s.id)); b.setAttribute('data-fokus', 'stufe-' + s.id);
+        if (s.empfehlung) b.appendChild(el('span', 'mf-stufe__schild', 'Empfehlung'));
+        var kopf = el('span', 'mf-stufe__kopf'); kopf.appendChild(el('span', 'mf-stufe__name', s.name)); kopf.appendChild(el('span', 'mf-stufe__preis', P.betrag(s))); b.appendChild(kopf);
+        var ul = el('span', 'mf-stufe__punkte'); (L.stufenKurz[s.id] || []).forEach(function (t) { var z = el('span', 'mf-stufe__punkt'); z.innerHTML = HAKEN; z.appendChild(document.createTextNode(t)); ul.appendChild(z); }); b.appendChild(ul);
+        var h = el('span', 'mf-stufe__haken'); h.innerHTML = HAKEN; b.appendChild(h);
+        b.addEventListener('click', function () { A.stufe = s.id; neuZeichnen('stufe-' + s.id); });
+        g.appendChild(b);
       });
       w.inhalt.appendChild(g);
-      w.inhalt.appendChild(el('p', 'lf-grund', (endoPflicht ? L.betreuung.endo : L.betreuung.grund[empf])));
-      if (mitWebsite()) {
-        var s = el('div', 'lf-frage lf-frage--hosting'), kopf = el('div', 'lf-frage__kopf');
-        var bild = el('span', 'lf-frage__bild'); bild.innerHTML = icon('hosting'); kopf.appendChild(bild);
-        var t = el('span', 'lf-frage__text'); t.appendChild(el('span', 'lf-frage__was', L.betreuung.selbst)); t.appendChild(el('span', 'lf-frage__preis', '− ' + P.euro(P.betreuung.selbst) + MONAT)); kopf.appendChild(t);
-        kopf.appendChild(schalter(A.selbst, L.betreuung.selbst, function () { A.selbst = !A.selbst; neu(); zeigen(aktiv, 0, true, 'selbst'); }, 'selbst'));
-        s.appendChild(kopf); w.inhalt.appendChild(s);
-      }
+      /* Alles, was drin ist */
+      var r = el('div', 'mf-alles');
+      P.stufen.forEach(function (s) { var sp = el('div'); sp.appendChild(el('b', '', s.name)); var ul = el('ul'); s.punkte.forEach(function (p) { ul.appendChild(el('li', '', p.t)); }); sp.appendChild(ul); r.appendChild(sp); });
+      w.inhalt.appendChild(aufklapper('mf-auf--klein', L.website.alles, false, r, function () {}));
+      /* Extras hinzufügen (optional) – Ja/Nein-Fragen, Enthaltenes als „schon enthalten“ */
+      var n = extrasIds().length;
+      w.inhalt.appendChild(aufklapper('mf-auf--extras', L.website.extras + (n ? ' · ' + n + ' gewählt' : ''), A.extrasOffen, extrasListe(), function (o) { A.extrasOffen = o; }));
+      /* Betreuung als eine Zeile */
+      w.inhalt.appendChild(betreuungZeile());
     },
-    ergebnis: function (w) {
-      var e = P.rechnen(auswahl()), ab = e.ab ? 'ab ' : '';
-      w.titel = L.ergebnis.titel; w.satz = L.ergebnis.satz;
-      var z = el('div', 'lf-summen');
-      [['Einmalig', ab + P.euro(e.einmalig), 'lf-summe--haupt', ''], ['Monatlich', P.euro(e.monatlich), '', MONAT], ['Erstes Jahr', ab + P.euro(e.jahr), '', '']].forEach(function (x) {
-        var d = el('div', 'lf-summe ' + x[2]), zahl = el('span', 'lf-summe__zahl', x[1]);
-        if (x[3]) zahl.appendChild(el('small', '', x[3]));
-        d.appendChild(el('span', 'lf-summe__was', x[0])); d.appendChild(zahl); z.appendChild(d);
+    endo: function (w) {
+      w.titel = L.endo.titel; w.satz = L.endo.satz;
+      var c = el('div', 'mf-endo'); c.setAttribute('role', 'group'); c.setAttribute('aria-label', L.endo.titel);
+      L.endo.faehigkeiten.forEach(function (f) {
+        var b = el('button', 'mf-chip'); b.type = 'button'; b.setAttribute('aria-pressed', String(A.endo.indexOf(f.id) >= 0)); b.setAttribute('data-fokus', 'endo-' + f.id);
+        var kopf = el('span', 'mf-chip__kopf'); kopf.appendChild(el('b', '', f.name)); kopf.appendChild(el('span', 'mf-chip__status mf-chip__status--' + f.status.replace(' ', '-').toLowerCase(), f.status)); b.appendChild(kopf);
+        b.appendChild(el('span', 'mf-chip__satz', f.satz));
+        b.addEventListener('click', function () { var i = A.endo.indexOf(f.id); if (i >= 0) A.endo.splice(i, 1); else A.endo.push(f.id); neuZeichnen('endo-' + f.id); });
+        c.appendChild(b);
       });
-      w.inhalt.appendChild(z);
-      var dl = el('dl', 'lf-teile');
-      function zeile(was, wert, klein) { var d = el('div'); var dt = el('dt', '', was); if (klein) dt.appendChild(el('small', '', klein)); d.appendChild(dt); d.appendChild(el('dd', '', wert)); dl.appendChild(d); }
-      if (e.stufe) {
-        var schon = L.fragen.filter(function (f) { return A.ja[f.id] && (enthalten(f.extra) || (f.id === 'bewegung' && enthalten(A.bewegung))); }).map(function (f) { return f.id === 'bewegung' ? (A.bewegung === '3d' ? '3D-Element' : 'Video') : f.kurz; });
-        zeile('Website ' + e.stufe.name, P.betrag(e.stufe), schon.length ? 'Schon enthalten: ' + schon.join(', ') : e.stufe.fuer);
-      }
-      e.extras.forEach(function (m) { zeile(m.name + (m.anzahl > 1 ? ' × ' + m.anzahl : ''), P.betrag(m)); });
-      e.mehr.forEach(function (m) { zeile('endo: ' + m.name, P.betrag(m), m.faehigkeiten ? m.faehigkeiten.join(', ') : ''); });
-      if (e.betreuung) zeile('Betreuung ' + e.betreuung.name, P.euro(e.monatlich) + MONAT, e.selbst ? 'Hosting & Domain stellen Sie selbst' : 'Hosting, Domain und SSL inklusive');
-      w.inhalt.appendChild(dl);
-      w.inhalt.appendChild(el('p', 'lf-klein', P.klein + ' ' + P.steuer));
-      var k = el('div', 'lf-ende');
-      var an = el('button', 'btn btn--wa lf-anfragen', 'Angebot anfragen'); an.type = 'button'; an.setAttribute('data-preise-anfrage', '');
-      an.appendChild(el('span', '', ' →')).setAttribute('aria-hidden', 'true');
-      an.addEventListener('click', anfragen);
-      var ae = el('button', 'btn lf-aendern', 'Antworten ändern'); ae.type = 'button'; ae.addEventListener('click', function () { zeigen('art', -1); });
-      k.appendChild(an); k.appendChild(ae); w.inhalt.appendChild(k);
+      w.inhalt.appendChild(c);
+      var alle = L.endo.faehigkeiten.map(function (f) { return f.id; }), k = P.mehr[1], komplett = A.endo.length === alle.length;
+      var kb = el('button', 'mf-komplett'); kb.type = 'button'; kb.setAttribute('aria-pressed', String(komplett)); kb.setAttribute('data-fokus', 'komplett');
+      var kk = el('span', 'mf-stufe__kopf'); kk.appendChild(el('span', 'mf-stufe__name', k.name)); kk.appendChild(el('span', 'mf-stufe__preis', P.betrag(k) + ' + ' + P.euro(k.monat) + MONAT)); kb.appendChild(kk);
+      kb.appendChild(el('span', 'mf-karte__satz', L.endo.komplett));
+      kb.addEventListener('click', function () { A.endo = komplett ? [] : alle.slice(); neuZeichnen('komplett'); });
+      w.inhalt.appendChild(kb);
+      var n = A.endo.length, m = P.endoPaket(A.endo);
+      w.inhalt.appendChild(el('p', 'mf-stand', !n ? L.endo.leer : m.id === 'komplett' ? (komplett ? k.name + ': ' + P.betrag(k) : L.endo.komplettSatz + ' ' + k.name + ': ' + P.betrag(k)) : n + (n === 1 ? ' Aufgabe' : ' Aufgaben') + ': ' + P.betrag(m) + ' + ' + P.euro(m.monat) + MONAT));
+      var a = el('a', 'mf-link', L.endo.ansehen + ' ↗'); a.href = P.endoSeiteOeffentlich ? P.endoSeite : P.endoStart; a.target = '_blank'; a.rel = 'noopener';
+      w.inhalt.appendChild(a);
+      if (!mitWebsite()) w.inhalt.appendChild(betreuungZeile());
     }
   };
-  function stufeName() { var s = P.stufen.filter(function (x) { return x.id === A.stufe; })[0]; return s ? s.name : ''; }
+  function extrasListe() {
+    var ul = el('ul', 'lf-fragen'); ul.setAttribute('role', 'list');
+    L.fragen.forEach(function (f) {
+      var li = el('li', 'lf-frage'), kopf = el('div', 'lf-frage__kopf');
+      var bild = el('span', 'lf-frage__bild'); bild.innerHTML = icon(f.icon); kopf.appendChild(bild);
+      var t = el('span', 'lf-frage__text'); t.appendChild(el('span', 'lf-frage__was', f.frage));
+      var extra = f.extra && P.alleExtras().filter(function (x) { return x.id === f.extra; })[0], s = stufeDaten();
+      var schon = f.extra && enthalten(f.extra) || (f.id === 'bewegung' && enthalten('loop') && enthalten('3d'));
+      t.appendChild(el('span', 'lf-frage__preis', schon ? 'Schon in ' + s.name + ' enthalten' : extra ? '+ ' + P.betrag(extra) + (f.id === 'unterseite' ? ' je Seite' : '') : '+ ' + L.bewegungPreis(P)));
+      kopf.appendChild(t);
+      var inf = f.begriff ? info(f.begriff) : null; if (inf) kopf.appendChild(inf.knopf);
+      if (schon) kopf.appendChild(el('span', 'lf-frage__schon', 'enthalten'));
+      else kopf.appendChild(schalter(A.ja[f.id], f.frage, function () { A.ja[f.id] = !A.ja[f.id]; neuZeichnen('ja-' + f.id); }, 'ja-' + f.id));
+      li.appendChild(kopf); if (inf) li.appendChild(inf.text);
+      if (!schon && A.ja[f.id] && f.id === 'seo') {
+        var g = el('div', 'lf-unter'), gp = P.alleExtras().filter(function (x) { return x.id === 'google'; })[0];
+        g.appendChild(el('span', 'lf-frage__was', L.googleFrage)); g.appendChild(el('span', 'lf-frage__preis', '+ ' + P.betrag(gp)));
+        g.appendChild(schalter(A.ja.google, L.googleFrage, function () { A.ja.google = !A.ja.google; neuZeichnen('ja-google'); }, 'ja-google'));
+        li.appendChild(g);
+      }
+      if (!schon && A.ja[f.id] && f.id === 'bewegung') {
+        var c = el('div', 'lf-unter lf-chips'); c.setAttribute('role', 'group'); c.setAttribute('aria-label', 'Was soll sich bewegen?');
+        [['loop', 'Video'], ['3d', '3D-Element']].forEach(function (x) {
+          var m = P.alleExtras().filter(function (y) { return y.id === x[0]; })[0];
+          var b = el('button', 'lf-chip', x[1] + (enthalten(x[0]) ? ' · enthalten' : ' · ' + P.betrag(m))); b.type = 'button'; b.setAttribute('aria-pressed', String(A.bewegung === x[0])); b.setAttribute('data-fokus', 'bw-' + x[0]);
+          b.addEventListener('click', function () { A.bewegung = x[0]; neuZeichnen('bw-' + x[0]); });
+          c.appendChild(b);
+        });
+        li.appendChild(c);
+      }
+      if (!schon && A.ja[f.id] && f.id === 'unterseite') {
+        var z = el('div', 'lf-unter lf-zahl'); z.appendChild(el('span', 'lf-frage__was', 'Wie viele zusätzliche Seiten?'));
+        var minus = el('button', 'lf-zahl__knopf', '−'), wert = el('output', 'lf-zahl__wert', String(A.seiten)), plus = el('button', 'lf-zahl__knopf', '+');
+        minus.type = plus.type = 'button'; minus.setAttribute('aria-label', 'Eine Seite weniger'); plus.setAttribute('aria-label', 'Eine Seite mehr');
+        minus.disabled = A.seiten <= 1; plus.disabled = A.seiten >= 10; minus.setAttribute('data-fokus', 'minus'); plus.setAttribute('data-fokus', 'plus');
+        minus.addEventListener('click', function () { A.seiten = Math.max(1, A.seiten - 1); neuZeichnen('minus'); });
+        plus.addEventListener('click', function () { A.seiten = Math.min(10, A.seiten + 1); neuZeichnen('plus'); });
+        z.appendChild(minus); z.appendChild(wert); z.appendChild(plus); li.appendChild(z);
+      }
+      ul.appendChild(li);
+    });
+    return ul;
+  }
+  /* Betreuung: eine Zeile „Betreuung Basis · 50 € / Monat · ändern“, aufgeklappt drei Stufen + Hosting selbst */
+  function betreuungZeile() {
+    var id = betreuungJetzt(), b = P.betreuung.stufen.filter(function (x) { return x.id === id; })[0], selbst = A.selbst && mitWebsite();
+    var wrap = el('div', 'mf-betreuung');
+    var zeile = el('div', 'mf-betreuung__zeile');
+    zeile.appendChild(el('span', 'mf-betreuung__text', L.betreuung.titel + ' ' + b.name + ' · ' + P.euro(b.monat - (selbst ? P.betreuung.selbst : 0)) + MONAT));
+    var k = el('button', 'mf-link mf-link--klein', A.betreuungOffen ? 'fertig' : L.betreuung.aendern); k.type = 'button'; k.setAttribute('aria-expanded', String(A.betreuungOffen)); k.setAttribute('data-fokus', 'betreuung');
+    k.addEventListener('click', function () { A.betreuungOffen = !A.betreuungOffen; zeigen(aktiv, 0, true, 'betreuung'); });
+    zeile.appendChild(k); wrap.appendChild(zeile);
+    wrap.appendChild(el('p', 'mf-betreuung__grund', mitEndo() ? L.betreuung.endo : L.betreuung.grund[id]));
+    if (A.betreuungOffen) {
+      var g = el('div', 'mf-betreuung__wahl'); g.setAttribute('role', 'group'); g.setAttribute('aria-label', L.betreuung.titel);
+      P.betreuung.stufen.forEach(function (x) {
+        var o = el('button', 'lf-chip lf-chip--gross'); o.type = 'button'; o.setAttribute('aria-pressed', String(id === x.id)); o.setAttribute('data-fokus', 'b-' + x.id);
+        o.appendChild(el('b', '', x.name + ' · ' + P.euro(x.monat - (selbst ? P.betreuung.selbst : 0)) + MONAT)); o.appendChild(el('span', '', x.fuer));
+        if (mitEndo() && x.id !== P.mehrStufe) { o.disabled = true; }
+        o.addEventListener('click', function () { A.betreuung = x.id; neuZeichnen('b-' + x.id); });
+        g.appendChild(o);
+      });
+      wrap.appendChild(g);
+      if (mitWebsite()) {
+        var s = el('div', 'lf-unter mf-selbst'); s.appendChild(el('span', 'lf-frage__was', L.betreuung.selbst)); s.appendChild(el('span', 'lf-frage__preis', '− ' + P.euro(P.betreuung.selbst) + MONAT));
+        s.appendChild(schalter(A.selbst, L.betreuung.selbst, function () { A.selbst = !A.selbst; neuZeichnen('selbst'); }, 'selbst'));
+        wrap.appendChild(s);
+      }
+    }
+    return wrap;
+  }
 
-  /* ---------- Anzeige: eine Frage, weicher Wechsel (200 ms), Fokus auf die Frage ---------- */
-  var laufend = null;
+  /* ---------- Anzeige ---------- */
   function zeigen(id, richtung, still, fokusKey) {
     aktiv = id;
-    var liste = fragenListe(), nr = liste.indexOf(id) + 1, n = liste.length, ende = id === 'ergebnis';
-    stand.textContent = ende ? 'Alle Fragen beantwortet' : 'Frage ' + nr + ' von ' + n;
-    balken.style.transform = 'scaleX(' + (ende ? 1 : (nr - 1) / n) + ')';
-    var w = { inhalt: el('div', 'lf-frage-inhalt') };
-    BAU[id](w);
-    var s = el('div', 'lf-schritt' + (still || ruhig || !richtung ? '' : richtung > 0 ? ' ist-rein' : ' ist-rein--zurueck')); s.setAttribute('role', 'group');
-    var h = el('h3', 'lf-titel', w.titel); h.id = 'lf-titel'; h.tabIndex = -1; s.setAttribute('aria-labelledby', 'lf-titel');
-    s.appendChild(h); if (w.satz) s.appendChild(el('p', 'lf-satz', w.satz)); s.appendChild(w.inhalt);
-    buehne.textContent = ''; buehne.appendChild(s);
+    var liste = schritte(), nr = liste.indexOf(id) + 1, n = id === 'art' && !A.art ? 3 : liste.length, istAnfrage = id === 'anfrage';
+    stand.textContent = 'Schritt ' + nr + ' von ' + n;
+    linie.style.transform = 'scaleX(' + (nr / n) + ')';
+    var ani = still || ruhig || !richtung ? '' : richtung > 0 ? ' ist-rein' : ' ist-rein--zurueck';
+    if (istAnfrage) {
+      dyn.hidden = true; dyn.textContent = ''; anfrageBox.hidden = false;
+      anfrageBox.className = 'mf-anfrage' + ani;
+    } else {
+      anfrageBox.hidden = true; dyn.hidden = false;
+      var w = { inhalt: el('div', 'mf-inhalt') };
+      BAU[id](w);
+      var s = el('div', 'mf-schritt' + ani); s.setAttribute('role', 'group');
+      var h = el(id === 'art' ? 'h2' : 'h3', 'mf-titel', w.titel); h.id = 'mf-titel'; h.tabIndex = -1; s.setAttribute('aria-labelledby', 'mf-titel');
+      s.appendChild(h); if (w.satz) s.appendChild(el('p', 'mf-satz', w.satz)); s.appendChild(w.inhalt);
+      dyn.textContent = ''; dyn.appendChild(s);
+    }
     zurueck.hidden = id === 'art';
-    weiter.hidden = id === 'art' || id === 'stufe' || ende;
-    weiter.textContent = id === 'betreuung' ? 'Preis anzeigen' : 'Weiter';
-    weiter.disabled = id === 'koennen' && mitEndo() && !A.endo.length;
-    q('[data-lf-hinweis]').textContent = weiter.disabled ? L.endo.leer : '';
-    box.classList.toggle('ist-ergebnis', ende);
-    betragZeigen();
-    if (fokusKey) { var f = buehne.querySelector('[data-fokus="' + fokusKey + '"]'); if (f) f.focus({ preventScroll: true }); }
+    weiter.hidden = id === 'art' || istAnfrage;
+    weiter.textContent = liste[nr] === 'anfrage' ? 'Zur Anfrage' : 'Weiter';
+    weiter.disabled = (id === 'website' && !A.stufe) || (id === 'endo' && !A.endo.length);
+    hinweis.textContent = id === 'website' && !A.stufe ? 'Bitte wählen Sie eine Website.' : id === 'endo' && !A.endo.length ? L.endo.leer : '';
+    box.setAttribute('data-schritt-jetzt', id);
+    summeZeigen();
+    if (fokusKey) { var f = box.querySelector('[data-fokus="' + fokusKey + '"]'); if (f) f.focus({ preventScroll: true }); }
     else if (!still) {
-      h.focus({ preventScroll: true });
-      var oben = q('.lf').getBoundingClientRect().top;
-      if (oben < 0 || oben > window.innerHeight * 0.5) q('.lf').scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
+      var titel = istAnfrage ? anfrageBox.querySelector('.mf-titel') : dyn.querySelector('.mf-titel');
+      if (titel) titel.focus({ preventScroll: true });
+      var oben = box.getBoundingClientRect().top;
+      if (oben < -40 || oben > window.innerHeight * 0.5) box.scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
     }
   }
-  function weiterNach(vomKlick) {
-    neu();
-    var liste = fragenListe().concat('ergebnis'), i = liste.indexOf(aktiv);
-    clearTimeout(laufend);
-    laufend = setTimeout(function () { zeigen(liste[i + 1], 1); }, vomKlick && !ruhig ? 180 : 0);   /* kurz die Wahl zeigen, dann weiter */
-  }
-  weiter.addEventListener('click', function () { var liste = fragenListe().concat('ergebnis'); zeigen(liste[liste.indexOf(aktiv) + 1], 1); });
-  zurueck.addEventListener('click', function () { var liste = fragenListe().concat('ergebnis'); zeigen(liste[Math.max(0, liste.indexOf(aktiv) - 1)], -1); });
+  function gehe(id, richtung) { A.betreuungOffen = false; zeigen(id, richtung); }   /* neuer Schritt: Betreuung wieder eine Zeile */
+  weiter.addEventListener('click', function () { var l = schritte(); gehe(l[l.indexOf(aktiv) + 1], 1); });
+  zurueck.addEventListener('click', function () { var l = schritte(); gehe(l[Math.max(0, l.indexOf(aktiv) - 1)], -1); });
 
-  /* laufender Betrag oben (dezent) + Ansage + Formular */
-  function betragZeigen() {
-    var e = P.auswahlJetzt();
-    betrag.hidden = !e || aktiv === 'ergebnis';
-    if (e) betrag.textContent = 'Bisher ' + (e.ab ? 'ab ' : '') + P.euro(e.einmalig) + (e.monatlich ? ' + ' + P.euro(e.monatlich) + MONAT : '');
+  /* Eine Summenanzeige ab Schritt ② (in ③ steht die Zusammenfassung selbst) */
+  function summeZeigen() {
+    var e = P.auswahlJetzt(), an = aktiv !== 'art' && aktiv !== 'anfrage';
+    summe.hidden = !an;
+    box.classList.toggle('mit-summe', an);
+    q('[data-mf-summe-einmalig]').textContent = e ? (e.ab ? 'ab ' : '') + P.euro(e.einmalig) : '–';
+    q('[data-mf-summe-monatlich]').textContent = e ? P.euro(e.monatlich) + MONAT : '–';
   }
   function neu() {
     var e = P.auswahlJetzt();
-    betragZeigen();
+    summeZeigen();
     clearTimeout(liveT);
-    liveT = setTimeout(function () { if (e) live.textContent = 'Bisher einmalig ' + (e.ab ? 'ab ' : '') + P.euro(e.einmalig) + ', monatlich ' + P.euro(e.monatlich) + '.'; }, 500);
+    liveT = setTimeout(function () { if (e && live) live.textContent = 'Einmalig ' + (e.ab ? 'ab ' : '') + P.euro(e.einmalig) + ', monatlich ' + P.euro(e.monatlich) + '.'; }, 500);
     document.dispatchEvent(new CustomEvent('preise:auswahl', { detail: e }));
   }
-  /* „Angebot anfragen“ → Kontakt; die Box „Ihre Auswahl“ dort zeigt alles, gesendet wird erst beim Abschicken */
-  function anfragen() {
-    document.getElementById('kontakt').scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
-    var form = document.getElementById('anfrage');
-    setTimeout(function () { var n = form && form.elements.name; if (n) n.focus({ preventScroll: true }); }, ruhig ? 0 : 700);
+  /* „ändern“ in der Anfrage → zurück zu Schritt ② (ohne Auswahl → Schritt ①); alte Anker #preise/#kontakt */
+  P.zeigeSchritt = function (id) { var l = schritte(); gehe(id || (l.length > 2 ? l[1] : 'art'), -1); };
+  function ausAnker() {
+    if (location.hash === '#kontakt') { gehe('anfrage', 0); }
+    else if (location.hash === '#preise' && aktiv === 'anfrage' && !A.art) gehe('art', 0);
   }
-  /* von außen (Kontakt-Box „ändern“): zurück in den Leitfaden */
-  P.zeigeSchritt = function (id) { zeigen(id || 'art', -1); };
+  window.addEventListener('hashchange', ausAnker);
   P.antworten = A;   /* für Tests und Aufnahmen */
   zeigen('art', 0, true);
+  if (location.hash === '#kontakt') zeigen('anfrage', 0, true);
 })();
