@@ -74,7 +74,7 @@ window.PREISE = {
   mehrStufe: 'rundum',
   /* „endo ansehen“: /unternehmen erst, wenn die Seite öffentlich ist (heute gesperrt) – sonst die endo-Startseite */
   endoSeiteOeffentlich: true,   /* Auftrag 32 (29.09.2026): /unternehmen ist öffentlich */
-  endoSeite: 'https://endo-ergun.vercel.app/unternehmen',
+  endoSeite: 'https://endo-ergun.vercel.app/',   /* Auftrag 33: die Unternehmer-Seite ist jetzt die endo-Startseite */
   endoStart: 'https://endo-ergun.vercel.app/',
   klein: 'Unverbindliche Einschätzung, kein Festpreis. Die genaue Kalkulation klären wir im kostenlosen Erstgespräch.',
   steuer: 'Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.'   /* Kleinunternehmer laut Impressum;   = kein Zeilenumbruch */

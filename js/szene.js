@@ -524,10 +524,21 @@
      („Tschüss“). Beides startet gemeinsam, sobald es Nacht ist und man weiterscrollt, und läuft dann in eigener Zeit ab
      (so sieht man es sicher, bevor endo Studio kommt); beim Hochscrollen läuft es rückwärts. */
   /* 28.09. später (ERGUN.: „flüssig und sauber“): winken_fluss.py – winken2-v1 0,75–4,45 s, BiRefNet, feste Figur + Armzone, echte Zwischenbilder (48/s), ohne Überblendung; Werte aus figuren/emre.json */
-  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: { b: 215, h: 600, anzahl: 163, spalten: 12, fuss: 0.9964, oben: 0.0054, mitte: 0.5588, breite: 0.842, einzeln: true, ausschnitt: [0, 8, 151, 374] } };   /* 28.09. nachts: NEUE Figur (Higgsfield-Bild V1, Gesicht aus ERGUNs Foto mit blauem Hemd, auf seinen Wunsch) + Kling-Winken; winken_neu.py + winken_fest.py (PLATTE=0), 48 Bilder/s (Werte aus figuren/emre.json) */
+  var EMRE_ALT = { b: 215, h: 600, anzahl: 163, spalten: 12, fuss: 0.9964, oben: 0.0054, mitte: 0.5588, breite: 0.842, einzeln: true, ausschnitt: [0, 8, 151, 374] };   /* 28.09. nachts: Higgsfield-Bild V1 + Kling-Winken (winken_neu.py + winken_fest.py, 48 Bilder/s, figuren/emre.json) – seit Auftrag 31 nur noch ?figur=alt */
+  /* Auftrag 31 (29./30.09., ERGUN.: stilisierte 3D-Figur): geht beim Runterscrollen ein paar Schritte nach vorn und zeigt auf die mittlere
+     Karte „Was brauchen Sie?“. Bild = Scroll-Fortschritt (geglättet), rückwärts beim Hochscrollen. Kling-Video api_a24d0f0d,
+     gehen_masken.py + gehen_zeigen.py → figuren/emre3d*.webp + emre3d.json (Werte unten daraus, `fuesse` = je Bild Fußmitte x, Fußlinie y, Größe). */
+  var EMRE_3D = /*EMRE3D*/{"b":226,"h":600,"anzahl":80,"spalten":8,"proBlatt":40,"blaetter":2,"fuss":0.9117,"oben":0.0567,"mitte":0.5,"breite":0.6903,"fuesse":[[0.5442,0.9117,1.0008],[0.5442,0.9117,1.0012],[0.5442,0.9117,1.0021],[0.5442,0.9117,1.0036],[0.5442,0.915,1.0053],[0.5442,0.915,1.0069],[0.5442,0.915,1.0084],[0.542,0.915,1.0099],[0.542,0.9167,1.0113],[0.542,0.9167,1.0129],[0.542,0.9183,1.0148],[0.542,0.92,1.0172],[0.5398,0.92,1.02],[0.5354,0.9217,1.0234],[0.5265,0.9233,1.0271],[0.5265,0.9283,1.0309],[0.5265,0.93,1.0346],[0.5243,0.9283,1.0385],[0.5243,0.93,1.0432],[0.5022,0.9383,1.0489],[0.4912,0.9433,1.0557],[0.4912,0.9483,1.0633],[0.4889,0.9533,1.0713],[0.4956,0.9583,1.0795],[0.5111,0.965,1.0874],[0.6416,0.9667,1.0945],[0.6416,0.97,1.1004],[0.6416,0.9717,1.1051],[0.6416,0.9717,1.1089],[0.6416,0.9733,1.1121],[0.6416,0.9733,1.1148],[0.6416,0.975,1.1173],[0.6416,0.975,1.1196],[0.6416,0.975,1.122],[0.6416,0.975,1.1246],[0.6416,0.9783,1.1274],[0.6438,0.98,1.1301],[0.6438,0.9817,1.1325],[0.6438,0.9817,1.1346],[0.6438,0.9817,1.1364],[0.6438,0.9833,1.1379],[0.6438,0.9833,1.1393],[0.6416,0.9833,1.1405],[0.6416,0.9833,1.1417],[0.6416,0.985,1.1428],[0.6416,0.985,1.1438],[0.6416,0.985,1.1448],[0.6416,0.9867,1.1457],[0.5022,0.9867,1.1465],[0.5,0.9883,1.1472],[0.4956,0.9883,1.1477],[0.5,0.99,1.1481],[0.4978,0.99,1.1483],[0.5,0.9917,1.1483],[0.4978,0.9917,1.1483],[0.5,0.9933,1.1483],[0.4912,0.99,1.1483],[0.4934,0.985,1.1483],[0.5088,0.9783,1.1483],[0.5243,0.9733,1.1483],[0.5354,0.9717,1.1483],[0.5442,0.9667,1.1483],[0.5487,0.965,1.1483],[0.5531,0.965,1.1483],[0.5553,0.965,1.1483],[0.5553,0.9667,1.1483],[0.5531,0.9667,1.1483],[0.5531,0.9667,1.1483],[0.5531,0.9683,1.1483],[0.5531,0.9683,1.1483],[0.5531,0.97,1.1483],[0.5553,0.97,1.1483],[0.5531,0.9717,1.1483],[0.5531,0.9717,1.1483],[0.5531,0.9733,1.1483],[0.5531,0.9733,1.1483],[0.5531,0.975,1.1483],[0.5531,0.975,1.1483],[0.5531,0.9767,1.1483],[0.5531,0.9767,1.1483]],"datei":"emre3d","einzeln":true}/*EMRE3D*/;
+  /* bis ERGUN. die Aufnahme freigibt: neue Figur nur mit ?figur=neu (falls vorher jemand veröffentlicht, bleibt live die alte);
+     nach dem OK: FIGUR_NEU_STANDARD = true + Vorladen in index.html auf emre3d-folge-1/-2 */
+  var FIGUR_NEU_STANDARD = true;
+  var FIGUR_ALT = !EMRE_3D || (FIGUR_NEU_STANDARD ? /[?&]figur=alt\b/.test(location.search) : !/[?&]figur=neu\b/.test(location.search));
+  var FIGUREN = { hund: { b: 318, h: 360, anzahl: 36, spalten: 6, fuss: 0.9921, oben: 0.0896, mitte: 0.4201, breite: 0.7716 }, emre: FIGUR_ALT ? EMRE_ALT : EMRE_3D };
+  var E3D = !FIGUR_ALT, GEHEN_TEST = parseFloat((location.search.match(/[?&]gehen=([0-9.]+)/) || [])[1]);
+  if (isNaN(GEHEN_TEST)) GEHEN_TEST = -1; else GEHEN_TEST = Math.min(1, GEHEN_TEST);
   /* Tempo (27.09. spät, ERGUN.): ERGUN. und Hund laufen NUR nach Zeit, jeder in seinem festen Tempo, unabhängig vom Scrollen.
      ERGUN. winkt einmal (FIG_DAUER), der Hund hebt den Kopf in HUND_HOCH und senkt ihn in HUND_RUNTER. */
-  var FIG_DAUER = 3.4, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0, FIG_VERSION = 18;   /* 28.09. später (ERGUN.: „flüssig und sauber“): winken_fluss.py – 0,75–4,45 s aus winken2-v1, 48 Bilder/s mit echten Zwischenbildern, echte Geschwindigkeit (3,7 s) */
+  var FIG_DAUER = 3.4, HUND_HOCH = 2.5, HUND_RUNTER = 2.0, lichtGold = 0, lichtBlau = 0, lichtNacht = 0, FIG_VERSION = 19;   /* 28.09. später (ERGUN.: „flüssig und sauber“): winken_fluss.py – 0,75–4,45 s aus winken2-v1, 48 Bilder/s mit echten Zwischenbildern, echte Geschwindigkeit (3,7 s) */
   /* Lage von Sonne und Mond (für Wolken, js/wolken.js) und wie stark das Gestirn gerade verdeckt ist (0–1, in Zehnteln) */
   var gest = { sy: 0, my: 0, sonneAn: 1, mondAn: 0 }, verdecktQ = 0, gestTest = null;
   var fig = { phase: 0, ziel: 0, laeuft: false }, hund = { phase: 0, ziel: 0, laeuft: false }, animT = 0, animLaeuft = false;
@@ -550,7 +561,23 @@
   }
   function hundPruefen() { if (lichtNacht >= 0.9) hundZiel(1); else if (lichtNacht <= 0.5) hundZiel(0); }
   function figurLaden(name, folge) {
-    var f = FIGUREN[name], b = new Image(); b.decoding = 'async';
+    var f = FIGUREN[name];
+    /* 3D-Figur (Auftrag 31): Bildfolge in mehreren kleineren Rastern (iPhone dekodiert sicher); erst wenn ALLE fertig dekodiert
+       sind, wird die Folge freigegeben – vorher steht das Standbild. „Bewegung reduzieren“: nur die Endpose als Standbild. */
+    if (f.datei) {
+      if (!folge) { var sb = new Image(); sb.decoding = 'async'; sb.onload = function () { f.bild = sb; f.zuletzt = ''; figurenZeichnen(); }; sb.src = 'bilder/hero/figuren/' + f.datei + (ruhig ? '-ende' : '') + '.webp?v=' + FIG_VERSION; return; }
+      var teile = [], offen = f.blaetter;
+      for (var k = 0; k < f.blaetter; k++) (function (k) {
+        var bl = new Image(); bl.decoding = 'async';
+        bl.onload = function () {
+          var fertig = function (bild) { teile[k] = bild; if (--offen === 0) { f.folgen = teile; f.folge = teile[0]; f.zuletzt = ''; figurenZeichnen(); } };
+          (window.createImageBitmap ? createImageBitmap(bl) : (bl.decode ? bl.decode().then(function () { return bl; }) : Promise.resolve(bl))).then(fertig, function () { fertig(bl); });
+        };
+        bl.src = 'bilder/hero/figuren/' + f.datei + '-folge-' + (k + 1) + '.webp?v=' + FIG_VERSION;
+      })(k);
+      return;
+    }
+    var b = new Image(); b.decoding = 'async';
     b.onload = function () {
       var fertig = function (bild) { f[folge ? 'folge' : 'bild'] = bild; f.zuletzt = ''; figurenZeichnen(); if (folge && name === 'emre' && winkenWartet) winken(); if (folge && name === 'hund') hundPruefen(); };
       /* 28.09. (ERGUN.): Die Bildfolge wird erst VOLLSTÄNDIG dekodiert (createImageBitmap bzw. decode) und dann freigegeben –
@@ -617,6 +644,11 @@
         ga.drawImage(f.folge, (n0 % f.spalten) * z[2], Math.floor(n0 / f.spalten) * z[3], z[2], z[3], z[0] * sx, z[1] * sy, z[2] * sx, z[3] * sy);
       } else ga.drawImage(f.bild, 0, 0, W, H);
     }
+    else if (f.folgen) {
+      /* 3D-Figur: jedes Bild ein echtes Videobild aus seinem Raster, keine Überblendung */
+      var k0 = n0 % f.proBlatt;
+      ga.drawImage(f.folgen[Math.floor(n0 / f.proBlatt)], (k0 % f.spalten) * f.b, Math.floor(k0 / f.spalten) * f.h, f.b, f.h, 0, 0, W, H);
+    }
     else if (f.folge) {
       ga.globalAlpha = 1 - t; ga.drawImage(f.folge, (n0 % f.spalten) * f.b, Math.floor(n0 / f.spalten) * f.h, f.b, f.h, 0, 0, W, H);
       if (t > 0) { ga.globalCompositeOperation = 'lighter'; ga.globalAlpha = t; ga.drawImage(f.folge, (n1 % f.spalten) * f.b, Math.floor(n1 / f.spalten) * f.h, f.b, f.h, 0, 0, W, H); }
@@ -646,7 +678,19 @@
     var l = figurLicht(), E = FIGUREN.emre, H = FIGUREN.hund, h = hund.phase * hund.phase * (3 - 2 * hund.phase);
     figurZeichnen(H, h * (H.anzahl - 1), l);
     figurZeichnen(E, fig.phase * (E.anzahl - 1), l);
+    /* 3D-Figur: Fußgras steht dort, wo das gerade gezeigte Bild die Füße hat (Standbild vor dem Laden = Bild 0, „Bewegung reduzieren“ = Endpose) */
+    if (E.fuesse) fussMitgehen(E, E.folgen ? Math.round(Math.max(0, Math.min(1, fig.phase)) * (E.anzahl - 1)) : (ruhig ? E.anzahl - 1 : 0));
   }
+  /* 3D-Figur (Auftrag 31): Fortschritt 0 → 1 zwischen Seitenanfang und dem Moment, in dem die Karten „Was brauchen Sie?“ unten ins Bild
+     kommen (Kartenoberkante bei 88 % der Fensterhöhe). Gemessen beim Aufbau; ohne Karten: nach 55 % des Titelbilds. */
+  var gehen = { von: 0, bis: 1 };
+  function gehenMessen() {
+    var el = document.querySelector('#preise [data-mf-dyn]') || document.getElementById('preise');
+    var bis = el ? el.getBoundingClientRect().top + leseY() - window.innerHeight * 0.88 : heldOben + m.H * 0.55;
+    gehen.von = heldOben + m.H * 0.015;
+    gehen.bis = Math.max(heldOben + m.H * 0.3, Math.min(heldOben + m.H * 0.9, bis));
+  }
+  function gehenPhase(y) { return Math.max(0, Math.min(1, (y - gehen.von) / Math.max(1, gehen.bis - gehen.von))); }
   /* eine Bildschleife für beide, nur solange sich etwas bewegt; Delta-Zeit → gleich schnell auf 60 und 120 Hz */
   function animStart() { if (!animLaeuft) { animLaeuft = true; animT = performance.now(); requestAnimationFrame(animLauf); } }
   function animLauf(t) {
@@ -684,9 +728,10 @@
       var qf = Math.max(1, Math.min(window.devicePixelRatio || 1, 3, f.h / z[3]));
       c.className = 'szene__hund'; c.width = Math.ceil(z[2] * qf); c.height = Math.ceil(z[3] * qf);
       c.style.left = x + 'px'; c.style.top = y + 'px'; c.style.width = z[2] + 'px'; c.style.height = z[3] + 'px';
-      if (f === E) huelle.insertBefore(c, huelle.firstChild); else huelle.appendChild(c);
+      if (f === E && !E3D) huelle.insertBefore(c, huelle.firstChild); else huelle.appendChild(c);   /* 3D-Figur geht nach vorn → vor dem Hund */
       f.leinwand = c; f.zuletzt = '';
       f.fussX = z[1]; f.fussB = z[2] * f.breite; f.fussY = boden + sinken * 0.4; f.stand = z[3] * (f.fuss - f.oben);
+      if (f.fuesse) { f.fussX = x + z[2] * f.fuesse[0][0]; f.zw = z[2]; f.zh = z[3]; f.fussN = -1; }   /* 3D-Figur: Fußmitte aus Bild 0 (Arm macht die Zelle breiter) */
     });
     /* Mondlicht hinter den Figuren (Nachtlauf 27.09., ERGUN.: „Hand immer gut zu sehen“): schwacher, kühler Schein auf der Wiese
        hinter ERGUN. und dem Hund – nachts hebt sich der dunkle Umriss (Arm, Hand, Hundekopf) vom Hintergrund ab. Nur opacity (--nacht). */
@@ -699,14 +744,32 @@
     return huelle;
   }
   /* vor den Füßen: weicher Kontaktschatten und ein paar Halme in den Farben der Wiese */
+  /* 3D-Figur (Auftrag 31): ERGUN. geht nach vorn – sein Fußgras liegt auf einer eigenen Leinwand, die mit den Füßen wandert und
+     mitwächst (fussMitgehen, nur transform). Der Hund behält seins. */
   function fussgras(huelle, licht) {
+    var mit = Object.keys(FIGUREN).filter(function (k) { return FIGUREN[k].fuesse; });
+    fussgrasLw(huelle, licht, Object.keys(FIGUREN).filter(function (k) { return !FIGUREN[k].fuesse; }));
+    mit.forEach(function (k) {
+      var f = FIGUREN[k], c = fussgrasLw(huelle, licht, [k]);
+      c.style.transformOrigin = f.fussX.toFixed(1) + 'px ' + (f.fussY - parseFloat(c.style.top)).toFixed(1) + 'px';
+      (f.fussLw || (f.fussLw = [])).push(c); f.fussN = -1;
+    });
+  }
+  function fussMitgehen(f, n) {
+    if (!f.fussLw || n === f.fussN) return;
+    f.fussN = n;
+    var a = f.fuesse[0], b = f.fuesse[n], tr = 'translate3d(' + ((b[0] - a[0]) * f.zw).toFixed(1) + 'px,' + ((b[1] - a[1]) * f.zh).toFixed(1) + 'px,0) scale(' + b[2].toFixed(3) + ')';
+    f.fussLw = f.fussLw.filter(function (c) { return c.isConnected; });
+    f.fussLw.forEach(function (c) { c.style.transform = tr; });
+  }
+  function fussgrasLw(huelle, licht, namen) {
     var p = F.wiese[licht], r = zufall(4242), oben = m.H, unten = 0;
-    Object.keys(FIGUREN).forEach(function (k) { var f = FIGUREN[k]; oben = Math.min(oben, f.fussY - m.H * 0.05); unten = Math.max(unten, f.fussY + m.H * 0.07); });
+    namen.forEach(function (k) { var f = FIGUREN[k]; oben = Math.min(oben, f.fussY - m.H * 0.05); unten = Math.max(unten, f.fussY + m.H * 0.07); });
     var c = document.createElement('canvas'), q = m.q;
     c.width = Math.ceil(m.W * q); c.height = Math.ceil((unten - oben) * q);
     c.style.top = oben + 'px'; c.style.height = (unten - oben) + 'px'; c.className = 'szene__bild'; c.setAttribute('data-licht', licht);
     var g = c.getContext('2d'); g.setTransform(q, 0, 0, q, 0, -oben * q);
-    Object.keys(FIGUREN).forEach(function (k) {
+    namen.forEach(function (k) {
       var f = FIGUREN[k], w = f.fussB;
       /* Kontaktschatten direkt unter den Füßen … */
       var sg = g.createRadialGradient(f.fussX, f.fussY, 0, f.fussX, f.fussY, w * 0.6);
@@ -727,6 +790,7 @@
       }
     });
     huelle.appendChild(c);
+    return c;
   }
 
   /* ---------- Sterne (Nachtlauf 27.09., ERGUN.: „scharfe leuchtende Sterne, wenn es dunkel wird“) ----------
@@ -886,7 +950,10 @@
       /* Parallaxe: direkt am echten Scrollwert, sonst schwimmt die Landschaft gegen die Seite (Bewegung reduziert: keine) */
       if (!(cssParallaxe && isNaN(festP))) Object.keys(ebenen).forEach(function (k) { setze(ebenen[k], s * TIEFE[k] * (k === 'himmel' ? 1 : m.f)); });
       /* Winken: sofort beim ersten Runterwischen von ganz oben; erst ganz oben wird es wieder freigegeben */
-      if (!isNaN(festP) && !FIG_TEST) { fig.phase = sanft(0.4, 0.58, p / ZEIT); figurenZeichnen(); }   /* Standbild zum Prüfen (?p / ?nacht) */
+      if (E3D) {   /* 3D-Figur: folgt dem geglätteten Scrollwert im Takt; ?p / ?nacht: Stand passend dazu, ?gehen=0…1 stellt sie fest ein */
+        if (!isNaN(festP) && !FIG_TEST) { fig.phase = GEHEN_TEST >= 0 ? GEHEN_TEST : gehenPhase(heldOben + p * m.H); figurenZeichnen(); }
+      }
+      else if (!isNaN(festP) && !FIG_TEST) { fig.phase = sanft(0.4, 0.58, p / ZEIT); figurenZeichnen(); }   /* Standbild zum Prüfen (?p / ?nacht) */
       else if (!isNaN(festP)) { /* ?figuren=test: Knöpfe steuern die Figuren */ }
       else if (ruhig) { /* Bewegung reduziert: kein Winken */ }
       else if (vorherP < 0) gewunken = p > 0.003;            /* erster Aufbau: nur ganz oben ist das Winken frei */
@@ -894,7 +961,11 @@
       else if (!gewunken && p > vorherP) { gewunken = true; winken(); }
     }
     /* Neuaufbau: Licht und Faden sofort auf den aktuellen Stand */
-    if (immer) { weichY = rohY; weichV = 0; lichtP = fortschritt(rohY); licht(lichtP); if (window.ergunTakt) window.ergunTakt(weichY, lichtP); }
+    if (immer) {
+      weichY = rohY; weichV = 0; lichtP = fortschritt(rohY);
+      if (E3D) { gehenMessen(); if (isNaN(festP)) fig.phase = ruhig ? 1 : (GEHEN_TEST >= 0 ? GEHEN_TEST : gehenPhase(rohY)); }
+      licht(lichtP); if (window.ergunTakt) window.ergunTakt(weichY, lichtP);
+    }
   }
   /* Der Takt läuft, solange gescrollt wird, und noch kurz danach (iPhone-Schwungscrollen) – dann schläft er */
   var laeuft = false, zuletztT = 0, stillSeit = 0, lichtP = -1;
@@ -913,8 +984,11 @@
       if (Math.abs(rohY - weichY) < 0.02 && Math.abs(weichV) < 0.5) { weichY = rohY; weichV = 0; }
     }
     if (GESTIRN_TEST) gestirnKurve(t);
-    var lp = fortschritt(weichY);
-    if (Math.abs(lp - lichtP) > 0.00005) { lichtP = lp; licht(lp); }
+    var lp = fortschritt(weichY), gp = fig.phase;
+    /* 3D-Figur: Bild = geglätteter Scroll-Fortschritt (dieselbe Feder wie Licht und Gestirne), rückwärts beim Hochscrollen */
+    if (E3D && !ruhig && isNaN(festP) && GEHEN_TEST < 0) gp = gehenPhase(weichY);
+    if (Math.abs(lp - lichtP) > 0.00005) { lichtP = lp; fig.phase = gp; licht(lp); }
+    else if (gp !== fig.phase) { fig.phase = gp; figurenZeichnen(); }
     /* gemeinsamer Takt für andere Bewegungen (Wurzeln, 27.09.): gleiche Scroll-Quelle, gleiche 150-ms-Glättung */
     if (window.ergunTakt) window.ergunTakt(weichY, lp);
     if (weichY !== rohY) stillSeit = t;
@@ -975,7 +1049,7 @@
     if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { held.classList.toggle('szene--weg', !e[0].isIntersecting); }).observe(held);
     schnuppePlanen();
     window.__szene = { schnuppe: schnuppeStart, p: function (x) { window.scrollTo(0, x * m.H); }, bauzeit: function () { return bauzeit; },
-      zustand: function () { return { phase: fig.phase, laeuft: fig.laeuft, hund: hund.phase, hundZiel: hund.ziel, hundLaeuft: hund.laeuft, gewunken: gewunken, wartet: winkenWartet, rohY: rohY, weichY: weichY, licht: lichtP }; },
+      zustand: function () { return { phase: fig.phase, gehen: E3D ? [gehen.von, gehen.bis] : null, fussN: FIGUREN.emre.fussN, laeuft: fig.laeuft, hund: hund.phase, hundZiel: hund.ziel, hundLaeuft: hund.laeuft, gewunken: gewunken, wartet: winkenWartet, rohY: rohY, weichY: weichY, licht: lichtP }; },
       winken: function () { fig.laeuft = false; winken(); }, hund: function (z) { hund.ziel = -1; hundZiel(z); },
       /* Prüfen (28.09.): Winken auf festen Stand 0–1 setzen und zeichnen (bildgenaue Aufnahmen) */
       emre: function (x) { fig.laeuft = false; fig.phase = Math.max(0, Math.min(1, x)); FIGUREN.emre.zuletzt = ''; figurenZeichnen(); return Math.round(fig.phase * (FIGUREN.emre.anzahl - 1)); } };
