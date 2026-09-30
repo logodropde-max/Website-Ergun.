@@ -1,5 +1,9 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
+## Titelbild „Maschine“ – Vorschau (30.09.2026, nicht live)
+- `maschine-vorschau.html` + `js/maschine.js` (nicht verlinkt, noindex): Laptop an der Stelle von Figur + Hund, Schichten fahren beim Scrollen auseinander (CSS-3D, Kamerafahrt durch die Schichten), Website auf dem Bildschirm = echtes HTML, am Ende Sprung in „Was brauchen Sie?“. Prüfgriff `window.__maschine.p(x)`.
+- Teile: `bilder/hero/maschine/*.webp` aus `bilder/hero/4k/maschine/teile.py` (Quelle: Higgsfield `api_*_maschine-*`). Einbau in die Startseite folgt hinter `?titel=maschine`.
+
 ## 30.09.2026 – Auftrag 36: Figur blendet nach der Wahl aus + Auswahl premium (Rückweg Tag `vor-auftrag-36`) – LIVE seit 30.09. (Emres OK, Standard = Variante A)
 - **Schalter:** `window.ERGUN_A36` im Kopf von `index.html`. Steht seit dem OK auf `true` = Neues ist Standard, `?karten=alt` zeigt den bisherigen Look, `?ausblenden=b` die andere Variante. `false` würde alles zurückstellen (Neues dann nur mit `?karten=neu` / `?ausblenden=a|b`).
 - **Figur (`js/szene.js`, Abschnitt „Auftrag 36“):** `js/preise.js` meldet jeden Schritt als Ereignis `preise:schritt` (`detail.schritt`: art · website · endo · anfrage). `aus.erledigt` = Schritt ist nicht mehr „art“. `ausPruefen()`: weg, wenn erledigt + runtergescrollt + die Figur das Titelbild nach oben verlässt (`halten.drueber`); wieder da bei Schritt ① oder ganz oben. `ausSetzen()` schaltet nur Klassen (`.szene__figur.ist-weg`, `.szene--figur-weg`) – Zeiten und Aussehen stehen im CSS neben `.szene__vorn`. Variante A spielt dazu die Bildfolge rückwärts (`AUS_A_TEMPO`, `AUS_A_ZURUECK`), Variante B hellt beim Zeichnen auf (`AUS_B_HELL`, Schritt 4b in `figurZeichnen`). `figurLage()` misst die Figur ohne die Verwandlung der Hülle; solange sie weg ist, wird das Halten nicht nachgeführt.

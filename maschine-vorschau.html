@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vorschau Titelbild „Maschine“ – ERGUN.</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<!-- Vorschau (30.09.2026, ERGUNs Wahl: Bild 4 „Laptop als Explosionszeichnung“, weiterentwickelt). Nicht verlinkt, noindex.
+     Zeigt NUR den Ablauf der Maschine, damit ERGUN. die Animation beurteilen kann. Danach kommt sie ins Titelbild an die Stelle
+     von Figur + Hund (Schalter ?titel=maschine). Himmel hier nur als einfacher Verlauf Tag → Nacht, die gezeichnete Landschaft kommt dort.
+     Teile: bilder/hero/maschine/*.webp (aus bilder/hero/4k/maschine/teile.py). Logik: js/maschine.js. Nur transform/opacity. -->
+<style>
+@font-face { font-family: "Instrument Serif"; src: url("schriften/InstrumentSerif-Regular.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Satoshi"; src: url("schriften/Satoshi-Variable.woff2") format("woff2"); font-weight: 300 900; font-display: swap; }
+:root { --grund: #070B16; --text: #F4F1E6; --leise: #94A9C5; --gold: #F2B45C; --orange: #FF7A1A; --ease: cubic-bezier(0.22, 1, 0.36, 1); }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--grund); color: var(--text); font-family: "Satoshi", system-ui, -apple-system, "Segoe UI", sans-serif; }
+.m-strecke { position: relative; height: 620svh; }
+.m-buehne { position: sticky; top: 0; height: 100svh; min-height: 560px; overflow: hidden; }
+/* Himmel: vier Stimmungen übereinander, das Skript setzt nur die Deckkraft */
+.m-himmel, .m-himmel i { position: absolute; inset: 0; }
+.m-himmel i { display: block; opacity: 0; }
+.m-himmel .h-tag { opacity: 1; background: linear-gradient(#7FA9D6, #BFD6EA 55%, #E7E3D2); }
+.m-himmel .h-gold { background: linear-gradient(#5C6FA0, #D9926A 58%, #F2B45C); }
+.m-himmel .h-blau { background: linear-gradient(#1B2A55, #34487A 55%, #6E6A8E); }
+.m-himmel .h-nacht { background: linear-gradient(#050811, #0B1530 60%, #101C3A); }
+.m-boden { position: absolute; left: 0; right: 0; bottom: 0; height: 22%; background: linear-gradient(rgba(7, 11, 22, 0), rgba(7, 11, 22, 0.55) 40%, #070B16); }
+
+/* Text links: kleiner Schritt-Hinweis (ändert sich mit dem Ablauf) */
+.m-text { position: absolute; left: clamp(20px, 6vw, 96px); top: 50%; transform: translateY(-50%); width: min(34vw, 420px); z-index: 5; }
+.m-text h1 { margin: 0 0 18px; font: 400 clamp(34px, 4.4vw, 64px)/1.02 "Instrument Serif", Georgia, serif; letter-spacing: -0.01em; }
+.m-schritte { position: relative; min-height: 5.5em; }
+.m-schritt { position: absolute; inset: 0 auto auto 0; margin: 0; font-size: clamp(15px, 1.35vw, 19px); line-height: 1.45; color: var(--leise); opacity: 0; transform: translateY(8px); transition: opacity 360ms var(--ease), transform 360ms var(--ease); }
+.m-schritt b { display: block; color: var(--text); font-weight: 600; }
+.m-schritt.ist-an { opacity: 1; transform: none; }
+.m-kette { display: flex; flex-wrap: wrap; gap: 6px 10px; margin-top: 6px; font-size: 13px; color: var(--leise); }
+.m-kette span.ist-an { color: var(--gold); }
+
+/* ---------- die Maschine in 3D ---------- */
+.m-welt { position: absolute; left: 64%; top: 54%; width: var(--L); height: calc(var(--L) * 0.69); transform: translate(-50%, -50%); perspective: 1800px; z-index: 3; }
+.m-kamera { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.m-lage { position: absolute; left: 0; bottom: 0; transform-style: preserve-3d; transform-origin: 50% 100%; will-change: transform, opacity; }
+.m-lage > img { display: block; width: 100%; height: auto; pointer-events: none; user-select: none; }
+.m-unterteil { width: 100%; transform-origin: 50% 0; }
+.m-schirm-lage { width: 100%; }
+.m-platine { width: 100%; }
+.m-mechanik { width: 62%; left: 19%; }
+.m-werkstatt { width: 100%; }
+.m-auf { position: absolute; transform-style: preserve-3d; }   /* Dinge AUF einer Platte (Zahnräder, Männchen, Lichtpunkt), in Prozent der Platte */
+.m-zahnrad { position: absolute; transform: translate(-50%, -50%); will-change: transform; }
+.m-zahnrad img { display: block; width: 100%; height: 100%; }
+.m-mann { position: absolute; transform: translate(-50%, -100%); opacity: 0; will-change: transform, opacity; }
+.m-mann img { display: block; width: 100%; height: auto; }
+.m-punkt { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; opacity: 0; background: radial-gradient(circle, #FFF6EA 0 30%, var(--orange) 55%, rgba(255, 122, 26, 0) 72%); box-shadow: 0 0 18px 6px rgba(255, 122, 26, 0.55); will-change: transform, opacity; }
+.m-spur { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.m-spur path { fill: none; stroke: var(--orange); stroke-width: 0.7; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 3px rgba(255, 122, 26, 0.85)); }
+.m-brief { position: absolute; width: 44px; height: 30px; margin: -15px 0 0 -22px; opacity: 0; will-change: transform, opacity; }
+.m-leuchten { position: absolute; border-radius: 50%; opacity: 0; background: radial-gradient(circle, rgba(255, 186, 110, 0.75), rgba(255, 122, 26, 0) 70%); will-change: opacity; }
+
+/* Bildschirm: echte, scharfe Mini-Website (entsteht in drei Schritten) + endo-Fenster */
+.m-anzeige { position: absolute; left: 7%; top: 6.88%; width: 86%; height: 83.17%; overflow: hidden; border-radius: 1.2%; background: #F4F1E6; color: #0C162C; font-size: calc(var(--L) * 0.018); }
+.w { position: absolute; inset: 0; padding: 4% 5%; display: grid; grid-template-rows: auto 1fr auto; gap: 5%; }
+.w-nav { display: flex; align-items: center; justify-content: space-between; }
+.w-logo { width: 16%; height: 1.6em; border-radius: 3px; }
+.w-links { display: flex; gap: 6%; width: 40%; justify-content: flex-end; }
+.w-links i { display: block; width: 22%; height: 0.6em; border-radius: 2px; }
+.w-held { display: grid; grid-template-columns: 1.1fr 1fr; gap: 6%; align-items: center; }
+.w-titel { display: grid; gap: 0.8em; }
+.w-titel i { display: block; height: 1.5em; border-radius: 3px; }
+.w-titel i:nth-child(2) { width: 78%; }
+.w-titel i.w-zeile { height: 0.6em; width: 90%; }
+.w-titel i.w-knopf { height: 2em; width: 42%; border-radius: 999px; margin-top: 0.4em; }
+.w-bild { aspect-ratio: 4 / 3; border-radius: 6px; overflow: hidden; }
+.w-reihe { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4%; }
+.w-reihe .w-bild { aspect-ratio: 16 / 10; }
+.w-bild img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* drei Schichten der Website: Skizze (Strich), Farbe (Flächen), Bilder */
+.w-skizze .w-logo, .w-skizze i, .w-skizze .w-bild { border: 1.5px dashed rgba(12, 22, 44, 0.55); background: transparent; }
+.w-farbe .w-logo { background: #0C162C; } .w-farbe .w-links i { background: #94A9C5; } .w-farbe .w-titel i { background: #0C162C; } .w-farbe .w-titel i.w-zeile { background: #94A9C5; }
+.w-farbe .w-titel i.w-knopf { background: var(--orange); } .w-farbe .w-bild { background: linear-gradient(135deg, #5E78A8, #C79AB8); }
+.w-skizze, .w-farbe, .w-bilder { will-change: clip-path, opacity; }
+.w-skizze { clip-path: inset(0 100% 0 0); }
+.w-farbe, .w-bilder { opacity: 0; }
+.w-bilder .w-logo, .w-bilder i { visibility: hidden; }
+.m-endo { position: absolute; right: 4%; bottom: 5%; width: 38%; padding: 3% 3.4%; border-radius: 10px; background: #0C162C; color: #F4F1E6; box-shadow: 0 10px 28px rgba(12, 22, 44, 0.35); font-size: 1.05em; line-height: 1.35; opacity: 0; transform: translateY(12%) scale(0.96); will-change: transform, opacity; }
+.m-endo b { display: block; font-size: 0.8em; color: #94A9C5; font-weight: 600; margin-bottom: 0.3em; }
+.m-endo span { color: var(--orange); }
+
+/* Schluss: die Kamera ist im Bildschirm – er wird zu Schritt 1 des Kontaktformulars */
+.m-formular { position: absolute; inset: 0; z-index: 6; display: grid; place-content: center; justify-items: center; gap: 22px; padding: 24px; background: #0C162C; opacity: 0; pointer-events: none; will-change: opacity; }
+.m-formular h2 { margin: 0; font: 400 clamp(34px, 5vw, 62px)/1.05 "Instrument Serif", Georgia, serif; }
+.m-karten { display: grid; grid-template-columns: repeat(3, minmax(0, 220px)); gap: 14px; }
+.m-karten div { padding: 18px 16px; border-radius: 20px; border: 1px solid rgba(242, 180, 92, 0.35); background: rgba(94, 120, 168, 0.12); font-size: 17px; font-weight: 600; }
+.m-karten small { display: block; margin-top: 4px; font-weight: 400; font-size: 13px; color: var(--leise); }
+.m-formular p { margin: 0; color: var(--leise); font-size: 14px; }
+.m-hinweis { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 9; padding: 6px 12px; border-radius: 999px; background: rgba(12, 22, 44, 0.8); color: var(--leise); font-size: 12px; }
+.m-danach { padding: 80px 24px; text-align: center; color: var(--leise); }
+
+/* Handy: Text oben, Maschine darunter, Schichten fahren nach oben auseinander */
+@media (max-width: 760px) {
+  .m-text { top: 88px; transform: none; width: auto; right: 20px; }
+  .m-text h1 { font-size: 34px; margin-bottom: 10px; }
+  .m-schritte { min-height: 4.4em; }
+  .m-welt { left: 50%; top: 66%; }
+  .m-karten { grid-template-columns: minmax(0, 1fr); width: min(100%, 320px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .m-strecke { height: auto; }
+  .m-buehne { position: relative; }
+  .m-schritt { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="m-strecke" data-strecke>
+  <div class="m-buehne">
+    <div class="m-himmel" aria-hidden="true"><i class="h-tag"></i><i class="h-gold"></i><i class="h-blau"></i><i class="h-nacht"></i></div>
+    <div class="m-boden" aria-hidden="true"></div>
+
+    <div class="m-text">
+      <h1>Websites. Automatisierung. KI.</h1>
+      <div class="m-schritte" aria-live="polite">
+        <p class="m-schritt" data-schritt="0"><b>Von ERGUN.</b>Scrollen Sie – und schauen Sie in die Maschine.</p>
+        <p class="m-schritt" data-schritt="1"><b>Erst Ihre Website</b>Entwurf, Gestaltung, Inhalte – Schritt für Schritt.<span class="m-kette"><span data-k="1">Skizze</span><span data-k="2">Farbe</span><span data-k="3">Bilder</span></span></p>
+        <p class="m-schritt" data-schritt="2"><b>Dann kommt eine Anfrage</b>Ein Kunde schreibt – auch nachts.</p>
+        <p class="m-schritt" data-schritt="3"><b>endo arbeitet sie ab</b>Annehmen, sortieren, Termin eintragen, antworten.<span class="m-kette"><span data-k="4">angekommen</span><span data-k="5">sortiert</span><span data-k="6">Termin</span><span data-k="7">Antwort</span></span></p>
+        <p class="m-schritt" data-schritt="4"><b>Alles greift ineinander</b>Ihre Website arbeitet, auch wenn Sie Feierabend haben.</p>
+      </div>
+    </div>
+
+    <div class="m-welt" data-welt aria-hidden="true">
+      <div class="m-kamera" data-kamera>
+        <!-- hinten → vorn -->
+        <div class="m-lage m-werkstatt" data-lage="3">
+          <img src="bilder/hero/maschine/werkstatt.webp" alt="" width="1600" height="634" decoding="async">
+          <svg class="m-spur" viewBox="0 0 100 100" preserveAspectRatio="none"><path data-spur="3" d="M10 16 L11 58 L24 70 L42 66 L60 66 L76 70 L90 60"/></svg>
+          <div class="m-auf" style="inset:0">
+            <div class="m-brief" data-brief="3"><svg viewBox="0 0 44 30"><rect x="1" y="1" width="42" height="28" rx="3" fill="#F4F1E6" stroke="#0C162C" stroke-width="1.5"/><path d="M2 3 22 17 42 3" fill="none" stroke="#0C162C" stroke-width="1.5"/><circle cx="22" cy="17" r="3" fill="#FF7A1A"/></svg></div>
+            <div class="m-mann" data-mann="3" style="width:10%"><img src="bilder/hero/maschine/maennchen-3.webp" alt="" width="324" height="513"></div>
+            <div class="m-mann" data-mann="5" style="width:10.5%;left:54%;top:66%"><img src="bilder/hero/maschine/maennchen-5.webp" alt="" width="362" height="518"></div>
+            <div class="m-mann" data-mann="6" style="width:10.5%;left:80%;top:70%"><img src="bilder/hero/maschine/maennchen-6.webp" alt="" width="361" height="513"></div>
+            <div class="m-leuchten" data-leuchten="kalender" style="left:52%;top:5%;width:24%;height:60%"></div>
+            <div class="m-leuchten" data-leuchten="haken" style="left:84%;top:36%;width:16%;height:42%"></div>
+          </div>
+        </div>
+        <div class="m-lage m-mechanik" data-lage="2">
+          <img src="bilder/hero/maschine/mechanik.webp" alt="" width="1200" height="1424" decoding="async">
+          <svg class="m-spur" viewBox="0 0 100 100" preserveAspectRatio="none"><path data-spur="2" d="M3 44.7 L20.3 44.7 L50 77 L72.5 44.7 L83.5 80.9"/></svg>
+          <div class="m-auf" style="inset:0">
+            <div class="m-zahnrad" data-rad="1" data-dreh="1" style="left:50.6%;top:21.1%;width:30%;aspect-ratio:1"><img src="bilder/hero/maschine/zahnraeder-1.webp" alt=""></div>
+            <div class="m-zahnrad" data-rad="2" data-dreh="-1.3" style="left:20.3%;top:44.7%;width:25%;aspect-ratio:1"><img src="bilder/hero/maschine/zahnraeder-2.webp" alt=""></div>
+            <div class="m-zahnrad" data-rad="3" data-dreh="1.5" style="left:72.5%;top:44.7%;width:22%;aspect-ratio:1"><img src="bilder/hero/maschine/zahnraeder-3.webp" alt=""></div>
+            <div class="m-zahnrad" data-rad="4" data-dreh="-1.8" style="left:50%;top:77.1%;width:21%;aspect-ratio:1"><img src="bilder/hero/maschine/zahnraeder-4.webp" alt=""></div>
+            <div class="m-zahnrad" data-rad="5" data-dreh="2.2" style="left:83.5%;top:80.9%;width:17%;aspect-ratio:1"><img src="bilder/hero/maschine/zahnraeder-5.webp" alt=""></div>
+            <div class="m-mann" data-mann="4" style="width:15%;left:74%;top:66%"><img src="bilder/hero/maschine/maennchen-4.webp" alt="" width="374" height="518"></div>
+          </div>
+        </div>
+        <div class="m-lage m-platine" data-lage="1">
+          <img src="bilder/hero/maschine/platine.webp" alt="" width="1600" height="831" decoding="async">
+          <svg class="m-spur" viewBox="0 0 100 100" preserveAspectRatio="none"><path data-spur="1" d="M4 50 L96 50"/></svg>
+        </div>
+        <div class="m-lage m-unterteil" data-lage="u">
+          <img src="bilder/hero/maschine/unterteil.webp" alt="" width="1600" height="1024" decoding="async">
+        </div>
+        <div class="m-lage m-schirm-lage" data-lage="0">
+          <img src="bilder/hero/maschine/bildschirm.webp" alt="" width="1600" height="1105" decoding="async">
+          <div class="m-anzeige">
+            <div class="w w-skizze" data-w="skizze"><div class="w-nav"><div class="w-logo"></div><div class="w-links"><i></i><i></i><i></i></div></div><div class="w-held"><div class="w-titel"><i></i><i></i><i class="w-zeile"></i><i class="w-zeile"></i><i class="w-knopf"></i></div><div class="w-bild"></div></div><div class="w-reihe"><div class="w-bild"></div><div class="w-bild"></div><div class="w-bild"></div></div></div>
+            <div class="w w-farbe" data-w="farbe"><div class="w-nav"><div class="w-logo"></div><div class="w-links"><i></i><i></i><i></i></div></div><div class="w-held"><div class="w-titel"><i></i><i></i><i class="w-zeile"></i><i class="w-zeile"></i><i class="w-knopf"></i></div><div class="w-bild"></div></div><div class="w-reihe"><div class="w-bild"></div><div class="w-bild"></div><div class="w-bild"></div></div></div>
+            <div class="w w-bilder" data-w="bilder"><div class="w-nav"><div class="w-logo"></div><div class="w-links"><i></i><i></i><i></i></div></div><div class="w-held"><div class="w-titel"><i></i><i></i><i class="w-zeile"></i><i class="w-zeile"></i><i class="w-knopf"></i></div><div class="w-bild"><img src="bilder/hero/layer-1-sky-960.webp" alt=""></div></div><div class="w-reihe"><div class="w-bild"><img src="bilder/hero/layer-2-ridge-960.webp" alt=""></div><div class="w-bild"><img src="bilder/hero/layer-1-sky-blaue-stunde-960.webp" alt=""></div><div class="w-bild"><img src="bilder/hero/layer-1-sky-ohne-sonne-960.webp" alt=""></div></div></div>
+            <div class="m-endo" data-endo><b>endo · Neue Anfrage</b>Beantwortet. Termin eingetragen <span>✓</span></div>
+          </div>
+          <div class="m-auf" style="inset:0">
+            <div class="m-brief" data-brief="0"><svg viewBox="0 0 44 30"><rect x="1" y="1" width="42" height="28" rx="3" fill="#F4F1E6" stroke="#0C162C" stroke-width="1.5"/><path d="M2 3 22 17 42 3" fill="none" stroke="#0C162C" stroke-width="1.5"/><circle cx="22" cy="17" r="3" fill="#FF7A1A"/></svg></div>
+            <div class="m-mann" data-mann="1" style="width:9%;left:10%;top:104%"><img src="bilder/hero/maschine/maennchen-1.webp" alt="" width="320" height="515"></div>
+            <div class="m-mann" data-mann="2" style="width:10%;left:88%;top:104%"><img src="bilder/hero/maschine/maennchen-2.webp" alt="" width="373" height="519"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="m-formular" data-formular aria-hidden="true">
+      <h2>Was brauchen Sie?</h2>
+      <div class="m-karten"><div>Website<small>Ihr Auftritt im Netz</small></div><div>Automatisierung<small>mit endo</small></div><div>Beides<small>Website + endo</small></div></div>
+      <p>(Vorschau – hier geht es in Ihr Kontaktformular über)</p>
+    </div>
+  </div>
+</div>
+<div class="m-danach">Hier folgt auf der echten Seite der Anfrage-Ablauf („Was brauchen Sie?“ → „Ihre Anfrage“).</div>
+<div class="m-hinweis" data-hinweis>Vorschau Titelbild „Maschine“ · langsam scrollen</div>
+<script src="js/maschine.js?v=4"></script>
+</body>
+</html>
