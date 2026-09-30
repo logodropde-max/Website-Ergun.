@@ -626,7 +626,7 @@
     if (f.einzeln) nr = Math.round(nr);   /* ERGUN. (28.09.): jedes Videobild einzeln, keine Überblendung */
     var n0 = Math.floor(nr), t = Math.round((nr - n0) * 8) / 8, n1 = Math.min(f.anzahl - 1, n0 + 1);
     if (t >= 1) { n0 = n1; t = 0; }
-    var schluessel = n0 + '|' + t + '|' + lichtGold.toFixed(2) + '|' + lichtBlau.toFixed(2) + '|' + lichtNacht.toFixed(2) + '|' + verdecktQ + '|' + (f.fade || '');
+    var schluessel = n0 + '|' + t + '|' + lichtGold.toFixed(2) + '|' + lichtBlau.toFixed(2) + '|' + lichtNacht.toFixed(2) + '|' + verdecktQ + '|' + (f.fade || '') + '|' + (f.hell || 0).toFixed(3);
     if (schluessel === f.zuletzt) return;
     f.zuletzt = schluessel;
     var W = c.width, H = c.height;
@@ -669,6 +669,9 @@
       gb.globalCompositeOperation = 'source-in'; gb.fillStyle = rgbStr(l.rim, 1); gb.fillRect(0, 0, W, H);
       ga.globalCompositeOperation = 'source-over'; ga.globalAlpha = l.ra; ga.drawImage(B, 0, 0); ga.globalAlpha = 1;
     }
+    /* 4b. Auftrag 36 (Variante B): die ganze Figur hellt zum Licht der Szene hin auf (Farbe des Lichtsaums: Tag warm, Nacht kühles Mondlicht) –
+       eine Farbe über dem ganzen Umriss (source-atop), die Figur wird dabei nicht durchsichtig */
+    if (f.hell > 0.004) { ga.globalCompositeOperation = 'source-atop'; ga.globalAlpha = Math.min(1, f.hell) * AUS_B_HELL; ga.fillStyle = rgbStr(l.rim, 1); ga.fillRect(0, 0, W, H); ga.globalAlpha = 1; ga.globalCompositeOperation = 'source-over'; }
     /* 5. 3D-Figur über der Erde (Auftrag 34): unten derselbe dunkle Verlauf wie .szene__fade, nur auf der Figur (source-atop) */
     if (f.fade && f.fade[0] - f.fade[1] < H) {
       var fg = ga.createLinearGradient(0, f.fade[0] - f.fade[1], 0, f.fade[0]);
@@ -682,6 +685,7 @@
      Senken selbst mit; eine zusätzliche Kurve hat die Mitte beschleunigt) und ohne Überblendung zweier Bilder (Geisterbild). */
   function figurenZeichnen() {
     var l = figurLicht(), E = FIGUREN.emre, H = FIGUREN.hund, h = hund.phase * hund.phase * (3 - 2 * hund.phase);
+    E.hell = aus.hell * aus.hell * (3 - 2 * aus.hell);   /* weich an beiden Enden */
     figurZeichnen(H, h * (H.anzahl - 1), l);
     figurZeichnen(E, fig.phase * (E.anzahl - 1), l);
     /* 3D-Figur: Fußgras steht dort, wo das gerade gezeigte Bild die Füße hat (Standbild vor dem Laden = Bild 0, „Bewegung reduzieren“ = Endpose) */
@@ -691,6 +695,41 @@
      oben startet die Bewegung EINMAL und läuft in Videotempo ab (Bilder 10–104 bei 24/s = 3,9 s, alle 80 Bilder gleichmäßig durch die Zeit –
      das Video bringt weiches Losgehen und Ankommen selbst mit). Erst ganz oben geht die Figur im selben Tempo zurück. */
   var FIG3D_DAUER = 3.9, gegangen = false;
+  /* Auftrag 36 (30.09.2026, Ausnahme auf ERGUNs Wunsch): Hat der Besucher gewählt (Schritt ① verlassen, Ereignis „preise:schritt“ aus js/preise.js),
+     ist der Job der Figur erledigt – sie verschwindet ruhig, sobald sie das Titelbild nach oben verlässt (dort stand sie bisher über der Auswahl).
+     Ausgeblendet wird sie als EINE Ebene (Hülle .szene__figur: opacity/transform/filter per CSS), nie Bild für Bild gemischt.
+     ?ausblenden=a „tritt zurück“: Video-Bilder rückwärts (ein, zwei Schritte), etwas kleiner, Tiefenunschärfe.
+     ?ausblenden=b „löst sich im Licht“: die ganze Figur hellt zum Licht der Szene auf (Tag warm, Nacht Mondlicht) und zerfließt.
+     Ganz oben oder zurück in Schritt ① kommt sie weich wieder. „Bewegung reduzieren“: nur kurzes Ausblenden (CSS, 250 ms). Der Hund bleibt. */
+  var AUS_STANDARD = 'a', AUS_ART = (location.search.match(/[?&]ausblenden=([ab])(?![a-z])/) || [])[1] || AUS_STANDARD;
+  var AUS_AN = !!window.ERGUN_A36 || /[?&]ausblenden=[ab](?![a-z])/.test(location.search);   /* Schalter in index.html: bis zu ERGUNs OK nur mit ?ausblenden=a|b */
+  var AUS_B_DAUER = 1.2, AUS_B_HELL = 0.46, AUS_A_TEMPO = 1.5, AUS_A_ZURUECK = 0.55;
+  var aus = { erledigt: false, weg: false, hell: 0, hellZiel: 0, T: 0 };
+  document.addEventListener('preise:schritt', function (e) { aus.erledigt = !!(e.detail && e.detail.schritt !== 'art'); if (bereit) { zeichne(true); ausPruefen(); } });   /* erst den Stand auffrischen (Hintergrund-Tab: der Bildtakt steht), dann entscheiden */
+  function ausPruefen() {
+    if (!AUS_AN || !E3D || !FIGUREN.emre.leinwand || !isNaN(festP) || FIG_TEST || GEHEN_TEST >= 0) return;
+    var unten = ruhig ? letztesP > 0.003 : gegangen;
+    var soll = aus.erledigt && unten && (aus.weg || !!halten.drueber);
+    if (soll === aus.weg) return;
+    if (!soll && !unten && !ruhig) { fig.phase = fig.ziel = 0; fig.laeuft = false; }   /* ganz oben und noch unsichtbar: gleich die Startpose, dann weich einblenden */
+    ausSetzen(soll);
+  }
+  function ausSetzen(weg) {
+    aus.weg = weg;
+    var E = FIGUREN.emre, h = E.huelle3d;
+    if (h) {
+      if (weg && E.fuesse) { var fu = E.fuesse[Math.max(0, E.fussN)] || E.fuesse[0]; h.style.transformOrigin = (fu[0] * E.zw).toFixed(1) + 'px ' + (fu[1] * E.zh + halten.dy).toFixed(1) + 'px'; }   /* kleiner werden um die Füße */
+      h.classList.toggle('ist-weg', weg);
+    }
+    held.classList.toggle('szene--figur-weg', weg);   /* Fußgras, Schatten und Mondschein der Figur blenden mit */
+    fig.tempo = 1;
+    if (!weg) figurHalten(rohY);
+    if (ruhig) return;
+    if (AUS_ART === 'a') { if (weg) { fig.tempo = AUS_A_TEMPO; gehenZiel(Math.max(0, fig.phase - AUS_A_ZURUECK)); } else if (gegangen) gehenZiel(1); else figurenZeichnen(); }
+    else { aus.hellZiel = weg ? 1 : 0; animStart(); }
+    clearTimeout(aus.T);   /* Endstand auch ohne Bildtakt (Hintergrund-Tab: requestAnimationFrame steht) */
+    aus.T = setTimeout(function () { if (AUS_ART !== 'a' && aus.hell !== aus.hellZiel) { aus.hell = aus.hellZiel; figurenZeichnen(); } }, 1800);
+  }
   function gehenZiel(z) {
     fig.ziel = z;
     if (!FIGUREN.emre.folgen) return;                 /* Bildfolge noch nicht dekodiert: startet, sobald sie da ist (figurLaden) */
@@ -712,12 +751,21 @@
     halten.klein = streifen < figur * 0.55;
     halten.bis = halten.klein ? frueh : voll;
   }
+  /* Lage der Figur im Fenster OHNE die Ausblend-Verwandlung ihrer Hülle (Auftrag 36: die Hülle wird beim Ausblenden kleiner/unscharf) */
+  function figurLage(c) {
+    var h = FIGUREN.emre.huelle3d, p = h && h.parentNode;
+    if (!p) { var r = c.getBoundingClientRect(); return { top: r.top, sk: r.height / (parseFloat(c.style.height) || r.height || 1) }; }
+    var pr = p.getBoundingClientRect(), sk = pr.height / (p.offsetHeight || pr.height || 1);
+    return { top: pr.top + (parseFloat(h.style.top) + halten.dy) * sk, sk: sk };
+  }
   function figurHalten(y) {
     var E = FIGUREN.emre, c = E.leinwand;
     if (!E3D || !c) return;
-    var r = c.getBoundingClientRect(), sk = r.height / (parseFloat(c.style.height) || r.height || 1), dy = 0;
+    var r = figurLage(c), sk = r.sk, dy = 0, kn = 30;
+    var x = halten.oben - (r.top - halten.dy * sk);                      /* wie weit der Kopf ohne Halten über die Haltelinie liefe */
+    halten.drueber = x > -kn;                                            /* die Figur verlässt das Titelbild nach oben (Auftrag 36: nach der Wahl blendet sie hier aus) */
+    if (aus.weg) { figurMaske(c, r.top, sk); return; }                   /* ausgeblendet: nichts nachführen (scrollt mit der Szene) */
     if (!ruhig && isNaN(festP) && !FIG_TEST) {
-      var x = halten.oben - (r.top - halten.dy * sk), kn = 30;          /* wie weit der Kopf ohne Halten über die Haltelinie liefe */
       var noetig = x <= -kn ? 0 : (x >= kn ? x : (x + kn) * (x + kn) / (4 * kn));   /* weicher Einsatz statt Knick */
       if (y > halten.bis) noetig = Math.max(0, noetig - (y - halten.bis));    /* Karten ganz im Bild: ab hier scrollt die Figur mit weg */
       dy = Math.round(noetig / sk * 10) / 10;
@@ -748,7 +796,7 @@
     var dt = Math.min(0.1, Math.max(0, (t - animT) / 1000)); animT = t;
     if (fig.laeuft && E3D) {   /* 3D-Figur: zum Ziel (1 = Zeigepose, 0 = Start) im Videotempo, Richtungswechsel aus der aktuellen Pose */
       var rg = fig.ziel > fig.phase ? 1 : -1;
-      fig.phase = Math.max(0, Math.min(1, fig.phase + rg * dt / FIG3D_DAUER));
+      fig.phase = Math.max(0, Math.min(1, fig.phase + rg * dt / FIG3D_DAUER * (fig.tempo || 1)));
       if ((rg > 0 && fig.phase >= fig.ziel) || (rg < 0 && fig.phase <= fig.ziel)) { fig.phase = fig.ziel; fig.laeuft = false; }
     }
     else if (fig.laeuft) { fig.phase = Math.min(1, fig.phase + dt / FIG_DAUER); if (fig.phase >= 1) fig.laeuft = false; }
@@ -757,9 +805,13 @@
       hund.phase = Math.max(0, Math.min(1, hund.phase + r * dt / (r > 0 ? HUND_HOCH : HUND_RUNTER)));
       if ((r > 0 && hund.phase >= hund.ziel) || (r < 0 && hund.phase <= hund.ziel)) { hund.phase = hund.ziel; hund.laeuft = false; }
     }
+    if (aus.hell !== aus.hellZiel) {   /* Auftrag 36 (Variante B): aufhellen in 90 % der Zeit, zurück in 0,6 s */
+      var hr = aus.hellZiel > aus.hell ? 1 : -1;
+      aus.hell = Math.max(0, Math.min(1, aus.hell + hr * dt / (hr > 0 ? AUS_B_DAUER * 0.9 : 0.6)));
+    }
     figurenZeichnen();
     if (FIG_TEST && testAnzeige) testAnzeige();
-    if (fig.laeuft || hund.laeuft) requestAnimationFrame(animLauf); else animLaeuft = false;
+    if (fig.laeuft || hund.laeuft || aus.hell !== aus.hellZiel) requestAnimationFrame(animLauf); else animLaeuft = false;
   }
   var testAnzeige = null;
   /* ERGUN. und der Hund stehen nebeneinander auf der Kuppe – gleiche Entfernung, beide Füße auf dem Boden.
@@ -785,7 +837,13 @@
       var qf = Math.max(1, Math.min(window.devicePixelRatio || 1, 3, f.h / z[3]));
       c.className = 'szene__hund'; c.width = Math.ceil(z[2] * qf); c.height = Math.ceil(z[3] * qf);
       c.style.left = x + 'px'; c.style.top = y + 'px'; c.style.width = z[2] + 'px'; c.style.height = z[3] + 'px';
-      if (f === E && E3D && vorn) vorn.appendChild(c);   /* 3D-Figur: eigene Ebene über der Erde (Auftrag 34) */
+      if (f === E && E3D && vorn) {   /* 3D-Figur: eigene Ebene über der Erde (Auftrag 34), in einer Hülle, die als Ganzes ausblendet (Auftrag 36) */
+        var hu = E.huelle3d || document.createElement('div');
+        hu.className = 'szene__figur' + (aus.weg ? ' ist-weg' : ''); hu.setAttribute('data-aus', AUS_ART);
+        hu.style.left = x + 'px'; hu.style.top = y + 'px'; hu.style.width = z[2] + 'px'; hu.style.height = z[3] + 'px';
+        c.style.left = '0px'; c.style.top = '0px';
+        hu.appendChild(c); vorn.appendChild(hu); E.huelle3d = hu;
+      }
       else if (f === E && !E3D) huelle.insertBefore(c, huelle.firstChild); else huelle.appendChild(c);   /* 3D-Figur geht nach vorn → vor dem Hund */
       f.leinwand = c; f.zuletzt = '';
       f.fussX = z[1]; f.fussB = z[2] * f.breite; f.fussY = boden + sinken * 0.4; f.stand = z[3] * (f.fuss - f.oben);
@@ -795,7 +853,7 @@
        hinter ERGUN. und dem Hund – nachts hebt sich der dunkle Umriss (Arm, Hand, Hundekopf) vom Hintergrund ab. Nur opacity (--nacht). */
     held.querySelectorAll('.szene__mondlicht').forEach(function (d) { d.remove(); });
     [[H, 1.0], [E, 0.8]].forEach(function (z) {
-      var f = z[0], r = f.stand * z[1], d = document.createElement('div'); d.className = 'szene__mondlicht';
+      var f = z[0], r = f.stand * z[1], d = document.createElement('div'); d.className = 'szene__mondlicht' + (f === E ? ' szene__mondlicht--figur' : '');
       d.style.left = (f.fussX - r).toFixed(1) + 'px'; d.style.top = (f.fussY - f.stand * 0.5 - r).toFixed(1) + 'px'; d.style.width = d.style.height = (r * 2).toFixed(1) + 'px';
       huelle.insertBefore(d, huelle.firstChild);   /* Mondschein bleibt unter der Erde (über ihr wäre er ein heller Kasten mit harter Unterkante) */
     });
@@ -808,7 +866,9 @@
     var mit = Object.keys(FIGUREN).filter(function (k) { return FIGUREN[k].fuesse; });
     fussgrasLw(huelle, licht, Object.keys(FIGUREN).filter(function (k) { return !FIGUREN[k].fuesse; }));
     mit.forEach(function (k) {
-      var f = FIGUREN[k], c = fussgrasLw(huelle, licht, [k]);
+      var f = FIGUREN[k], fh = huelle.querySelector('.szene__fuss');
+      if (!fh) { fh = document.createElement('div'); fh.className = 'szene__fuss'; huelle.appendChild(fh); }   /* eigene Hülle: blendet mit der Figur aus (Auftrag 36) */
+      var c = fussgrasLw(fh, licht, [k]);
       c.style.transformOrigin = f.fussX.toFixed(1) + 'px ' + (f.fussY - parseFloat(c.style.top)).toFixed(1) + 'px';
       (f.fussLw || (f.fussLw = [])).push(c); f.fussN = -1;
     });
@@ -1016,6 +1076,7 @@
         else if (p <= 0.003) { if (gegangen) { gegangen = false; gehenZiel(0); } }                                   /* ganz oben: ruhig zurück */
         else if (!gegangen && p > vorherP) { gegangen = true; gehenZiel(1); }                                          /* erstes Runterscrollen: einmal los */
         figurHalten(rohY);
+        ausPruefen();
       }
       else if (!isNaN(festP) && !FIG_TEST) { fig.phase = sanft(0.4, 0.58, p / ZEIT); figurenZeichnen(); }   /* Standbild zum Prüfen (?p / ?nacht) */
       else if (!isNaN(festP)) { /* ?figuren=test: Knöpfe steuern die Figuren */ }
@@ -1115,7 +1176,8 @@
     if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { held.classList.toggle('szene--weg', !e[0].isIntersecting); }).observe(held);
     schnuppePlanen();
     window.__szene = { figurLw: function () { return FIGUREN.emre.leinwand; }, schnuppe: schnuppeStart, p: function (x) { window.scrollTo(0, x * m.H); }, bauzeit: function () { return bauzeit; },
-      zustand: function () { return { phase: fig.phase, gehen: E3D ? { ziel: fig.ziel, laeuft: fig.laeuft, gegangen: gegangen, halten: halten.dy, bis: Math.round(halten.bis), klein: !!halten.klein } : null, fussN: FIGUREN.emre.fussN, laeuft: fig.laeuft, hund: hund.phase, hundZiel: hund.ziel, hundLaeuft: hund.laeuft, gewunken: gewunken, wartet: winkenWartet, rohY: rohY, weichY: weichY, licht: lichtP }; },
+      zustand: function () { return { phase: fig.phase, gehen: E3D ? { ziel: fig.ziel, laeuft: fig.laeuft, gegangen: gegangen, halten: halten.dy, bis: Math.round(halten.bis), klein: !!halten.klein } : null, aus: { art: AUS_ART, erledigt: aus.erledigt, weg: aus.weg, hell: aus.hell, drueber: !!halten.drueber }, fussN: FIGUREN.emre.fussN, laeuft: fig.laeuft, hund: hund.phase, hundZiel: hund.ziel, hundLaeuft: hund.laeuft, gewunken: gewunken, wartet: winkenWartet, rohY: rohY, weichY: weichY, licht: lichtP }; },
+      aus: function (w) { ausSetzen(!!w); },   /* Prüfen (Auftrag 36): Ausblenden von Hand, auch mit ?nacht= / ?gehen= */
       winken: function () { fig.laeuft = false; winken(); }, hund: function (z) { hund.ziel = -1; hundZiel(z); },
       /* Prüfen (28.09.): Winken auf festen Stand 0–1 setzen und zeichnen (bildgenaue Aufnahmen) */
       emre: function (x) { fig.laeuft = false; fig.phase = Math.max(0, Math.min(1, x)); FIGUREN.emre.zuletzt = ''; figurenZeichnen(); return Math.round(fig.phase * (FIGUREN.emre.anzahl - 1)); } };

@@ -31,7 +31,11 @@
 <link rel="preload" href="bilder/hero/figuren/emre3d-folge-1.webp?v=19" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
 <link rel="preload" href="bilder/hero/figuren/emre3d-folge-2.webp?v=19" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
 <link rel="preload" href="bilder/hero/figuren/hund-folge.webp?v=19" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
-<script>document.documentElement.classList.add('js'); if (new URLSearchParams(location.search).get('farbe') === 'b') document.documentElement.setAttribute('data-farbe', 'b');   /* Auftrag 28: vorsichtigere Farbe zum Vergleich */</script>
+<script>document.documentElement.classList.add('js'); if (new URLSearchParams(location.search).get('farbe') === 'b') document.documentElement.setAttribute('data-farbe', 'b');   /* Auftrag 28: vorsichtigere Farbe zum Vergleich */
+/* Auftrag 36 (Figur blendet nach der Wahl aus + Auswahl premium): EIN Schalter. false = bis zu ERGUNs OK bleibt live alles wie bisher, das Neue gibt es nur
+   mit ?karten=neu bzw. ?ausblenden=a|b (Vorschau). true = Neues ist Standard, der bisherige Look bleibt mit ?karten=alt erreichbar. */
+window.ERGUN_A36 = false;
+(function (k) { if (window.ERGUN_A36 ? k !== 'alt' : k === 'neu') document.documentElement.setAttribute('data-karten', 'neu'); })(new URLSearchParams(location.search).get('karten'));</script>
 
 <style>
 html, body { touch-action: pan-x pan-y; }
@@ -191,6 +195,24 @@ img { display: block; max-width: 100%; height: auto; }
 @keyframes schnuppe { 0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-24deg) scaleX(0.2); } 12% { opacity: 1; } 100% { opacity: 0; transform: translate3d(-260px, 116px, 0) rotate(-24deg) scaleX(1.2); } }
 /* ERGUN. und der Hund liegen in einer eigenen Hülle über allen Fassungen der Wiese (Füße, Schatten und Halme davor) */
 .szene__figuren { position: absolute; inset: 0; z-index: 1; }
+/* Auftrag 36 (ERGUN., 30.09.2026): Nach der Wahl hat die Figur ihren Job erledigt und verschwindet ruhig – als EINE Ebene (diese Hülle), nie
+   Bild für Bild gemischt. Ausnahme zur Regel oben: hier läuft für gut eine Sekunde ein kleiner Weichzeichner (nur auf der Figur, ca. 226 × 600 px).
+   a = „tritt zurück“ (kleiner, Tiefenunschärfe; js/szene.js spielt dazu die Schritte rückwärts) · b = „löst sich im Licht“ (js/szene.js hellt die
+   Figur zum Szenenlicht auf). Zurück (ganz oben / Schritt ①) blendet sie weich ein. Fußgras, Schatten und Mondschein der Figur gehen mit. */
+.szene__figur { position: absolute; transition: opacity 800ms var(--ease), transform 900ms var(--ease), filter 800ms var(--ease), visibility 0s; }
+.szene__figur.ist-weg { opacity: 0; visibility: hidden; }
+.szene__figur[data-aus="a"].ist-weg { transform: translate3d(0, -1.5%, 0) scale(0.92); filter: blur(3px);
+  transition: opacity 1200ms cubic-bezier(0.65, 0, 0.35, 1) 250ms, transform 1500ms cubic-bezier(0.65, 0, 0.35, 1), filter 1500ms cubic-bezier(0.65, 0, 0.35, 1), visibility 0s linear 1500ms; }
+.szene__figur[data-aus="b"].ist-weg { transform: translate3d(0, -5px, 0) scale(1.02); filter: blur(6px);
+  transition: opacity 1000ms cubic-bezier(0.65, 0, 0.35, 1) 200ms, transform 1200ms cubic-bezier(0.65, 0, 0.35, 1), filter 1200ms cubic-bezier(0.4, 0, 0.6, 1), visibility 0s linear 1200ms; }
+.szene__fuss { position: absolute; inset: 0; transition: opacity 700ms var(--ease); }
+.szene__mondlicht--figur { transition: opacity 700ms var(--ease); }
+.szene--figur-weg .szene__fuss, .szene--figur-weg .szene__mondlicht--figur { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .szene__figur, .szene__figur[data-aus].ist-weg { transform: none; filter: none; transition: opacity 250ms linear, visibility 0s linear 250ms; }
+  .szene__figur:not(.ist-weg) { transition: opacity 250ms linear, visibility 0s; }
+  .szene__fuss, .szene__mondlicht--figur { transition: opacity 250ms linear; }
+}
 .szene__vorn { z-index: 3; }   /* Auftrag 34: nach .szene__erde im Code = darüber; die Figur wird zur Unterkante hin per Maske ausgeblendet wie .szene__fade */
 /* alles, was beim Scrollen überblendet wird, auf eigene Grafikebene – sonst malt das Handy den Himmel jedes Bild neu */
 .szene__bild[data-licht="gold"], .szene__bild[data-licht="nacht"], .himmel--gold, .himmel--blau, .himmel--nacht, .sonne__glut, .sonne__hof, .sonne__kern--abend, .sonne, .mond { will-change: opacity; }
@@ -902,6 +924,142 @@ html[data-farbe="b"] .mf__linie i { background: var(--f-text); }
   .mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .mf-haken__box, .mf-haken__box svg, .btn { transition: none; }
   .mf-karte:hover, .mf-stufe:hover, .mf-chip:hover, .mf-komplett:hover { transform: none; }
 }
+.mf-chip__haken { display: none; }   /* Haken in den endo-Aufgaben: erst im neuen Look (Auftrag 36) */
+.mf-chip__name { display: contents; }   /* ?karten=alt: der Name steht wie bisher direkt in der Kopfzeile */
+
+/* ---------- Auftrag 36 (30.09.2026): Auswahl premium – „Emaille im Dämmerlicht“ ----------
+   Die Farbwelt bleibt (Nachtblau und Gold aus dem Titelbild), das Material wird edler: Fläche mit Verlauf (oben vom letzten Licht gestreift, unten
+   tiefer), feine Körnung gegen „flach digital“, 1 px helle Innenkante oben, mehrstufiger weicher Schatten. Licht: ein Schein folgt der Maus
+   (Kante Gold → Dämmerungsrosa), am Handy ein kurzer Lichtimpuls am Finger. Gewählt: hebt sich 2 px, die Goldkante leuchtet ruhig, das Häkchen
+   zeichnet sich als Linie; die nicht gewählten treten leicht zurück. Preis groß (Clash Display, Tabellenziffern), feine Trennlinie, kleine Beschriftung.
+   EINE Stelle für die Werte: die --k-… hier. Übergänge 150–260 ms, Versatz 50 ms, nichts hüpft; „Bewegung reduzieren“ = sofort.
+   Alter Look zum Vergleich: ?karten=alt (dann fehlt data-karten="neu" am <html>, alle Regeln hier greifen nicht). */
+@property --k-an { syntax: "<number>"; inherits: false; initial-value: 0; }
+:root {
+  --k-flaeche: linear-gradient(180deg, rgba(126, 154, 204, 0.17) 0%, rgba(94, 120, 168, 0.11) 40%, rgba(40, 51, 76, 0.26) 100%);           /* Emaille: oben heller, unten tiefes Blau */
+  --k-flaeche-wahl: linear-gradient(180deg, rgba(242, 180, 92, 0.14) 0%, rgba(110, 134, 180, 0.17) 42%, rgba(40, 51, 76, 0.32) 100%);     /* gewählt: Goldhauch von oben */
+  --k-flaeche-zurueck: linear-gradient(180deg, rgba(94, 120, 168, 0.08) 0%, rgba(40, 51, 76, 0.16) 100%);                                 /* nicht gewählt: tritt zurück */
+  --k-kante: linear-gradient(180deg, rgba(255, 214, 160, 0.48) 0%, rgba(148, 169, 197, 0.24) 32%, rgba(94, 120, 168, 0.10) 100%);         /* 1 px: Gold-Schimmer oben → Blau */
+  --k-kante-wahl: linear-gradient(180deg, #FFBE74 0%, #F2B45C 46%, rgba(242, 180, 92, 0.6) 100%);
+  --k-glanz: inset 0 1px 0 rgba(244, 241, 230, 0.10), inset 0 -1px 0 rgba(2, 5, 16, 0.42);                                                /* helle Innenkante oben, dunkle unten */
+  --k-tiefe: 0 1px 2px rgba(2, 5, 16, 0.5), 0 8px 16px -8px rgba(2, 5, 16, 0.6), 0 28px 48px -28px rgba(2, 5, 16, 0.9);
+  --k-tiefe-hoch: 0 2px 4px rgba(2, 5, 16, 0.5), 0 14px 26px -10px rgba(2, 5, 16, 0.7), 0 40px 64px -32px rgba(2, 5, 16, 0.95);
+  --k-tiefe-flach: 0 1px 2px rgba(2, 5, 16, 0.4), 0 10px 20px -14px rgba(2, 5, 16, 0.7);
+  --k-schein: 0 0 0 1px rgba(242, 180, 92, 0.16), 0 0 34px -10px rgba(242, 180, 92, 0.5), 0 22px 46px -30px rgba(255, 170, 96, 0.42);     /* ruhiges Leuchten der Goldkante */
+  --k-korn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.86 0 0 0 0 0.9 0 0 0 0 1 0.07 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23k)'/%3E%3C/svg%3E") 0 0 / 160px 160px;
+  --k-linie: linear-gradient(90deg, rgba(148, 169, 197, 0.34), rgba(148, 169, 197, 0.06) 78%, rgba(148, 169, 197, 0));                     /* feine Trennlinie, läuft nach rechts aus */
+  --k-dauer: 200ms;
+  --k-versatz: 50ms;
+}
+html[data-farbe="b"] {   /* Vergleich ?farbe=b (Auftrag 28): Gewählt in Creme statt Gold */
+  --k-flaeche-wahl: linear-gradient(180deg, rgba(232, 220, 194, 0.10) 0%, rgba(110, 134, 180, 0.14) 42%, rgba(40, 51, 76, 0.30) 100%);
+  --k-kante-wahl: linear-gradient(180deg, #F4F1E6 0%, #E8DCC2 46%, rgba(232, 220, 194, 0.6) 100%);
+  --k-schein: 0 0 0 1px rgba(232, 220, 194, 0.14), 0 0 30px -12px rgba(232, 220, 194, 0.4);
+}
+/* Material: Schritt ①, Website-Stufen, endo-Aufgaben, endo komplett, Betreuungs-Stufen, Zusammenfassung */
+[data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross, .mf .auswahl) { background: var(--k-korn), var(--k-flaeche); box-shadow: var(--k-glanz), var(--k-tiefe); }
+[data-karten="neu"] .lf-chip--gross { position: relative; border: 0; }
+[data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross) {
+  --k-licht: radial-gradient(340px circle at var(--mx, 50%) var(--my, 0px), rgba(255, 214, 160, calc(0.12 * var(--k-an))), rgba(199, 154, 184, calc(0.06 * var(--k-an))) 44%, rgba(199, 154, 184, 0) 74%);
+  background: var(--k-licht), var(--k-korn), var(--k-flaeche);
+  transition: transform var(--k-dauer) var(--ease-out), box-shadow var(--k-dauer) var(--ease-out), opacity var(--k-dauer) var(--ease-out), --k-an 260ms var(--ease-out); }
+[data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross)::before, [data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross)::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+[data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross, .mf .auswahl)::before { background: var(--k-kante); }
+/* Licht auf der Kante: folgt der Maus (js/preise.js setzt --mx/--my), sonst von oben */
+[data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross)::after { opacity: 0; transition: opacity 260ms var(--ease-out);
+  background: radial-gradient(230px circle at var(--mx, 50%) var(--my, 0px), rgba(255, 228, 188, 0.95), rgba(242, 180, 92, 0.62) 28%, rgba(199, 154, 184, 0.4) 56%, rgba(199, 154, 184, 0) 80%); }
+@media (hover: hover) and (pointer: fine) {
+  [data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross):hover { --k-an: 1; transform: translateY(-2px); box-shadow: var(--k-glanz), var(--k-tiefe-hoch); }
+  [data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross):hover::after { opacity: 1; }
+}
+/* gewählt – deutlich, aber edel */
+[data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross)[aria-pressed="true"] { background: var(--k-licht), var(--k-korn), var(--k-flaeche-wahl); box-shadow: var(--k-glanz), var(--k-schein), var(--k-tiefe-hoch); transform: translateY(-2px); }
+[data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross)[aria-pressed="true"]::before { background: var(--k-kante-wahl); }
+[data-karten="neu"] .mf-endo .mf-chip[aria-pressed="true"] { transform: none; }   /* Liste untereinander: gewählte Zeilen bleiben in der Reihe (gleiche Abstände) */
+/* nur eine wählbar (Schritt ①, Stufen, Betreuung): die anderen treten leicht zurück, damit die Wahl hervorsticht – Hover/Fokus holt sie wieder nach vorn */
+[data-karten="neu"] .hat-wahl > :is(.mf-karte, .mf-stufe, .lf-chip--gross):not([aria-pressed="true"]) { background: var(--k-licht), var(--k-korn), var(--k-flaeche-zurueck); box-shadow: var(--k-glanz), var(--k-tiefe-flach); opacity: 0.8; }
+[data-karten="neu"] .hat-wahl > :is(.mf-karte, .mf-stufe, .lf-chip--gross):not([aria-pressed="true"]):focus-visible { opacity: 1; }
+@media (hover: hover) and (pointer: fine) { [data-karten="neu"] .hat-wahl > :is(.mf-karte, .mf-stufe, .lf-chip--gross):not([aria-pressed="true"]):hover { opacity: 1; box-shadow: var(--k-glanz), var(--k-tiefe-hoch); } }
+[data-karten="neu"] .lf-chip--gross:disabled { opacity: 0.4; transform: none; }
+[data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross):active { transform: translateY(0) scale(0.985); }
+/* gerade gewählt (js/preise.js: .ist-frisch): anheben, Goldkante kommt, Licht am Zeiger/Finger; Handy beim Antippen: .ist-impuls */
+[data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross).ist-frisch { animation: k-wahl 260ms var(--ease-out) backwards; }
+[data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross).ist-frisch::before { animation: k-kante 320ms var(--ease-out) backwards; }
+[data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross):is(.ist-frisch, .ist-impuls)::after { animation: k-impuls 640ms var(--ease-out); }
+@keyframes k-wahl { from { transform: translateY(0); box-shadow: var(--k-glanz), var(--k-tiefe); } }
+@keyframes k-kante { from { opacity: 0.3; } }
+@keyframes k-impuls { 0% { opacity: 0; } 28% { opacity: 1; } }
+@keyframes k-punkt { from { opacity: 0; transform: scale(0.7); } }
+@keyframes k-haken { from { stroke-dashoffset: 21; } }
+@keyframes k-rein { from { opacity: 0; transform: translateY(10px); } }
+/* Häkchen zeichnet sich als Linie: rund = eine wählbar (Stufe, endo komplett), eckig = mehrere (Extras, endo-Aufgaben, Betreuung) */
+[data-karten="neu"] :is(.mf-stufe__haken, .mf-haken__box, .mf-chip__haken) svg path { stroke-dasharray: 21; stroke-dashoffset: 0; }
+[data-karten="neu"] .mf-stufe__haken { top: 20px; right: 18px; background: linear-gradient(180deg, var(--f-gold-hell), var(--f-gold)); color: var(--f-knopf-text); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 0 4px rgba(242, 180, 92, 0.14); opacity: 0; transition: none; }
+[data-karten="neu"] .mf-stufe__haken svg { stroke-width: 2.4; }
+[data-karten="neu"] [aria-pressed="true"] > .mf-stufe__haken { opacity: 1; }
+[data-karten="neu"] .ist-frisch > .mf-stufe__haken { animation: k-punkt 220ms var(--ease-out) backwards; }
+[data-karten="neu"] .ist-frisch :is(.mf-stufe__haken, .mf-haken__box, .mf-chip__haken) svg path { animation: k-haken 280ms var(--ease-out) 90ms backwards; }
+[data-karten="neu"] :is(.mf-haken__box, .mf-chip__haken, .haken__box) { border-radius: 7px; background: rgba(6, 10, 20, 0.5); box-shadow: inset 0 1px 2px rgba(2, 5, 16, 0.7); }
+[data-karten="neu"] .mf-haken__box svg { opacity: 1; visibility: hidden; stroke-width: 2.4; }
+[data-karten="neu"] .mf-haken[aria-checked="true"] .mf-haken__box svg, [data-karten="neu"] .mf-chip[aria-pressed="true"] .mf-chip__haken svg { visibility: visible; }
+[data-karten="neu"] .mf-haken[aria-checked="true"] .mf-haken__box, [data-karten="neu"] .mf-chip[aria-pressed="true"] .mf-chip__haken, [data-karten="neu"] .anfrage__haken input:checked + .haken__box {
+  background: linear-gradient(180deg, var(--f-gold-hell), var(--f-gold)); border-color: transparent; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 0 4px rgba(242, 180, 92, 0.13); }
+[data-karten="neu"] .mf-extra.ist-schon .mf-haken__box { background: rgba(242, 180, 92, 0.18); box-shadow: none; }
+[data-karten="neu"] .mf-chip__name { display: inline-flex; align-items: center; gap: 12px; min-width: 0; }
+[data-karten="neu"] .mf-chip__haken { flex: none; display: grid; place-items: center; width: 22px; height: 22px; border: 1.5px solid rgba(148, 169, 197, 0.55); color: var(--f-knopf-text); transition: border-color 150ms var(--ease-out); }
+[data-karten="neu"] .mf-chip__haken svg { width: 14px; height: 14px; stroke-width: 2.4; visibility: hidden; }
+[data-karten="neu"] .mf-chip__satz { padding-left: 34px; }
+@media (min-width: 720px) { [data-karten="neu"] .mf-endo .mf-chip__satz { padding-left: 0; } }
+@media (hover: hover) and (pointer: fine) { [data-karten="neu"] .mf-chip:hover .mf-chip__haken { border-color: var(--f-gold); } }
+[data-karten="neu"] .mf-extra.ist-an:not(.ist-schon) .mf-extra__preis { color: var(--f-gold-hell); }
+/* Typografie: Preis groß in Clash Display mit Tabellenziffern, kleine Beschriftung in Satoshi, feine Trennlinie */
+[data-karten="neu"] :is(.mf-karte__preis, .mf-stufe__preis) { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 6px; font-weight: 400; }
+[data-karten="neu"] .k-preis__zahl { font-family: var(--serif); font-size: 21px; line-height: 26px; font-weight: 500; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--f-text); }
+[data-karten="neu"] :is(.k-preis__vor, .k-preis__nach) { font-family: var(--sans); font-size: 13px; line-height: 18px; font-weight: 500; letter-spacing: 0; color: var(--f-gedaempft); }
+[data-karten="neu"] .mf-stufe__kopf { gap: 8px; padding-bottom: 16px; background: var(--k-linie) left bottom / 100% 1px no-repeat; }
+[data-karten="neu"] .mf-stufe__preis .k-preis__zahl { font-size: 26px; line-height: 30px; }
+[data-karten="neu"] .mf-komplett .mf-stufe__kopf { padding-bottom: 12px; }
+[data-karten="neu"] .mf-karte__dezent { font-weight: 500; }
+@media (min-width: 720px) {
+  [data-karten="neu"] .mf-karte { display: flex; flex-direction: column; min-height: 248px; }   /* Preise und Trennlinien aller drei Karten auf einer Linie unten */
+  [data-karten="neu"] .mf-karte__text { flex: 1; }
+  [data-karten="neu"] .mf-karte__preis { padding-top: 16px; background: var(--k-linie) left top / 100% 1px no-repeat; }
+  [data-karten="neu"] .mf-karte__preis .k-preis__zahl { font-size: 30px; line-height: 34px; }
+  [data-karten="neu"] .mf-stufe__preis .k-preis__zahl { font-size: 28px; line-height: 32px; }
+}
+@media (min-width: 720px) and (max-width: 899px) { [data-karten="neu"] .mf-karte { padding: 20px; } [data-karten="neu"] .mf-karte__titel { font-size: 21px; line-height: 28px; } }   /* schmale Dreierreihe: „Automatisierung“ bleibt in der Karte */
+/* „Empfehlung“: schlichtes Schild mit dem Vierstern der Marke, keine Knallfarbe */
+[data-karten="neu"] .mf-stufe__schild { left: 20px; display: inline-flex; align-items: center; gap: 6px; padding: 2px 11px 2px 9px; border: 0; background: linear-gradient(180deg, #17233F, #101B34); color: var(--f-gold-hell); letter-spacing: 0.01em;
+  box-shadow: 0 0 0 1px rgba(242, 180, 92, 0.44), inset 0 1px 0 rgba(255, 228, 188, 0.14), 0 8px 16px -10px rgba(2, 5, 16, 0.95); }
+[data-karten="neu"] .mf-stufe__schild::before { content: ""; width: 8px; height: 8px; background: currentColor; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); }
+/* Zusammenfassung, Summenleiste, Antwort-Weg, Knöpfe: dasselbe Material */
+[data-karten="neu"] .mf .auswahl { padding: 24px; }
+[data-karten="neu"] .auswahl__summen { border-top: 0; background: var(--k-linie) left top / 100% 1px no-repeat; }
+[data-karten="neu"] .auswahl__summen b { font-weight: 500; letter-spacing: -0.02em; }
+[data-karten="neu"] .mf-summe b { font-weight: 500; letter-spacing: -0.02em; }
+@media (min-width: 1024px) { [data-karten="neu"] .mf-summe { border-top: 0; background: linear-gradient(90deg, rgba(242, 180, 92, 0.7), rgba(242, 180, 92, 0.12) 80%, rgba(242, 180, 92, 0)) left top / 100% 1px no-repeat; } }
+@media (max-width: 1023px) { [data-karten="neu"] .mf-summe { background: var(--k-korn), linear-gradient(180deg, rgba(22, 34, 62, 0.95), rgba(10, 18, 38, 0.95)); box-shadow: inset 0 1px 0 rgba(244, 241, 230, 0.10), 0 0 0 1px rgba(148, 169, 197, 0.18), 0 18px 44px -12px rgba(2, 5, 16, 0.85); } }
+[data-karten="neu"] .weg__option span { background: var(--k-flaeche); box-shadow: var(--k-glanz); transition: border-color 200ms var(--ease-out), color 200ms var(--ease-out), box-shadow 200ms var(--ease-out); }
+[data-karten="neu"] .weg__option input:checked + span { background: var(--k-flaeche-wahl); box-shadow: var(--k-glanz), 0 0 26px -10px rgba(242, 180, 92, 0.5); }
+[data-karten="neu"] .btn--wa { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 0 rgba(122, 62, 12, 0.28), 0 1px 2px rgba(2, 5, 16, 0.5), 0 12px 26px -12px rgba(255, 170, 96, 0.6), 0 28px 48px -30px rgba(255, 170, 96, 0.55); }
+[data-karten="neu"] .btn--hell { background: linear-gradient(180deg, rgba(244, 241, 230, 0.10), rgba(244, 241, 230, 0.03)); border-color: rgba(244, 241, 230, 0.3); box-shadow: inset 0 1px 0 rgba(244, 241, 230, 0.12), 0 12px 26px -16px rgba(2, 5, 16, 0.95); }
+@media (hover: hover) and (pointer: fine) {
+  [data-karten="neu"] .btn--wa:hover { transform: translateY(-1px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(122, 62, 12, 0.28), 0 2px 4px rgba(2, 5, 16, 0.5), 0 16px 32px -12px rgba(255, 170, 96, 0.72), 0 32px 54px -30px rgba(255, 170, 96, 0.6); }
+  [data-karten="neu"] .btn--hell:hover { transform: translateY(-1px); }
+  [data-karten="neu"] .btn:active { transform: scale(0.97); }
+}
+/* Mikro-Bewegung: Karten erscheinen gestaffelt (50 ms Versatz), beim Schrittwechsel und wenn Schritt ① ins Bild kommt */
+@media (prefers-reduced-motion: no-preference) {
+  [data-karten="neu"] .mf-schritt:is(.ist-rein, .ist-rein--zurueck, .k-auftritt) :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett) { animation: k-rein 260ms var(--ease-out) backwards; animation-delay: calc(var(--i, 0) * var(--k-versatz)); }
+  [data-karten="neu"] .mf-schritt.k-wartet .mf-karte { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross), [data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross)::before, [data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross)::after,
+  [data-karten="neu"] :is(.mf-stufe__haken, .mf-haken__box, .mf-chip__haken) , [data-karten="neu"] :is(.mf-stufe__haken, .mf-haken__box, .mf-chip__haken) svg path, [data-karten="neu"] .weg__option span { transition: none; animation: none; }
+  [data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross):is(:hover, :active, [aria-pressed="true"]), [data-karten="neu"] .btn:is(:hover, :active) { transform: none; }
+}
 </style>
 </head>
 <body>
@@ -1075,7 +1233,7 @@ html[data-farbe="b"] .mf__linie i { background: var(--f-text); }
 </footer>
 <div class="wechsel" aria-hidden="true"></div>
 
-<script src="js/szene.js?v=60"></script>
+<script src="js/szene.js?v=63"></script>
 <script src="js/wolken.js?v=6" defer></script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
@@ -1097,7 +1255,7 @@ html[data-farbe="b"] .mf__linie i { background: var(--f-text); }
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
-<script src="js/preise.js?v=8"></script>
+<script src="js/preise.js?v=9"></script>
 <script>
 /* Kostenloses Erstgespräch: eine Karte mit allen Feldern (seit 25.09. abends keine Schritte mehr).
    Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)
