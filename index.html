@@ -36,12 +36,12 @@ window.ERGUN_A36 = true;
 <script>
 /* Titelbild-Schalter (01.10.2026). ?titel=… wählt, sonst gilt ERGUN_TITEL.
    · alt       = gezeichnete Landschaft mit Figur + Hund
-   · maschine  = tropisches Büro, scroll-gebunden mit Karten ①–④ (bis zur Kristall-Freigabe live)
+   · maschine  = tropisches Büro, scroll-gebunden mit Karten ①–④ (live bis 01.10. abends)
    · dschungel = tropisches Büro, neueste Fassung: 4K, geführt, Premium-Angebote (eingelagert – Tag dschungel-final, _archiv/ERGUN-Dschungel-2026-10-01/)
      (?titel=neu = derselbe Stand)
-   · kristall  = neue Startseite (in Arbeit)
+   · kristall  = Startseite seit 01.10.2026 (Emres „OK“) – Vorlage „Lycoris Specimen“, pinker Brillant
    Die Dschungel-Fassung liegt als <template> im HTML: ohne ihren Schalter lädt sie nichts (keine Bilder, kein CSS, kein Skript). */
-window.ERGUN_TITEL = 'maschine';
+window.ERGUN_TITEL = 'kristall';
 (function () {
   var t = new URLSearchParams(location.search).get('titel'); if (t === 'neu') t = 'dschungel'; if (t === 'a') t = 'alt';
   var wahl = ['alt', 'maschine', 'dschungel', 'kristall'].indexOf(t) >= 0 ? t : window.ERGUN_TITEL;
