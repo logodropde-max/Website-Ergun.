@@ -228,6 +228,14 @@ window.LEITFADEN = {
     beides: '<rect x="4" y="11" width="28" height="22" rx="4"/><path d="M4 17h28"/><circle cx="37" cy="30" r="7"/><ellipse cx="37" cy="30" rx="11" ry="4" transform="rotate(-20 37 30)"/>'
   };
   function icon(n) { return '<svg class="lf-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICON[n] || '') + '</svg>'; }
+  /* Premium (01.10., ?titel=neu – ERGUN.: „Blau-Gelb wirkt billig“): feine Linienzeichnungen statt Symbolen, nur Aussehen */
+  var PREMIUM = document.documentElement.classList.contains('titel-neu');
+  var GRAFIK = {
+    website: '<rect x="8" y="8" width="104" height="58" rx="5"/><path d="M8 18h104"/><path d="M14.5 13h.01M19.5 13h.01M24.5 13h.01"/><path d="M18 30h32M18 37h24M18 44h28"/><rect x="18" y="51" width="16" height="5" rx="2.5"/><rect x="62" y="26" width="40" height="30" rx="2.5"/><path d="M62 50l11-9 8 6 7-5 14 10"/>',
+    endo: '<circle cx="18" cy="37" r="8"/><path d="M26 37h19"/><path d="M41 33l4 4-4 4"/><rect x="47" y="26" width="26" height="22" rx="5"/><path d="M53 33h14M53 38h10M53 43h12"/><path d="M73 37h19"/><path d="M88 33l4 4-4 4"/><circle cx="102" cy="37" r="8"/><path d="M98.5 37.5l2.5 2.5 4.5-5"/>',
+    beides: '<rect x="8" y="12" width="58" height="42" rx="4"/><path d="M8 20h58"/><path d="M15 29h22M15 35h16M15 41h19"/><rect x="42" y="27" width="17" height="15" rx="2"/><path d="M66 33h14"/><path d="M76 29l4 4-4 4"/><rect x="82" y="24" width="20" height="18" rx="4"/><path d="M87 30h10M87 35h7"/><circle cx="92" cy="54" r="6"/><path d="M92 42v6"/><path d="M89.5 54.5l2 2 3.5-4"/>'
+  };
+  function grafik(n) { return '<svg class="mf-grafik" viewBox="0 0 120 72" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (GRAFIK[n] || '') + '</svg>'; }
   var HAKEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 12.5l4.5 4.5L18.5 7.5"/></svg>';
 
   /* ---------- Antworten (nur Arbeitsspeicher) ---------- */
@@ -279,7 +287,7 @@ window.LEITFADEN = {
       if (A.art) g.className += ' hat-wahl';
       L.art.optionen.forEach(function (o, nr) {
         var b = reihe(el('button', 'mf-karte'), nr); b.type = 'button'; b.setAttribute('aria-pressed', String(A.art === o.id)); b.setAttribute('data-fokus', 'art-' + o.id);
-        var bild = el('span', 'mf-karte__bild'); bild.innerHTML = icon(o.id); b.appendChild(bild);
+        var bild = el('span', 'mf-karte__bild'); bild.innerHTML = PREMIUM ? grafik(o.id) : icon(o.id); b.appendChild(bild);
         var txt = el('span', 'mf-karte__text'), kopf = el('span', 'mf-karte__kopf');
         kopf.appendChild(el('span', 'mf-karte__titel', o.titel)); if (o.dezent) kopf.appendChild(el('span', 'mf-karte__dezent', o.dezent));
         txt.appendChild(kopf); txt.appendChild(el('span', 'mf-karte__satz', o.satz)); txt.appendChild(preisEl('span', 'mf-karte__preis', preis[o.id])); b.appendChild(txt);
@@ -306,6 +314,10 @@ window.LEITFADEN = {
         var kopf = el('span', 'mf-stufe__kopf'); kopf.appendChild(el('span', 'mf-stufe__name', s.name)); kopf.appendChild(preisEl('span', 'mf-stufe__preis', P.betrag(s))); b.appendChild(kopf);
         var ul = el('span', 'mf-stufe__punkte'); (L.stufenKurz[s.id] || []).forEach(function (t) { var z = el('span', 'mf-stufe__punkt'); z.innerHTML = HAKEN; z.appendChild(document.createTextNode(t)); ul.appendChild(z); }); b.appendChild(ul);
         var h = el('span', 'mf-stufe__haken'); h.innerHTML = HAKEN; b.appendChild(h);
+        if (PREMIUM) {   /* monatlich klein unter dem Preis (günstigste Betreuung aus PREISE) + „Auswählen“ als Rand-Knopf */
+          kopf.appendChild(el('span', 'mf-stufe__monat', 'zzgl. Betreuung ab ' + P.euro(P.betreuung.stufen[0].monat) + MONAT));
+          b.appendChild(el('span', 'mf-stufe__waehlen', A.stufe === s.id ? 'Ausgewählt' : 'Auswählen'));
+        }
         b.addEventListener('click', function () { A.stufe = s.id; neuZeichnen('stufe-' + s.id); });
         g.appendChild(b);
       });

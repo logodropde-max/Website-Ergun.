@@ -12,7 +12,7 @@
      Logik: js/maschine-foto.js. Vorgänger zum Vergleich: maschine-vorschau-v2.html. -->
 <link rel="preload" as="image" type="image/avif" media="(min-aspect-ratio: 4/5)" imagesrcset="bilder/hero/tropen/quer-morgen-1280.avif 1280w, bilder/hero/tropen/quer-morgen-1920.avif 1920w, bilder/hero/tropen/quer-morgen-2560.avif 2560w" imagesizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw" fetchpriority="high">
 <link rel="preload" as="image" type="image/avif" media="(max-aspect-ratio: 4/5)" imagesrcset="bilder/hero/tropen/hoch-morgen-720.avif 720w, bilder/hero/tropen/hoch-morgen-1080.avif 1080w, bilder/hero/tropen/hoch-morgen-1440.avif 1440w" imagesizes="100vw" fetchpriority="high">
-<link rel="stylesheet" href="maschine.css?v=1">
+<link rel="stylesheet" href="maschine.css?v=2">
 <style>
 @font-face { font-family: "Instrument Serif"; src: url("schriften/InstrumentSerif-Regular.woff2") format("woff2"); font-display: swap; }
 @font-face { font-family: "Satoshi"; src: url("schriften/Satoshi-Variable.woff2") format("woff2"); font-weight: 300 900; font-display: swap; }
@@ -47,6 +47,7 @@ html, body { margin: 0; background: #0A0D12; color: #F4F1E6; font-family: "Satos
     <div class="t-dunkel" data-dunkel aria-hidden="true"></div>
     <img class="t-blaetter" data-blaetter src="bilder/hero/tropen/blaetter-900.webp" srcset="bilder/hero/tropen/blaetter-900.webp 900w, bilder/hero/tropen/blaetter-1400.webp 1400w" sizes="(max-aspect-ratio: 4/5) 96vw, 44vw" alt="" aria-hidden="true" decoding="async">
     <div class="t-verlauf" aria-hidden="true"></div>
+    <div class="m-weiter" data-weiter aria-hidden="true"><span>Scrollen</span><i></i></div>
 
     <div class="m-text">
       <p class="t-klein">Digitalstudio für Unternehmen</p>
@@ -128,6 +129,6 @@ html, body { margin: 0; background: #0A0D12; color: #F4F1E6; font-family: "Satos
 <div class="m-danach">Hier folgt auf der echten Seite der Anfrage-Ablauf („Was brauchen Sie?“ → „Ihre Anfrage“).</div>
 <div class="m-hinweis" data-hinweis>Vorschau v3 · langsam scrollen · <a href="maschine-vorschau-v2.html">vorher (v2)</a></div>
 <script>window.TROPEN_SCHIRM = {"quer": {"w": 3840, "h": 2160, "ecken": [[0.64932, 0.455], [0.81339, 0.45338], [0.80784, 0.66176], [0.64042, 0.64745]]}, "hoch": {"w": 2160, "h": 3840, "ecken": [[0.34755, 0.5419], [0.65931, 0.54214], [0.66611, 0.65406], [0.33833, 0.65396]]}};</script>
-<script src="js/maschine-foto.js?v=9"></script>
+<script src="js/maschine-foto.js?v=11"></script>
 </body>
 </html>

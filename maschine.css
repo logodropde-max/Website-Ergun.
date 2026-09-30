@@ -194,3 +194,16 @@
   .m-schritt, .m-fort__teil, .m-fort li > span, .m-fort li > i::after { transition: none; }
   .t-video { display: none; }
 }
+
+/* ---------- Neu (01.10., ?titel=neu): geführte Bewegung, ohne Karten ①–④ und Fortschritt, direkt in die Angebote ---------- */
+.titel-neu .m-strecke { height: 100svh; }
+.titel-neu .m-buehne { position: relative; height: 100svh; }
+.titel-neu .t-karten, .titel-neu .m-brief, .titel-neu .m-schritte, .titel-neu .m-fort, .titel-neu .t-dunkel { display: none; }
+html.m-halt, html.m-halt body { overflow: hidden; overscroll-behavior: none; }
+.m-weiter { position: absolute; left: 50%; bottom: max(22px, env(safe-area-inset-bottom)); z-index: 6; display: none; flex-direction: column; align-items: center; gap: 8px;
+  transform: translateX(-50%); color: rgba(243, 240, 234, 0.82); font-size: 13px; letter-spacing: 0.02em; opacity: 0; transition: opacity 400ms var(--ease); pointer-events: none; }
+.titel-neu .m-weiter { display: flex; }
+.m-weiter.ist-an { opacity: 1; }
+.m-weiter i { width: 11px; height: 11px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); animation: m-puls 1.8s ease-in-out infinite; }
+@keyframes m-puls { 0%, 100% { transform: translateY(-2px) rotate(45deg); opacity: 0.45; } 50% { transform: translateY(4px) rotate(45deg); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .m-weiter { display: none !important; } }

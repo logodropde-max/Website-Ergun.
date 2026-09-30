@@ -1,5 +1,12 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
+## Startseite „Kristall“ – Vorschau `?titel=kristall` (01.10.2026, live erst nach Emres OK, Rückweg Tag `vor-kristall`)
+- Ausnahme auf Emres Wunsch: Aufbau der Vorlage „Lycoris Specimen“ 1:1. Dateien: `js/kristall.js` (Bühne, WebGL-Stein, 2D-Ersatz, Inhalte aus `PREISE`), `kristall.css` (Tokens `--k-…`, Container-Abfragen auf die Bühne `k`), Markup `<template id="kristall-vorlage">` in `index.html` (wird nur bei `ERGUN_WAHL === 'kristall'` eingesetzt; CSS/Skript lädt nur dann). `kristall-vorschau.html` leitet auf `./?titel=kristall`.
+- Bild 06 = das echte Formular: `kristall.js` hängt `<main id="inhalt">` in `.k-root` (margin-top −100svh), dazu die Fußleiste `.k-fussleiste`.
+- Stein: `PROFIL_0`/`PROFIL_1` (Brillant-Maße), `bauplan(seed)` (Begleitsteine, Funken, Keim), `geometrie(c)` je Bild-Koordinate 0…5. Kamera `KEYS` / `KEYS_TALL` (Hochformat) / `KEYS_KURZ` (Handy < 720 px hoch). Schalter: `?seed=`, `?krone=rand`, `?farbe=orange`, `?knopf=pink`, `?schrift=b`, `?webgl=aus`. Prüfgriff `window.__kristall.{zustand, geometrie, springe}`.
+- Prüfen: Einzelbilder je Bild mit `cdp-shot.mjs` (Scroll auf `strecke.offsetHeight * a`, a = 0 · 0.2 … 1), Tests `kristall.test.mjs`.
+- Freischalten nach OK: `window.ERGUN_TITEL = 'kristall';` + Tests `auftrag44` (Standard) anpassen.
+
 ## Titelbild „Maschine“ – tropisches Büro LIVE auf der Startseite (Auftrag 44, 01.10.2026, Rückweg Tag `vor-titel-maschine`)
 - `index.html`: Schalter `window.ERGUN_TITEL = 'maschine'` im Kopf (`?titel=alt`/`?titel=a` = alte Szene, dann laden `szene.js`, `wolken.js` und die Figur-Vorlader), Markup `.m-strecke#titel` vor `<main>`, Skripte über einen kleinen Lader (`async = false`). `#preise` hat `data-maschine-ziel` und `margin-top: -100svh` (nur ohne „Bewegung reduzieren“) – `maschine-foto.js` hält ihn oben fest und öffnet ihn per clip-path aus dem Laptop-Bildschirm. Gemeinsames CSS `maschine.css` (auch für `maschine-vorschau.html`). Nav-Marke „nach oben“ zeigt auf `#titel`.
 

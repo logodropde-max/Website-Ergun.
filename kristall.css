@@ -1,0 +1,238 @@
+/* ERGUN. – Startseite „Kristall“ (01.10.2026, Vorschau ?titel=kristall – Ausnahme auf ERGUNs Wunsch: Aufbau, Scroll-Ablauf und Look der
+   Vorlage „Lycoris Specimen“ (07 Vorlagen/Lycoris-Specimen-Vorlage.tsx.txt) 1:1, nur Inhalt und Objekt getauscht: ein pinker Chrom-Kristall,
+   der über die sechs Bilder wächst). Logik: js/kristall.js. Alles hängt an .k-… bzw. html.titel-kristall – die übrige Seite bleibt unberührt.
+   Farben wie die Vorlage: ink (Grund) · bone (warmer Schrift-Ton, bewusst nicht Weiß) · Akzent Pink statt Karminrot (sparsam: Punkte, Linien).
+   Vergleiche: ?farbe=orange (Chrom-Kristall, Orange-Akzent) · ?knopf=pink („Anfrage senden“ pink statt ERGUN.-Orange) · ?schrift=b. */
+html.titel-kristall {
+  --k-ink: #050505; --k-bone: #b6b095; --k-akzent: #E8A0BF; --k-akzent-tief: #9E4F74; --k-marke: #FF5A1F;
+  --k-display: "Instrument Serif", Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --k-sans: "Satoshi", "Helvetica Neue", Helvetica, Arial, ui-sans-serif, system-ui, sans-serif;
+  --k-ease: cubic-bezier(.2, .8, .2, 1);
+  background: var(--k-ink);
+}
+html.titel-kristall[data-farbe="orange"] { --k-akzent: #FF5A1F; --k-akzent-tief: #8A2E0E; }
+html.titel-kristall[data-schrift="b"] { --k-display: "Clash Display", "Clash Ersatz", system-ui, sans-serif; }
+.titel-kristall body { background: var(--k-ink); }
+.titel-kristall .nav { display: none; }   /* die Vorlage hat ihre eigene Navigation (01–06 rechts) */
+
+/* ---------- Bühne (klebend) + Strecke = Zeitachse. Höhe wie die Vorlage: 1 Bühne + 5 × 1,2 Bühnen Scroll ---------- */
+.k-root { position: relative; background: var(--k-ink); }
+.k-buehne { position: sticky; top: 0; z-index: 1; height: 100svh; min-height: 480px; overflow: hidden; color: var(--k-bone); background: var(--k-ink);
+  container-type: size; container-name: k; user-select: none; -webkit-user-select: none; }
+.k-strecke { height: calc(100svh * 6); }
+.k-rahmen { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 90% at 50% 45%, transparent 55%, color-mix(in srgb, var(--k-bone) 8%, transparent) 100%); }
+.k-muster { position: absolute; inset: -10%; pointer-events: none; opacity: 0; background-size: 520px 520px; background-repeat: repeat; mix-blend-mode: screen; }
+.k-schein { position: absolute; left: 0; top: 0; border-radius: 50%; pointer-events: none; will-change: transform;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--k-akzent) 24%, transparent), color-mix(in srgb, var(--k-akzent) 7%, transparent) 45%, transparent 100%); }
+.k-leinwand { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-width: none; }
+.k-standbild { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: none; }
+.k-korn { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.09; mix-blend-mode: screen; }
+.k-ebene { position: absolute; inset: 0; pointer-events: none; }
+.k-display { font-family: var(--k-display); font-weight: 400; }
+.k-sans { font-family: var(--k-sans); }
+[data-sc] { opacity: 0; }
+
+/* Buchstaben des Cover-Worts: erscheinen einmal gestaffelt, dann übernimmt der Scroll */
+.k-char { display: inline-block; animation: k-rein 1.3s var(--k-ease) both; }
+@keyframes k-rein { from { opacity: 0; transform: translateY(0.35em) rotate(4deg); filter: blur(10px); } to { opacity: 1; transform: none; filter: blur(0); } }
+.k-g { display: inline-block; transition: color .25s, transform .25s var(--k-ease); cursor: default; }
+.k-g:hover { color: var(--k-akzent); transform: translateY(-0.08em) scale(1.12); }
+
+/* ---------- 01 Cover ---------- */
+.k-cover-oben { position: absolute; left: 5cqw; right: 5cqw; top: 5cqh; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.k-cover-titel { font-size: clamp(20px, 3.3cqw, 46px); line-height: 0.88; letter-spacing: 0.02em; text-transform: uppercase; }
+.k-cover-text { max-width: 25cqw; margin: 0; font-size: clamp(10px, 0.95cqw, 13px); line-height: 1.35; text-align: left; text-wrap: pretty; }
+.k-cover-liste { list-style: none; margin: 0; padding: 0; font-size: clamp(10px, 0.95cqw, 13px); line-height: 1.35; }
+.k-cover-rechts { font-size: clamp(18px, 2.6cqw, 38px); line-height: 0.9; text-align: right; text-transform: uppercase; }
+.k-wort { position: absolute; left: 50%; top: 61%; width: max-content; transform: translate(-50%, -50%); font-size: min(21cqw, 33cqh); line-height: 1; white-space: nowrap; }
+.k-wort h1 { margin: 0; font: inherit; white-space: nowrap; letter-spacing: normal; }
+.k-wort__klein { position: absolute; right: 0.04em; bottom: 84%; font-size: max(15px, 0.14em); letter-spacing: 0.02em; }
+.k-wort [data-ch] { display: inline-block; will-change: transform; }
+.k-wort .k-punkt-marke { color: var(--k-akzent); }
+.k-cover-unten { position: absolute; left: 5cqw; right: 5cqw; bottom: 5cqh; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+.k-signatur { display: flex; align-items: center; gap: 12px; }
+.k-jahr { font-size: clamp(20px, 2.4cqw, 34px); letter-spacing: -0.02em; font-weight: 300; }
+.k-von { font-size: 9px; line-height: 1.2; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid color-mix(in srgb, var(--k-bone) 50%, transparent); padding: 0 6cqw 6px 0; }
+.k-spalten { display: flex; gap: 20px; color: var(--k-akzent); font-size: 8px; line-height: 1.25; letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* ---------- 02 Krone ---------- */
+.k-mitte-klein { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: clamp(10px, 1.1cqw, 14px); }
+.k-bildnr { position: absolute; left: 5cqw; bottom: 5cqh; font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; }
+.k-bildnr b { color: var(--k-akzent); font-weight: 400; }
+
+/* ---------- 03 Websites (Muster-Blatt) ---------- */
+.k-spec { position: absolute; left: 6cqw; right: 6cqw; top: 12cqh; bottom: 20cqh; display: grid; align-items: center; grid-template-columns: 1fr min(30cqw, 34cqh) 1fr; column-gap: 2cqw; pointer-events: auto; }
+.k-spec-seite { position: relative; display: flex; flex-direction: column; gap: 2.4cqh; }
+.k-spec-seite--r { align-items: flex-end; text-align: right; }
+.k-spec-block { position: relative; }
+.k-spec-zeile { white-space: nowrap; }
+/* Beschriftung je Block: klein über dem Wort (lesbar statt der gedrehten 8-px-Zeile der Vorlage) */
+.k-seitlich { display: block; margin-bottom: 0.7em; font-size: 10px; letter-spacing: 0.22em; color: var(--k-akzent); opacity: 0.9; line-height: 1.2; white-space: nowrap; font-family: var(--k-sans); text-transform: uppercase; }
+.k-spec-mitte { position: relative; height: 100%; text-align: center; }
+.k-spec-name { position: absolute; width: 100%; top: 40%; font-size: min(2.6cqw, 3.6cqh); line-height: 1; }
+.k-spec-name small { display: block; font-size: 0.5em; margin-top: 0.2em; }
+.k-spec-lupe { position: absolute; width: 100%; top: 57%; line-height: 1.05; }
+.k-spec-lupe__wort { font-size: min(2.8cqw, 3.8cqh); transition: font-size .35s var(--k-ease), color .35s; }
+.k-spec-lupe.ist-an .k-spec-lupe__wort { font-size: min(5.2cqw, 7cqh); color: var(--k-akzent); }
+.k-spec-lupe__satz { font-family: var(--k-sans); font-size: 8px; letter-spacing: 0.25em; opacity: 0.6; min-height: 1.3em; text-transform: uppercase; margin-top: 0.6em; }
+.k-spec-lupe.ist-an .k-spec-lupe__satz { letter-spacing: 0.08em; text-transform: none; font-size: 11px; opacity: 0.85; }
+.k-spec-preise { margin-top: 1em; font-size: min(2.2cqw, 3cqh); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.k-spec-linie { position: absolute; left: 6cqw; right: 6cqw; bottom: 15.5cqh; height: 1px; background: color-mix(in srgb, var(--k-bone) 25%, transparent); transform-origin: left; }
+.k-spec-extras { position: absolute; left: 6cqw; right: 6cqw; bottom: 8cqh; text-align: center; font-size: min(1.9cqw, 2.6cqh); line-height: 1.35; pointer-events: auto; }
+.k-spec-extras .k-g + .k-g::before { content: "·"; color: var(--k-akzent); margin: 0 0.45em; }
+.k-spec-extras-kurz { display: none; }
+
+/* ---------- 04 Stufen (Fächer) ---------- */
+.k-faecher { position: absolute; left: 50%; top: 13cqh; transform: translateX(-50%); font-size: min(15cqw, 12.5cqh); line-height: 0.9; text-transform: uppercase; white-space: nowrap; text-align: center; }
+.k-faecher__seite { position: absolute; top: 0.35em; font-size: 0.12em; text-transform: none; white-space: nowrap; }
+.k-faecher__seite--l { right: 100%; margin-right: 1.2em; text-align: right; line-height: 1.25; }
+.k-faecher__seite--r { left: 100%; margin-left: 1.2em; }
+.k-stufe { position: relative; }
+.k-stufe__preis { position: absolute; left: 100%; top: 0.22em; margin-left: 0.5em; font-size: 0.16em; line-height: 1.1; text-transform: none; text-align: left; font-variant-numeric: tabular-nums; }
+.k-stufe__preis { color: var(--k-akzent); width: min(22cqw, 320px); white-space: normal; }
+.k-stufe__preis i { display: block; font-style: normal; color: color-mix(in srgb, var(--k-bone) 72%, transparent); }
+.k-faecher-unten { position: absolute; left: 0; right: 0; bottom: 5cqh; display: flex; justify-content: center; }
+.k-faecher-endo { font-size: 9px; letter-spacing: 0.5em; text-transform: uppercase; white-space: nowrap; padding-left: 0.5em; }
+
+/* ---------- 05 Anspruch (Bloom) ---------- */
+.k-bloom { position: absolute; left: 9cqw; top: 34cqh; font-size: min(9.5cqw, 13cqh); line-height: 0.82; pointer-events: auto; }
+.k-bloom__klein { font-size: 0.4em; line-height: 1.1; margin-top: -0.1em; margin-bottom: 0.25em; }
+.k-bloom__fuss { font-size: 9px; letter-spacing: 0.25em; margin-top: 3cqh; opacity: 0.7; text-transform: uppercase; }
+
+/* ---------- 06 Anfrage: Bühnen-Teil (hinter dem Formular) ---------- */
+.k-fuss { position: absolute; left: 5cqw; right: 5cqw; bottom: 4.5cqh; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-size: clamp(10px, 1.5cqw, 20px); letter-spacing: 0.04em; pointer-events: auto; }
+.k-fuss a { color: inherit; text-decoration: none; white-space: nowrap; }
+
+/* ---------- Navigation 01–06 rechts ---------- */
+.k-nav { position: absolute; right: 2cqw; top: 50%; transform: translateY(-50%); z-index: 4; display: flex; flex-direction: column; align-items: flex-end; font-family: var(--k-sans); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; pointer-events: auto; }
+.k-nav button { display: flex; align-items: center; justify-content: flex-end; gap: 10px; min-height: 22px; padding: 5px 0; border: 0; background: none; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+.k-nav .k-strich { display: block; height: 1px; width: 14px; background: currentColor; opacity: 0.45; transition: width .4s var(--k-ease), opacity .3s, background-color .3s; }
+.k-nav .k-lab { opacity: 0; transform: translateX(6px); transition: opacity .3s, transform .3s; }
+.k-nav button:hover .k-lab, .k-nav button:focus-visible .k-lab { opacity: 1; transform: none; }
+.k-nav button[aria-current="step"] .k-strich { width: 34px; opacity: 1; background: var(--k-akzent); }
+.k-nav button:focus-visible { outline: 1px solid var(--k-akzent); outline-offset: 4px; }
+
+/* ---------- Hochformat / schmal – wie die Vorlage ---------- */
+.k-breit { display: block; } .k-hoch { display: none; }
+@container k (orientation: portrait) {
+  .k-breit { display: none; } .k-hoch { display: block; }
+  .k-bloom { left: 7cqw; top: auto; bottom: 13cqh; }
+  .k-spec { grid-template-columns: 1fr 1fr; }
+  .k-spec-mitte { display: none; }
+}
+@container k (max-width: 720px) {
+  .k-spec-extras .k-g { display: none; }
+  .k-spec-extras-kurz { display: block; font-size: 17px; }
+  .k-seitlich { white-space: normal; font-size: 9px; letter-spacing: 0.16em; }
+}
+@container k (max-width: 720px) { .k-weg-sm { display: none !important; } .k-faecher-endo { white-space: normal; text-align: center; letter-spacing: 0.22em; max-width: 86cqw; line-height: 1.8; } }
+@container k (max-width: 1020px) { .k-weg-md { display: none !important; } }
+/* schmale Bühne: Preis + „für wen“ unter jede Stufe statt daneben (sonst läuft es rechts aus dem Bild) */
+@container k (max-width: 1020px) {
+  .k-faecher { top: 9cqh; }
+  .k-faecher__seite { font-size: 11px; }
+  .k-stufe__preis { position: static; display: block; width: auto; margin: 0.35em auto 1em; font-size: 13px; line-height: 1.35; text-align: center; white-space: normal; max-width: 78cqw; }
+  .k-stufe__preis i { font-size: 12px; }
+}
+/* kleine Handys (375 × 667): nur der Preis, sonst stößt der Text an den Kristall */
+@container k (max-width: 1020px) and (max-height: 720px) { .k-stufe__preis i { display: none; } .k-stufe__preis { margin-bottom: 0.6em; } }
+
+/* ---------- 06 Anfrage: das echte Formular (#preise, gleiche Felder/Logik/Tests) im Look der Vorlage ----------
+   Wie ein Musterblatt: keine Flächen, feine Haarlinien in „bone“, Überschriften in der Display-Schrift, Beschriftungen klein und gesperrt.
+   Gewählt = pinke Linie + Punkt. Orange nur für „Anfrage senden“ (?knopf=pink = pink). Desktop: Formular links, Kristall rechts daneben;
+   Handy: Kristall klein oben, Formular darunter. Die Seite bleibt bedienbar – nur das Formular fängt Klicks, die Bühne dahinter nicht. */
+html.titel-kristall {
+  --f-grund-oben: transparent; --f-grund: var(--k-ink); --f-grund-tief: var(--k-ink);
+  --f-flaeche: transparent; --f-flaeche-hover: color-mix(in srgb, var(--k-bone) 5%, transparent);
+  --f-kante: linear-gradient(color-mix(in srgb, var(--k-bone) 24%, transparent), color-mix(in srgb, var(--k-bone) 24%, transparent));
+  --f-linie: color-mix(in srgb, var(--k-bone) 18%, transparent);
+  --f-text: #d9d3b8; --f-gedaempft: var(--k-bone); --f-gold: var(--k-akzent); --f-gold-hell: var(--k-akzent); --f-bernstein: var(--k-akzent);
+  --f-rosa: transparent; --f-hof: transparent; --f-wahl: var(--k-akzent); --f-schein: none; --f-tiefe: none;
+  --f-knopf: var(--k-marke); --f-knopf-text: var(--k-ink);
+  --bg: var(--k-ink); --text: #d9d3b8; --muted: var(--k-bone); --accent: var(--k-akzent); --line: color-mix(in srgb, var(--k-bone) 18%, transparent);
+  --k-flaeche: transparent; --k-flaeche-wahl: color-mix(in srgb, var(--k-akzent) 6%, transparent); --k-flaeche-zurueck: transparent;
+  --k-kante: linear-gradient(color-mix(in srgb, var(--k-bone) 24%, transparent), color-mix(in srgb, var(--k-bone) 24%, transparent));
+  --k-kante-wahl: linear-gradient(var(--k-akzent), var(--k-akzent)); --k-glanz: none; --k-tiefe: none; --k-tiefe-hoch: none; --k-tiefe-flach: none;
+  --k-schein: none; --k-korn: none; --k-licht: none; --k-linie: linear-gradient(90deg, color-mix(in srgb, var(--k-bone) 30%, transparent), transparent);
+}
+html.titel-kristall[data-knopf="pink"] { --f-knopf: var(--k-akzent); }
+.titel-kristall main#inhalt { position: relative; z-index: 3; margin-top: -100svh; pointer-events: none; }
+.titel-kristall .preise { background: transparent; }
+.titel-kristall .preise__innen { pointer-events: auto; min-height: 100svh; width: auto; max-width: 620px; margin: 0 0 0 7vw; padding: clamp(72px, 12svh, 120px) 0 64px; isolation: auto; }
+.titel-kristall .preise__innen::before { display: none; }
+.titel-kristall .mf__raster { display: block; }
+.titel-kristall .mf-summe { position: static; margin-top: 36px; }
+/* Schrift wie das Musterblatt */
+.titel-kristall .mf-titel { font-family: var(--k-display); font-weight: 400; font-size: clamp(2.6rem, 5vw, 4.6rem); line-height: 0.95; letter-spacing: -0.01em; color: #e4dfc6; }
+.titel-kristall .mf-satz { color: var(--k-bone); font-size: 15px; max-width: 42ch; }
+.titel-kristall .mf__stand, .titel-kristall .mf-zurueck, .titel-kristall .mf-extras__titel, .titel-kristall .auswahl__titel, .titel-kristall .field label, .titel-kristall legend,
+.titel-kristall .mf-summe span { font-family: var(--k-sans); font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--k-bone); }
+.titel-kristall .mf__linie { background: color-mix(in srgb, var(--k-bone) 20%, transparent); height: 1px; }
+.titel-kristall .mf__linie i { background: var(--k-akzent); }
+/* Karten, Stufen, Chips: Haarlinie statt Fläche, eckig wie gedruckt */
+.titel-kristall :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip, .lf-chip--gross) { border-radius: 2px; border: 1px solid color-mix(in srgb, var(--k-bone) 26%, transparent); background: transparent; box-shadow: none; color: #d9d3b8; }
+.titel-kristall :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip, .lf-chip--gross)::before, .titel-kristall :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett)::after { display: none; }
+.titel-kristall :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip, .lf-chip--gross)[aria-pressed="true"] { border-color: var(--k-akzent); background: color-mix(in srgb, var(--k-akzent) 6%, transparent); box-shadow: inset 0 0 0 1px var(--k-akzent); }
+@media (hover: hover) and (pointer: fine) {
+  .titel-kristall :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett):hover { border-color: color-mix(in srgb, var(--k-bone) 55%, transparent); background: color-mix(in srgb, var(--k-bone) 4%, transparent); transform: translateY(-2px); box-shadow: none; }
+}
+.titel-kristall .mf-karte__bild, .titel-kristall .mf-stufe__punkt svg, .titel-kristall .mf-karte__dezent { color: var(--k-akzent); }
+.titel-kristall .mf-karte__titel, .titel-kristall .mf-stufe__name { font-family: var(--k-display); font-weight: 400; font-size: 26px; line-height: 1; color: #e4dfc6; }
+.titel-kristall .mf-karte__satz, .titel-kristall .mf-stufe__punkte { color: var(--k-bone); }
+.titel-kristall .mf-karte__preis, .titel-kristall .mf-stufe__preis { font-family: var(--k-sans); color: #e4dfc6; font-variant-numeric: tabular-nums; }
+.titel-kristall .mf-stufe__schild { border-color: color-mix(in srgb, var(--k-akzent) 50%, transparent); background: var(--k-ink); color: var(--k-akzent); }
+.titel-kristall .mf-stufe__haken, .titel-kristall .mf-haken[aria-checked="true"] .mf-haken__box { background: var(--k-akzent); border-color: var(--k-akzent); color: var(--k-ink); }
+.titel-kristall .mf-link { color: #e4dfc6; text-decoration-color: var(--k-akzent); }
+.titel-kristall .mf-auf > summary::before { border-color: color-mix(in srgb, var(--k-bone) 40%, transparent); color: var(--k-akzent); }
+/* Ihre Anfrage: Felder nur mit Unterstrich, wie auf einem Formblatt */
+.titel-kristall .auswahl { background: transparent; border: 1px solid color-mix(in srgb, var(--k-bone) 22%, transparent); border-radius: 2px; }
+.titel-kristall .field input, .titel-kristall .field textarea { background: transparent; border: 0; border-bottom: 1px solid color-mix(in srgb, var(--k-bone) 40%, transparent); border-radius: 0; color: #e4dfc6; padding-left: 0; padding-right: 0; }
+.titel-kristall .field input:focus, .titel-kristall .field textarea:focus { outline: none; border-bottom-color: var(--k-akzent); box-shadow: 0 1px 0 var(--k-akzent); }
+.titel-kristall .weg__option span { background: transparent; border: 1px solid color-mix(in srgb, var(--k-bone) 30%, transparent); border-radius: 2px; color: #e4dfc6; }
+.titel-kristall .weg__option input:checked + span { border-color: var(--k-akzent); box-shadow: inset 0 0 0 1px var(--k-akzent); }
+.titel-kristall .haken__box { border-color: color-mix(in srgb, var(--k-bone) 45%, transparent); border-radius: 2px; }
+.titel-kristall .anfrage__haken input:checked + .haken__box { background: var(--k-akzent); border-color: var(--k-akzent); color: var(--k-ink); }
+.titel-kristall .btn--wa { background: var(--f-knopf); color: var(--k-ink); border-radius: 2px; box-shadow: none; font-family: var(--k-sans); letter-spacing: 0.04em; }
+.titel-kristall .btn:not(.btn--wa) { background: transparent; border: 1px solid color-mix(in srgb, var(--k-bone) 35%, transparent); border-radius: 2px; color: #e4dfc6; }
+.titel-kristall .mf-summe { background: transparent; border: 0; border-top: 1px solid color-mix(in srgb, var(--k-bone) 22%, transparent); border-radius: 0; box-shadow: none; padding: 16px 0 0; }
+.titel-kristall .mf-summe b { font-family: var(--k-display); font-weight: 400; font-size: 28px; color: #e4dfc6; font-variant-numeric: tabular-nums; }
+.titel-kristall .mf-agentur, .titel-kristall .form__hint, .titel-kristall .mf-satz .online { color: var(--k-bone); }
+.titel-kristall .mf-person img { filter: grayscale(0.35); }
+/* Fußleiste wie die Vorlage: links, Zeichen, rechts */
+.titel-kristall .footer { display: none; }
+.k-fussleiste { position: relative; z-index: 3; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 28px 5vw 36px; background: var(--k-ink); color: var(--k-bone);
+  font-family: var(--k-sans); font-size: clamp(11px, 1.2vw, 16px); letter-spacing: 0.04em; border-top: 1px solid color-mix(in srgb, var(--k-bone) 14%, transparent); }
+.k-fussleiste nav { display: flex; gap: clamp(14px, 2.4vw, 32px); }
+.k-fussleiste a { color: inherit; text-decoration: none; white-space: nowrap; min-height: 44px; display: inline-flex; align-items: center; }
+.k-fussleiste a:hover, .k-fussleiste a:focus-visible { color: var(--k-akzent); }
+@media (max-width: 760px) {
+  .titel-kristall .preise__innen { margin: 0 auto; max-width: none; padding: 30svh 20px 96px; }
+  .titel-kristall .mf-summe { position: fixed; }   /* Handy: wie gewohnt als Leiste unten */
+  .titel-kristall .mf-summe { background: color-mix(in srgb, var(--k-ink) 94%, transparent); border: 1px solid color-mix(in srgb, var(--k-bone) 20%, transparent); padding: 10px 16px; border-radius: 2px; }
+  .k-fussleiste { flex-wrap: wrap; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .k-char { animation: none; } .k-g { transition: none; }
+  .titel-kristall main#inhalt { margin-top: 0; }
+}
+
+/* Nachschärfen (Formular): die alten Nachtblau-Regeln der Seite haben teils höhere Spezifität – hier gezielt überstimmt */
+html.titel-kristall body .anfrage .field :is(input, textarea, select) { background: transparent; border: 0; border-bottom: 1px solid color-mix(in srgb, var(--k-bone) 40%, transparent); border-radius: 0; color: #e4dfc6; padding-left: 0; padding-right: 0; box-shadow: none; }
+html.titel-kristall body .anfrage .field :is(input, textarea, select):focus-visible { border-bottom-color: var(--k-akzent); box-shadow: 0 1px 0 var(--k-akzent); background: transparent; }
+html.titel-kristall body .anfrage .field :is(input, textarea)::placeholder { color: color-mix(in srgb, var(--k-bone) 55%, transparent); }
+html.titel-kristall body .mf .auswahl { border-radius: 2px; background: transparent; border: 1px solid color-mix(in srgb, var(--k-bone) 22%, transparent); box-shadow: none; }
+html.titel-kristall body .mf-stufe__schild { top: -9px; padding: 1px 8px; border-radius: 2px; border: 1px solid color-mix(in srgb, var(--k-akzent) 55%, transparent); background: var(--k-ink); color: var(--k-akzent); font-family: var(--k-sans); font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; }
+html.titel-kristall body .mf-stufe__schild::before { display: none; }
+html.titel-kristall body .upload { background: transparent; border: 1px dashed color-mix(in srgb, var(--k-bone) 30%, transparent); border-radius: 2px; }
+@media (max-width: 760px) {
+  html.titel-kristall body .mf-summe { background: color-mix(in srgb, var(--k-ink) 94%, transparent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--k-bone) 22%, transparent); border: 0; border-radius: 2px; }
+}
+/* Karten immer gleich hoch – auch in der Handy-Liste (Regel: gleiche Höhe, gleiche Abstände) */
+html.titel-kristall body .mf-karten { grid-auto-rows: 1fr; }
+/* kleine Handys (375 × 667): alle drei Karten von ① ohne Scrollen – weniger Luft oben, kompaktere Karten */
+@media (max-width: 760px) and (max-height: 720px) {
+  .titel-kristall .preise__innen { padding-top: 15svh; }
+  html.titel-kristall body .mf-karte { padding: 11px 14px; }
+  html.titel-kristall body .mf-karte__titel { font-size: 22px; }
+  html.titel-kristall body .mf-karte__preis { margin-top: 2px; }
+}
