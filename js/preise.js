@@ -205,6 +205,16 @@ window.LEITFADEN = {
   var ruhig = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function q(s) { return box.querySelector(s); }
+  /* Preis mit Hierarchie (Auftrag 36): große Zahl + kleine Beschriftung („ab“, „+ 200 € / Monat“) – der Text bleibt Zeichen für Zeichen derselbe */
+  function preisEl(tag, cls, text) {
+    var e = el(tag, cls), m = /^(ab\s)?(\d[\d.]*\s€)(.*)$/.exec(text);
+    if (!m) { e.textContent = text; return e; }
+    if (m[1]) e.appendChild(el('span', 'k-preis__vor', m[1]));
+    e.appendChild(el('span', 'k-preis__zahl', m[2]));
+    if (m[3]) e.appendChild(el('span', 'k-preis__nach', m[3]));
+    return e;
+  }
+  function reihe(b, i) { b.setAttribute('style', '--i:' + i); return b; }   /* Platz in der Reihe → gestaffeltes Erscheinen (CSS, 50 ms Versatz) */
   var MONAT = ' / Monat';
   var ICON = {
     termin: '<rect x="8" y="10" width="32" height="30" rx="4"/><path d="M8 18h32M16 6v8M32 6v8"/><path d="m18 29 4 4 8-8"/>',
@@ -266,12 +276,13 @@ window.LEITFADEN = {
         endo: P.betrag(f) + ' + ' + P.euro(f.monat) + MONAT,
         beides: 'ab ' + P.euro(P.stufen[0].preis + f.preis) + ' + ' + P.euro(f.monat) + MONAT
       };
-      L.art.optionen.forEach(function (o) {
-        var b = el('button', 'mf-karte'); b.type = 'button'; b.setAttribute('aria-pressed', String(A.art === o.id)); b.setAttribute('data-fokus', 'art-' + o.id);
+      if (A.art) g.className += ' hat-wahl';
+      L.art.optionen.forEach(function (o, nr) {
+        var b = reihe(el('button', 'mf-karte'), nr); b.type = 'button'; b.setAttribute('aria-pressed', String(A.art === o.id)); b.setAttribute('data-fokus', 'art-' + o.id);
         var bild = el('span', 'mf-karte__bild'); bild.innerHTML = icon(o.id); b.appendChild(bild);
         var txt = el('span', 'mf-karte__text'), kopf = el('span', 'mf-karte__kopf');
         kopf.appendChild(el('span', 'mf-karte__titel', o.titel)); if (o.dezent) kopf.appendChild(el('span', 'mf-karte__dezent', o.dezent));
-        txt.appendChild(kopf); txt.appendChild(el('span', 'mf-karte__satz', o.satz)); txt.appendChild(el('span', 'mf-karte__preis', preis[o.id])); b.appendChild(txt);
+        txt.appendChild(kopf); txt.appendChild(el('span', 'mf-karte__satz', o.satz)); txt.appendChild(preisEl('span', 'mf-karte__preis', preis[o.id])); b.appendChild(txt);
         b.addEventListener('click', function () { if (A.art !== o.id) { A.art = o.id; A.betreuung = null; A.betreuungAn = true; } neu(); gehe(schritte()[1], 1); });
         b.addEventListener('keydown', function (e) {   /* Pfeiltasten wandern zwischen den drei Karten, Enter/Leertaste wählt (Knopf) */
           var k = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key]; if (!k) return;
@@ -288,10 +299,11 @@ window.LEITFADEN = {
     website: function (w) {
       w.titel = L.website.titel; w.satz = L.website.satz;
       var g = el('div', 'mf-stufen'); g.setAttribute('role', 'group'); g.setAttribute('aria-label', L.website.titel);
-      P.stufen.forEach(function (s) {
-        var b = el('button', 'mf-stufe'); b.type = 'button'; b.setAttribute('aria-pressed', String(A.stufe === s.id)); b.setAttribute('data-fokus', 'stufe-' + s.id);
+      if (A.stufe) g.className += ' hat-wahl';
+      P.stufen.forEach(function (s, nr) {
+        var b = reihe(el('button', 'mf-stufe'), nr); b.type = 'button'; b.setAttribute('aria-pressed', String(A.stufe === s.id)); b.setAttribute('data-fokus', 'stufe-' + s.id);
         if (s.empfehlung) b.appendChild(el('span', 'mf-stufe__schild', 'Empfehlung'));
-        var kopf = el('span', 'mf-stufe__kopf'); kopf.appendChild(el('span', 'mf-stufe__name', s.name)); kopf.appendChild(el('span', 'mf-stufe__preis', P.betrag(s))); b.appendChild(kopf);
+        var kopf = el('span', 'mf-stufe__kopf'); kopf.appendChild(el('span', 'mf-stufe__name', s.name)); kopf.appendChild(preisEl('span', 'mf-stufe__preis', P.betrag(s))); b.appendChild(kopf);
         var ul = el('span', 'mf-stufe__punkte'); (L.stufenKurz[s.id] || []).forEach(function (t) { var z = el('span', 'mf-stufe__punkt'); z.innerHTML = HAKEN; z.appendChild(document.createTextNode(t)); ul.appendChild(z); }); b.appendChild(ul);
         var h = el('span', 'mf-stufe__haken'); h.innerHTML = HAKEN; b.appendChild(h);
         b.addEventListener('click', function () { A.stufe = s.id; neuZeichnen('stufe-' + s.id); });
@@ -311,17 +323,19 @@ window.LEITFADEN = {
     endo: function (w) {
       w.titel = L.endo.titel; w.satz = L.endo.satz;
       var c = el('div', 'mf-endo'); c.setAttribute('role', 'group'); c.setAttribute('aria-label', L.endo.titel);
-      L.endo.faehigkeiten.forEach(function (f) {
-        var b = el('button', 'mf-chip'); b.type = 'button'; b.setAttribute('aria-pressed', String(A.endo.indexOf(f.id) >= 0)); b.setAttribute('data-fokus', 'endo-' + f.id);
-        var kopf = el('span', 'mf-chip__kopf'); kopf.appendChild(el('b', '', f.name)); kopf.appendChild(el('span', 'mf-chip__status mf-chip__status--' + f.status.replace(' ', '-').toLowerCase(), f.status)); b.appendChild(kopf);
+      L.endo.faehigkeiten.forEach(function (f, nr) {
+        var b = reihe(el('button', 'mf-chip'), nr); b.type = 'button'; b.setAttribute('aria-pressed', String(A.endo.indexOf(f.id) >= 0)); b.setAttribute('data-fokus', 'endo-' + f.id);
+        var kopf = el('span', 'mf-chip__kopf'), name = el('span', 'mf-chip__name'), hk = el('span', 'mf-chip__haken'); hk.setAttribute('aria-hidden', 'true'); hk.innerHTML = HAKEN;
+        name.appendChild(hk); name.appendChild(el('b', '', f.name)); kopf.appendChild(name); kopf.appendChild(el('span', 'mf-chip__status mf-chip__status--' + f.status.replace(' ', '-').toLowerCase(), f.status)); b.appendChild(kopf);
         b.appendChild(el('span', 'mf-chip__satz', f.satz));
         b.addEventListener('click', function () { var i = A.endo.indexOf(f.id); if (i >= 0) A.endo.splice(i, 1); else A.endo.push(f.id); neuZeichnen('endo-' + f.id); });
         c.appendChild(b);
       });
       w.inhalt.appendChild(c);
       var alle = L.endo.faehigkeiten.map(function (f) { return f.id; }), k = P.mehr[1], komplett = A.endo.length === alle.length;
-      var kb = el('button', 'mf-komplett'); kb.type = 'button'; kb.setAttribute('aria-pressed', String(komplett)); kb.setAttribute('data-fokus', 'komplett');
-      var kk = el('span', 'mf-stufe__kopf'); kk.appendChild(el('span', 'mf-stufe__name', k.name)); kk.appendChild(el('span', 'mf-stufe__preis', P.betrag(k) + ' + ' + P.euro(k.monat) + MONAT)); kb.appendChild(kk);
+      var kb = reihe(el('button', 'mf-komplett'), alle.length); kb.type = 'button'; kb.setAttribute('aria-pressed', String(komplett)); kb.setAttribute('data-fokus', 'komplett');
+      var kk = el('span', 'mf-stufe__kopf'); kk.appendChild(el('span', 'mf-stufe__name', k.name)); kk.appendChild(preisEl('span', 'mf-stufe__preis', P.betrag(k) + ' + ' + P.euro(k.monat) + MONAT)); kb.appendChild(kk);
+      var kh = el('span', 'mf-stufe__haken'); kh.innerHTML = HAKEN; kb.appendChild(kh);
       kb.appendChild(el('span', 'mf-karte__satz', L.endo.komplett));
       kb.addEventListener('click', function () { A.endo = komplett ? [] : alle.slice(); neuZeichnen('komplett'); });
       w.inhalt.appendChild(kb);
@@ -387,7 +401,7 @@ window.LEITFADEN = {
     wrap.appendChild(zeile);
     wrap.appendChild(el('p', 'mf-betreuung__grund', !an ? L.betreuung.ohneSatz : gesperrt ? L.betreuung.endo : L.betreuung.grund[id]));
     if (an && A.betreuungOffen) {
-      var g = el('div', 'mf-betreuung__wahl'); g.setAttribute('role', 'group'); g.setAttribute('aria-label', L.betreuung.titel);
+      var g = el('div', 'mf-betreuung__wahl hat-wahl'); g.setAttribute('role', 'group'); g.setAttribute('aria-label', L.betreuung.titel);
       P.betreuung.stufen.forEach(function (x) {
         var o = el('button', 'lf-chip lf-chip--gross'); o.type = 'button'; o.setAttribute('aria-pressed', String(id === x.id)); o.setAttribute('data-fokus', 'b-' + x.id);
         o.appendChild(el('b', '', x.name + ' · ' + P.euro(x.monat - (selbst ? P.betreuung.selbst : 0)) + MONAT)); o.appendChild(el('span', '', x.fuer));
@@ -431,7 +445,16 @@ window.LEITFADEN = {
     hinweis.textContent = id === 'website' && !A.stufe ? 'Bitte wählen Sie eine Website.' : id === 'endo' && !A.endo.length ? L.endo.leer : '';
     box.setAttribute('data-schritt-jetzt', id);
     summeZeigen();
-    if (fokusKey) { var f = box.querySelector('[data-fokus="' + fokusKey + '"]'); if (f) f.focus({ preventScroll: true }); }
+    /* Auftrag 36: die Szene erfährt den Schritt (die Figur hat nach der ersten Wahl ihren Job erledigt und blendet aus; zurück in Schritt ① kommt sie wieder) */
+    document.dispatchEvent(new CustomEvent('preise:schritt', { detail: { schritt: id } }));
+    if (fokusKey) {
+      var f = box.querySelector('[data-fokus="' + fokusKey + '"]');
+      if (f) {
+        f.focus({ preventScroll: true });
+        /* gerade gewählt: nur dieses eine Element zeigt den Wechsel (Anheben, Goldkante, Häkchen zeichnet sich) – der Rest steht still */
+        if (f.getAttribute('aria-pressed') === 'true' || f.getAttribute('aria-checked') === 'true') { f.className += ' ist-frisch'; lichtAn(f); }
+      }
+    }
     else if (!still) {
       var titel = istAnfrage ? anfrageBox.querySelector('.mf-titel') : dyn.querySelector('.mf-titel');
       if (titel) titel.focus({ preventScroll: true });
@@ -466,6 +489,43 @@ window.LEITFADEN = {
   }
   window.addEventListener('hashchange', ausAnker);
   P.antworten = A;   /* für Tests und Aufnahmen */
+
+  /* ---------- Licht auf den Karten (Auftrag 36) ----------
+     Maus: ein weicher Schein folgt dem Zeiger (nur zwei CSS-Variablen auf der Karte selbst, einmal pro Bild). Handy: kurzer Lichtimpuls dort,
+     wo getippt wurde. „Bewegung reduzieren“: nichts davon. Das Aussehen steht in index.html (Abschnitt „Auftrag 36“, Werte --k-…). */
+  var KARTEN = '.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross', zeiger = null, lichtGeplant = false;
+  function lichtSetzen(k, x, y) {
+    var r = k.getBoundingClientRect(), drin = x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;   /* Tastatur: Zeiger liegt woanders → Licht mittig oben */
+    k.style.setProperty('--mx', Math.round(drin ? x - r.left : r.width / 2) + 'px'); k.style.setProperty('--my', Math.round(drin ? y - r.top : 0) + 'px');
+  }
+  function lichtAn(k) { if (!ruhig && zeiger && k.matches && k.matches(KARTEN) && k.getBoundingClientRect) lichtSetzen(k, zeiger[0], zeiger[1]); }
+  if (!ruhig && window.requestAnimationFrame) {
+    box.addEventListener('pointermove', function (e) {
+      zeiger = [e.clientX, e.clientY, e.target];
+      if (e.pointerType !== 'mouse' || lichtGeplant) return;
+      lichtGeplant = true;
+      requestAnimationFrame(function () { lichtGeplant = false; var k = zeiger[2].closest && zeiger[2].closest(KARTEN); if (k) lichtSetzen(k, zeiger[0], zeiger[1]); });
+    }, { passive: true });
+    box.addEventListener('pointerdown', function (e) {
+      zeiger = [e.clientX, e.clientY, e.target];
+      var k = e.target.closest && e.target.closest(KARTEN); if (!k) return;
+      lichtSetzen(k, e.clientX, e.clientY);
+      if (e.pointerType !== 'mouse') { k.classList.remove('ist-impuls'); void k.offsetWidth; k.classList.add('ist-impuls'); }
+    }, { passive: true });
+  }
+
   zeigen('art', 0, true);
   if (location.hash === '#kontakt') zeigen('anfrage', 0, true);
+  /* Schritt ① erscheint gestaffelt, sobald die Karten ins Bild kommen (einmal). Ohne IntersectionObserver oder mit „Bewegung reduzieren“: sofort da. */
+  if (!ruhig && aktiv === 'art' && 'IntersectionObserver' in window) {
+    var erste = dyn.querySelector('.mf-schritt');
+    if (erste) {
+      erste.className += ' k-wartet';
+      var io = new IntersectionObserver(function (e) {
+        if (!e[0].isIntersecting) return;
+        io.disconnect(); erste.className = erste.className.replace(' k-wartet', '') + ' k-auftritt';
+      }, { threshold: 0.12 });
+      io.observe(erste.querySelector('.mf-karten') || erste);
+    }
+  }
 })();
