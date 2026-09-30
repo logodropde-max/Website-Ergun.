@@ -1,6 +1,9 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
-## Titelbild „Maschine“ – Vorschau (30.09.2026, nicht live)
+## Titelbild „Maschine“ – Vorschau v2 (30.09.2026, nicht live, Rückweg Tag `vor-maschine-v2`)
+- `maschine-vorschau.html` + `js/maschine.js?v=14`: Studio-Bühne (Spotlight `--sx/--sy`, Boden `--by` mit Raster, Schatten, Spiegelung, Vignette, Körnung; Stimmung `[data-stimmung]` warm/kühl/orange), Laptop in HTML/CSS (`.m-deckel`, `.m-basis`, Tastatur baut das Skript; die Bilder `bildschirm.webp`/`unterteil.webp` werden nicht mehr genutzt), vier Karten `[data-karte=1…4]` mit `container-type: size` (Schrift in `cqw`), Handlungen über CSS-Variablen je Karte (`--neu`, `--e1/--e2/--weg`, `--slot/--haken`, `--blase/--flug/--status`, Faden `--faden/--punkt`). Zeitplan: Website 0.12–0.35, Brief 0.35–0.41, Stufen ab 0.45/0.55/0.65/0.75 (je 0.07), einrasten 0.85–0.90, gerade + Mitte 0.905–0.945, Mini-Formular im Bildschirm 0.928–0.95, Formular öffnet sich per clip-path vom Bildschirm-Rechteck 0.955–0.995. Variante B `?figuren=ja` (flache SVG-Figuren, Arm über `--arm`). Kein „endo“ in der Szene. Prüfen: `window.__maschine.p(x)` / `.zustand()`. Bericht: `08 Projekte/Titelbild-Maschine-2026-09-30/Bericht Titelbild Maschine (Vorschau v2).md`.
+
+## Titelbild „Maschine“ – Vorschau v1 (30.09.2026, nicht live)
 - `maschine-vorschau.html` + `js/maschine.js` (nicht verlinkt, noindex): Laptop an der Stelle von Figur + Hund, Schichten fahren beim Scrollen auseinander (CSS-3D, Kamerafahrt durch die Schichten), Website auf dem Bildschirm = echtes HTML, am Ende Sprung in „Was brauchen Sie?“. Prüfgriff `window.__maschine.p(x)`.
 - Teile: `bilder/hero/maschine/*.webp` aus `bilder/hero/4k/maschine/teile.py` (Quelle: Higgsfield `api_*_maschine-*`). Einbau in die Startseite folgt hinter `?titel=maschine`.
 
