@@ -16,9 +16,12 @@
   if (frage.get('farbe') === 'orange') html.setAttribute('data-farbe', 'orange');
   if (frage.get('schrift') === 'b') html.setAttribute('data-schrift', 'b');
   if (frage.get('knopf') === 'pink') html.setAttribute('data-knopf', 'pink');
+  /* Hintergrund-Muster (Brillant-Streuung, eigenes Bild, kachelbar): bis zu ERGUNs OK nur mit ?muster=b; MUSTER_STANDARD = true macht es zum Standard, ?muster=aus schaltet es ab */
+  var MUSTER_STANDARD = false, MUSTER = frage.get('muster') === 'b' || (MUSTER_STANDARD && frage.get('muster') !== 'aus');
+  if (MUSTER) html.setAttribute('data-muster', 'b');
   var SEED = parseInt(frage.get('seed'), 10) || 7, KRONE_RAND = frage.get('krone') === 'rand';
   var $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
-  var buehne = $('[data-k-buehne]', root), strecke = $('[data-k-strecke]', root), leinwand = $('[data-k-leinwand]', root), schein = $('[data-k-schein]', root), wort = $('[data-k-wort]', root);
+  var buehne = $('[data-k-buehne]', root), strecke = $('[data-k-strecke]', root), leinwand = $('[data-k-leinwand]', root), schein = $('[data-k-schein]', root), wort = $('[data-k-wort]', root), muster = $('[data-k-muster]', root);
 
   /* Das echte Formular (#preise in <main>) gehört als Bild 06 in die Bühne: <main> wandert hinter die Strecke, die Bühne klebt weiter daneben */
   var haupt = document.querySelector('main#inhalt'); if (haupt) root.appendChild(haupt);
@@ -440,6 +443,8 @@
     schein.style.transform = 'translate(' + (gx - gr).toFixed(1) + 'px,' + (gy - gr).toFixed(1) + 'px)';
     schein.style.width = schein.style.height = (gr * 2).toFixed(1) + 'px';
     schein.style.opacity = String(0.55 + 0.45 * smooth(4.2, 5, coord));
+    if (MUSTER && muster) { muster.style.opacity = String(0.55 * (1 - 0.65 * smooth(4.3, 5, coord)));   /* hinter dem Formular leiser */
+      if (!ruhig) muster.style.transform = 'translate3d(0,' + (-coord * 18).toFixed(1) + 'px,0)'; }   /* Muster wandert langsam mit – Tiefe hinter dem Stein */
 
     if (gl && prog) {
       var c = gl, stand = Math.round(coord * 400) / 400;
