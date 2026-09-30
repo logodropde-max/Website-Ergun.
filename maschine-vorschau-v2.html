@@ -6,47 +6,39 @@
 <title>Vorschau Titelbild „Maschine“ – ERGUN.</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<!-- Vorschau v3 (Auftrag 44, 30.09.2026 – Ausnahme auf ERGUNs Wunsch: hyperrealistisch im tropischen Wohlfühl-Büro, Fotos von Higgsfield).
-     Nicht verlinkt, noindex. Die Scroll-Geschichte (Website entsteht → ① Anfrage kommt an ② Automatisch sortiert ③ Termin eingetragen
-     ④ Antwort geht raus → Formular) bleibt HTML/CSS. Fotos: bilder/hero/tropen/ (aus bilder/hero/4k/tropen/bilder.py, Ecken ecken.py).
-     Logik: js/maschine-foto.js. Vorgänger zum Vergleich: maschine-vorschau-v2.html. -->
-<link rel="preload" as="image" type="image/avif" media="(min-aspect-ratio: 4/5)" imagesrcset="bilder/hero/tropen/quer-morgen-1280.avif 1280w, bilder/hero/tropen/quer-morgen-1920.avif 1920w, bilder/hero/tropen/quer-morgen-2560.avif 2560w" imagesizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw" fetchpriority="high">
-<link rel="preload" as="image" type="image/avif" media="(max-aspect-ratio: 4/5)" imagesrcset="bilder/hero/tropen/hoch-morgen-720.avif 720w, bilder/hero/tropen/hoch-morgen-1080.avif 1080w, bilder/hero/tropen/hoch-morgen-1440.avif 1440w" imagesizes="100vw" fetchpriority="high">
+<!-- Vorschau v2 (30.09.2026, ERGUN.: „Laptop-Animation gut, aber professioneller Hintergrund und moderne, verständliche Stufen“).
+     Nicht verlinkt, noindex. Ausnahme auf ERGUNs Wunsch: keine gezeichnete Landschaft, keine Farbstreifen Tag → Nacht, die
+     Bleistift-Tafeln (Platine/Mechanik/Werkstatt) sind durch vier HTML-Karten ersetzt. Variante A = ohne Figuren (Standard),
+     Variante B = ?figuren=ja (flache Figuren, je Stufe genau eine Handlung). Logik: js/maschine.js. Nur transform/opacity. -->
+<script>if (/[?&]figuren=ja\b/.test(location.search)) document.documentElement.classList.add('mit-figuren');</script>
 <style>
 @font-face { font-family: "Instrument Serif"; src: url("schriften/InstrumentSerif-Regular.woff2") format("woff2"); font-display: swap; }
 @font-face { font-family: "Satoshi"; src: url("schriften/Satoshi-Variable.woff2") format("woff2"); font-weight: 300 900; font-display: swap; }
 :root {
-  --grund: #0A0D12; --text: #F4F1E6; --leise: #C9CFD9; --kante: rgba(244, 241, 230, 0.14);
-  --orange: #FF7A1A; --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --grund: #0A0D14; --graphit: #15171C; --nacht: #0B1426; --text: #F4F1E6; --leise: #9AA8BD; --kante: rgba(244, 241, 230, 0.13);
+  --orange: #FF7A1A; --warm: #E9B98A; --kuehl: #7FA3D9; --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; background: var(--grund); color: var(--text); font-family: "Satoshi", system-ui, -apple-system, "Segoe UI", sans-serif; }
 .m-strecke { position: relative; height: 720svh; }
-.m-buehne { position: sticky; top: 0; height: 100svh; min-height: 560px; overflow: hidden; background: #1B2016; }
+.m-buehne { position: sticky; top: 0; height: 100svh; min-height: 560px; overflow: hidden; background: linear-gradient(180deg, var(--graphit) 0%, #10131B 45%, var(--nacht) 100%); }
 
-/* ---------- Foto-Bühne: tropisches Büro (Auftrag 44). Morgen → Goldene Stunde → Abend liegen übereinander (nur opacity).
-   .t-foto hat die Größe des Fotos im „cover“-Zuschnitt (setzt das Skript) – der Bildschirm-Inhalt liegt per matrix3d darauf. ---------- */
-.t-foto { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
-.t-licht, .t-licht img, .t-video, .t-weich { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; }
-.t-licht { opacity: 0; will-change: opacity; }
-.t-licht[data-licht="morgen"] { opacity: 1; }
-.t-video { opacity: 0; will-change: opacity; }
-.t-weich { opacity: 0; will-change: opacity; }   /* winzige Fassung (192 px), groß gezogen = weich unscharf, billig statt filter: blur */
-.t-schirm { position: absolute; left: 0; top: 0; transform-origin: 0 0; overflow: hidden; border-radius: 0.6%; background: #07080A; }
-.t-schirm .m-anzeige { left: 1.4%; top: 2.6%; width: 97.2%; height: 94.2%; border-radius: 0.8%; }
-.t-aus { position: absolute; inset: 0; background: #0B0C0F; will-change: opacity; }   /* Bildschirm aus – wie im Foto */
-.t-glanz { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(118deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 28%, transparent 46%), radial-gradient(120% 90% at 50% 50%, transparent 62%, rgba(0, 0, 0, 0.22) 100%); mix-blend-mode: screen; }
-.t-dunkel { position: absolute; inset: 0; background: #06080C; opacity: 0; pointer-events: none; will-change: opacity; }
-.t-blaetter { position: absolute; left: -5vw; bottom: -8vh; width: min(44vw, 760px); height: auto; filter: blur(3px); pointer-events: none; will-change: transform, opacity; z-index: 2; }
-.t-verlauf { position: absolute; inset: 0; pointer-events: none; z-index: 3; background: linear-gradient(90deg, rgba(8, 10, 14, 0.78) 0%, rgba(8, 10, 14, 0.55) 24%, rgba(8, 10, 14, 0.18) 42%, transparent 56%); }
-.m-text { position: absolute; left: clamp(20px, 6vw, 96px); top: 50%; transform: translateY(-50%); width: min(34vw, 440px); z-index: 5; text-shadow: 0 1px 18px rgba(0, 0, 0, 0.35); }
-.m-text .t-klein { margin: 0 0 12px; font-size: 14px; letter-spacing: 0.01em; color: var(--leise); }
-.m-text h1 { margin: 0 0 20px; font: 400 clamp(36px, 4.2vw, 64px)/1.04 "Instrument Serif", Georgia, serif; letter-spacing: -0.01em; }
-.t-versteckt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.t-wolke { display: inline-block; width: 0.62em; height: 0.34em; margin: 0 0.18em; vertical-align: 0.12em; fill: rgba(244, 241, 230, 0.8); }
-.t-karten { position: absolute; z-index: 4; width: var(--L); height: calc(var(--L) * var(--kh, 0.66)); --kh: 0.66; pointer-events: none; }
-.t-karten .m-karte { position: absolute; left: 0; top: 0; opacity: 0; will-change: transform, opacity; }
-.m-brief { position: absolute; z-index: 4; width: 44px; height: 30px; margin: -15px 0 0 -22px; opacity: 0; will-change: transform, opacity; }
+/* ---------- Studio-Bühne: Spotlight, Stimmung, Boden, Vignette, Körnung (alles fest, nur die Stimmung blendet per opacity) ---------- */
+.m-licht, .m-stimmung, .m-vignette, .m-korn { position: absolute; inset: 0; pointer-events: none; }
+.m-licht { background: radial-gradient(42% 52% at var(--sx, 60%) var(--sy, 40%), rgba(214, 222, 238, 0.13), rgba(214, 222, 238, 0.04) 45%, transparent 72%); }
+.m-stimmung i { position: absolute; inset: 0; opacity: 0; will-change: opacity; }
+.m-stimmung .s-warm { background: radial-gradient(40% 50% at var(--sx, 60%) var(--sy, 40%), rgba(233, 185, 138, 0.13), transparent 70%); }
+.m-stimmung .s-kuehl { background: radial-gradient(44% 54% at var(--sx, 60%) var(--sy, 40%), rgba(127, 163, 217, 0.13), transparent 72%); }
+.m-stimmung .s-orange { background: radial-gradient(30% 36% at var(--sx, 60%) calc(var(--sy, 40%) + 8%), rgba(255, 122, 26, 0.16), transparent 70%); }
+.m-boden { position: absolute; left: -30%; right: -30%; top: var(--by, 70%); bottom: -10%; background: linear-gradient(180deg, rgba(160, 175, 200, 0.05), rgba(160, 175, 200, 0) 60%); }
+.m-boden::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(244, 241, 230, 0.10) 30%, rgba(244, 241, 230, 0.10) 70%, transparent); }
+.m-raster { position: absolute; left: 0; right: 0; top: 0; height: 180%; opacity: 0.05; transform-origin: 50% 0; transform: perspective(520px) rotateX(74deg);
+  background-image: linear-gradient(rgba(244, 241, 230, 1) 1px, transparent 1px), linear-gradient(90deg, rgba(244, 241, 230, 1) 1px, transparent 1px); background-size: 64px 64px; background-position: center top;
+  -webkit-mask-image: radial-gradient(60% 70% at 50% 0%, #000 30%, transparent 75%); mask-image: radial-gradient(60% 70% at 50% 0%, #000 30%, transparent 75%); }
+.m-vignette { background: radial-gradient(120% 95% at 55% 42%, transparent 55%, rgba(0, 0, 0, 0.55) 100%); }
+.m-korn { opacity: 0.06; mix-blend-mode: overlay; background-size: 180px 180px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23k)'/%3E%3C/svg%3E"); }
+
 /* ---------- Text links: Überschrift, Phase, Fortschritt ---------- */
 .m-text { position: absolute; left: clamp(20px, 6vw, 96px); top: 50%; transform: translateY(-50%); width: min(32vw, 400px); z-index: 5; }
 .m-text h1 { margin: 0 0 20px; font: 400 clamp(34px, 4.2vw, 62px)/1.02 "Instrument Serif", Georgia, serif; letter-spacing: -0.01em; }
@@ -67,6 +59,17 @@ html, body { margin: 0; background: var(--grund); color: var(--text); font-famil
 .m-fort li.ist-fertig > i { --voll: 1; }
 .m-fort li.ist-aktiv > span { border-color: var(--text); background: var(--text); color: #10131B; }
 .m-fort__titel { margin: 12px 0 0; font-size: 20px; line-height: 1.3; font-weight: 600; color: var(--text); min-height: 1.3em; }
+
+/* ---------- die Maschine in 3D ---------- */
+.m-welt { position: absolute; left: 60%; top: 54%; width: var(--L); height: calc(var(--L) * 0.69); transform: translate(-50%, -50%); perspective: 1800px; z-index: 3; }
+.m-schatten { position: absolute; left: 50%; top: 100%; width: 120%; height: calc(var(--L) * 0.34); transform: translate(-50%, -12%); border-radius: 50%; background: radial-gradient(50% 50% at 50% 50%, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.28) 45%, transparent 72%); pointer-events: none; will-change: opacity; }
+.m-spiegel { position: absolute; left: 12%; right: 12%; top: calc(100% + var(--L) * 0.20); height: calc(var(--L) * 0.16); background: linear-gradient(180deg, rgba(180, 196, 222, 0.07), transparent); -webkit-mask-image: radial-gradient(50% 100% at 50% 0%, #000, transparent); mask-image: radial-gradient(50% 100% at 50% 0%, #000, transparent); pointer-events: none; will-change: opacity; }
+.m-kamera { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.m-lage { position: absolute; left: 0; bottom: 0; width: 100%; transform-style: preserve-3d; transform-origin: 50% 100%; will-change: transform, opacity; }
+.m-lage > img { display: block; width: 100%; height: auto; pointer-events: none; user-select: none; }
+.m-unterteil { transform-origin: 50% 0; }
+.m-auf { position: absolute; transform-style: preserve-3d; }
+.m-brief { position: absolute; width: 44px; height: 30px; margin: -15px 0 0 -22px; opacity: 0; will-change: transform, opacity; }
 
 /* ---------- die vier Stufen als Karten (HTML, gestochen scharf). Werte kommen als CSS-Variablen aus maschine.js ---------- */
 .m-karte { --kh: 0.66; position: absolute; left: 0; bottom: 0; width: 100%; height: calc(var(--L) * var(--kh)); container-type: size; border-radius: calc(var(--L) * 0.036);
@@ -142,7 +145,24 @@ html, body { margin: 0; background: var(--grund); color: var(--text); font-famil
 .k-eingabe { margin-top: auto; display: flex; align-items: center; gap: 0.6em; padding: 0.5em 0.5em 0.5em 0.9em; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.1); color: var(--leise); font-size: 0.85em; }
 .k-eingabe svg { width: 1.9em; height: 1.9em; margin-left: auto; padding: 0.4em; border-radius: 50%; background: rgba(255, 122, 26, calc(0.2 + 0.6 * var(--druck, 0))); color: var(--text); }
 
+/* Variante B: flache Figuren (einfarbig), je Stufe genau eine Handlung */
+.k-figur, .m-figur { display: none; }
+.mit-figuren .k-figur { display: block; position: absolute; right: 4cqw; bottom: 5cqw; width: 18cqw; height: 36cqw; max-height: 72cqh; }
+.mit-figuren .m-figur { display: block; position: absolute; width: 11%; aspect-ratio: 60 / 120; transform: translate(-50%, -100%); opacity: 0; will-change: transform, opacity; }
+.k-figur svg, .m-figur svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.fig-arm { transform-box: view-box; transform-origin: 32px 34px; transform: rotate(calc(var(--arm, 12) * 1deg)); }
+.fig-ding { opacity: var(--ding, 1); }
+
 /* Bildschirm: echte, scharfe Mini-Website (clean: Raster → Farbe → Bilder) + endo-Meldung */
+/* Laptop in HTML/CSS (ERGUN., 30.09.: „ähnlich wie ein MacBook, moderner Laptop“) – Aluminium, dünner schwarzer Rand, kein Logo */
+.m-deckel { position: relative; width: 100%; aspect-ratio: 1600 / 1105; border-radius: calc(var(--L) * 0.03); background: #0B0C0F; box-shadow: 0 0 0 calc(var(--L) * 0.004) #A9AEB6, 0 0 0 calc(var(--L) * 0.006) #6E737B, 0 20px 50px -18px rgba(0, 0, 0, 0.7); }
+.m-linse { position: absolute; left: 50%; top: 1.6%; width: calc(var(--L) * 0.008); height: calc(var(--L) * 0.008); margin-left: calc(var(--L) * -0.004); border-radius: 50%; background: #1C2230; box-shadow: 0 0 0 1px #15171C; }
+.m-basis { position: relative; width: 100%; aspect-ratio: 1600 / 1024; border-radius: calc(var(--L) * 0.022) calc(var(--L) * 0.022) calc(var(--L) * 0.04) calc(var(--L) * 0.04); background: linear-gradient(180deg, #D3D6DB, #BCC0C7 60%, #A9ADB5); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -2px 0 rgba(0, 0, 0, 0.12); }
+.m-scharnier { position: absolute; left: 14%; right: 14%; top: 0; height: 2.2%; border-radius: 0 0 6px 6px; background: linear-gradient(180deg, #52565D, #7C8088); }
+.m-tastatur { position: absolute; left: 11%; right: 11%; top: 7%; height: 44%; display: flex; flex-direction: column; gap: 2.2%; padding: 1.4%; border-radius: calc(var(--L) * 0.008); background: #2A2C31; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45); }
+.m-tastatur > div { display: flex; gap: 1.1%; flex: 1; }
+.m-tastatur i { flex: 1; border-radius: calc(var(--L) * 0.003); background: linear-gradient(180deg, #1A1B1E, #111214); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06); }
+.m-trackpad { position: absolute; left: 31%; right: 31%; top: 56%; bottom: 7%; border-radius: calc(var(--L) * 0.012); background: linear-gradient(180deg, #C6C9CF, #B3B7BE); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.4); }
 .m-anzeige { position: absolute; left: 2.6%; top: 3.8%; width: 94.8%; height: 92.4%; overflow: hidden; border-radius: calc(var(--L) * 0.008); background: #F6F4EE; color: #0C162C; font-size: calc(var(--L) * 0.018); }
 .w { position: absolute; inset: 0; padding: 4% 5%; display: grid; grid-template-rows: auto 1fr auto; gap: 5%; }
 .w-nav { display: flex; align-items: center; justify-content: space-between; }
@@ -184,65 +204,45 @@ html, body { margin: 0; background: var(--grund); color: var(--text); font-famil
 .m-karten div { padding: 18px 16px; border-radius: 20px; border: 1px solid rgba(242, 180, 92, 0.35); background: rgba(94, 120, 168, 0.12); font-size: 17px; font-weight: 600; }
 .m-karten small { display: block; margin-top: 4px; font-weight: 400; font-size: 13px; color: var(--leise); }
 .m-formular p { margin: 0; color: var(--leise); font-size: 14px; }
-.m-danach { padding: 80px 24px; text-align: center; color: var(--leise); }
-.m-hinweis a { color: var(--text); }
 .m-hinweis { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 9; padding: 6px 12px; border-radius: 999px; background: rgba(12, 16, 26, 0.85); color: var(--leise); font-size: 12px; white-space: nowrap; }
+.m-hinweis a { color: var(--text); }
+.m-danach { padding: 80px 24px; text-align: center; color: var(--leise); }
 
-/* Handy/Tablet hochkant: Hochformat-Foto, Titel oben mit dunklem Verlauf, Karten in der Mitte */
-@media (max-aspect-ratio: 4/5) {
-  .t-verlauf { background: linear-gradient(180deg, rgba(8, 10, 14, 0.80) 0%, rgba(8, 10, 14, 0.52) 22%, rgba(8, 10, 14, 0.10) 40%, transparent 50%); }
-  .m-text { top: 28px; transform: none; width: auto; right: 20px; }
-  .m-text .t-klein { margin-bottom: 8px; font-size: 13px; }
-  .m-text h1 { font-size: clamp(30px, 8.4vw, 44px); margin-bottom: 10px; }
+/* Handy: Text oben, Maschine darunter, Karten fahren nach oben auseinander; Karten höher, Schrift größer */
+@media (max-width: 760px) {
+  .m-text { top: 76px; transform: none; width: auto; right: 20px; }
+  .m-text h1 { font-size: 32px; margin-bottom: 10px; }
   .m-schritte { min-height: 2.9em; }
   .m-schritt { font-size: 15px; }
   .m-schritt span { display: none; }
   .m-fort { margin-top: 6px; height: 62px; }
   .m-fort li > span { width: 26px; height: 26px; }
   .m-fort__titel { margin-top: 8px; font-size: 17px; }
-  .t-karten, .t-karten .m-karte { --kh: 0.9; }
-  .t-karten .k-innen { font-size: 4.9cqw; gap: 3.6cqw; }
-  .t-karten .k-kal { height: auto; max-height: none; grid-auto-rows: auto; }
-  .t-karten .k-kal > i { min-height: 1.45em; }
-  .t-blaetter { left: -18vw; bottom: -6vh; width: 96vw; }
+  .m-karte { --kh: 0.9; }
+  .k-innen { font-size: 4.9cqw; gap: 3.6cqw; }
+  .mit-figuren .k-innen { padding-right: 5.5cqw; }
+  .mit-figuren .k-figur { right: 7cqw; bottom: calc(100% - 1px); width: 10cqw; height: 20cqw; }   /* am Handy steht die Figur oben auf der Karte */
+  .k-kal { height: auto; max-height: none; grid-auto-rows: auto; }
+  .k-kal > i { min-height: 1.45em; }
+  .k-kal-notiz { margin-top: 0.5em; }
   .m-karten { grid-template-columns: minmax(0, 1fr); width: min(100%, 320px); }
 }
 @media (prefers-reduced-motion: reduce) {
   .m-strecke { height: auto; }
   .m-buehne { position: relative; }
   .m-schritt, .m-fort__teil, .m-fort li > span, .m-fort li > i::after { transition: none; }
-  .t-video { display: none; }
 }
 </style>
 </head>
 <body>
 <div class="m-strecke" data-strecke>
   <div class="m-buehne">
-    <div class="t-foto" data-foto>
-      <picture class="t-licht " data-licht="morgen"><source media="(max-aspect-ratio: 4/5)" type="image/avif" srcset="bilder/hero/tropen/hoch-morgen-720.avif 720w, bilder/hero/tropen/hoch-morgen-1080.avif 1080w, bilder/hero/tropen/hoch-morgen-1440.avif 1440w" sizes="100vw"><source media="(max-aspect-ratio: 4/5)" type="image/webp" srcset="bilder/hero/tropen/hoch-morgen-720.webp 720w, bilder/hero/tropen/hoch-morgen-1080.webp 1080w, bilder/hero/tropen/hoch-morgen-1440.webp 1440w" sizes="100vw"><source type="image/avif" srcset="bilder/hero/tropen/quer-morgen-1280.avif 1280w, bilder/hero/tropen/quer-morgen-1920.avif 1920w, bilder/hero/tropen/quer-morgen-2560.avif 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><source type="image/webp" srcset="bilder/hero/tropen/quer-morgen-1280.webp 1280w, bilder/hero/tropen/quer-morgen-1920.webp 1920w, bilder/hero/tropen/quer-morgen-2560.webp 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><img src="bilder/hero/tropen/quer-morgen-1920.webp" width="3840" height="2160" alt="Ruhiges Büro mit offenem Blick in einen tropischen Regenwald, auf einem hellen Eichentisch steht ein aufgeklappter Laptop" decoding="async" fetchpriority="high"></picture>
-      <video class="t-video" data-video muted playsinline loop preload="none" aria-hidden="true" data-src="bilder/hero/tropen/tropen-loop-720.mp4"></video>
-      <picture class="t-licht " data-licht="gold"><source media="(max-aspect-ratio: 4/5)" type="image/avif" data-srcset="bilder/hero/tropen/hoch-gold-720.avif 720w, bilder/hero/tropen/hoch-gold-1080.avif 1080w, bilder/hero/tropen/hoch-gold-1440.avif 1440w" sizes="100vw"><source media="(max-aspect-ratio: 4/5)" type="image/webp" data-srcset="bilder/hero/tropen/hoch-gold-720.webp 720w, bilder/hero/tropen/hoch-gold-1080.webp 1080w, bilder/hero/tropen/hoch-gold-1440.webp 1440w" sizes="100vw"><source type="image/avif" data-srcset="bilder/hero/tropen/quer-gold-1280.avif 1280w, bilder/hero/tropen/quer-gold-1920.avif 1920w, bilder/hero/tropen/quer-gold-2560.avif 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><source type="image/webp" data-srcset="bilder/hero/tropen/quer-gold-1280.webp 1280w, bilder/hero/tropen/quer-gold-1920.webp 1920w, bilder/hero/tropen/quer-gold-2560.webp 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><img data-src="bilder/hero/tropen/quer-gold-1920.webp" width="3840" height="2160" alt="" decoding="async" loading="eager"></picture>
-      <picture class="t-licht " data-licht="abend"><source media="(max-aspect-ratio: 4/5)" type="image/avif" data-srcset="bilder/hero/tropen/hoch-abend-720.avif 720w, bilder/hero/tropen/hoch-abend-1080.avif 1080w, bilder/hero/tropen/hoch-abend-1440.avif 1440w" sizes="100vw"><source media="(max-aspect-ratio: 4/5)" type="image/webp" data-srcset="bilder/hero/tropen/hoch-abend-720.webp 720w, bilder/hero/tropen/hoch-abend-1080.webp 1080w, bilder/hero/tropen/hoch-abend-1440.webp 1440w" sizes="100vw"><source type="image/avif" data-srcset="bilder/hero/tropen/quer-abend-1280.avif 1280w, bilder/hero/tropen/quer-abend-1920.avif 1920w, bilder/hero/tropen/quer-abend-2560.avif 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><source type="image/webp" data-srcset="bilder/hero/tropen/quer-abend-1280.webp 1280w, bilder/hero/tropen/quer-abend-1920.webp 1920w, bilder/hero/tropen/quer-abend-2560.webp 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><img data-src="bilder/hero/tropen/quer-abend-1920.webp" width="3840" height="2160" alt="" decoding="async" loading="eager"></picture>
-      <img class="t-weich" data-weich data-quer="bilder/hero/tropen/quer-abend-weich.webp" data-hoch="bilder/hero/tropen/hoch-abend-weich.webp" alt="" aria-hidden="true">
-      <div class="t-schirm" data-schirm aria-hidden="true">
-        <div class="m-anzeige">
-            <div class="w w-skizze" data-w="skizze"><div class="w-nav"><div class="w-logo"></div><div class="w-links"><i></i><i></i><i></i></div></div><div class="w-held"><div class="w-titel"><i></i><i></i><i class="w-zeile"></i><i class="w-zeile"></i><i class="w-knopf"></i></div><div class="w-bild"></div></div><div class="w-reihe"><div class="w-bild"></div><div class="w-bild"></div><div class="w-bild"></div></div></div>
-            <div class="w w-farbe" data-w="farbe"><div class="w-nav"><div class="w-logo"></div><div class="w-links"><i></i><i></i><i></i></div></div><div class="w-held"><div class="w-titel"><i></i><i></i><i class="w-zeile"></i><i class="w-zeile"></i><i class="w-knopf"></i></div><div class="w-bild"></div></div><div class="w-reihe"><div class="w-bild"></div><div class="w-bild"></div><div class="w-bild"></div></div></div>
-            <div class="w w-bilder" data-w="bilder"><div class="w-nav"><div class="w-logo"></div><div class="w-links"><i></i><i></i><i></i></div></div><div class="w-held"><div class="w-titel"><i></i><i></i><i class="w-zeile"></i><i class="w-zeile"></i><i class="w-knopf"></i></div><div class="w-bild"><img src="bilder/hero/layer-1-sky-960.webp" alt=""></div></div><div class="w-reihe"><div class="w-bild"><img src="bilder/hero/layer-2-ridge-960.webp" alt=""></div><div class="w-bild"><img src="bilder/hero/layer-1-sky-blaue-stunde-960.webp" alt=""></div><div class="w-bild"><img src="bilder/hero/layer-1-sky-ohne-sonne-960.webp" alt=""></div></div></div>
-            <div class="m-endo" data-endo><b>Neue Anfrage</b>Beantwortet. Termin eingetragen <span>✓</span></div>
-            <div class="w w-formular" data-w="formular"><strong>Was brauchen Sie?</strong><div><span>Website</span><span>Automatisierung</span><span>Beides</span></div></div>
-          </div>
-        <div class="t-aus" data-aus></div>
-        <div class="t-glanz"></div>
-      </div>
-    </div>
-    <div class="t-dunkel" data-dunkel aria-hidden="true"></div>
-    <img class="t-blaetter" data-blaetter src="bilder/hero/tropen/blaetter-900.webp" srcset="bilder/hero/tropen/blaetter-900.webp 900w, bilder/hero/tropen/blaetter-1400.webp 1400w" sizes="(max-aspect-ratio: 4/5) 96vw, 44vw" alt="" aria-hidden="true" decoding="async">
-    <div class="t-verlauf" aria-hidden="true"></div>
+    <div class="m-licht" aria-hidden="true"></div>
+    <div class="m-stimmung" aria-hidden="true"><i class="s-warm" data-stimmung="warm"></i><i class="s-kuehl" data-stimmung="kuehl"></i><i class="s-orange" data-stimmung="orange"></i></div>
+    <div class="m-boden" aria-hidden="true"><div class="m-raster"></div></div>
 
     <div class="m-text">
-      <p class="t-klein">Digitalstudio für Unternehmen</p>
-      <h1><span class="t-versteckt">ERGUN. </span>Websites<svg class="t-wolke" viewBox="0 0 40 22" aria-hidden="true"><path d="M8 21H32A7 7 0 0 0 33 7.1A9 9 0 0 0 16 5A7 7 0 0 0 7.5 11A5 5 0 0 0 8 21Z"/></svg>Automatisierung<svg class="t-wolke" viewBox="0 0 40 22" aria-hidden="true"><path d="M8 21H32A7 7 0 0 0 33 7.1A9 9 0 0 0 16 5A7 7 0 0 0 7.5 11A5 5 0 0 0 8 21Z"/></svg>KI</h1>
+      <h1>Websites. Automatisierung. KI.</h1>
       <div class="m-schritte" aria-live="polite">
         <p class="m-schritt" data-schritt="0"><b>So arbeitet Ihr System</b></p>
         <p class="m-schritt" data-schritt="1"><b>Ihre Website entsteht</b></p>
@@ -262,29 +262,25 @@ html, body { margin: 0; background: var(--grund); color: var(--text); font-famil
       </div>
     </div>
 
-    <div class="t-karten" data-karten aria-hidden="true">
-      <div class="m-karte" data-karte="1"><div class="k-innen">
-            <div class="k-kopf"><span class="k-nr">1</span><h3>Anfrage kommt an</h3><svg class="k-sym" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h5l1.5 3h5L16 13h5"/><path d="M5.5 5h13L21 13v5.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5V13z"/></svg></div>
-            <div class="k-inhalt k-post">
-              <div class="k-zeile k-zeile--neu"><i></i><div><b>Termin für Freitag?</b><span>Neue Anfrage</span></div><em>jetzt</em></div>
-              <div class="k-zeile k-zeile--alt"><i></i><div class="k-balken"><u style="width:46%"></u><u style="width:78%"></u></div><em>09:12</em></div>
-              <div class="k-zeile k-zeile--alt"><i></i><div class="k-balken"><u style="width:38%"></u><u style="width:64%"></u></div><em>Mo</em></div>
-            </div>
+    <div class="m-welt" data-welt aria-hidden="true">
+      <div class="m-schatten" data-schatten></div>
+      <div class="m-spiegel" data-spiegel></div>
+      <div class="m-kamera" data-kamera>
+        <!-- hinten → vorn: Stufe 4 … Stufe 1, Unterteil, Bildschirm -->
+        <div class="m-lage" data-lage="4">
+          <div class="m-karte" data-karte="4"><div class="k-innen">
+            <div class="k-kopf"><span class="k-nr">4</span><h3>Antwort geht raus</h3><svg class="k-sym" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3 10 14"/><path d="M21 3 14.5 21 10 14 3 9.5z"/></svg></div>
+            <div class="k-inhalt"><div class="k-chat">
+              <div class="k-blase k-blase--kunde">Termin für Freitag?</div>
+              <div class="k-blase k-blase--antwort">Ihr Termin am Freitag, 10 Uhr, ist eingetragen <span>✓</span></div>
+              <div class="k-status">Gesendet <span>✓</span></div>
+              <div class="k-eingabe"><i></i><i></i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></div>
+            </div></div>
           </div>
-          <div class="k-faden"><b></b></div></div>
-      <div class="m-karte" data-karte="2"><div class="k-innen">
-            <div class="k-kopf"><span class="k-nr">2</span><h3>Automatisch sortiert</h3><svg class="k-sym" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></div>
-            <div class="k-inhalt k-sort">
-              <div class="k-nachricht"><b>Termin für Freitag?</b><span class="k-etikett k-etikett--termin">Termin</span><span class="k-etikett k-etikett--neu">Neukunde</span></div>
-              <div class="k-spalten">
-                <div class="k-spalte k-spalte--ziel"><svg viewBox="0 0 24 24" aria-label="Termine"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><b class="k-gelandet">Termin für Freitag?</b><i></i></div>
-                <div class="k-spalte"><svg viewBox="0 0 24 24" aria-label="Fragen"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.2A8 8 0 1 1 20 12z"/><path d="M10 9.5a2 2 0 1 1 2.8 1.8c-.5.3-.8.7-.8 1.2v.5M12 16h.01"/></svg><i></i><i></i></div>
-                <div class="k-spalte"><svg viewBox="0 0 24 24" aria-label="Angebote"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg><i></i></div>
-              </div>
-            </div>
-          </div>
-          <div class="k-faden"><b></b></div></div>
-      <div class="m-karte" data-karte="3"><div class="k-innen">
+          <div class="k-faden"><b></b></div><div class="k-figur" data-figur="senden"></div></div>
+        </div>
+        <div class="m-lage" data-lage="3">
+          <div class="m-karte" data-karte="3"><div class="k-innen">
             <div class="k-kopf"><span class="k-nr">3</span><h3>Termin eingetragen</h3><svg class="k-sym" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></div>
             <div class="k-inhalt">
               <div class="k-kal">
@@ -296,30 +292,65 @@ html, body { margin: 0; background: var(--grund); color: var(--text); font-famil
               <p class="k-kal-notiz"><b>Fr 10:00</b> ✓</p>
             </div>
           </div>
-          <div class="k-faden"><b></b></div></div>
-      <div class="m-karte" data-karte="4"><div class="k-innen">
-            <div class="k-kopf"><span class="k-nr">4</span><h3>Antwort geht raus</h3><svg class="k-sym" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3 10 14"/><path d="M21 3 14.5 21 10 14 3 9.5z"/></svg></div>
-            <div class="k-inhalt"><div class="k-chat">
-              <div class="k-blase k-blase--kunde">Termin für Freitag?</div>
-              <div class="k-blase k-blase--antwort">Ihr Termin am Freitag, 10 Uhr, ist eingetragen <span>✓</span></div>
-              <div class="k-status">Gesendet <span>✓</span></div>
-              <div class="k-eingabe"><i></i><i></i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></div>
-            </div></div>
+          <div class="k-faden"><b></b></div><div class="k-figur" data-figur="haken"></div></div>
+        </div>
+        <div class="m-lage" data-lage="2">
+          <div class="m-karte" data-karte="2"><div class="k-innen">
+            <div class="k-kopf"><span class="k-nr">2</span><h3>Automatisch sortiert</h3><svg class="k-sym" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></div>
+            <div class="k-inhalt k-sort">
+              <div class="k-nachricht"><b>Termin für Freitag?</b><span class="k-etikett k-etikett--termin">Termin</span><span class="k-etikett k-etikett--neu">Neukunde</span></div>
+              <div class="k-spalten">
+                <div class="k-spalte k-spalte--ziel"><svg viewBox="0 0 24 24" aria-label="Termine"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><b class="k-gelandet">Termin für Freitag?</b><i></i></div>
+                <div class="k-spalte"><svg viewBox="0 0 24 24" aria-label="Fragen"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.2A8 8 0 1 1 20 12z"/><path d="M10 9.5a2 2 0 1 1 2.8 1.8c-.5.3-.8.7-.8 1.2v.5M12 16h.01"/></svg><i></i><i></i></div>
+                <div class="k-spalte"><svg viewBox="0 0 24 24" aria-label="Angebote"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg><i></i></div>
+              </div>
+            </div>
           </div>
-          <div class="k-faden"><b></b></div></div>
+          <div class="k-faden"><b></b></div><div class="k-figur" data-figur="kleben"></div></div>
+        </div>
+        <div class="m-lage" data-lage="1">
+          <div class="m-karte" data-karte="1"><div class="k-innen">
+            <div class="k-kopf"><span class="k-nr">1</span><h3>Anfrage kommt an</h3><svg class="k-sym" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h5l1.5 3h5L16 13h5"/><path d="M5.5 5h13L21 13v5.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5V13z"/></svg></div>
+            <div class="k-inhalt k-post">
+              <div class="k-zeile k-zeile--neu"><i></i><div><b>Termin für Freitag?</b><span>Neue Anfrage</span></div><em>jetzt</em></div>
+              <div class="k-zeile k-zeile--alt"><i></i><div class="k-balken"><u style="width:46%"></u><u style="width:78%"></u></div><em>09:12</em></div>
+              <div class="k-zeile k-zeile--alt"><i></i><div class="k-balken"><u style="width:38%"></u><u style="width:64%"></u></div><em>Mo</em></div>
+            </div>
+          </div>
+          <div class="k-faden"><b></b></div><div class="k-figur" data-figur="bringen"></div></div>
+        </div>
+        <div class="m-lage m-unterteil" data-lage="u">
+          <div class="m-basis"><div class="m-scharnier"></div><div class="m-tastatur" data-tastatur></div><div class="m-trackpad"></div></div>
+        </div>
+        <div class="m-lage" data-lage="0">
+          <div class="m-deckel"><i class="m-linse"></i></div>
+          <div class="m-anzeige">
+            <div class="w w-skizze" data-w="skizze"><div class="w-nav"><div class="w-logo"></div><div class="w-links"><i></i><i></i><i></i></div></div><div class="w-held"><div class="w-titel"><i></i><i></i><i class="w-zeile"></i><i class="w-zeile"></i><i class="w-knopf"></i></div><div class="w-bild"></div></div><div class="w-reihe"><div class="w-bild"></div><div class="w-bild"></div><div class="w-bild"></div></div></div>
+            <div class="w w-farbe" data-w="farbe"><div class="w-nav"><div class="w-logo"></div><div class="w-links"><i></i><i></i><i></i></div></div><div class="w-held"><div class="w-titel"><i></i><i></i><i class="w-zeile"></i><i class="w-zeile"></i><i class="w-knopf"></i></div><div class="w-bild"></div></div><div class="w-reihe"><div class="w-bild"></div><div class="w-bild"></div><div class="w-bild"></div></div></div>
+            <div class="w w-bilder" data-w="bilder"><div class="w-nav"><div class="w-logo"></div><div class="w-links"><i></i><i></i><i></i></div></div><div class="w-held"><div class="w-titel"><i></i><i></i><i class="w-zeile"></i><i class="w-zeile"></i><i class="w-knopf"></i></div><div class="w-bild"><img src="bilder/hero/layer-1-sky-960.webp" alt=""></div></div><div class="w-reihe"><div class="w-bild"><img src="bilder/hero/layer-2-ridge-960.webp" alt=""></div><div class="w-bild"><img src="bilder/hero/layer-1-sky-blaue-stunde-960.webp" alt=""></div><div class="w-bild"><img src="bilder/hero/layer-1-sky-ohne-sonne-960.webp" alt=""></div></div></div>
+            <div class="m-endo" data-endo><b>Neue Anfrage</b>Beantwortet. Termin eingetragen <span>✓</span></div>
+            <div class="w w-formular" data-w="formular"><strong>Was brauchen Sie?</strong><div><span>Website</span><span>Automatisierung</span><span>Beides</span></div></div>
+          </div>
+          <div class="m-auf" style="inset:0">
+            <div class="m-brief" data-brief><svg viewBox="0 0 44 30"><rect x="1" y="1" width="42" height="28" rx="4" fill="#F4F1E6"/><path d="M3 4 22 17 41 4" fill="none" stroke="#0C162C" stroke-width="1.5" stroke-linejoin="round"/><circle cx="22" cy="17" r="3" fill="#FF7A1A"/></svg></div>
+            <div class="m-figur" data-figur="zeichnen" style="left:8%;top:104%"></div>
+            <div class="m-figur" data-figur="malen" style="left:92%;top:104%"></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="m-brief" data-brief aria-hidden="true"><svg viewBox="0 0 44 30"><rect x="1" y="1" width="42" height="28" rx="4" fill="#F4F1E6"/><path d="M3 4 22 17 41 4" fill="none" stroke="#0C162C" stroke-width="1.5" stroke-linejoin="round"/><circle cx="22" cy="17" r="3" fill="#FF7A1A"/></svg></div>
 
     <div class="m-formular" data-formular aria-hidden="true">
       <h2>Was brauchen Sie?</h2>
       <div class="m-karten"><div>Website<small>Ihr Auftritt im Netz</small></div><div>Automatisierung<small>Anfragen, Termine, Antworten</small></div><div>Beides<small>Website + Automatisierung</small></div></div>
       <p>(Vorschau – hier geht es in Ihr Kontaktformular über)</p>
     </div>
+    <div class="m-vignette" aria-hidden="true"></div>
+    <div class="m-korn" aria-hidden="true"></div>
   </div>
 </div>
 <div class="m-danach">Hier folgt auf der echten Seite der Anfrage-Ablauf („Was brauchen Sie?“ → „Ihre Anfrage“).</div>
-<div class="m-hinweis" data-hinweis>Vorschau v3 · langsam scrollen · <a href="maschine-vorschau-v2.html">vorher (v2)</a></div>
-<script>window.TROPEN_SCHIRM = {"quer": {"w": 3840, "h": 2160, "ecken": [[0.64932, 0.455], [0.81339, 0.45338], [0.80784, 0.66176], [0.64042, 0.64745]]}, "hoch": {"w": 2160, "h": 3840, "ecken": [[0.34755, 0.5419], [0.65931, 0.54214], [0.66611, 0.65406], [0.33833, 0.65396]]}};</script>
-<script src="js/maschine-foto.js?v=3"></script>
+<div class="m-hinweis" data-hinweis>Vorschau v2 · langsam scrollen · <a href="?figuren=ja" data-umschalter>mit Figuren</a></div>
+<script src="js/maschine.js?v=14"></script>
 </body>
 </html>
