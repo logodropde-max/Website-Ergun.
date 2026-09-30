@@ -17,10 +17,13 @@
   var buehne = strecke.firstElementChild, foto = $('[data-foto]'), schirm = $('[data-schirm]'), anzeige = $('.m-anzeige', schirm);
   var licht = {}; $$('[data-licht]').forEach(function (e) { licht[e.getAttribute('data-licht')] = e; });
   var aus = $('[data-aus]'), video = $('[data-video]'), weich = $('[data-weich]'), dunkel = $('[data-dunkel]'), blaetter = $('[data-blaetter]'), brief = $('[data-brief]');
-  var kartenBox = $('[data-karten]'), karte = {}; [1, 2, 3, 4].forEach(function (i) { karte[i] = $('[data-karte="' + i + '"]'); });
+  var kartenBox = $('[data-m-karten]'), karte = {}; [1, 2, 3, 4].forEach(function (i) { karte[i] = $('[data-karte="' + i + '"]'); });
   var formular = $('[data-formular]'), formularTeile = formular ? [].slice.call(formular.children) : [], text = $('.m-text');
   var web = { skizze: $('[data-w="skizze"]'), farbe: $('[data-w="farbe"]'), bilder: $('[data-w="bilder"]'), formular: $('[data-w="formular"]') }, meldung = $('[data-endo]');
-  var schritte = $$('[data-schritt]'), fort = { web: $('[data-fort="web"]'), ablauf: $('[data-fort="ablauf"]') };
+  var abschnitt = document.querySelector('[data-maschine-ziel]');   /* Startseite: echter Abschnitt „Was brauchen Sie?“ statt Einblendung */
+  if (abschnitt && formular) { formular.remove(); formular = null; formularTeile = []; }
+  var nachOben = document.querySelector('[data-nach-oben]'); if (nachOben && strecke.id) nachOben.setAttribute('href', '#' + strecke.id);
+  var schritte = $$('[data-schritt]'), fort ={ web: $('[data-fort="web"]'), ablauf: $('[data-fort="ablauf"]') };
   var TITEL = { web: ['Entwurf', 'Farbe & Schrift', 'Bilder & Inhalte'], ablauf: ['Anfrage kommt an', 'Automatisch sortiert', 'Termin eingetragen', 'Antwort geht raus'] };
 
   /* ---------- Helfer ---------- */
@@ -147,8 +150,23 @@
     fortschritt(fort.ablauf, n >= 2, n === 2 ? 1 : stufe, n === 4 || T[3] >= 1, TITEL.ablauf);
     phase = ['start', 'website', 'anfrage', 'ablauf', 'fertig'][n] + (O > 0.5 ? '+formular' : '');
   }
-  /* Formular öffnet sich: Ausschnitt wächst vom Bildschirm-Rechteck auf die ganze Bühne */
+  /* Formular öffnet sich: Ausschnitt wächst vom Bildschirm-Rechteck auf die ganze Bühne.
+     Startseite: statt der Vorschau-Einblendung öffnet sich der echte Abschnitt „Was brauchen Sie?“ ([data-maschine-ziel]). Er liegt per
+     margin-top: -100svh über dem letzten Bild der Maschine; solange er noch unter dem Fensterrand steht, wird er oben festgehalten. */
+  var verschoben = 0;
   function oeffnen(o, roh) {
+    if (abschnitt) {
+      if (ruhig) return;   /* „Bewegung reduzieren“: Abschnitt steht ganz normal unter dem Standbild */
+      var zr = abschnitt.getBoundingClientRect(), obenEcht = zr.top - verschoben, vorbei = obenEcht <= 0.5;   /* Lage OHNE die eigene Verschiebung (sonst schaltet es hin und her) */
+      if (o <= 0 && !vorbei) { abschnitt.style.visibility = 'hidden'; abschnitt.style.clipPath = ''; abschnitt.style.transform = ''; verschoben = 0; return; }
+      abschnitt.style.visibility = '';
+      if (vorbei) { abschnitt.style.clipPath = ''; abschnitt.style.transform = ''; verschoben = 0; return; }
+      var aa = anzeige.getBoundingClientRect(), q2 = 1 - o;
+      verschoben = -obenEcht; abschnitt.style.transform = 'translate3d(0, ' + r3(verschoben) + 'px, 0)';   /* oben festhalten, bis er von selbst oben ist – kein Sprung */
+      if (o >= 1) { abschnitt.style.clipPath = ''; return; }
+      abschnitt.style.clipPath = 'inset(' + r3(aa.top * q2) + 'px ' + r3((window.innerWidth - aa.right) * q2) + 'px ' + r3((zr.height - aa.bottom) * q2) + 'px ' + r3(aa.left * q2) + 'px round ' + r3(6 * q2 + 0.5) + 'px)';
+      return;
+    }
     if (!formular) return;
     if (o <= 0) { formular.style.opacity = '0'; formular.style.pointerEvents = 'none'; return; }
     var b = buehne.getBoundingClientRect(), a = anzeige.getBoundingClientRect(), q = 1 - o;
@@ -189,6 +207,7 @@
   function beimScrollen() { ziel = lesen(); if (!laeuft) { laeuft = true; requestAnimationFrame(schritt); } }
 
   messen();
+  if (ruhig && document.readyState !== 'complete') window.addEventListener('load', function () { messen(); kamera(1, m.fx + m.sx, m.fy + m.sy); });
   if (ruhig) {   /* Standbild Morgen, fertige Website, Meldung sichtbar */
     zeichnen(0.36); setze(licht.gold, null, 0); setze(licht.abend, null, 0); setze(meldung, 'none', 1);
     schritte.forEach(function (el, i) { el.classList.toggle('ist-an', i === 4); });
@@ -199,6 +218,10 @@
     p = ziel = lesen(); zeichnen(p);
     window.addEventListener('scroll', beimScrollen, { passive: true });
     window.addEventListener('resize', function () { messen(); zeichnen(p); });
+    /* Startseite: das Skript kann vor maschine.css/Schriften laufen → nach dem Laden noch einmal messen */
+    var neuMessen = function () { messen(); zeichnen(p); };
+    window.addEventListener('load', neuMessen);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(neuMessen);
   }
   if (document.readyState === 'complete') setTimeout(nachladen, 200); else window.addEventListener('load', function () { setTimeout(nachladen, 200); });
   window.__maschine = { p: function (x) { p = ziel = klemm(x); zeichnen(p); return phase; }, zustand: function () { return { p: p, phase: phase, stufe: stufe, hoch: m.hoch, schirm: [r3(m.sb), r3(m.sh)], kamera: kam }; } };

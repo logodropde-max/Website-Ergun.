@@ -1,6 +1,9 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
-## Titelbild „Maschine“ – Vorschau v3 tropisches Büro (Auftrag 44, 30.09./01.10.2026, nicht live)
+## Titelbild „Maschine“ – tropisches Büro LIVE auf der Startseite (Auftrag 44, 01.10.2026, Rückweg Tag `vor-titel-maschine`)
+- `index.html`: Schalter `window.ERGUN_TITEL = 'maschine'` im Kopf (`?titel=alt`/`?titel=a` = alte Szene, dann laden `szene.js`, `wolken.js` und die Figur-Vorlader), Markup `.m-strecke#titel` vor `<main>`, Skripte über einen kleinen Lader (`async = false`). `#preise` hat `data-maschine-ziel` und `margin-top: -100svh` (nur ohne „Bewegung reduzieren“) – `maschine-foto.js` hält ihn oben fest und öffnet ihn per clip-path aus dem Laptop-Bildschirm. Gemeinsames CSS `maschine.css` (auch für `maschine-vorschau.html`). Nav-Marke „nach oben“ zeigt auf `#titel`.
+
+## Titelbild „Maschine“ – Vorschau v3 tropisches Büro (Auftrag 44, 30.09./01.10.2026)
 - `maschine-vorschau.html` + `js/maschine-foto.js` (v2 bleibt als `maschine-vorschau-v2.html` + `js/maschine.js`). Fotos `bilder/hero/tropen/` (quer-/hoch-{morgen,gold,abend}-{Breite}.avif/.webp, `*-weich.webp` 192 px für den Unschärfe-Wechsel, `blaetter-900/1400.webp`, `tropen-loop-720.mp4`, `bildschirm.json`) aus `bilder/hero/4k/tropen/` (`ecken.py` misst die Bildschirm-Ecken, `bilder.py` baut die Größen, `blaetter.py` stellt die Blätter über die Farbe frei). Bildschirm-Inhalt per `matrix3d` (Homographie in `matrix3d()`), `.t-foto` im cover-Zuschnitt (Anker x 0.58/0.5), Kamera `kamera(s, zx, zy)` hält immer den Rand bedeckt. Zeitplan oben in `maschine-foto.js`. Prüfen: `window.__maschine.p(x)`.
 
 ## Titelbild „Maschine“ – Vorschau v2 (30.09.2026, nicht live, Rückweg Tag `vor-maschine-v2`)

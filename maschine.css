@@ -1,0 +1,196 @@
+/* ERGUN. – Titelbild „Maschine“ im tropischen Büro (Auftrag 44, live seit ERGUNs OK am 01.10.2026).
+   Gemeinsam für index.html (Startseite) und maschine-vorschau.html. Logik: js/maschine-foto.js. Alle Farben/Variablen
+   hängen an .m-strecke (nicht :root), damit sie die Startseite nicht verändern. */
+.m-strecke {
+  --grund: #0A0D12; --text: #F4F1E6; --leise: #C9CFD9; --kante: rgba(244, 241, 230, 0.14);
+  --orange: #FF7A1A; --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+.m-strecke { position: relative; height: 720svh; }
+.m-buehne { position: sticky; top: 0; height: 100svh; min-height: 560px; overflow: hidden; background: #1B2016; }
+
+/* ---------- Foto-Bühne: tropisches Büro (Auftrag 44). Morgen → Goldene Stunde → Abend liegen übereinander (nur opacity).
+   .t-foto hat die Größe des Fotos im „cover“-Zuschnitt (setzt das Skript) – der Bildschirm-Inhalt liegt per matrix3d darauf. ---------- */
+.t-foto { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
+.t-licht, .t-licht img, .t-video, .t-weich { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; }
+.t-licht { opacity: 0; will-change: opacity; }
+.t-licht[data-licht="morgen"] { opacity: 1; }
+.t-video { opacity: 0; will-change: opacity; }
+.t-weich { opacity: 0; will-change: opacity; }   /* winzige Fassung (192 px), groß gezogen = weich unscharf, billig statt filter: blur */
+.t-schirm { position: absolute; left: 0; top: 0; transform-origin: 0 0; overflow: hidden; border-radius: 0.6%; background: #07080A; }
+.t-schirm .m-anzeige { left: 1.4%; top: 2.6%; width: 97.2%; height: 94.2%; border-radius: 0.8%; }
+.t-aus { position: absolute; inset: 0; background: #0B0C0F; will-change: opacity; }   /* Bildschirm aus – wie im Foto */
+.t-glanz { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(118deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 28%, transparent 46%), radial-gradient(120% 90% at 50% 50%, transparent 62%, rgba(0, 0, 0, 0.22) 100%); mix-blend-mode: screen; }
+.t-dunkel { position: absolute; inset: 0; background: #06080C; opacity: 0; pointer-events: none; will-change: opacity; }
+.t-blaetter { position: absolute; left: -5vw; bottom: -8vh; width: min(44vw, 760px); height: auto; filter: blur(3px); pointer-events: none; will-change: transform, opacity; z-index: 2; }
+.t-verlauf { position: absolute; inset: 0; pointer-events: none; z-index: 3; background: linear-gradient(90deg, rgba(8, 10, 14, 0.78) 0%, rgba(8, 10, 14, 0.55) 24%, rgba(8, 10, 14, 0.18) 42%, transparent 56%); }
+.m-text { position: absolute; left: clamp(20px, 6vw, 96px); top: 50%; transform: translateY(-50%); width: min(34vw, 440px); z-index: 5; text-shadow: 0 1px 18px rgba(0, 0, 0, 0.35); }
+.m-text .t-klein { margin: 0 0 12px; font-size: 14px; letter-spacing: 0.01em; color: var(--leise); }
+.m-text h1 { margin: 0 0 20px; font: 400 clamp(36px, 4.2vw, 64px)/1.04 "Instrument Serif", Georgia, serif; letter-spacing: -0.01em; }
+.t-versteckt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.t-wolke { display: inline-block; width: 0.62em; height: 0.34em; margin: 0 0.18em; vertical-align: 0.12em; fill: rgba(244, 241, 230, 0.8); }
+.t-karten { position: absolute; z-index: 4; width: var(--L); height: calc(var(--L) * var(--kh, 0.66)); --kh: 0.66; pointer-events: none; }
+.t-karten .m-karte { position: absolute; left: 0; top: 0; opacity: 0; will-change: transform, opacity; }
+.m-brief { position: absolute; z-index: 4; width: 44px; height: 30px; margin: -15px 0 0 -22px; opacity: 0; will-change: transform, opacity; }
+/* ---------- Text links: Überschrift, Phase, Fortschritt ---------- */
+.m-text { position: absolute; left: clamp(20px, 6vw, 96px); top: 50%; transform: translateY(-50%); width: min(32vw, 400px); z-index: 5; }
+.m-text h1 { margin: 0 0 20px; font: 400 clamp(34px, 4.2vw, 62px)/1.02 "Instrument Serif", Georgia, serif; letter-spacing: -0.01em; }
+.m-schritte { position: relative; min-height: 3.4em; }
+.m-schritt { position: absolute; inset: 0 auto auto 0; margin: 0; font-size: clamp(15px, 1.25vw, 18px); line-height: 1.45; color: var(--leise); opacity: 0; transform: translateY(8px); transition: opacity 360ms var(--ease), transform 360ms var(--ease); }
+.m-schritt b { display: block; color: var(--text); font-weight: 600; }
+.m-schritt.ist-an { opacity: 1; transform: none; }
+.m-fort { position: relative; margin-top: 18px; height: 78px; }
+.m-fort__teil { position: absolute; inset: 0 auto auto 0; width: 100%; opacity: 0; transform: translateY(6px); transition: opacity 320ms var(--ease), transform 320ms var(--ease); }
+.m-fort__teil.ist-an { opacity: 1; transform: none; }
+.m-fort ol { display: flex; align-items: center; margin: 0; padding: 0; list-style: none; }
+.m-fort li { display: flex; align-items: center; flex: 1; }
+.m-fort li:last-child { flex: none; }
+.m-fort li > span { display: grid; place-items: center; width: 28px; height: 28px; flex: none; border-radius: 50%; border: 1px solid rgba(244, 241, 230, 0.22); color: var(--leise); font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; transition: background-color 240ms var(--ease), border-color 240ms var(--ease), color 240ms var(--ease); }
+.m-fort li > i { flex: 1; height: 1px; margin: 0 6px; background: rgba(244, 241, 230, 0.16); position: relative; overflow: hidden; }
+.m-fort li > i::after { content: ""; position: absolute; inset: 0; background: var(--orange); transform-origin: 0 50%; transform: scaleX(var(--voll, 0)); transition: transform 240ms var(--ease); }
+.m-fort li.ist-fertig > span { border-color: rgba(255, 122, 26, 0.7); background: rgba(255, 122, 26, 0.16); color: var(--text); }
+.m-fort li.ist-fertig > i { --voll: 1; }
+.m-fort li.ist-aktiv > span { border-color: var(--text); background: var(--text); color: #10131B; }
+.m-fort__titel { margin: 12px 0 0; font-size: 20px; line-height: 1.3; font-weight: 600; color: var(--text); min-height: 1.3em; }
+
+/* ---------- die vier Stufen als Karten (HTML, gestochen scharf). Werte kommen als CSS-Variablen aus maschine.js ---------- */
+.m-karte { --kh: 0.66; position: absolute; left: 0; bottom: 0; width: 100%; height: calc(var(--L) * var(--kh)); container-type: size; border-radius: calc(var(--L) * 0.036);
+  background: linear-gradient(165deg, rgba(34, 38, 48, 0.97), rgba(17, 20, 28, 0.97)); border: 1px solid var(--kante);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 34px 70px -28px rgba(0, 0, 0, 0.75); }
+.k-innen { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 3.2cqw; padding: 5cqw 5.5cqw 6cqw; font-size: 3.3cqw; line-height: 1.3; }
+.mit-figuren .k-innen { padding-right: 26cqw; }
+.k-kopf { display: flex; align-items: center; gap: 0.6em; }
+.k-nr { display: grid; place-items: center; width: 1.75em; height: 1.75em; flex: none; border-radius: 50%; background: var(--text); color: #10131B; font-size: 0.82em; font-weight: 700; font-variant-numeric: tabular-nums; }
+.k-kopf h3 { margin: 0; font-size: 1.18em; font-weight: 600; letter-spacing: -0.005em; }
+.k-sym { width: 1.35em; height: 1.35em; margin-left: auto; flex: none; color: var(--leise); }
+.k-inhalt { position: relative; flex: 1; min-height: 0; }
+.k-klein { font-size: 0.8em; color: var(--leise); }
+/* roter Faden: feine Linie an der Unterkante, der Lichtpunkt läuft mit */
+.k-faden { position: absolute; left: 5.5cqw; right: 5.5cqw; bottom: 2.6cqw; height: 1px; background: rgba(244, 241, 230, 0.08); }
+.k-faden::before { content: ""; position: absolute; inset: 0; background: var(--orange); transform-origin: 0 50%; transform: scaleX(var(--faden, 0)); opacity: 0.85; }
+.k-faden b { position: absolute; left: 0; top: 0; width: 9px; height: 9px; margin: -4px 0 0 -4px; border-radius: 50%; background: #FFE3C8; box-shadow: 0 0 0 2px rgba(255, 122, 26, 0.9), 0 0 10px rgba(255, 122, 26, 0.7); transform: translateX(calc(var(--faden, 0) * 89cqw)); opacity: var(--punkt, 0); }
+
+/* ① Posteingang */
+.k-post { display: flex; flex-direction: column; gap: 0.5em; }
+.k-zeile { display: grid; grid-template-columns: 0.55em minmax(0, 1fr) auto; align-items: center; gap: 0.7em; padding: 0.62em 0.8em; border-radius: 0.7em; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.06); }
+.k-zeile > i { width: 0.55em; height: 0.55em; border-radius: 50%; background: rgba(244, 241, 230, 0.18); }
+.k-zeile b, .k-zeile span { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.k-zeile b { font-weight: 600; }
+.k-zeile span { color: var(--leise); font-size: 0.9em; }
+.k-zeile em { font-style: normal; font-size: 0.78em; color: var(--leise); font-variant-numeric: tabular-nums; }
+.k-zeile--neu { border-color: rgba(255, 122, 26, 0.5); background: rgba(255, 122, 26, 0.08); opacity: var(--neu, 0); transform: translateY(calc((1 - var(--neu, 0)) * -0.9em)) scale(calc(0.97 + 0.03 * var(--neu, 0))); }
+.k-zeile--neu > i { background: var(--orange); }
+.k-balken { display: grid; gap: 0.45em; }
+.k-balken u { display: block; height: 0.5em; border-radius: 999px; background: rgba(244, 241, 230, 0.14); }
+.k-balken u + u { background: rgba(244, 241, 230, 0.08); }
+.k-zeile--alt { padding-top: 0.8em; padding-bottom: 0.8em; transform: translateY(calc((1 - var(--neu, 0)) * (-100% - 0.5em))); }
+
+/* ② sortieren */
+.k-sort { display: grid; grid-template-rows: auto 1fr; gap: 0.9em; }
+.k-nachricht { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4em 0.5em; padding: 0.6em 0.8em; border-radius: 0.7em; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08);
+  opacity: calc(1 - var(--weg, 0)); transform: translateY(calc(var(--weg, 0) * 2.4em)) scale(calc(1 - 0.12 * var(--weg, 0))); }
+.k-nachricht b { font-weight: 600; margin-right: auto; }
+.k-etikett { padding: 0.15em 0.6em; border-radius: 999px; font-size: 0.78em; font-weight: 600; opacity: var(--e, 0); transform: scale(calc(0.8 + 0.2 * var(--e, 0))); }
+.k-etikett--termin { --e: var(--e1); background: rgba(255, 122, 26, 0.18); color: #FFC08F; border: 1px solid rgba(255, 122, 26, 0.45); }
+.k-etikett--neu { --e: var(--e2); background: rgba(127, 163, 217, 0.16); color: #BFD2F0; border: 1px solid rgba(127, 163, 217, 0.4); }
+.k-spalten { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6em; }
+.k-spalte { display: flex; flex-direction: column; gap: 0.45em; padding: 0.6em; border-radius: 0.7em; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); min-width: 0; }
+.k-spalte > svg { width: 1.3em; height: 1.3em; fill: none; stroke: var(--leise); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.k-spalte--ziel > svg { stroke: #FFC08F; }
+.k-spalte > i { display: block; height: 1.5em; border-radius: 0.45em; background: rgba(244, 241, 230, 0.07); }
+.k-spalte--ziel { border-color: rgba(255, 122, 26, calc(0.1 + 0.4 * var(--weg, 0))); }
+.k-spalte > .k-gelandet { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0.3em 0.5em; border-radius: 0.45em; font-size: 0.78em; font-weight: 600; background: rgba(255, 122, 26, 0.16); border: 1px solid rgba(255, 122, 26, 0.5); opacity: var(--weg, 0); transform: translateY(calc((1 - var(--weg, 0)) * -0.8em)); }
+
+/* ③ Kalender */
+.k-kal { display: grid; grid-template-columns: 2.6em repeat(5, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: 0.35em; height: 100%; max-height: 11em; }
+.k-kal > span { font-size: 0.78em; color: var(--leise); align-self: center; text-align: center; font-variant-numeric: tabular-nums; }
+.k-kal > span.k-zeit { text-align: left; }
+.k-kal > i { border-radius: 0.4em; border: 1px solid rgba(255, 255, 255, 0.06); min-height: 1.6em; }
+.k-kal > i.b { background: rgba(154, 168, 189, 0.22); border-color: transparent; }
+.k-kal > i.k-frei { position: relative; border: 1px dashed rgba(255, 122, 26, 0.55); }
+.k-kal > i.k-frei::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; background: var(--orange); opacity: var(--slot, 0); }
+.k-kal > i.k-frei svg { position: absolute; left: 50%; top: 50%; width: 1.1em; height: 1.1em; margin: -0.55em 0 0 -0.55em; color: #10131B; opacity: var(--haken, 0); transform: scale(calc(0.6 + 0.4 * var(--haken, 0))); }
+.k-kal-notiz { margin: 0.6em 0 0; font-size: 0.9em; opacity: var(--haken, 0); }
+.k-kal-notiz b { color: #FFC08F; font-variant-numeric: tabular-nums; }
+
+/* ④ Antwort */
+.k-chat { display: flex; flex-direction: column; gap: 0.55em; height: 100%; }
+.k-blase { max-width: 82%; padding: 0.55em 0.8em; border-radius: 0.9em; }
+.k-blase--kunde { align-self: flex-start; background: rgba(255, 255, 255, 0.07); border-bottom-left-radius: 0.3em; }
+.k-blase--antwort { align-self: flex-end; background: rgba(255, 122, 26, 0.14); border: 1px solid rgba(255, 122, 26, 0.45); border-bottom-right-radius: 0.3em;
+  opacity: var(--blase, 0); transform: translateY(calc((1 - var(--flug, 0)) * 3.4em)) scale(calc(0.94 + 0.06 * var(--flug, 0))); transform-origin: 100% 100%; }
+.k-blase--antwort span { color: var(--orange); font-weight: 700; }
+.k-status { align-self: flex-end; font-size: 0.78em; color: var(--leise); opacity: var(--status, 0); }
+.k-status span { color: var(--orange); }
+.k-eingabe > i { display: block; height: 0.5em; width: 28%; border-radius: 999px; background: rgba(244, 241, 230, 0.1); }
+.k-eingabe > i + i { width: 18%; }
+.k-eingabe { margin-top: auto; display: flex; align-items: center; gap: 0.6em; padding: 0.5em 0.5em 0.5em 0.9em; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.1); color: var(--leise); font-size: 0.85em; }
+.k-eingabe svg { width: 1.9em; height: 1.9em; margin-left: auto; padding: 0.4em; border-radius: 50%; background: rgba(255, 122, 26, calc(0.2 + 0.6 * var(--druck, 0))); color: var(--text); }
+
+/* Bildschirm: echte, scharfe Mini-Website (clean: Raster → Farbe → Bilder) + endo-Meldung */
+.m-anzeige { position: absolute; left: 2.6%; top: 3.8%; width: 94.8%; height: 92.4%; overflow: hidden; border-radius: calc(var(--L) * 0.008); background: #F6F4EE; color: #0C162C; font-size: calc(var(--L) * 0.018); }
+.w { position: absolute; inset: 0; padding: 4% 5%; display: grid; grid-template-rows: auto 1fr auto; gap: 5%; }
+.w-nav { display: flex; align-items: center; justify-content: space-between; }
+.w-logo { width: 16%; height: 1.6em; border-radius: 3px; }
+.w-links { display: flex; gap: 6%; width: 40%; justify-content: flex-end; }
+.w-links i { display: block; width: 22%; height: 0.6em; border-radius: 2px; }
+.w-held { display: grid; grid-template-columns: 1.1fr 1fr; gap: 6%; align-items: center; }
+.w-titel { display: grid; gap: 0.8em; }
+.w-titel i { display: block; height: 1.5em; border-radius: 3px; }
+.w-titel i:nth-child(2) { width: 78%; }
+.w-titel i.w-zeile { height: 0.6em; width: 90%; }
+.w-titel i.w-knopf { height: 2em; width: 42%; border-radius: 999px; margin-top: 0.4em; }
+.w-bild { aspect-ratio: 4 / 3; border-radius: 6px; overflow: hidden; }
+.w-reihe { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4%; }
+.w-reihe .w-bild { aspect-ratio: 16 / 10; }
+.w-bild img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.w-skizze .w-logo, .w-skizze i, .w-skizze .w-bild { border: 1px solid rgba(12, 22, 44, 0.28); background: rgba(12, 22, 44, 0.04); }
+.w-skizze { background-image: linear-gradient(rgba(12, 22, 44, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(12, 22, 44, 0.05) 1px, transparent 1px); background-size: 8% 12%; }
+.w-farbe .w-logo { background: #0C162C; } .w-farbe .w-links i { background: #94A9C5; } .w-farbe .w-titel i { background: #0C162C; } .w-farbe .w-titel i.w-zeile { background: #94A9C5; }
+.w-farbe .w-titel i.w-knopf { background: var(--orange); } .w-farbe .w-bild { background: linear-gradient(135deg, #5E78A8, #C79AB8); }
+.w-skizze, .w-farbe, .w-bilder { will-change: clip-path, opacity; }
+.w-skizze { clip-path: inset(0 100% 0 0); }
+.w-farbe, .w-bilder { opacity: 0; }
+.w-bilder .w-logo, .w-bilder i { visibility: hidden; }
+/* im Bildschirm: Schritt 1 des Formulars als Mini-Fassung – daraus öffnet sich am Ende das echte Formular */
+.w-formular { display: grid; grid-template-rows: auto auto; place-content: center; justify-items: center; gap: 7%; background: #0C162C; color: #F4F1E6; opacity: 0; }
+.w-formular strong { font: 400 3.4em/1 "Instrument Serif", Georgia, serif; }
+.w-formular div { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8em; width: 78%; }
+.w-formular span { padding: 1.2em 0.8em; border-radius: 0.9em; border: 1px solid rgba(242, 180, 92, 0.35); background: rgba(94, 120, 168, 0.12); font-weight: 600; font-size: 1.1em; }
+.m-endo { position: absolute; right: 4%; bottom: 5%; width: 40%; padding: 3% 3.4%; border-radius: 10px; background: #0C162C; color: #F4F1E6; box-shadow: 0 10px 28px rgba(12, 22, 44, 0.35); font-size: 1.05em; line-height: 1.35; opacity: 0; transform: translateY(12%) scale(0.96); will-change: transform, opacity; }
+.m-endo b { display: block; font-size: 0.8em; color: #94A9C5; font-weight: 600; margin-bottom: 0.3em; }
+.m-endo span { color: var(--orange); }
+
+/* Schluss: die Kamera ist im Bildschirm – er wird zu Schritt 1 des Kontaktformulars */
+.m-formular { position: absolute; inset: 0; z-index: 6; display: grid; place-content: center; justify-items: center; gap: 22px; padding: 24px; background: #0C162C; opacity: 0; pointer-events: none; will-change: clip-path, opacity; }
+.m-formular > * { will-change: transform, opacity; }
+.m-formular h2 { margin: 0; font: 400 clamp(34px, 5vw, 62px)/1.05 "Instrument Serif", Georgia, serif; }
+.m-karten { display: grid; grid-template-columns: repeat(3, minmax(0, 220px)); gap: 14px; }
+.m-karten div { padding: 18px 16px; border-radius: 20px; border: 1px solid rgba(242, 180, 92, 0.35); background: rgba(94, 120, 168, 0.12); font-size: 17px; font-weight: 600; }
+.m-karten small { display: block; margin-top: 4px; font-weight: 400; font-size: 13px; color: var(--leise); }
+.m-formular p { margin: 0; color: var(--leise); font-size: 14px; }
+
+/* Handy/Tablet hochkant: Hochformat-Foto, Titel oben mit dunklem Verlauf, Karten in der Mitte */
+@media (max-aspect-ratio: 4/5) {
+  .t-verlauf { background: linear-gradient(180deg, rgba(8, 10, 14, 0.80) 0%, rgba(8, 10, 14, 0.52) 22%, rgba(8, 10, 14, 0.10) 40%, transparent 50%); }
+  .m-text { top: 28px; transform: none; width: auto; right: 20px; }
+  .m-text .t-klein { margin-bottom: 8px; font-size: 13px; }
+  .m-text h1 { font-size: clamp(30px, 8.4vw, 44px); margin-bottom: 10px; }
+  .m-schritte { min-height: 2.9em; }
+  .m-schritt { font-size: 15px; }
+  .m-schritt span { display: none; }
+  .m-fort { margin-top: 6px; height: 62px; }
+  .m-fort li > span { width: 26px; height: 26px; }
+  .m-fort__titel { margin-top: 8px; font-size: 17px; }
+  .t-karten, .t-karten .m-karte { --kh: 0.9; }
+  .t-karten .k-innen { font-size: 4.9cqw; gap: 3.6cqw; }
+  .t-karten .k-kal { height: auto; max-height: none; grid-auto-rows: auto; }
+  .t-karten .k-kal > i { min-height: 1.45em; }
+  .t-blaetter { left: -18vw; bottom: -6vh; width: 96vw; }
+  .m-karten { grid-template-columns: minmax(0, 1fr); width: min(100%, 320px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .m-strecke { height: auto; }
+  .m-buehne { position: relative; }
+  .m-schritt, .m-fort__teil, .m-fort li > span, .m-fort li > i::after { transition: none; }
+  .t-video { display: none; }
+}

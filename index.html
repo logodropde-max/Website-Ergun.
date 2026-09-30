@@ -28,14 +28,25 @@
 <link rel="preload" href="schriften/Satoshi-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="schriften/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <!-- Bildfolgen von ERGUN. und dem Hund früh, aber mit niedriger Priorität holen: das Winken (erstes Runterwischen) wartet sonst auf sie -->
-<link rel="preload" href="bilder/hero/figuren/emre3d-folge-1.webp?v=19" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
-<link rel="preload" href="bilder/hero/figuren/emre3d-folge-2.webp?v=19" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
-<link rel="preload" href="bilder/hero/figuren/hund-folge.webp?v=19" as="image" fetchpriority="low" media="(prefers-reduced-motion: no-preference)">
 <script>document.documentElement.classList.add('js'); if (new URLSearchParams(location.search).get('farbe') === 'b') document.documentElement.setAttribute('data-farbe', 'b');   /* Auftrag 28: vorsichtigere Farbe zum Vergleich */
 /* Auftrag 36 (Figur blendet nach der Wahl aus + Auswahl premium): EIN Schalter. false = bis zu ERGUNs OK bleibt live alles wie bisher, das Neue gibt es nur
    mit ?karten=neu bzw. ?ausblenden=a|b (Vorschau). true = Neues ist Standard, der bisherige Look bleibt mit ?karten=alt erreichbar. */
 window.ERGUN_A36 = true;
 (function (k) { if (window.ERGUN_A36 ? k !== 'alt' : k === 'neu') document.documentElement.setAttribute('data-karten', 'neu'); })(new URLSearchParams(location.search).get('karten'));</script>
+<script>
+/* Titelbild (Auftrag 44, ERGUNs OK 01.10.2026): „maschine“ = tropisches Büro mit Laptop (Standard), ?titel=alt bzw. ?titel=a = alte gezeichnete
+   Landschaft mit Figur + Hund. Rückweg für alle: ERGUN_TITEL = 'alt'. */
+window.ERGUN_TITEL = 'maschine';
+(function () {
+  var t = new URLSearchParams(location.search).get('titel'), m = t === 'alt' || t === 'a' ? false : t === 'maschine' ? true : window.ERGUN_TITEL === 'maschine';
+  window.ERGUN_MASCHINE = m;
+  document.documentElement.classList.toggle('titel-maschine', m);
+  if (!m) ['emre3d-folge-1', 'emre3d-folge-2', 'hund-folge'].forEach(function (n) {   /* Vorlader der alten Figur nur noch hier */
+    var l = document.createElement('link'); l.rel = 'preload'; l.as = 'image'; l.href = 'bilder/hero/figuren/' + n + '.webp?v=19';
+    l.setAttribute('fetchpriority', 'low'); l.media = '(prefers-reduced-motion: no-preference)'; document.head.appendChild(l);
+  });
+})();
+</script>
 
 <style>
 html, body { touch-action: pan-x pan-y; }
@@ -1061,13 +1072,27 @@ html[data-farbe="b"] {   /* Vergleich ?farbe=b (Auftrag 28): Gewählt in Creme s
   [data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross):is(:hover, :active, [aria-pressed="true"]), [data-karten="neu"] .btn:is(:hover, :active) { transform: none; }
 }
 </style>
+<link rel="stylesheet" href="maschine.css?v=1">
+<link rel="preload" data-titel-maschine as="image" type="image/avif" media="(min-aspect-ratio: 4/5)" imagesrcset="bilder/hero/tropen/quer-morgen-1280.avif 1280w, bilder/hero/tropen/quer-morgen-1920.avif 1920w, bilder/hero/tropen/quer-morgen-2560.avif 2560w" imagesizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw" fetchpriority="high">
+<link rel="preload" data-titel-maschine as="image" type="image/avif" media="(max-aspect-ratio: 4/5)" imagesrcset="bilder/hero/tropen/hoch-morgen-720.avif 720w, bilder/hero/tropen/hoch-morgen-1080.avif 1080w, bilder/hero/tropen/hoch-morgen-1440.avif 1440w" imagesizes="100vw" fetchpriority="high">
+<style>
+/* Auftrag 44: Titelbild „Maschine“ statt der gezeichneten Szene (Schalter ERGUN_TITEL im Kopf) */
+html:not(.titel-maschine) .m-strecke { display: none; }
+.titel-maschine .szene { display: none; }
+.titel-maschine .m-strecke .m-text { top: 50%; }
+@media (max-aspect-ratio: 4/5) { .titel-maschine .m-strecke .m-text { top: 64px; } }   /* unter der festen Navigation */
+/* „Was brauchen Sie?“ liegt über dem letzten Bild der Maschine und öffnet sich aus dem Laptop-Bildschirm (js/maschine-foto.js) */
+@media (prefers-reduced-motion: no-preference) {
+  .titel-maschine #preise { margin-top: -100svh; z-index: 6; }
+}
+</style>
 </head>
 <body>
 
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
 
 <header class="nav">
-  <a class="nav__mark" href="#top" aria-label="ERGUN – nach oben">ERGUN<span class="dot">.</span></a>
+  <a class="nav__mark" href="#top" data-nach-oben aria-label="ERGUN – nach oben">ERGUN<span class="dot">.</span></a>
   <nav class="nav__links" aria-label="Seitennavigation">
     <a class="nav__link" href="#preise">Anfrage</a>
     <a class="nav__link nav__link--endo" href="https://endo-ergun.vercel.app/" data-endo-link>endo <span aria-hidden="true">↗</span></a>
@@ -1107,11 +1132,113 @@ html[data-farbe="b"] {   /* Vergleich ?farbe=b (Auftrag 28): Gewählt in Creme s
   </section>
 </div>
 
+<div class="m-strecke" id="titel" data-strecke>
+  <div class="m-buehne">
+    <div class="t-foto" data-foto>
+      <picture class="t-licht " data-licht="morgen"><source media="(max-aspect-ratio: 4/5)" type="image/avif" srcset="bilder/hero/tropen/hoch-morgen-720.avif 720w, bilder/hero/tropen/hoch-morgen-1080.avif 1080w, bilder/hero/tropen/hoch-morgen-1440.avif 1440w" sizes="100vw"><source media="(max-aspect-ratio: 4/5)" type="image/webp" srcset="bilder/hero/tropen/hoch-morgen-720.webp 720w, bilder/hero/tropen/hoch-morgen-1080.webp 1080w, bilder/hero/tropen/hoch-morgen-1440.webp 1440w" sizes="100vw"><source type="image/avif" srcset="bilder/hero/tropen/quer-morgen-1280.avif 1280w, bilder/hero/tropen/quer-morgen-1920.avif 1920w, bilder/hero/tropen/quer-morgen-2560.avif 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><source type="image/webp" srcset="bilder/hero/tropen/quer-morgen-1280.webp 1280w, bilder/hero/tropen/quer-morgen-1920.webp 1920w, bilder/hero/tropen/quer-morgen-2560.webp 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><img src="bilder/hero/tropen/quer-morgen-1920.webp" width="3840" height="2160" alt="Ruhiges Büro mit offenem Blick in einen tropischen Regenwald, auf einem hellen Eichentisch steht ein aufgeklappter Laptop" decoding="async" fetchpriority="high"></picture>
+      <video class="t-video" data-video muted playsinline loop preload="none" aria-hidden="true" data-src="bilder/hero/tropen/tropen-loop-720.mp4"></video>
+      <picture class="t-licht " data-licht="gold"><source media="(max-aspect-ratio: 4/5)" type="image/avif" data-srcset="bilder/hero/tropen/hoch-gold-720.avif 720w, bilder/hero/tropen/hoch-gold-1080.avif 1080w, bilder/hero/tropen/hoch-gold-1440.avif 1440w" sizes="100vw"><source media="(max-aspect-ratio: 4/5)" type="image/webp" data-srcset="bilder/hero/tropen/hoch-gold-720.webp 720w, bilder/hero/tropen/hoch-gold-1080.webp 1080w, bilder/hero/tropen/hoch-gold-1440.webp 1440w" sizes="100vw"><source type="image/avif" data-srcset="bilder/hero/tropen/quer-gold-1280.avif 1280w, bilder/hero/tropen/quer-gold-1920.avif 1920w, bilder/hero/tropen/quer-gold-2560.avif 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><source type="image/webp" data-srcset="bilder/hero/tropen/quer-gold-1280.webp 1280w, bilder/hero/tropen/quer-gold-1920.webp 1920w, bilder/hero/tropen/quer-gold-2560.webp 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><img data-src="bilder/hero/tropen/quer-gold-1920.webp" width="3840" height="2160" alt="" decoding="async" loading="eager"></picture>
+      <picture class="t-licht " data-licht="abend"><source media="(max-aspect-ratio: 4/5)" type="image/avif" data-srcset="bilder/hero/tropen/hoch-abend-720.avif 720w, bilder/hero/tropen/hoch-abend-1080.avif 1080w, bilder/hero/tropen/hoch-abend-1440.avif 1440w" sizes="100vw"><source media="(max-aspect-ratio: 4/5)" type="image/webp" data-srcset="bilder/hero/tropen/hoch-abend-720.webp 720w, bilder/hero/tropen/hoch-abend-1080.webp 1080w, bilder/hero/tropen/hoch-abend-1440.webp 1440w" sizes="100vw"><source type="image/avif" data-srcset="bilder/hero/tropen/quer-abend-1280.avif 1280w, bilder/hero/tropen/quer-abend-1920.avif 1920w, bilder/hero/tropen/quer-abend-2560.avif 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><source type="image/webp" data-srcset="bilder/hero/tropen/quer-abend-1280.webp 1280w, bilder/hero/tropen/quer-abend-1920.webp 1920w, bilder/hero/tropen/quer-abend-2560.webp 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><img data-src="bilder/hero/tropen/quer-abend-1920.webp" width="3840" height="2160" alt="" decoding="async" loading="eager"></picture>
+      <img class="t-weich" data-weich data-quer="bilder/hero/tropen/quer-abend-weich.webp" data-hoch="bilder/hero/tropen/hoch-abend-weich.webp" alt="" aria-hidden="true">
+      <div class="t-schirm" data-schirm aria-hidden="true">
+        <div class="m-anzeige">
+            <div class="w w-skizze" data-w="skizze"><div class="w-nav"><div class="w-logo"></div><div class="w-links"><i></i><i></i><i></i></div></div><div class="w-held"><div class="w-titel"><i></i><i></i><i class="w-zeile"></i><i class="w-zeile"></i><i class="w-knopf"></i></div><div class="w-bild"></div></div><div class="w-reihe"><div class="w-bild"></div><div class="w-bild"></div><div class="w-bild"></div></div></div>
+            <div class="w w-farbe" data-w="farbe"><div class="w-nav"><div class="w-logo"></div><div class="w-links"><i></i><i></i><i></i></div></div><div class="w-held"><div class="w-titel"><i></i><i></i><i class="w-zeile"></i><i class="w-zeile"></i><i class="w-knopf"></i></div><div class="w-bild"></div></div><div class="w-reihe"><div class="w-bild"></div><div class="w-bild"></div><div class="w-bild"></div></div></div>
+            <div class="w w-bilder" data-w="bilder"><div class="w-nav"><div class="w-logo"></div><div class="w-links"><i></i><i></i><i></i></div></div><div class="w-held"><div class="w-titel"><i></i><i></i><i class="w-zeile"></i><i class="w-zeile"></i><i class="w-knopf"></i></div><div class="w-bild"><img src="bilder/hero/layer-1-sky-960.webp" alt=""></div></div><div class="w-reihe"><div class="w-bild"><img src="bilder/hero/layer-2-ridge-960.webp" alt=""></div><div class="w-bild"><img src="bilder/hero/layer-1-sky-blaue-stunde-960.webp" alt=""></div><div class="w-bild"><img src="bilder/hero/layer-1-sky-ohne-sonne-960.webp" alt=""></div></div></div>
+            <div class="m-endo" data-endo><b>Neue Anfrage</b>Beantwortet. Termin eingetragen <span>✓</span></div>
+            <div class="w w-formular" data-w="formular"><strong>Was brauchen Sie?</strong><div><span>Website</span><span>Automatisierung</span><span>Beides</span></div></div>
+          </div>
+        <div class="t-aus" data-aus></div>
+        <div class="t-glanz"></div>
+      </div>
+    </div>
+    <div class="t-dunkel" data-dunkel aria-hidden="true"></div>
+    <img class="t-blaetter" data-blaetter src="bilder/hero/tropen/blaetter-900.webp" srcset="bilder/hero/tropen/blaetter-900.webp 900w, bilder/hero/tropen/blaetter-1400.webp 1400w" sizes="(max-aspect-ratio: 4/5) 96vw, 44vw" alt="" aria-hidden="true" decoding="async">
+    <div class="t-verlauf" aria-hidden="true"></div>
+
+    <div class="m-text">
+      <p class="t-klein">Digitalstudio für Unternehmen</p>
+      <h1><span class="t-versteckt">ERGUN. </span>Websites<svg class="t-wolke" viewBox="0 0 40 22" aria-hidden="true"><path d="M8 21H32A7 7 0 0 0 33 7.1A9 9 0 0 0 16 5A7 7 0 0 0 7.5 11A5 5 0 0 0 8 21Z"/></svg>Automatisierung<svg class="t-wolke" viewBox="0 0 40 22" aria-hidden="true"><path d="M8 21H32A7 7 0 0 0 33 7.1A9 9 0 0 0 16 5A7 7 0 0 0 7.5 11A5 5 0 0 0 8 21Z"/></svg>KI</h1>
+      <div class="m-schritte" aria-live="polite">
+        <p class="m-schritt" data-schritt="0"><b>So arbeitet Ihr System</b></p>
+        <p class="m-schritt" data-schritt="1"><b>Ihre Website entsteht</b></p>
+        <p class="m-schritt" data-schritt="2"><b>Eine Anfrage kommt</b></p>
+        <p class="m-schritt" data-schritt="3"><b>Automatisch erledigt</b></p>
+        <p class="m-schritt" data-schritt="4"><b>Alles greift ineinander</b></p>
+      </div>
+      <div class="m-fort" aria-hidden="true">
+        <div class="m-fort__teil" data-fort="web">
+          <ol><li><span>1</span><i></i></li><li><span>2</span><i></i></li><li><span>3</span></li></ol>
+          <p class="m-fort__titel" data-fort-titel></p>
+        </div>
+        <div class="m-fort__teil" data-fort="ablauf">
+          <ol><li><span>1</span><i></i></li><li><span>2</span><i></i></li><li><span>3</span><i></i></li><li><span>4</span></li></ol>
+          <p class="m-fort__titel" data-fort-titel></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="t-karten" data-m-karten aria-hidden="true">
+      <div class="m-karte" data-karte="1"><div class="k-innen">
+            <div class="k-kopf"><span class="k-nr">1</span><h3>Anfrage kommt an</h3><svg class="k-sym" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h5l1.5 3h5L16 13h5"/><path d="M5.5 5h13L21 13v5.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5V13z"/></svg></div>
+            <div class="k-inhalt k-post">
+              <div class="k-zeile k-zeile--neu"><i></i><div><b>Termin für Freitag?</b><span>Neue Anfrage</span></div><em>jetzt</em></div>
+              <div class="k-zeile k-zeile--alt"><i></i><div class="k-balken"><u style="width:46%"></u><u style="width:78%"></u></div><em>09:12</em></div>
+              <div class="k-zeile k-zeile--alt"><i></i><div class="k-balken"><u style="width:38%"></u><u style="width:64%"></u></div><em>Mo</em></div>
+            </div>
+          </div>
+          <div class="k-faden"><b></b></div></div>
+      <div class="m-karte" data-karte="2"><div class="k-innen">
+            <div class="k-kopf"><span class="k-nr">2</span><h3>Automatisch sortiert</h3><svg class="k-sym" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></div>
+            <div class="k-inhalt k-sort">
+              <div class="k-nachricht"><b>Termin für Freitag?</b><span class="k-etikett k-etikett--termin">Termin</span><span class="k-etikett k-etikett--neu">Neukunde</span></div>
+              <div class="k-spalten">
+                <div class="k-spalte k-spalte--ziel"><svg viewBox="0 0 24 24" aria-label="Termine"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><b class="k-gelandet">Termin für Freitag?</b><i></i></div>
+                <div class="k-spalte"><svg viewBox="0 0 24 24" aria-label="Fragen"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.2A8 8 0 1 1 20 12z"/><path d="M10 9.5a2 2 0 1 1 2.8 1.8c-.5.3-.8.7-.8 1.2v.5M12 16h.01"/></svg><i></i><i></i></div>
+                <div class="k-spalte"><svg viewBox="0 0 24 24" aria-label="Angebote"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg><i></i></div>
+              </div>
+            </div>
+          </div>
+          <div class="k-faden"><b></b></div></div>
+      <div class="m-karte" data-karte="3"><div class="k-innen">
+            <div class="k-kopf"><span class="k-nr">3</span><h3>Termin eingetragen</h3><svg class="k-sym" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></div>
+            <div class="k-inhalt">
+              <div class="k-kal">
+                <span class="k-zeit"></span><span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span>
+                <span class="k-zeit">9:00</span><i class="b"></i><i></i><i></i><i class="b"></i><i></i>
+                <span class="k-zeit">10:00</span><i></i><i class="b"></i><i class="b"></i><i></i><i class="k-frei"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></i>
+                <span class="k-zeit">11:00</span><i class="b"></i><i></i><i></i><i></i><i class="b"></i>
+              </div>
+              <p class="k-kal-notiz"><b>Fr 10:00</b> ✓</p>
+            </div>
+          </div>
+          <div class="k-faden"><b></b></div></div>
+      <div class="m-karte" data-karte="4"><div class="k-innen">
+            <div class="k-kopf"><span class="k-nr">4</span><h3>Antwort geht raus</h3><svg class="k-sym" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3 10 14"/><path d="M21 3 14.5 21 10 14 3 9.5z"/></svg></div>
+            <div class="k-inhalt"><div class="k-chat">
+              <div class="k-blase k-blase--kunde">Termin für Freitag?</div>
+              <div class="k-blase k-blase--antwort">Ihr Termin am Freitag, 10 Uhr, ist eingetragen <span>✓</span></div>
+              <div class="k-status">Gesendet <span>✓</span></div>
+              <div class="k-eingabe"><i></i><i></i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></div>
+            </div></div>
+          </div>
+          <div class="k-faden"><b></b></div></div>
+    </div>
+    <div class="m-brief" data-brief aria-hidden="true"><svg viewBox="0 0 44 30"><rect x="1" y="1" width="42" height="28" rx="4" fill="#F4F1E6"/><path d="M3 4 22 17 41 4" fill="none" stroke="#0C162C" stroke-width="1.5" stroke-linejoin="round"/><circle cx="22" cy="17" r="3" fill="#FF7A1A"/></svg></div>
+
+    <div class="m-formular" data-formular aria-hidden="true">
+      <h2>Was brauchen Sie?</h2>
+      <div class="m-karten"><div>Website<small>Ihr Auftritt im Netz</small></div><div>Automatisierung<small>Anfragen, Termine, Antworten</small></div><div>Beides<small>Website + Automatisierung</small></div></div>
+      <p>(Vorschau – hier geht es in Ihr Kontaktformular über)</p>
+    </div>
+  </div>
+</div>
+
 <main id="inhalt" tabindex="-1">
   <!-- EIN ABLAUF (Auftrag 25 ERGUN. minimal, 29.09.2026 – Ausnahme auf Emres Wunsch: Preis-Bereich und Kontakt sind ein Ablauf):
        ① Was brauchen Sie? (Website · Automatisierung · Beides) → ② nur das Passende → ③ Ihre Anfrage (Zusammenfassung + Formular).
        Schritt ① und ② baut js/preise.js (Zahlen PREISE, Texte LEITFADEN), Schritt ③ steht hier. Alte Anker: #preise = Ablauf, #kontakt = Schritt ③. -->
-  <section class="preise mf" id="preise" aria-label="Anfrage an ERGUN." data-preise>
+  <section class="preise mf" id="preise" aria-label="Anfrage an ERGUN." data-preise data-maschine-ziel>
    <span class="mf-anker" id="kontakt" aria-hidden="true"></span>
    <div class="preise__innen">
     <div class="mf__oben">
@@ -1233,8 +1360,14 @@ html[data-farbe="b"] {   /* Vergleich ?farbe=b (Auftrag 28): Gewählt in Creme s
 </footer>
 <div class="wechsel" aria-hidden="true"></div>
 
-<script src="js/szene.js?v=63"></script>
-<script src="js/wolken.js?v=6" defer></script>
+<script>
+/* Auftrag 44: je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
+(function () {
+  var liste = window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=9'] : ['js/szene.js?v=63', 'js/wolken.js?v=6'];
+  liste.forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
+})();
+</script>
+<script>window.TROPEN_SCHIRM = {"quer": {"w": 3840, "h": 2160, "ecken": [[0.64932, 0.455], [0.81339, 0.45338], [0.80784, 0.66176], [0.64042, 0.64745]]}, "hoch": {"w": 2160, "h": 3840, "ecken": [[0.34755, 0.5419], [0.65931, 0.54214], [0.66611, 0.65406], [0.33833, 0.65396]]}};</script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {
