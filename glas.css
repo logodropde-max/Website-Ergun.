@@ -1,0 +1,131 @@
+/* ERGUN. – Startseite „Glas“ (?titel=glas, 01.10.2026 – Ausnahme auf ERGUNs Wunsch: die 21st.dev-Vorlage „Glass Headline Hero“ als neues
+   Design-Konzept der ganzen Seite; die Tokens aus Auftrag 28 und die Szene „All“ gelten hier nicht). Das CSS der Vorlage selbst steht
+   wörtlich in glas-vorlage.gen.css (Präfix ghr-); hier nur, was die Vorlage nicht hat (Präfix glas-) und das Formular im selben Stil.
+   Farben der Vorlage: Grund #0D0A14 · Orange #FF5A1F · Rosa #FF9EC1 · Blau #2F4CFF · Creme #FFE6B8. Text Weiß, gedämpft .8 / .62.
+   Flächen wie die Vorlagen-Pillen: rgba(255,255,255,.06) + 1-px-Kante rgba(255,255,255,.2) + Blur 10px; Hover .13 / .4. */
+html.titel-glas {
+  --g-grund: #0D0A14; --g-text: #FFFFFF; --g-leise: rgba(255, 255, 255, 0.8); --g-klein: rgba(255, 255, 255, 0.62);
+  --g-flaeche: rgba(255, 255, 255, 0.06); --g-flaeche-hover: rgba(255, 255, 255, 0.13); --g-kante: rgba(255, 255, 255, 0.2); --g-kante-hover: rgba(255, 255, 255, 0.4);
+  --g-creme: #FFE6B8; --g-orange: #FF5A1F; --g-rosa: #FF9EC1; --g-blau: #2F4CFF;
+  --g-ease: cubic-bezier(0.23, 1, 0.32, 1); --g-schrift: "Clash Display", "Clash Ersatz", system-ui, sans-serif;
+  /* das bestehende Formular liest diese Variablen – hier auf Glas umgestellt */
+  --f-grund-oben: transparent; --f-grund: var(--g-grund); --f-grund-tief: var(--g-grund);
+  --f-blau: var(--g-kante); --f-blau-tief: var(--g-grund);
+  --f-flaeche: var(--g-flaeche); --f-flaeche-hover: var(--g-flaeche-hover);
+  --f-kante: linear-gradient(var(--g-kante), var(--g-kante)); --f-linie: rgba(255, 255, 255, 0.14);
+  --f-text: var(--g-text); --f-gedaempft: var(--g-leise);
+  --f-gold: var(--g-creme); --f-gold-hell: var(--g-creme); --f-bernstein: var(--g-creme); --f-rosa: transparent; --f-hof: transparent;
+  --f-wahl: var(--g-creme); --f-schein: 0 0 0 1px var(--g-creme), 0 0 40px -12px rgba(255, 230, 184, 0.45); --f-tiefe: none;
+  --f-knopf: #FFFFFF; --f-knopf-text: var(--g-grund); --f-fehler: var(--g-rosa); --f-marke: var(--g-orange);
+  --k-flaeche: var(--g-flaeche); --k-flaeche-wahl: rgba(255, 230, 184, 0.08); --k-flaeche-zurueck: rgba(255, 255, 255, 0.04);
+  --k-kante: linear-gradient(var(--g-kante), var(--g-kante)); --k-kante-wahl: linear-gradient(var(--g-creme), var(--g-creme));
+  --k-glanz: inset 0 1px 0 rgba(255, 255, 255, 0.08); --k-tiefe: none; --k-tiefe-hoch: none; --k-tiefe-flach: none;
+  --k-schein: 0 0 0 1px var(--g-creme), 0 0 40px -12px rgba(255, 230, 184, 0.45); --k-korn: none; --k-licht: none;
+  --k-linie: linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+  background: var(--g-grund); color: var(--g-text);
+}
+html.titel-glas body { background: var(--g-grund); color: var(--g-text); font-family: var(--g-schrift); }
+@media (prefers-reduced-motion: no-preference) { html.titel-glas { scroll-behavior: smooth; } }
+html.titel-glas .nav, html.titel-glas .footer, html.titel-glas .szene { display: none; }
+
+/* ---------- Leiste oben: dünn, Glas ---------- */
+.glas-kopf { position: fixed; z-index: 40; left: 12px; right: 12px; top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  height: 52px; padding: 0 8px 0 20px; border-radius: 999px; border: 1px solid var(--g-kante); background: rgba(13, 10, 20, 0.42);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); font-family: var(--g-schrift); }
+.glas-kopf a { color: var(--g-text); text-decoration: none; }
+.glas-kopf__marke { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; display: inline-flex; align-items: center; min-height: 44px; }
+.glas-kopf__marke span { color: var(--g-orange); }
+.glas-kopf__links { display: flex; align-items: center; gap: 4px; }
+.glas-kopf__links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 999px; font-size: 14px; font-weight: 500; color: var(--g-leise);
+  transition: background-color 200ms ease, color 200ms ease; }
+@media (hover: hover) and (pointer: fine) { .glas-kopf__links a:hover { background: rgba(255, 255, 255, 0.1); color: var(--g-text); } }
+.glas-kopf a:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 3px; }
+@media (max-width: 480px) { .glas-kopf { left: 8px; right: 8px; padding: 0 4px 0 16px; } .glas-kopf__links a { padding: 0 10px; font-size: 13px; } }
+@media (max-width: 359px) { .glas-kopf__links a { padding: 0 7px; } }
+
+/* ---------- Hero: Schrift der Seite (Clash), Punkt-Vergleich ---------- */
+.glas-hero .ghr-title, .glas-hero .ghr-btn, .glas-hero .ghr-eyebrow { font-family: var(--g-schrift); }
+.glas-hero .ghr-title { font-weight: 700; }   /* Clash Display reicht bis 700 (Vorlage: 800 der Host-Schrift) */
+.glas-punkt { color: var(--g-orange); }
+.ghr-root[data-glass='true'] .glas-punkt { color: var(--g-orange); }
+
+/* ---------- Unter dem Hero: das Farbfeld läuft weich und leise aus ---------- */
+html.titel-glas main#inhalt { position: relative; }
+html.titel-glas .preise { position: relative; background:
+  linear-gradient(to bottom, rgba(13, 10, 20, 0) 0, var(--g-grund) 520px),
+  radial-gradient(60% 40% at 25% 0%, rgba(255, 90, 31, 0.2), transparent 70%),
+  radial-gradient(50% 36% at 78% 6%, rgba(47, 76, 255, 0.2), transparent 70%),
+  radial-gradient(45% 30% at 60% 30%, rgba(255, 158, 193, 0.13), transparent 70%),
+  var(--g-grund); }
+html.titel-glas .preise::before, html.titel-glas .preise::after { display: none; }
+html.titel-glas .preise__innen { position: relative; width: min(1120px, calc(100% - 40px)); max-width: none; margin: 0 auto; padding: clamp(72px, 12vh, 128px) 0 96px; }
+
+/* ---------- Angebote = Schritt ①: Glas-Karten, immer volle Reihen (3 nebeneinander oder eine Liste) ---------- */
+.glas-angebote { container-type: inline-size; margin: 0 0 clamp(72px, 10vh, 112px); scroll-margin-top: 84px; }
+.glas-h2 { position: static !important; width: auto !important; height: auto !important; clip: auto !important; overflow: visible !important; white-space: normal !important;
+  margin: 0 0 clamp(28px, 4vh, 44px); text-align: center; font-family: var(--g-schrift); font-size: clamp(2.5rem, 6.2vw, 5rem); font-weight: 700; line-height: 0.95; letter-spacing: -0.025em; color: var(--g-text); }
+.glas-angebote .mf-angebote__liste { display: grid; grid-template-columns: minmax(0, 1fr); grid-auto-rows: 1fr; gap: 14px; }   /* alle Karten gleich hoch */
+@container (min-width: 760px) { .glas-angebote .mf-angebote__liste { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
+.glas-karte { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-height: 44px; margin: 0; padding: 28px 28px 26px; border-radius: 24px;
+  border: 1px solid var(--g-kante); background: var(--g-flaeche); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  color: var(--g-text); font: inherit; text-align: left; text-transform: none; cursor: pointer;
+  transition: transform 200ms var(--g-ease), background-color 200ms ease, border-color 200ms ease, box-shadow 300ms ease, opacity 200ms ease; }
+@container (min-width: 760px) { .glas-karte { min-height: 220px; } }
+.glas-karte__titel { display: block; font-size: clamp(24px, 2.4vw, 30px); font-weight: 600; line-height: 1.05; letter-spacing: -0.015em; white-space: normal; color: var(--g-text); }
+.glas-karte__satz { display: block; font-size: 15px; line-height: 1.5; color: var(--g-leise); }
+.glas-karte__preis { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-top: auto; padding-top: 14px; font-variant-numeric: tabular-nums; }
+.glas-karte__preis b { font-size: 24px; font-weight: 600; letter-spacing: -0.01em; color: var(--g-text); }
+.glas-karte__preis small { font-size: 13px; color: var(--g-klein); }
+@media (hover: hover) and (pointer: fine) { .glas-karte:hover { background: var(--g-flaeche-hover); border-color: var(--g-kante-hover); transform: translateY(-2px); } }
+.glas-karte:active { transform: scale(0.98); }
+.glas-karte:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 3px; }
+.glas-karte[aria-pressed="true"] { border-color: var(--g-creme); background: rgba(255, 230, 184, 0.08); box-shadow: 0 0 0 1px var(--g-creme), 0 0 44px -12px rgba(255, 230, 184, 0.5); }
+.glas-karte[aria-pressed="true"] .glas-karte__titel::after { content: ""; display: inline-block; width: 0.22em; height: 0.22em; margin-left: 0.12em; border-radius: 50%; background: var(--g-creme); vertical-align: 0.05em; }
+.glas-angebote.hat-wahl .glas-karte:not([aria-pressed="true"]) { opacity: 0.72; }
+.glas-angebote .mf-angebote__direkt { display: flex; align-items: center; justify-content: center; min-height: 44px; margin: 18px auto 0; color: var(--g-text); font-family: var(--g-schrift);
+  font-size: 15px; text-decoration: underline; text-decoration-color: rgba(255, 255, 255, 0.4); text-underline-offset: 4px; }
+
+/* ---------- Formular (② ③) im selben Stil ---------- */
+html.titel-glas .mf__oben, html.titel-glas .mf__raster { scroll-margin-top: 84px; }
+html.titel-glas .mf__oben[hidden] { display: none; }   /* allgemeine Anfrage: kein „Schritt x von y“ */
+html.titel-glas .mf-titel { font-family: var(--g-schrift); font-weight: 700; line-height: 0.95; letter-spacing: -0.025em; color: var(--g-text); }
+html.titel-glas :is(.mf-satz, .mf__stand, .mf-zurueck, .form__hint, .mf__hinweis) { color: var(--g-leise); }
+html.titel-glas :is(.form__hint, .anfrage__hp) small, html.titel-glas .auswahl__jahr { color: var(--g-klein); }
+html.titel-glas :is(.mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross, .auswahl, .weg__option span, .upload) { border-radius: 20px;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+html.titel-glas body .anfrage .field :is(input, textarea, select) { background: var(--g-flaeche); border: 1px solid var(--g-kante); border-radius: 14px; color: var(--g-text);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: none; }
+html.titel-glas body .anfrage .field :is(input, textarea)::placeholder { color: rgba(255, 255, 255, 0.5); }
+html.titel-glas body .anfrage .field :is(input, textarea, select):focus-visible,
+html.titel-glas :is(.mf-stufe, .mf-chip, .mf-komplett, .mf-haken, .mf-link, .btn, .weg__option input, .mf-zurueck, .mf-weiter):focus-visible { outline: 2px solid #FFFFFF; outline-offset: 3px; box-shadow: none; }
+html.titel-glas body .anfrage .field.hat-fehler :is(input, textarea) { border-color: var(--g-rosa); }
+html.titel-glas .field__error { color: var(--g-rosa); }
+/* „Anfrage senden“ = der einzige weiße Primär-Knopf unterhalb des Heros (wie .ghr-primary) */
+html.titel-glas body .anfrage__senden { background: #FFFFFF; color: var(--g-grund); border: 0; border-radius: 999px; box-shadow: none; font-family: var(--g-schrift); font-weight: 600; }
+@media (hover: hover) and (pointer: fine) { html.titel-glas body .anfrage__senden:hover { background: #EFEAE2; } }
+html.titel-glas body .anfrage__senden:active { transform: scale(0.97); }
+html.titel-glas body .btn:not(.anfrage__senden) { border-radius: 999px; }
+html.titel-glas .mf-summe { border-radius: 20px; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+
+/* ---------- Fußzeile ---------- */
+.glas-fuss { position: relative; padding: 28px 0 40px; border-top: 1px solid rgba(255, 255, 255, 0.12); background: var(--g-grund); }
+.glas-fuss__zeile, .glas-fuss__klein { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+.glas-fuss__zeile { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; }
+.glas-fuss__marke { font-size: 17px; font-weight: 600; }
+.glas-fuss__marke span { color: var(--g-orange); }
+.glas-fuss nav { display: flex; gap: 6px; }
+.glas-fuss a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; color: var(--g-leise); text-decoration: none; font-size: 14px; }
+.glas-fuss a:hover, .glas-fuss a:focus-visible { color: var(--g-text); }
+.glas-fuss a:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 3px; }
+.glas-fuss__klein { margin-top: 8px; font-size: 12px; line-height: 1.5; color: var(--g-klein); }
+.glas-fuss__quellen a { display: inline; min-height: 0; padding: 0; font-size: 12px; color: var(--g-klein); text-decoration: underline; text-decoration-color: rgba(255, 255, 255, 0.25); }
+
+/* ---------- Abschnitte steigen beim Erscheinen dezent auf (wie ghr-in) ---------- */
+.glas-rein, .glas-fuss { opacity: 0; transform: translateY(12px); transition: opacity 700ms var(--g-ease), transform 700ms var(--g-ease); }
+.glas-rein.ist-da, .glas-fuss.ist-da, html.glas-alles-da .glas-rein, html.glas-alles-da .glas-fuss { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .glas-rein, .glas-fuss { transform: none; transition: opacity 400ms ease; } }
+/* Lesbarkeit der Beschreibung: weicher dunkler Schleier direkt dahinter (wie der „soft scrim“ im Feld-Shader der Vorlage, der am Handy
+   höher liegt als der Text) – Kontrast Weiß .8 auf dem Feld ≥ 4,5 : 1 */
+.glas-hero .ghr-desc { position: relative; }
+.glas-hero .ghr-desc::before { content: ""; position: absolute; inset: -40px -64px; z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(13, 10, 20, 0.74), rgba(13, 10, 20, 0.66) 62%, rgba(13, 10, 20, 0)); }

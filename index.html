@@ -49,23 +49,23 @@ window.ERGUN_A36 = true;
    · lycoris   = Startseite am 01.10.2026 bis zum Lebensbaum: die Vorlage „Lycoris Specimen“ 1:1 (rote Spinnenlilie, Karmin), nur ERGUNs Texte
    · blume     = Startseite am 01.10.2026 bis Lycoris: Kristall-Seite näher an der Vorlage, der Diamant öffnet sich zur Blüte (?blume=rose|tulpe|lilie)
    Die Dschungel-Fassung liegt als <template> im HTML: ohne ihren Schalter lädt sie nichts (keine Bilder, kein CSS, kein Skript). */
-window.ERGUN_TITEL = 'all';
+window.ERGUN_TITEL = 'glas';
 (function () {
   var t = new URLSearchParams(location.search).get('titel'); if (t === 'neu') t = 'dschungel'; if (t === 'a') t = 'alt';
-  var wahl = ['alt', 'maschine', 'dschungel', 'kristall', 'blume', 'lycoris', 'baum', 'lycoris3', 'all'].indexOf(t) >= 0 ? t : window.ERGUN_TITEL;
+  var wahl = ['alt', 'maschine', 'dschungel', 'kristall', 'blume', 'lycoris', 'baum', 'lycoris3', 'all', 'glas'].indexOf(t) >= 0 ? t : window.ERGUN_TITEL;
   var m = wahl === 'maschine' || wahl === 'dschungel', neu = wahl === 'dschungel';
   var k = wahl === 'kristall' || wahl === 'blume' || wahl === 'lycoris' || wahl === 'baum' || wahl === 'lycoris3', bl = wahl === 'blume' || wahl === 'lycoris' || wahl === 'lycoris3';
   window.ERGUN_WAHL = wahl; window.ERGUN_MASCHINE = m; window.ERGUN_NEU = neu; window.ERGUN_KRISTALL = k;
-  var all = wahl === 'all';   /* „All“ (01.10., Vorschau ?titel=all): Erde → Saturn → Erde bei Nacht, endo-Form als Mond – eigene Szene js/all.js, Formular-Look aus kristall.css */
+  var all = wahl === 'all', glas = wahl === 'glas'; window.ERGUN_GLAS = glas;   /* „Glas“ (01.10., Vorschau ?titel=glas): 21st-Vorlage „Glass Headline Hero“ als neues Design – js/glas.js + glas.css, kein three.js */   /* „All“ (01.10., Vorschau ?titel=all): Erde → Saturn → Erde bei Nacht, endo-Form als Mond – eigene Szene js/all.js, Formular-Look aus kristall.css */
   var ORDNUNG_STANDARD = true, ow = new URLSearchParams(location.search).get('ordnung');
-  window.ERGUN_ORDNUNG = all || (wahl === 'lycoris3' && new URLSearchParams(location.search).get('blume') !== 'lilie' && (ow === 'neu' || (ORDNUNG_STANDARD && ow !== 'alt')));
+  window.ERGUN_ORDNUNG = all || glas || (wahl === 'lycoris3' && new URLSearchParams(location.search).get('blume') !== 'lilie' && (ow === 'neu' || (ORDNUNG_STANDARD && ow !== 'alt')));
   var html = document.documentElement;
   html.classList.toggle('ordnung-neu', window.ERGUN_ORDNUNG);
   /* Ablauf der Blume (01.10. abends, Vorschau ?ablauf=neu): Start → Angebote um die Rosette von oben → Formular. ABLAUF_STANDARD = true seit Emres OK (01.10.); ?ablauf=alt = vorher */
   var ABLAUF_STANDARD = true, ab = new URLSearchParams(location.search).get('ablauf');
   window.ERGUN_ABLAUF = window.ERGUN_ORDNUNG && (ab === 'neu' || (ABLAUF_STANDARD && ab !== 'alt'));
   html.classList.toggle('ablauf-neu', window.ERGUN_ABLAUF);
-  html.classList.toggle('titel-maschine', m); html.classList.toggle('titel-neu', neu); html.classList.toggle('titel-kristall', k || all); html.classList.toggle('titel-blume', bl || wahl === 'baum'); html.classList.toggle('titel-lycoris', wahl === 'lycoris' || wahl === 'lycoris3'); html.classList.toggle('titel-drei', wahl === 'lycoris3'); html.classList.toggle('titel-baum', wahl === 'baum'); html.classList.toggle('titel-all', all);
+  html.classList.toggle('titel-maschine', m); html.classList.toggle('titel-neu', neu); html.classList.toggle('titel-kristall', k || all); html.classList.toggle('titel-blume', bl || wahl === 'baum'); html.classList.toggle('titel-lycoris', wahl === 'lycoris' || wahl === 'lycoris3'); html.classList.toggle('titel-drei', wahl === 'lycoris3'); html.classList.toggle('titel-baum', wahl === 'baum'); html.classList.toggle('titel-all', all); html.classList.toggle('titel-glas', glas);
   if (m) {   /* nur dann: CSS + Vorlader des Morgenbilds */
     var c = document.createElement('link'); c.rel = 'stylesheet'; c.href = 'maschine.css?v=3'; document.head.appendChild(c);
     [
@@ -80,6 +80,7 @@ window.ERGUN_TITEL = 'all';
     var fl = document.createElement('link'); fl.rel = 'preload'; fl.as = 'font'; fl.type = 'font/woff2'; fl.href = 'schriften/Federant-Regular.woff2'; fl.setAttribute('crossorigin', ''); document.head.appendChild(fl);
   }
   if (k || all) { var kc = document.createElement('link'); kc.rel = 'stylesheet'; kc.href = 'kristall.css?v=38'; document.head.appendChild(kc); }
+  if (glas) ['glas-vorlage.gen.css?v=1', 'glas.css?v=1'].forEach(function (h) { var gc = document.createElement('link'); gc.rel = 'stylesheet'; gc.href = h; document.head.appendChild(gc); });
   if (all) { var ac = document.createElement('link'); ac.rel = 'stylesheet'; ac.href = 'all.css?v=1'; document.head.appendChild(ac);
     var sw = new URLSearchParams(location.search).get('schrift'); if (sw === 'federant') { html.setAttribute('data-schrift', 'vorlage'); } }
   if (wahl === 'alt') ['emre3d-folge-1', 'emre3d-folge-2', 'hund-folge'].forEach(function (n) {   /* Vorlader der alten Figur nur hier */
@@ -1476,6 +1477,33 @@ html.titel-neu {
 </template>
 <script>if (window.ERGUN_KRISTALL) { var kv = document.getElementById('kristall-vorlage'); kv.parentNode.insertBefore(kv.content.cloneNode(true), kv); }</script>
 
+<!-- „Glas“ (01.10.2026, ?titel=glas – Ausnahme auf ERGUNs Wunsch): Hero nach der 21st.dev-Vorlage „Glass Headline Hero“
+     (_code/vorlagen-21st/glass-headline-hero/). Die Überschrift bleibt ein echtes <h1>, je Wort ein <span class="ghr-word">; das Glas malt
+     js/glas.js (WebGL2) genau dorthin. Ohne WebGL2: weiße Schrift über dem CSS-Verlauf. Logik: js/glas.quelle.js · Aussehen: glas.css -->
+<template id="glas-vorlage">
+<header class="glas-kopf" data-glas-kopf>
+  <a class="glas-kopf__marke" href="#top" aria-label="ERGUN. – nach oben">ERGUN<span>.</span></a>
+  <nav class="glas-kopf__links" aria-label="Hauptnavigation">
+    <a href="#angebote" data-glas-ziel="angebote">Angebote</a>
+    <a href="#kontakt" data-glas-ziel="kontakt">Kontakt</a>
+    <a href="https://endo-ergun.vercel.app/" data-endo-link>endo <span aria-hidden="true">↗</span></a>
+  </nav>
+</header>
+<section class="ghr-root glas-hero" id="top" data-glas-root aria-label="Einstieg">
+  <canvas class="ghr-canvas" data-glas-canvas aria-hidden="true"></canvas>
+  <div class="ghr-content">
+    <span class="ghr-eyebrow">Digitalstudio</span>
+    <h1 class="ghr-title" data-glas-titel><span class="ghr-word">ERGUN.</span></h1>
+    <p class="ghr-desc" data-glas-text>Websites, die auffallen – und Abläufe, die von allein laufen.</p>
+    <div class="ghr-actions">
+      <a class="ghr-btn ghr-primary" href="#angebote" data-glas-ziel="angebote">Anfrage starten<svg class="ghr-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="ghr-btn ghr-secondary" href="https://endo-ergun.vercel.app/" target="_blank" rel="noopener">endo ansehen <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</section>
+</template>
+<script>if (window.ERGUN_GLAS) { var gv = document.getElementById('glas-vorlage'); gv.parentNode.insertBefore(gv.content.cloneNode(true), gv); }</script>
+
 <main id="inhalt" tabindex="-1">
   <!-- EIN ABLAUF (Auftrag 25 ERGUN. minimal, 29.09.2026 – Ausnahme auf Emres Wunsch: Preis-Bereich und Kontakt sind ein Ablauf):
        ① Was brauchen Sie? (Website · Automatisierung · Beides) → ② nur das Passende → ③ Ihre Anfrage (Zusammenfassung + Formular).
@@ -1605,7 +1633,7 @@ html.titel-neu {
 <script>
 /* Auftrag 44: je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
 (function () {
-  var liste = window.ERGUN_WAHL === 'all' ? ['js/all.js?v=1'] : window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'baum' ? ['js/baum.js?v=6', 'js/kristall.js?v=45'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris' || window.ERGUN_WAHL === 'lycoris3') ? ['js/blume.js?v=11', 'js/kristall.js?v=45'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=45'] : [];
+  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=1'] : window.ERGUN_WAHL === 'all' ? ['js/all.js?v=1'] : window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'baum' ? ['js/baum.js?v=6', 'js/kristall.js?v=45'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris' || window.ERGUN_WAHL === 'lycoris3') ? ['js/blume.js?v=11', 'js/kristall.js?v=45'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=45'] : [];
   liste.forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
 })();
 </script>
