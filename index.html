@@ -40,17 +40,18 @@ window.ERGUN_A36 = true;
    · dschungel = tropisches Büro, neueste Fassung: 4K, geführt, Premium-Angebote (eingelagert – Tag dschungel-final, _archiv/ERGUN-Dschungel-2026-10-01/)
      (?titel=neu = derselbe Stand)
    · kristall  = Startseite 01.10.2026 bis zur Blume – Vorlage „Lycoris Specimen“, pinker Brillant
-   · blume     = Startseite seit 01.10.2026 (Emres „Ok“): Kristall-Seite näher an der Vorlage, der Diamant öffnet sich zur Blüte (?blume=rose|tulpe|lilie)
+   · lycoris   = Startseite seit 01.10.2026 (Emre: „Mach es live danach Ok“): die Vorlage „Lycoris Specimen“ 1:1 (rote Spinnenlilie, Karmin), nur ERGUNs Texte
+   · blume     = Startseite am 01.10.2026 bis Lycoris: Kristall-Seite näher an der Vorlage, der Diamant öffnet sich zur Blüte (?blume=rose|tulpe|lilie)
    Die Dschungel-Fassung liegt als <template> im HTML: ohne ihren Schalter lädt sie nichts (keine Bilder, kein CSS, kein Skript). */
-window.ERGUN_TITEL = 'blume';
+window.ERGUN_TITEL = 'lycoris';
 (function () {
   var t = new URLSearchParams(location.search).get('titel'); if (t === 'neu') t = 'dschungel'; if (t === 'a') t = 'alt';
-  var wahl = ['alt', 'maschine', 'dschungel', 'kristall', 'blume'].indexOf(t) >= 0 ? t : window.ERGUN_TITEL;
+  var wahl = ['alt', 'maschine', 'dschungel', 'kristall', 'blume', 'lycoris'].indexOf(t) >= 0 ? t : window.ERGUN_TITEL;
   var m = wahl === 'maschine' || wahl === 'dschungel', neu = wahl === 'dschungel';
-  var k = wahl === 'kristall' || wahl === 'blume';
+  var k = wahl === 'kristall' || wahl === 'blume' || wahl === 'lycoris', bl = wahl === 'blume' || wahl === 'lycoris';
   window.ERGUN_WAHL = wahl; window.ERGUN_MASCHINE = m; window.ERGUN_NEU = neu; window.ERGUN_KRISTALL = k;
   var html = document.documentElement;
-  html.classList.toggle('titel-maschine', m); html.classList.toggle('titel-neu', neu); html.classList.toggle('titel-kristall', k); html.classList.toggle('titel-blume', wahl === 'blume');
+  html.classList.toggle('titel-maschine', m); html.classList.toggle('titel-neu', neu); html.classList.toggle('titel-kristall', k); html.classList.toggle('titel-blume', bl); html.classList.toggle('titel-lycoris', wahl === 'lycoris');
   if (m) {   /* nur dann: CSS + Vorlader des Morgenbilds */
     var c = document.createElement('link'); c.rel = 'stylesheet'; c.href = 'maschine.css?v=3'; document.head.appendChild(c);
     [
@@ -60,11 +61,11 @@ window.ERGUN_TITEL = 'blume';
       var l = document.createElement('link'); l.rel = 'preload'; l.as = 'image'; l.type = 'image/avif'; l.media = v[0]; l.setAttribute('imagesrcset', v[1]); l.setAttribute('imagesizes', v[2]); l.setAttribute('fetchpriority', 'high'); document.head.appendChild(l);
     });
   }
-  if (wahl === 'blume' && !new URLSearchParams(location.search).get('schrift')) {   /* Blume: Display-Schrift der Vorlage (Federant, lokal) ist Standard (Emre, 01.10.); ?schrift=clash = Clash Display */
+  if (bl && !new URLSearchParams(location.search).get('schrift')) {   /* Blume: Display-Schrift der Vorlage (Federant, lokal) ist Standard (Emre, 01.10.); ?schrift=clash = Clash Display */
     html.setAttribute('data-schrift', 'vorlage');
     var fl = document.createElement('link'); fl.rel = 'preload'; fl.as = 'font'; fl.type = 'font/woff2'; fl.href = 'schriften/Federant-Regular.woff2'; fl.setAttribute('crossorigin', ''); document.head.appendChild(fl);
   }
-  if (k) { var kc = document.createElement('link'); kc.rel = 'stylesheet'; kc.href = 'kristall.css?v=24'; document.head.appendChild(kc); }
+  if (k) { var kc = document.createElement('link'); kc.rel = 'stylesheet'; kc.href = 'kristall.css?v=26'; document.head.appendChild(kc); }
   if (wahl === 'alt') ['emre3d-folge-1', 'emre3d-folge-2', 'hund-folge'].forEach(function (n) {   /* Vorlader der alten Figur nur hier */
     var l = document.createElement('link'); l.rel = 'preload'; l.as = 'image'; l.href = 'bilder/hero/figuren/' + n + '.webp?v=19';
     l.setAttribute('fetchpriority', 'low'); l.media = '(prefers-reduced-motion: no-preference)'; document.head.appendChild(l);
@@ -1587,7 +1588,7 @@ html.titel-neu {
 <script>
 /* Auftrag 44: je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
 (function () {
-  var liste = window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'blume' ? ['js/blume.js?v=6', 'js/kristall.js?v=26'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=26'] : [];
+  var liste = window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris') ? ['js/blume.js?v=7', 'js/kristall.js?v=28'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=28'] : [];
   liste.forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
 })();
 </script>

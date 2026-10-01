@@ -1,5 +1,8 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
+## Startseite „Lycoris“ = Vorlage 1:1 (seit 01.10.2026 Startseite, `window.ERGUN_TITEL = 'lycoris'`)
+- Läuft über dieselbe Technik wie die Blume (`titel-kristall` + `titel-blume` + `titel-lycoris`, `js/blume.js` + `js/kristall.js`); in `kristall.js` schaltet `LYCORIS`: Art immer `lilie`, offen = 1, kein Diamant, Aufblühen über die Zeit (`geboren`, 2,6 s wie die Vorlage), Farben Karmin (`FARBE = rot × 2,2`, `HEISS = (1, 0,55 + g, 0,5 + b)`), Fragment-Shader `B.FRAG_VORLAGE` (wörtlich aus der Vorlage), Bild 06 = `KEYS[5]` der Vorlage, Handy Bild 04 `KEYS_TALL[3] = { size 0.82, oy −0.44 }`. CSS am Ende von `kristall.css` (`html.titel-lycoris`: Akzent Karmin, Lichthof, Formular-Abstand oben).
+
 ## Startseite „Blume“ – Vorschau `?titel=blume`- **Seit 01.10. Startseite** (Emres OK): `window.ERGUN_TITEL = 'blume'`, Rose, Federant als Standard-Schrift (Schalter im Kopf von `index.html` setzt `data-schrift="vorlage"` + Vorlader, wenn kein `?schrift=` da ist; `?schrift=clash` = Clash Display).
  (01.10.2026, Rückweg Tag `vor-blume`, live erst nach Emres OK)
 - Ausnahme auf Emres Wunsch: näher an die Vorlage „Lycoris Specimen“. Gleiche Vorlage (`<template id="kristall-vorlage">`) und `kristall.css` wie die Kristall-Seite; `index.html` setzt `titel-kristall` + `titel-blume` und lädt `js/blume.js` vor `js/kristall.js`.

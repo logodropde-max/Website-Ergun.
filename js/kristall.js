@@ -19,8 +19,10 @@
   if (frage.get('schrift') === 'vorlage') html.setAttribute('data-schrift', 'vorlage');   /* Display-Schrift der Vorlage (Federant, lokal) zum Vergleich */
   /* Fassung „Blume“ (?titel=blume, 01.10. – näher an die Vorlage): der Diamant öffnet sich zur Knospe, die Blüte geht Bild für Bild auf.
      Art per ?blume=rose|tulpe|lilie (Standard rose); die Geometrie kommt aus js/blume.js. */
-  var B = window.ERGUN_BLUME, BLUME = window.ERGUN_WAHL === 'blume' && !!B;
-  var ART = BLUME ? (B.ARTEN.indexOf(frage.get('blume')) >= 0 ? frage.get('blume') : 'rose') : null;
+  /* Fassung „Lycoris“ (?titel=lycoris, 01.10. – ERGUN: „den Prompt eins zu eins nachmachen, nur meinen Text“): die Vorlage 1:1 –
+     rote Chrom-Spinnenlilie von Anfang an (blüht beim Laden auf wie dort), Karmin, Kamera-Bilder der Vorlage, kein Diamant. */
+  var B = window.ERGUN_BLUME, LYCORIS = window.ERGUN_WAHL === 'lycoris' && !!B, BLUME = (window.ERGUN_WAHL === 'blume' || LYCORIS) && !!B;
+  var ART = LYCORIS ? 'lilie' : BLUME ? (B.ARTEN.indexOf(frage.get('blume')) >= 0 ? frage.get('blume') : 'rose') : null;
   if (BLUME) html.setAttribute('data-blume', ART);
   var FEST_K = frage.get('k') !== null && frage.get('k') !== '' ? parseFloat(frage.get('k')) : null, FEST_O = frage.get('offen') !== null && frage.get('offen') !== '' ? parseFloat(frage.get('offen')) : null;   /* nur zum Prüfen */
   /* Hintergrund-Muster (Brillant-Streuung, eigenes Bild, kachelbar): Standard seit ERGUNs OK (01.10.); ?muster=aus schaltet es ab; in der Blume nur mit ?muster=b */
@@ -157,7 +159,7 @@
   /* ---------- Blume: der Diamant öffnet sich ----------
      Jede Facette löst sich weich: sie kippt um ihre Querachse nach außen (wie ein Blütenblatt, das aufgeht), gleitet nach außen/oben und
      wird dabei kleiner – oben zuerst, im Kreis leicht versetzt. Im selben Zug wächst die Knospe aus der Mitte (u_bloom wie die Vorlage). */
-  var DIAMANT = BLUME ? RADIUS * 0.42 / 0.5 : 0, DIAMANT_DATEN = BLUME ? geometrie(0, DIAMANT) : null;
+  var DIAMANT = BLUME && !LYCORIS ? RADIUS * 0.42 / 0.5 : 0, DIAMANT_DATEN = BLUME && !LYCORIS ? geometrie(0, DIAMANT) : null;
   function drehe(v, a, w) { var c = Math.cos(w), s = Math.sin(w), d = dot(a, v); return add(add(mul(v, c), mul(cross(a, v), s)), mul(a, d * (1 - c))); }
   function zerfall(daten, t) {
     if (t <= 0) return daten;
@@ -209,10 +211,15 @@
     KEYS_TALL = [{ size: 0.9, oy: 0.36 }, { size: 0.56 }, { size: 0.34, oy: 0.44 }, { size: 0.95, oy: -0.2 }, { size: 0.86, ox: 0.5, oy: 0.46 }, { size: 0.5, ox: 0, oy: 0.8 }];
     /* Rose und Tulpe sehen von unten wie eine Schale aus (die Lilie der Vorlage nicht) – im Fächer daher leicht von oben */
     if (ART !== 'lilie') { KEYS[3].el = 6; KEYS[3].oy = -0.4; KEYS_TALL[3] = { size: 0.8, oy: -0.36 }; }
+    if (LYCORIS) {   /* Vorlage 1:1, auch Bild 06: die Lilie hängt von oben ins Bild (das Formular rückt dafür nach unten, siehe kristall.css) */
+      KEYS[5] = { spin: 5.0, el: -74, size: 0.86, ox: 0, oy: 1.02, stem: 0.04 };
+      KEYS_TALL[5] = { size: 0.96, oy: 1.0 };
+      KEYS_TALL[3] = { size: 0.82, oy: -0.44 };   /* Handy: unter den Preisen bleibt Platz (die Vorlage hat dort keine Preiszeilen) */
+    }
   }
   var SCENES = KEYS.length, HOLD = 0.34, NAV = ['ERGUN.', BLUME ? 'Blüte' : 'Kristall', 'Websites', 'Preise', 'Anspruch', 'Anfrage'];
-  var KEYS_ENG = BLUME ? { 5: { size: 0.3, ox: 0, oy: 0.74 } } : {};   /* Blume, mittlere Breiten (< 1100 px quer): Blüte klein oben über dem Formular statt daneben – sie verdeckt es nie */
-  var KEYS_KURZ = BLUME ? { 5: { size: 0.4, oy: 0.95 } } : { 5: { size: 0.28, oy: 0.8 } };   /* kleine Handys (Höhe < 720): Kristall über dem Formular kleiner und höher, damit alle drei Karten ohne Scrollen passen */
+  var KEYS_ENG = BLUME && !LYCORIS ? { 5: { size: 0.3, ox: 0, oy: 0.74 } } : {};   /* Blume, mittlere Breiten (< 1100 px quer): Blüte klein oben über dem Formular statt daneben – sie verdeckt es nie */
+  var KEYS_KURZ = LYCORIS ? { 5: { size: 0.6, oy: 1.02 } } : BLUME ? { 5: { size: 0.4, oy: 0.95 } } : { 5: { size: 0.28, oy: 0.8 } };   /* kleine Handys (Höhe < 720): Kristall über dem Formular kleiner und höher, damit alle drei Karten ohne Scrollen passen */
   function keyAt(coord, tall) {
     var i = Math.max(0, Math.min(SCENES - 1, Math.floor(coord))), j = Math.min(SCENES - 1, i + 1), f = coord - i, kurz = tall && H < 720, eng = !tall && W < 1100;
     var a = Object.assign({}, KEYS[i], tall ? KEYS_TALL[i] : {}, eng ? KEYS_ENG[i] : {}, kurz ? KEYS_KURZ[i] : {}), b = Object.assign({}, KEYS[j], tall ? KEYS_TALL[j] : {}, eng ? KEYS_ENG[j] : {}, kurz ? KEYS_KURZ[j] : {});
@@ -233,6 +240,9 @@
   var TIEF = ORANGE ? hexToLinear('#3B3E46') : hexToLinear('#9E4F74');
   var HEISS = ORANGE ? [1, 0.97, 0.94] : [1, 0.9, 0.95];
   var AKZENT = ORANGE ? '#FF5A1F' : '#E8A0BF';
+  if (LYCORIS) {   /* Karmin der Vorlage (#e3131b): u_red = rot × 2,2, Glanz = (1, 0,55 + g, 0,5 + b) – wie dort */
+    var rot = hexToLinear('#e3131b'); FARBE = mul(rot, 2.2); HEISS = [1, 0.55 + rot[1], 0.5 + rot[2]]; AKZENT = '#e3131b';
+  }
 
   /* ---------- Shader ---------- */
   var VERT = 'attribute vec3 a_pos; attribute vec3 a_nrm; attribute vec3 a_bary; attribute vec3 a_kante; attribute vec3 a_rund;\n' +
@@ -318,7 +328,7 @@
     });
     ['u_vp', 'u_model', 'u_offset', 'u_eye', 'u_farbe', 'u_tief', 'u_hot', 'u_politur', 'u_glut', 'u_alpha'].forEach(function (n) { loc[n] = gl.getUniformLocation(prog, n); });
     if (BLUME) {
-      var vs2 = compile(gl.VERTEX_SHADER, B.VERT), fs2 = compile(gl.FRAGMENT_SHADER, B.FRAG);
+      var vs2 = compile(gl.VERTEX_SHADER, B.VERT), fs2 = compile(gl.FRAGMENT_SHADER, LYCORIS ? B.FRAG_VORLAGE : B.FRAG);
       if (!vs2 || !fs2) return false;
       progB = gl.createProgram(); gl.attachShader(progB, vs2); gl.attachShader(progB, fs2); gl.linkProgram(progB); gl.deleteShader(vs2); gl.deleteShader(fs2);
       if (!gl.getProgramParameter(progB, gl.LINK_STATUS)) return false;
@@ -357,7 +367,7 @@
   if (BLUME) MARKE = [0, 60, 120, 180, 240, 300].map(function (a) { return '<path d="M20 20 C 22 12, 30 8, 33 12 C 35 15, 31 17, 29 14" transform="rotate(' + a + ' 20 20)"/>'; }).join('');
   function marke(el, farbe, akzent) { el.innerHTML = '<g fill="none" stroke="' + farbe + '" stroke-width="' + (BLUME ? 2.6 : 2.2) + '" stroke-linejoin="round" stroke-linecap="round">' + MARKE + '</g><circle cx="20" cy="20" r="2.6" fill="' + akzent + '"/>'; }
   $$('[data-k-marke]').forEach(function (m) { marke(m, getComputedStyle(buehne).color || '#b6b095', AKZENT); });
-  if (BLUME) { var bildnr = $('.k-bildnr', root); if (bildnr) bildnr.innerHTML = '<b>02</b> — Die Blüte, von oben'; }
+  if (BLUME) { var bildnr = $('.k-bildnr', root); if (bildnr) bildnr.innerHTML = LYCORIS ? '<b>02</b> — Die Krone, von oben' : '<b>02</b> — Die Blüte, von oben'; }
   function inhalte() {
     var P = window.PREISE; if (!P || !P.euro) return false;
     var MON = ' / Monat', f = P.mehr[0];
@@ -508,7 +518,7 @@
     }
     tris.sort(function (p, q) { return q.z - p.z; });
     c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
-    var t = [214, 150, 180], s = [74, 30, 52], w = [250, 228, 238];
+    var t = LYCORIS ? [227, 19, 27] : [214, 150, 180], s = LYCORIS ? [70, 4, 8] : [74, 30, 52], w = LYCORIS ? [255, 150, 140] : [250, 228, 238];
     tris.forEach(function (q) {
       var h = Math.min(1, q.hell), col = 'rgb(' + [0, 1, 2].map(function (j) { return Math.round(h < 0.7 ? s[j] + (t[j] - s[j]) * (h / 0.7) : t[j] + (w[j] - t[j]) * ((h - 0.7) / 0.3)); }).join(',') + ')';
       c.beginPath(); c.moveTo(q.p[0][0], q.p[0][1]); c.lineTo(q.p[1][0], q.p[1][1]); c.lineTo(q.p[2][0], q.p[2][1]); c.closePath();
@@ -517,7 +527,7 @@
   }
 
   /* ---------- Schleife ---------- */
-  var laeuft = false, sichtbar = true, zuletzt = performance.now(), zeit = 0, p01 = -1, gezeigt = -1, koord = 0, raf = 0;
+  var laeuft = false, sichtbar = true, zuletzt = performance.now(), zeit = 0, p01 = -1, gezeigt = -1, koord = 0, raf = 0, geboren = -1;
   function bild(jetzt) {
     raf = requestAnimationFrame(bild);
     var dt = Math.min(0.05, (jetzt - zuletzt) / 1000); zuletzt = jetzt;
@@ -548,7 +558,7 @@
     if (BLUME && gl && progB) {
       var g0 = gl; g0.viewport(0, 0, leinwand.width, leinwand.height); g0.clear(g0.COLOR_BUFFER_BIT | g0.DEPTH_BUFFER_BIT);
       /* 1) der Diamant (Bild 01) – öffnet sich beim ersten Scrollen */
-      var zerfallT = ruhig ? 1 : smooth(0.04, 0.8, coord);
+      var zerfallT = ruhig || LYCORIS ? 1 : smooth(0.04, 0.8, coord);
       if (zerfallT < 1) {
         var st0 = Math.round(zerfallT * 300) / 300;
         if (st0 !== geoStand) { geoStand = st0; geoDaten = zerfall(DIAMANT_DATEN, st0); g0.bindBuffer(g0.ARRAY_BUFFER, vbo); g0.bufferData(g0.ARRAY_BUFFER, geoDaten, g0.DYNAMIC_DRAW); }
@@ -561,9 +571,10 @@
         }
       }
       /* 2) die Blüte: wächst aus der Mitte (Knospe), öffnet sich Bild für Bild */
-      var wachsen = ruhig ? 1 : smooth(0.14, 0.85, coord);
+      if (geboren < 0) geboren = jetzt;
+      var wachsen = ruhig ? 1 : LYCORIS ? klemm((jetzt - geboren) / 2600) : smooth(0.14, 0.85, coord);   /* Lycoris: blüht beim Laden auf (2,6 s) wie die Vorlage */
       if (wachsen > 0.002) {
-        var stufe = ART === 'lilie' ? 40 : 160, ost = ruhig ? 1 : FEST_O !== null ? FEST_O : Math.round(offenBei(coord) * stufe) / stufe;
+        var stufe = ART === 'lilie' ? 40 : 160, ost = ruhig || LYCORIS ? 1 : FEST_O !== null ? FEST_O : Math.round(offenBei(coord) * stufe) / stufe;
         if (ost !== blumeStand) {
           blumeStand = ost; var bg = B.bauen(ART, ost, SEED);
           g0.bindBuffer(g0.ARRAY_BUFFER, vboB); g0.bufferData(g0.ARRAY_BUFFER, bg.data, g0.DYNAMIC_DRAW);
@@ -573,7 +584,7 @@
         binde(g0, progB, vboB, attrB, B.STRIDE); g0.bindBuffer(g0.ELEMENT_ARRAY_BUFFER, iboB);
         var hz = B.HERZ[ART];
         g0.uniformMatrix4fv(locB.u_vp, false, vp); g0.uniformMatrix4fv(locB.u_model, false, model); g0.uniform2f(locB.u_offset, k.ox, k.oy);
-        g0.uniform1f(locB.u_time, zeit); g0.uniform1f(locB.u_bloom, wachsen); g0.uniform1f(locB.u_sway, bewegt ? 1 : 0); g0.uniform1f(locB.u_stem, k.stem * smooth(0.3, 1, wachsen));   /* der Stiel wächst mit der Knospe */
+        g0.uniform1f(locB.u_time, zeit); g0.uniform1f(locB.u_bloom, wachsen); g0.uniform1f(locB.u_sway, bewegt ? 1 : 0); g0.uniform1f(locB.u_stem, LYCORIS ? k.stem : k.stem * smooth(0.3, 1, wachsen));   /* der Stiel wächst mit der Knospe */
         g0.uniform3f(locB.u_herz, hz[0], hz[1], hz[2]); g0.uniform3f(locB.u_eye, eye[0], eye[1], eye[2]);
         g0.uniform3f(locB.u_red, FARBE[0], FARBE[1], FARBE[2]); g0.uniform3f(locB.u_tief, TIEF[0], TIEF[1], TIEF[2]); g0.uniform3f(locB.u_hot, HEISS[0], HEISS[1], HEISS[2]); g0.uniform1f(locB.u_alpha, 1);
         g0.drawElements(g0.TRIANGLES, blumeAnzahl, blumeTyp, 0);
@@ -639,7 +650,7 @@
   }
   if (window.PREISE || document.readyState !== 'loading') los(); else document.addEventListener('DOMContentLoaded', los);
   window.__kristall = {
-    zustand: function () { return { koord: koord, gl: !!gl, ableitung: ableitung, radius: RADIUS, seed: SEED, dreiecke: geoDaten ? geoDaten.length / STRIDE / 3 : 0, blume: ART, offen: BLUME ? (ruhig ? 1 : offenBei(koord)) : null, blumeDreiecke: blumeAnzahl / 3 }; },
+    zustand: function () { return { koord: koord, gl: !!gl, ableitung: ableitung, radius: RADIUS, seed: SEED, dreiecke: geoDaten ? geoDaten.length / STRIDE / 3 : 0, blume: ART, lycoris: LYCORIS, offen: BLUME ? (ruhig || LYCORIS ? 1 : offenBei(koord)) : null, blumeDreiecke: blumeAnzahl / 3 }; },
     geometrie: geometrie, springe: springe
   };
 })();

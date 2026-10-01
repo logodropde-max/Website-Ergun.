@@ -256,3 +256,12 @@ html.titel-blume .k-rahmen { background: radial-gradient(120% 90% at 50% 45%, tr
 html.titel-blume .k-schein { background: radial-gradient(closest-side, rgba(158, 79, 116, 0.42), rgba(158, 79, 116, 0.14) 45%, transparent 100%); }
 /* Blume, Bild 06 auf mittleren Breiten (Tablet hoch/quer): Platz oben für die kleine Blüte – das Formular rückt nach unten wie am Handy */
 @media (min-width: 761px) and (max-width: 1099px) { html.titel-blume .titel-kristall .preise__innen, html.titel-blume .preise__innen { padding-top: 30svh; } }
+/* ---------- Fassung „Lycoris“ (?titel=lycoris): die Vorlage 1:1 – Karmin statt Pink, olivfarbener Rand (Grundregel), Lichthof wie dort ---------- */
+html.titel-lycoris { --k-akzent: #e3131b; --k-akzent-tief: #8f0b10; }
+html.titel-lycoris .k-rahmen { background: radial-gradient(120% 90% at 50% 45%, transparent 55%, color-mix(in srgb, var(--k-bone) 8%, transparent) 100%); }
+html.titel-lycoris .k-schein { background: radial-gradient(closest-side, rgba(227, 19, 27, 0.24), rgba(227, 19, 27, 0.07) 45%, transparent 100%); }
+/* Bild 06: die Lilie hängt wie in der Vorlage von oben ins Bild – das Formular beginnt darunter */
+html.titel-lycoris .preise__innen { padding-top: 44svh; }
+@media (max-width: 760px) { html.titel-lycoris .preise__innen { padding-top: 30svh; } }
+@media (max-width: 760px) and (max-height: 720px) { html.titel-lycoris .preise__innen { padding-top: 15svh; } }
+@media (min-width: 761px) and (max-height: 820px) { html.titel-lycoris .preise__innen { padding-top: 34svh; } }   /* niedrige Querbildschirme: Kartenreihe ganz im Bild */

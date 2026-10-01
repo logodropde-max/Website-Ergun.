@@ -223,5 +223,28 @@
     '  col = col / (1.0 + col); col = pow(col, vec3(1.0 / 2.2));\n' +
     '  gl_FragColor = vec4(col * u_alpha, u_alpha); }';
 
-  root.ERGUN_BLUME = { STRIDE: STRIDE, HERZ: HERZ, ARTEN: Object.keys(ARTEN), bauen: bauen, radius: radius, VERT: VERT, FRAG: FRAG };
+  /* der Fragment-Shader der Vorlage wörtlich (Fassung „Lycoris“: rotes Chrom, fast kein Streulicht, alles Spiegelung des dunklen Studios) */
+  var FRAG_VORLAGE = 'precision highp float;\n' +
+    'uniform vec3 u_eye; uniform vec3 u_red; uniform vec3 u_hot; uniform float u_alpha;\n' +
+    'varying vec3 v_n; varying vec3 v_w; varying float v_s;\n' +
+    'float studio(vec3 r) {\n' +
+    '  float key = pow(max(dot(r, normalize(vec3(-0.45, 0.85, 0.35))), 0.0), 14.0) * 2.6;\n' +
+    '  float strip = smoothstep(0.55, 0.8, r.x) * smoothstep(-0.7, 0.3, r.y) * 1.4;\n' +
+    '  float rim = smoothstep(0.55, 0.95, -r.z) * smoothstep(-0.2, 0.5, r.y) * 0.9;\n' +
+    '  float hz = exp(-abs(r.y - 0.05) * 7.0) * 0.4;\n' +
+    '  return key + strip + rim + hz; }\n' +
+    'void main() {\n' +
+    '  vec3 n = normalize(v_n); vec3 v = normalize(u_eye - v_w); if (dot(n, v) < 0.0) n = -n;\n' +
+    '  vec3 r = reflect(-v, n); float e = studio(r);\n' +
+    '  float fr = pow(1.0 - max(dot(n, v), 0.0), 3.0);\n' +
+    '  float dif = max(dot(n, normalize(vec3(-0.3, 0.8, 0.6))), 0.0);\n' +
+    '  vec3 col = u_red * (0.04 + 0.22 * dif);\n' +
+    '  col += u_red * e * 1.15;\n' +
+    '  col += u_hot * pow(e, 3.0) * 0.3;\n' +
+    '  col += u_red * fr * 1.1;\n' +
+    '  col *= 0.8 + 0.2 * smoothstep(0.0, 0.25, v_s);\n' +
+    '  col = col / (1.0 + col); col = pow(col, vec3(1.0 / 2.2));\n' +
+    '  gl_FragColor = vec4(col * u_alpha, u_alpha); }';
+
+  root.ERGUN_BLUME = { STRIDE: STRIDE, HERZ: HERZ, ARTEN: Object.keys(ARTEN), bauen: bauen, radius: radius, VERT: VERT, FRAG: FRAG, FRAG_VORLAGE: FRAG_VORLAGE };
 })(typeof window !== 'undefined' ? window : globalThis);
