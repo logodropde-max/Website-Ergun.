@@ -20,7 +20,7 @@
 
   var STRIDE = 13;
   /* Herz = wohin die Kamera schaut (wie HEART der Vorlage) – je Art die Mitte der Blüte */
-  var HERZ = { lilie: [0, 0.25, 0], rose: [0, 0.42, 0], tulpe: [0, 0.55, 0] };
+  var HERZ = { lilie: [0, 0.25, 0], rose: [0, 0.42, 0], tulpe: [0, 0.55, 0], dahlie: [0, 0.16, 0], pfingstrose: [0, 0.2, 0], lotus: [0, 0.28, 0] };
 
   /* ---------- Netz-Baukasten (wie buildMesh der Vorlage) ---------- */
   function netz() {
@@ -68,6 +68,39 @@
           push(g[i][j], nr, i / U, phase, 0, staffel, basis);
         }
         for (i = 0; i < U; i++) for (j = 0; j < V; j++) { var a = start + i * (V + 1) + j, b = a + V + 1; idx.push(a, a + 1, b, a + 1, b + 1, b); }
+      },
+      /* dicke, gewölbte Schale (Blütenblatt der vollen Blume): Vorder- und Rückseite + Ränder wie das Band der Vorlage */
+      schale: function (c) {
+        var U = c.U, V = c.V, g = [], N = [], i, j;
+        for (i = 0; i <= U; i++) { g.push([]); for (j = 0; j <= V; j++) g[i].push(c.punkt(i / U, (j / V) * 2 - 1)); }
+        for (i = 0; i <= U; i++) { N.push([]); for (j = 0; j <= V; j++) N[i].push(norm(cross(sub(g[Math.min(i + 1, U)][j], g[Math.max(i - 1, 0)][j]), sub(g[i][Math.min(j + 1, V)], g[i][Math.max(j - 1, 0)])))); }
+        function x(q, nr, s) { return push(q, nr, s, c.phase, c.art, c.staffel, c.grund); }
+        var vorn = n; for (i = 0; i <= U; i++) for (j = 0; j <= V; j++) x(g[i][j], N[i][j], i / U);
+        var hinten = n; for (i = 0; i <= U; i++) for (j = 0; j <= V; j++) x(sub(g[i][j], mul(N[i][j], c.dicke)), mul(N[i][j], -1), i / U);
+        for (i = 0; i < U; i++) for (j = 0; j < V; j++) {
+          var a = i * (V + 1) + j, b = a + V + 1;
+          idx.push(vorn + a, vorn + a + 1, vorn + b, vorn + a + 1, vorn + b + 1, vorn + b);
+          idx.push(hinten + a, hinten + b, hinten + a + 1, hinten + a + 1, hinten + b, hinten + b + 1);
+        }
+        function rand(liste, aus) {   /* Streifen zwischen Vorder- und Rückkante – der helle Rand im Chrom */
+          var st = n;
+          liste.forEach(function (q) { var o = aus(q[0], q[1]); x(g[q[0]][q[1]], o, q[0] / U); x(sub(g[q[0]][q[1]], mul(N[q[0]][q[1]], c.dicke)), o, q[0] / U); });
+          for (var k = 0; k < liste.length - 1; k++) { var a2 = st + k * 2; idx.push(a2, a2 + 1, a2 + 2, a2 + 1, a2 + 3, a2 + 2); }
+        }
+        var l = [], r = [], sp = [];
+        for (i = 0; i <= U; i++) { l.push([i, 0]); r.push([i, V]); }
+        for (j = 0; j <= V; j++) sp.push([U, j]);
+        rand(l, function (a, b) { return norm(sub(g[a][0], g[a][1])); });
+        rand(r, function (a, b) { return norm(sub(g[a][V], g[a][V - 1])); });
+        rand(sp, function (a, b) { return norm(sub(g[U][b], g[U - 1][b])); });
+      },
+      kugel: function (mitte, rx, ry, kind, staffel, basis) {
+        var st = n, U = 14, V = 9;
+        for (var i = 0; i <= V; i++) for (var j = 0; j <= U; j++) {
+          var th = (i / V) * Math.PI, ph = (j / U) * Math.PI * 2, nr = [Math.sin(th) * Math.cos(ph), Math.cos(th), Math.sin(th) * Math.sin(ph)];
+          push(add(mitte, [nr[0] * rx, nr[1] * ry, nr[2] * rx]), norm([nr[0] / rx, nr[1] / ry, nr[2] / rx]), 1, 0, kind, staffel, basis);
+        }
+        for (i = 0; i < V; i++) for (j = 0; j < U; j++) { var a = st + i * (U + 1) + j, b = a + U + 1; idx.push(a, a + 1, b, a + 1, b + 1, b); }
       },
       fertig: function () { return { data: new Float32Array(v), index: n > 65535 ? new Uint32Array(idx) : new Uint16Array(idx), ecken: n }; }
     };
@@ -174,27 +207,122 @@
     stiel(m, 4.4);
   }
 
-  var ARTEN = { lilie: lilie, rose: rose, tulpe: tulpe };
-  function bauen(art, offen, seed) {
-    var m = netz(); (ARTEN[art] || rose)(m, klemm(offen), seed || 7);
+  /* =====================================================================================================================
+     Volle Blume (Lycoris-Fassung, ?blume=voll, 01.10.2026 – Ausnahme auf ERGUNs Wunsch): eine echte, volle Blüte statt der Spinnenlilie –
+     von oben eine Rosette, von der Seite eine volle Kuppel, von unten der grüne Kelch. Blütenblätter wie die Bänder der Vorlage (Dicke,
+     Randwelle), nur breit und löffelförmig gewölbt; Stiel als Röhre in grünem Chrom mit Kelch und zwei Blättern (Mittelrippe).
+     Arten 2 = Stiel (grün, wird mit u_stem gekürzt) · 3 = Kelch/Stielblatt (grün, wächst und wiegt wie ein Blütenblatt).
+     ===================================================================================================================== */
+  function schale(m, q) {
+    /* q: phi, basis, L, theta(u), breite(u), wolb(u), roll(u), welle, dicke, U, V, phase, staffel, art, grund, falte */
+    var up = [0, 1, 0], d = [Math.cos(q.phi), 0, Math.sin(q.phi)], e = [-d[2], 0, d[0]], U = q.U, V = q.V, n = 18, mitte = [], richt = [], p = q.basis;
+    for (var k = 0; k <= n; k++) { var u = k / n, th = q.theta(u), t = add(mul(d, Math.sin(th)), mul(up, Math.cos(th))); mitte.push(p); richt.push(t); p = add(p, mul(t, q.L / n)); }
+    function auf(u) { var x = u * n, i = Math.min(n - 1, Math.floor(x)), f = x - i; return [add(mul(mitte[i], 1 - f), mul(mitte[i + 1], f)), norm(add(mul(richt[i], 1 - f), mul(richt[i + 1], f)))]; }
+    function punkt(u, v) {
+      var a = auf(u), w = Math.max(0.0005, q.breite(u)), nOut = norm(cross(a[1], e)), y;
+      if (q.falte) y = q.falte * Math.abs(v) * w;   /* V-Falz = Mittelrippe (Stielblatt) */
+      else { var wolb = Math.max(0.02, q.wolb(u)), R = w / wolb; var x0 = R * Math.sin(v * wolb); y = R * (1 - Math.cos(v * wolb)); return finish(a, w, nOut, x0, y, u, v); }
+      return finish(a, w, nOut, v * w, y, u, v);
+    }
+    function finish(a, w, nOut, x, y, u, v) {
+      var pt = add(add(a[0], mul(e, x)), mul(nOut, -y));
+      if (q.roll) pt = add(pt, mul(nOut, q.roll(u) * w * Math.pow(Math.abs(v), 3)));
+      if (q.welle) pt = add(pt, mul(nOut, q.welle * w * Math.pow(Math.abs(v), 2) * Math.sin(u * 13 + v * 3 + q.phase)));
+      return pt;
+    }
+    m.schale({ punkt: punkt, U: U, V: V, dicke: q.dicke, phase: q.phase, staffel: q.staffel, art: q.art, grund: q.grund || q.basis });
+  }
+
+  /* Blüte in Kränzen: i = 0 außen … N−1 innen, goldener Winkel; je Art Länge, Breite, Neigung, Wölbung */
+  function vollBluete(m, art, seed, fein) {
+    var r = rng(seed + 41), gold = Math.PI * (3 - Math.sqrt(5));
+    var P = art === 'lotus' ? 0 : Math.round((art === 'dahlie' ? 96 : 74) * fein);
+    var UU = fein < 0.8 ? 7 : 9, VV = fein < 0.8 ? 5 : 7;
+    for (var i = 0; i < P; i++) {
+      var t = i / (P - 1), phi = i * gold + (r() - 0.5) * 0.05, phase = r() * 6.28, q;
+      if (art === 'dahlie') {   /* sehr geometrisch: schmale, stark gewölbte (gerollte) Blätter, außen flach, innen aufrecht und eingerollt */
+        var L = 0.2 + 0.72 * Math.pow(1 - t, 0.85), th0 = 0.18 + 1.32 * Math.pow(1 - t, 1.1), rb = 0.03 + 0.11 * (1 - t);
+        q = { phi: phi, basis: [Math.cos(phi) * rb, 0.04 + 0.22 * t, Math.sin(phi) * rb], L: L, U: UU, V: VV, phase: phase, staffel: 0.15 + t * 0.8, art: 0, dicke: 0.008,
+          theta: function (u) { return th0 + (0.12 * (1 - t) - 0.55 * t) * u; },
+          breite: function (u) { return L * 0.16 * Math.pow(Math.sin(Math.PI / 2 * Math.min(1, 0.06 + u / 0.55)), 0.8) * (u > 0.75 ? 1 - (u - 0.75) / 0.25 * 0.75 : 1); },
+          wolb: function () { return 1.35 + 0.3 * t; }, roll: null, welle: 0.04 };
+      } else {   /* Pfingstrose: breite, weiche, gewellte Blätter, innen eine dichte Schale */
+        var L2 = 0.28 + 0.62 * Math.pow(1 - t, 0.7), th2 = 0.28 + 1.05 * Math.pow(1 - t, 1.3), rb2 = 0.03 + 0.12 * (1 - t);
+        q = { phi: phi, basis: [Math.cos(phi) * rb2, 0.04 + 0.12 * t, Math.sin(phi) * rb2], L: L2, U: UU + 2, V: VV + 2, phase: phase, staffel: 0.15 + t * 0.8, art: 0, dicke: 0.007,
+          theta: function (u) { return th2 + (0.3 * (1 - t) - 0.5 * t) * Math.pow(u, 1.4); },
+          breite: function (u) { return L2 * 0.6 * Math.pow(Math.sin(Math.PI / 2 * Math.min(1, 0.05 + u / 0.6)), 0.7) * Math.sqrt(Math.max(0.05, 1 - Math.pow(Math.max(0, u - 0.7) / 0.3, 2) * 0.8)); },
+          wolb: function (u) { return (0.9 + 0.5 * t) * (0.75 + 0.25 * Math.sin(Math.PI * u)); },
+          roll: function (u) { return (1 - t) * 0.35 * smooth(0.5, 1, u); }, welle: 0.14 };
+      }
+      schale(m, q);
+    }
+    if (art === 'lotus') {   /* Lotus: drei Kränze großer, spitzer Blätter + Fruchtknoten mit Staubfäden */
+      [[9, 0.95, 1.1, 0.0], [8, 0.85, 0.72, 0.4], [6, 0.7, 0.38, 0.8]].forEach(function (kr, ki) {
+        for (var j = 0; j < kr[0]; j++) {
+          var phi = (j / kr[0]) * Math.PI * 2 + ki * 0.35, L3 = kr[1] * (0.95 + r() * 0.1), th3 = kr[2];
+          schale(m, { phi: phi, basis: [Math.cos(phi) * 0.12, 0.05 + ki * 0.03, Math.sin(phi) * 0.12], L: L3, U: UU + 3, V: VV + 2, phase: r() * 6.28, staffel: 0.1 + kr[3] * 0.7, art: 0, dicke: 0.009,
+            theta: function (u) { return th3 + 0.25 * u * u; },
+            breite: function (u) { return L3 * 0.34 * Math.pow(Math.sin(Math.PI * Math.min(1, 0.04 + u * 0.98)), 0.75); },
+            wolb: function () { return 1.0; }, roll: null, welle: 0.02 });
+        }
+      });
+      m.kugel([0, 0.16, 0], 0.13, 0.06, 1, 0.8, [0, 0.1, 0]);   /* Fruchtknoten */
+      for (var s = 0; s < 22; s++) {
+        var w = (s / 22) * Math.PI * 2, dd = [Math.cos(w), 0, Math.sin(w)], pts = [], p = [dd[0] * 0.15, 0.12, dd[2] * 0.15];
+        for (var k = 0; k <= 10; k++) { pts.push(p); p = add(p, mul(norm(add([0, 1, 0], mul(dd, 0.6))), 0.016)); }
+        m.roehre({ pts: pts, kind: 1, w: 0.006, lat: [dd[2], 0, -dd[0]], bulb: true, phase: w, stagger: 0.85, base: [0, 0.1, 0] });
+      }
+    }
+  }
+
+  /* grüner Kelch, Stiel (Röhre der Vorlage, leicht geschwungen) und zwei Stielblätter mit Mittelrippe */
+  function gruenTeile(m, seed, fein) {
+    var r = rng(seed + 77), K = fein < 0.8 ? 5 : 6;
+    m.kugel([0, 0.03, 0], 0.11, 0.08, 3, 0.05, [0, 0, 0]);   /* Blütenboden */
+    for (var i = 0; i < K; i++) {
+      var phi = (i / K) * Math.PI * 2 + 0.3;
+      schale(m, { phi: phi, basis: [Math.cos(phi) * 0.07, 0.0, Math.sin(phi) * 0.07], L: 0.36, U: 7, V: 5, phase: r() * 6.28, staffel: 0.05, art: 3, dicke: 0.008,
+        theta: function (u) { return 1.75 + 0.5 * u; },
+        breite: function (u) { return 0.075 * Math.pow(Math.sin(Math.PI * Math.min(1, 0.05 + u * 0.97)), 0.8); },
+        wolb: function () { return 0.9; }, roll: null, welle: 0.03 });
+    }
+    var pts = [];
+    for (var k = 0; k <= 40; k++) { var s = k / 40; pts.push([0.11 * Math.sin(s * 2.6), 0.0 - s * 4.3, 0.05 * Math.sin(s * 1.6)]); }
+    m.roehre({ pts: pts, kind: 2, w: 0.045, lat: [1, 0, 0], bulb: false, phase: 0, stagger: 0, base: [0, 0, 0] });
+    [[0.36, 0.2, 1.0], [0.6, Math.PI + 0.35, 0.85]].forEach(function (b) {   /* zwei Blätter: lanzettlich, mit Falz (Mittelrippe), hängen leicht über */
+      var s = b[0], ap = [0.11 * Math.sin(s * 2.6), -s * 4.3, 0.05 * Math.sin(s * 1.6)], Lb = b[2];
+      schale(m, { phi: b[1], basis: ap, L: Lb, U: 12, V: 4, phase: r() * 6.28, staffel: 0.1, art: 3, dicke: 0.008, falte: 0.32,
+        theta: function (u) { return 0.75 + 1.0 * u * u; },
+        breite: function (u) { return Lb * 0.13 * Math.pow(Math.sin(Math.PI * Math.min(1, 0.03 + u * 0.98)), 0.7); },
+        wolb: function () { return 0.5; }, roll: null, welle: 0.03, grund: ap });
+    });
+  }
+  function vollArt(name) { return function (m, offen, seed, fein) { vollBluete(m, name, seed, fein); gruenTeile(m, seed, fein); }; }
+
+  var ARTEN = { lilie: lilie, rose: rose, tulpe: tulpe, dahlie: vollArt('dahlie'), pfingstrose: vollArt('pfingstrose'), lotus: vollArt('lotus') };
+  var VOLL = ['dahlie', 'pfingstrose', 'lotus'];
+  function bauen(art, offen, seed, fein) {
+    var m = netz(); (ARTEN[art] || rose)(m, klemm(offen), seed || 7, fein === undefined ? 1 : fein);
     return m.fertig();
   }
   /* Radius der voll offenen Blüte um ihr Herz, ohne Stiel – für die Kamera (wie „radius“ der Vorlage) */
   function radius(art, seed) {
     var g = bauen(art, 1, seed), h = HERZ[art] || HERZ.rose, r = 0;
-    for (var i = 0; i < g.data.length; i += STRIDE) { if (g.data[i + 8] > 1.5) continue; r = Math.max(r, Math.hypot(g.data[i] - h[0], g.data[i + 1] - h[1], g.data[i + 2] - h[2])); }
+    for (var i = 0; i < g.data.length; i += STRIDE) { if (g.data[i + 8] > 1.5 && g.data[i + 8] < 2.5) continue; if (g.data[i + 8] > 2.5 && g.data[i + 11] < -0.05) continue;   /* ohne Stiel und Stielblätter */ r = Math.max(r, Math.hypot(g.data[i] - h[0], g.data[i + 1] - h[1], g.data[i + 2] - h[2])); }
     return r;
   }
 
   /* ---------- Shader: rotes Chrom der Vorlage, hier in Pink (Schatten #9E4F74, Glanzlichter fast weiß) ---------- */
   var VERT = 'attribute vec3 a_pos; attribute vec3 a_nrm; attribute vec4 a_aux; attribute vec3 a_base;\n' +
     'uniform mat4 u_vp; uniform mat4 u_model; uniform vec2 u_offset; uniform float u_time; uniform float u_bloom; uniform float u_sway; uniform float u_stem; uniform vec3 u_herz;\n' +
-    'varying vec3 v_n; varying vec3 v_w; varying float v_s;\n' +
+    'varying vec3 v_n; varying vec3 v_w; varying float v_s; varying float v_g;\n' +
     'void main() {\n' +
-    '  vec3 p = a_pos; float k = a_aux.z;\n' +
-    '  if (k < 1.5) {\n' +
+    '  vec3 p = a_pos; float k = a_aux.z; v_g = k > 1.5 ? 1.0 : 0.0;\n' +
+    '  if (k < 1.5 || k > 2.5) {\n' +
     '    float g = clamp(u_bloom * 1.6 - a_aux.w * 0.6, 0.0, 1.0); g = 1.0 - pow(1.0 - g, 3.0);\n' +
-    '    p = a_base + (p - a_base) * g;\n' +
+    '    vec3 b0 = a_base; float sc = g;\n' +
+    '    if (k > 2.5 && a_base.y < -0.05) { b0.y = a_base.y * u_stem; sc *= smoothstep(0.15, 0.7, u_stem); }\n' +
+    '    p = b0 + (p - a_base) * sc;\n' +
     '    float amp = (k < 0.5 ? 0.03 : 0.06) * u_sway * a_aux.x * a_aux.x;\n' +
     '    p += amp * vec3(sin(u_time * 0.9 + a_aux.y), 0.5 * sin(u_time * 1.3 + a_aux.y * 1.7), cos(u_time * 0.7 + a_aux.y * 1.3));\n' +
     '  } else if (p.y < 0.0) { p.y *= u_stem; }\n' +
@@ -246,5 +374,12 @@
     '  col = col / (1.0 + col); col = pow(col, vec3(1.0 / 2.2));\n' +
     '  gl_FragColor = vec4(col * u_alpha, u_alpha); }';
 
-  root.ERGUN_BLUME = { STRIDE: STRIDE, HERZ: HERZ, ARTEN: Object.keys(ARTEN), bauen: bauen, radius: radius, VERT: VERT, FRAG: FRAG, FRAG_VORLAGE: FRAG_VORLAGE };
+  /* volle Blume: der Shader der Vorlage, Grundfarbe und Glanz zwischen Blüte und Grün gemischt */
+  var FRAG_VOLL = FRAG_VORLAGE
+    .replace('uniform vec3 u_eye; uniform vec3 u_red; uniform vec3 u_hot; uniform float u_alpha;', 'uniform vec3 u_eye; uniform vec3 u_red; uniform vec3 u_hot; uniform float u_alpha; uniform vec3 u_gruen; uniform vec3 u_gruenHot;')
+    .replace('varying vec3 v_n; varying vec3 v_w; varying float v_s;', 'varying vec3 v_n; varying vec3 v_w; varying float v_s; varying float v_g;')
+    .replace('  vec3 col = u_red * (0.04 + 0.22 * dif);', '  vec3 rot = mix(u_red, u_gruen, v_g); vec3 heiss = mix(u_hot, u_gruenHot, v_g);\n  vec3 col = rot * (0.04 + 0.22 * dif);')
+    .replace('  col += u_red * e * 1.15;', '  col += rot * e * 1.15;').replace('  col += u_hot * pow(e, 3.0) * 0.3;', '  col += heiss * pow(e, 3.0) * 0.3;').replace('  col += u_red * fr * 1.1;', '  col += rot * fr * 1.1;');
+
+  root.ERGUN_BLUME = { STRIDE: STRIDE, HERZ: HERZ, ARTEN: Object.keys(ARTEN), VOLL: VOLL, bauen: bauen, radius: radius, VERT: VERT, FRAG: FRAG, FRAG_VORLAGE: FRAG_VORLAGE, FRAG_VOLL: FRAG_VOLL };
 })(typeof window !== 'undefined' ? window : globalThis);

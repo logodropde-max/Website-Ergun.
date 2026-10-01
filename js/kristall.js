@@ -27,8 +27,11 @@
   /* Fassung „Lebensbaum“ (?titel=baum, 01.10.): Lebensbaum im Kreis (Formvorlage Feld 5) wächst mit jedem Bild, der Ring schließt sich beim Formular.
      Geometrie einmal aus js/baum.js, Wachstum nur über Uniforms. ?farbe=vorlage = Karmin der Vorlage. */
   var T = window.ERGUN_BAUM, BAUM = window.ERGUN_WAHL === 'baum' && !!T;
-  var ART = LYCORIS ? 'lilie' : BLUME ? (B.ARTEN.indexOf(frage.get('blume')) >= 0 ? frage.get('blume') : 'rose') : null;
+  /* volle Blume statt der Spinnenlilie (?blume=voll, 01.10.): Art ?art=dahlie|pfingstrose|lotus, Farbe ?farbe=rosegold|karmin|elfenbein|pflaume */
+  var VOLL = LYCORIS && frage.get('blume') === 'voll';
+  var ART = VOLL ? (B.VOLL.indexOf(frage.get('art')) >= 0 ? frage.get('art') : 'dahlie') : LYCORIS ? 'lilie' : BLUME ? (B.ARTEN.indexOf(frage.get('blume')) >= 0 ? frage.get('blume') : 'rose') : null;
   if (BLUME) html.setAttribute('data-blume', ART);
+  var BFEIN = Math.min(window.innerWidth || 1440, window.innerHeight || 900) < 700 ? 0.82 : 1;   /* Handy: etwas weniger Blütenblätter (noch ohne Lücken) */
   var FEST_K = frage.get('k') !== null && frage.get('k') !== '' ? parseFloat(frage.get('k')) : null, FEST_O = frage.get('offen') !== null && frage.get('offen') !== '' ? parseFloat(frage.get('offen')) : null;   /* nur zum Prüfen */
   /* Hintergrund-Muster (Brillant-Streuung, eigenes Bild, kachelbar): Standard seit ERGUNs OK (01.10.); ?muster=aus schaltet es ab; in der Blume nur mit ?muster=b */
   var MUSTER_STANDARD = true, MUSTER = frage.get('muster') === 'b' || (MUSTER_STANDARD && !BLUME && !BAUM && frage.get('muster') !== 'aus');
@@ -260,10 +263,16 @@
   var FARBE = ORANGE ? mul(hexToLinear('#C9CCD3'), 1.5) : mul(hexToLinear('#E8A0BF'), 1.55);
   var TIEF = ORANGE ? hexToLinear('#3B3E46') : hexToLinear('#9E4F74');
   var HEISS = ORANGE ? [1, 0.97, 0.94] : [1, 0.9, 0.95];
-  var AKZENT = ORANGE ? '#FF5A1F' : '#E8A0BF';
+  var AKZENT = ORANGE ? '#FF5A1F' : '#E8A0BF', GRUEN = mul(hexToLinear('#4F7A4A'), 2.2);   /* grünes Chrom: Stiel, Kelch, Blätter der vollen Blume */
   if (BAUM && !ORANGE) FARBE = mul(hexToLinear('#E8A0BF'), 1.9);   /* Lebensbaum: frontal gesehen spiegelt das Chrom weniger – etwas heller, wie Feld 5 */
   if (LYCORIS || (BAUM && frage.get('farbe') === 'vorlage')) {   /* Karmin der Vorlage (#e3131b): u_red = rot × 2,2, Glanz = (1, 0,55 + g, 0,5 + b) – wie dort */
-    var rot = hexToLinear('#e3131b'); FARBE = mul(rot, 2.2); HEISS = [1, 0.55 + rot[1], 0.5 + rot[2]]; AKZENT = '#e3131b'; if (BAUM) { TIEF = mul(rot, 0.45); html.setAttribute('data-farbe', 'vorlage'); }
+    var rot = hexToLinear('#e3131b'); FARBE = mul(rot, 2.2); HEISS = [1, 0.55 + rot[1], 0.5 + rot[2]]; AKZENT = '#e3131b';
+    if (VOLL) {   /* Blütenfarbe im selben Chrom-Stil; Lichthof und Akzente der Seite folgen ihr */
+      var FARBEN = { rosegold: ['#C48A74', 1.7], karmin: ['#e3131b', 2.2], elfenbein: ['#E3D6BE', 1.05], pflaume: ['#6B2D5C', 2.6] }, wahlF = FARBEN[frage.get('farbe')] ? frage.get('farbe') : 'rosegold';
+      rot = hexToLinear(FARBEN[wahlF][0]); FARBE = mul(rot, FARBEN[wahlF][1]); HEISS = [1, Math.min(1.2, 0.55 + rot[1]), Math.min(1.2, 0.5 + rot[2])]; AKZENT = FARBEN[wahlF][0];
+      var hx = parseInt(AKZENT.slice(1), 16); html.style.setProperty('--k-akzent', AKZENT); html.style.setProperty('--k-glut', ((hx >> 16) & 255) + ', ' + ((hx >> 8) & 255) + ', ' + (hx & 255));
+      html.setAttribute('data-bluetenfarbe', wahlF);
+    } if (BAUM) { TIEF = mul(rot, 0.45); html.setAttribute('data-farbe', 'vorlage'); }
   }
 
   /* ---------- Shader ---------- */
@@ -365,14 +374,14 @@
       gl.useProgram(prog);
     }
     if (BLUME) {
-      var vs2 = compile(gl.VERTEX_SHADER, B.VERT), fs2 = compile(gl.FRAGMENT_SHADER, LYCORIS ? B.FRAG_VORLAGE : B.FRAG);
+      var vs2 = compile(gl.VERTEX_SHADER, B.VERT), fs2 = compile(gl.FRAGMENT_SHADER, VOLL ? B.FRAG_VOLL : LYCORIS ? B.FRAG_VORLAGE : B.FRAG);
       if (!vs2 || !fs2) return false;
       progB = gl.createProgram(); gl.attachShader(progB, vs2); gl.attachShader(progB, fs2); gl.linkProgram(progB); gl.deleteShader(vs2); gl.deleteShader(fs2);
       if (!gl.getProgramParameter(progB, gl.LINK_STATUS)) return false;
       gl.getExtension('OES_element_index_uint');
       vboB = gl.createBuffer(); iboB = gl.createBuffer(); attrB = [];
       [['a_pos', 3, 0], ['a_nrm', 3, 3], ['a_aux', 4, 6], ['a_base', 3, 10]].forEach(function (a) { var l = gl.getAttribLocation(progB, a[0]); if (l >= 0) attrB.push([l, a[1], a[2]]); });
-      ['u_vp', 'u_model', 'u_offset', 'u_time', 'u_bloom', 'u_sway', 'u_stem', 'u_herz', 'u_eye', 'u_red', 'u_tief', 'u_hot', 'u_alpha'].forEach(function (n) { locB[n] = gl.getUniformLocation(progB, n); });
+      ['u_vp', 'u_model', 'u_offset', 'u_time', 'u_bloom', 'u_sway', 'u_stem', 'u_herz', 'u_eye', 'u_red', 'u_tief', 'u_hot', 'u_alpha', 'u_gruen', 'u_gruenHot'].forEach(function (n) { locB[n] = gl.getUniformLocation(progB, n); });
       gl.useProgram(prog); blumeStand = -1;
     }
     gl.enable(gl.DEPTH_TEST); gl.clearColor(0, 0, 0, 0);
@@ -585,7 +594,7 @@
   var B2 = null, b2Stand = -1;
   function zeichne2dBlume(vp, model, k, coord, eye) {
     var c = ctx2d; if (!c) return; var o = ruhig ? 1 : Math.round(offenBei(coord) * 20) / 20;
-    if (o !== b2Stand) { b2Stand = o; B2 = B.bauen(ART, o, SEED); }
+    if (o !== b2Stand) { b2Stand = o; B2 = B.bauen(ART, o, SEED, BFEIN); }
     var d = B2.data, ix = B2.index, S = B.STRIDE, hz = B.HERZ[ART], mvp = multiply(vp, model), licht = norm([-0.3, 0.8, 0.6]), proj = [], tris = [];
     for (var i = 0; i < d.length; i += S) {
       var x = d[i] - hz[0], y = (d[i + 8] > 1.5 && d[i + 1] < 0 ? d[i + 1] * k.stem : d[i + 1]) - hz[1], z = d[i + 2] - hz[2];
@@ -597,13 +606,14 @@
     for (i = 0; i < ix.length; i += 3) {
       var a = proj[ix[i]], b = proj[ix[i + 1]], e = proj[ix[i + 2]], nn = norm(add(add(a[3], b[3]), e[3]));
       if (dot(nn, blick) < 0) nn = mul(nn, -1);
-      tris.push({ p: [a, b, e], z: a[2] + b[2] + e[2], hell: 0.18 + 0.62 * Math.max(0, dot(nn, licht)) + 0.3 * Math.pow(1 - Math.max(0, dot(nn, blick)), 2) });
+      tris.push({ gruen: VOLL && d[ix[i] * S + 8] > 1.5, p: [a, b, e], z: a[2] + b[2] + e[2], hell: 0.18 + 0.62 * Math.max(0, dot(nn, licht)) + 0.3 * Math.pow(1 - Math.max(0, dot(nn, blick)), 2) });
     }
     tris.sort(function (p, q) { return q.z - p.z; });
     c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
-    var t = LYCORIS ? [227, 19, 27] : [214, 150, 180], s = LYCORIS ? [70, 4, 8] : [74, 30, 52], w = LYCORIS ? [255, 150, 140] : [250, 228, 238];
+    var akz = parseInt(AKZENT.slice(1), 16), t = VOLL ? [(akz >> 16) & 255, (akz >> 8) & 255, akz & 255] : LYCORIS ? [227, 19, 27] : [214, 150, 180], s = LYCORIS ? [70, 4, 8] : [74, 30, 52], w = LYCORIS ? [255, 150, 140] : [250, 228, 238];
     tris.forEach(function (q) {
-      var h = Math.min(1, q.hell), col = 'rgb(' + [0, 1, 2].map(function (j) { return Math.round(h < 0.7 ? s[j] + (t[j] - s[j]) * (h / 0.7) : t[j] + (w[j] - t[j]) * ((h - 0.7) / 0.3)); }).join(',') + ')';
+      var h = Math.min(1, q.hell), ts = q.gruen ? [79, 122, 74] : t, ss = q.gruen ? [18, 34, 18] : s, ws = q.gruen ? [200, 235, 205] : w;
+      var col = 'rgb(' + [0, 1, 2].map(function (j) { return Math.round(h < 0.7 ? ss[j] + (ts[j] - ss[j]) * (h / 0.7) : ts[j] + (ws[j] - ts[j]) * ((h - 0.7) / 0.3)); }).join(',') + ')';
       c.beginPath(); c.moveTo(q.p[0][0], q.p[0][1]); c.lineTo(q.p[1][0], q.p[1][1]); c.lineTo(q.p[2][0], q.p[2][1]); c.closePath();
       c.fillStyle = col; c.fill(); c.strokeStyle = col; c.lineWidth = 0.5; c.stroke();
     });
@@ -699,7 +709,7 @@
       if (wachsen > 0.002) {
         var stufe = ART === 'lilie' ? 40 : 160, ost = ruhig || LYCORIS ? 1 : FEST_O !== null ? FEST_O : Math.round(offenBei(coord) * stufe) / stufe;
         if (ost !== blumeStand) {
-          blumeStand = ost; var bg = B.bauen(ART, ost, SEED);
+          blumeStand = ost; var bg = B.bauen(ART, ost, SEED, BFEIN);
           g0.bindBuffer(g0.ARRAY_BUFFER, vboB); g0.bufferData(g0.ARRAY_BUFFER, bg.data, g0.DYNAMIC_DRAW);
           g0.bindBuffer(g0.ELEMENT_ARRAY_BUFFER, iboB); g0.bufferData(g0.ELEMENT_ARRAY_BUFFER, bg.index, g0.DYNAMIC_DRAW);
           blumeAnzahl = bg.index.length; blumeTyp = bg.index instanceof Uint32Array ? g0.UNSIGNED_INT : g0.UNSIGNED_SHORT;
@@ -710,6 +720,7 @@
         g0.uniform1f(locB.u_time, zeit); g0.uniform1f(locB.u_bloom, wachsen); g0.uniform1f(locB.u_sway, bewegt ? 1 : 0); g0.uniform1f(locB.u_stem, LYCORIS ? k.stem : k.stem * smooth(0.3, 1, wachsen));   /* der Stiel wächst mit der Knospe */
         g0.uniform3f(locB.u_herz, hz[0], hz[1], hz[2]); g0.uniform3f(locB.u_eye, eye[0], eye[1], eye[2]);
         g0.uniform3f(locB.u_red, FARBE[0], FARBE[1], FARBE[2]); g0.uniform3f(locB.u_tief, TIEF[0], TIEF[1], TIEF[2]); g0.uniform3f(locB.u_hot, HEISS[0], HEISS[1], HEISS[2]); g0.uniform1f(locB.u_alpha, 1);
+        if (locB.u_gruen) { g0.uniform3f(locB.u_gruen, GRUEN[0], GRUEN[1], GRUEN[2]); g0.uniform3f(locB.u_gruenHot, 0.82, 1, 0.86); }
         g0.drawElements(g0.TRIANGLES, blumeAnzahl, blumeTyp, 0);
       }
     } else if (BLUME && ctx2d) zeichne2dBlume(vp, model, k, coord, eye);
@@ -775,7 +786,7 @@
   }
   if (window.PREISE || document.readyState !== 'loading') los(); else document.addEventListener('DOMContentLoaded', los);
   window.__kristall = {
-    zustand: function () { return { koord: koord, gl: !!gl, ableitung: ableitung, radius: RADIUS, seed: SEED, dreiecke: geoDaten ? geoDaten.length / STRIDE / 3 : 0, blume: ART, lycoris: LYCORIS, drei: DREI, bilder: SCENES, baum: BAUM, baumDreiecke: baumAnzahl / 3, ring: BAUM ? (ruhig ? 1 : klemm(koord / 5)) : null, offen: BLUME ? (ruhig || LYCORIS ? 1 : offenBei(koord)) : null, blumeDreiecke: blumeAnzahl / 3 }; },
+    zustand: function () { return { koord: koord, gl: !!gl, ableitung: ableitung, radius: RADIUS, seed: SEED, dreiecke: geoDaten ? geoDaten.length / STRIDE / 3 : 0, blume: ART, voll: VOLL, farbe: VOLL ? html.getAttribute('data-bluetenfarbe') : null, lycoris: LYCORIS, drei: DREI, bilder: SCENES, baum: BAUM, baumDreiecke: baumAnzahl / 3, ring: BAUM ? (ruhig ? 1 : klemm(koord / 5)) : null, offen: BLUME ? (ruhig || LYCORIS ? 1 : offenBei(koord)) : null, blumeDreiecke: blumeAnzahl / 3 }; },
     geometrie: geometrie, springe: springe
   };
 })();
