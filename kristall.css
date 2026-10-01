@@ -248,3 +248,11 @@ html.titel-kristall:not([data-schrift="a"]) body .mf-titel { font-size: clamp(2r
 @container k (max-width: 720px) { html.titel-kristall:not([data-schrift="a"]) .k-faecher__seite { display: none; } }
 /* Querformat nahe 4:3 (1024 × 768): die Steine stehen relativ breiter – Satz kleiner, damit kein Stein den Text berührt */
 @container k (orientation: landscape) and (max-aspect-ratio: 3/2) { html.titel-kristall:not([data-schrift="a"]) .k-bloom { font-size: min(6cqw, 11cqh); left: 6cqw; } }
+/* ---------- Fassung „Blume“ (?titel=blume, 01.10.) ---------- */
+@font-face { font-family: "Federant"; src: url("schriften/Federant-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+html.titel-kristall[data-schrift="vorlage"] { --k-display: "Federant", "Iowan Old Style", "Palatino Linotype", Georgia, serif; }   /* Display-Schrift der Vorlage, nur zum Vergleich */
+html.titel-blume .k-rahmen { background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(158, 79, 116, 0.16) 100%); }   /* Rand wie die Vorlage – dunkles Rosé statt Oliv */
+/* Lichthof wie die Vorlage: kräftiger Farbschein hinter der Blüte (dort Karmin, hier tiefes Rosé, damit es nicht milchig wird) */
+html.titel-blume .k-schein { background: radial-gradient(closest-side, rgba(158, 79, 116, 0.42), rgba(158, 79, 116, 0.14) 45%, transparent 100%); }
+/* Blume, Bild 06 auf mittleren Breiten (Tablet hoch/quer): Platz oben für die kleine Blüte – das Formular rückt nach unten wie am Handy */
+@media (min-width: 761px) and (max-width: 1099px) { html.titel-blume .titel-kristall .preise__innen, html.titel-blume .preise__innen { padding-top: 30svh; } }

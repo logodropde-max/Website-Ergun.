@@ -1,5 +1,12 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
+## Startseite „Blume“ – Vorschau `?titel=blume` (01.10.2026, Rückweg Tag `vor-blume`, live erst nach Emres OK)
+- Ausnahme auf Emres Wunsch: näher an die Vorlage „Lycoris Specimen“. Gleiche Vorlage (`<template id="kristall-vorlage">`) und `kristall.css` wie die Kristall-Seite; `index.html` setzt `titel-kristall` + `titel-blume` und lädt `js/blume.js` vor `js/kristall.js`.
+- `js/blume.js`: `ERGUN_BLUME.bauen(art, offen, seed)` → Netz im Format der Vorlage (Lage · Normale · aux · Basis, 13 Werte), Arten `lilie` (buildCurves der Vorlage mit „offen“), `rose`, `tulpe` (gewölbte Flächen über `blatt()`: Mittellinie mit θ(u), Querschnitt als Kreisbogen, Normale aus dem Gitter); Shader `VERT`/`FRAG` = Chrom der Vorlage in Pink (`u_red`, `u_tief`, `u_hot`), Herz je Art in `HERZ`.
+- `js/kristall.js` (wenn `BLUME`): Diamant = `geometrie(0, DIAMANT)`, Öffnen = `zerfall(daten, t)` (je Facette kippen, gleiten, schrumpfen), Blüte = zweites Programm `progB` mit Index-Puffer, `offenBei(c)` (Werte `OFFEN`), Wachsen `smooth(0.14, 0.85, c)`, Kamera `KEYS` der Vorlage (+ `stem`), Abweichungen: Rose/Tulpe Bild 04 `el 6`, Bild 06 rechts neben dem Formular, `KEYS_ENG` (< 1100 px quer) / `KEYS_TALL` / `KEYS_KURZ` klein oben. Attribute je Programm über `binde()` (vorher alle aus). 2D-Ersatz `zeichne2dBlume`. Prüf-Schalter: `?k=0…5` (Bild fest), `?offen=0…1`.
+- Schalter: `?blume=rose|tulpe|lilie`, `?schrift=vorlage` (Federant lokal), `?krone=teile` (alte ERG|UN.-Krone), `?muster=b`.
+- Tests: `blume.test.mjs`.
+
 ## Startseite „Kristall“ – Vorschau `?titel=kristall` (01.10.2026, live erst nach Emres OK, Rückweg Tag `vor-kristall`)
 - Ausnahme auf Emres Wunsch: Aufbau der Vorlage „Lycoris Specimen“ 1:1. Dateien: `js/kristall.js` (Bühne, WebGL-Stein, 2D-Ersatz, Inhalte aus `PREISE`), `kristall.css` (Tokens `--k-…`, Container-Abfragen auf die Bühne `k`), Markup `<template id="kristall-vorlage">` in `index.html` (wird nur bei `ERGUN_WAHL === 'kristall'` eingesetzt; CSS/Skript lädt nur dann). `kristall-vorschau.html` leitet auf `./?titel=kristall`.
 - Bild 06 = das echte Formular: `kristall.js` hängt `<main id="inhalt">` in `.k-root` (margin-top −100svh), dazu die Fußleiste `.k-fussleiste`.

@@ -16,10 +16,17 @@
   if (frage.get('farbe') === 'orange') html.setAttribute('data-farbe', 'orange');
   if (frage.get('schrift') === 'a') html.setAttribute('data-schrift', 'a');   /* Standard = Clash Display (Emre, 01.10.) */
   if (frage.get('knopf') === 'pink') html.setAttribute('data-knopf', 'pink');
-  /* Hintergrund-Muster (Brillant-Streuung, eigenes Bild, kachelbar): Standard seit ERGUNs OK (01.10.); ?muster=aus schaltet es ab */
-  var MUSTER_STANDARD = true, MUSTER = frage.get('muster') === 'b' || (MUSTER_STANDARD && frage.get('muster') !== 'aus');
+  if (frage.get('schrift') === 'vorlage') html.setAttribute('data-schrift', 'vorlage');   /* Display-Schrift der Vorlage (Federant, lokal) zum Vergleich */
+  /* Fassung „Blume“ (?titel=blume, 01.10. – näher an die Vorlage): der Diamant öffnet sich zur Knospe, die Blüte geht Bild für Bild auf.
+     Art per ?blume=rose|tulpe|lilie (Standard rose); die Geometrie kommt aus js/blume.js. */
+  var B = window.ERGUN_BLUME, BLUME = window.ERGUN_WAHL === 'blume' && !!B;
+  var ART = BLUME ? (B.ARTEN.indexOf(frage.get('blume')) >= 0 ? frage.get('blume') : 'rose') : null;
+  if (BLUME) html.setAttribute('data-blume', ART);
+  var FEST_K = frage.get('k') !== null && frage.get('k') !== '' ? parseFloat(frage.get('k')) : null, FEST_O = frage.get('offen') !== null && frage.get('offen') !== '' ? parseFloat(frage.get('offen')) : null;   /* nur zum Prüfen */
+  /* Hintergrund-Muster (Brillant-Streuung, eigenes Bild, kachelbar): Standard seit ERGUNs OK (01.10.); ?muster=aus schaltet es ab; in der Blume nur mit ?muster=b */
+  var MUSTER_STANDARD = true, MUSTER = frage.get('muster') === 'b' || (MUSTER_STANDARD && !BLUME && frage.get('muster') !== 'aus');
   if (MUSTER) html.setAttribute('data-muster', 'b');
-  var SEED = parseInt(frage.get('seed'), 10) || 7, KRONE_RAND = frage.get('krone') === 'rand';
+  var SEED = parseInt(frage.get('seed'), 10) || 7, KRONE_RAND = BLUME ? frage.get('krone') !== 'teile' : frage.get('krone') === 'rand';   /* Blume: wie die Vorlage rahmen nur „E“ und „.“ die Krone */
   var $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
   var buehne = $('[data-k-buehne]', root), strecke = $('[data-k-strecke]', root), leinwand = $('[data-k-leinwand]', root), schein = $('[data-k-schein]', root), wort = $('[data-k-wort]', root), muster = $('[data-k-muster]', root);
 
@@ -92,7 +99,7 @@
 
   /* Zustand bei Bild-Koordinate c (0…5): Dreiecke mit Flächen-Normalen, Baryzentrik, echten Kanten und „runder“ Normale */
   var STRIDE = 15;   /* Lage 3 · Flächen-Normale 3 · Baryzentrik 3 · echte Kanten 3 · runde Normale 3 */
-  function geometrie(c) {
+  function geometrie(c, nurDiamant) {
     var v = [], ordnung = smooth(2.4, 3.5, c), rauh = 1 - smooth(0.2, 1.4, c);
     function drei(a, b, d, kanten, innen, ra, rb, rd) {
       var n = norm(cross(sub(b, a), sub(d, a)));
@@ -126,6 +133,7 @@
         }
       }
     }
+    if (nurDiamant) { stein([0, 0.135 * nurDiamant, 0], [0, 1, 0], nurDiamant, PLAN.dreh, 1); return new Float32Array(v); }   /* Blume, Bild 01: der polierte Brillant allein */
     /* roher Keim: am Anfang da, der Stein wächst aus ihm heraus */
     var kr = 0.36 * (1 - smooth(0.7, 1.7, c));
     if (kr > 0.005) {
@@ -144,7 +152,36 @@
     return new Float32Array(v);
   }
   /* Radius des ausgewachsenen Clusters um die Mitte (für die Kamera – wie „radius“ der Vorlage) */
-  var RADIUS = (function () { var g = geometrie(5), r = 0; for (var i = 0; i < g.length; i += STRIDE) r = Math.max(r, Math.hypot(g[i], g[i + 1], g[i + 2])); return r; })();
+  var RADIUS = BLUME ? B.radius(ART, SEED) : (function () { var g = geometrie(5), r = 0; for (var i = 0; i < g.length; i += STRIDE) r = Math.max(r, Math.hypot(g[i], g[i + 1], g[i + 2])); return r; })();
+
+  /* ---------- Blume: der Diamant öffnet sich ----------
+     Jede Facette löst sich weich: sie kippt um ihre Querachse nach außen (wie ein Blütenblatt, das aufgeht), gleitet nach außen/oben und
+     wird dabei kleiner – oben zuerst, im Kreis leicht versetzt. Im selben Zug wächst die Knospe aus der Mitte (u_bloom wie die Vorlage). */
+  var DIAMANT = BLUME ? RADIUS * 0.42 / 0.5 : 0, DIAMANT_DATEN = BLUME ? geometrie(0, DIAMANT) : null;
+  function drehe(v, a, w) { var c = Math.cos(w), s = Math.sin(w), d = dot(a, v); return add(add(mul(v, c), mul(cross(a, v), s)), mul(a, d * (1 - c))); }
+  function zerfall(daten, t) {
+    if (t <= 0) return daten;
+    var aus = [], hoehe = DIAMANT * 0.6;
+    for (var i = 0; i < daten.length; i += STRIDE * 3) {
+      var cen = [0, 0, 0];
+      for (var j = 0; j < 3; j++) cen = add(cen, [daten[i + j * STRIDE], daten[i + j * STRIDE + 1], daten[i + j * STRIDE + 2]]);
+      cen = mul(cen, 1 / 3);
+      var verz = klemm((0.5 - cen[1] / hoehe) * 0.42) + 0.06 * (1 + Math.sin(Math.atan2(cen[2], cen[0]) * 3));
+      var e = smooth(0, 1, klemm((t - verz) / 0.5)); if (e >= 0.999) continue;
+      var nrm = [daten[i + 3], daten[i + 4], daten[i + 5]], achse = cross(nrm, [0, 1, 0]);
+      achse = Math.hypot(achse[0], achse[1], achse[2]) < 1e-3 ? [1, 0, 0] : norm(achse);
+      var aussen = norm([nrm[0] + cen[0] * 0.8, 0, nrm[2] + cen[2] * 0.8]), w = e * 1.6, weg = add(mul(aussen, e * DIAMANT * 0.42), [0, e * DIAMANT * 0.12, 0]), sk = Math.pow(1 - e, 1.6);   /* seitlich weg wie aufgehende Blätter, nicht nach unten */
+      for (j = 0; j < 3; j++) {
+        var o = i + j * STRIDE, q = add(add(cen, mul(drehe(sub([daten[o], daten[o + 1], daten[o + 2]], cen), achse, w), sk)), weg);
+        var nf = drehe([daten[o + 3], daten[o + 4], daten[o + 5]], achse, w), nr = drehe([daten[o + 12], daten[o + 13], daten[o + 14]], achse, w);
+        aus.push(q[0], q[1], q[2], nf[0], nf[1], nf[2], daten[o + 6], daten[o + 7], daten[o + 8], daten[o + 9], daten[o + 10], daten[o + 11], nr[0], nr[1], nr[2]);
+      }
+    }
+    return new Float32Array(aus);
+  }
+  /* wie weit die Blüte je Bild offen ist (01 Knospe verborgen im Diamanten · 02 Knospe · 03–05 öffnet sich · 06 voll offen) */
+  var OFFEN = [0.04, 0.16, 0.4, 0.64, 0.88, 1];
+  function offenBei(c) { var i = Math.max(0, Math.min(4, Math.floor(c))), f = klemm(c - i); return mix(OFFEN[i], OFFEN[i + 1], f); }
 
   /* ---------- Scroll → Bild-Koordinate (wie die Vorlage) ---------- */
   function sceneCoord(p, n, hold) { if (n <= 1) return 0; var t = klemm(p) * (n - 1), i = Math.min(Math.floor(t), n - 2), h = hold / 2; return i + easeInOut(klemm((t - i - h) / (1 - 2 * h))); }
@@ -160,12 +197,26 @@
     { spin: 5.0, el: 14, size: 0.66, ox: 0.5, oy: 0.04 }
   ];
   var KEYS_TALL = [{ size: 0.9, oy: 0.36 }, { size: 0.56 }, { size: 0.34, oy: 0.44 }, { size: 0.66, oy: -0.5 }, { size: 0.86, ox: 0.5, oy: 0.46 }, { size: 0.34, ox: 0, oy: 0.74 }];
-  var SCENES = KEYS.length, HOLD = 0.34, NAV = ['ERGUN.', 'Kristall', 'Websites', 'Preise', 'Anspruch', 'Anfrage'];
-  var KEYS_KURZ = { 5: { size: 0.28, oy: 0.8 } };   /* kleine Handys (Höhe < 720): Kristall über dem Formular kleiner und höher, damit alle drei Karten ohne Scrollen passen */
+  if (BLUME) {   /* Kamera-Bilder der Vorlage 1:1 (#region camera frames) – nur Bild 06 weicht aus: die Blüte hängt von oben rechts herein und verdeckt das Formular nie */
+    KEYS = [
+      { spin: 0.2, el: 9, size: 0.86, ox: 0, oy: 0.3, stem: 1 },
+      { spin: 1.4, el: 88, size: 0.58, ox: 0, oy: 0, stem: 0 },
+      { spin: 2.3, el: 12, size: 0.27, ox: 0, oy: 0.4, stem: 0.3 },
+      { spin: 3.1, el: -30, size: 0.86, ox: 0, oy: -0.34, stem: 0.06 },
+      { spin: 4.1, el: 16, size: 1.02, ox: 0.66, oy: 0.2, stem: 1 },
+      { spin: 5.0, el: 30, size: 0.6, ox: 0.56, oy: 0.04, stem: 0.3 }
+    ];
+    KEYS_TALL = [{ size: 0.9, oy: 0.36 }, { size: 0.56 }, { size: 0.34, oy: 0.44 }, { size: 0.95, oy: -0.2 }, { size: 0.86, ox: 0.5, oy: 0.46 }, { size: 0.5, ox: 0, oy: 0.8 }];
+    /* Rose und Tulpe sehen von unten wie eine Schale aus (die Lilie der Vorlage nicht) – im Fächer daher leicht von oben */
+    if (ART !== 'lilie') { KEYS[3].el = 6; KEYS[3].oy = -0.4; KEYS_TALL[3] = { size: 0.8, oy: -0.36 }; }
+  }
+  var SCENES = KEYS.length, HOLD = 0.34, NAV = ['ERGUN.', BLUME ? 'Blüte' : 'Kristall', 'Websites', 'Preise', 'Anspruch', 'Anfrage'];
+  var KEYS_ENG = BLUME ? { 5: { size: 0.3, ox: 0, oy: 0.74 } } : {};   /* Blume, mittlere Breiten (< 1100 px quer): Blüte klein oben über dem Formular statt daneben – sie verdeckt es nie */
+  var KEYS_KURZ = BLUME ? { 5: { size: 0.4, oy: 0.95 } } : { 5: { size: 0.28, oy: 0.8 } };   /* kleine Handys (Höhe < 720): Kristall über dem Formular kleiner und höher, damit alle drei Karten ohne Scrollen passen */
   function keyAt(coord, tall) {
-    var i = Math.max(0, Math.min(SCENES - 1, Math.floor(coord))), j = Math.min(SCENES - 1, i + 1), f = coord - i, kurz = tall && H < 720;
-    var a = Object.assign({}, KEYS[i], tall ? KEYS_TALL[i] : {}, kurz ? KEYS_KURZ[i] : {}), b = Object.assign({}, KEYS[j], tall ? KEYS_TALL[j] : {}, kurz ? KEYS_KURZ[j] : {});
-    return { spin: mix(a.spin, b.spin, f), el: mix(a.el, b.el, f), size: mix(a.size, b.size, f), ox: mix(a.ox, b.ox, f), oy: mix(a.oy, b.oy, f) };
+    var i = Math.max(0, Math.min(SCENES - 1, Math.floor(coord))), j = Math.min(SCENES - 1, i + 1), f = coord - i, kurz = tall && H < 720, eng = !tall && W < 1100;
+    var a = Object.assign({}, KEYS[i], tall ? KEYS_TALL[i] : {}, eng ? KEYS_ENG[i] : {}, kurz ? KEYS_KURZ[i] : {}), b = Object.assign({}, KEYS[j], tall ? KEYS_TALL[j] : {}, eng ? KEYS_ENG[j] : {}, kurz ? KEYS_KURZ[j] : {});
+    return { spin: mix(a.spin, b.spin, f), el: mix(a.el, b.el, f), size: mix(a.size, b.size, f), ox: mix(a.ox, b.ox, f), oy: mix(a.oy, b.oy, f), stem: mix(a.stem || 0, b.stem || 0, f) };
   }
 
   /* ---------- Matrizen (spaltenweise) ---------- */
@@ -244,6 +295,12 @@
 
   /* ---------- GL (mit 2D-Rückfall) ---------- */
   var gl = null, ctx2d = null, prog = null, vbo = null, loc = {}, ableitung = false, geoStand = -1, geoDaten = null;
+  var progB = null, vboB = null, iboB = null, locB = {}, attrGem = [], attrB = [], blumeStand = -1, blumeAnzahl = 0, blumeTyp = 0;
+  function binde(c, programm, puffer, liste, stride) {   /* Attribute je Programm: alle aus, dann die eigenen an */
+    c.useProgram(programm); c.bindBuffer(c.ARRAY_BUFFER, puffer);
+    for (var i = 0; i < 8; i++) c.disableVertexAttribArray(i);
+    liste.forEach(function (a) { c.enableVertexAttribArray(a[0]); c.vertexAttribPointer(a[0], a[1], c.FLOAT, false, stride * 4, a[2] * 4); });
+  }
   function initGL() {
     gl = leinwand.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: true });
     if (!gl) return false;
@@ -255,11 +312,22 @@
     prog = gl.createProgram(); gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog); gl.deleteShader(vs); gl.deleteShader(fs);
     if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return false;
     gl.useProgram(prog);
-    vbo = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+    vbo = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, vbo); attrGem = [];
     [['a_pos', 3, 0], ['a_nrm', 3, 3], ['a_bary', 3, 6], ['a_kante', 3, 9], ['a_rund', 3, 12]].forEach(function (a) {
-      var l = gl.getAttribLocation(prog, a[0]); if (l < 0) return; gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, a[1], gl.FLOAT, false, STRIDE * 4, a[2] * 4);
+      var l = gl.getAttribLocation(prog, a[0]); if (l < 0) return; attrGem.push([l, a[1], a[2]]); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, a[1], gl.FLOAT, false, STRIDE * 4, a[2] * 4);
     });
     ['u_vp', 'u_model', 'u_offset', 'u_eye', 'u_farbe', 'u_tief', 'u_hot', 'u_politur', 'u_glut', 'u_alpha'].forEach(function (n) { loc[n] = gl.getUniformLocation(prog, n); });
+    if (BLUME) {
+      var vs2 = compile(gl.VERTEX_SHADER, B.VERT), fs2 = compile(gl.FRAGMENT_SHADER, B.FRAG);
+      if (!vs2 || !fs2) return false;
+      progB = gl.createProgram(); gl.attachShader(progB, vs2); gl.attachShader(progB, fs2); gl.linkProgram(progB); gl.deleteShader(vs2); gl.deleteShader(fs2);
+      if (!gl.getProgramParameter(progB, gl.LINK_STATUS)) return false;
+      gl.getExtension('OES_element_index_uint');
+      vboB = gl.createBuffer(); iboB = gl.createBuffer(); attrB = [];
+      [['a_pos', 3, 0], ['a_nrm', 3, 3], ['a_aux', 4, 6], ['a_base', 3, 10]].forEach(function (a) { var l = gl.getAttribLocation(progB, a[0]); if (l >= 0) attrB.push([l, a[1], a[2]]); });
+      ['u_vp', 'u_model', 'u_offset', 'u_time', 'u_bloom', 'u_sway', 'u_stem', 'u_herz', 'u_eye', 'u_red', 'u_tief', 'u_hot', 'u_alpha'].forEach(function (n) { locB[n] = gl.getUniformLocation(progB, n); });
+      gl.useProgram(prog); blumeStand = -1;
+    }
     gl.enable(gl.DEPTH_TEST); gl.clearColor(0, 0, 0, 0);
     geoStand = -1;
     return true;
@@ -285,8 +353,11 @@
 
   /* ---------- Inhalte aus PREISE (nichts von Hand) + Studio-Zeichen + Navigation ---------- */
   var MARKE = '<path d="M20 3.5 L23.6 8.2 L23.6 31.8 L20 36.5 L16.4 31.8 L16.4 8.2 Z" transform="rotate(0 20 20)"/><path d="M20 3.5 L23.6 8.2 L23.6 31.8 L20 36.5 L16.4 31.8 L16.4 8.2 Z" transform="rotate(60 20 20)"/><path d="M20 3.5 L23.6 8.2 L23.6 31.8 L20 36.5 L16.4 31.8 L16.4 8.2 Z" transform="rotate(120 20 20)"/>';
-  function marke(el, farbe, akzent) { el.innerHTML = '<g fill="none" stroke="' + farbe + '" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">' + MARKE + '</g><circle cx="20" cy="20" r="2.6" fill="' + akzent + '"/>'; }
+  /* Blume: das Zeichen der Vorlage (sechs eingerollte Blütenblätter) statt des Kristalls */
+  if (BLUME) MARKE = [0, 60, 120, 180, 240, 300].map(function (a) { return '<path d="M20 20 C 22 12, 30 8, 33 12 C 35 15, 31 17, 29 14" transform="rotate(' + a + ' 20 20)"/>'; }).join('');
+  function marke(el, farbe, akzent) { el.innerHTML = '<g fill="none" stroke="' + farbe + '" stroke-width="' + (BLUME ? 2.6 : 2.2) + '" stroke-linejoin="round" stroke-linecap="round">' + MARKE + '</g><circle cx="20" cy="20" r="2.6" fill="' + akzent + '"/>'; }
   $$('[data-k-marke]').forEach(function (m) { marke(m, getComputedStyle(buehne).color || '#b6b095', AKZENT); });
+  if (BLUME) { var bildnr = $('.k-bildnr', root); if (bildnr) bildnr.innerHTML = '<b>02</b> — Die Blüte, von oben'; }
   function inhalte() {
     var P = window.PREISE; if (!P || !P.euro) return false;
     var MON = ' / Monat', f = P.mehr[0];
@@ -417,6 +488,34 @@
     });
   }
 
+  /* ---------- 2D-Rückfall der Blume: die Blüte im Stand des Bildes, Dreiecke von hinten nach vorn gemalt ---------- */
+  var B2 = null, b2Stand = -1;
+  function zeichne2dBlume(vp, model, k, coord, eye) {
+    var c = ctx2d; if (!c) return; var o = ruhig ? 1 : Math.round(offenBei(coord) * 20) / 20;
+    if (o !== b2Stand) { b2Stand = o; B2 = B.bauen(ART, o, SEED); }
+    var d = B2.data, ix = B2.index, S = B.STRIDE, hz = B.HERZ[ART], mvp = multiply(vp, model), licht = norm([-0.3, 0.8, 0.6]), proj = [], tris = [];
+    for (var i = 0; i < d.length; i += S) {
+      var x = d[i] - hz[0], y = (d[i + 8] > 1.5 && d[i + 1] < 0 ? d[i + 1] * k.stem : d[i + 1]) - hz[1], z = d[i + 2] - hz[2];
+      var cx = mvp[0] * x + mvp[4] * y + mvp[8] * z + mvp[12], cy = mvp[1] * x + mvp[5] * y + mvp[9] * z + mvp[13], cw = mvp[3] * x + mvp[7] * y + mvp[11] * z + mvp[15];
+      var n = [d[i + 3], d[i + 4], d[i + 5]], nr = [model[0] * n[0] + model[4] * n[1] + model[8] * n[2], model[1] * n[0] + model[5] * n[1] + model[9] * n[2], model[2] * n[0] + model[6] * n[1] + model[10] * n[2]];
+      proj.push([((cx / cw + k.ox) * 0.5 + 0.5) * W, (0.5 - (cy / cw + k.oy) * 0.5) * H, cw, nr]);
+    }
+    var blick = norm(eye);
+    for (i = 0; i < ix.length; i += 3) {
+      var a = proj[ix[i]], b = proj[ix[i + 1]], e = proj[ix[i + 2]], nn = norm(add(add(a[3], b[3]), e[3]));
+      if (dot(nn, blick) < 0) nn = mul(nn, -1);
+      tris.push({ p: [a, b, e], z: a[2] + b[2] + e[2], hell: 0.18 + 0.62 * Math.max(0, dot(nn, licht)) + 0.3 * Math.pow(1 - Math.max(0, dot(nn, blick)), 2) });
+    }
+    tris.sort(function (p, q) { return q.z - p.z; });
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
+    var t = [214, 150, 180], s = [74, 30, 52], w = [250, 228, 238];
+    tris.forEach(function (q) {
+      var h = Math.min(1, q.hell), col = 'rgb(' + [0, 1, 2].map(function (j) { return Math.round(h < 0.7 ? s[j] + (t[j] - s[j]) * (h / 0.7) : t[j] + (w[j] - t[j]) * ((h - 0.7) / 0.3)); }).join(',') + ')';
+      c.beginPath(); c.moveTo(q.p[0][0], q.p[0][1]); c.lineTo(q.p[1][0], q.p[1][1]); c.lineTo(q.p[2][0], q.p[2][1]); c.closePath();
+      c.fillStyle = col; c.fill(); c.strokeStyle = col; c.lineWidth = 0.5; c.stroke();
+    });
+  }
+
   /* ---------- Schleife ---------- */
   var laeuft = false, sichtbar = true, zuletzt = performance.now(), zeit = 0, p01 = -1, gezeigt = -1, koord = 0, raf = 0;
   function bild(jetzt) {
@@ -425,7 +524,7 @@
     var bewegt = !ruhig; if (bewegt) zeit += dt;
     var r = root.getBoundingClientRect(), weg = strecke.offsetHeight, p = weg > 0 ? klemm(-r.top / weg) : 0;
     p01 = p01 < 0 || ruhig ? p : p01 + (p - p01) * (1 - Math.exp(-dt * 9));
-    var coord = koord = sceneCoord(p01, SCENES, HOLD), szene = Math.round(coord);
+    var coord = koord = FEST_K !== null ? FEST_K : sceneCoord(p01, SCENES, HOLD), szene = Math.round(coord);   /* ?k= hält ein Bild fest (Prüfen) */
     if (szene !== gezeigt) { gezeigt = szene; navKnoepfe.forEach(function (b, i) { if (i === szene) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); }); }
 
     /* Kamera */
@@ -442,11 +541,45 @@
     var gx = (0.5 + k.ox / 2) * W, gy = (0.5 - k.oy / 2) * H, gr = k.size * minDim * 1.25;
     schein.style.transform = 'translate(' + (gx - gr).toFixed(1) + 'px,' + (gy - gr).toFixed(1) + 'px)';
     schein.style.width = schein.style.height = (gr * 2).toFixed(1) + 'px';
-    schein.style.opacity = String(0.55 + 0.45 * smooth(4.2, 5, coord));
+    schein.style.opacity = BLUME ? '1' : String(0.55 + 0.45 * smooth(4.2, 5, coord));
     if (MUSTER && muster) { muster.style.opacity = String(0.55 * (1 - 0.65 * smooth(4.3, 5, coord)));   /* hinter dem Formular leiser */
       if (!ruhig) muster.style.transform = 'translate3d(0,' + (-coord * 18).toFixed(1) + 'px,0)'; }   /* Muster wandert langsam mit – Tiefe hinter dem Stein */
 
-    if (gl && prog) {
+    if (BLUME && gl && progB) {
+      var g0 = gl; g0.viewport(0, 0, leinwand.width, leinwand.height); g0.clear(g0.COLOR_BUFFER_BIT | g0.DEPTH_BUFFER_BIT);
+      /* 1) der Diamant (Bild 01) – öffnet sich beim ersten Scrollen */
+      var zerfallT = ruhig ? 1 : smooth(0.04, 0.8, coord);
+      if (zerfallT < 1) {
+        var st0 = Math.round(zerfallT * 300) / 300;
+        if (st0 !== geoStand) { geoStand = st0; geoDaten = zerfall(DIAMANT_DATEN, st0); g0.bindBuffer(g0.ARRAY_BUFFER, vbo); g0.bufferData(g0.ARRAY_BUFFER, geoDaten, g0.DYNAMIC_DRAW); }
+        if (geoDaten.length) {
+          binde(g0, prog, vbo, attrGem, STRIDE);
+          g0.uniformMatrix4fv(loc.u_vp, false, vp); g0.uniformMatrix4fv(loc.u_model, false, model); g0.uniform2f(loc.u_offset, k.ox, k.oy); g0.uniform3f(loc.u_eye, eye[0], eye[1], eye[2]);
+          g0.uniform3f(loc.u_farbe, FARBE[0], FARBE[1], FARBE[2]); g0.uniform3f(loc.u_tief, TIEF[0], TIEF[1], TIEF[2]); g0.uniform3f(loc.u_hot, HEISS[0], HEISS[1], HEISS[2]);
+          g0.uniform1f(loc.u_politur, 1); g0.uniform1f(loc.u_glut, 0); g0.uniform1f(loc.u_alpha, 1);
+          g0.drawArrays(g0.TRIANGLES, 0, geoDaten.length / STRIDE);
+        }
+      }
+      /* 2) die Blüte: wächst aus der Mitte (Knospe), öffnet sich Bild für Bild */
+      var wachsen = ruhig ? 1 : smooth(0.14, 0.85, coord);
+      if (wachsen > 0.002) {
+        var stufe = ART === 'lilie' ? 40 : 160, ost = ruhig ? 1 : FEST_O !== null ? FEST_O : Math.round(offenBei(coord) * stufe) / stufe;
+        if (ost !== blumeStand) {
+          blumeStand = ost; var bg = B.bauen(ART, ost, SEED);
+          g0.bindBuffer(g0.ARRAY_BUFFER, vboB); g0.bufferData(g0.ARRAY_BUFFER, bg.data, g0.DYNAMIC_DRAW);
+          g0.bindBuffer(g0.ELEMENT_ARRAY_BUFFER, iboB); g0.bufferData(g0.ELEMENT_ARRAY_BUFFER, bg.index, g0.DYNAMIC_DRAW);
+          blumeAnzahl = bg.index.length; blumeTyp = bg.index instanceof Uint32Array ? g0.UNSIGNED_INT : g0.UNSIGNED_SHORT;
+        }
+        binde(g0, progB, vboB, attrB, B.STRIDE); g0.bindBuffer(g0.ELEMENT_ARRAY_BUFFER, iboB);
+        var hz = B.HERZ[ART];
+        g0.uniformMatrix4fv(locB.u_vp, false, vp); g0.uniformMatrix4fv(locB.u_model, false, model); g0.uniform2f(locB.u_offset, k.ox, k.oy);
+        g0.uniform1f(locB.u_time, zeit); g0.uniform1f(locB.u_bloom, wachsen); g0.uniform1f(locB.u_sway, bewegt ? 1 : 0); g0.uniform1f(locB.u_stem, k.stem * smooth(0.3, 1, wachsen));   /* der Stiel wächst mit der Knospe */
+        g0.uniform3f(locB.u_herz, hz[0], hz[1], hz[2]); g0.uniform3f(locB.u_eye, eye[0], eye[1], eye[2]);
+        g0.uniform3f(locB.u_red, FARBE[0], FARBE[1], FARBE[2]); g0.uniform3f(locB.u_tief, TIEF[0], TIEF[1], TIEF[2]); g0.uniform3f(locB.u_hot, HEISS[0], HEISS[1], HEISS[2]); g0.uniform1f(locB.u_alpha, 1);
+        g0.drawElements(g0.TRIANGLES, blumeAnzahl, blumeTyp, 0);
+      }
+    } else if (BLUME && ctx2d) zeichne2dBlume(vp, model, k, coord, eye);
+    else if (gl && prog) {
       var c = gl, stand = Math.round(coord * 400) / 400;
       if (stand !== geoStand) { geoStand = stand; geoDaten = geometrie(stand); c.bindBuffer(c.ARRAY_BUFFER, vbo); c.bufferData(c.ARRAY_BUFFER, geoDaten, c.DYNAMIC_DRAW); }
       c.viewport(0, 0, leinwand.width, leinwand.height); c.clear(c.COLOR_BUFFER_BIT | c.DEPTH_BUFFER_BIT);
@@ -506,7 +639,7 @@
   }
   if (window.PREISE || document.readyState !== 'loading') los(); else document.addEventListener('DOMContentLoaded', los);
   window.__kristall = {
-    zustand: function () { return { koord: koord, gl: !!gl, ableitung: ableitung, radius: RADIUS, seed: SEED, dreiecke: geoDaten ? geoDaten.length / STRIDE / 3 : 0 }; },
+    zustand: function () { return { koord: koord, gl: !!gl, ableitung: ableitung, radius: RADIUS, seed: SEED, dreiecke: geoDaten ? geoDaten.length / STRIDE / 3 : 0, blume: ART, offen: BLUME ? (ruhig ? 1 : offenBei(koord)) : null, blumeDreiecke: blumeAnzahl / 3 }; },
     geometrie: geometrie, springe: springe
   };
 })();
