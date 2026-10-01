@@ -272,6 +272,14 @@ window.LEITFADEN = {
     whatsapp: '<path d="M4.5 19.5l1.2-3.6A8 8 0 1 1 8.4 18.6z"/><path d="M9.5 9.5c.3 2.2 2.3 4.4 5 5l1-1.4-1.8-.9-.8.8c-.9-.4-1.6-1.1-2-2l.8-.8-.9-1.8z"/>',
     endo: '<circle cx="12" cy="12" r="4"/><ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(-20 12 12)"/>'
   };
+  /* Ruhe (01.10.2026): dieselben Symbole wie auf der endo-Seite (_code/endo-studio/js/bausteine.js ENDO_SYMBOL) – Test vergleicht */
+  if (document.documentElement.classList.contains('ruhe')) {
+    ESYM.empfang = '<path d="M3.5 8.5A2.5 2.5 0 0 1 6 6h8.5A2.5 2.5 0 0 1 17 8.5v5a2.5 2.5 0 0 1-2.5 2.5H9.5L6 19v-3a2.5 2.5 0 0 1-2.5-2.5z"/><path d="M7 10.2h6.5M7 12.8h4"/><circle cx="19" cy="5.5" r="2.4" fill="currentColor" stroke="none"/>';
+    ESYM.termine = '<rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/><path d="m9.5 14.5 1.8 1.8 3.4-3.4"/>';
+    ESYM.kontakte = '<rect x="3.5" y="5.5" width="17" height="13" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M5.8 16c.6-1.4 1.8-2.1 3.2-2.1s2.6.7 3.2 2.1M14.5 10h3.5M14.5 13h3.5"/>';
+    ESYM.uebersicht = '<rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 16v-3M12 16v-6M15 16v-4"/>';
+    ESYM.studio = '<rect x="3.5" y="6.5" width="14" height="13" rx="2"/><circle cx="8" cy="11" r="1.4"/><path d="m4.5 18 4-4 3 3 2-2 3.5 3.5"/><path d="M19.5 2.2l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>';
+  }
   var HAKEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 12.5l4.5 4.5L18.5 7.5"/></svg>';
 
   /* ---------- Antworten (nur Arbeitsspeicher) ---------- */

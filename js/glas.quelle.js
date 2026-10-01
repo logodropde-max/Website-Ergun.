@@ -47,6 +47,28 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   const FEIN = html.classList.contains('glas-fein');
   /* Glas nahtlos (?glas=nahtlos): keine Fläche über dem Verlauf – er wird selbst nach unten weich dunkler (siehe GLASS_FEIN) */
   const NAHTLOS = FEIN && html.classList.contains('glas-nahtlos');
+  /* Ruhe (?ruhe=neu, 01.10.2026 – Emre: „Der Schriftzug zittert beim Laden und beim Scrollen“). Ursachen und Lösung:
+     · Das Glas liegt in der festen Leinwand und wurde einen Bild-Takt NACH dem übrigen Titelbild-Text verschoben (der Browser scrollt Text
+       sofort, die Leinwand malt im nächsten requestAnimationFrame) → der Schriftzug wackelte gegen „Digitalstudio“ und die Knöpfe.
+       Jetzt steht der Titelbild-Inhalt ebenfalls fest und wird im SELBEN Bild-Takt per transform verschoben wie das Glas (auf ganze
+       Gerätepixel gerundet) – beide bewegen sich immer gemeinsam.
+     · Schrift lud nach (font-display: swap) → erst nach document.fonts.ready messen und malen; bis dahin ist der Schriftzug unsichtbar
+       (Platz bleibt reserviert, keine Verschiebung); kein „Wachsen“ des Glases beim Laden (form = 1, nur weiches Einblenden).
+     · Adressleiste am Handy → nur bei echter Breitenänderung neu rechnen; Leinwand fest 100lvh (glas-fein.css). */
+  const RUHE = FEIN && html.classList.contains('ruhe');
+  const inhalt = RUHE ? root.querySelector('.ghr-content') : null;
+  let versatz = 0, breiteJetzt = window.innerWidth;
+  const dprR = Math.min(window.devicePixelRatio || 1, 2);
+  function lageSetzen() {   /* Ruhe: Titelbild-Inhalt im selben Takt wie das Glas – auf ganze Gerätepixel gerundet */
+    if (!inhalt) return versatz;
+    const r = Math.round((window.scrollY || 0) * dprR) / dprR;
+    if (r !== versatz || !inhalt.style.transform) {
+      versatz = r; inhalt.style.transform = 'translate3d(0,' + (-r) + 'px,0)';
+      inhalt.style.visibility = r > root.offsetHeight + 40 ? 'hidden' : '';
+    }
+    return versatz;
+  }
+  if (RUHE) { html.classList.add('glas-ruhe'); lageSetzen(); }
   const $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => [].slice.call((r || document).querySelectorAll(s));
   function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
 
@@ -167,7 +189,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     const zugabe = fs * 0.16, frei = root.clientWidth * (1 - 2 * 0.06);
     if (breite + zugabe > frei) titleEl.style.fontSize = (fs * frei / (breite + zugabe)).toFixed(2) + 'px';
   }
-  if (fein) { einpassen(); window.addEventListener('resize', einpassen); }
+  if (fein) { einpassen(); window.addEventListener('resize', () => { if (RUHE && window.innerWidth === breiteJetzt) return; breiteJetzt = window.innerWidth; einpassen(); }); }
 
   /* Kante aus dem Abstand statt aus dem Weichzeichner (fein): Die Vorlage gewinnt die Glas-Kante (Kanal R) durch Weichzeichnen der Schrift.
      Bei fetter, eng gesetzter Schrift laufen dabei die schmalen Innenräume zu (E, G, N, Punkt verschmelzen → „Kästen“). Hier: echter
@@ -294,7 +316,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       const heading = titleEl, cr = canvas.getBoundingClientRect();
       const scale = lite ? Math.min(window.devicePixelRatio || 1, 1.25) : Math.min(window.devicePixelRatio || 1, 2);
       const w = Math.max(1, Math.round(cr.width * scale)), h = Math.max(1, Math.round(cr.height * scale));
-      const cs = getComputedStyle(heading), fontPx = parseFloat(cs.fontSize) || 64, sy = window.scrollY || 0;
+      const cs = getComputedStyle(heading), fontPx = parseFloat(cs.fontSize) || 64, sy = RUHE ? versatz : window.scrollY || 0;   /* Ruhe: der Inhalt ist um „versatz“ verschoben */
       const zeichen = [], tw = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
       for (let n = tw.nextNode(); n; n = tw.nextNode()) for (let i = 0; i < n.data.length; i++) {
         if (/\s/.test(n.data[i])) continue;
@@ -320,6 +342,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       return { cnv, w, h, fontPx, scale };
     };
     const hochladen = (cnv, w, h, fontPx, scale) => {   /* dieselben Schritte wie im Pfad der Vorlage darunter */
+      zustand.masken = (zustand.masken || 0) + 1;   /* Prüfung: wie oft der Schriftzug neu aufgebaut wurde */
       if (!maskTex) maskTex = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, maskTex);
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
@@ -412,8 +435,8 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       run(P.field, field, { time, aspect, octaves: lite ? 3 : 5, c0: pal[0], c1: pal[1], c2: pal[2], c3: pal[3], c4: pal[4] });
       run(P.glass, null, {
         field: field.tex, height: blurB.tex, htexel: [1 / blurB.w, 1 / blurB.h], bevel, aspect, light: [light.x, light.y], glass: 1,
-        form: reduceMq.matches || readyAt < 0 ? 1 : formed(performance.now() - readyAt, FORM_MS), res: [canvas.width, canvas.height],
-        shift: fein ? (window.scrollY || 0) / Math.max(1, canvas.clientHeight) : 0, nahtlos: NAHTLOS ? 1 : 0
+        form: RUHE || reduceMq.matches || readyAt < 0 ? 1 : formed(performance.now() - readyAt, FORM_MS), res: [canvas.width, canvas.height],
+        shift: fein ? (RUHE ? lageSetzen() : window.scrollY || 0) / Math.max(1, canvas.clientHeight) : 0, nahtlos: NAHTLOS ? 1 : 0
       });
       zustand.bilder++;
     };
@@ -511,10 +534,16 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     pointer.kick();
   });
   root.setAttribute('data-glass', 'false');
-  start();
+  if (RUHE) {   /* erst messen und malen, wenn die Schrift da ist (höchstens 2,5 s warten) */
+    let los = false; const go = () => { if (los) return; los = true; html.classList.add('glas-schrift-da'); einpassen(); start(); if (!zustand.glas) html.classList.add('glas-ohne'); };
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(go); else go();
+    setTimeout(go, 2500);
+    /* ohne WebGL (oder bevor das Glas läuft) bewegt ein eigener Takt den festen Inhalt mit dem Scrollen */
+    let gt = 0; window.addEventListener('scroll', () => { if (zustand.glas || gt) return; gt = requestAnimationFrame(() => { gt = 0; lageSetzen(); }); }, { passive: true });
+  } else start();
 
   /* Bildrate messen (Prüfung): Bilder je Sekunde der letzten Sekunde */
   let fpsT = performance.now(), fpsN = 0;
   setInterval(() => { const n = zustand.bilder; zustand.fps = Math.round((n - fpsN) * 1000 / Math.max(1, performance.now() - fpsT)); fpsN = n; fpsT = performance.now(); }, 1000);
-  window.__glas = { zustand: () => ({ glas: zustand.glas, lite: zustand.lite, fps: zustand.fps, angebote: angeboteFertig, titel: titleEl.textContent, punkt: html.getAttribute('data-glas-punkt') || 'glas' }), zumKontakt, zuAngeboten };
+  window.__glas = { zustand: () => ({ glas: zustand.glas, lite: zustand.lite, fps: zustand.fps, angebote: angeboteFertig, masken: zustand.masken || 0, versatz, ruhe: RUHE, titel: titleEl.textContent, punkt: html.getAttribute('data-glas-punkt') || 'glas' }), zumKontakt, zuAngeboten };
 })();

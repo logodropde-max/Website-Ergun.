@@ -137,3 +137,18 @@ html.glas-nahtlos :is(.glas-kopf__marke, .glas-fuss__marke) span {
 @media (prefers-reduced-motion: reduce) { html.glas-nahtlos :is(.glas-kopf__marke, .glas-fuss__marke) span { animation: none; background-position: 15% 50%; } }
 /* Unterzeile im Titelbild (Emre, 01.10. spät): „Websites und Automatisierung“ – ruhig, etwas größer als vorher der Satz */
 html.glas-nahtlos .glas-hero .ghr-desc.glas-unterzeile { font-size: clamp(1.125rem, 2.2cqw, 1.5rem); font-weight: 500; letter-spacing: 0.01em; color: rgba(255, 255, 255, 0.92); }
+
+/* Ruhe (?ruhe=neu, 01.10.2026): kein Zoom, kein seitliches Schieben, Eingabefelder am Handy ≥ 16 px (iOS zoomt sonst beim Antippen) */
+html.ruhe, html.ruhe body { overflow-x: clip; touch-action: pan-x pan-y; }
+html.ruhe :is(a, button, input, select, textarea, label, summary, [role="button"], [role="tab"]) { touch-action: manipulation; }
+@media (max-width: 767px) { html.ruhe :is(input, select, textarea) { font-size: 16px !important; } }
+html.ruhe .glas-kopf, html.ruhe .glas-buehne { transform: translateZ(0); }
+html.ruhe .glas-buehne { bottom: auto; height: 100lvh; }   /* feste Größe: die Adressleiste ändert nichts */
+/* Ruhe: der Titelbild-Inhalt steht fest und wird im selben Bild-Takt wie das Glas verschoben (glas.quelle.js lageSetzen) */
+html.glas-ruhe .glas-hero .ghr-content { position: fixed; top: 0; left: 0; right: 0; height: 100svh; will-change: transform; }
+html.glas-ruhe:not(.glas-schrift-da) .glas-hero .ghr-title { visibility: hidden; }   /* Platz bleibt, bis die Schrift geladen ist */
+html.glas-ruhe .glas-hero :is(.ghr-eyebrow, .ghr-desc, .ghr-actions) { animation-name: ghr-fade; }   /* nur Einblenden, kein Hochrutschen */
+/* Ruhe: Fließtext am Handy mindestens 16 px (kein Zoomen nötig). Kleingedrucktes, Schilder, Beschriftungen und Preise bleiben klein. */
+@media (max-width: 767px) {
+  html.ruhe :is(.mf-extra__satz, .mf-stufe__punkt, .mf-alles li, .mf-betreuung__grund, .mf-ezeile__satz, .mf-satz, .glas-karte__satz) { font-size: 16px; line-height: 1.45; }
+}

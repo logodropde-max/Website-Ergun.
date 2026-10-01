@@ -1,5 +1,9 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
+## Ruhe (LIVE seit Emres OK, 01.10.2026 spät; `?ruhe=alt` = vorher; Rückweg Tag `vor-ruhe-live`)
+- Kopf-Skript (Ende von `<head>`, gleich wie auf endo): Klasse `html.ruhe`, Viewport ohne Zoom, Gesten/Strg+Rad abgefangen; CSS in `glas-fein.css` (16 px Felder/Fließtext am Handy, `overflow-x: clip`, `touch-action`).
+- `js/glas.quelle.js` (`RUHE`, Klasse `glas-ruhe`): `.ghr-content` fest + `lageSetzen()` verschiebt es im selben Takt wie das Glas (`u_shift`), Start erst nach `document.fonts.ready` (Klasse `glas-schrift-da`), kein Glas-Wachsen, nur Breitenänderung zählt, `.glas-buehne` 100lvh. Prüfgriff `__glas.zustand()` meldet `masken` (Neuaufbauten) und `versatz`.
+
 ## endo-Preise (01.10.2026 spät, neues Modell – LIVE seit Emres OK; Rückweg Tag `vor-endo-preise`)
 - `PREISE.endo` in `js/preise.js` = einzige Quelle (je Fähigkeit `einmalig`, `monat`, `hinweis`; `komplett`, `whatsapp`, `erklaer`, `grenze`). `PREISE.mehr` wird daraus berechnet (Karten/ältere Fassungen), `P.monatText()` setzt „ab“ vor den Monatsbetrag. `P.endoPaket(ids, whatsapp)`: Summen je Fähigkeit, komplett bei allen fünf oder wenn nicht teurer, WhatsApp obendrauf. `P.rechnen()` liefert zusätzlich `betreuungMonat` und `endoMonat`.
 - Schritt ② endo: `.mf-eliste`/`.mf-ezeile` (Grundform in `index.html`, Glas in `glas-fein.css`), Symbole `ESYM`. Betreuung gehört nur zur Website (kein `mehrStufe` mehr).
