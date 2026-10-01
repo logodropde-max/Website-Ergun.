@@ -1,0 +1,106 @@
+/* ERGUN. – „Glas fein“ (?glas=fein, 01.10.2026 spät – Ausnahme auf Emres Wunsch): eine Bildsprache für die ganze Seite.
+   Der flüssige Verlauf des Heros liegt als feste Bühne (.glas-buehne, EIN WebGL-Kontext) hinter allem und läuft unter dem Hero gedämpft,
+   dunkler, unschärfer und langsamer weiter. Eine Glasfläche für Kopfzeile, Angebote und Formular; ein Raster, ein Abstandssystem,
+   eine Schrift-Hierarchie (Überschrift · Kartentitel · Text · Klein). Lädt nur mit dem Schalter (index.html, GLAS_FEIN_STANDARD) nach glas.css. */
+html.glas-fein {
+  /* eine Glasfläche für alles */
+  --gf-flaeche: rgba(255, 255, 255, 0.07); --gf-flaeche-hover: rgba(255, 255, 255, 0.11); --gf-flaeche-wahl: rgba(255, 255, 255, 0.15);
+  --gf-kante: rgba(255, 255, 255, 0.16); --gf-kante-hover: rgba(255, 255, 255, 0.32);
+  --gf-blur: blur(18px) saturate(1.2);
+  --gf-schatten: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 24px 48px -28px rgba(0, 0, 0, 0.75);
+  --gf-akzent: #FF5A1F;   /* Orange aus dem Verlauf (= Marken-Orange) */
+  --gf-r: 24px; --gf-r-feld: 14px;
+  /* Schrift-Hierarchie */
+  --gf-h: clamp(2.25rem, 4.8vw, 3.75rem); --gf-titel: clamp(1.5rem, 2vw, 1.75rem); --gf-text: 1rem; --gf-klein: 0.875rem;
+  --gf-abstand: clamp(64px, 10vh, 112px);
+  /* das Formular liest diese Variablen */
+  --f-flaeche: var(--gf-flaeche); --f-flaeche-hover: var(--gf-flaeche-hover); --k-flaeche: var(--gf-flaeche);
+  --f-kante: linear-gradient(var(--gf-kante), var(--gf-kante)); --k-kante: linear-gradient(var(--gf-kante), var(--gf-kante));
+  --f-wahl: var(--gf-akzent); --k-kante-wahl: linear-gradient(var(--gf-akzent), var(--gf-akzent)); --k-flaeche-wahl: var(--gf-flaeche-wahl);
+  --f-schein: 0 0 0 1px var(--gf-akzent); --k-schein: 0 0 0 1px var(--gf-akzent);
+  --f-tiefe: var(--gf-schatten); --f-linie: rgba(255, 255, 255, 0.1); --f-gold: rgba(255, 255, 255, 0.9); --f-gold-hell: #FFFFFF;
+  --f-knopf-text: #0D0A14;
+}
+html.glas-fein, html.glas-fein body { background: var(--g-grund); }
+
+/* ---------- Bühne: der Verlauf hinter der ganzen Seite ---------- */
+.glas-buehne { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.glas-buehne .ghr-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+html.glas-fein .glas-buehne .ghr-canvas { opacity: 1; }
+html.glas-fein .glas-hero { background: transparent !important; z-index: 1; }
+html.glas-fein main#inhalt, html.glas-fein .glas-fuss { position: relative; z-index: 1; }
+
+/* ---------- Hero: Schriftzug in einer Zeile, Abstände optisch ausgeglichen (glas.quelle.js → abstaende/einpassen) ---------- */
+html.glas-fein .glas-hero .ghr-title { max-width: none; white-space: nowrap; letter-spacing: 0; }
+html.glas-fein .glas-z { display: inline; }
+
+/* ---------- Kopfzeile: Glas wie die Karten, Logo im Material des Schriftzugs ---------- */
+html.glas-fein .glas-kopf { background: rgba(13, 10, 20, 0.66); border-color: var(--gf-kante); -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); box-shadow: var(--gf-schatten); }
+html.glas-fein .glas-kopf__marke { font-size: 18px; font-weight: 700; letter-spacing: 0.01em; color: #FFFFFF;
+  background: linear-gradient(172deg, #FFFFFF 8%, #FFEFE0 40%, #FFD3BC 64%, #F4B9D2 92%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(13, 10, 20, 0.35)); }
+html.glas-fein .glas-kopf__marke span { -webkit-text-fill-color: var(--gf-akzent); color: var(--gf-akzent); }
+html.glas-fein .glas-kopf__links a { color: rgba(255, 255, 255, 0.86); }
+
+/* ---------- Unter dem Hero: der Verlauf läuft gedämpft weiter, hinter den Karten ruhiger und dunkler ---------- */
+html.glas-fein .preise { background: linear-gradient(to bottom, rgba(13, 10, 20, 0.3) 0, rgba(13, 10, 20, 0.7) min(30vh, 260px), rgba(13, 10, 20, 0.78) 100%) !important; }
+html.glas-fein .preise__innen { width: min(1120px, calc(100% - 40px)); padding: var(--gf-abstand) 0 calc(var(--gf-abstand) + 16px); }
+html.glas-fein .glas-angebote { position: relative; margin-bottom: var(--gf-abstand); }
+html.glas-fein .glas-angebote::before { content: ""; position: absolute; z-index: -1; inset: -12% 0; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(13, 10, 20, 0.6), rgba(13, 10, 20, 0.35) 65%, rgba(13, 10, 20, 0)); }
+
+/* Überschriften: eine Stufe für „Was brauchen Sie?“ und die Formular-Schritte */
+html.glas-fein .glas-h2, html.glas-fein .mf-titel { font-size: var(--gf-h); font-weight: 700; line-height: 0.98; letter-spacing: -0.025em; }
+html.glas-fein .glas-h2 { margin-bottom: clamp(28px, 4vh, 40px); }
+html.glas-fein .mf-satz { font-size: var(--gf-text); line-height: 1.5; color: rgba(255, 255, 255, 0.8); }
+
+/* ---------- Angebote (Schritt ①): dieselbe Glasfläche, Preise groß, Wahl eindeutig ---------- */
+html.glas-fein .glas-karte { gap: 10px; padding: 28px; border-radius: var(--gf-r); border-color: var(--gf-kante); background: var(--gf-flaeche);
+  -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); box-shadow: var(--gf-schatten); }
+html.glas-fein .glas-karte__titel { font-size: var(--gf-titel); font-weight: 600; padding-right: 36px; }
+html.glas-fein .glas-karte__satz { font-size: var(--gf-text); line-height: 1.5; color: rgba(255, 255, 255, 0.8); }
+html.glas-fein .glas-karte__preis { gap: 4px 10px; padding-top: 18px; }
+html.glas-fein .glas-karte__preis b { font-size: clamp(28px, 2.6vw, 34px); font-weight: 600; letter-spacing: -0.015em; font-variant-numeric: tabular-nums; }
+html.glas-fein .glas-karte__preis small { font-size: 15px; font-weight: 500; color: rgba(255, 255, 255, 0.82); font-variant-numeric: tabular-nums; }
+@media (hover: hover) and (pointer: fine) { html.glas-fein .glas-karte:hover { background: var(--gf-flaeche-hover); border-color: var(--gf-kante-hover); } }
+html.glas-fein .glas-karte[aria-pressed="true"] { background: var(--gf-flaeche-wahl); border-color: var(--gf-akzent); box-shadow: 0 0 0 1px var(--gf-akzent), var(--gf-schatten); }
+html.glas-fein .glas-karte[aria-pressed="true"] .glas-karte__titel::after { content: none; }
+/* kleiner Haken oben rechts (nur bei der gewählten Karte) */
+html.glas-fein .glas-karte::after { content: ""; position: absolute; top: 24px; right: 24px; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--gf-akzent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230D0A14' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 15px no-repeat;
+  opacity: 0; transform: scale(0.6); transition: opacity 200ms var(--g-ease), transform 200ms var(--g-ease); }
+html.glas-fein .glas-karte[aria-pressed="true"]::after { opacity: 1; transform: none; }
+html.glas-fein .glas-angebote.hat-wahl .glas-karte:not([aria-pressed="true"]) { opacity: 0.9; }
+/* „Lieber gleich schreiben“ als ruhige Glas-Pille – gut auffindbar, aber unter den Hauptknöpfen */
+html.glas-fein .glas-angebote .mf-angebote__direkt { width: max-content; min-height: 48px; margin-top: 24px; padding: 0 24px; border-radius: 999px; border: 1px solid var(--gf-kante);
+  background: var(--gf-flaeche); -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); text-decoration: none; font-weight: 600; font-size: 15px;
+  transition: background-color 200ms ease, border-color 200ms ease; }
+@media (hover: hover) and (pointer: fine) { html.glas-fein .glas-angebote .mf-angebote__direkt:hover { background: var(--gf-flaeche-hover); border-color: var(--gf-kante-hover); } }
+html.glas-fein .glas-angebote .mf-angebote__direkt:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 3px; }
+
+/* ---------- Formular (② ③): dieselbe Glasfläche ---------- */
+html.glas-fein :is(.mf-stufe, .mf-chip, .mf-komplett, .mf .auswahl, .lf-chip--gross) { border-radius: var(--gf-r); -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); }
+html.glas-fein :is(.mf-stufe, .mf-chip, .mf-komplett)[aria-pressed="true"] { background: var(--gf-flaeche-wahl); }
+@media (hover: hover) and (pointer: fine) { html.glas-fein :is(.mf-stufe, .mf-chip)[aria-pressed="true"]:hover { background-color: var(--gf-flaeche-wahl); } }
+html.glas-fein .mf-chip__status--live { background: #FFFFFF; border-color: #FFFFFF; color: #0D0A14; }
+html.glas-fein .mf-stufe__schild { background: #1A1420; border-color: var(--gf-kante); color: #FFFFFF; }
+html.glas-fein .mf-haken__box { border-color: rgba(255, 255, 255, 0.45); }
+html.glas-fein .mf-extras__titel { color: rgba(255, 255, 255, 0.8); }
+html.glas-fein .mf__linie { background: rgba(255, 255, 255, 0.12); }
+html.glas-fein .mf__linie i { background: var(--gf-akzent); }
+html.glas-fein body .anfrage .field :is(input, textarea, select) { background: var(--gf-flaeche); border-color: var(--gf-kante); border-radius: var(--gf-r-feld);
+  -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); }
+html.glas-fein .upload { border-radius: var(--gf-r-feld); border-color: rgba(255, 255, 255, 0.22); background: var(--gf-flaeche); }
+html.glas-fein .upload__symbol { color: #FFFFFF; background: rgba(255, 255, 255, 0.1); }
+@media (min-width: 1024px) {
+  html.glas-fein .mf-summe { padding: 20px; border: 1px solid var(--gf-kante); border-top: 1px solid var(--gf-kante); border-radius: var(--gf-r); background: var(--gf-flaeche);
+    -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); box-shadow: var(--gf-schatten); }
+}
+@media (max-width: 1023px) {
+  html.glas-fein .mf-summe { border: 1px solid var(--gf-kante); background: rgba(22, 17, 30, 0.82); -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); }
+}
+
+/* ---------- Fußzeile ---------- */
+html.glas-fein .glas-fuss { border-top: 0; background: rgba(13, 10, 20, 0.8); }
+html.glas-fein .glas-fuss__marke { background: linear-gradient(172deg, #FFFFFF 8%, #FFEFE0 40%, #FFD3BC 64%, #F4B9D2 92%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+html.glas-fein .glas-fuss__marke span { -webkit-text-fill-color: var(--gf-akzent); }

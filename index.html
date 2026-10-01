@@ -80,7 +80,11 @@ window.ERGUN_TITEL = 'glas';
     var fl = document.createElement('link'); fl.rel = 'preload'; fl.as = 'font'; fl.type = 'font/woff2'; fl.href = 'schriften/Federant-Regular.woff2'; fl.setAttribute('crossorigin', ''); document.head.appendChild(fl);
   }
   if (k || all) { var kc = document.createElement('link'); kc.rel = 'stylesheet'; kc.href = 'kristall.css?v=38'; document.head.appendChild(kc); }
-  if (glas) ['glas-vorlage.gen.css?v=1', 'glas.css?v=1'].forEach(function (h) { var gc = document.createElement('link'); gc.rel = 'stylesheet'; gc.href = h; document.head.appendChild(gc); });
+  /* Glas fein (01.10. spät, Vorschau ?glas=fein – Ausnahme auf Emres Wunsch): sauberer Schriftzug, Logo im Glas-Look, Verlauf läuft gedämpft hinter
+     der ganzen Seite weiter. GLAS_FEIN_STANDARD = true seit Emres OK (01.10. spät); ?glas=alt = vorher */
+  var GLAS_FEIN_STANDARD = true, gq = new URLSearchParams(location.search).get('glas');
+  var gfein = glas && (gq === 'fein' || (GLAS_FEIN_STANDARD && gq !== 'alt')); window.ERGUN_GLAS_FEIN = gfein; html.classList.toggle('glas-fein', gfein);
+  if (glas) ['glas-vorlage.gen.css?v=1', 'glas.css?v=1'].concat(gfein ? ['glas-fein.css?v=1'] : []).forEach(function (h) { var gc = document.createElement('link'); gc.rel = 'stylesheet'; gc.href = h; document.head.appendChild(gc); });
   if (all) { var ac = document.createElement('link'); ac.rel = 'stylesheet'; ac.href = 'all.css?v=1'; document.head.appendChild(ac);
     var sw = new URLSearchParams(location.search).get('schrift'); if (sw === 'federant') { html.setAttribute('data-schrift', 'vorlage'); } }
   if (wahl === 'alt') ['emre3d-folge-1', 'emre3d-folge-2', 'hund-folge'].forEach(function (n) {   /* Vorlader der alten Figur nur hier */
