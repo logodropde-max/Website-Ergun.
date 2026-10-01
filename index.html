@@ -59,8 +59,8 @@ window.ERGUN_TITEL = 'lycoris3';
   window.ERGUN_ORDNUNG = wahl === 'lycoris3' && new URLSearchParams(location.search).get('blume') !== 'lilie' && (ow === 'neu' || (ORDNUNG_STANDARD && ow !== 'alt'));
   var html = document.documentElement;
   html.classList.toggle('ordnung-neu', window.ERGUN_ORDNUNG);
-  /* Ablauf der Blume (01.10. abends, Vorschau ?ablauf=neu): Start → Angebote um die Rosette von oben → Formular. ABLAUF_STANDARD = true nach Emres OK */
-  var ABLAUF_STANDARD = false, ab = new URLSearchParams(location.search).get('ablauf');
+  /* Ablauf der Blume (01.10. abends, Vorschau ?ablauf=neu): Start → Angebote um die Rosette von oben → Formular. ABLAUF_STANDARD = true seit Emres OK (01.10.); ?ablauf=alt = vorher */
+  var ABLAUF_STANDARD = true, ab = new URLSearchParams(location.search).get('ablauf');
   window.ERGUN_ABLAUF = window.ERGUN_ORDNUNG && (ab === 'neu' || (ABLAUF_STANDARD && ab !== 'alt'));
   html.classList.toggle('ablauf-neu', window.ERGUN_ABLAUF);
   html.classList.toggle('titel-maschine', m); html.classList.toggle('titel-neu', neu); html.classList.toggle('titel-kristall', k); html.classList.toggle('titel-blume', bl || wahl === 'baum'); html.classList.toggle('titel-lycoris', wahl === 'lycoris' || wahl === 'lycoris3'); html.classList.toggle('titel-drei', wahl === 'lycoris3'); html.classList.toggle('titel-baum', wahl === 'baum');

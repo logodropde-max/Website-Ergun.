@@ -1,6 +1,6 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
-## Ablauf der Blume (`?ablauf=neu`, 01.10.2026 abends, Rückweg Tag `vor-ablauf`)
+## Ablauf der Blume (01.10.2026 abends, Standard seit Emres OK; vorher `?ablauf=alt`, Rückweg Tag `vor-ablauf`)
 - `ABLAUF_STANDARD` / `window.ERGUN_ABLAUF` / Klasse `ablauf-neu` (nur mit Aufräumen). `kristall.js` (`ABL`): `angeboteBauen()` holt `#angebote` als `.k-angebote-ebene` in die Bühne (Bild 02, `data-sc=1`, gestaffelt 0/0,15/0,3); `ordnungLage()`: Bild 02 = Rosette von oben (el 88, ≤ +10 %), Desktop rechts in der freien Fläche (Angebote links), schmal oben mit `--k-ang-oben` für die Angebote darunter; `zuAngeboten()` = Bild 02. Prüfwert `zustand().rosette` = [x, y, Radius].
 
 ## Aufräumen „Lycoris 3“ (01.10.2026, Standard seit Emres OK; vorher `?ordnung=alt`, Rückweg Tag `vor-aufraeumen`)
