@@ -1,5 +1,8 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
+## Startseite „Lycoris 3“ – Vorschau `?titel=lycoris3` (01.10.2026, Rückweg Tag `vor-lycoris3`)
+- Lycoris (`LYCORIS` in `kristall.js`) + `DREI`: `KEYS` = [Cover, Fächer-Fahrt (spin 3.1, el −30, size 0.52, oy −0.8), Bild 06 der Vorlage]; `sammeln()` zeigt nur Bild-0-Schrift und die Angebote (`data-k-drei`), der Rest bekommt Szene 99 (bleibt im HTML); `angeboteBauen()` liest Titel/Satz/Preis aus `#preise .mf-karte` (Klick → Karte im Formular + `springe(2)`); Kopfleiste (Start/Angebote/Kontakt/endo), Cover-Wort fällt in die Lilie (`gruppen = {}`). CSS `html.titel-drei` (Strecke 240svh, Fächer-Größen). Test `lycoris3.test.mjs`.
+
 ## Startseite „Lebensbaum“ – Vorschau `?titel=baum` (01.10.2026, Rückweg Tag `vor-baum`)
 - **Seit 01.10. Startseite** (Emres OK): `window.ERGUN_TITEL = 'baum'`.
 - Gleiche Vorlage + `kristall.css` wie Kristall/Blume (`titel-kristall` + `titel-blume` für Rand/Lichthof + `titel-baum`); `index.html` lädt `js/baum.js` vor `js/kristall.js`.

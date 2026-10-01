@@ -21,7 +21,9 @@
      Art per ?blume=rose|tulpe|lilie (Standard rose); die Geometrie kommt aus js/blume.js. */
   /* Fassung „Lycoris“ (?titel=lycoris, 01.10. – ERGUN: „den Prompt eins zu eins nachmachen, nur meinen Text“): die Vorlage 1:1 –
      rote Chrom-Spinnenlilie von Anfang an (blüht beim Laden auf wie dort), Karmin, Kamera-Bilder der Vorlage, kein Diamant. */
-  var B = window.ERGUN_BLUME, LYCORIS = window.ERGUN_WAHL === 'lycoris' && !!B, BLUME = (window.ERGUN_WAHL === 'blume' || LYCORIS) && !!B;
+  /* Fassung „Lycoris 3“ (?titel=lycoris3, 01.10.): die Vorlage 1:1, aber nur 3 Bilder – Start · Angebote · Kontakt (Leiste oben) */
+  var DREI = window.ERGUN_WAHL === 'lycoris3' && !!window.ERGUN_BLUME;
+  var B = window.ERGUN_BLUME, LYCORIS = (window.ERGUN_WAHL === 'lycoris' || DREI) && !!B, BLUME = (window.ERGUN_WAHL === 'blume' || LYCORIS) && !!B;
   /* Fassung „Lebensbaum“ (?titel=baum, 01.10.): Lebensbaum im Kreis (Formvorlage Feld 5) wächst mit jedem Bild, der Ring schließt sich beim Formular.
      Geometrie einmal aus js/baum.js, Wachstum nur über Uniforms. ?farbe=vorlage = Karmin der Vorlage. */
   var T = window.ERGUN_BAUM, BAUM = window.ERGUN_WAHL === 'baum' && !!T;
@@ -219,6 +221,10 @@
       KEYS_TALL[5] = { size: 0.96, oy: 1.0 };
       KEYS_TALL[3] = { size: 0.82, oy: -0.44 };   /* Handy: unter den Preisen bleibt Platz (die Vorlage hat dort keine Preiszeilen) */
     }
+    if (DREI) {   /* 3 Bilder: Cover → Fächer (die große kreisende Fahrt der Vorlage, Lilie von unten) → Lilie hängt von oben über dem Formular */
+      KEYS = [KEYS[0], { spin: 3.1, el: -30, size: 0.52, ox: 0, oy: -0.8, stem: 0.06 }, KEYS[5]];
+      KEYS_TALL = [KEYS_TALL[0], { size: 0.8, oy: -0.52 }, KEYS_TALL[5]];
+    }
   }
   if (BAUM) {   /* Bahnen wie die Vorlage, aber das Emblem bleibt immer frontal und groß im Blick (Emre: „man soll alles erkennen“) */
     KEYS = [
@@ -231,10 +237,10 @@
     ];
     KEYS_TALL = [{ size: 0.9, oy: 0.3 }, { size: 0.62 }, { size: 0.5, oy: 0.62 }, { size: 0.82, oy: -0.44 }, { size: 0.8, ox: 0, oy: 0.42 }, { size: 0.46, ox: 0, oy: 0.66 }];
   }
-  var SCENES = KEYS.length, HOLD = 0.34, NAV = ['ERGUN.', BAUM ? 'Baum' : BLUME ? 'Blüte' : 'Kristall', 'Websites', 'Preise', 'Anspruch', 'Anfrage'];
+  var SCENES = KEYS.length, HOLD = 0.34, NAV = DREI ? ['Start', 'Angebote', 'Kontakt'] : ['ERGUN.', BAUM ? 'Baum' : BLUME ? 'Blüte' : 'Kristall', 'Websites', 'Preise', 'Anspruch', 'Anfrage'];
   var KEYS_ENG = BAUM ? { 5: { size: 0.26, ox: 0, oy: 0.6 } } : BLUME && !LYCORIS ? { 5: { size: 0.3, ox: 0, oy: 0.74 } } : {};   /* Blume, mittlere Breiten (< 1100 px quer): Blüte klein oben über dem Formular statt daneben – sie verdeckt es nie */
   var KEYS_TAB = BAUM ? { 3: { size: 0.5, oy: -0.5 }, 5: { size: 0.26, ox: 0, oy: 0.6 } } : {};
-  var KEYS_KURZ = BAUM ? { 3: { size: 0.66, oy: -0.4 }, 5: { size: 0.28, oy: 0.84 } } : LYCORIS ? { 5: { size: 0.6, oy: 1.02 } } : BLUME ? { 5: { size: 0.4, oy: 0.95 } } : { 5: { size: 0.28, oy: 0.8 } };   /* kleine Handys (Höhe < 720): Kristall über dem Formular kleiner und höher, damit alle drei Karten ohne Scrollen passen */
+  var KEYS_KURZ = DREI ? { 1: { size: 0.56, oy: -0.62 }, 2: { size: 0.6, oy: 1.02 } } : BAUM ? { 3: { size: 0.66, oy: -0.4 }, 5: { size: 0.28, oy: 0.84 } } : LYCORIS ? { 5: { size: 0.6, oy: 1.02 } } : BLUME ? { 5: { size: 0.4, oy: 0.95 } } : { 5: { size: 0.28, oy: 0.8 } };   /* kleine Handys (Höhe < 720): Kristall über dem Formular kleiner und höher, damit alle drei Karten ohne Scrollen passen */
   function keyAt(coord, tall) {
     var i = Math.max(0, Math.min(SCENES - 1, Math.floor(coord))), j = Math.min(SCENES - 1, i + 1), f = coord - i, kurz = tall && H < 720, eng = !tall && W < 1100, tab = BAUM && tall && W >= 700;   /* Lebensbaum: Tablet hochkant eigene Lage */
     var a = Object.assign({}, KEYS[i], tall ? KEYS_TALL[i] : {}, eng ? KEYS_ENG[i] : {}, tab ? KEYS_TAB[i] : {}, kurz ? KEYS_KURZ[i] : {}), b = Object.assign({}, KEYS[j], tall ? KEYS_TALL[j] : {}, eng ? KEYS_ENG[j] : {}, tab ? KEYS_TAB[j] : {}, kurz ? KEYS_KURZ[j] : {});
@@ -399,7 +405,7 @@
   if (BLUME) MARKE = [0, 60, 120, 180, 240, 300].map(function (a) { return '<path d="M20 20 C 22 12, 30 8, 33 12 C 35 15, 31 17, 29 14" transform="rotate(' + a + ' 20 20)"/>'; }).join('');
   function marke(el, farbe, akzent) { el.innerHTML = '<g fill="none" stroke="' + farbe + '" stroke-width="' + (BLUME ? 2.6 : BAUM ? 1.9 : 2.2) + '" stroke-linejoin="round" stroke-linecap="round">' + MARKE + '</g><circle cx="20" cy="20" r="2.6" fill="' + akzent + '"/>'; }
   $$('[data-k-marke]').forEach(function (m) { marke(m, getComputedStyle(buehne).color || '#b6b095', AKZENT); });
-  if (BAUM) {   /* Titel (Ausnahme auf ERGUNs Wunsch): oben links die Zeile „ERGUN. — Digitalstudio“, unter dem Wort „Website & Automatisierung“ */
+  if (BAUM || DREI) {   /* Titel (Ausnahme auf ERGUNs Wunsch): oben links die Zeile „ERGUN. — Digitalstudio“, unter dem Wort „Website & Automatisierung“ */
     var bn = $('.k-bildnr', root); if (bn) bn.innerHTML = '<b>02</b> — ERGUN. — Digitalstudio';
     var ct = $('.k-cover-titel', root); if (ct) ct.innerHTML = 'ERGUN. —<br>Digitalstudio';
     var wt = $('[data-k-baum-titel]', root); if (wt) wt.hidden = false;
@@ -450,7 +456,7 @@
     }
     /* 04 Preise: drei Stufen mit Preis und „für wen“, dazu endo */
     var fa = $('[data-k-faecher]', root);
-    if (fa && !$('.k-stufe', fa)) P.stufen.forEach(function (s, i) {
+    if (fa && !DREI && !$('.k-stufe', fa)) P.stufen.forEach(function (s, i) {
       var d = document.createElement('div'); d.className = 'k-stufe'; d.setAttribute('data-sc', '3'); d.setAttribute('data-fx', 'clip'); d.setAttribute('data-d', String(i * 0.15));
       d.appendChild(document.createTextNode(s.name));
       var p = document.createElement('span'); p.className = 'k-stufe__preis k-sans'; p.textContent = P.betrag(s);
@@ -468,12 +474,13 @@
   var navKnoepfe = $$('button', nav);
   /* Lebensbaum: feste Leiste oben (Stil der Vorlage) – ERGUN. · Leistungen · Preise · Kontakt · endo ↗; springt weich zum Bild (jump() der Vorlage) */
   var kopfLinks = [];
-  if (BAUM) {
+  if (BAUM || DREI) {
     var kopf = document.createElement('header'); kopf.className = 'k-kopf'; kopf.setAttribute('data-k-kopf', '');
     kopf.innerHTML = '<a class="k-kopf__marke" href="#top" data-sprung="0">ERGUN<span>.</span></a>' +
       '<button class="k-kopf__menue" type="button" aria-expanded="false" aria-controls="k-kopf-links">Menü</button>' +
       '<nav class="k-kopf__links" id="k-kopf-links" aria-label="Hauptnavigation">' +
-      '<a href="#leistungen" data-sprung="2">Leistungen</a><a href="#preise" data-sprung="3">Preise</a><a href="#kontakt" data-sprung="5">Kontakt</a>' +
+      (DREI ? '<a href="#top" data-sprung="0">Start</a><a href="#preise" data-sprung="1">Angebote</a><a href="#kontakt" data-sprung="2">Kontakt</a>'
+            : '<a href="#leistungen" data-sprung="2">Leistungen</a><a href="#preise" data-sprung="3">Preise</a><a href="#kontakt" data-sprung="5">Kontakt</a>') +
       '<a href="https://endo-ergun.vercel.app/" data-endo-link>endo <span aria-hidden="true">↗</span></a></nav>';
     root.parentNode.insertBefore(kopf, root);
     var menueKnopf = kopf.querySelector('.k-kopf__menue');
@@ -490,6 +497,28 @@
     window.scrollBy({ top: ziel, behavior: ruhig ? 'auto' : 'smooth' });
   }
   /* Anker zur Anfrage (#preise, #kontakt) führen ans Ende der Bühne – dort liegt das Formular */
+
+  /* ---------- Lycoris 3, Bild 02: die drei Angebote aus den echten Formular-Karten (Texte + Preise aus PREISE über preise.js),
+     gesetzt wie der Fächer der Vorlage; Klick wählt die Karte im Formular und springt zu Bild 03 ---------- */
+  var angeboteFertig = false;
+  function angeboteBauen() {
+    if (!DREI || angeboteFertig) return true;
+    var fa = $('[data-k-faecher]', root), karten = $$('#preise .mf-karte');
+    if (!fa || karten.length < 3) return false;
+    fa.classList.add('k-angebote');
+    karten.slice(0, 3).forEach(function (k, i) {
+      var titel = $('.mf-karte__titel', k), satz = $('.mf-karte__satz', k), preis = $('.mf-karte__preis', k), dezent = $('.mf-karte__dezent', k);
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'k-angebot';
+      b.setAttribute('data-sc', '1'); b.setAttribute('data-fx', 'clip'); b.setAttribute('data-d', String(i * 0.15)); b.setAttribute('data-k-drei', ''); b.setAttribute('data-angebot', String(i));
+      var w = document.createElement('span'); w.className = 'k-angebot__wort'; w.textContent = titel ? titel.textContent : ''; b.appendChild(w);
+      var info = document.createElement('span'); info.className = 'k-angebot__info k-sans';
+      var bp = document.createElement('b'); bp.textContent = preis ? preis.textContent.replace(/\s+/g, ' ').trim() : ''; info.appendChild(bp);
+      info.appendChild(document.createTextNode(' · ' + (dezent ? dezent.textContent + ' – ' : '') + (satz ? satz.textContent : ''))); b.appendChild(info);
+      b.addEventListener('click', function () { var kk = $$('#preise .mf-karte')[i]; if (kk) kk.click(); springe(SCENES - 1); });
+      fa.appendChild(b);
+    });
+    angeboteFertig = true; sammeln(); return true;
+  }
 
   /* ---------- Lupe (03): zeigt das Wort groß + den vollen Stichpunkt ---------- */
   var lupe = $('[data-k-lupe]', root), lupeWort = $('[data-k-lupe-wort]', root), lupeSatz = $('[data-k-lupe-satz]', root);
@@ -518,7 +547,7 @@
 
   /* ---------- Schrift-Elemente je Bild ---------- */
   var stuecke = [];
-  function sammeln() { stuecke = $$('[data-sc]', buehne).map(function (el) { return { el: el, scene: Number(el.getAttribute('data-sc')), fx: el.getAttribute('data-fx'), delay: Number(el.getAttribute('data-d')) || 0, last: -1 }; }); }
+  function sammeln() { stuecke = $$('[data-sc]', buehne).map(function (el) { var sc = Number(el.getAttribute('data-sc')); if (DREI && !el.hasAttribute('data-k-drei') && sc !== 0) { sc = 99; el.style.visibility = 'hidden'; } return { el: el, scene: sc, fx: el.getAttribute('data-fx'), delay: Number(el.getAttribute('data-d')) || 0, last: -1 }; }); }
 
   /* ---------- 2D-Rückfall: der Kristall als sauberes Bild (projiziert, von hinten nach vorn gemalt) – im Stand des Bildes, damit er
      im Cover nicht ausgewachsen über dem Wort liegt; „Bewegung reduzieren“ = je Bild ein Standbild ---------- */
@@ -599,17 +628,17 @@
   /* Lebensbaum: das Formular gleitet beim Übergang 05 → 06 gestaffelt herein (wie die Schrift der Vorlage) */
   var formTeile = [], formStand = -1, formZeit = 0;
   function formularHerein(coord, jetzt) {
-    if (!BAUM || ruhig) return;
+    if (!(BAUM || DREI) || ruhig) return;
     if (jetzt - formZeit > 600) { formZeit = jetzt; formTeile = $$('#preise .preise__innen > *'); formStand = -1; }
     var q = Math.round(coord * 200) / 200; if (q === formStand) return; formStand = q;
     formTeile.forEach(function (el, i) {
-      var v = coord >= 5 ? 1 : reveal(coord, 5, Math.min(0.6, i * 0.12));
+      var v = coord >= SCENES - 1 ? 1 : reveal(coord, SCENES - 1, Math.min(0.6, i * 0.12));
       el.style.opacity = v >= 0.999 ? '' : String(v); el.style.transform = v >= 0.999 ? '' : 'translateY(' + ((1 - v) * 26).toFixed(1) + 'px)';
     });
   }
 
   /* ---------- Schleife ---------- */
-  var laeuft = false, sichtbar = true, zuletzt = performance.now(), zeit = 0, p01 = -1, gezeigt = -1, koord = 0, raf = 0, geboren = -1;
+  var laeuft = false, sichtbar = true, zuletzt = performance.now(), zeit = 0, p01 = -1, gezeigt = -1, koord = 0, raf = 0, geboren = -1, zuletztVersuch = 0;
   function bild(jetzt) {
     raf = requestAnimationFrame(bild);
     var dt = Math.min(0.05, (jetzt - zuletzt) / 1000); zuletzt = jetzt;
@@ -618,7 +647,7 @@
     p01 = p01 < 0 || ruhig ? p : p01 + (p - p01) * (1 - Math.exp(-dt * 9));
     var coord = koord = FEST_K !== null ? FEST_K : sceneCoord(p01, SCENES, HOLD), szene = Math.round(coord);   /* ?k= hält ein Bild fest (Prüfen) */
     if (szene !== gezeigt) { gezeigt = szene; navKnoepfe.forEach(function (b, i) { if (i === szene) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
-      kopfLinks.forEach(function (a) { var z = Number(a.getAttribute('data-sprung')); if (z === szene && z > 0) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); }); }
+      kopfLinks.forEach(function (a) { var z = Number(a.getAttribute('data-sprung')); if (z === szene && (z > 0 || (DREI && !a.classList.contains('k-kopf__marke')))) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); }); }
 
     /* Kamera */
     var tall = H > W * 1.05, k = keyAt(coord, tall);
@@ -696,6 +725,7 @@
     } else if (ctx2d) zeichne2d(vp, model, k, coord, eye);
 
     formularHerein(coord, jetzt);
+    if (DREI && !angeboteFertig && Math.floor(jetzt / 400) !== Math.floor(zuletztVersuch / 400)) { zuletztVersuch = jetzt; angeboteBauen(); }
     /* Schrift je Bild – wie die Vorlage */
     stuecke.forEach(function (it) {
       var v = reveal(coord, it.scene, it.delay), q = Math.round(v * 500) / 500; if (q === it.last) return; it.last = q;
@@ -710,7 +740,7 @@
 
     /* Das Cover-Wort teilt sich zur Krone: „ERG“ und „UN.“ flankieren den Kristall (?krone=rand: nur E und . wie die Vorlage) */
     var m = easeInOut(klemm(coord)), aus = klemm(coord - 1), k1 = keyAt(1, tall), r1 = k1.size * minDim * 0.5, cy1 = (0.5 - k1.oy / 2) * H;
-    var gruppen = KRONE_RAND ? { 0: -1, 5: 1 } : { 0: -1, 1: -1, 2: -1, 3: 1, 4: 1, 5: 1 };
+    var gruppen = DREI ? {} : KRONE_RAND ? { 0: -1, 5: 1 } : { 0: -1, 1: -1, 2: -1, 3: 1, 4: 1, 5: 1 };
     var breite = { '-1': 0, '1': 0 }, rand = { '-1': [1e9, -1e9], '1': [1e9, -1e9] };
     zeichen.forEach(function (c, i) { var g = gruppen[i], n0 = nat[i]; if (!g || !n0) return; rand[g][0] = Math.min(rand[g][0], n0.x - n0.w / 2); rand[g][1] = Math.max(rand[g][1], n0.x + n0.w / 2); });
     ['-1', '1'].forEach(function (g) { breite[g] = Math.max(1, rand[g][1] - rand[g][0]); });
@@ -736,7 +766,7 @@
   function stop() { laeuft = false; cancelAnimationFrame(raf); }
 
   function los() {
-    inhalte(); sammeln(); messen();
+    inhalte(); angeboteBauen(); sammeln(); messen();
     new ResizeObserver(messen).observe(buehne);
     if (document.fonts) { document.fonts.ready.then(messen); if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', messen); }
     new IntersectionObserver(function (e) { sichtbar = e[0].isIntersecting; if (sichtbar) start(); else stop(); }).observe(root);
@@ -745,7 +775,7 @@
   }
   if (window.PREISE || document.readyState !== 'loading') los(); else document.addEventListener('DOMContentLoaded', los);
   window.__kristall = {
-    zustand: function () { return { koord: koord, gl: !!gl, ableitung: ableitung, radius: RADIUS, seed: SEED, dreiecke: geoDaten ? geoDaten.length / STRIDE / 3 : 0, blume: ART, lycoris: LYCORIS, baum: BAUM, baumDreiecke: baumAnzahl / 3, ring: BAUM ? (ruhig ? 1 : klemm(koord / 5)) : null, offen: BLUME ? (ruhig || LYCORIS ? 1 : offenBei(koord)) : null, blumeDreiecke: blumeAnzahl / 3 }; },
+    zustand: function () { return { koord: koord, gl: !!gl, ableitung: ableitung, radius: RADIUS, seed: SEED, dreiecke: geoDaten ? geoDaten.length / STRIDE / 3 : 0, blume: ART, lycoris: LYCORIS, drei: DREI, bilder: SCENES, baum: BAUM, baumDreiecke: baumAnzahl / 3, ring: BAUM ? (ruhig ? 1 : klemm(koord / 5)) : null, offen: BLUME ? (ruhig || LYCORIS ? 1 : offenBei(koord)) : null, blumeDreiecke: blumeAnzahl / 3 }; },
     geometrie: geometrie, springe: springe
   };
 })();

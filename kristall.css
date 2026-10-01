@@ -297,3 +297,20 @@ html.titel-baum .k-fussleiste { position: relative; z-index: 31; }
 /* Lebensbaum, Bild 06 auf Tablets/kleinen Laptops: kleiner Baum oben, Formular darunter */
 @media (min-width: 761px) and (max-width: 1099px) { html.titel-baum .preise__innen { padding-top: 36svh; } }
 @media (max-width: 760px) and (max-height: 720px) { html.titel-baum .preise__innen { padding-top: 17svh; } }
+/* ---------- Fassung „Lycoris 3“ (?titel=lycoris3): Vorlage 1:1 mit 3 Bildern – Start · Angebote · Kontakt (Leiste oben) ---------- */
+html.titel-drei .k-strecke { height: calc(100svh * 2.4); }   /* 2 Übergänge × 1,2 Bühnenhöhen wie die Vorlage */
+html.titel-drei .k-wort__klein, html.titel-drei .k-mitte-klein, html.titel-drei .k-faecher__seite, html.titel-drei .k-faecher-unten { display: none; }
+html.titel-drei .k-cover-oben { top: calc(5cqh + 44px); }
+html.titel-drei .k-faecher { top: 14cqh; max-width: 92cqw; font-size: min(7.6cqw, 9.6cqh); line-height: 0.92; white-space: normal; pointer-events: auto; }
+.k-angebot { display: block; margin: 0 auto 2.6cqh; padding: 0; background: none; border: 0; color: inherit; font: inherit; text-transform: uppercase; text-align: center; cursor: pointer; pointer-events: auto; }
+.k-angebot__wort { display: block; white-space: nowrap; transition: color 0.25s; }
+.k-angebot__info { display: block; margin-top: 0.55em; font-size: 15px; line-height: 1.4; letter-spacing: 0.03em; text-transform: none; opacity: 0.85; }
+.k-angebot__info b { color: var(--k-akzent); font-weight: 400; }
+@media (hover: hover) and (pointer: fine) { .k-angebot:hover .k-angebot__wort { color: var(--k-akzent); } }
+.k-angebot:focus-visible { outline: 1px solid var(--k-akzent); outline-offset: 6px; }
+@container k (max-width: 720px) {
+  html.titel-drei .k-faecher { top: 11cqh; font-size: min(9.2cqw, 6.4cqh); }
+  .k-angebot { margin-bottom: 2.2cqh; }
+  .k-angebot__info { font-size: 12px; }
+  html.titel-drei .k-cover-oben { top: calc(5cqh + 40px); }
+}
