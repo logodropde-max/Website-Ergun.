@@ -2,16 +2,16 @@
    Vorlage „Lycoris Specimen“ (07 Vorlagen/Lycoris-Specimen-Vorlage.tsx.txt) 1:1, nur Inhalt und Objekt getauscht: ein pinker Chrom-Kristall,
    der über die sechs Bilder wächst). Logik: js/kristall.js. Alles hängt an .k-… bzw. html.titel-kristall – die übrige Seite bleibt unberührt.
    Farben wie die Vorlage: ink (Grund) · bone (warmer Schrift-Ton, bewusst nicht Weiß) · Akzent Pink statt Karminrot (sparsam: Punkte, Linien).
-   Vergleiche: ?farbe=orange (Chrom-Kristall, Orange-Akzent) · ?knopf=pink („Anfrage senden“ pink statt ERGUN.-Orange) · ?schrift=b. */
+   Vergleiche: ?farbe=orange (Chrom-Kristall, Orange-Akzent) · ?knopf=pink („Anfrage senden“ pink statt ERGUN.-Orange) · ?schrift=a (Instrument Serif; Standard seit 01.10. Clash Display). */
 html.titel-kristall {
   --k-ink: #050505; --k-bone: #b6b095; --k-akzent: #E8A0BF; --k-akzent-tief: #9E4F74; --k-marke: #FF5A1F;
-  --k-display: "Instrument Serif", Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --k-display: "Clash Display", "Clash Ersatz", system-ui, sans-serif;   /* Schrift B – Emres Wahl 01.10. */
   --k-sans: "Satoshi", "Helvetica Neue", Helvetica, Arial, ui-sans-serif, system-ui, sans-serif;
   --k-ease: cubic-bezier(.2, .8, .2, 1);
   background: var(--k-ink);
 }
 html.titel-kristall[data-farbe="orange"] { --k-akzent: #FF5A1F; --k-akzent-tief: #8A2E0E; }
-html.titel-kristall[data-schrift="b"] { --k-display: "Clash Display", "Clash Ersatz", system-ui, sans-serif; }
+html.titel-kristall[data-schrift="a"] { --k-display: "Instrument Serif", Georgia, "Iowan Old Style", "Palatino Linotype", serif; }   /* ?schrift=a = vorherige Schrift */
 .titel-kristall body { background: var(--k-ink); }
 .titel-kristall .nav { display: none; }   /* die Vorlage hat ihre eigene Navigation (01–06 rechts) */
 
@@ -238,3 +238,11 @@ html.titel-kristall body .mf-karten { grid-auto-rows: 1fr; }
   html.titel-kristall body .mf-karte__titel { font-size: 22px; }
   html.titel-kristall body .mf-karte__preis { margin-top: 2px; }
 }
+/* Schrift B (Clash Display, Standard seit 01.10.) läuft breiter als Instrument Serif – Größen, die sonst umbrechen oder sich berühren */
+html.titel-kristall:not([data-schrift="a"]) .k-cover-titel { font-size: clamp(17px, 2.4cqw, 34px); line-height: 0.98; letter-spacing: 0; }
+html.titel-kristall:not([data-schrift="a"]) .k-cover-rechts { font-size: clamp(15px, 1.9cqw, 28px); line-height: 0.98; }
+html.titel-kristall:not([data-schrift="a"]) .k-spec-preise { white-space: nowrap; font-size: min(1.7cqw, 2.5cqh); }
+html.titel-kristall:not([data-schrift="a"]) .k-bloom { line-height: 0.95; }
+html.titel-kristall:not([data-schrift="a"]) .k-bloom__klein { margin-top: 0.2em; margin-bottom: 0.3em; }
+html.titel-kristall:not([data-schrift="a"]) body .mf-titel { font-size: clamp(2rem, 3.4vw, 3.2rem); line-height: 1; letter-spacing: -0.02em; }
+@container k (max-width: 720px) { html.titel-kristall:not([data-schrift="a"]) .k-faecher__seite { display: none; } }

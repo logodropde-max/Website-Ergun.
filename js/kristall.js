@@ -14,7 +14,7 @@
   if (!root) return;
   var html = document.documentElement, frage = new URLSearchParams(location.search);
   if (frage.get('farbe') === 'orange') html.setAttribute('data-farbe', 'orange');
-  if (frage.get('schrift') === 'b') html.setAttribute('data-schrift', 'b');
+  if (frage.get('schrift') === 'a') html.setAttribute('data-schrift', 'a');   /* Standard = Clash Display (Emre, 01.10.) */
   if (frage.get('knopf') === 'pink') html.setAttribute('data-knopf', 'pink');
   /* Hintergrund-Muster (Brillant-Streuung, eigenes Bild, kachelbar): bis zu ERGUNs OK nur mit ?muster=b; MUSTER_STANDARD = true macht es zum Standard, ?muster=aus schaltet es ab */
   var MUSTER_STANDARD = false, MUSTER = frage.get('muster') === 'b' || (MUSTER_STANDARD && frage.get('muster') !== 'aus');
