@@ -6,6 +6,7 @@
 - Stein: `PROFIL_0`/`PROFIL_1` (Brillant-Maße), `bauplan(seed)` (Begleitsteine, Funken, Keim), `geometrie(c)` je Bild-Koordinate 0…5. Kamera `KEYS` / `KEYS_TALL` (Hochformat) / `KEYS_KURZ` (Handy < 720 px hoch). Schalter: `?seed=`, `?krone=rand`, `?farbe=orange`, `?knopf=pink`, `?schrift=b`, `?webgl=aus`. Prüfgriff `window.__kristall.{zustand, geometrie, springe}`.
 - Prüfen: Einzelbilder je Bild mit `cdp-shot.mjs` (Scroll auf `strecke.offsetHeight * a`, a = 0 · 0.2 … 1), Tests `kristall.test.mjs`.
 - Freischalten nach OK: `window.ERGUN_TITEL = 'kristall';` + Tests `auftrag44` (Standard) anpassen.
+- **Muster seit 01.10. Standard** (`MUSTER_STANDARD = true`, Emres OK; `?muster=aus` = ohne).
 - **Schrift seit 01.10. nachts: Clash Display** (Emres Wahl B) als `--k-display`; `?schrift=a` = Instrument Serif. Größen-Anpassungen für die breitere Schrift am Ende von `kristall.css` (`:not([data-schrift="a"])`).
 - **Seit 01.10. nachts Standard** (Emres OK). Hintergrund-Muster `bilder/kristall/muster-b.webp` (Higgsfield-Abo, kachelbar) nur mit `?muster=b` bzw. `MUSTER_STANDARD = true` in `js/kristall.js` (`?muster=aus` schaltet ab); wandert mit `coord` (−18 px je Bild), hinter dem Formular auf 35 %.
 

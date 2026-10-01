@@ -242,7 +242,9 @@ html.titel-kristall body .mf-karten { grid-auto-rows: 1fr; }
 html.titel-kristall:not([data-schrift="a"]) .k-cover-titel { font-size: clamp(17px, 2.4cqw, 34px); line-height: 0.98; letter-spacing: 0; }
 html.titel-kristall:not([data-schrift="a"]) .k-cover-rechts { font-size: clamp(15px, 1.9cqw, 28px); line-height: 0.98; }
 html.titel-kristall:not([data-schrift="a"]) .k-spec-preise { white-space: nowrap; font-size: min(1.7cqw, 2.5cqh); }
-html.titel-kristall:not([data-schrift="a"]) .k-bloom { line-height: 0.95; }
+html.titel-kristall:not([data-schrift="a"]) .k-bloom { line-height: 0.95; font-size: min(7.4cqw, 11cqh); }
 html.titel-kristall:not([data-schrift="a"]) .k-bloom__klein { margin-top: 0.2em; margin-bottom: 0.3em; }
 html.titel-kristall:not([data-schrift="a"]) body .mf-titel { font-size: clamp(2rem, 3.4vw, 3.2rem); line-height: 1; letter-spacing: -0.02em; }
 @container k (max-width: 720px) { html.titel-kristall:not([data-schrift="a"]) .k-faecher__seite { display: none; } }
+/* Querformat nahe 4:3 (1024 × 768): die Steine stehen relativ breiter – Satz kleiner, damit kein Stein den Text berührt */
+@container k (orientation: landscape) and (max-aspect-ratio: 3/2) { html.titel-kristall:not([data-schrift="a"]) .k-bloom { font-size: min(6cqw, 11cqh); left: 6cqw; } }

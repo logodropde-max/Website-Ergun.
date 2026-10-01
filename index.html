@@ -58,7 +58,7 @@ window.ERGUN_TITEL = 'kristall';
       var l = document.createElement('link'); l.rel = 'preload'; l.as = 'image'; l.type = 'image/avif'; l.media = v[0]; l.setAttribute('imagesrcset', v[1]); l.setAttribute('imagesizes', v[2]); l.setAttribute('fetchpriority', 'high'); document.head.appendChild(l);
     });
   }
-  if (wahl === 'kristall') { var kc = document.createElement('link'); kc.rel = 'stylesheet'; kc.href = 'kristall.css?v=19'; document.head.appendChild(kc); }
+  if (wahl === 'kristall') { var kc = document.createElement('link'); kc.rel = 'stylesheet'; kc.href = 'kristall.css?v=21'; document.head.appendChild(kc); }
   if (wahl === 'alt') ['emre3d-folge-1', 'emre3d-folge-2', 'hund-folge'].forEach(function (n) {   /* Vorlader der alten Figur nur hier */
     var l = document.createElement('link'); l.rel = 'preload'; l.as = 'image'; l.href = 'bilder/hero/figuren/' + n + '.webp?v=19';
     l.setAttribute('fetchpriority', 'low'); l.media = '(prefers-reduced-motion: no-preference)'; document.head.appendChild(l);
@@ -1581,7 +1581,7 @@ html.titel-neu {
 <script>
 /* Auftrag 44: je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
 (function () {
-  var liste = window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=19'] : [];
+  var liste = window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=20'] : [];
   liste.forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
 })();
 </script>

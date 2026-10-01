@@ -16,8 +16,8 @@
   if (frage.get('farbe') === 'orange') html.setAttribute('data-farbe', 'orange');
   if (frage.get('schrift') === 'a') html.setAttribute('data-schrift', 'a');   /* Standard = Clash Display (Emre, 01.10.) */
   if (frage.get('knopf') === 'pink') html.setAttribute('data-knopf', 'pink');
-  /* Hintergrund-Muster (Brillant-Streuung, eigenes Bild, kachelbar): bis zu ERGUNs OK nur mit ?muster=b; MUSTER_STANDARD = true macht es zum Standard, ?muster=aus schaltet es ab */
-  var MUSTER_STANDARD = false, MUSTER = frage.get('muster') === 'b' || (MUSTER_STANDARD && frage.get('muster') !== 'aus');
+  /* Hintergrund-Muster (Brillant-Streuung, eigenes Bild, kachelbar): Standard seit ERGUNs OK (01.10.); ?muster=aus schaltet es ab */
+  var MUSTER_STANDARD = true, MUSTER = frage.get('muster') === 'b' || (MUSTER_STANDARD && frage.get('muster') !== 'aus');
   if (MUSTER) html.setAttribute('data-muster', 'b');
   var SEED = parseInt(frage.get('seed'), 10) || 7, KRONE_RAND = frage.get('krone') === 'rand';
   var $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
