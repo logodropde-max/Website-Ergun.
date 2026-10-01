@@ -100,7 +100,40 @@ html.glas-fein .upload__symbol { color: #FFFFFF; background: rgba(255, 255, 255,
   html.glas-fein .mf-summe { border: 1px solid var(--gf-kante); background: rgba(22, 17, 30, 0.82); -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); }
 }
 
+/* ② endo-Liste (neues Preismodell, 01.10.2026) in derselben Glasfläche */
+html.glas-fein .mf-ezeile { border-radius: var(--gf-r); -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); }
+html.glas-fein .mf-ezeile[aria-checked="true"] { background: var(--gf-flaeche-wahl); }
+html.glas-fein .mf-ezeile__satz, html.glas-fein .mf-epreis__teil small, html.glas-fein .mf-epreis__hinweis { color: rgba(255, 255, 255, 0.78); }
+html.glas-fein .mf-ezeile__name, html.glas-fein .mf-epreis__teil b { font-family: var(--g-schrift); }
+
 /* ---------- Fußzeile ---------- */
 html.glas-fein .glas-fuss { border-top: 0; background: rgba(13, 10, 20, 0.8); }
 html.glas-fein .glas-fuss__marke { background: linear-gradient(172deg, #FFFFFF 8%, #FFEFE0 40%, #FFD3BC 64%, #F4B9D2 92%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 html.glas-fein .glas-fuss__marke span { -webkit-text-fill-color: var(--gf-akzent); }
+
+/* ======================= Glas nahtlos (?glas=nahtlos – Ausnahme auf Emres Wunsch) =======================
+   Keine Fläche über dem Verlauf: #preise, Angebote und Fußzeile sind durchsichtig, der Verlauf selbst wird im Shader stufenlos dunkler
+   (glas.quelle.js, u_nahtlos). Flächen haben nur noch die einzelnen Glas-Karten. */
+html.glas-nahtlos .preise { background: transparent !important; }
+html.glas-nahtlos .glas-angebote::before { content: none; }
+html.glas-nahtlos .glas-fuss { background: transparent; }
+
+/* Kopfzeile: Glas, durch das der Verlauf scheint – der Hintergrund wird weichgezeichnet und leicht abgedunkelt (so bleibt die Schrift
+   auf hellen wie dunklen Stellen lesbar), dazu ein Hauch Tönung aus den Verlaufsfarben und eine feine helle Kante */
+html.glas-nahtlos .glas-kopf {
+  background: linear-gradient(100deg, rgba(255, 90, 31, 0.08), rgba(255, 158, 193, 0.06) 45%, rgba(47, 76, 255, 0.08)), rgba(13, 10, 20, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
+  -webkit-backdrop-filter: blur(22px) saturate(1.35) brightness(0.62); backdrop-filter: blur(22px) saturate(1.35) brightness(0.62);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 16px 40px -24px rgba(0, 0, 0, 0.6);
+}
+html.glas-nahtlos .glas-kopf__links a { color: #FFFFFF; text-shadow: 0 1px 2px rgba(13, 10, 20, 0.35); }
+/* Logo-Punkt im Verlauf des Hintergrunds (Orange → Rosé → Violett), wandert langsam mit; „Bewegung reduzieren“ = steht */
+html.glas-nahtlos :is(.glas-kopf__marke, .glas-fuss__marke) span {
+  background: linear-gradient(120deg, #FF5A1F 0%, #FF9EC1 30%, #8B6BFF 55%, #FF5A1F 80%, #FF9EC1 100%) 0 50% / 300% 100%;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+  animation: glas-punkt 9s linear infinite;
+}
+@keyframes glas-punkt { to { background-position: 100% 50%; } }
+@media (prefers-reduced-motion: reduce) { html.glas-nahtlos :is(.glas-kopf__marke, .glas-fuss__marke) span { animation: none; background-position: 15% 50%; } }
+/* Unterzeile im Titelbild (Emre, 01.10. spät): „Websites und Automatisierung“ – ruhig, etwas größer als vorher der Satz */
+html.glas-nahtlos .glas-hero .ghr-desc.glas-unterzeile { font-size: clamp(1.125rem, 2.2cqw, 1.5rem); font-weight: 500; letter-spacing: 0.01em; color: rgba(255, 255, 255, 0.92); }

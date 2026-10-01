@@ -539,7 +539,7 @@
     var MON = ' / Monat', f = P.mehr[0];
     $$('[data-k-preis]', root).forEach(function (el) {
       var art = el.getAttribute('data-k-preis');
-      el.textContent = art === 'ab-start' ? 'ab ' + P.euro(P.stufen[0].preis) : art === 'endo' ? P.betrag(f) + ' + ' + P.euro(f.monat) + MON : '';
+      el.textContent = art === 'ab-start' ? 'ab ' + P.euro(P.stufen[0].preis) : art === 'endo' ? P.betrag(f) + ' + ' + P.monatText(f) + MON : '';
     });
     /* 03 Websites: Begriffe aus den Stufen-Stichpunkten; das Wort zeigt beim Zeigen den vollen Stichpunkt */
     function punkt(stufe, muster) { var s = P.stufen.filter(function (x) { return x.id === stufe; })[0]; var p = s && s.punkte.filter(function (x) { return muster.test(x.t); })[0]; return p ? p.t : ''; }

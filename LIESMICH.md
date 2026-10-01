@@ -1,5 +1,10 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
+## endo-Preise (01.10.2026 spät, neues Modell – LIVE seit Emres OK; Rückweg Tag `vor-endo-preise`)
+- `PREISE.endo` in `js/preise.js` = einzige Quelle (je Fähigkeit `einmalig`, `monat`, `hinweis`; `komplett`, `whatsapp`, `erklaer`, `grenze`). `PREISE.mehr` wird daraus berechnet (Karten/ältere Fassungen), `P.monatText()` setzt „ab“ vor den Monatsbetrag. `P.endoPaket(ids, whatsapp)`: Summen je Fähigkeit, komplett bei allen fünf oder wenn nicht teurer, WhatsApp obendrauf. `P.rechnen()` liefert zusätzlich `betreuungMonat` und `endoMonat`.
+- Schritt ② endo: `.mf-eliste`/`.mf-ezeile` (Grundform in `index.html`, Glas in `glas-fein.css`), Symbole `ESYM`. Betreuung gehört nur zur Website (kein `mehrStufe` mehr).
+- Test `ergun-preise.test.mjs` vergleicht `PREISE.endo` mit `_code/endo-studio/js/endo-preise.js` und `02 Preise`.
+
 ## Glas fein (Standard seit Emres OK 01.10.2026 spät, `GLAS_FEIN_STANDARD = true`; `?glas=alt` = vorher; Rückweg Tag `vor-glas-fein-live`)
 - Schalter `GLAS_FEIN_STANDARD` in `index.html` (Klasse `html.glas-fein`, lädt zusätzlich `glas-fein.css`); `?glas=alt` = vorher. In `js/glas.quelle.js` hinter `FEIN`: `kanteAusAbstand()` (Abstandstransformation → Kanal R mit dem Kantenprofil der Vorlage, Innenräume bleiben offen), `maskeFein()` (Zeichen einzeln per Range, Maske in Fenstergröße auf Dokument-Lage), `abstaende()` (optisch gleiche Lücken 0,06 em), `einpassen()` (≥ 6 % Rand je Seite). Shader der Vorlage nur per Textersetzung zur Laufzeit (Weichzeichner bis 3 σ, `u_shift` für die Scroll-Lage) – `glas-vorlage.gen.js` bleibt wörtlich.
 - Leinwand liegt in `.glas-buehne` (fixed, am Anfang von `<body>`; `.ghr-root` hat container-type = eigener Bezugsrahmen für fixed). Unter dem Hero: Zeit × bis 0,3, Leinwand mit dpr 0,35 (weich), höchstens ~24 Bilder/s. Prüfschalter `?glasdbg=r|g|b` zeigt die Kanäle der Höhenkarte.

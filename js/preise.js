@@ -56,22 +56,30 @@ window.PREISE = {
         punkte: ['Hosting, Domain & SSL', 'Updates & Sicherheit', 'Sicherungen', 'Erreichbarkeit geprüft', 'Kleine Textänderungen'] },
       { id: 'aktiv', name: 'Aktiv', monat: 100, fuer: 'Websites mit Terminbuchung, Formularen, regelmäßigen Änderungen',
         punkte: ['Alles aus Basis', 'Betreuung der Funktionen', 'E-Mail-Versand der Formulare', 'Inhaltsänderungen nach Absprache', 'Kurzer Monatsbericht'] },
-      { id: 'rundum', name: 'Rundum', monat: 200, fuer: 'Automatisierung, endo, Systeme mit Datenbank',
-        punkte: ['Alles aus Aktiv', 'Betrieb & Sicherung der Datenbank', 'Betreuung von Automatisierung/endo', 'Bevorzugte Bearbeitung', 'Weiterentwicklung nach Absprache'] }
+      { id: 'rundum', name: 'Rundum', monat: 200, fuer: 'Websites mit Datenbank, Login oder vielen eigenen Funktionen',
+        punkte: ['Alles aus Aktiv', 'Betrieb & Sicherung der Datenbank', 'Betreuung von Login und Schnittstellen', 'Bevorzugte Bearbeitung', 'Weiterentwicklung nach Absprache'] }
     ]
   },
-  /* Automatisierung & KI → endo (Auftrag 10, ERGUN. 28.09.2026: „ERGUN. baut Ihre Website. endo automatisiert Ihren Betrieb.“ –
-     Automatisierung gibt es nur noch über endo). Eine Option wählbar (oder keine); setzt die Betreuung auf Rundum (dort ist der
-     laufende Betrieb enthalten; monat = Anzeige auf Karte und Formular). endo wird gemietet: Einrichtung einmalig + monatlich. */
-  mehr: [
-    { id: 'faehigkeit', name: 'Eine Fähigkeit', satz: 'Zum Beispiel Empfang: Anfragen per E-Mail und WhatsApp automatisch beantworten, sortieren und weiterleiten.', preis: 1000, monat: 200, ab: true },
-    { id: 'komplett', name: 'endo komplett', satz: 'Alle Fähigkeiten: Empfang, Termine, Kontakte, Übersicht und Studio.', preis: 4000, monat: 200, ab: true }
-  ],
+  /* Automatisierung & KI → endo – NEUES PREISMODELL (Emre, 01.10.2026, Ausnahme auf Emres Wunsch; ersetzt „eine Fähigkeit ab 1.000 € +
+     200 €/Monat · endo komplett ab 4.000 € + 200 €/Monat“): Der Betrieb kauft sein Programm einmalig – es gehört ihm (Cockpit, Chat-Fenster,
+     Kalender, Kartei …). Die KI darin betreibt und verbessert ERGUN. – dafür die Monatsgebühr je Fähigkeit. Die Website-Betreuung bleibt
+     davon getrennt. Gleiche Werte auf der endo-Seite (_code/endo-studio/js/endo-preise.js) und in Obsidian „02 Preise“ – ein Test vergleicht alle drei. */
+  endo: {
+    erklaer: 'Ihr Programm gehört Ihnen. Die KI darin betreiben und verbessern wir.',
+    faehigkeiten: [
+      { id: 'empfang', einmalig: 1200, monat: 120, hinweis: 'bis 500 Gespräche/Monat' },
+      { id: 'termine', einmalig: 800, monat: 60 },
+      { id: 'kontakte', einmalig: 500, monat: 40 },
+      { id: 'uebersicht', einmalig: 400, monat: 30 },
+      { id: 'studio', einmalig: 400, monat: 70, hinweis: 'inkl. 20 Bilder/Monat' }],
+    komplett: { id: 'komplett', name: 'endo komplett', einmalig: 2800, monat: 250 },
+    whatsapp: { id: 'whatsapp', name: 'WhatsApp-Kanal', satz: 'endo antwortet auch per WhatsApp.', einmalig: 500, monat: 40, hinweis: 'zzgl. WhatsApp-Gebühren (Meta)' },
+    grenze: 'faire Nutzungsgrenze'
+  },
   mehrTitel: 'Automatisierung & KI → endo',
   mehrSatz: 'Automatisierung und KI für Ihren Betrieb laufen über endo – ebenfalls von ERGUN.',
   /* EINE Karte im Kontaktformular für alles aus „mehr“ (Preis = günstigste Option) */
   endoKarte: 'Automatisierung & KI mit endo',
-  mehrStufe: 'rundum',
   /* „endo ansehen“: /unternehmen erst, wenn die Seite öffentlich ist (heute gesperrt) – sonst die endo-Startseite */
   endoSeiteOeffentlich: true,   /* Auftrag 32 (29.09.2026): /unternehmen ist öffentlich */
   endoSeite: 'https://endo-ergun.vercel.app/',   /* Auftrag 33: die Unternehmer-Seite ist jetzt die endo-Startseite */
@@ -114,20 +122,21 @@ window.LEITFADEN = {
   /* Extras (Auftrag 28): ruhige Liste mit Haken in den 4 Gruppen aus PREISE.extras (Name, Satz, Preis rechtsbündig) – nichts als „beliebt“ markiert */
   extrasSchon: 'enthalten', extrasJeSeite: 'je Seite', extrasAnzahl: 'Wie viele zusätzliche Seiten?',
   /* Betreuung (Auftrag 28): Haken = mit Betreuung (Stufe vorgewählt, „ändern“ öffnet die Stufen), Haken weg = ohne Betreuung, 0 € im Monat.
-     Mit endo bleibt sie gesetzt (Rundum), weil der Betrieb von endo darin steckt. */
+     Seit dem neuen endo-Preismodell (01.10.2026) gilt sie nur für die Website – den Betrieb der KI deckt die endo-Monatsgebühr. */
   betreuung: { titel: 'Betreuung', grund: { basis: 'Passt für eine Website ohne eigene Funktionen.', aktiv: 'Passt, weil Ihre Website Termine oder Formulare verarbeitet.', rundum: 'Passt, weil Ihre Website viel Eigenes kann.' },
-    endo: 'Bleibt gesetzt: Der laufende Betrieb von endo ist darin enthalten.', selbst: 'Ich habe eigenes Hosting und eine eigene Domain', aendern: 'ändern',
+    selbst: 'Ich habe eigenes Hosting und eine eigene Domain', aendern: 'ändern',
     ohne: 'Ohne Betreuung', ohneSatz: 'Hosting, Domain und Updates übernehmen Sie dann selbst.' },
   /* endo-Fähigkeiten (5 seit Auftrag 30, 29.09.2026: Social entfernt) mit ehrlichem Status – Stand aus endo (_code/endo-studio/js/assistenten.js), dort ändern und hier nachziehen */
-  endo: { titel: 'Wo soll endo helfen?', satz: 'Wählen Sie eine oder mehrere Aufgaben.', ansehen: 'So sieht das aus: endo ansehen',
+  endo: { titel: 'Wo soll endo helfen?', satz: 'Wählen Sie eine oder mehrere Fähigkeiten – oder alles zusammen.', ansehen: 'So sieht das aus: endo ansehen',
+    einmalig: 'einmalig', monatlich: 'monatlich', zusatz: 'Zusatz', statt: 'statt', einzeln: 'einzeln', guenstiger: 'endo komplett ist hier günstiger – Sie bekommen alle fünf.',
     faehigkeiten: [
       { id: 'empfang', name: 'Empfang', satz: 'beantwortet Anfragen rund um die Uhr', status: 'Demo' },
       { id: 'termine', name: 'Termine', satz: 'Kunden buchen selbst, mit Erinnerung', status: 'In Arbeit' },
       { id: 'kontakte', name: 'Kontakte', satz: 'Ihre Kundenkartei mit Erinnerungen', status: 'In Arbeit' },
       { id: 'uebersicht', name: 'Übersicht', satz: 'Ihr Wochenbericht', status: 'In Arbeit' },
       { id: 'studio', name: 'Studio', satz: 'Bilder und Videos aus Handyfotos', status: 'Live' }],
-    komplett: 'Alle Aufgaben zum Paketpreis.', leer: 'Bitte wählen Sie mindestens eine Aufgabe.',
-    komplettSatz: 'Ab 4 Aufgaben ist endo komplett günstiger.' },
+    komplett: 'Alle fünf Fähigkeiten zum Paketpreis.', leer: 'Bitte wählen Sie mindestens eine Fähigkeit.',
+    whatsappNur: 'Kommt zu einer gewählten Fähigkeit dazu.' },
   anfrage: { titel: 'Ihre Anfrage', satz: 'Antwort innerhalb von 24 Stunden.', leer: 'Nichts ausgewählt – schreiben Sie einfach, worum es geht.', auswahl: 'Auswahl treffen' }
 };
 
@@ -135,30 +144,46 @@ window.LEITFADEN = {
 (function (P) {
   P.euro = function (n) { return Math.round(n).toLocaleString('de-DE') + ' €'; };
   P.betrag = function (x) { return (x.ab ? 'ab ' : '') + P.euro(x.preis); };
+  P.monatText = function (x) { return (x.monatAb ? 'ab ' : '') + P.euro(x.monat); };
+  /* endo je Fähigkeit (aus PREISE.endo) + abgeleitete Pakete für Karten und ältere Fassungen: mehr[0] = „Einzelne Fähigkeit“ (günstigste,
+     einmalig und monatlich je für sich), mehr[1] = endo komplett. Nichts davon von Hand – alles aus PREISE.endo berechnet. */
+  P.endoFaehigkeit = function (id) { return P.endo.faehigkeiten.filter(function (f) { return f.id === id; })[0] || null; };
+  P.endoEinzeln = function () { return P.endo.faehigkeiten.reduce(function (s, f) { return { einmalig: s.einmalig + f.einmalig, monat: s.monat + f.monat }; }, { einmalig: 0, monat: 0 }); };
+  var minE = Math.min.apply(null, P.endo.faehigkeiten.map(function (f) { return f.einmalig; })), minM = Math.min.apply(null, P.endo.faehigkeiten.map(function (f) { return f.monat; }));
+  P.mehr = [
+    { id: 'faehigkeit', name: 'Einzelne Fähigkeit', satz: 'Zum Beispiel Empfang: Anfragen automatisch beantworten, sortieren und weiterleiten.', preis: minE, monat: minM, ab: true, monatAb: true },
+    { id: 'komplett', name: P.endo.komplett.name, satz: 'Alle Fähigkeiten: Empfang, Termine, Kontakte, Übersicht und Studio.', preis: P.endo.komplett.einmalig, monat: P.endo.komplett.monat, ab: false }];
   P.alleExtras = function () { return P.extras.reduce(function (l, g) { return l.concat(g.eintraege); }, []); };
-  /* Standard-Betreuung (Rechner ohne ausdrückliche Wahl): Automatisierung/endo → Rundum · Pro mit Terminbuchung oder Funktion → Aktiv · sonst Basis */
+  /* Standard-Betreuung (Rechner ohne ausdrückliche Wahl): Pro mit Terminbuchung oder Funktion → Aktiv · sonst Basis.
+     endo setzt seit dem neuen Preismodell (01.10.2026) keine Betreuung mehr: den Betrieb der KI deckt die endo-Monatsgebühr. */
   P.betreuungStandard = function (a) {
     a = a || {};
-    if ((a.mehr || []).length || (a.endo || []).length) return P.mehrStufe;
     if (a.stufe === 'pro' && (a.extras || []).some(function (x) { return x === 'termin' || x === 'funktion'; })) return 'aktiv';
     return 'basis';
   };
-  /* Empfehlung im Leitfaden (Frage 4, Auftrag 27): endo → Rundum · Terminbuchung, Formular mit Dateien oder eigene Funktion
+  /* Empfehlung im Leitfaden (Frage 4, Auftrag 27): Terminbuchung, Formular mit Dateien oder eigene Funktion
      (auch wenn schon in der Stufe enthalten) → Aktiv · sonst Basis */
   P.betreuungEmpfehlung = function (a) {
     a = a || {};
-    if ((a.mehr || []).length || (a.endo || []).length) return P.mehrStufe;
     var s = P.stufen.filter(function (x) { return x.id === a.stufe; })[0], hat = (a.extras || []).concat(s && s.id === 'pro' ? ['termin', 'formular'] : []);
     return hat.some(function (x) { return x === 'termin' || x === 'formular' || x === 'funktion'; }) ? 'aktiv' : 'basis';
   };
-  /* endo nach Aufgaben (Auftrag 27): je Fähigkeit der Preis von „Eine Fähigkeit“, ab 4 Fähigkeiten „endo komplett“ (günstiger).
-     Monatlich zählt wie bisher die Betreuung Rundum (dort ist der laufende Betrieb von endo enthalten). */
-  P.endoPaket = function (ids) {
-    var n = (ids || []).length, f = P.mehr[0], k = P.mehr[1];
+  /* endo nach Fähigkeiten (neues Preismodell, 01.10.2026): einmalig und monatlich je Fähigkeit addiert. endo komplett, wenn alle fünf gewählt
+     sind – oder automatisch, sobald es einmalig UND monatlich nicht teurer ist als die Auswahl (dann gibt es alle fünf zum selben Preis oder
+     günstiger). WhatsApp-Kanal kommt als Zusatz obendrauf. */
+  P.endoPaket = function (ids, whatsapp) {
+    ids = ids || []; var n = ids.length, k = P.endo.komplett, w = P.endo.whatsapp;
     if (!n) return null;
-    if (n * f.preis >= k.preis) return { id: k.id, name: k.name, satz: k.satz, preis: k.preis, monat: k.monat, ab: k.ab, anzahl: n, faehigkeiten: ['alle Fähigkeiten'] };
+    var gew = P.endo.faehigkeiten.filter(function (f) { return ids.indexOf(f.id) >= 0; });
+    var s = gew.reduce(function (x, f) { return { einmalig: x.einmalig + f.einmalig, monat: x.monat + f.monat }; }, { einmalig: 0, monat: 0 });
+    var alle = gew.length === P.endo.faehigkeiten.length, guenstiger = !alle && k.einmalig <= s.einmalig && k.monat <= s.monat;
     var namen = (window.LEITFADEN ? window.LEITFADEN.endo.faehigkeiten : []).filter(function (x) { return ids.indexOf(x.id) >= 0; }).map(function (x) { return x.name; });
-    return { id: f.id, name: n === 1 ? f.name : n + ' Fähigkeiten', satz: f.satz, preis: f.preis * n, monat: f.monat, ab: f.ab, anzahl: n, faehigkeiten: namen };
+    var p = alle || guenstiger
+      ? { id: k.id, name: k.name, preis: k.einmalig, monat: k.monat, faehigkeiten: ['alle Fähigkeiten'], guenstiger: guenstiger, statt: s }
+      : { id: 'faehigkeiten', name: n === 1 ? namen[0] || 'Eine Fähigkeit' : n + ' Fähigkeiten', preis: s.einmalig, monat: s.monat, faehigkeiten: namen };
+    p.ab = false; p.anzahl = n; p.whatsapp = !!whatsapp;
+    if (whatsapp) { p.preis += w.einmalig; p.monat += w.monat; }
+    return p;
   };
   /* auswahl = { stufe: 'business', extras: ['termin'], anzahl: { unterseite: 2 }, endo: ['empfang'], betreuung: 'basis', selbst: false, mehr: [], anfrage: [] } */
   P.rechnen = function (auswahl) {
@@ -170,14 +195,16 @@ window.LEITFADEN = {
       var x = {}; for (var k in m) x[k] = m[k]; x.preis = m.preis * n; x.anzahl = n; return x;
     });
     var mehr = P.mehr.filter(function (m) { return (a.mehr || []).indexOf(m.id) >= 0; });
-    if ((a.endo || []).length) mehr = [P.endoPaket(a.endo)];
+    if ((a.endo || []).length) mehr = [P.endoPaket(a.endo, a.whatsapp)];
     var bId = a.betreuung === undefined ? P.betreuungStandard(a) : a.betreuung;
     var betreuung = P.betreuung.stufen.filter(function (b) { return b.id === bId; })[0] || null;
-    var monatlich = betreuung ? betreuung.monat - (a.selbst ? P.betreuung.selbst : 0) : 0;
+    var betreuungMonat = betreuung ? betreuung.monat - (a.selbst ? P.betreuung.selbst : 0) : 0;
+    var endoMonat = mehr.reduce(function (s, m) { return s + m.monat; }, 0);
+    var monatlich = betreuungMonat + endoMonat;   /* einmalig und monatlich getrennt: Website-Betreuung + endo-Gebühr */
     var teile = [stufe].concat(extras, mehr).filter(Boolean);
     var einmalig = teile.reduce(function (s, x) { return s + x.preis; }, 0);
     return { stufe: stufe, extras: extras, mehr: mehr, betreuung: betreuung, selbst: !!a.selbst, anfrage: P.aufAnfrage.filter(function (x) { return (a.anfrage || []).indexOf(x.id) >= 0; }),
-      einmalig: einmalig, ab: teile.some(function (x) { return x.ab; }), monatlich: monatlich, jahr: einmalig + 12 * monatlich };
+      einmalig: einmalig, ab: teile.some(function (x) { return x.ab; }), monatlich: monatlich, betreuungMonat: betreuungMonat, endoMonat: endoMonat, jahr: einmalig + 12 * monatlich };
   };
   /* Text fürs Kontaktformular (landet in der Nachricht – gesendet wird erst, wenn der Besucher selbst abschickt) */
   P.anfrageText = function (e) {
@@ -185,8 +212,8 @@ window.LEITFADEN = {
     if (e.stufe) z.push('• Website: ' + e.stufe.name + ' (' + P.betrag(e.stufe) + ')');
     if (e.extras.length) z.push('• Extras: ' + e.extras.map(function (m) { return m.name + (m.anzahl > 1 ? ' × ' + m.anzahl : '') + ' (' + P.betrag(m) + ')'; }).join(', '));
     if (e.anfrage.length) z.push('• Im Erstgespräch besprechen: ' + e.anfrage.map(function (x) { return x.name; }).join(', '));
-    if (e.mehr.length) z.push('• Automatisierung & KI mit endo: ' + e.mehr.map(function (m) { return m.name + (m.faehigkeiten && m.anzahl > 1 && m.id !== 'komplett' ? ' – ' + m.faehigkeiten.join(', ') : m.faehigkeiten && m.anzahl === 1 ? ' – ' + m.faehigkeiten.join(', ') : '') + ' (' + P.betrag(m) + ' + ' + P.euro(m.monat) + ' / Monat)'; }).join(', '));
-    z.push('• Betreuung: ' + (e.betreuung ? e.betreuung.name + ' (' + P.euro(e.monatlich) + ' / Monat' + (e.selbst ? ', Hosting & Domain stelle ich selbst' : '') + ')' : 'ohne Betreuung (Hosting, Domain und Updates übernehme ich selbst)'));
+    if (e.mehr.length) z.push('• Automatisierung & KI mit endo: ' + e.mehr.map(function (m) { return m.name + (m.faehigkeiten && m.id === 'faehigkeiten' && m.anzahl > 1 ? ' – ' + m.faehigkeiten.join(', ') : '') + (m.whatsapp ? ' + ' + P.endo.whatsapp.name : '') + ' (' + P.betrag(m) + ' einmalig + ' + P.monatText(m) + ' / Monat)'; }).join(', '));
+    if (e.stufe) z.push('• Betreuung: ' + (e.betreuung ? e.betreuung.name + ' (' + P.euro(e.betreuungMonat) + ' / Monat' + (e.selbst ? ', Hosting & Domain stelle ich selbst' : '') + ')' : 'ohne Betreuung (Hosting, Domain und Updates übernehme ich selbst)'));
     z.push('Einmalig ' + ab + P.euro(e.einmalig) + ' · monatlich ' + P.euro(e.monatlich) + ' · erstes Jahr ' + ab + P.euro(e.jahr) + ' (unverbindliche Einschätzung)');
     return z.join('\n').replace(/ /g, ' ');   /* feste Leerzeichen → normale (WhatsApp/Mail) */
   };
@@ -236,21 +263,30 @@ window.LEITFADEN = {
     beides: '<rect x="8" y="12" width="58" height="42" rx="4"/><path d="M8 20h58"/><path d="M15 29h22M15 35h16M15 41h19"/><rect x="42" y="27" width="17" height="15" rx="2"/><path d="M66 33h14"/><path d="M76 29l4 4-4 4"/><rect x="82" y="24" width="20" height="18" rx="4"/><path d="M87 30h10M87 35h7"/><circle cx="92" cy="54" r="6"/><path d="M92 42v6"/><path d="M89.5 54.5l2 2 3.5-4"/>'
   };
   function grafik(n) { return '<svg class="mf-grafik" viewBox="0 0 120 72" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (GRAFIK[n] || '') + '</svg>'; }
+  var ESYM = {
+    empfang: '<path d="M4 13l2.5-7h11L20 13v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M4 13h4.5l1 2h5l1-2H20"/>',
+    termine: '<rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/><path d="m9.5 14.5 2 2 3.5-3.5"/>',
+    kontakte: '<rect x="3.5" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M5.8 16.2a3.5 3.5 0 0 1 6.4 0"/><path d="M14 10h4M14 13.5h3"/>',
+    uebersicht: '<path d="M5 19V9M10 19V5M15 19v-7M20 19v-4"/>',
+    studio: '<rect x="3.5" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m20.5 16-4.5-4.5L7 19"/>',
+    whatsapp: '<path d="M4.5 19.5l1.2-3.6A8 8 0 1 1 8.4 18.6z"/><path d="M9.5 9.5c.3 2.2 2.3 4.4 5 5l1-1.4-1.8-.9-.8.8c-.9-.4-1.6-1.1-2-2l.8-.8-.9-1.8z"/>',
+    endo: '<circle cx="12" cy="12" r="4"/><ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(-20 12 12)"/>'
+  };
   var HAKEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 12.5l4.5 4.5L18.5 7.5"/></svg>';
 
   /* ---------- Antworten (nur Arbeitsspeicher) ---------- */
-  var A = { art: null, stufe: null, extras: [], seiten: 1, endo: [], betreuung: null, betreuungAn: true, selbst: false, extrasOffen: false, betreuungOffen: false };
+  var A = { art: null, stufe: null, extras: [], seiten: 1, endo: [], whatsapp: false, betreuung: null, betreuungAn: true, selbst: false, extrasOffen: false, betreuungOffen: false };
   function mitWebsite() { return A.art === 'website' || A.art === 'beides'; }
   function mitEndo() { return A.art === 'endo' || A.art === 'beides'; }
   function stufeDaten() { return P.stufen.filter(function (x) { return x.id === A.stufe; })[0] || null; }
   function enthalten(id) { var s = stufeDaten(); return !!(s && (s.enthaelt || []).indexOf(id) >= 0); }
   function extrasIds() { return mitWebsite() ? A.extras.filter(function (x) { return !enthalten(x); }) : []; }   /* Enthaltenes zählt nicht doppelt */
   function ohneBetreuung() { return { stufe: mitWebsite() ? A.stufe : null, extras: extrasIds(), endo: mitEndo() ? A.endo : [] }; }
-  function betreuungJetzt() { var e = P.betreuungStandard(ohneBetreuung());   /* vorausgewählt wie im Rechner: meist Basis */ return mitEndo() ? P.mehrStufe : (A.betreuung || e); }
-  function betreuungAn() { return mitEndo() || A.betreuungAn; }   /* mit endo immer gesetzt */
+  function betreuungJetzt() { return A.betreuung || P.betreuungStandard(ohneBetreuung()); }   /* vorausgewählt wie im Rechner: meist Basis */
+  function betreuungAn() { return mitWebsite() && A.betreuungAn; }   /* Betreuung gehört zur Website; endo hat seine eigene Monatsgebühr */
   function auswahl() {
     return { stufe: mitWebsite() ? A.stufe : null, extras: extrasIds(), anzahl: { unterseite: A.seiten }, endo: mitEndo() ? A.endo.slice() : [],
-      betreuung: betreuungAn() ? betreuungJetzt() : null, selbst: mitWebsite() && A.selbst && betreuungAn() };
+      whatsapp: mitEndo() && A.whatsapp && A.endo.length > 0, betreuung: betreuungAn() ? betreuungJetzt() : null, selbst: mitWebsite() && A.selbst && betreuungAn() };
   }
   function leer() { return !A.art || (mitWebsite() && !A.stufe) || (!mitWebsite() && !A.endo.length); }
   /* Anfrage-Box: Auswahl ist fertig, sobald die nötigen Teile gewählt sind (bei „Beides“ reicht die Website, endo kommt dazu) */
@@ -260,9 +296,9 @@ window.LEITFADEN = {
   function schritte() { return ['art'].concat(A.art === 'website' ? ['website'] : A.art === 'endo' ? ['endo'] : A.art === 'beides' ? ['website', 'endo'] : [], ['anfrage']); }
   var aktiv = 'art', dyn = q('[data-mf-dyn]'), anfrageBox = q('[data-mf-anfrage]'), stand = q('[data-mf-stand]'), linie = q('[data-mf-linie]');
   var zurueck = q('[data-mf-zurueck]'), weiter = q('[data-mf-weiter]'), hinweis = q('[data-mf-hinweis]'), summe = q('[data-mf-summe]'), live = q('[data-preise-live]'), liveT;
-  function artPreise() {
+  function artPreise() {   /* aus PREISE berechnet: günstigste Fähigkeit (einmalig und monatlich je für sich); Beides = Website-Start + endo ab */
     var f = P.mehr[0];
-    return { website: 'ab ' + P.euro(P.stufen[0].preis), endo: P.betrag(f) + ' + ' + P.euro(f.monat) + MONAT, beides: 'ab ' + P.euro(P.stufen[0].preis + f.preis) + ' + ' + P.euro(f.monat) + MONAT };
+    return { website: 'ab ' + P.euro(P.stufen[0].preis), endo: P.betrag(f) + ' + ' + P.monatText(f) + MONAT, beides: 'ab ' + P.euro(P.stufen[0].preis + f.preis) + ' + ' + P.monatText(f) + MONAT };
   }
 
   /* ---------- Aufräumen (?ordnung=neu, 01.10.2026 – Ausnahme auf ERGUNs Wunsch): die drei Angebote stehen groß über dem Formular und SIND
@@ -363,30 +399,54 @@ window.LEITFADEN = {
       /* Betreuung als eine Zeile */
       w.inhalt.appendChild(betreuungZeile());
     },
+    /* endo (neues Preismodell, 01.10.2026): oben „endo komplett“ als eigene Zeile mit Ersparnis, darunter die fünf Fähigkeiten als Liste –
+       Symbol, Name, Stand, Kurzbeschreibung, rechts „einmalig“ und „monatlich“ getrennt; Auswahl per Haken. WhatsApp als Zusatz-Haken.
+       Komplett ersetzt die Einzelauswahl (alle fünf gewählt). Darunter der Erklärsatz. Zahlen nur aus PREISE.endo. */
     endo: function (w) {
       w.titel = L.endo.titel; w.satz = L.endo.satz;
-      var c = el('div', 'mf-endo'); c.setAttribute('role', 'group'); c.setAttribute('aria-label', L.endo.titel);
+      var alle = L.endo.faehigkeiten.map(function (f) { return f.id; }), K = P.endo.komplett, komplett = A.endo.length === alle.length, einz = P.endoEinzeln();
+      function preise(einmalig, monat, hinweis) {
+        var s = el('span', 'mf-epreis');
+        var a = el('span', 'mf-epreis__teil'); a.appendChild(el('b', '', P.euro(einmalig))); a.appendChild(el('small', '', L.endo.einmalig)); s.appendChild(a);
+        var m = el('span', 'mf-epreis__teil'); m.appendChild(el('b', '', P.euro(monat))); m.appendChild(el('small', '', L.endo.monatlich)); s.appendChild(m);
+        if (hinweis) s.appendChild(el('small', 'mf-epreis__hinweis', hinweis));
+        return s;
+      }
+      function zeile(cls, an, key, symbol, name, status, satz, pr, klick, gesperrt) {
+        var b = el('button', 'mf-ezeile ' + cls); b.type = 'button'; b.setAttribute('role', 'checkbox'); b.setAttribute('aria-checked', String(!!an)); b.setAttribute('data-fokus', key);
+        if (gesperrt) { b.disabled = true; b.setAttribute('aria-disabled', 'true'); }
+        var box = el('span', 'mf-haken__box'); box.setAttribute('aria-hidden', 'true'); box.innerHTML = HAKEN; b.appendChild(box);
+        var sy = el('span', 'mf-ezeile__symbol'); sy.setAttribute('aria-hidden', 'true'); sy.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + (ESYM[symbol] || ESYM.endo) + '</svg>'; b.appendChild(sy);
+        var tx = el('span', 'mf-ezeile__text'), kopf = el('span', 'mf-ezeile__kopf'); kopf.appendChild(el('b', 'mf-ezeile__name', name));
+        if (status) kopf.appendChild(el('span', 'mf-chip__status mf-chip__status--' + status.replace(' ', '-').toLowerCase(), status));
+        tx.appendChild(kopf); tx.appendChild(el('span', 'mf-ezeile__satz', satz)); b.appendChild(tx);
+        b.appendChild(pr);
+        if (!gesperrt) b.addEventListener('click', klick);
+        return b;
+      }
+      var c = el('div', 'mf-eliste'); c.setAttribute('role', 'group'); c.setAttribute('aria-label', L.endo.titel);
+      /* endo komplett */
+      var kp = preise(K.einmalig, K.monat, L.endo.statt + ' ' + P.euro(einz.einmalig) + ' + ' + P.euro(einz.monat) + MONAT + ' ' + L.endo.einzeln);
+      c.appendChild(reihe(zeile('mf-ezeile--komplett', komplett, 'komplett', 'endo', K.name, '', L.endo.komplett, kp, function () { A.endo = komplett ? [] : alle.slice(); neuZeichnen('komplett'); }), 0));
+      /* fünf Fähigkeiten */
       L.endo.faehigkeiten.forEach(function (f, nr) {
-        var b = reihe(el('button', 'mf-chip'), nr); b.type = 'button'; b.setAttribute('aria-pressed', String(A.endo.indexOf(f.id) >= 0)); b.setAttribute('data-fokus', 'endo-' + f.id);
-        var kopf = el('span', 'mf-chip__kopf'), name = el('span', 'mf-chip__name'), hk = el('span', 'mf-chip__haken'); hk.setAttribute('aria-hidden', 'true'); hk.innerHTML = HAKEN;
-        name.appendChild(hk); name.appendChild(el('b', '', f.name)); kopf.appendChild(name); kopf.appendChild(el('span', 'mf-chip__status mf-chip__status--' + f.status.replace(' ', '-').toLowerCase(), f.status)); b.appendChild(kopf);
-        b.appendChild(el('span', 'mf-chip__satz', f.satz));
-        b.addEventListener('click', function () { var i = A.endo.indexOf(f.id); if (i >= 0) A.endo.splice(i, 1); else A.endo.push(f.id); neuZeichnen('endo-' + f.id); });
-        c.appendChild(b);
+        var d = P.endoFaehigkeit(f.id) || { einmalig: 0, monat: 0 };
+        c.appendChild(reihe(zeile('', A.endo.indexOf(f.id) >= 0, 'endo-' + f.id, f.id, f.name, f.status, f.satz, preise(d.einmalig, d.monat, d.hinweis), function () {
+          var i = A.endo.indexOf(f.id); if (i >= 0) A.endo.splice(i, 1); else A.endo.push(f.id); neuZeichnen('endo-' + f.id);
+        }), nr + 1));
       });
       w.inhalt.appendChild(c);
-      var alle = L.endo.faehigkeiten.map(function (f) { return f.id; }), k = P.mehr[1], komplett = A.endo.length === alle.length;
-      var kb = reihe(el('button', 'mf-komplett'), alle.length); kb.type = 'button'; kb.setAttribute('aria-pressed', String(komplett)); kb.setAttribute('data-fokus', 'komplett');
-      var kk = el('span', 'mf-stufe__kopf'); kk.appendChild(el('span', 'mf-stufe__name', k.name)); kk.appendChild(preisEl('span', 'mf-stufe__preis', P.betrag(k) + ' + ' + P.euro(k.monat) + MONAT)); kb.appendChild(kk);
-      var kh = el('span', 'mf-stufe__haken'); kh.innerHTML = HAKEN; kb.appendChild(kh);
-      kb.appendChild(el('span', 'mf-karte__satz', L.endo.komplett));
-      kb.addEventListener('click', function () { A.endo = komplett ? [] : alle.slice(); neuZeichnen('komplett'); });
-      w.inhalt.appendChild(kb);
-      var n = A.endo.length, m = P.endoPaket(A.endo);
-      w.inhalt.appendChild(el('p', 'mf-stand', !n ? L.endo.leer : m.id === 'komplett' ? (komplett ? k.name + ': ' + P.betrag(k) : L.endo.komplettSatz + ' ' + k.name + ': ' + P.betrag(k)) : n + (n === 1 ? ' Aufgabe' : ' Aufgaben') + ': ' + P.betrag(m) + ' + ' + P.euro(m.monat) + MONAT));
+      /* Zusatz: WhatsApp-Kanal */
+      var W = P.endo.whatsapp, wl = el('div', 'mf-eliste mf-eliste--zusatz'); wl.setAttribute('role', 'group'); wl.setAttribute('aria-label', L.endo.zusatz);
+      wl.appendChild(el('p', 'mf-extras__titel', L.endo.zusatz));
+      wl.appendChild(reihe(zeile('mf-ezeile--zusatz', A.whatsapp && A.endo.length > 0, 'whatsapp', 'whatsapp', W.name, '', A.endo.length ? W.satz : L.endo.whatsappNur, preise(W.einmalig, W.monat, W.hinweis), function () { A.whatsapp = !A.whatsapp; neuZeichnen('whatsapp'); }, !A.endo.length), alle.length + 1));
+      w.inhalt.appendChild(wl);
+      /* Stand + Erklärsatz */
+      var m = P.endoPaket(A.endo, A.whatsapp);
+      w.inhalt.appendChild(el('p', 'mf-stand', !m ? L.endo.leer : (m.guenstiger ? L.endo.guenstiger + ' ' : '') + m.name + ': ' + P.euro(m.preis) + ' ' + L.endo.einmalig + ' + ' + P.euro(m.monat) + MONAT));
+      w.inhalt.appendChild(el('p', 'mf-erklaer', P.endo.erklaer + ' ' + P.endo.grenze.charAt(0).toUpperCase() + P.endo.grenze.slice(1) + '.'));
       var a = el('a', 'mf-link', L.endo.ansehen + ' ↗'); a.href = P.endoSeiteOeffentlich ? P.endoSeite : P.endoStart; a.target = '_blank'; a.rel = 'noopener';
       w.inhalt.appendChild(a);
-      if (!mitWebsite()) w.inhalt.appendChild(betreuungZeile());
     }
   };
   /* Extras (Auftrag 28): ruhige Liste mit Haken in den 4 Gruppen, Preis rechtsbündig, je ein kurzer Satz. Enthaltenes = „enthalten“. */
@@ -429,7 +489,7 @@ window.LEITFADEN = {
   /* Betreuung (Auftrag 28): eine Zeile mit Haken „☑ Betreuung Basis · 50 € / Monat · ändern“. Haken weg = ohne Betreuung (0 € im Monat).
      Mit endo gesetzt und gesperrt (Rundum), mit kurzem Grund. „ändern“ öffnet die drei Stufen + Hosting selbst. */
   function betreuungZeile() {
-    var an = betreuungAn(), gesperrt = mitEndo(), id = betreuungJetzt(), b = P.betreuung.stufen.filter(function (x) { return x.id === id; })[0], selbst = A.selbst && mitWebsite();
+    var an = betreuungAn(), gesperrt = false, id = betreuungJetzt(), b = P.betreuung.stufen.filter(function (x) { return x.id === id; })[0], selbst = A.selbst && mitWebsite();
     var wrap = el('div', 'mf-betreuung' + (an ? '' : ' ist-aus'));
     var zeile = el('div', 'mf-betreuung__zeile');
     var k = hakenKnopf(an, L.betreuung.titel, 'betreuung-an', gesperrt);
@@ -442,13 +502,12 @@ window.LEITFADEN = {
       zeile.appendChild(ae);
     }
     wrap.appendChild(zeile);
-    wrap.appendChild(el('p', 'mf-betreuung__grund', !an ? L.betreuung.ohneSatz : gesperrt ? L.betreuung.endo : L.betreuung.grund[id]));
+    wrap.appendChild(el('p', 'mf-betreuung__grund', !an ? L.betreuung.ohneSatz : L.betreuung.grund[id]));
     if (an && A.betreuungOffen) {
       var g = el('div', 'mf-betreuung__wahl hat-wahl'); g.setAttribute('role', 'group'); g.setAttribute('aria-label', L.betreuung.titel);
       P.betreuung.stufen.forEach(function (x) {
         var o = el('button', 'lf-chip lf-chip--gross'); o.type = 'button'; o.setAttribute('aria-pressed', String(id === x.id)); o.setAttribute('data-fokus', 'b-' + x.id);
         o.appendChild(el('b', '', x.name + ' · ' + P.euro(x.monat - (selbst ? P.betreuung.selbst : 0)) + MONAT)); o.appendChild(el('span', '', x.fuer));
-        if (gesperrt && x.id !== P.mehrStufe) { o.disabled = true; }
         o.addEventListener('click', function () { A.betreuung = x.id; neuZeichnen('b-' + x.id); });
         g.appendChild(o);
       });

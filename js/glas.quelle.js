@@ -45,6 +45,8 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   /* Glas fein (?glas=fein, Ausnahme auf Emres Wunsch): Schriftzug Zeichen für Zeichen aus der echten Lage gemalt, nie angeschnitten, Verlauf als
      feste Bühne hinter der GANZEN Seite (ein WebGL-Kontext), unter dem Hero gedämpft und langsamer. Ohne den Schalter bleibt alles wie vorher. */
   const FEIN = html.classList.contains('glas-fein');
+  /* Glas nahtlos (?glas=nahtlos): keine Fläche über dem Verlauf – er wird selbst nach unten weich dunkler (siehe GLASS_FEIN) */
+  const NAHTLOS = FEIN && html.classList.contains('glas-nahtlos');
   const $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => [].slice.call((r || document).querySelectorAll(s));
   function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
 
@@ -63,6 +65,9 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   if (frage.get('punkt') === 'orange') {   /* Vergleich: der Punkt als solides Marken-Orange über dem Glas (nicht Teil des Glases) */
     titleEl.innerHTML = '<span class="ghr-word">ERGUN</span><span class="glas-punkt">.</span>';
     html.setAttribute('data-glas-punkt', 'orange');
+  }
+  if (NAHTLOS && frage.get('text') !== 'b') {   /* Emre (01.10. spät): im Titelbild steht „Websites und Automatisierung“ */
+    const d = root.querySelector('[data-glas-text]'); if (d) { d.textContent = 'Websites und Automatisierung'; d.classList.add('glas-unterzeile'); }
   }
   if (frage.get('text') === 'b') { const d = root.querySelector('[data-glas-text]'); if (d) d.textContent = 'Website & Automatisierung für Unternehmen.'; }
 
@@ -131,6 +136,11 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
      · Glas: die Höhenkarte sitzt fest auf dem Dokument, die Leinwand auf dem Fenster → Lage um die Scroll-Strecke verschieben (u_shift). */
   const BLUR_FEIN = BLUR.replace('float x = float(i) * u_radius / 24.0;', 'float x = float(i) * u_radius * 1.5 / 24.0;');
   let GLASS_FEIN = GLASS.split('texture(u_height, ').join('texture(u_height, vec2(0.0, -u_shift) + ').replace('uniform vec2 u_res;', 'uniform vec2 u_res;\nuniform float u_shift;');
+  /* nahtlos: Lage im Dokument in Fensterhöhen (yDoc) → ab etwa der Hälfte des Heros stufenlos dunkler (über ~0,95 Fensterhöhen, ohne Kante),
+     in der Mitte (hinter den Inhalten) noch etwas mehr. Dieselben Farben, nur leiser. */
+  if (NAHTLOS) GLASS_FEIN = GLASS_FEIN.replace('uniform float u_shift;', 'uniform float u_shift;\nuniform float u_nahtlos;').replace('  o = vec4(col, 1.0);\n}',
+    '  float yDoc = (1.0 - uv.y) + u_shift;\n  float tief = smoothstep(0.55, 1.5, yDoc) * u_nahtlos;\n' +
+    '  float mitte = exp(-pow((uv.x - 0.5) / 0.42, 2.0));\n  col *= mix(1.0, 0.36 - 0.1 * mitte, tief);\n  o = vec4(col, 1.0);\n}');
   const dbg = frage.get('glasdbg');   /* Prüfschalter: Kanäle der Höhenkarte zeigen (r = Kante, g = Maske, b = Wölbung) */
   if (FEIN && dbg) GLASS_FEIN = GLASS_FEIN.replace('o = vec4(col, 1.0);\n}', 'vec4 dh = texture(u_height, vec2(0.0, -u_shift) + uv); o = vec4(pow(vec3(' + (dbg === 'g' ? 'dh.g' : dbg === 'b' ? 'dh.b' : 'dh.r') + '), vec3(0.25)), 1.0);\n}');
   const fehlt = BLUR_FEIN === BLUR || GLASS_FEIN.indexOf('u_shift') < 0;   /* Vorlage geändert? dann sicher die alte Fassung */
@@ -403,7 +413,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       run(P.glass, null, {
         field: field.tex, height: blurB.tex, htexel: [1 / blurB.w, 1 / blurB.h], bevel, aspect, light: [light.x, light.y], glass: 1,
         form: reduceMq.matches || readyAt < 0 ? 1 : formed(performance.now() - readyAt, FORM_MS), res: [canvas.width, canvas.height],
-        shift: fein ? (window.scrollY || 0) / Math.max(1, canvas.clientHeight) : 0
+        shift: fein ? (window.scrollY || 0) / Math.max(1, canvas.clientHeight) : 0, nahtlos: NAHTLOS ? 1 : 0
       });
       zustand.bilder++;
     };
@@ -428,7 +438,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       const [tx, ty] = idle && animating() ? orbit(time) : [pt.x, pt.y];
       light.x = follow(light.x, tx, dt, idle ? 1.2 : 7);
       light.y = follow(light.y, ty, dt, idle ? 1.2 : 7);
-      if (fein) { const tief = unten >= 1 ? true : unten < 0.97 ? false : tiefStand; if (tief !== tiefStand) { tiefStand = tief; size(); } }
+      if (fein && !NAHTLOS) { const tief = unten >= 1 ? true : unten < 0.97 ? false : tiefStand; if (tief !== tiefStand) { tiefStand = tief; size(); } }
       const sparen = fein && unten >= 1 && animating() && now - gemalt < 40;
       if (!sparen) { draw(); gemalt = now; }
       const catching = Math.abs(light.x - tx) + Math.abs(light.y - ty) > 0.0015;
