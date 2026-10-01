@@ -41,7 +41,7 @@
   var ABL = ORD && !!window.ERGUN_ABLAUF;
   /* feine Blume (?blume=fein, 01.10. – Ausnahme auf ERGUNs Wunsch): dünne, dicht gestaffelte Blätter, edles Material, goldene Mitte, Tau
      (?tau=aus = ohne); dazu ein ruhiger Hintergrund: violetter Lichthof, Kupferstich der Dahlie (wächst bei den Angeboten zum Mandala), Pollen */
-  var FEIN = ORD && frage.get('blume') === 'fein';
+  var FEIN_STANDARD = true, FEIN = ORD && (frage.get('blume') === 'fein' || (FEIN_STANDARD && frage.get('blume') !== 'voll'));   /* seit Emres OK (01.10.) Standard; ?blume=voll = vorherige Dahlie */
   if (FEIN) { ART = frage.get('tau') === 'aus' ? 'feinOhneTau' : 'fein'; html.setAttribute('data-blume', ART); html.classList.add('blume-fein'); }
   var BFEIN = Math.min(window.innerWidth || 1440, window.innerHeight || 900) < 700 ? 0.82 : 1;   /* Handy: etwas weniger Blütenblätter (noch ohne Lücken) */
   var FEST_K = frage.get('k') !== null && frage.get('k') !== '' ? parseFloat(frage.get('k')) : null, FEST_O = frage.get('offen') !== null && frage.get('offen') !== '' ? parseFloat(frage.get('offen')) : null;   /* nur zum Prüfen */

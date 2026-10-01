@@ -1,6 +1,6 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
-## Blume fein (`?blume=fein`, 01.10.2026, Rückweg Tag `vor-blume-fein`)
+## Blume fein (01.10.2026, Standard seit Emres OK – `FEIN_STANDARD` in `kristall.js`; vorher `?blume=voll`, Rückweg Tag `vor-blume-fein`)
 - `blume.js`: `feineDahlie()` (Arten `fein`/`feinOhneTau`), `FRAG_FEIN` (Verlauf, Perlmutt, Ränder über `v_q`, Gold `v_k`≈1, Tau `v_k`≈0,7, Adern im Grün), `u_fein` (Tau/Gold wiegen kaum). `kristall.js`: `FEIN`, `hintergrundFein()` (`.k-stich` SVG-Stich, `.k-pollen` Canvas). CSS-Abschnitt „feine Blume“ (Lichthof, Angebote-Linie, Karten-Schein). Seite ohne Blume pixelgleich. Test `blume-fein.test.mjs`.
 
 ## Ablauf der Blume (01.10.2026 abends, Standard seit Emres OK; vorher `?ablauf=alt`, Rückweg Tag `vor-ablauf`)
