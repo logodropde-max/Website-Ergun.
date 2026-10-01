@@ -40,7 +40,8 @@ window.ERGUN_A36 = true;
    · dschungel = tropisches Büro, neueste Fassung: 4K, geführt, Premium-Angebote (eingelagert – Tag dschungel-final, _archiv/ERGUN-Dschungel-2026-10-01/)
      (?titel=neu = derselbe Stand)
    · kristall  = Startseite 01.10.2026 bis zur Blume – Vorlage „Lycoris Specimen“, pinker Brillant
-   · lycoris3  = Startseite seit 01.10.2026 nachmittags (Emres „Ok“): Vorlage Lycoris mit 3 Seiten (Start · Angebote · Kontakt), Leiste oben,
+   · all       = Startseite seit 01.10.2026 abends (Emres „Ok“): Erde → Saturn (Angebote, endo-Mond) → Erde bei Nacht (Formular), js/all.js
+   · lycoris3  = Startseite 01.10.2026 nachmittags bis „All“ (Emres „Ok“): Vorlage Lycoris mit 3 Seiten (Start · Angebote · Kontakt), Leiste oben,
                  volle Dahlie in Lila (?blume=lilie = rote Spinnenlilie)
                  ?ordnung=neu (Aufräumen, Vorschau): keine Dopplungen, Angebote = Schritt ① direkt über dem Formular, Themen oben auch am Handy
                  ohne „Menü“, Blume immer ganz (fester Stiel, sie bewegt sich statt zu wachsen). ORDNUNG_STANDARD = true seit Emres OK („Stelle Seite dann online“, 01.10.); ?ordnung=alt = vorher.
@@ -48,7 +49,7 @@ window.ERGUN_A36 = true;
    · lycoris   = Startseite am 01.10.2026 bis zum Lebensbaum: die Vorlage „Lycoris Specimen“ 1:1 (rote Spinnenlilie, Karmin), nur ERGUNs Texte
    · blume     = Startseite am 01.10.2026 bis Lycoris: Kristall-Seite näher an der Vorlage, der Diamant öffnet sich zur Blüte (?blume=rose|tulpe|lilie)
    Die Dschungel-Fassung liegt als <template> im HTML: ohne ihren Schalter lädt sie nichts (keine Bilder, kein CSS, kein Skript). */
-window.ERGUN_TITEL = 'lycoris3';
+window.ERGUN_TITEL = 'all';
 (function () {
   var t = new URLSearchParams(location.search).get('titel'); if (t === 'neu') t = 'dschungel'; if (t === 'a') t = 'alt';
   var wahl = ['alt', 'maschine', 'dschungel', 'kristall', 'blume', 'lycoris', 'baum', 'lycoris3', 'all'].indexOf(t) >= 0 ? t : window.ERGUN_TITEL;
@@ -64,7 +65,7 @@ window.ERGUN_TITEL = 'lycoris3';
   var ABLAUF_STANDARD = true, ab = new URLSearchParams(location.search).get('ablauf');
   window.ERGUN_ABLAUF = window.ERGUN_ORDNUNG && (ab === 'neu' || (ABLAUF_STANDARD && ab !== 'alt'));
   html.classList.toggle('ablauf-neu', window.ERGUN_ABLAUF);
-  html.classList.toggle('titel-maschine', m); html.classList.toggle('titel-neu', neu); html.classList.toggle('titel-kristall', k); html.classList.toggle('titel-blume', bl || wahl === 'baum'); html.classList.toggle('titel-lycoris', wahl === 'lycoris' || wahl === 'lycoris3'); html.classList.toggle('titel-drei', wahl === 'lycoris3'); html.classList.toggle('titel-baum', wahl === 'baum'); html.classList.toggle('titel-all', all); if (all) html.classList.add('titel-kristall');
+  html.classList.toggle('titel-maschine', m); html.classList.toggle('titel-neu', neu); html.classList.toggle('titel-kristall', k || all); html.classList.toggle('titel-blume', bl || wahl === 'baum'); html.classList.toggle('titel-lycoris', wahl === 'lycoris' || wahl === 'lycoris3'); html.classList.toggle('titel-drei', wahl === 'lycoris3'); html.classList.toggle('titel-baum', wahl === 'baum'); html.classList.toggle('titel-all', all);
   if (m) {   /* nur dann: CSS + Vorlader des Morgenbilds */
     var c = document.createElement('link'); c.rel = 'stylesheet'; c.href = 'maschine.css?v=3'; document.head.appendChild(c);
     [
