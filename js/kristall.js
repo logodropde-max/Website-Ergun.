@@ -36,6 +36,9 @@
      Themen oben ohne „Menü“; die Blume ist immer ganz zu sehen: fester, kürzerer Stiel, sie wächst/schrumpft nicht – sie gleitet, dreht und
      neigt sich, die Kamera kreist (Start ganz hinter „ERGUN.“ → einmal genau von oben → neben den Angeboten/dem Formular). */
   var ORD = DREI && VOLL && !!window.ERGUN_ORDNUNG, STIEL = ORD ? 2.6 : undefined;
+  /* Ablauf der Blume (01.10. abends, ?ablauf=neu – Ausnahme auf ERGUNs Wunsch): Start (Seitenansicht hinter „ERGUN.“) → Angebote: die Rosette
+     genau von oben, die drei Angebote erscheinen gestaffelt daneben (Handy: darunter) → Formular: zurück in die Seitenansicht, zur Seite. */
+  var ABL = ORD && !!window.ERGUN_ABLAUF;
   var BFEIN = Math.min(window.innerWidth || 1440, window.innerHeight || 900) < 700 ? 0.82 : 1;   /* Handy: etwas weniger Blütenblätter (noch ohne Lücken) */
   var FEST_K = frage.get('k') !== null && frage.get('k') !== '' ? parseFloat(frage.get('k')) : null, FEST_O = frage.get('offen') !== null && frage.get('offen') !== '' ? parseFloat(frage.get('offen')) : null;   /* nur zum Prüfen */
   /* Hintergrund-Muster (Brillant-Streuung, eigenes Bild, kachelbar): Standard seit ERGUNs OK (01.10.); ?muster=aus schaltet es ab; in der Blume nur mit ?muster=b */
@@ -443,20 +446,25 @@
     var spalteR = 0.07 * W + Math.min(860, 0.46 * W), frei = W - spalteR, luecke = Math.max(24, W * 0.03);
     var u0 = Math.min(hoch / ((e0.t + e0.b) * PF), (W * 0.9) / (2 * e0.h * PF));
     var u2 = Math.min(u0, (frei - 2 * luecke) / (2 * e2.h * PF), hoch / ((e2.t + e2.b) * PF));
-    var seite = W >= 900 && u2 >= 0.9 * u0;
-    if (!seite) {   /* schmal: alle drei Angebote müssen unter der Blume ganz ins Bild passen – sonst die Blume insgesamt kleiner (gleiche Proportionen) */
+    var seite = W >= 900 && u2 >= 0.9 * u0 && (!ABL || (frei - 2 * luecke) / (2 * e1.h * PF) >= 0.9 * u0), u1max = Infinity;
+    if (!seite && ABL) {   /* schmal: Rosette oben, die drei Angebote darunter ganz im Bild; Formular unter der Seitenansicht */
+      var angA = $('#angebote'), angHA = angA ? angA.offsetHeight : H * 0.4;
+      u1max = (H - kopfH - rand - angHA - 28) / (2 * e1.h * PF);
+      u0 = Math.min((H * 0.7 - kopfH - rand) / ((e0.t + e0.b) * PF), (W - 32) / (2 * e0.h * PF), u1max / 0.9); u2 = 0.9 * u0;
+    } else if (!seite) {   /* schmal: alle drei Angebote müssen unter der Blume ganz ins Bild passen – sonst die Blume insgesamt kleiner (gleiche Proportionen) */
       var ang = $('#angebote'), angH = ang ? ang.offsetHeight : H * 0.4;
       u0 = Math.min((H * 0.7 - kopfH - rand) / ((e0.t + e0.b) * PF), (W - 32) / (2 * e0.h * PF));
       u2 = Math.min(0.9 * u0, (H - kopfH - rand - angH - 20) / ((e2.t + e2.b) * PF)); u0 = Math.min(u0, u2 / 0.9);
     }
-    var u1 = Math.min(u0 * 1.1, hoch / (2 * e1.h * PF), (W - 32) / (2 * e1.h * PF));
+    var u1 = Math.min(u0 * 1.1, hoch / (2 * e1.h * PF), (W - 32) / (2 * e1.h * PF), u1max, ABL && seite ? (frei - 2 * luecke) / (2 * e1.h * PF) : Infinity);
+    var x1 = ABL && seite ? spalteR + frei / 2 : W / 2, y1 = ABL && !seite ? kopfH + rand + e1.h * PF * u1 : kopfH + (H - kopfH) / 2;
     var y0 = kopfH + rand + (seite ? (hoch - (e0.t + e0.b) * PF * u0) / 2 : 0) + e0.t * PF * u0;
     var y2 = kopfH + rand + (seite ? (hoch - (e2.t + e2.b) * PF * u2) / 2 : 0) + e2.t * PF * u2;
     function gr(u) { return 2 * RADIUS * u / md; }
     function oy(y) { return 1 - 2 * y / H; }
     KEYS = [
       { spin: 0.2, el: 12, size: gr(u0), ox: 0, oy: oy(y0), stem: 1 },
-      { spin: 1.4, el: 88, size: gr(u1), ox: 0, oy: oy(kopfH + (H - kopfH) / 2), stem: 1 },
+      { spin: 1.4, el: 88, size: gr(u1), ox: 2 * x1 / W - 1, oy: oy(y1), stem: 1 },
       { spin: 2.3, el: 14, size: gr(u2), ox: seite ? 2 * (spalteR + frei / 2) / W - 1 : 0, oy: oy(y2), stem: 1 }
     ];
     ORD_SEITE = seite; ORD_UNTEN = y2 + e2.b * PF * u2;
@@ -464,8 +472,9 @@
     html.setAttribute('data-k-lage', seite ? 'seite' : 'oben');
     if (lageVorher !== html.getAttribute('data-k-lage') && !nochmal) { ordnungLage(true); return; }   /* die Schrift der Angebote hängt an der Lage – einmal nachmessen */
     html.style.setProperty('--k-oben', Math.round(seite ? kopfH + H * 0.07 : ORD_UNTEN + 14) + 'px');
+    if (ABL) { html.style.setProperty('--k-ang-oben', Math.round(y1 + e1.h * PF * u1 + 16) + 'px'); ORD_ROSETTE = [x1, y1, e1.h * PF * u1]; }
   }
-  var ORD_SEITE = true, ORD_UNTEN = 0;
+  var ORD_SEITE = true, ORD_UNTEN = 0, ORD_ROSETTE = null;
 
   /* ---------- Inhalte aus PREISE (nichts von Hand) + Studio-Zeichen + Navigation ---------- */
   var MARKE = '<path d="M20 3.5 L23.6 8.2 L23.6 31.8 L20 36.5 L16.4 31.8 L16.4 8.2 Z" transform="rotate(0 20 20)"/><path d="M20 3.5 L23.6 8.2 L23.6 31.8 L20 36.5 L16.4 31.8 L16.4 8.2 Z" transform="rotate(60 20 20)"/><path d="M20 3.5 L23.6 8.2 L23.6 31.8 L20 36.5 L16.4 31.8 L16.4 8.2 Z" transform="rotate(120 20 20)"/>';
@@ -571,7 +580,7 @@
   }
   /* Aufräumen: „Angebote“ = Ende der Fahrt (die Angebote stehen oben), „Kontakt“ = das Formular direkt darunter */
   function formStart() { var o = $('#preise .mf__oben'); return o && !o.hidden ? o : $('#preise .mf__raster'); }
-  function zuAngeboten() { springe(SCENES - 1); }
+  function zuAngeboten() { springe(ABL ? 1 : SCENES - 1); }
   function zumKontakt() {   /* Lage ohne die Einblend-Verschiebung messen (offsetTop statt getBoundingClientRect) */
     var f = formStart(), y = 0; if (!f) return;
     for (var e = f; e; e = e.offsetParent) y += e.offsetTop;
@@ -583,6 +592,13 @@
      gesetzt wie der Fächer der Vorlage; Klick wählt die Karte im Formular und springt zu Bild 03 ---------- */
   var angeboteFertig = false;
   function angeboteBauen() {
+    if (ABL && !angeboteFertig) {   /* Ablauf: die Angebote (Schritt ①, gebaut von preise.js) wandern als Bild 02 in die Bühne neben/unter die Rosette */
+      var an = document.getElementById('angebote'); if (!an) return false;
+      an.classList.add('k-angebote-ebene'); buehne.insertBefore(an, $('.k-korn', buehne));
+      $$('.k-angebot', an).forEach(function (b, i) { b.setAttribute('data-sc', '1'); b.setAttribute('data-fx', 'clip'); b.setAttribute('data-d', String(i * 0.15)); b.setAttribute('data-k-drei', ''); });
+      var di = $('.mf-angebote__direkt', an); if (di) { di.setAttribute('data-sc', '1'); di.setAttribute('data-fx', 'rise'); di.setAttribute('data-d', '0.5'); di.setAttribute('data-k-drei', ''); }
+      angeboteFertig = true; sammeln(); messen(); return true;
+    }
     if (!DREI || ORD || angeboteFertig) return true;   /* Aufräumen: die Angebote baut preise.js über dem Formular (Schritt ①) */
     var fa = $('[data-k-faecher]', root), karten = $$('#preise .mf-karte');
     if (!fa || karten.length < 3) return false;
@@ -730,9 +746,9 @@
     var coord = koord = FEST_K !== null ? FEST_K : sceneCoord(p01, SCENES, HOLD), szene = Math.round(coord);   /* ?k= hält ein Bild fest (Prüfen) */
     if (ORD) {   /* aktiver Bereich nach Lage: Kontakt, sobald das Formular oben ist; Angebote, sobald sie im Bild sind; sonst Start */
       var fs = formStart(), an = $('#angebote'), fT = fs ? fs.getBoundingClientRect().top : 1e9, aT = an ? an.getBoundingClientRect().top : 1e9;
-      szene = fT < H * 0.45 ? 2 : aT < H * 0.7 ? 1 : 0;
+      szene = fT < H * 0.45 ? 2 : ABL ? (coord > 0.5 ? 1 : 0) : aT < H * 0.7 ? 1 : 0;
       /* schmal: gleitet das Formular-Blatt über die Blume, blendet sie weich aus – sie ist nie nur halb zu sehen */
-      var ueber = ORD_SEITE ? 0 : klemm((ORD_UNTEN + 14 - aT) / Math.max(60, ORD_UNTEN * 0.3)), deck = (1 - ueber).toFixed(3);
+      var ueber = ORD_SEITE ? 0 : klemm((ORD_UNTEN + 14 - (ABL ? fT : aT)) / Math.max(60, ORD_UNTEN * 0.3)), deck = (1 - ueber).toFixed(3);
       if (leinwand.style.opacity !== deck) { leinwand.style.opacity = deck; schein.style.visibility = ueber > 0.98 ? 'hidden' : ''; }
     }
     if (szene !== gezeigt) { gezeigt = szene; navKnoepfe.forEach(function (b, i) { if (i === szene) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
@@ -869,7 +885,7 @@
   }
   if (window.PREISE || document.readyState !== 'loading') los(); else document.addEventListener('DOMContentLoaded', los);
   window.__kristall = {
-    zustand: function () { return { koord: koord, gl: !!gl, ableitung: ableitung, radius: RADIUS, seed: SEED, dreiecke: geoDaten ? geoDaten.length / STRIDE / 3 : 0, blume: ART, voll: VOLL, farbe: VOLL ? html.getAttribute('data-bluetenfarbe') : null, lycoris: LYCORIS, drei: DREI, ordnung: ORD, lage: ORD ? html.getAttribute("data-k-lage") : null, bilder: SCENES, baum: BAUM, baumDreiecke: baumAnzahl / 3, ring: BAUM ? (ruhig ? 1 : klemm(koord / 5)) : null, offen: BLUME ? (ruhig || LYCORIS ? 1 : offenBei(koord)) : null, blumeDreiecke: blumeAnzahl / 3 }; },
+    zustand: function () { return { koord: koord, gl: !!gl, ableitung: ableitung, radius: RADIUS, seed: SEED, dreiecke: geoDaten ? geoDaten.length / STRIDE / 3 : 0, blume: ART, voll: VOLL, farbe: VOLL ? html.getAttribute('data-bluetenfarbe') : null, lycoris: LYCORIS, drei: DREI, ordnung: ORD, ablauf: ABL, rosette: ORD_ROSETTE, lage: ORD ? html.getAttribute("data-k-lage") : null, bilder: SCENES, baum: BAUM, baumDreiecke: baumAnzahl / 3, ring: BAUM ? (ruhig ? 1 : klemm(koord / 5)) : null, offen: BLUME ? (ruhig || LYCORIS ? 1 : offenBei(koord)) : null, blumeDreiecke: blumeAnzahl / 3 }; },
     geometrie: geometrie, springe: springe, zuAngeboten: zuAngeboten, zumKontakt: zumKontakt, keys: function () { return KEYS; }
   };
 })();

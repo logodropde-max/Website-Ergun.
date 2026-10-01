@@ -504,7 +504,10 @@ window.LEITFADEN = {
       if (titel) titel.focus({ preventScroll: true });
       if (ORD) {   /* weich zum Formular unter den Angeboten (Leiste oben bleibt frei) */
         var fz = (A.art ? oben : (istAnfrage ? anfrageBox : dyn)).getBoundingClientRect().top;
-        if (fz < 60 || fz > window.innerHeight * 0.4) window.scrollBy({ top: fz - 72, behavior: ruhig ? 'auto' : 'smooth' });
+        if (fz < 60 || fz > window.innerHeight * 0.4) {
+          if (window.__kristall && window.__kristall.zumKontakt) window.__kristall.zumKontakt();   /* misst ohne Einblend-Verschiebung */
+          else window.scrollBy({ top: fz - 72, behavior: ruhig ? 'auto' : 'smooth' });
+        }
       } else {
         var obenY = box.getBoundingClientRect().top;
         if (obenY < -40 || obenY > window.innerHeight * 0.5) box.scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });

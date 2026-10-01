@@ -1,5 +1,8 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
+## Ablauf der Blume (`?ablauf=neu`, 01.10.2026 abends, Rückweg Tag `vor-ablauf`)
+- `ABLAUF_STANDARD` / `window.ERGUN_ABLAUF` / Klasse `ablauf-neu` (nur mit Aufräumen). `kristall.js` (`ABL`): `angeboteBauen()` holt `#angebote` als `.k-angebote-ebene` in die Bühne (Bild 02, `data-sc=1`, gestaffelt 0/0,15/0,3); `ordnungLage()`: Bild 02 = Rosette von oben (el 88, ≤ +10 %), Desktop rechts in der freien Fläche (Angebote links), schmal oben mit `--k-ang-oben` für die Angebote darunter; `zuAngeboten()` = Bild 02. Prüfwert `zustand().rosette` = [x, y, Radius].
+
 ## Aufräumen „Lycoris 3“ (01.10.2026, Standard seit Emres OK; vorher `?ordnung=alt`, Rückweg Tag `vor-aufraeumen`)
 - Schalter `ORDNUNG_STANDARD` / `window.ERGUN_ORDNUNG` / Klasse `ordnung-neu` (nur Lycoris 3 mit voller Blume). `kristall.js` (`ORD`): entfernt Altlasten (alte Leiste/Fußzeile/Szene, Vorlagen, Bühnenbilder 02–05, Cover-Dopplungen, rechte Navigation, `.mf-agentur`), Leiste ohne Menü (`zuAngeboten()`, `zumKontakt()`, aktiver Bereich nach Lage), Kamera aus `ordnungLage()`: Ausmaß der Blume je Blickwinkel → Start mittig ganz, Bild 2 genau von oben (el 88, ≤ +10 %), Bild 3 rechts neben der Spalte (`data-k-lage="seite"`) oder schmal oben mit Text darunter (`"oben"`, `--k-oben`, Formular als Blatt, Blume blendet beim Überdecken aus). Kein Wachsen (`wachsen = 1`), Stiel fest (`STIEL = 2.6`, `blume.js bauen(…, stiel)`).
 - `preise.js` (`ORD`): `#angebote` (3 × `.k-angebot`, Preise aus `artPreise()`) = Schritt ①, Start mit „Ihre Anfrage“ (allgemein), kein „Zurück“ zu ①, `P.zeigeSchritt('art')` scrollt zu den Angeboten. Test `aufraeumen.test.mjs`.

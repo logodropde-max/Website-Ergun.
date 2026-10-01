@@ -343,3 +343,13 @@ html.ordnung-neu[data-k-lage="oben"] .mf-angebote .k-angebot { font-size: min(ca
   html.ordnung-neu .mf-angebote .k-angebot__info { font-size: 13px; }
 }
 @media (max-width: 359px) { html.ordnung-neu .k-kopf__links { gap: 10px; } html.ordnung-neu .k-kopf__links a { letter-spacing: 0.08em; } }
+/* ---------- Ablauf der Blume (?ablauf=neu, 01.10. abends): Bild 02 = Rosette von oben + die drei Angebote daneben (Handy: darunter) ---------- */
+.k-angebote-ebene { position: absolute; z-index: 3; margin: 0; pointer-events: none; }
+html[data-k-lage="seite"] .k-angebote-ebene { left: 7cqw; top: 50%; transform: translateY(-50%); width: min(860px, 46cqw); }
+html[data-k-lage="oben"] .k-angebote-ebene { left: 20px; right: 20px; top: var(--k-ang-oben, 50%); width: auto; }
+.k-angebote-ebene .k-angebot, .k-angebote-ebene .mf-angebote__direkt { pointer-events: auto; }
+html[data-k-lage="seite"] .k-angebote-ebene .k-angebot { font-size: min(calc(min(860px, 46cqw) / 9.4), 8.6cqh); }
+html[data-k-lage="oben"] .k-angebote-ebene .k-angebot { font-size: min(calc((100cqw - 40px) / 9.6), 52px, 5.6cqh); }
+html[data-k-lage="oben"] .k-angebote-ebene .mf-angebote__liste { gap: clamp(8px, 1.6cqh, 18px); }
+html[data-k-lage="oben"] .k-angebote-ebene .k-angebot__info { margin-top: 0.35em; }
+html[data-k-lage="oben"] .k-angebote-ebene .mf-angebote__direkt { margin-top: clamp(8px, 1.6cqh, 18px); min-height: 44px; }

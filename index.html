@@ -59,6 +59,10 @@ window.ERGUN_TITEL = 'lycoris3';
   window.ERGUN_ORDNUNG = wahl === 'lycoris3' && new URLSearchParams(location.search).get('blume') !== 'lilie' && (ow === 'neu' || (ORDNUNG_STANDARD && ow !== 'alt'));
   var html = document.documentElement;
   html.classList.toggle('ordnung-neu', window.ERGUN_ORDNUNG);
+  /* Ablauf der Blume (01.10. abends, Vorschau ?ablauf=neu): Start → Angebote um die Rosette von oben → Formular. ABLAUF_STANDARD = true nach Emres OK */
+  var ABLAUF_STANDARD = false, ab = new URLSearchParams(location.search).get('ablauf');
+  window.ERGUN_ABLAUF = window.ERGUN_ORDNUNG && (ab === 'neu' || (ABLAUF_STANDARD && ab !== 'alt'));
+  html.classList.toggle('ablauf-neu', window.ERGUN_ABLAUF);
   html.classList.toggle('titel-maschine', m); html.classList.toggle('titel-neu', neu); html.classList.toggle('titel-kristall', k); html.classList.toggle('titel-blume', bl || wahl === 'baum'); html.classList.toggle('titel-lycoris', wahl === 'lycoris' || wahl === 'lycoris3'); html.classList.toggle('titel-drei', wahl === 'lycoris3'); html.classList.toggle('titel-baum', wahl === 'baum');
   if (m) {   /* nur dann: CSS + Vorlader des Morgenbilds */
     var c = document.createElement('link'); c.rel = 'stylesheet'; c.href = 'maschine.css?v=3'; document.head.appendChild(c);
@@ -73,7 +77,7 @@ window.ERGUN_TITEL = 'lycoris3';
     html.setAttribute('data-schrift', 'vorlage');
     var fl = document.createElement('link'); fl.rel = 'preload'; fl.as = 'font'; fl.type = 'font/woff2'; fl.href = 'schriften/Federant-Regular.woff2'; fl.setAttribute('crossorigin', ''); document.head.appendChild(fl);
   }
-  if (k) { var kc = document.createElement('link'); kc.rel = 'stylesheet'; kc.href = 'kristall.css?v=34'; document.head.appendChild(kc); }
+  if (k) { var kc = document.createElement('link'); kc.rel = 'stylesheet'; kc.href = 'kristall.css?v=35'; document.head.appendChild(kc); }
   if (wahl === 'alt') ['emre3d-folge-1', 'emre3d-folge-2', 'hund-folge'].forEach(function (n) {   /* Vorlader der alten Figur nur hier */
     var l = document.createElement('link'); l.rel = 'preload'; l.as = 'image'; l.href = 'bilder/hero/figuren/' + n + '.webp?v=19';
     l.setAttribute('fetchpriority', 'low'); l.media = '(prefers-reduced-motion: no-preference)'; document.head.appendChild(l);
@@ -1597,7 +1601,7 @@ html.titel-neu {
 <script>
 /* Auftrag 44: je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
 (function () {
-  var liste = window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'baum' ? ['js/baum.js?v=6', 'js/kristall.js?v=41'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris' || window.ERGUN_WAHL === 'lycoris3') ? ['js/blume.js?v=10', 'js/kristall.js?v=41'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=41'] : [];
+  var liste = window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'baum' ? ['js/baum.js?v=6', 'js/kristall.js?v=42'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris' || window.ERGUN_WAHL === 'lycoris3') ? ['js/blume.js?v=10', 'js/kristall.js?v=42'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=42'] : [];
   liste.forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
 })();
 </script>
@@ -1622,7 +1626,7 @@ html.titel-neu {
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
-<script src="js/preise.js?v=11"></script>
+<script src="js/preise.js?v=12"></script>
 <script>
 /* Kostenloses Erstgespräch: eine Karte mit allen Feldern (seit 25.09. abends keine Schritte mehr).
    Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)
