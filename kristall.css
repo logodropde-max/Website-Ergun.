@@ -353,3 +353,26 @@ html[data-k-lage="oben"] .k-angebote-ebene .k-angebot { font-size: min(calc((100
 html[data-k-lage="oben"] .k-angebote-ebene .mf-angebote__liste { gap: clamp(8px, 1.6cqh, 18px); }
 html[data-k-lage="oben"] .k-angebote-ebene .k-angebot__info { margin-top: 0.35em; }
 html[data-k-lage="oben"] .k-angebote-ebene .mf-angebote__direkt { margin-top: clamp(8px, 1.6cqh, 18px); min-height: 44px; }
+/* ---------- feine Blume (?blume=fein, 01.10.2026): Hintergrund hinter der Blüte – violetter Lichthof, Kupferstich der Dahlie, Pollen ---------- */
+html.blume-fein .k-schein { background: radial-gradient(closest-side, rgba(88, 48, 150, 0.46), rgba(70, 36, 120, 0.16) 48%, rgba(40, 20, 70, 0.05) 72%, transparent 100%); }
+.k-stich { position: absolute; left: 0; top: 0; color: var(--k-bone); pointer-events: none; opacity: 0; will-change: transform, opacity; transform-origin: 50% 50%; }
+.k-stich svg { display: block; width: 100%; height: 100%; }
+.k-pollen { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+/* feine Blume – Angebote und Formular etwas hochwertiger (gleiche Texte, Farben, Abläufe): feine Linie unter dem Angebot wächst beim Zeigen,
+   gewählt = Linie + Punkt in Lila; Formular-Karten mit weichem lila Schein statt harter Kante */
+html.blume-fein .k-angebot { position: relative; }
+html.blume-fein .k-angebot__wort { display: inline-block; transition: color 0.25s, transform 0.35s var(--k-ease); }
+html.blume-fein .k-angebot__info { transition: opacity 0.25s; }
+html.blume-fein .k-angebot::after { content: ""; position: absolute; left: 0; bottom: -0.35em; width: min(100%, 11em); height: 1px; background: linear-gradient(90deg, var(--k-akzent), transparent); transform: scaleX(0); transform-origin: left; transition: transform 0.45s var(--k-ease); font-size: 15px; }
+@media (hover: hover) and (pointer: fine) {
+  html.blume-fein .k-angebot:hover .k-angebot__wort { transform: translateX(0.08em); }
+  html.blume-fein .k-angebot:hover .k-angebot__info { opacity: 1; }
+  html.blume-fein .k-angebot:hover::after { transform: scaleX(1); }
+}
+html.blume-fein .k-angebot[aria-pressed="true"]::after { transform: scaleX(1); }
+html.blume-fein .k-angebot[aria-pressed="true"] .k-angebot__info { opacity: 1; }
+html.blume-fein .k-angebot:active .k-angebot__wort { transform: scale(0.98); }
+html.blume-fein :is(.mf-stufe, .mf-chip, .mf-komplett) { transition: border-color 0.2s, background-color 0.2s, box-shadow 0.3s, transform 0.2s; }
+html.blume-fein :is(.mf-stufe, .mf-chip, .mf-komplett)[aria-pressed="true"] { background: radial-gradient(120% 140% at 0% 0%, rgba(155, 107, 203, 0.16), transparent 60%); box-shadow: inset 0 0 0 1px var(--k-akzent), 0 10px 30px -18px rgba(155, 107, 203, 0.7); }
+@media (hover: hover) and (pointer: fine) { html.blume-fein :is(.mf-stufe, .mf-chip, .mf-komplett):hover { border-color: color-mix(in srgb, var(--k-akzent) 55%, transparent); } }
+html.blume-fein .auswahl { background: linear-gradient(180deg, rgba(155, 107, 203, 0.06), transparent 70%); }

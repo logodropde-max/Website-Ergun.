@@ -20,7 +20,7 @@
 
   var STRIDE = 13;
   /* Herz = wohin die Kamera schaut (wie HEART der Vorlage) – je Art die Mitte der Blüte */
-  var HERZ = { lilie: [0, 0.25, 0], rose: [0, 0.42, 0], tulpe: [0, 0.55, 0], dahlie: [0, 0.16, 0], pfingstrose: [0, 0.2, 0], lotus: [0, 0.28, 0] };
+  var HERZ = { lilie: [0, 0.25, 0], rose: [0, 0.42, 0], tulpe: [0, 0.55, 0], dahlie: [0, 0.16, 0], pfingstrose: [0, 0.2, 0], lotus: [0, 0.28, 0], fein: [0, 0.17, 0], feinOhneTau: [0, 0.17, 0] };
 
   /* ---------- Netz-Baukasten (wie buildMesh der Vorlage) ---------- */
   function netz() {
@@ -74,9 +74,10 @@
         var U = c.U, V = c.V, g = [], N = [], i, j;
         for (i = 0; i <= U; i++) { g.push([]); for (j = 0; j <= V; j++) g[i].push(c.punkt(i / U, (j / V) * 2 - 1)); }
         for (i = 0; i <= U; i++) { N.push([]); for (j = 0; j <= V; j++) N[i].push(norm(cross(sub(g[Math.min(i + 1, U)][j], g[Math.max(i - 1, 0)][j]), sub(g[i][Math.min(j + 1, V)], g[i][Math.max(j - 1, 0)])))); }
-        function x(q, nr, s) { return push(q, nr, s, c.phase, c.art, c.staffel, c.grund); }
-        var vorn = n; for (i = 0; i <= U; i++) for (j = 0; j <= V; j++) x(g[i][j], N[i][j], i / U);
-        var hinten = n; for (i = 0; i <= U; i++) for (j = 0; j <= V; j++) x(sub(g[i][j], mul(N[i][j], c.dicke)), mul(N[i][j], -1), i / U);
+        /* quer: Lage über die Blattbreite (0 Rand … 0,5 Mitte … 1 Rand) statt der Staffel – nur für die feine Blume (wächst nicht, Staffel ungenutzt) */
+        function x(q, nr, s, jj) { return push(q, nr, s, c.phase, c.art, c.quer ? (jj === undefined ? 0.5 : jj / V) : c.staffel, c.grund); }
+        var vorn = n; for (i = 0; i <= U; i++) for (j = 0; j <= V; j++) x(g[i][j], N[i][j], i / U, j);
+        var hinten = n; for (i = 0; i <= U; i++) for (j = 0; j <= V; j++) x(sub(g[i][j], mul(N[i][j], c.dicke)), mul(N[i][j], -1), i / U, j);
         for (i = 0; i < U; i++) for (j = 0; j < V; j++) {
           var a = i * (V + 1) + j, b = a + V + 1;
           idx.push(vorn + a, vorn + a + 1, vorn + b, vorn + a + 1, vorn + b + 1, vorn + b);
@@ -84,7 +85,7 @@
         }
         function rand(liste, aus) {   /* Streifen zwischen Vorder- und Rückkante – der helle Rand im Chrom */
           var st = n;
-          liste.forEach(function (q) { var o = aus(q[0], q[1]); x(g[q[0]][q[1]], o, q[0] / U); x(sub(g[q[0]][q[1]], mul(N[q[0]][q[1]], c.dicke)), o, q[0] / U); });
+          liste.forEach(function (q) { var o = aus(q[0], q[1]); x(g[q[0]][q[1]], o, q[0] / U, q[1]); x(sub(g[q[0]][q[1]], mul(N[q[0]][q[1]], c.dicke)), o, q[0] / U, q[1]); });
           for (var k = 0; k < liste.length - 1; k++) { var a2 = st + k * 2; idx.push(a2, a2 + 1, a2 + 2, a2 + 1, a2 + 3, a2 + 2); }
         }
         var l = [], r = [], sp = [];
@@ -230,7 +231,38 @@
       if (q.welle) pt = add(pt, mul(nOut, q.welle * w * Math.pow(Math.abs(v), 2) * Math.sin(u * 13 + v * 3 + q.phase)));
       return pt;
     }
-    m.schale({ punkt: punkt, U: U, V: V, dicke: q.dicke, phase: q.phase, staffel: q.staffel, art: q.art, grund: q.grund || q.basis });
+    m.schale({ punkt: punkt, U: U, V: V, dicke: q.dicke, phase: q.phase, staffel: q.staffel, art: q.art, grund: q.grund || q.basis, quer: q.quer });
+  }
+
+  /* ---------- feine Dahlie (?blume=fein, 01.10.2026 – Ausnahme auf ERGUNs Wunsch): dünne, schmale, löffelförmige Blätter mit weich gerundeter,
+     fein zugespitzter Spitze, die sich leicht ein- bzw. ausrollt; viele dicht gestaffelte Reihen im goldenen Winkel – innen klein und
+     geschlossen, außen groß und offen → von oben eine ruhige Rosette, von der Seite eine volle Kuppel. Mitte: goldene Staubgefäß-Punkte
+     (Art 1), dazu wenige Tautropfen (Art 0,7, ?tau=aus = ohne). Stiel und Blätter schlanker, Blätter mit Mittelrippe (Adern malt der Shader). */
+  function feineDahlie(m, seed, fein, stiel, tau) {
+    var r = rng(seed + 59), gold = Math.PI * (3 - Math.sqrt(5)), P = Math.round(168 * fein), UU = fein < 0.9 ? 9 : 11, VV = fein < 0.9 ? 5 : 7, aussen = [];
+    for (var i = 0; i < P; i++) {
+      var t = i / (P - 1), phi = i * gold + (r() - 0.5) * 0.03, phase = r() * 6.28;
+      var L = 0.13 + 0.86 * Math.pow(1 - t, 0.95), th0 = 0.06 + 1.42 * Math.pow(1 - t, 1.25), rb = 0.02 + 0.1 * (1 - t), curl = 0.32 * (1 - t) - 0.9 * Math.pow(t, 1.4);
+      (function (L, th0, curl, t) {
+        schale(m, { phi: phi, basis: [Math.cos(phi) * rb, 0.04 + 0.25 * Math.pow(t, 0.9), Math.sin(phi) * rb], L: L, U: UU, V: VV, phase: phase, staffel: 0, art: 0, dicke: 0.0032, quer: true,
+          theta: function (u) { return th0 + curl * Math.pow(u, 2.2); },
+          breite: function (u) { return L * (0.19 - 0.05 * t) * Math.pow(Math.sin(Math.PI * Math.min(1, 0.07 + u * 0.95)), 0.62); },   /* schmal, Spitze weich gerundet */
+          wolb: function (u) { return (1.15 + 0.6 * t) * (0.65 + 0.35 * Math.sin(Math.PI * Math.min(1, u * 1.1))); }, roll: function (u) { return 0.18 * smooth(0.6, 1, u); }, welle: 0.012 });
+      })(L, th0, curl, t);
+      if (t < 0.12) aussen.push([phi, L, th0]);
+    }
+    /* Mitte: goldene Staubgefäße, fein gestaffelt (goldener Winkel) */
+    var S = Math.round(46 * fein);
+    for (var s = 0; s < S; s++) {
+      var a = s * gold, rr = 0.01 + 0.085 * Math.sqrt(s / S), h = 0.43 - 0.07 * (s / S);
+      m.kugel([Math.cos(a) * rr, h, Math.sin(a) * rr], 0.017, 0.015, 1, 0, [0, 0.3, 0]);
+    }
+    if (tau) [[3, 0.62], [11, 0.48], [19, 0.7], [27, 0.55]].forEach(function (d) {   /* Tautropfen auf äußeren Blättern */
+      var b = aussen[d[0] % aussen.length]; if (!b) return; var ph = b[0], dist = b[1] * d[1], th = b[2] + 0.05;
+      var dir = [Math.cos(ph) * Math.sin(th), Math.cos(th), Math.sin(ph) * Math.sin(th)], p = add([Math.cos(ph) * 0.12, 0.05, Math.sin(ph) * 0.12], mul(dir, dist));
+      m.kugel(add(p, [0, 0.014, 0]), 0.016, 0.012, 0.7, 0, p);
+    });
+    gruenTeile(m, seed, fein, stiel, true);
   }
 
   /* Blüte in Kränzen: i = 0 außen … N−1 innen, goldener Winkel; je Art Länge, Breite, Neigung, Wölbung */
@@ -276,23 +308,23 @@
   }
 
   /* grüner Kelch, Stiel (Röhre der Vorlage, leicht geschwungen) und zwei Stielblätter mit Mittelrippe */
-  function gruenTeile(m, seed, fein, stiel) {
+  function gruenTeile(m, seed, fein, stiel, zart) {
     /* stiel = Länge des Stiels (Standard 4,3). Kürzer (Aufräumen, ?ordnung=neu): die ganze Blume passt groß ins Bild – Blätter wachsen mit */
     var r = rng(seed + 77), K = fein < 0.8 ? 5 : 6, SL = stiel || 4.3, BL = Math.min(1, 0.45 + 0.55 * SL / 4.3);
-    m.kugel([0, 0.03, 0], 0.11, 0.08, 3, 0.05, [0, 0, 0]);   /* Blütenboden */
+    m.kugel([0, 0.03, 0], zart ? 0.09 : 0.11, zart ? 0.065 : 0.08, 3, 0.05, [0, 0, 0]);   /* Blütenboden */
     for (var i = 0; i < K; i++) {
       var phi = (i / K) * Math.PI * 2 + 0.3;
-      schale(m, { phi: phi, basis: [Math.cos(phi) * 0.07, 0.0, Math.sin(phi) * 0.07], L: 0.36, U: 7, V: 5, phase: r() * 6.28, staffel: 0.05, art: 3, dicke: 0.008,
+      schale(m, { phi: phi, basis: [Math.cos(phi) * 0.07, 0.0, Math.sin(phi) * 0.07], L: 0.36, U: 7, V: 5, phase: r() * 6.28, staffel: 0.05, art: 3, dicke: zart ? 0.004 : 0.008, quer: zart,
         theta: function (u) { return 1.75 + 0.5 * u; },
         breite: function (u) { return 0.075 * Math.pow(Math.sin(Math.PI * Math.min(1, 0.05 + u * 0.97)), 0.8); },
         wolb: function () { return 0.9; }, roll: null, welle: 0.03 });
     }
     var pts = [];
     for (var k = 0; k <= 40; k++) { var s = k / 40; pts.push([0.11 * Math.sin(s * 2.6), 0.0 - s * SL, 0.05 * Math.sin(s * 1.6)]); }
-    m.roehre({ pts: pts, kind: 2, w: 0.045, lat: [1, 0, 0], bulb: false, phase: 0, stagger: 0, base: [0, 0, 0] });
+    m.roehre({ pts: pts, kind: 2, w: zart ? 0.028 : 0.045, lat: [1, 0, 0], bulb: false, phase: 0, stagger: 0, base: [0, 0, 0] });
     [[0.36, 0.2, 1.0], [0.6, Math.PI + 0.35, 0.85]].forEach(function (b) {   /* zwei Blätter: lanzettlich, mit Falz (Mittelrippe), hängen leicht über */
       var s = b[0], ap = [0.11 * Math.sin(s * 2.6), -s * SL, 0.05 * Math.sin(s * 1.6)], Lb = b[2] * BL;
-      schale(m, { phi: b[1], basis: ap, L: Lb, U: 12, V: 4, phase: r() * 6.28, staffel: 0.1, art: 3, dicke: 0.008, falte: 0.32,
+      schale(m, { phi: b[1], basis: ap, L: Lb, U: zart ? 16 : 12, V: zart ? 6 : 4, phase: r() * 6.28, staffel: 0.1, art: 3, dicke: zart ? 0.004 : 0.008, falte: zart ? 0.18 : 0.32, quer: zart,
         theta: function (u) { return 0.75 + 1.0 * u * u; },
         breite: function (u) { return Lb * 0.13 * Math.pow(Math.sin(Math.PI * Math.min(1, 0.03 + u * 0.98)), 0.7); },
         wolb: function () { return 0.5; }, roll: null, welle: 0.03, grund: ap });
@@ -300,7 +332,8 @@
   }
   function vollArt(name) { return function (m, offen, seed, fein, stiel) { vollBluete(m, name, seed, fein); gruenTeile(m, seed, fein, stiel); }; }
 
-  var ARTEN = { lilie: lilie, rose: rose, tulpe: tulpe, dahlie: vollArt('dahlie'), pfingstrose: vollArt('pfingstrose'), lotus: vollArt('lotus') };
+  var ARTEN = { lilie: lilie, rose: rose, tulpe: tulpe, dahlie: vollArt('dahlie'), pfingstrose: vollArt('pfingstrose'), lotus: vollArt('lotus'),
+    fein: function (m, offen, seed, fein, stiel) { feineDahlie(m, seed, fein, stiel, true); }, feinOhneTau: function (m, offen, seed, fein, stiel) { feineDahlie(m, seed, fein, stiel, false); } };
   var VOLL = ['dahlie', 'pfingstrose', 'lotus'];
   function bauen(art, offen, seed, fein, stiel) {
     var m = netz(); (ARTEN[art] || rose)(m, klemm(offen), seed || 7, fein === undefined ? 1 : fein, stiel);
@@ -315,16 +348,16 @@
 
   /* ---------- Shader: rotes Chrom der Vorlage, hier in Pink (Schatten #9E4F74, Glanzlichter fast weiß) ---------- */
   var VERT = 'attribute vec3 a_pos; attribute vec3 a_nrm; attribute vec4 a_aux; attribute vec3 a_base;\n' +
-    'uniform mat4 u_vp; uniform mat4 u_model; uniform vec2 u_offset; uniform float u_time; uniform float u_bloom; uniform float u_sway; uniform float u_stem; uniform vec3 u_herz;\n' +
-    'varying vec3 v_n; varying vec3 v_w; varying float v_s; varying float v_g;\n' +
+    'uniform mat4 u_vp; uniform mat4 u_model; uniform vec2 u_offset; uniform float u_time; uniform float u_bloom; uniform float u_sway; uniform float u_stem; uniform vec3 u_herz; uniform float u_fein;\n' +
+    'varying vec3 v_n; varying vec3 v_w; varying float v_s; varying float v_g; varying float v_k; varying float v_q;\n' +
     'void main() {\n' +
-    '  vec3 p = a_pos; float k = a_aux.z; v_g = k > 1.5 ? 1.0 : 0.0;\n' +
+    '  vec3 p = a_pos; float k = a_aux.z; v_g = k > 1.5 ? 1.0 : 0.0; v_k = k; v_q = a_aux.w;\n' +
     '  if (k < 1.5 || k > 2.5) {\n' +
     '    float g = clamp(u_bloom * 1.6 - a_aux.w * 0.6, 0.0, 1.0); g = 1.0 - pow(1.0 - g, 3.0);\n' +
     '    vec3 b0 = a_base; float sc = g;\n' +
     '    if (k > 2.5 && a_base.y < -0.05) { b0.y = a_base.y * u_stem; sc *= smoothstep(0.15, 0.7, u_stem); }\n' +
     '    p = b0 + (p - a_base) * sc;\n' +
-    '    float amp = (k < 0.5 ? 0.03 : 0.06) * u_sway * a_aux.x * a_aux.x;\n' +
+    '    float amp = (k < 0.5 ? 0.03 : (k < 1.2 ? mix(0.06, 0.004, u_fein) : 0.06)) * u_sway * a_aux.x * a_aux.x;\n' +
     '    p += amp * vec3(sin(u_time * 0.9 + a_aux.y), 0.5 * sin(u_time * 1.3 + a_aux.y * 1.7), cos(u_time * 0.7 + a_aux.y * 1.3));\n' +
     '  } else if (p.y < 0.0) { p.y *= u_stem; }\n' +
     '  vec4 w = u_model * vec4(p - u_herz, 1.0);\n' +
@@ -382,5 +415,50 @@
     .replace('  vec3 col = u_red * (0.04 + 0.22 * dif);', '  vec3 rot = mix(u_red, u_gruen, v_g); vec3 heiss = mix(u_hot, u_gruenHot, v_g);\n  vec3 col = rot * (0.04 + 0.22 * dif);')
     .replace('  col += u_red * e * 1.15;', '  col += rot * e * 1.15;').replace('  col += u_hot * pow(e, 3.0) * 0.3;', '  col += heiss * pow(e, 3.0) * 0.3;').replace('  col += u_red * fr * 1.1;', '  col += rot * fr * 1.1;');
 
-  root.ERGUN_BLUME = { STRIDE: STRIDE, HERZ: HERZ, ARTEN: Object.keys(ARTEN), VOLL: VOLL, bauen: bauen, radius: radius, VERT: VERT, FRAG: FRAG, FRAG_VORLAGE: FRAG_VORLAGE, FRAG_VOLL: FRAG_VOLL };
+  /* feine Dahlie (?blume=fein): edles, weiches Material statt Chrom – je Blatt Verlauf tiefes Violett (Grund) → helles Flieder (Spitze),
+     weiches Oberlicht + zartes Gegenlicht in Flieder, dezenter Perlmutt-Schimmer (je nach Winkel Hauch Rosé/Blau), durchscheinende Ränder,
+     feines Kantenlicht; goldene, leicht glimmende Staubgefäße (Art 1), Tautropfen (Art 0,7), grüne Teile mit Mittelrippe und Adern. */
+  var FRAG_FEIN = 'precision highp float;\n' +
+    'uniform vec3 u_eye; uniform vec3 u_red; uniform vec3 u_hot; uniform float u_alpha; uniform vec3 u_gruen; uniform vec3 u_gruenHot; uniform float u_time;\n' +
+    'varying vec3 v_n; varying vec3 v_w; varying float v_s; varying float v_g; varying float v_k; varying float v_q;\n' +
+    'float studio(vec3 r) {\n' +
+    '  float key = pow(max(dot(r, normalize(vec3(-0.3, 0.92, 0.25))), 0.0), 9.0) * 1.7;\n' +
+    '  float box = smoothstep(0.5, 0.9, r.y) * 0.5;\n' +
+    '  float strip = smoothstep(0.62, 0.88, r.x) * smoothstep(-0.5, 0.3, r.y) * 0.55;\n' +
+    '  float hz = exp(-abs(r.y - 0.05) * 6.0) * 0.18;\n' +
+    '  return key + box + strip + hz; }\n' +
+    'void main() {\n' +
+    '  vec3 n = normalize(v_n); vec3 v = normalize(u_eye - v_w); float unten = 0.0; if (dot(n, v) < 0.0) { n = -n; unten = 1.0; }\n' +
+    '  vec3 r = reflect(-v, n); float e = studio(r);\n' +
+    '  float nv = max(dot(n, v), 0.0); float fr = pow(1.0 - nv, 3.0);\n' +
+    '  vec3 L = normalize(vec3(-0.25, 0.9, 0.35)); float dif = max(dot(n, L), 0.0) * 0.75 + 0.25;\n' +
+    '  float gegen = pow(1.0 - nv, 2.0) * (0.45 + 0.55 * smoothstep(-0.3, 0.7, n.y));\n' +
+    '  vec3 col;\n' +
+    '  if (v_g > 0.5) {\n' +
+    '    float a = abs(v_q - 0.5) * 2.0; float rib = 1.0 - smoothstep(0.0, 0.07, a);\n' +
+    '    float ad = abs(fract(v_s * 7.0 - a * 1.7) - 0.5); float ader = (1.0 - smoothstep(0.0, 0.07, ad)) * smoothstep(0.1, 0.25, a) * (1.0 - smoothstep(0.8, 0.98, a));\n' +
+    '    vec3 gr = u_gruen * mix(0.55, 1.05, v_s);\n' +
+    '    col = gr * (0.08 + 0.42 * dif) + gr * e * 0.45 + u_gruenHot * pow(e, 3.0) * 0.1 + gr * gegen * 0.45;\n' +
+    '    col += gr * 0.3 * (rib + 0.45 * ader);\n' +
+    '  } else if (v_k > 0.9) {\n' +
+    '    vec3 gold = vec3(0.95, 0.7, 0.28);\n' +
+    '    col = gold * (0.22 + 0.55 * dif) + vec3(1.0, 0.86, 0.55) * pow(e, 2.0) * 0.5 + gold * 0.3 * (0.7 + 0.3 * sin(u_time * 1.6 + v_w.x * 37.0 + v_w.z * 23.0));\n' +
+    '  } else if (v_k > 0.5) {\n' +
+    '    vec3 hellT = mix(u_red, vec3(1.0), 0.6);\n' +
+    '    col = hellT * 0.12 + vec3(1.0) * pow(max(dot(r, L), 0.0), 70.0) * 3.0 + hellT * fr * 0.9 + vec3(1.0) * pow(e, 4.0) * 0.25;\n' +
+    '  } else {\n' +
+    '    vec3 tief = u_red * vec3(0.3, 0.17, 0.62); vec3 hell = mix(u_red, vec3(1.0, 0.95, 1.0), 0.26);\n' +
+    '    float t = smoothstep(0.0, 1.0, v_s); vec3 grund = mix(tief, hell, t * t * (0.6 + 0.4 * t));\n' +
+    '    col = grund * (0.08 + 0.5 * dif) * (1.0 - 0.35 * unten) * (0.5 + 0.5 * smoothstep(0.0, 0.55, v_s));\n' +
+    '    col += grund * e * 0.42 + u_hot * pow(e, 3.0) * 0.14;\n' +
+    '    vec3 perl = 0.5 + 0.5 * cos(6.2832 * (vec3(0.0, 0.33, 0.67) + fr * 0.85 + v_s * 0.3));\n' +
+    '    col += mix(hell, perl, 0.4) * fr * 0.24;\n' +
+    '    col += hell * vec3(0.92, 0.82, 1.0) * gegen * 0.2;\n' +
+    '    float rand = smoothstep(0.62, 1.0, abs(v_q * 2.0 - 1.0));\n' +
+    '    col += hell * rand * (0.1 + 0.4 * gegen) * (0.4 + 0.6 * t);\n' +
+    '  }\n' +
+    '  col = col / (1.0 + col); col = pow(col, vec3(1.0 / 2.2));\n' +
+    '  gl_FragColor = vec4(col * u_alpha, u_alpha); }';
+
+  root.ERGUN_BLUME = { FRAG_FEIN: FRAG_FEIN, STRIDE: STRIDE, HERZ: HERZ, ARTEN: Object.keys(ARTEN), VOLL: VOLL, bauen: bauen, radius: radius, VERT: VERT, FRAG: FRAG, FRAG_VORLAGE: FRAG_VORLAGE, FRAG_VOLL: FRAG_VOLL };
 })(typeof window !== 'undefined' ? window : globalThis);

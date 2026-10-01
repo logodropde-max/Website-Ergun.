@@ -39,6 +39,10 @@
   /* Ablauf der Blume (01.10. abends, ?ablauf=neu – Ausnahme auf ERGUNs Wunsch): Start (Seitenansicht hinter „ERGUN.“) → Angebote: die Rosette
      genau von oben, die drei Angebote erscheinen gestaffelt daneben (Handy: darunter) → Formular: zurück in die Seitenansicht, zur Seite. */
   var ABL = ORD && !!window.ERGUN_ABLAUF;
+  /* feine Blume (?blume=fein, 01.10. – Ausnahme auf ERGUNs Wunsch): dünne, dicht gestaffelte Blätter, edles Material, goldene Mitte, Tau
+     (?tau=aus = ohne); dazu ein ruhiger Hintergrund: violetter Lichthof, Kupferstich der Dahlie (wächst bei den Angeboten zum Mandala), Pollen */
+  var FEIN = ORD && frage.get('blume') === 'fein';
+  if (FEIN) { ART = frage.get('tau') === 'aus' ? 'feinOhneTau' : 'fein'; html.setAttribute('data-blume', ART); html.classList.add('blume-fein'); }
   var BFEIN = Math.min(window.innerWidth || 1440, window.innerHeight || 900) < 700 ? 0.82 : 1;   /* Handy: etwas weniger Blütenblätter (noch ohne Lücken) */
   var FEST_K = frage.get('k') !== null && frage.get('k') !== '' ? parseFloat(frage.get('k')) : null, FEST_O = frage.get('offen') !== null && frage.get('offen') !== '' ? parseFloat(frage.get('offen')) : null;   /* nur zum Prüfen */
   /* Hintergrund-Muster (Brillant-Streuung, eigenes Bild, kachelbar): Standard seit ERGUNs OK (01.10.); ?muster=aus schaltet es ab; in der Blume nur mit ?muster=b */
@@ -65,6 +69,47 @@
     ['.k-cover-titel', '.k-cover-text', '.k-cover-liste', '.k-von', '[data-k-nav]'].forEach(function (s) { var e = $(s, root); if (e) e.remove(); });
     ['header.nav', 'footer.footer', '.szene', '#dschungel-vorlage', '#kristall-vorlage', '.mf-agentur'].forEach(function (s) { var e = document.querySelector(s); if (e) e.remove(); });
     var spalten = $('.k-spalten', root); if (spalten) spalten.innerHTML = '<span>Persönlich<br>geplant und gebaut</span><span>Kostenloses<br>Erstgespräch</span><span>Scrollen<br>zum Entdecken</span>';
+  }
+
+  /* ---------- feine Blume: Hintergrund hinter der Blüte (Kupferstich der Dahlie + schwebende Pollen) ---------- */
+  var stich = null, pollen = null, pctx = null, POLLEN = [];
+  if (FEIN) {
+    var sv = '<svg viewBox="-100 -100 200 200" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="0.32" stroke-linecap="round" aria-hidden="true" focusable="false">';
+    for (var ring = 0; ring < 6; ring++) {   /* Blattkränze wie ein gestochenes Blatt: Umriss + zwei Schraffurlinien je Blatt */
+      var anz = 8 + ring * 5, rIn = 10 + ring * 14, rOut = rIn + 22, bw = (rOut - rIn) * 0.3;
+      for (var bi = 0; bi < anz; bi++) {
+        var wi = bi * 360 / anz + ring * 7.2, mt = (rIn + rOut) / 2;
+        sv += '<g transform="rotate(' + wi.toFixed(2) + ')"><path d="M' + rIn + ' 0 Q' + mt + ' ' + bw.toFixed(1) + ' ' + rOut + ' 0 Q' + mt + ' ' + (-bw).toFixed(1) + ' ' + rIn + ' 0Z"/>' +
+          '<path d="M' + (rIn + 4) + ' 0.6 L' + (rOut - 5) + ' 0.4 M' + (rIn + 6) + ' -1.6 Q' + mt + ' ' + (-bw * 0.55).toFixed(1) + ' ' + (rOut - 7) + ' -0.8" stroke-width="0.18"/></g>';
+      }
+    }
+    sv += '<circle r="97"/><circle r="99.2" stroke-width="0.18"/>';
+    for (var ti = 0; ti < 120; ti++) sv += '<path transform="rotate(' + (ti * 3) + ')" d="M97 0 L' + (ti % 5 ? 98.4 : 99.2) + ' 0" stroke-width="0.16"/>';
+    stich = document.createElement('div'); stich.className = 'k-stich'; stich.innerHTML = sv + '</svg>';
+    pollen = document.createElement('canvas'); pollen.className = 'k-pollen'; pollen.setAttribute('aria-hidden', 'true');
+    buehne.insertBefore(stich, leinwand); buehne.insertBefore(pollen, leinwand); pctx = pollen.getContext && pollen.getContext('2d');
+    var pr = (function (s) { return function () { s = (s * 16807) % 2147483647; return s / 2147483647; }; })(SEED * 977 + 13);
+    for (var pi = 0, pn = Math.min(window.innerWidth || 1440, 1600) < 760 ? 14 : 30; pi < pn; pi++) POLLEN.push({ x: pr(), y: pr(), z: 0.25 + 0.75 * pr(), ph: pr() * 6.28, lila: pr() < 0.35 });
+  }
+  function hintergrundFein(coord, gx, gy, gr) {
+    if (!FEIN) return;
+    var oben = 1 - Math.min(1, Math.abs(coord - 1) * 1.6), ruhe = smooth(1.4, 2, coord), mand = oben * oben * (3 - 2 * oben);
+    var S = gr * 2.1, sc = 0.82 + 0.38 * mand, dreh = zeit * 1.2 + coord * 18;
+    stich.style.width = stich.style.height = S.toFixed(1) + 'px';
+    stich.style.transform = 'translate(' + (gx - S / 2).toFixed(1) + 'px,' + (gy - S / 2).toFixed(1) + 'px) rotate(' + dreh.toFixed(2) + 'deg) scale(' + sc.toFixed(3) + ')';
+    stich.style.opacity = ((0.055 + 0.07 * mand) * (1 - 0.55 * ruhe) * (ORD_SEITE ? 1 : 0.75)).toFixed(3);
+    if (!pctx) return;
+    var pw = Math.round(W * dpr), ph = Math.round(H * dpr); if (pollen.width !== pw || pollen.height !== ph) { pollen.width = pw; pollen.height = ph; }
+    pctx.setTransform(dpr, 0, 0, dpr, 0, 0); pctx.clearRect(0, 0, W, H);
+    var leise = 1 - 0.6 * ruhe;
+    POLLEN.forEach(function (q) {
+      var y = ((q.y - zeit * 0.006 * q.z - coord * 0.07 * q.z) % 1 + 1) % 1, x = q.x + Math.sin(zeit * 0.22 + q.ph) * 0.012 * q.z;
+      var px = x * W, py = y * H, rr = 0.6 + 1.5 * q.z, al = (0.1 + 0.32 * q.z) * leise * (0.75 + 0.25 * Math.sin(zeit * 0.9 + q.ph * 3));
+      pctx.fillStyle = q.lila ? 'rgba(196, 170, 240,' + (al * 0.35).toFixed(3) + ')' : 'rgba(222, 205, 150,' + (al * 0.35).toFixed(3) + ')';
+      pctx.beginPath(); pctx.arc(px, py, rr * 3.2, 0, 6.2832); pctx.fill();
+      pctx.fillStyle = q.lila ? 'rgba(214, 196, 250,' + al.toFixed(3) + ')' : 'rgba(236, 222, 176,' + al.toFixed(3) + ')';
+      pctx.beginPath(); pctx.arc(px, py, rr, 0, 6.2832); pctx.fill();
+    });
   }
 
   /* ---------- Mathe ---------- */
@@ -389,14 +434,14 @@
       gl.useProgram(prog);
     }
     if (BLUME) {
-      var vs2 = compile(gl.VERTEX_SHADER, B.VERT), fs2 = compile(gl.FRAGMENT_SHADER, VOLL ? B.FRAG_VOLL : LYCORIS ? B.FRAG_VORLAGE : B.FRAG);
+      var vs2 = compile(gl.VERTEX_SHADER, B.VERT), fs2 = compile(gl.FRAGMENT_SHADER, FEIN ? B.FRAG_FEIN : VOLL ? B.FRAG_VOLL : LYCORIS ? B.FRAG_VORLAGE : B.FRAG);
       if (!vs2 || !fs2) return false;
       progB = gl.createProgram(); gl.attachShader(progB, vs2); gl.attachShader(progB, fs2); gl.linkProgram(progB); gl.deleteShader(vs2); gl.deleteShader(fs2);
       if (!gl.getProgramParameter(progB, gl.LINK_STATUS)) return false;
       gl.getExtension('OES_element_index_uint');
       vboB = gl.createBuffer(); iboB = gl.createBuffer(); attrB = [];
       [['a_pos', 3, 0], ['a_nrm', 3, 3], ['a_aux', 4, 6], ['a_base', 3, 10]].forEach(function (a) { var l = gl.getAttribLocation(progB, a[0]); if (l >= 0) attrB.push([l, a[1], a[2]]); });
-      ['u_vp', 'u_model', 'u_offset', 'u_time', 'u_bloom', 'u_sway', 'u_stem', 'u_herz', 'u_eye', 'u_red', 'u_tief', 'u_hot', 'u_alpha', 'u_gruen', 'u_gruenHot'].forEach(function (n) { locB[n] = gl.getUniformLocation(progB, n); });
+      ['u_vp', 'u_model', 'u_offset', 'u_time', 'u_bloom', 'u_sway', 'u_stem', 'u_herz', 'u_eye', 'u_red', 'u_tief', 'u_hot', 'u_alpha', 'u_gruen', 'u_gruenHot', 'u_fein'].forEach(function (n) { locB[n] = gl.getUniformLocation(progB, n); });
       gl.useProgram(prog); blumeStand = -1;
     }
     gl.enable(gl.DEPTH_TEST); gl.clearColor(0, 0, 0, 0);
@@ -694,13 +739,13 @@
     for (i = 0; i < ix.length; i += 3) {
       var a = proj[ix[i]], b = proj[ix[i + 1]], e = proj[ix[i + 2]], nn = norm(add(add(a[3], b[3]), e[3]));
       if (dot(nn, blick) < 0) nn = mul(nn, -1);
-      tris.push({ gruen: VOLL && d[ix[i] * S + 8] > 1.5, p: [a, b, e], z: a[2] + b[2] + e[2], hell: 0.18 + 0.62 * Math.max(0, dot(nn, licht)) + 0.3 * Math.pow(1 - Math.max(0, dot(nn, blick)), 2) });
+      tris.push({ gold: FEIN && d[ix[i] * S + 8] > 0.9 && d[ix[i] * S + 8] < 1.5, gruen: VOLL && d[ix[i] * S + 8] > 1.5, p: [a, b, e], z: a[2] + b[2] + e[2], hell: 0.18 + 0.62 * Math.max(0, dot(nn, licht)) + 0.3 * Math.pow(1 - Math.max(0, dot(nn, blick)), 2) });
     }
     tris.sort(function (p, q) { return q.z - p.z; });
     c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
-    var akz = parseInt(AKZENT.slice(1), 16), t = VOLL ? [(akz >> 16) & 255, (akz >> 8) & 255, akz & 255] : LYCORIS ? [227, 19, 27] : [214, 150, 180], s = LYCORIS ? [70, 4, 8] : [74, 30, 52], w = LYCORIS ? [255, 150, 140] : [250, 228, 238];
+    var akz = parseInt(AKZENT.slice(1), 16), t = VOLL ? [(akz >> 16) & 255, (akz >> 8) & 255, akz & 255] : LYCORIS ? [227, 19, 27] : [214, 150, 180], s = FEIN ? [42, 22, 82] : LYCORIS ? [70, 4, 8] : [74, 30, 52], w = FEIN ? [238, 228, 252] : LYCORIS ? [255, 150, 140] : [250, 228, 238];
     tris.forEach(function (q) {
-      var h = Math.min(1, q.hell), ts = q.gruen ? [79, 122, 74] : t, ss = q.gruen ? [18, 34, 18] : s, ws = q.gruen ? [200, 235, 205] : w;
+      var h = Math.min(1, q.hell), ts = q.gold ? [228, 178, 86] : q.gruen ? [79, 122, 74] : t, ss = q.gold ? [90, 60, 20] : q.gruen ? [18, 34, 18] : s, ws = q.gold ? [255, 236, 180] : q.gruen ? [200, 235, 205] : w;
       var col = 'rgb(' + [0, 1, 2].map(function (j) { return Math.round(h < 0.7 ? ss[j] + (ts[j] - ss[j]) * (h / 0.7) : ts[j] + (ws[j] - ts[j]) * ((h - 0.7) / 0.3)); }).join(',') + ')';
       c.beginPath(); c.moveTo(q.p[0][0], q.p[0][1]); c.lineTo(q.p[1][0], q.p[1][1]); c.lineTo(q.p[2][0], q.p[2][1]); c.closePath();
       c.fillStyle = col; c.fill(); c.strokeStyle = col; c.lineWidth = 0.5; c.stroke();
@@ -773,7 +818,8 @@
     var gx = (0.5 + k.ox / 2) * W, gy = (0.5 - k.oy / 2) * H, gr = k.size * minDim * 1.25;
     schein.style.transform = 'translate(' + (gx - gr).toFixed(1) + 'px,' + (gy - gr).toFixed(1) + 'px)';
     schein.style.width = schein.style.height = (gr * 2).toFixed(1) + 'px';
-    schein.style.opacity = BLUME || BAUM ? '1' : String(0.55 + 0.45 * smooth(4.2, 5, coord));
+    hintergrundFein(coord, gx, gy, gr);
+    schein.style.opacity = FEIN ? String(1 - 0.35 * smooth(1.4, 2, coord)) : BLUME || BAUM ? '1' : String(0.55 + 0.45 * smooth(4.2, 5, coord));
     if (MUSTER && muster) { muster.style.opacity = String(0.55 * (1 - 0.65 * smooth(4.3, 5, coord)));   /* hinter dem Formular leiser */
       if (!ruhig) muster.style.transform = 'translate3d(0,' + (-coord * 18).toFixed(1) + 'px,0)'; }   /* Muster wandert langsam mit – Tiefe hinter dem Stein */
 
@@ -820,6 +866,7 @@
         g0.uniform3f(locB.u_herz, hz[0], hz[1], hz[2]); g0.uniform3f(locB.u_eye, eye[0], eye[1], eye[2]);
         g0.uniform3f(locB.u_red, FARBE[0], FARBE[1], FARBE[2]); g0.uniform3f(locB.u_tief, TIEF[0], TIEF[1], TIEF[2]); g0.uniform3f(locB.u_hot, HEISS[0], HEISS[1], HEISS[2]); g0.uniform1f(locB.u_alpha, 1);
         if (locB.u_gruen) { g0.uniform3f(locB.u_gruen, GRUEN[0], GRUEN[1], GRUEN[2]); g0.uniform3f(locB.u_gruenHot, 0.82, 1, 0.86); }
+        if (locB.u_fein) g0.uniform1f(locB.u_fein, FEIN ? 1 : 0);
         g0.drawElements(g0.TRIANGLES, blumeAnzahl, blumeTyp, 0);
       }
     } else if (BLUME && ctx2d) zeichne2dBlume(vp, model, k, coord, eye);
