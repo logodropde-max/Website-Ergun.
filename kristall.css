@@ -314,3 +314,32 @@ html.titel-drei .k-faecher { top: 14cqh; max-width: 92cqw; font-size: min(7.6cqw
   .k-angebot__info { font-size: 12px; }
   html.titel-drei .k-cover-oben { top: calc(5cqh + 40px); }
 }
+/* ---------- Aufräumen (?ordnung=neu, 01.10.2026 – Ausnahme auf ERGUNs Wunsch) ----------
+   Start: „ERGUN.“ nur Logo + großer Schriftzug, „Digitalstudio“ einmal am Titel; Angebote = Schritt ① direkt über dem Formular;
+   Leiste oben auch am Handy ohne „Menü“ (Start = Klick auf ERGUN.). Lage der Blume rechnet kristall.js (data-k-lage, --k-oben). */
+html.ordnung-neu.titel-drei .k-wort__klein { display: block; }
+html.ordnung-neu .k-cover-rechts { margin-left: auto; }
+html.ordnung-neu .k-kopf { background: linear-gradient(to bottom, color-mix(in srgb, var(--k-ink) 94%, transparent) 70%, transparent); }
+html.ordnung-neu .k-kopf__menue { display: none !important; }
+html.ordnung-neu.titel-lycoris .preise__innen { padding-top: var(--k-oben, 18svh); }
+html.ordnung-neu[data-k-lage="seite"].titel-lycoris .preise__innen { margin: 0 0 0 7vw; max-width: min(620px, 46vw); padding-left: 0; padding-right: 0; }
+html.ordnung-neu[data-k-lage="oben"].titel-lycoris .preise__innen { margin: 0 auto; max-width: 640px; padding-left: 20px; padding-right: 20px; }
+html.ordnung-neu[data-k-lage="oben"] #preise { background: linear-gradient(to bottom, transparent calc(var(--k-oben, 40svh) - 28px), var(--k-ink) var(--k-oben, 40svh)); }   /* schmal: das Formular gleitet als Blatt über die Blume (volle Breite) */
+html.ordnung-neu .mf__oben[hidden] { display: none; }
+.mf-angebote { width: min(860px, 46vw); margin: 0 0 clamp(36px, 7svh, 80px); font-family: var(--k-display); font-weight: 400; color: var(--k-bone); }
+.mf-angebote__liste { display: grid; gap: clamp(14px, 2.6svh, 28px); }
+.mf-angebote .k-angebot { margin: 0; text-align: left; font-size: min(calc(min(860px, 46vw) / 9.4), 8.6svh); line-height: 0.92; }
+.mf-angebote .k-angebot__info { font-size: 15px; }
+.mf-angebote .k-angebot[aria-pressed="true"] .k-angebot__wort { color: var(--k-akzent); }
+.mf-angebote .k-angebot[aria-pressed="true"] .k-angebot__wort::after { content: ""; display: inline-block; width: 0.14em; height: 0.14em; margin-left: 0.1em; background: var(--k-akzent); }
+.mf-angebote.hat-wahl .k-angebot:not([aria-pressed="true"]) { opacity: 0.6; }
+.mf-angebote__direkt { margin-top: clamp(16px, 3svh, 28px); font-family: var(--k-sans); }
+html.ordnung-neu[data-k-lage="oben"] .mf-angebote { width: auto; }
+html.ordnung-neu[data-k-lage="oben"] .mf-angebote .k-angebot { font-size: min(calc((100vw - 40px) / 9.6), 64px); }
+@media (max-width: 720px) {
+  html.ordnung-neu .k-kopf__links { display: flex; position: static; flex-direction: row; align-items: center; gap: 14px; padding: 0; background: none; border: 0; }
+  html.ordnung-neu .k-kopf__links a { min-height: 44px; font-size: 10px; letter-spacing: 0.14em; border: 0; }
+  html.ordnung-neu .k-kopf__start { display: none; }
+  html.ordnung-neu .mf-angebote .k-angebot__info { font-size: 13px; }
+}
+@media (max-width: 359px) { html.ordnung-neu .k-kopf__links { gap: 10px; } html.ordnung-neu .k-kopf__links a { letter-spacing: 0.08em; } }

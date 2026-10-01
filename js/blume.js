@@ -276,8 +276,9 @@
   }
 
   /* grüner Kelch, Stiel (Röhre der Vorlage, leicht geschwungen) und zwei Stielblätter mit Mittelrippe */
-  function gruenTeile(m, seed, fein) {
-    var r = rng(seed + 77), K = fein < 0.8 ? 5 : 6;
+  function gruenTeile(m, seed, fein, stiel) {
+    /* stiel = Länge des Stiels (Standard 4,3). Kürzer (Aufräumen, ?ordnung=neu): die ganze Blume passt groß ins Bild – Blätter wachsen mit */
+    var r = rng(seed + 77), K = fein < 0.8 ? 5 : 6, SL = stiel || 4.3, BL = Math.min(1, 0.45 + 0.55 * SL / 4.3);
     m.kugel([0, 0.03, 0], 0.11, 0.08, 3, 0.05, [0, 0, 0]);   /* Blütenboden */
     for (var i = 0; i < K; i++) {
       var phi = (i / K) * Math.PI * 2 + 0.3;
@@ -287,22 +288,22 @@
         wolb: function () { return 0.9; }, roll: null, welle: 0.03 });
     }
     var pts = [];
-    for (var k = 0; k <= 40; k++) { var s = k / 40; pts.push([0.11 * Math.sin(s * 2.6), 0.0 - s * 4.3, 0.05 * Math.sin(s * 1.6)]); }
+    for (var k = 0; k <= 40; k++) { var s = k / 40; pts.push([0.11 * Math.sin(s * 2.6), 0.0 - s * SL, 0.05 * Math.sin(s * 1.6)]); }
     m.roehre({ pts: pts, kind: 2, w: 0.045, lat: [1, 0, 0], bulb: false, phase: 0, stagger: 0, base: [0, 0, 0] });
     [[0.36, 0.2, 1.0], [0.6, Math.PI + 0.35, 0.85]].forEach(function (b) {   /* zwei Blätter: lanzettlich, mit Falz (Mittelrippe), hängen leicht über */
-      var s = b[0], ap = [0.11 * Math.sin(s * 2.6), -s * 4.3, 0.05 * Math.sin(s * 1.6)], Lb = b[2];
+      var s = b[0], ap = [0.11 * Math.sin(s * 2.6), -s * SL, 0.05 * Math.sin(s * 1.6)], Lb = b[2] * BL;
       schale(m, { phi: b[1], basis: ap, L: Lb, U: 12, V: 4, phase: r() * 6.28, staffel: 0.1, art: 3, dicke: 0.008, falte: 0.32,
         theta: function (u) { return 0.75 + 1.0 * u * u; },
         breite: function (u) { return Lb * 0.13 * Math.pow(Math.sin(Math.PI * Math.min(1, 0.03 + u * 0.98)), 0.7); },
         wolb: function () { return 0.5; }, roll: null, welle: 0.03, grund: ap });
     });
   }
-  function vollArt(name) { return function (m, offen, seed, fein) { vollBluete(m, name, seed, fein); gruenTeile(m, seed, fein); }; }
+  function vollArt(name) { return function (m, offen, seed, fein, stiel) { vollBluete(m, name, seed, fein); gruenTeile(m, seed, fein, stiel); }; }
 
   var ARTEN = { lilie: lilie, rose: rose, tulpe: tulpe, dahlie: vollArt('dahlie'), pfingstrose: vollArt('pfingstrose'), lotus: vollArt('lotus') };
   var VOLL = ['dahlie', 'pfingstrose', 'lotus'];
-  function bauen(art, offen, seed, fein) {
-    var m = netz(); (ARTEN[art] || rose)(m, klemm(offen), seed || 7, fein === undefined ? 1 : fein);
+  function bauen(art, offen, seed, fein, stiel) {
+    var m = netz(); (ARTEN[art] || rose)(m, klemm(offen), seed || 7, fein === undefined ? 1 : fein, stiel);
     return m.fertig();
   }
   /* Radius der voll offenen Blüte um ihr Herz, ohne Stiel – für die Kamera (wie „radius“ der Vorlage) */

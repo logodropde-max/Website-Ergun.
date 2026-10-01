@@ -260,6 +260,41 @@ window.LEITFADEN = {
   function schritte() { return ['art'].concat(A.art === 'website' ? ['website'] : A.art === 'endo' ? ['endo'] : A.art === 'beides' ? ['website', 'endo'] : [], ['anfrage']); }
   var aktiv = 'art', dyn = q('[data-mf-dyn]'), anfrageBox = q('[data-mf-anfrage]'), stand = q('[data-mf-stand]'), linie = q('[data-mf-linie]');
   var zurueck = q('[data-mf-zurueck]'), weiter = q('[data-mf-weiter]'), hinweis = q('[data-mf-hinweis]'), summe = q('[data-mf-summe]'), live = q('[data-preise-live]'), liveT;
+  function artPreise() {
+    var f = P.mehr[0];
+    return { website: 'ab ' + P.euro(P.stufen[0].preis), endo: P.betrag(f) + ' + ' + P.euro(f.monat) + MONAT, beides: 'ab ' + P.euro(P.stufen[0].preis + f.preis) + ' + ' + P.euro(f.monat) + MONAT };
+  }
+
+  /* ---------- Aufräumen (?ordnung=neu, 01.10.2026 – Ausnahme auf ERGUNs Wunsch): die drei Angebote stehen groß über dem Formular und SIND
+     Schritt ① (keine zweite Kartenreihe). Klick wählt und führt weich zum Formular darunter (② bzw. ③). Ohne Wahl zeigt das Formular gleich
+     „Ihre Anfrage“ (allgemeine Anfrage); „Zurück“ in ② entfällt – die Angebote stehen ja darüber. ---------- */
+  var ORD = !!window.ERGUN_ORDNUNG, angebote = null, oben = q('.mf__oben');
+  function zuAngeboten() {
+    if (window.__kristall && window.__kristall.zuAngeboten) window.__kristall.zuAngeboten();
+    else if (angebote) angebote.scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
+  }
+  function angeboteMarkieren() {
+    if (!angebote) return;
+    [].forEach.call(angebote.querySelectorAll('[data-angebot]'), function (b) { b.setAttribute('aria-pressed', String(A.art === b.getAttribute('data-angebot'))); });
+    angebote.classList.toggle('hat-wahl', !!A.art);
+  }
+  if (ORD) {
+    angebote = el('div', 'mf-angebote'); angebote.id = 'angebote'; angebote.setAttribute('data-mf-angebote', '');
+    angebote.appendChild(el('h2', 'hinweis-versteckt', 'Angebote'));
+    var aliste = el('div', 'mf-angebote__liste'), apreis = artPreise(); aliste.setAttribute('role', 'group'); aliste.setAttribute('aria-label', L.art.titel);
+    L.art.optionen.forEach(function (o) {
+      var b = el('button', 'k-angebot'); b.type = 'button'; b.setAttribute('data-angebot', o.id); b.setAttribute('aria-pressed', 'false');
+      b.appendChild(el('span', 'k-angebot__wort', o.titel));
+      var info = el('span', 'k-angebot__info k-sans'); info.appendChild(el('b', '', apreis[o.id])); info.appendChild(document.createTextNode(' · ' + (o.dezent ? o.dezent + ' – ' : '') + o.satz)); b.appendChild(info);
+      b.addEventListener('click', function () { if (A.art !== o.id) { A.art = o.id; A.betreuung = null; A.betreuungAn = true; } neu(); gehe(schritte()[1], 1); });
+      aliste.appendChild(b);
+    });
+    angebote.appendChild(aliste);
+    var adirekt = el('button', 'mf-link mf-angebote__direkt', L.art.direkt + ' →'); adirekt.type = 'button';
+    adirekt.addEventListener('click', function () { A.art = null; neu(); gehe('anfrage', 1); });
+    angebote.appendChild(adirekt);
+    var ainnen = q('.preise__innen'); ainnen.insertBefore(angebote, ainnen.firstChild);
+  }
 
   function schalter(an, label, fn, key) {
     var s = el('button', 'lf-schalter'); s.type = 'button'; s.setAttribute('role', 'switch'); s.setAttribute('aria-checked', String(!!an)); s.setAttribute('aria-label', label);
@@ -279,11 +314,7 @@ window.LEITFADEN = {
     art: function (w) {
       w.titel = L.art.titel; w.satz = L.art.satz;
       var g = el('div', 'mf-karten'); g.setAttribute('role', 'group'); g.setAttribute('aria-label', L.art.titel);
-      var f = P.mehr[0], preis = {
-        website: 'ab ' + P.euro(P.stufen[0].preis),
-        endo: P.betrag(f) + ' + ' + P.euro(f.monat) + MONAT,
-        beides: 'ab ' + P.euro(P.stufen[0].preis + f.preis) + ' + ' + P.euro(f.monat) + MONAT
-      };
+      var preis = artPreise();
       if (A.art) g.className += ' hat-wahl';
       L.art.optionen.forEach(function (o, nr) {
         var b = reihe(el('button', 'mf-karte'), nr); b.type = 'button'; b.setAttribute('aria-pressed', String(A.art === o.id)); b.setAttribute('data-fokus', 'art-' + o.id);
@@ -437,6 +468,7 @@ window.LEITFADEN = {
     var liste = schritte(), nr = liste.indexOf(id) + 1, n = id === 'art' && !A.art ? 3 : liste.length, istAnfrage = id === 'anfrage';
     stand.textContent = 'Schritt ' + nr + ' von ' + n;
     linie.style.transform = 'scaleX(' + (nr / n) + ')';
+    if (ORD) { oben.hidden = !A.art; angeboteMarkieren(); }   /* allgemeine Anfrage: kein „Schritt x von y“ */
     var ani = still || ruhig || !richtung ? '' : richtung > 0 ? ' ist-rein' : ' ist-rein--zurueck';
     if (istAnfrage) {
       dyn.hidden = true; dyn.textContent = ''; anfrageBox.hidden = false;
@@ -450,7 +482,7 @@ window.LEITFADEN = {
       s.appendChild(h); if (w.satz) s.appendChild(el('p', 'mf-satz', w.satz)); s.appendChild(w.inhalt);
       dyn.textContent = ''; dyn.appendChild(s);
     }
-    zurueck.hidden = id === 'art';
+    zurueck.hidden = id === 'art' || (ORD && liste[nr - 2] === 'art');
     weiter.hidden = id === 'art' || istAnfrage;
     weiter.textContent = liste[nr] === 'anfrage' ? 'Zur Anfrage' : 'Weiter';
     weiter.disabled = (id === 'website' && !A.stufe) || (id === 'endo' && !A.endo.length);
@@ -470,8 +502,13 @@ window.LEITFADEN = {
     else if (!still) {
       var titel = istAnfrage ? anfrageBox.querySelector('.mf-titel') : dyn.querySelector('.mf-titel');
       if (titel) titel.focus({ preventScroll: true });
-      var oben = box.getBoundingClientRect().top;
-      if (oben < -40 || oben > window.innerHeight * 0.5) box.scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
+      if (ORD) {   /* weich zum Formular unter den Angeboten (Leiste oben bleibt frei) */
+        var fz = (A.art ? oben : (istAnfrage ? anfrageBox : dyn)).getBoundingClientRect().top;
+        if (fz < 60 || fz > window.innerHeight * 0.4) window.scrollBy({ top: fz - 72, behavior: ruhig ? 'auto' : 'smooth' });
+      } else {
+        var obenY = box.getBoundingClientRect().top;
+        if (obenY < -40 || obenY > window.innerHeight * 0.5) box.scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
+      }
     }
   }
   function gehe(id, richtung) { A.betreuungOffen = false; zeigen(id, richtung); }   /* neuer Schritt: Betreuung wieder eine Zeile */
@@ -494,10 +531,10 @@ window.LEITFADEN = {
     document.dispatchEvent(new CustomEvent('preise:auswahl', { detail: e }));
   }
   /* „ändern“ in der Anfrage → zurück zu Schritt ② (ohne Auswahl → Schritt ①); alte Anker #preise/#kontakt */
-  P.zeigeSchritt = function (id) { var l = schritte(); gehe(id || (l.length > 2 ? l[1] : 'art'), -1); };
+  P.zeigeSchritt = function (id) { var l = schritte(), z = id || (l.length > 2 ? l[1] : 'art'); if (ORD && z === 'art') { zuAngeboten(); return; } gehe(z, -1); };
   function ausAnker() {
     if (location.hash === '#kontakt') { gehe('anfrage', 0); }
-    else if (location.hash === '#preise' && aktiv === 'anfrage' && !A.art) gehe('art', 0);
+    else if (location.hash === '#preise' && aktiv === 'anfrage' && !A.art && !ORD) gehe('art', 0);
   }
   window.addEventListener('hashchange', ausAnker);
   P.antworten = A;   /* für Tests und Aufnahmen */
@@ -526,7 +563,7 @@ window.LEITFADEN = {
     }, { passive: true });
   }
 
-  zeigen('art', 0, true);
+  zeigen(ORD ? 'anfrage' : 'art', 0, true);
   if (location.hash === '#kontakt') zeigen('anfrage', 0, true);
   /* Schritt ① erscheint gestaffelt, sobald die Karten ins Bild kommen (einmal). Ohne IntersectionObserver oder mit „Bewegung reduzieren“: sofort da. */
   if (!ruhig && aktiv === 'art' && 'IntersectionObserver' in window) {
