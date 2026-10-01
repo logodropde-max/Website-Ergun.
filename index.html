@@ -1591,7 +1591,7 @@ html.titel-neu {
 <script>
 /* Auftrag 44: je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
 (function () {
-  var liste = window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'baum' ? ['js/baum.js?v=6', 'js/kristall.js?v=39'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris' || window.ERGUN_WAHL === 'lycoris3') ? ['js/blume.js?v=9', 'js/kristall.js?v=39'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=39'] : [];
+  var liste = window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'baum' ? ['js/baum.js?v=6', 'js/kristall.js?v=40'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris' || window.ERGUN_WAHL === 'lycoris3') ? ['js/blume.js?v=9', 'js/kristall.js?v=40'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=40'] : [];
   liste.forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
 })();
 </script>

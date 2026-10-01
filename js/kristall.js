@@ -27,8 +27,9 @@
   /* Fassung „Lebensbaum“ (?titel=baum, 01.10.): Lebensbaum im Kreis (Formvorlage Feld 5) wächst mit jedem Bild, der Ring schließt sich beim Formular.
      Geometrie einmal aus js/baum.js, Wachstum nur über Uniforms. ?farbe=vorlage = Karmin der Vorlage. */
   var T = window.ERGUN_BAUM, BAUM = window.ERGUN_WAHL === 'baum' && !!T;
-  /* volle Blume statt der Spinnenlilie (?blume=voll, 01.10.): Art ?art=dahlie|pfingstrose|lotus, Farbe ?farbe=rosegold|karmin|elfenbein|pflaume */
-  var VOLL = LYCORIS && frage.get('blume') === 'voll';
+  /* volle Blume statt der Spinnenlilie (01.10., seit Emres Wahl Standard: Dahlie in Lila; ?blume=lilie = rote Spinnenlilie der Vorlage).
+     Art ?art=dahlie|pfingstrose|lotus, Farbe ?farbe=lila|rosegold|karmin|elfenbein|pflaume */
+  var VOLL = LYCORIS && frage.get('blume') !== 'lilie';
   var ART = VOLL ? (B.VOLL.indexOf(frage.get('art')) >= 0 ? frage.get('art') : 'dahlie') : LYCORIS ? 'lilie' : BLUME ? (B.ARTEN.indexOf(frage.get('blume')) >= 0 ? frage.get('blume') : 'rose') : null;
   if (BLUME) html.setAttribute('data-blume', ART);
   var BFEIN = Math.min(window.innerWidth || 1440, window.innerHeight || 900) < 700 ? 0.82 : 1;   /* Handy: etwas weniger Blütenblätter (noch ohne Lücken) */
@@ -268,7 +269,7 @@
   if (LYCORIS || (BAUM && frage.get('farbe') === 'vorlage')) {   /* Karmin der Vorlage (#e3131b): u_red = rot × 2,2, Glanz = (1, 0,55 + g, 0,5 + b) – wie dort */
     var rot = hexToLinear('#e3131b'); FARBE = mul(rot, 2.2); HEISS = [1, 0.55 + rot[1], 0.5 + rot[2]]; AKZENT = '#e3131b';
     if (VOLL) {   /* Blütenfarbe im selben Chrom-Stil; Lichthof und Akzente der Seite folgen ihr */
-      var FARBEN = { rosegold: ['#C48A74', 1.7], karmin: ['#e3131b', 2.2], elfenbein: ['#E3D6BE', 1.05], pflaume: ['#6B2D5C', 2.6] }, wahlF = FARBEN[frage.get('farbe')] ? frage.get('farbe') : 'rosegold';
+      var FARBEN = { rosegold: ['#C48A74', 1.7], karmin: ['#e3131b', 2.2], elfenbein: ['#E3D6BE', 1.05], pflaume: ['#6B2D5C', 2.6], lila: ['#9B6BCB', 1.9] }, wahlF = FARBEN[frage.get('farbe')] ? frage.get('farbe') : 'lila';
       rot = hexToLinear(FARBEN[wahlF][0]); FARBE = mul(rot, FARBEN[wahlF][1]); HEISS = [1, Math.min(1.2, 0.55 + rot[1]), Math.min(1.2, 0.5 + rot[2])]; AKZENT = FARBEN[wahlF][0];
       var hx = parseInt(AKZENT.slice(1), 16); html.style.setProperty('--k-akzent', AKZENT); html.style.setProperty('--k-glut', ((hx >> 16) & 255) + ', ' + ((hx >> 8) & 255) + ', ' + (hx & 255));
       html.setAttribute('data-bluetenfarbe', wahlF);
