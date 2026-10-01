@@ -41,11 +41,13 @@ window.ERGUN_A36 = true;
      (?titel=neu = derselbe Stand)
    · kristall  = Startseite 01.10.2026 bis zur Blume – Vorlage „Lycoris Specimen“, pinker Brillant
    · lycoris3  = die Vorlage „Lycoris“ 1:1 mit nur 3 Bildern: Start · Angebote · Kontakt, Leiste oben (Vorschau)
-   · baum      = Startseite seit 01.10.2026 (Emres „Ok“): Lebensbaum im Kreis (Formvorlage Feld 5) im Stil der Vorlage, wächst mit jedem Bild
+   · lycoris3  = Startseite seit 01.10.2026 nachmittags (Emres „Ok“): Vorlage Lycoris mit 3 Seiten (Start · Angebote · Kontakt), Leiste oben,
+                 volle Dahlie in Lila (?blume=lilie = rote Spinnenlilie)
+   · baum      = Startseite am 01.10.2026 bis Lycoris 3 (Emres „Ok“): Lebensbaum im Kreis (Formvorlage Feld 5) im Stil der Vorlage, wächst mit jedem Bild
    · lycoris   = Startseite am 01.10.2026 bis zum Lebensbaum: die Vorlage „Lycoris Specimen“ 1:1 (rote Spinnenlilie, Karmin), nur ERGUNs Texte
    · blume     = Startseite am 01.10.2026 bis Lycoris: Kristall-Seite näher an der Vorlage, der Diamant öffnet sich zur Blüte (?blume=rose|tulpe|lilie)
    Die Dschungel-Fassung liegt als <template> im HTML: ohne ihren Schalter lädt sie nichts (keine Bilder, kein CSS, kein Skript). */
-window.ERGUN_TITEL = 'baum';
+window.ERGUN_TITEL = 'lycoris3';
 (function () {
   var t = new URLSearchParams(location.search).get('titel'); if (t === 'neu') t = 'dschungel'; if (t === 'a') t = 'alt';
   var wahl = ['alt', 'maschine', 'dschungel', 'kristall', 'blume', 'lycoris', 'baum', 'lycoris3'].indexOf(t) >= 0 ? t : window.ERGUN_TITEL;

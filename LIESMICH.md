@@ -4,7 +4,7 @@
 - **Seit Emres Wahl Standard in Lycoris/Lycoris 3: Dahlie in Lila** (`lila` = `#9B6BCB`, Faktor 1,9). `?blume=lilie` = rote Spinnenlilie der Vorlage; `?blume=voll` (alter Vorschau-Link) zeigt dasselbe wie ohne.
 - Nur in Lycoris/Lycoris 3 (`VOLL` in `kristall.js`). `js/blume.js`: Netz-Baustein `schale` (dicke, gewölbte Fläche mit Rändern) und `kugel`; `vollBluete(m, art, seed, fein)` (Dahlie 96 / Pfingstrose 74 Blätter im goldenen Winkel, Lotus 3 Kränze + Fruchtknoten), `gruenTeile()` (Blütenboden, Kelch, Stiel, 2 Stielblätter mit Falz). Art 2 = Stiel (grün, `u_stem`), Art 3 = grüne Blätter (wachsen/wiegen; Stielblätter wandern mit dem gekürzten Stiel). `FRAG_VOLL` = Shader der Vorlage, Blütenfarbe ↔ Grün (`u_gruen`, `u_gruenHot`). Farben in `FARBEN` (kristall.js) mit Helligkeitsfaktor; Handy `BFEIN = 0.82`.
 
-## Startseite „Lycoris 3“ – Vorschau `?titel=lycoris3` (01.10.2026, Rückweg Tag `vor-lycoris3`)
+## Startseite „Lycoris 3“ (01.10.2026, seit Emres „Ok“ Standard `window.ERGUN_TITEL = 'lycoris3'`; Rückweg Tag `vor-lycoris3-live`, davor `vor-lycoris3`)
 - Lycoris (`LYCORIS` in `kristall.js`) + `DREI`: `KEYS` = [Cover, Fächer-Fahrt (spin 3.1, el −30, size 0.52, oy −0.8), Bild 06 der Vorlage]; `sammeln()` zeigt nur Bild-0-Schrift und die Angebote (`data-k-drei`), der Rest bekommt Szene 99 (bleibt im HTML); `angeboteBauen()` liest Titel/Satz/Preis aus `#preise .mf-karte` (Klick → Karte im Formular + `springe(2)`); Kopfleiste (Start/Angebote/Kontakt/endo), Cover-Wort fällt in die Lilie (`gruppen = {}`). CSS `html.titel-drei` (Strecke 240svh, Fächer-Größen). Test `lycoris3.test.mjs`.
 
 ## Startseite „Lebensbaum“ – Vorschau `?titel=baum` (01.10.2026, Rückweg Tag `vor-baum`)
