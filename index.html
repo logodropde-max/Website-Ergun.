@@ -39,10 +39,10 @@ window.ERGUN_A36 = true;
    · maschine  = tropisches Büro, scroll-gebunden mit Karten ①–④ (live bis 01.10. abends)
    · dschungel = tropisches Büro, neueste Fassung: 4K, geführt, Premium-Angebote (eingelagert – Tag dschungel-final, _archiv/ERGUN-Dschungel-2026-10-01/)
      (?titel=neu = derselbe Stand)
-   · kristall  = Startseite seit 01.10.2026 (Emres „OK“) – Vorlage „Lycoris Specimen“, pinker Brillant
-   · blume     = Kristall-Seite näher an der Vorlage: der Diamant öffnet sich zur Blüte (Vorschau, ?blume=rose|tulpe|lilie)
+   · kristall  = Startseite 01.10.2026 bis zur Blume – Vorlage „Lycoris Specimen“, pinker Brillant
+   · blume     = Startseite seit 01.10.2026 (Emres „Ok“): Kristall-Seite näher an der Vorlage, der Diamant öffnet sich zur Blüte (?blume=rose|tulpe|lilie)
    Die Dschungel-Fassung liegt als <template> im HTML: ohne ihren Schalter lädt sie nichts (keine Bilder, kein CSS, kein Skript). */
-window.ERGUN_TITEL = 'kristall';
+window.ERGUN_TITEL = 'blume';
 (function () {
   var t = new URLSearchParams(location.search).get('titel'); if (t === 'neu') t = 'dschungel'; if (t === 'a') t = 'alt';
   var wahl = ['alt', 'maschine', 'dschungel', 'kristall', 'blume'].indexOf(t) >= 0 ? t : window.ERGUN_TITEL;
@@ -59,6 +59,10 @@ window.ERGUN_TITEL = 'kristall';
     ].forEach(function (v) {
       var l = document.createElement('link'); l.rel = 'preload'; l.as = 'image'; l.type = 'image/avif'; l.media = v[0]; l.setAttribute('imagesrcset', v[1]); l.setAttribute('imagesizes', v[2]); l.setAttribute('fetchpriority', 'high'); document.head.appendChild(l);
     });
+  }
+  if (wahl === 'blume' && !new URLSearchParams(location.search).get('schrift')) {   /* Blume: Display-Schrift der Vorlage (Federant, lokal) ist Standard (Emre, 01.10.); ?schrift=clash = Clash Display */
+    html.setAttribute('data-schrift', 'vorlage');
+    var fl = document.createElement('link'); fl.rel = 'preload'; fl.as = 'font'; fl.type = 'font/woff2'; fl.href = 'schriften/Federant-Regular.woff2'; fl.setAttribute('crossorigin', ''); document.head.appendChild(fl);
   }
   if (k) { var kc = document.createElement('link'); kc.rel = 'stylesheet'; kc.href = 'kristall.css?v=24'; document.head.appendChild(kc); }
   if (wahl === 'alt') ['emre3d-folge-1', 'emre3d-folge-2', 'hund-folge'].forEach(function (n) {   /* Vorlader der alten Figur nur hier */
