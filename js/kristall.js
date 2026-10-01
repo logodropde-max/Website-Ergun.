@@ -22,13 +22,16 @@
   /* Fassung „Lycoris“ (?titel=lycoris, 01.10. – ERGUN: „den Prompt eins zu eins nachmachen, nur meinen Text“): die Vorlage 1:1 –
      rote Chrom-Spinnenlilie von Anfang an (blüht beim Laden auf wie dort), Karmin, Kamera-Bilder der Vorlage, kein Diamant. */
   var B = window.ERGUN_BLUME, LYCORIS = window.ERGUN_WAHL === 'lycoris' && !!B, BLUME = (window.ERGUN_WAHL === 'blume' || LYCORIS) && !!B;
+  /* Fassung „Lebensbaum“ (?titel=baum, 01.10.): Lebensbaum im Kreis (Formvorlage Feld 5) wächst mit jedem Bild, der Ring schließt sich beim Formular.
+     Geometrie einmal aus js/baum.js, Wachstum nur über Uniforms. ?farbe=vorlage = Karmin der Vorlage. */
+  var T = window.ERGUN_BAUM, BAUM = window.ERGUN_WAHL === 'baum' && !!T;
   var ART = LYCORIS ? 'lilie' : BLUME ? (B.ARTEN.indexOf(frage.get('blume')) >= 0 ? frage.get('blume') : 'rose') : null;
   if (BLUME) html.setAttribute('data-blume', ART);
   var FEST_K = frage.get('k') !== null && frage.get('k') !== '' ? parseFloat(frage.get('k')) : null, FEST_O = frage.get('offen') !== null && frage.get('offen') !== '' ? parseFloat(frage.get('offen')) : null;   /* nur zum Prüfen */
   /* Hintergrund-Muster (Brillant-Streuung, eigenes Bild, kachelbar): Standard seit ERGUNs OK (01.10.); ?muster=aus schaltet es ab; in der Blume nur mit ?muster=b */
-  var MUSTER_STANDARD = true, MUSTER = frage.get('muster') === 'b' || (MUSTER_STANDARD && !BLUME && frage.get('muster') !== 'aus');
+  var MUSTER_STANDARD = true, MUSTER = frage.get('muster') === 'b' || (MUSTER_STANDARD && !BLUME && !BAUM && frage.get('muster') !== 'aus');
   if (MUSTER) html.setAttribute('data-muster', 'b');
-  var SEED = parseInt(frage.get('seed'), 10) || 7, KRONE_RAND = BLUME ? frage.get('krone') !== 'teile' : frage.get('krone') === 'rand';   /* Blume: wie die Vorlage rahmen nur „E“ und „.“ die Krone */
+  var SEED = parseInt(frage.get('seed'), 10) || 7, KRONE_RAND = BLUME || BAUM ? frage.get('krone') !== 'teile' : frage.get('krone') === 'rand';   /* Blume: wie die Vorlage rahmen nur „E“ und „.“ die Krone */
   var $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
   var buehne = $('[data-k-buehne]', root), strecke = $('[data-k-strecke]', root), leinwand = $('[data-k-leinwand]', root), schein = $('[data-k-schein]', root), wort = $('[data-k-wort]', root), muster = $('[data-k-muster]', root);
 
@@ -154,7 +157,7 @@
     return new Float32Array(v);
   }
   /* Radius des ausgewachsenen Clusters um die Mitte (für die Kamera – wie „radius“ der Vorlage) */
-  var RADIUS = BLUME ? B.radius(ART, SEED) : (function () { var g = geometrie(5), r = 0; for (var i = 0; i < g.length; i += STRIDE) r = Math.max(r, Math.hypot(g[i], g[i + 1], g[i + 2])); return r; })();
+  var RADIUS = BAUM ? T.RADIUS : BLUME ? B.radius(ART, SEED) : (function () { var g = geometrie(5), r = 0; for (var i = 0; i < g.length; i += STRIDE) r = Math.max(r, Math.hypot(g[i], g[i + 1], g[i + 2])); return r; })();
 
   /* ---------- Blume: der Diamant öffnet sich ----------
      Jede Facette löst sich weich: sie kippt um ihre Querachse nach außen (wie ein Blütenblatt, das aufgeht), gleitet nach außen/oben und
@@ -217,12 +220,24 @@
       KEYS_TALL[3] = { size: 0.82, oy: -0.44 };   /* Handy: unter den Preisen bleibt Platz (die Vorlage hat dort keine Preiszeilen) */
     }
   }
-  var SCENES = KEYS.length, HOLD = 0.34, NAV = ['ERGUN.', BLUME ? 'Blüte' : 'Kristall', 'Websites', 'Preise', 'Anspruch', 'Anfrage'];
-  var KEYS_ENG = BLUME && !LYCORIS ? { 5: { size: 0.3, ox: 0, oy: 0.74 } } : {};   /* Blume, mittlere Breiten (< 1100 px quer): Blüte klein oben über dem Formular statt daneben – sie verdeckt es nie */
-  var KEYS_KURZ = LYCORIS ? { 5: { size: 0.6, oy: 1.02 } } : BLUME ? { 5: { size: 0.4, oy: 0.95 } } : { 5: { size: 0.28, oy: 0.8 } };   /* kleine Handys (Höhe < 720): Kristall über dem Formular kleiner und höher, damit alle drei Karten ohne Scrollen passen */
+  if (BAUM) {   /* Bahnen wie die Vorlage, aber das Emblem bleibt immer frontal und groß im Blick (Emre: „man soll alles erkennen“) */
+    KEYS = [
+      { spin: -0.15, el: 6, size: 0.82, ox: 0, oy: 0.18 },
+      { spin: 0.12, el: 2, size: 0.62, ox: 0, oy: 0 },
+      { spin: -0.2, el: 8, size: 0.44, ox: 0, oy: 0.46 },
+      { spin: 0.22, el: -6, size: 0.46, ox: 0, oy: -0.42 },
+      { spin: -0.15, el: 4, size: 0.8, ox: 0.5, oy: 0.04 },
+      { spin: 0.0, el: 2, size: 0.62, ox: 0.52, oy: 0.02 }
+    ];
+    KEYS_TALL = [{ size: 0.9, oy: 0.3 }, { size: 0.62 }, { size: 0.5, oy: 0.62 }, { size: 0.82, oy: -0.44 }, { size: 0.8, ox: 0, oy: 0.42 }, { size: 0.46, ox: 0, oy: 0.66 }];
+  }
+  var SCENES = KEYS.length, HOLD = 0.34, NAV = ['ERGUN.', BAUM ? 'Baum' : BLUME ? 'Blüte' : 'Kristall', 'Websites', 'Preise', 'Anspruch', 'Anfrage'];
+  var KEYS_ENG = BAUM ? { 5: { size: 0.26, ox: 0, oy: 0.6 } } : BLUME && !LYCORIS ? { 5: { size: 0.3, ox: 0, oy: 0.74 } } : {};   /* Blume, mittlere Breiten (< 1100 px quer): Blüte klein oben über dem Formular statt daneben – sie verdeckt es nie */
+  var KEYS_TAB = BAUM ? { 3: { size: 0.5, oy: -0.5 }, 5: { size: 0.26, ox: 0, oy: 0.6 } } : {};
+  var KEYS_KURZ = BAUM ? { 3: { size: 0.66, oy: -0.4 }, 5: { size: 0.28, oy: 0.84 } } : LYCORIS ? { 5: { size: 0.6, oy: 1.02 } } : BLUME ? { 5: { size: 0.4, oy: 0.95 } } : { 5: { size: 0.28, oy: 0.8 } };   /* kleine Handys (Höhe < 720): Kristall über dem Formular kleiner und höher, damit alle drei Karten ohne Scrollen passen */
   function keyAt(coord, tall) {
-    var i = Math.max(0, Math.min(SCENES - 1, Math.floor(coord))), j = Math.min(SCENES - 1, i + 1), f = coord - i, kurz = tall && H < 720, eng = !tall && W < 1100;
-    var a = Object.assign({}, KEYS[i], tall ? KEYS_TALL[i] : {}, eng ? KEYS_ENG[i] : {}, kurz ? KEYS_KURZ[i] : {}), b = Object.assign({}, KEYS[j], tall ? KEYS_TALL[j] : {}, eng ? KEYS_ENG[j] : {}, kurz ? KEYS_KURZ[j] : {});
+    var i = Math.max(0, Math.min(SCENES - 1, Math.floor(coord))), j = Math.min(SCENES - 1, i + 1), f = coord - i, kurz = tall && H < 720, eng = !tall && W < 1100, tab = BAUM && tall && W >= 700;   /* Lebensbaum: Tablet hochkant eigene Lage */
+    var a = Object.assign({}, KEYS[i], tall ? KEYS_TALL[i] : {}, eng ? KEYS_ENG[i] : {}, tab ? KEYS_TAB[i] : {}, kurz ? KEYS_KURZ[i] : {}), b = Object.assign({}, KEYS[j], tall ? KEYS_TALL[j] : {}, eng ? KEYS_ENG[j] : {}, tab ? KEYS_TAB[j] : {}, kurz ? KEYS_KURZ[j] : {});
     return { spin: mix(a.spin, b.spin, f), el: mix(a.el, b.el, f), size: mix(a.size, b.size, f), ox: mix(a.ox, b.ox, f), oy: mix(a.oy, b.oy, f), stem: mix(a.stem || 0, b.stem || 0, f) };
   }
 
@@ -240,8 +255,9 @@
   var TIEF = ORANGE ? hexToLinear('#3B3E46') : hexToLinear('#9E4F74');
   var HEISS = ORANGE ? [1, 0.97, 0.94] : [1, 0.9, 0.95];
   var AKZENT = ORANGE ? '#FF5A1F' : '#E8A0BF';
-  if (LYCORIS) {   /* Karmin der Vorlage (#e3131b): u_red = rot × 2,2, Glanz = (1, 0,55 + g, 0,5 + b) – wie dort */
-    var rot = hexToLinear('#e3131b'); FARBE = mul(rot, 2.2); HEISS = [1, 0.55 + rot[1], 0.5 + rot[2]]; AKZENT = '#e3131b';
+  if (BAUM && !ORANGE) FARBE = mul(hexToLinear('#E8A0BF'), 1.9);   /* Lebensbaum: frontal gesehen spiegelt das Chrom weniger – etwas heller, wie Feld 5 */
+  if (LYCORIS || (BAUM && frage.get('farbe') === 'vorlage')) {   /* Karmin der Vorlage (#e3131b): u_red = rot × 2,2, Glanz = (1, 0,55 + g, 0,5 + b) – wie dort */
+    var rot = hexToLinear('#e3131b'); FARBE = mul(rot, 2.2); HEISS = [1, 0.55 + rot[1], 0.5 + rot[2]]; AKZENT = '#e3131b'; if (BAUM) { TIEF = mul(rot, 0.45); html.setAttribute('data-farbe', 'vorlage'); }
   }
 
   /* ---------- Shader ---------- */
@@ -306,6 +322,7 @@
   /* ---------- GL (mit 2D-Rückfall) ---------- */
   var gl = null, ctx2d = null, prog = null, vbo = null, loc = {}, ableitung = false, geoStand = -1, geoDaten = null;
   var progB = null, vboB = null, iboB = null, locB = {}, attrGem = [], attrB = [], blumeStand = -1, blumeAnzahl = 0, blumeTyp = 0;
+  var progT = null, vboT = null, iboT = null, locT = {}, attrT = [], baumAnzahl = 0, baumTyp = 0, baumGeo = null;
   function binde(c, programm, puffer, liste, stride) {   /* Attribute je Programm: alle aus, dann die eigenen an */
     c.useProgram(programm); c.bindBuffer(c.ARRAY_BUFFER, puffer);
     for (var i = 0; i < 8; i++) c.disableVertexAttribArray(i);
@@ -327,6 +344,20 @@
       var l = gl.getAttribLocation(prog, a[0]); if (l < 0) return; attrGem.push([l, a[1], a[2]]); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, a[1], gl.FLOAT, false, STRIDE * 4, a[2] * 4);
     });
     ['u_vp', 'u_model', 'u_offset', 'u_eye', 'u_farbe', 'u_tief', 'u_hot', 'u_politur', 'u_glut', 'u_alpha'].forEach(function (n) { loc[n] = gl.getUniformLocation(prog, n); });
+    if (BAUM) {   /* Lebensbaum: Netz einmal hochladen, am Handy weniger Details */
+      var vs3 = compile(gl.VERTEX_SHADER, T.VERT), fs3 = compile(gl.FRAGMENT_SHADER, T.FRAG);
+      if (!vs3 || !fs3) return false;
+      progT = gl.createProgram(); gl.attachShader(progT, vs3); gl.attachShader(progT, fs3); gl.linkProgram(progT); gl.deleteShader(vs3); gl.deleteShader(fs3);
+      if (!gl.getProgramParameter(progT, gl.LINK_STATUS)) return false;
+      gl.getExtension('OES_element_index_uint');
+      if (!baumGeo) baumGeo = T.bauen({ fein: Math.min(window.innerWidth || 1440, window.innerHeight || 900) < 700 ? 0.6 : 1, seed: SEED });
+      vboT = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, vboT); gl.bufferData(gl.ARRAY_BUFFER, baumGeo.data, gl.STATIC_DRAW);
+      iboT = gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iboT); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, baumGeo.index, gl.STATIC_DRAW);
+      baumAnzahl = baumGeo.index.length; baumTyp = baumGeo.index instanceof Uint32Array ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
+      attrT = []; T.ATTRIBUTE.forEach(function (a) { var l = gl.getAttribLocation(progT, a[0]); if (l >= 0) attrT.push([l, a[1], a[2]]); });
+      T.UNIFORMS.forEach(function (n) { locT[n] = gl.getUniformLocation(progT, n); });
+      gl.useProgram(prog);
+    }
     if (BLUME) {
       var vs2 = compile(gl.VERTEX_SHADER, B.VERT), fs2 = compile(gl.FRAGMENT_SHADER, LYCORIS ? B.FRAG_VORLAGE : B.FRAG);
       if (!vs2 || !fs2) return false;
@@ -364,9 +395,15 @@
   /* ---------- Inhalte aus PREISE (nichts von Hand) + Studio-Zeichen + Navigation ---------- */
   var MARKE = '<path d="M20 3.5 L23.6 8.2 L23.6 31.8 L20 36.5 L16.4 31.8 L16.4 8.2 Z" transform="rotate(0 20 20)"/><path d="M20 3.5 L23.6 8.2 L23.6 31.8 L20 36.5 L16.4 31.8 L16.4 8.2 Z" transform="rotate(60 20 20)"/><path d="M20 3.5 L23.6 8.2 L23.6 31.8 L20 36.5 L16.4 31.8 L16.4 8.2 Z" transform="rotate(120 20 20)"/>';
   /* Blume: das Zeichen der Vorlage (sechs eingerollte Blütenblätter) statt des Kristalls */
+  if (BAUM) MARKE = '<circle cx="20" cy="20" r="16.5"/><path d="M20 20 V9 M20 13 L14.5 9 M20 13 L25.5 9 M20 16 L12 14 M20 16 L28 14 M20 20 V31 M20 26 L14.5 30.5 M20 26 L25.5 30.5 M20 23 L12 26 M20 23 L28 26"/>';
   if (BLUME) MARKE = [0, 60, 120, 180, 240, 300].map(function (a) { return '<path d="M20 20 C 22 12, 30 8, 33 12 C 35 15, 31 17, 29 14" transform="rotate(' + a + ' 20 20)"/>'; }).join('');
-  function marke(el, farbe, akzent) { el.innerHTML = '<g fill="none" stroke="' + farbe + '" stroke-width="' + (BLUME ? 2.6 : 2.2) + '" stroke-linejoin="round" stroke-linecap="round">' + MARKE + '</g><circle cx="20" cy="20" r="2.6" fill="' + akzent + '"/>'; }
+  function marke(el, farbe, akzent) { el.innerHTML = '<g fill="none" stroke="' + farbe + '" stroke-width="' + (BLUME ? 2.6 : BAUM ? 1.9 : 2.2) + '" stroke-linejoin="round" stroke-linecap="round">' + MARKE + '</g><circle cx="20" cy="20" r="2.6" fill="' + akzent + '"/>'; }
   $$('[data-k-marke]').forEach(function (m) { marke(m, getComputedStyle(buehne).color || '#b6b095', AKZENT); });
+  if (BAUM) {   /* Titel (Ausnahme auf ERGUNs Wunsch): oben links die Zeile „ERGUN. — Digitalstudio“, unter dem Wort „Website & Automatisierung“ */
+    var bn = $('.k-bildnr', root); if (bn) bn.innerHTML = '<b>02</b> — ERGUN. — Digitalstudio';
+    var ct = $('.k-cover-titel', root); if (ct) ct.innerHTML = 'ERGUN. —<br>Digitalstudio';
+    var wt = $('[data-k-baum-titel]', root); if (wt) wt.hidden = false;
+  }
   if (BLUME) { var bildnr = $('.k-bildnr', root); if (bildnr) bildnr.innerHTML = LYCORIS ? '<b>02</b> — Die Krone, von oben' : '<b>02</b> — Die Blüte, von oben'; }
   function inhalte() {
     var P = window.PREISE; if (!P || !P.euro) return false;
@@ -429,6 +466,23 @@
     b.addEventListener('click', function () { springe(i); }); nav.appendChild(b);
   });
   var navKnoepfe = $$('button', nav);
+  /* Lebensbaum: feste Leiste oben (Stil der Vorlage) – ERGUN. · Leistungen · Preise · Kontakt · endo ↗; springt weich zum Bild (jump() der Vorlage) */
+  var kopfLinks = [];
+  if (BAUM) {
+    var kopf = document.createElement('header'); kopf.className = 'k-kopf'; kopf.setAttribute('data-k-kopf', '');
+    kopf.innerHTML = '<a class="k-kopf__marke" href="#top" data-sprung="0">ERGUN<span>.</span></a>' +
+      '<button class="k-kopf__menue" type="button" aria-expanded="false" aria-controls="k-kopf-links">Menü</button>' +
+      '<nav class="k-kopf__links" id="k-kopf-links" aria-label="Hauptnavigation">' +
+      '<a href="#leistungen" data-sprung="2">Leistungen</a><a href="#preise" data-sprung="3">Preise</a><a href="#kontakt" data-sprung="5">Kontakt</a>' +
+      '<a href="https://endo-ergun.vercel.app/" data-endo-link>endo <span aria-hidden="true">↗</span></a></nav>';
+    root.parentNode.insertBefore(kopf, root);
+    var menueKnopf = kopf.querySelector('.k-kopf__menue');
+    function menue(auf) { kopf.classList.toggle('ist-offen', auf); menueKnopf.setAttribute('aria-expanded', auf ? 'true' : 'false'); }
+    menueKnopf.addEventListener('click', function () { menue(!kopf.classList.contains('ist-offen')); });
+    kopfLinks = [].slice.call(kopf.querySelectorAll('[data-sprung]'));
+    kopfLinks.forEach(function (a) { a.addEventListener('click', function (e) { e.preventDefault(); menue(false); springe(Number(a.getAttribute('data-sprung'))); }); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') menue(false); });
+  }
 
   var ruhig = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   function springe(i) {
@@ -526,6 +580,34 @@
     });
   }
 
+  /* ---------- 2D-Rückfall Lebensbaum: das fertige Emblem als Linienbild (wie der Rückfall der Vorlage: Kurven projiziert und gezogen) ---------- */
+  var BAUM2D = null;
+  function zeichne2dBaum(vp, model, k) {
+    var c = ctx2d; if (!c) return; if (!BAUM2D) BAUM2D = T.bauen({ fein: 0.6, seed: SEED }).linien;
+    var mvp = multiply(vp, model), minDim = Math.min(W, H), skal = (k.size * minDim * 0.5) / RADIUS;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H); c.lineCap = 'round'; c.lineJoin = 'round';
+    c.strokeStyle = AKZENT; c.shadowColor = AKZENT; c.shadowBlur = 10;
+    BAUM2D.forEach(function (l) {
+      c.beginPath();
+      l.pts.forEach(function (q, i) {
+        var cx = mvp[0] * q[0] + mvp[4] * q[1] + mvp[8] * q[2] + mvp[12], cy = mvp[1] * q[0] + mvp[5] * q[1] + mvp[9] * q[2] + mvp[13], cw = mvp[3] * q[0] + mvp[7] * q[1] + mvp[11] * q[2] + mvp[15];
+        var sx = ((cx / cw + k.ox) * 0.5 + 0.5) * W, sy = (0.5 - (cy / cw + k.oy) * 0.5) * H; if (i) c.lineTo(sx, sy); else c.moveTo(sx, sy);
+      });
+      c.lineWidth = Math.max(0.8, l.w * skal * 1.6); c.stroke();
+    });
+  }
+  /* Lebensbaum: das Formular gleitet beim Übergang 05 → 06 gestaffelt herein (wie die Schrift der Vorlage) */
+  var formTeile = [], formStand = -1, formZeit = 0;
+  function formularHerein(coord, jetzt) {
+    if (!BAUM || ruhig) return;
+    if (jetzt - formZeit > 600) { formZeit = jetzt; formTeile = $$('#preise .preise__innen > *'); formStand = -1; }
+    var q = Math.round(coord * 200) / 200; if (q === formStand) return; formStand = q;
+    formTeile.forEach(function (el, i) {
+      var v = coord >= 5 ? 1 : reveal(coord, 5, Math.min(0.6, i * 0.12));
+      el.style.opacity = v >= 0.999 ? '' : String(v); el.style.transform = v >= 0.999 ? '' : 'translateY(' + ((1 - v) * 26).toFixed(1) + 'px)';
+    });
+  }
+
   /* ---------- Schleife ---------- */
   var laeuft = false, sichtbar = true, zuletzt = performance.now(), zeit = 0, p01 = -1, gezeigt = -1, koord = 0, raf = 0, geboren = -1;
   function bild(jetzt) {
@@ -535,27 +617,39 @@
     var r = root.getBoundingClientRect(), weg = strecke.offsetHeight, p = weg > 0 ? klemm(-r.top / weg) : 0;
     p01 = p01 < 0 || ruhig ? p : p01 + (p - p01) * (1 - Math.exp(-dt * 9));
     var coord = koord = FEST_K !== null ? FEST_K : sceneCoord(p01, SCENES, HOLD), szene = Math.round(coord);   /* ?k= hält ein Bild fest (Prüfen) */
-    if (szene !== gezeigt) { gezeigt = szene; navKnoepfe.forEach(function (b, i) { if (i === szene) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); }); }
+    if (szene !== gezeigt) { gezeigt = szene; navKnoepfe.forEach(function (b, i) { if (i === szene) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+      kopfLinks.forEach(function (a) { var z = Number(a.getAttribute('data-sprung')); if (z === szene && z > 0) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); }); }
 
     /* Kamera */
     var tall = H > W * 1.05, k = keyAt(coord, tall);
     zeiger.x += (zeiger.tx - zeiger.x) * (1 - Math.exp(-dt * 4)); zeiger.y += (zeiger.ty - zeiger.y) * (1 - Math.exp(-dt * 4));
-    if (bewegt) { dreh += drehV + dt * 0.1; drehV *= Math.exp(-dt * 3); } else { dreh += drehV; drehV = 0; }
+    if (bewegt) { dreh += drehV + (BAUM ? 0 : dt * 0.1); drehV *= Math.exp(-dt * 3); } else { dreh += drehV; drehV = 0; }
+    if (BAUM) dreh *= Math.exp(-dt * 0.8);   /* nach dem Ziehen wieder ruhig nach vorn */
     var px = bewegt ? zeiger.x : 0, py = bewegt ? zeiger.y : 0, fov = (30 * Math.PI) / 180, minDim = Math.min(W, H);
     var dist = (RADIUS * H) / (k.size * minDim * Math.tan(fov / 2)), el = Math.max(-88, Math.min(88, k.el + py * 9)) * (Math.PI / 180);
     var eye = [0, Math.sin(el) * dist, Math.cos(el) * dist];
     var vp = multiply(perspective(fov, W / H, Math.max(0.05, dist - 6), dist + 8), lookAt(eye, [0, 0, 0]));
-    var model = multiply(rotY(k.spin + dreh + px * 0.35), rotX(py * 0.05));
+    var model = BAUM ? multiply(rotY(k.spin + dreh + px * 0.28 + (bewegt ? Math.sin(zeit * 0.35) * 0.08 : 0)), rotX(py * 0.06)) : multiply(rotY(k.spin + dreh + px * 0.35), rotX(py * 0.05));
 
     /* Lichthof hinter dem Kristall folgt seinem Herz */
     var gx = (0.5 + k.ox / 2) * W, gy = (0.5 - k.oy / 2) * H, gr = k.size * minDim * 1.25;
     schein.style.transform = 'translate(' + (gx - gr).toFixed(1) + 'px,' + (gy - gr).toFixed(1) + 'px)';
     schein.style.width = schein.style.height = (gr * 2).toFixed(1) + 'px';
-    schein.style.opacity = BLUME ? '1' : String(0.55 + 0.45 * smooth(4.2, 5, coord));
+    schein.style.opacity = BLUME || BAUM ? '1' : String(0.55 + 0.45 * smooth(4.2, 5, coord));
     if (MUSTER && muster) { muster.style.opacity = String(0.55 * (1 - 0.65 * smooth(4.3, 5, coord)));   /* hinter dem Formular leiser */
       if (!ruhig) muster.style.transform = 'translate3d(0,' + (-coord * 18).toFixed(1) + 'px,0)'; }   /* Muster wandert langsam mit – Tiefe hinter dem Stein */
 
-    if (BLUME && gl && progB) {
+    if (BAUM && gl && progT) {
+      var g1 = gl, grow = ruhig ? 5 : coord;
+      g1.viewport(0, 0, leinwand.width, leinwand.height); g1.clear(g1.COLOR_BUFFER_BIT | g1.DEPTH_BUFFER_BIT);
+      binde(g1, progT, vboT, attrT, T.STRIDE); g1.bindBuffer(g1.ELEMENT_ARRAY_BUFFER, iboT);
+      g1.uniformMatrix4fv(locT.u_vp, false, vp); g1.uniformMatrix4fv(locT.u_model, false, model); g1.uniform2f(locT.u_offset, k.ox, k.oy);
+      g1.uniform1f(locT.u_time, zeit); g1.uniform1f(locT.u_sway, bewegt ? 1 : 0); g1.uniform1f(locT.u_grow, grow);
+      g1.uniform1f(locT.u_ring, ruhig ? 1 : klemm(coord / 5)); g1.uniform1f(locT.u_seed, 1 - 0.6 * smooth(0.3, 1.3, grow)); g1.uniform1f(locT.u_glow, smooth(4.45, 5, grow));
+      g1.uniform3f(locT.u_eye, eye[0], eye[1], eye[2]); g1.uniform3f(locT.u_red, FARBE[0], FARBE[1], FARBE[2]); g1.uniform3f(locT.u_tief, TIEF[0], TIEF[1], TIEF[2]); g1.uniform3f(locT.u_hot, HEISS[0], HEISS[1], HEISS[2]); g1.uniform1f(locT.u_alpha, 1);
+      g1.drawElements(g1.TRIANGLES, baumAnzahl, baumTyp, 0);
+    } else if (BAUM && ctx2d) zeichne2dBaum(vp, model, k);
+    else if (BLUME && gl && progB) {
       var g0 = gl; g0.viewport(0, 0, leinwand.width, leinwand.height); g0.clear(g0.COLOR_BUFFER_BIT | g0.DEPTH_BUFFER_BIT);
       /* 1) der Diamant (Bild 01) – öffnet sich beim ersten Scrollen */
       var zerfallT = ruhig || LYCORIS ? 1 : smooth(0.04, 0.8, coord);
@@ -601,6 +695,7 @@
       c.drawArrays(c.TRIANGLES, 0, geoDaten.length / STRIDE);
     } else if (ctx2d) zeichne2d(vp, model, k, coord, eye);
 
+    formularHerein(coord, jetzt);
     /* Schrift je Bild – wie die Vorlage */
     stuecke.forEach(function (it) {
       var v = reveal(coord, it.scene, it.delay), q = Math.round(v * 500) / 500; if (q === it.last) return; it.last = q;
@@ -650,7 +745,7 @@
   }
   if (window.PREISE || document.readyState !== 'loading') los(); else document.addEventListener('DOMContentLoaded', los);
   window.__kristall = {
-    zustand: function () { return { koord: koord, gl: !!gl, ableitung: ableitung, radius: RADIUS, seed: SEED, dreiecke: geoDaten ? geoDaten.length / STRIDE / 3 : 0, blume: ART, lycoris: LYCORIS, offen: BLUME ? (ruhig || LYCORIS ? 1 : offenBei(koord)) : null, blumeDreiecke: blumeAnzahl / 3 }; },
+    zustand: function () { return { koord: koord, gl: !!gl, ableitung: ableitung, radius: RADIUS, seed: SEED, dreiecke: geoDaten ? geoDaten.length / STRIDE / 3 : 0, blume: ART, lycoris: LYCORIS, baum: BAUM, baumDreiecke: baumAnzahl / 3, ring: BAUM ? (ruhig ? 1 : klemm(koord / 5)) : null, offen: BLUME ? (ruhig || LYCORIS ? 1 : offenBei(koord)) : null, blumeDreiecke: blumeAnzahl / 3 }; },
     geometrie: geometrie, springe: springe
   };
 })();

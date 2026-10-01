@@ -265,3 +265,35 @@ html.titel-lycoris .preise__innen { padding-top: 44svh; }
 @media (max-width: 760px) { html.titel-lycoris .preise__innen { padding-top: 30svh; } }
 @media (max-width: 760px) and (max-height: 720px) { html.titel-lycoris .preise__innen { padding-top: 15svh; } }
 @media (min-width: 761px) and (max-height: 820px) { html.titel-lycoris .preise__innen { padding-top: 34svh; } }   /* niedrige Querbildschirme: Kartenreihe ganz im Bild */
+/* ---------- Fassung „Lebensbaum“ (?titel=baum, 01.10.) – erbt Rand-Schein und Lichthof der Blume (titel-blume) ---------- */
+html.titel-baum .k-wort__klein, html.titel-baum .k-mitte-klein { display: none; }
+.k-wort__titel { position: absolute; left: 0; right: 0; top: 100%; margin-top: 0.08em; text-align: center; font-size: max(15px, 0.12em); line-height: 1.1; letter-spacing: 0.01em; white-space: nowrap; }
+html.titel-baum .k-cover-oben { top: calc(5cqh + 44px); }
+html.titel-baum .k-spec-name { top: 58%; }
+html.titel-baum .k-spec-lupe { top: 71%; }
+/* Kopfleiste (Stil der Vorlage: klein, gesperrt, Khaki auf Tinte) */
+.k-kopf { position: fixed; z-index: 30; left: 0; right: 0; top: 0; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 0 5vw; height: 56px; color: var(--k-bone); font-family: var(--k-sans); background: linear-gradient(to bottom, color-mix(in srgb, var(--k-ink) 88%, transparent), transparent); }
+.k-kopf a { color: inherit; text-decoration: none; }
+.k-kopf__marke { font-family: var(--k-display); font-size: 20px; letter-spacing: 0.02em; display: inline-flex; align-items: center; min-height: 44px; }
+.k-kopf__marke span { color: var(--k-akzent); }
+.k-kopf__links { display: flex; align-items: center; gap: 28px; }
+.k-kopf__links a { position: relative; display: inline-flex; align-items: center; min-height: 44px; font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.78; transition: opacity 0.2s, color 0.2s; }
+.k-kopf__links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 10px; height: 1px; background: var(--k-akzent); transform: scaleX(0); transform-origin: left; transition: transform 0.35s var(--k-ease, cubic-bezier(.2,.8,.2,1)); }
+.k-kopf__links a[aria-current="true"] { opacity: 1; color: var(--k-akzent); }
+.k-kopf__links a[aria-current="true"]::after { transform: scaleX(1); }
+@media (hover: hover) and (pointer: fine) { .k-kopf__links a:hover { opacity: 1; } .k-kopf__links a:hover::after { transform: scaleX(1); } }
+.k-kopf__links a:focus-visible, .k-kopf__marke:focus-visible, .k-kopf__menue:focus-visible { outline: 1px solid var(--k-akzent); outline-offset: 4px; }
+.k-kopf__menue { display: none; min-height: 44px; min-width: 44px; padding: 0 4px; background: none; border: 0; color: inherit; font: inherit; font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; cursor: pointer; }
+@media (max-width: 720px) {
+  .k-kopf { padding: 0 16px; height: 52px; }
+  .k-kopf__menue { display: inline-flex; align-items: center; }
+  .k-kopf__links { display: none; position: absolute; top: 52px; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; padding: 8px 16px 16px; background: var(--k-ink); border-bottom: 1px solid color-mix(in srgb, var(--k-bone) 18%, transparent); }
+  .k-kopf.ist-offen .k-kopf__links { display: flex; }
+  .k-kopf__links a { min-height: 48px; font-size: 11px; border-bottom: 1px solid color-mix(in srgb, var(--k-bone) 10%, transparent); }
+  .k-kopf__links a::after { display: none; }
+  html.titel-baum .k-cover-oben { top: calc(5cqh + 40px); }
+}
+html.titel-baum .k-fussleiste { position: relative; z-index: 31; }
+/* Lebensbaum, Bild 06 auf Tablets/kleinen Laptops: kleiner Baum oben, Formular darunter */
+@media (min-width: 761px) and (max-width: 1099px) { html.titel-baum .preise__innen { padding-top: 36svh; } }
+@media (max-width: 760px) and (max-height: 720px) { html.titel-baum .preise__innen { padding-top: 17svh; } }

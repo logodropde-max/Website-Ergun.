@@ -40,18 +40,19 @@ window.ERGUN_A36 = true;
    · dschungel = tropisches Büro, neueste Fassung: 4K, geführt, Premium-Angebote (eingelagert – Tag dschungel-final, _archiv/ERGUN-Dschungel-2026-10-01/)
      (?titel=neu = derselbe Stand)
    · kristall  = Startseite 01.10.2026 bis zur Blume – Vorlage „Lycoris Specimen“, pinker Brillant
+   · baum      = Lebensbaum im Kreis (Formvorlage Feld 5) im Stil der Vorlage, wächst mit jedem Bild (Vorschau)
    · lycoris   = Startseite seit 01.10.2026 (Emre: „Mach es live danach Ok“): die Vorlage „Lycoris Specimen“ 1:1 (rote Spinnenlilie, Karmin), nur ERGUNs Texte
    · blume     = Startseite am 01.10.2026 bis Lycoris: Kristall-Seite näher an der Vorlage, der Diamant öffnet sich zur Blüte (?blume=rose|tulpe|lilie)
    Die Dschungel-Fassung liegt als <template> im HTML: ohne ihren Schalter lädt sie nichts (keine Bilder, kein CSS, kein Skript). */
 window.ERGUN_TITEL = 'lycoris';
 (function () {
   var t = new URLSearchParams(location.search).get('titel'); if (t === 'neu') t = 'dschungel'; if (t === 'a') t = 'alt';
-  var wahl = ['alt', 'maschine', 'dschungel', 'kristall', 'blume', 'lycoris'].indexOf(t) >= 0 ? t : window.ERGUN_TITEL;
+  var wahl = ['alt', 'maschine', 'dschungel', 'kristall', 'blume', 'lycoris', 'baum'].indexOf(t) >= 0 ? t : window.ERGUN_TITEL;
   var m = wahl === 'maschine' || wahl === 'dschungel', neu = wahl === 'dschungel';
-  var k = wahl === 'kristall' || wahl === 'blume' || wahl === 'lycoris', bl = wahl === 'blume' || wahl === 'lycoris';
+  var k = wahl === 'kristall' || wahl === 'blume' || wahl === 'lycoris' || wahl === 'baum', bl = wahl === 'blume' || wahl === 'lycoris';
   window.ERGUN_WAHL = wahl; window.ERGUN_MASCHINE = m; window.ERGUN_NEU = neu; window.ERGUN_KRISTALL = k;
   var html = document.documentElement;
-  html.classList.toggle('titel-maschine', m); html.classList.toggle('titel-neu', neu); html.classList.toggle('titel-kristall', k); html.classList.toggle('titel-blume', bl); html.classList.toggle('titel-lycoris', wahl === 'lycoris');
+  html.classList.toggle('titel-maschine', m); html.classList.toggle('titel-neu', neu); html.classList.toggle('titel-kristall', k); html.classList.toggle('titel-blume', bl || wahl === 'baum'); html.classList.toggle('titel-lycoris', wahl === 'lycoris'); html.classList.toggle('titel-baum', wahl === 'baum');
   if (m) {   /* nur dann: CSS + Vorlader des Morgenbilds */
     var c = document.createElement('link'); c.rel = 'stylesheet'; c.href = 'maschine.css?v=3'; document.head.appendChild(c);
     [
@@ -65,7 +66,7 @@ window.ERGUN_TITEL = 'lycoris';
     html.setAttribute('data-schrift', 'vorlage');
     var fl = document.createElement('link'); fl.rel = 'preload'; fl.as = 'font'; fl.type = 'font/woff2'; fl.href = 'schriften/Federant-Regular.woff2'; fl.setAttribute('crossorigin', ''); document.head.appendChild(fl);
   }
-  if (k) { var kc = document.createElement('link'); kc.rel = 'stylesheet'; kc.href = 'kristall.css?v=26'; document.head.appendChild(kc); }
+  if (k) { var kc = document.createElement('link'); kc.rel = 'stylesheet'; kc.href = 'kristall.css?v=30'; document.head.appendChild(kc); }
   if (wahl === 'alt') ['emre3d-folge-1', 'emre3d-folge-2', 'hund-folge'].forEach(function (n) {   /* Vorlader der alten Figur nur hier */
     var l = document.createElement('link'); l.rel = 'preload'; l.as = 'image'; l.href = 'bilder/hero/figuren/' + n + '.webp?v=19';
     l.setAttribute('fetchpriority', 'low'); l.media = '(prefers-reduced-motion: no-preference)'; document.head.appendChild(l);
@@ -1386,6 +1387,7 @@ html.titel-neu {
       <div class="k-display k-wort" data-k-wort>
         <span class="k-wort__klein" data-sc="0" data-fx="rise" data-d="0.6">Digitalstudio</span>
         <h1 aria-label="ERGUN. – Websites, Automatisierung und KI"><span data-ch aria-hidden="true"><span class="k-char" style="animation-delay:.15s">E</span></span><span data-ch aria-hidden="true"><span class="k-char" style="animation-delay:.22s">R</span></span><span data-ch aria-hidden="true"><span class="k-char" style="animation-delay:.29s">G</span></span><span data-ch aria-hidden="true"><span class="k-char" style="animation-delay:.36s">U</span></span><span data-ch aria-hidden="true"><span class="k-char" style="animation-delay:.43s">N</span></span><span data-ch aria-hidden="true"><span class="k-char k-punkt-marke" style="animation-delay:.5s">.</span></span></h1>
+        <span class="k-wort__titel" data-sc="0" data-fx="rise" data-d="0.7" data-k-baum-titel hidden>Website &amp; Automatisierung</span>
       </div>
       <div class="k-cover-unten">
         <div class="k-signatur" data-sc="0" data-fx="rise" data-d="0.3">
@@ -1588,7 +1590,7 @@ html.titel-neu {
 <script>
 /* Auftrag 44: je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
 (function () {
-  var liste = window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris') ? ['js/blume.js?v=7', 'js/kristall.js?v=28'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=28'] : [];
+  var liste = window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'baum' ? ['js/baum.js?v=6', 'js/kristall.js?v=33'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris') ? ['js/blume.js?v=7', 'js/kristall.js?v=33'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=33'] : [];
   liste.forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
 })();
 </script>

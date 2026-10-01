@@ -1,5 +1,11 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
+## Startseite „Lebensbaum“ – Vorschau `?titel=baum` (01.10.2026, Rückweg Tag `vor-baum`)
+- Gleiche Vorlage + `kristall.css` wie Kristall/Blume (`titel-kristall` + `titel-blume` für Rand/Lichthof + `titel-baum`); `index.html` lädt `js/baum.js` vor `js/kristall.js`.
+- `js/baum.js`: `ERGUN_BAUM.bauen({ fein, seed })` → Netz (14 Werte: Lage, Normale, aux = s · Phase · Art · Start, Basis, Ende), Arten 0 Röhre (wächst entlang s, Basis = Mittelpunkt → spitze Wachstumsspitze) · 1 Blatt · 2 Blüte · 3 Ring (s von unten nach oben auf beiden Seiten) · 4 Ring-Andeutung · 5 Leuchtpunkt · 6 Samen; `linien` für den 2D-Ersatz. Formwerte: Stamm `OBEN/UNTEN`, Hauptäste/-wurzeln in `zweig(...)`-Aufrufen, `INNEN` (Abstand zum Ring), Blattgröße in `blattStellen`, Blüten `lilie()` (S = 0,17 × Platz).
+- `js/kristall.js` (`BAUM`): Programm `progT` (statischer Puffer), Uniforms `u_grow` = Bild-Koordinate, `u_ring` = Bild/5, `u_seed`, `u_glow`; Kamera `KEYS`/`KEYS_TALL`/`KEYS_ENG` (< 1100 quer)/`KEYS_TAB` (Tablet hoch)/`KEYS_KURZ` (Handy < 720 hoch); Baum wiegt sich statt zu drehen; Kopfleiste `.k-kopf` (Links mit `data-sprung` → `springe()`), Titel/Kicker, `formularHerein()` (Formular gleitet beim Übergang 05→06 herein), 2D-Ersatz `zeichne2dBaum`. `?farbe=vorlage` = Karmin.
+- Tests: `baum.test.mjs`.
+
 ## Startseite „Lycoris“ = Vorlage 1:1 (seit 01.10.2026 Startseite, `window.ERGUN_TITEL = 'lycoris'`)
 - Läuft über dieselbe Technik wie die Blume (`titel-kristall` + `titel-blume` + `titel-lycoris`, `js/blume.js` + `js/kristall.js`); in `kristall.js` schaltet `LYCORIS`: Art immer `lilie`, offen = 1, kein Diamant, Aufblühen über die Zeit (`geboren`, 2,6 s wie die Vorlage), Farben Karmin (`FARBE = rot × 2,2`, `HEISS = (1, 0,55 + g, 0,5 + b)`), Fragment-Shader `B.FRAG_VORLAGE` (wörtlich aus der Vorlage), Bild 06 = `KEYS[5]` der Vorlage, Handy Bild 04 `KEYS_TALL[3] = { size 0.82, oy −0.44 }`. CSS am Ende von `kristall.css` (`html.titel-lycoris`: Akzent Karmin, Lichthof, Formular-Abstand oben).
 
