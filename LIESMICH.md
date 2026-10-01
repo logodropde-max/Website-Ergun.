@@ -1,5 +1,10 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
+## Startseite „All“ (`?titel=all`, 01.10.2026, Rückweg Tag `vor-all`)
+- Eigene Szene ohne kristall.js: `js/all.quelle.js` → `js/all.js` (esbuild + three 0.186.1 aus `C:\Users\emrer\endo-bau`, Befehl im Kopf der Quelle), `all.css` (+ Formular-Look aus `kristall.css` über `titel-kristall`), Angebote = `#angebote` aus `preise.js` (ERGUN_ORDNUNG). Drei Folien (`#start`, `#angebote-bereich`, `#kontakt-bereich`), ein Impuls = ein Flug (Logik wie endo `ethereal.quelle.js`).
+- **Bildquellen (`bilder/all/`):** Erde Tag – NASA Visible Earth „Blue Marble: Next Generation“ `world.topo.bathy.200412.3x5400x2700` (gemeinfrei) · Erde Nacht – NASA „Black Marble 2016“ `BlackMarble_2016_3km` (gemeinfrei) · Wolken – NASA `cloud_combined_2048` (gemeinfrei) · Wasser-Maske aus Blue Marble berechnet (Maske: R = Wolken, G = Wasser) · Saturn + Ringe – Solar System Scope (solarsystemscope.com/textures) `8k_saturn`, `8k_saturn_ring_alpha`, 2k-Fassungen, über Wikimedia Commons, **CC BY 4.0** → Namensnennung in der Fußleiste (Pflicht). Standbilder `stand-{0,1,2}-{quer,hoch}.webp` aus der Szene gerendert.
+- endo-Mond: `js/endo-form-shader.quelle.js` = 1:1 Kopie aus `endo-studio/js/ethereal-shader.quelle.js` (Test vergleicht) – bei Änderungen dort neu kopieren und `all.js` neu bauen.
+
 ## Blume fein (01.10.2026, Standard seit Emres OK – `FEIN_STANDARD` in `kristall.js`; vorher `?blume=voll`, Rückweg Tag `vor-blume-fein`)
 - `blume.js`: `feineDahlie()` (Arten `fein`/`feinOhneTau`), `FRAG_FEIN` (Verlauf, Perlmutt, Ränder über `v_q`, Gold `v_k`≈1, Tau `v_k`≈0,7, Adern im Grün), `u_fein` (Tau/Gold wiegen kaum). `kristall.js`: `FEIN`, `hintergrundFein()` (`.k-stich` SVG-Stich, `.k-pollen` Canvas). CSS-Abschnitt „feine Blume“ (Lichthof, Angebote-Linie, Karten-Schein). Seite ohne Blume pixelgleich. Test `blume-fein.test.mjs`.
 
