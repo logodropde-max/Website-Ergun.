@@ -59,6 +59,9 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   const inhalt = RUHE ? root.querySelector('.ghr-content') : null;
   let versatz = 0, breiteJetzt = window.innerWidth;
   const dprR = Math.min(window.devicePixelRatio || 1, 2);
+  /* Ruhe + Handy (Emre, 02.10.: „alles auf höchste FPS“): Leinwand mit höchstens 1,5-facher Pixeldichte, Farbfeld mit 4 statt 5 Rausch-Stufen
+     (der Schriftzug selbst bleibt scharf: seine Maske hat eine eigene Auflösung bis 2×), unter dem Titelbild kein Drosseln mehr */
+  const HANDY_R = window.matchMedia('(max-width: 899px)').matches;
   function lageSetzen() {   /* Ruhe: Titelbild-Inhalt im selben Takt wie das Glas – auf ganze Gerätepixel gerundet */
     if (!inhalt) return versatz;
     const r = Math.round((window.scrollY || 0) * dprR) / dprR;
@@ -100,7 +103,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   fuss.innerHTML = '<div class="glas-fuss__zeile"><span class="glas-fuss__marke">ERGUN<span>.</span></span>' +
     '<nav aria-label="Rechtliches"><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></nav></div>' +
     '<p class="glas-fuss__klein" data-glas-klein></p>' +
-    '<p class="glas-fuss__klein glas-fuss__quellen">Bilder der Planeten der Fassung „All“: Erde – NASA (gemeinfrei) · Saturn – <a href="https://www.solarsystemscope.com/textures/" rel="noopener" target="_blank">Solar System Scope</a>, <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener" target="_blank">CC BY 4.0</a></p>';
+    ''   /* NASA-/Saturn-Hinweis entfernt (Emre, 02.10.2026): die Glas-Seite zeigt keine Planetenbilder; die Fassung ?titel=all hat ihren eigenen Hinweis */;
   if (haupt) haupt.parentNode.insertBefore(fuss, haupt.nextSibling);
   if (P && P.klein) $('[data-glas-klein]', fuss).textContent = P.klein + ' ' + (P.steuer || '');
   function kopfHoehe() { const k = $('[data-glas-kopf]'); return k ? k.offsetHeight : 0; }
@@ -417,7 +420,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     };
 
     const size = () => {
-      const dpr = fein && tiefStand ? 0.35 : lite ? (fein ? Math.min(window.devicePixelRatio || 1, 1) : 0.65) : Math.min(window.devicePixelRatio || 1, 2);   /* fein: unter dem Hero grob (weich, unscharf, kaum Rechenzeit); Lite nie unter 1 – sonst zackige Buchstaben */
+      const dpr = fein && tiefStand ? 0.35 : RUHE && HANDY_R && !lite ? Math.min(window.devicePixelRatio || 1, 1.5) : lite ? (fein ? Math.min(window.devicePixelRatio || 1, 1) : 0.65) : Math.min(window.devicePixelRatio || 1, 2);   /* fein: unter dem Hero grob (weich, unscharf, kaum Rechenzeit); Lite nie unter 1 – sonst zackige Buchstaben */
       const w = Math.max(1, Math.round(canvas.clientWidth * dpr)), h = Math.max(1, Math.round(canvas.clientHeight * dpr));
       if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
       const fs = lite ? 0.25 : 0.4;
@@ -432,7 +435,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     const draw = () => {
       if (!field || !blurB) return;
       const pal = live.palette, aspect = canvas.width / canvas.height;
-      run(P.field, field, { time, aspect, octaves: lite ? 3 : 5, c0: pal[0], c1: pal[1], c2: pal[2], c3: pal[3], c4: pal[4] });
+      run(P.field, field, { time, aspect, octaves: lite ? 3 : RUHE && HANDY_R ? 4 : 5, c0: pal[0], c1: pal[1], c2: pal[2], c3: pal[3], c4: pal[4] });
       run(P.glass, null, {
         field: field.tex, height: blurB.tex, htexel: [1 / blurB.w, 1 / blurB.h], bevel, aspect, light: [light.x, light.y], glass: 1,
         form: RUHE || reduceMq.matches || readyAt < 0 ? 1 : formed(performance.now() - readyAt, FORM_MS), res: [canvas.width, canvas.height],
@@ -444,7 +447,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     const animating = () => (fein || inView) && !document.hidden && !reduceMq.matches;   /* fein: die Bühne liegt hinter der ganzen Seite */
     let gemalt = 0, tiefStand = false;
     const frame = (now) => {
-      raf = 0;
+      raf = 0; gerufen = performance.now();
       if (disposed) return;
       const raw = (now - last) / 1000;
       last = now;
@@ -462,14 +465,21 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       light.x = follow(light.x, tx, dt, idle ? 1.2 : 7);
       light.y = follow(light.y, ty, dt, idle ? 1.2 : 7);
       if (fein && !NAHTLOS) { const tief = unten >= 1 ? true : unten < 0.97 ? false : tiefStand; if (tief !== tiefStand) { tiefStand = tief; size(); } }
-      const sparen = fein && unten >= 1 && animating() && now - gemalt < 40;
+      const sparen = fein && !RUHE && unten >= 1 && animating() && now - gemalt < 40;   /* Ruhe (Emre, 02.10.): immer volle Bildrate */
       if (!sparen) { draw(); gemalt = now; }
       const catching = Math.abs(light.x - tx) + Math.abs(light.y - ty) > 0.0015;
       const visible = (fein || inView) && !document.hidden;
       const forming = readyAt >= 0 && performance.now() - readyAt < FORM_MS;
       if (visible && (animating() || catching || forming)) raf = requestAnimationFrame(frame);
     };
-    const kick = () => { if (raf || disposed) return; last = performance.now(); raf = requestAnimationFrame(frame); };
+    let gerufen = 0;
+    const kick = () => {
+      if (disposed) return;
+      /* Ruhe (Emre, 02.10.): hing der Takt (Seite eingefroren beim Verlassen, Bild-Anforderung verfallen), neu starten statt zu warten */
+      if (raf && performance.now() - gerufen > 500) { cancelAnimationFrame(raf); raf = 0; }
+      if (raf) return; last = gerufen = performance.now(); raf = requestAnimationFrame(frame);
+    };
+    pointer.neustart = () => { if (disposed) return; cancelAnimationFrame(raf); raf = 0; kick(); };
     pointer.kick = kick;
     pointer.rebuild = () => { if (disposed) return; buildMask(); kick(); };
 
@@ -539,7 +549,13 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(go); else go();
     setTimeout(go, 2500);
     /* ohne WebGL (oder bevor das Glas läuft) bewegt ein eigener Takt den festen Inhalt mit dem Scrollen */
-    let gt = 0; window.addEventListener('scroll', () => { if (zustand.glas || gt) return; gt = requestAnimationFrame(() => { gt = 0; lageSetzen(); }); }, { passive: true });
+    /* eigener Scroll-Takt: hält den Titelbild-Inhalt IMMER an seinem Platz – auch wenn der Glas-Takt einmal hängt (Emre, 02.10.:
+       „Digitalstudio bleibt stehen, wenn man die Seite verlässt und wiederkommt“). Gleicher gerundeter Wert wie das Glas. */
+    let gt = 0; window.addEventListener('scroll', () => { if (gt) return; gt = requestAnimationFrame(() => { gt = 0; lageSetzen(); }); }, { passive: true });
+    const zurueck = () => { lageSetzen(); if (pointer.neustart) pointer.neustart(); };
+    window.addEventListener('pageshow', zurueck);   /* zurück aus dem Verlauf (Seite war eingefroren) */
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) zurueck(); });
+    window.addEventListener('focus', zurueck);
   } else start();
 
   /* Bildrate messen (Prüfung): Bilder je Sekunde der letzten Sekunde */

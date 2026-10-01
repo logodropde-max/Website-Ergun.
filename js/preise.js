@@ -74,7 +74,8 @@ window.PREISE = {
       { id: 'studio', einmalig: 400, monat: 70, hinweis: 'inkl. 20 Bilder/Monat' }],
     komplett: { id: 'komplett', name: 'endo komplett', einmalig: 2800, monat: 250 },
     whatsapp: { id: 'whatsapp', name: 'WhatsApp-Kanal', satz: 'endo antwortet auch per WhatsApp.', einmalig: 500, monat: 40, hinweis: 'zzgl. WhatsApp-Gebühren (Meta)' },
-    grenze: 'faire Nutzungsgrenze'
+    grenze: 'faire Nutzungsgrenze',
+    laufzeit: 6   /* Mindestlaufzeit je Fähigkeit in Monaten (Emre, 02.10.2026) */
   },
   mehrTitel: 'Automatisierung & KI → endo',
   mehrSatz: 'Automatisierung und KI für Ihren Betrieb laufen über endo – ebenfalls von ERGUN.',
@@ -212,7 +213,7 @@ window.LEITFADEN = {
     if (e.stufe) z.push('• Website: ' + e.stufe.name + ' (' + P.betrag(e.stufe) + ')');
     if (e.extras.length) z.push('• Extras: ' + e.extras.map(function (m) { return m.name + (m.anzahl > 1 ? ' × ' + m.anzahl : '') + ' (' + P.betrag(m) + ')'; }).join(', '));
     if (e.anfrage.length) z.push('• Im Erstgespräch besprechen: ' + e.anfrage.map(function (x) { return x.name; }).join(', '));
-    if (e.mehr.length) z.push('• Automatisierung & KI mit endo: ' + e.mehr.map(function (m) { return m.name + (m.faehigkeiten && m.id === 'faehigkeiten' && m.anzahl > 1 ? ' – ' + m.faehigkeiten.join(', ') : '') + (m.whatsapp ? ' + ' + P.endo.whatsapp.name : '') + ' (' + P.betrag(m) + ' einmalig + ' + P.monatText(m) + ' / Monat)'; }).join(', '));
+    if (e.mehr.length) z.push('• Automatisierung & KI mit endo: ' + e.mehr.map(function (m) { return m.name + (m.faehigkeiten && m.id === 'faehigkeiten' && m.anzahl > 1 ? ' – ' + m.faehigkeiten.join(', ') : '') + (m.whatsapp ? ' + ' + P.endo.whatsapp.name : '') + ' (' + P.betrag(m) + ' einmalig + ' + P.monatText(m) + ' / Monat, Mindestlaufzeit ' + P.endo.laufzeit + ' Monate)'; }).join(', '));
     if (e.stufe) z.push('• Betreuung: ' + (e.betreuung ? e.betreuung.name + ' (' + P.euro(e.betreuungMonat) + ' / Monat' + (e.selbst ? ', Hosting & Domain stelle ich selbst' : '') + ')' : 'ohne Betreuung (Hosting, Domain und Updates übernehme ich selbst)'));
     z.push('Einmalig ' + ab + P.euro(e.einmalig) + ' · monatlich ' + P.euro(e.monatlich) + ' · erstes Jahr ' + ab + P.euro(e.jahr) + ' (unverbindliche Einschätzung)');
     return z.join('\n').replace(/ /g, ' ');   /* feste Leerzeichen → normale (WhatsApp/Mail) */
@@ -452,7 +453,7 @@ window.LEITFADEN = {
       /* Stand + Erklärsatz */
       var m = P.endoPaket(A.endo, A.whatsapp);
       w.inhalt.appendChild(el('p', 'mf-stand', !m ? L.endo.leer : (m.guenstiger ? L.endo.guenstiger + ' ' : '') + m.name + ': ' + P.euro(m.preis) + ' ' + L.endo.einmalig + ' + ' + P.euro(m.monat) + MONAT));
-      w.inhalt.appendChild(el('p', 'mf-erklaer', P.endo.erklaer + ' ' + P.endo.grenze.charAt(0).toUpperCase() + P.endo.grenze.slice(1) + '.'));
+      w.inhalt.appendChild(el('p', 'mf-erklaer', P.endo.erklaer + ' Mindestlaufzeit ' + P.endo.laufzeit + ' Monate je Fähigkeit, ' + P.endo.grenze + '.'));
       var a = el('a', 'mf-link', L.endo.ansehen + ' ↗'); a.href = P.endoSeiteOeffentlich ? P.endoSeite : P.endoStart; a.target = '_blank'; a.rel = 'noopener';
       w.inhalt.appendChild(a);
     }
