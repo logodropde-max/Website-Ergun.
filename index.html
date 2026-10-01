@@ -40,11 +40,11 @@ window.ERGUN_A36 = true;
    · dschungel = tropisches Büro, neueste Fassung: 4K, geführt, Premium-Angebote (eingelagert – Tag dschungel-final, _archiv/ERGUN-Dschungel-2026-10-01/)
      (?titel=neu = derselbe Stand)
    · kristall  = Startseite 01.10.2026 bis zur Blume – Vorlage „Lycoris Specimen“, pinker Brillant
-   · baum      = Lebensbaum im Kreis (Formvorlage Feld 5) im Stil der Vorlage, wächst mit jedem Bild (Vorschau)
-   · lycoris   = Startseite seit 01.10.2026 (Emre: „Mach es live danach Ok“): die Vorlage „Lycoris Specimen“ 1:1 (rote Spinnenlilie, Karmin), nur ERGUNs Texte
+   · baum      = Startseite seit 01.10.2026 (Emres „Ok“): Lebensbaum im Kreis (Formvorlage Feld 5) im Stil der Vorlage, wächst mit jedem Bild
+   · lycoris   = Startseite am 01.10.2026 bis zum Lebensbaum: die Vorlage „Lycoris Specimen“ 1:1 (rote Spinnenlilie, Karmin), nur ERGUNs Texte
    · blume     = Startseite am 01.10.2026 bis Lycoris: Kristall-Seite näher an der Vorlage, der Diamant öffnet sich zur Blüte (?blume=rose|tulpe|lilie)
    Die Dschungel-Fassung liegt als <template> im HTML: ohne ihren Schalter lädt sie nichts (keine Bilder, kein CSS, kein Skript). */
-window.ERGUN_TITEL = 'lycoris';
+window.ERGUN_TITEL = 'baum';
 (function () {
   var t = new URLSearchParams(location.search).get('titel'); if (t === 'neu') t = 'dschungel'; if (t === 'a') t = 'alt';
   var wahl = ['alt', 'maschine', 'dschungel', 'kristall', 'blume', 'lycoris', 'baum'].indexOf(t) >= 0 ? t : window.ERGUN_TITEL;
