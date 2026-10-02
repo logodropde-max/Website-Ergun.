@@ -22,3 +22,11 @@ Login und Datenbank für [[endo-ai|endo.ai]].
 - **Konten bei uns:** `endo_konten` mit ID `u-<Supabase-Nutzer-ID>`, Name = E-Mail, Start **0 Credits**. Neue Tabelle `endo_fotos` (Meine Fotos), Spalte `geloescht` bei Aufträgen, Funktionen `endo_konto_sicherstellen`, `endo_foto_merken`, `endo_meine_dateien`, `endo_datei_loeschen`, `endo_alte_dateien_austragen` – alle nur für den Server (geprüft: anon = false).
 - **E-Mails:** vorerst Supabase-Standardversand – englische Vorlagen, nur wenige Mails pro Stunde, nur an Team-Mitglieder der Organisation. Vorlagen lassen sich erst mit **eigenem SMTP** ändern (Emails → SMTP Settings, z. B. über einen Mail-Dienst) → offen in [[To-dos]].
 - **Credits gutschreiben** (bis der Kauf läuft): Claude Code macht es im SQL-Editor (`update endo_konten set credits = credits + N where id = 'u-…'`).
+
+## Stand 02.10.2026 – Bestätigungs-Mail für die endo-Startseite
+- Emre: eigenes SMTP eingerichtet, „Confirm email“ an, Vorlage „Confirm sign up“ deutsch. Weitere deutsche Vorlagen: [[Mail-Vorlagen (Übersicht)]].
+- **Prüfen in Authentication → URL Configuration** (oben steht noch der alte Stand vom 26.09.):
+  - **Site URL** → `https://endo-ergun.vercel.app/` (ist sie noch `https://website-ergun.vercel.app/ki/`, landet jeder Link ohne erlaubtes Ziel auf einer Seite, die es nicht mehr gibt).
+  - **Redirect URLs** → `https://endo-ergun.vercel.app/**` ergänzen (deckt `/` und `/cockpit` ab). Fehlt das, ignoriert Supabase das `redirect_to` unserer Seite und schickt auf die Site URL.
+- **Rate Limits (Authentication → Rate Limits):** „Rate limit for sending emails“ – mit eigenem SMTP selbst einstellbar (Supabase-Standard ohne SMTP: nur wenige Mails pro Stunde). Für den Start z. B. 30–60 pro Stunde. Unser eigenes Tageslimit je Besucher (registrieren/anmelden/passwort-vergessen/erneut-senden) kommt zusätzlich.
+- **Emails → „Email OTP Expiration“**: wie lange der Link gilt (die Vorlagen sagen „1 Stunde“ – passt zur Standardeinstellung 3600 s; bei Änderung den Satz anpassen).
