@@ -1,5 +1,10 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
+## Ladezustand „Glas“ (LIVE seit Emres OK, 02.10.2026; `LADEN_STANDARD = true` in `index.html`, `?laden=alt` = ohne; Rückweg Tag `vor-lader-live`)
+- Stil am Ende des `<head>` (nicht das erste `<style>` – Tests lesen es), `#lader` + Steuerung als erstes Element im `<body>`. Klassen: `lader-an` (Schalter an), `glas-laden` (lädt: Seite unsichtbar, Verlauf in `glas.js` steht still), `lader-deckt` (Seite wird darunter gemalt), `lader-geht` (Überblendung). Prüfgriff `window.__lader` (Zeiten), `__laderHalt = true` hält ihn fest (nur Prüfungen).
+- Farben NIE von Hand: `python _code/werkzeuge/lader-farben.py` (Server 8791 an) nimmt das erste Glas-Bild je Format mit Grafikkarte auf und trägt Kleinbild, Grundfläche und `theme-color` ein – nach jeder Änderung an Shader, Farben oder Schriftzug-Lage neu laufen lassen.
+- Prüfen: `node _code/werkzeuge/lade-aufnahme.mjs plan.json` (`netz: normal|langsam`, `besuch: erst|wieder`, `reduziert`, `gpu`) + `python _code/werkzeuge/lade-blatt.py <ordner>`; Bericht `08 Projekte/Lader-2026-10-02/`.
+
 ## Ruhe (LIVE seit Emres OK, 01.10.2026 spät; `?ruhe=alt` = vorher; Rückweg Tag `vor-ruhe-live`)
 - Kopf-Skript (Ende von `<head>`, gleich wie auf endo): Klasse `html.ruhe`, Viewport ohne Zoom, Gesten/Strg+Rad abgefangen; CSS in `glas-fein.css` (16 px Felder/Fließtext am Handy, `overflow-x: clip`, `touch-action`).
 - `js/glas.quelle.js` (`RUHE`, Klasse `glas-ruhe`): `.ghr-content` fest + `lageSetzen()` verschiebt es im selben Takt wie das Glas (`u_shift`), Start erst nach `document.fonts.ready` (Klasse `glas-schrift-da`), kein Glas-Wachsen, nur Breitenänderung zählt, `.glas-buehne` 100lvh. Prüfgriff `__glas.zustand()` meldet `masken` (Neuaufbauten) und `versatz`.

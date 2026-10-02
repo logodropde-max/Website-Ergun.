@@ -453,13 +453,15 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       last = now;
       const dt = Math.min(raw, 0.1);
       if (!lite && judged < 40 && animating()) {
-        judged += 1;
+        judged += 1; zustand.geprueft = judged;   /* Ladezustand wartet, bis über den Sparmodus entschieden ist (kein Wechsel nach dem Aufdecken) */
         if (judged > 3 && raw > SLOW_FRAME_S) slow += raw > CRAWL_FRAME_S ? 3 : 1;
         if (slow >= SLOW_FRAMES) { lite = true; zustand.lite = true; html.setAttribute('data-glas-lite', 'true'); size(); }
       }
       /* fein: unter dem Hero fließt der Verlauf langsamer (bis 0,3×) und wird höchstens ~24-mal je Sekunde neu gemalt */
       const unten = fein ? Math.min(Math.max((window.scrollY || 0) / Math.max(1, canvas.clientHeight), 0), 1) : 0;
-      if (animating()) time += dt * (1 - 0.7 * unten);
+      /* Ladezustand (index.html #lader, 02.10.): solange er steht, bleibt der Verlauf beim ersten Bild stehen – genau das Bild, aus dem
+         die Ladefarben gemacht sind; so gehen beide ohne Farbsprung ineinander über */
+      if (animating() && !html.classList.contains('glas-laden')) time += dt * (1 - 0.7 * unten);
       const pt = pointer, idle = (now - pt.at) / 1000 > IDLE_S;
       const [tx, ty] = idle && animating() ? orbit(time) : [pt.x, pt.y];
       light.x = follow(light.x, tx, dt, idle ? 1.2 : 7);
@@ -561,5 +563,5 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   /* Bildrate messen (Prüfung): Bilder je Sekunde der letzten Sekunde */
   let fpsT = performance.now(), fpsN = 0;
   setInterval(() => { const n = zustand.bilder; zustand.fps = Math.round((n - fpsN) * 1000 / Math.max(1, performance.now() - fpsT)); fpsN = n; fpsT = performance.now(); }, 1000);
-  window.__glas = { zustand: () => ({ glas: zustand.glas, lite: zustand.lite, fps: zustand.fps, angebote: angeboteFertig, masken: zustand.masken || 0, versatz, ruhe: RUHE, titel: titleEl.textContent, punkt: html.getAttribute('data-glas-punkt') || 'glas' }), zumKontakt, zuAngeboten };
+  window.__glas = { zustand: () => ({ glas: zustand.glas, lite: zustand.lite, fps: zustand.fps, bilder: zustand.bilder, geprueft: zustand.geprueft || 0, angebote: angeboteFertig, masken: zustand.masken || 0, versatz, ruhe: RUHE, titel: titleEl.textContent, punkt: html.getAttribute('data-glas-punkt') || 'glas' }), zumKontakt, zuAngeboten };
 })();

@@ -98,6 +98,22 @@ window.ERGUN_TITEL = 'glas';
 })();
 </script>
 
+<script>
+/* Ladezustand „Glas“ (02.10.2026, Vorschau ?laden=neu – Auftrag 3): vom ersten Bild an nur der Ladezustand, dann weicher Übergang in die
+   Glas-Seite. Gilt nur für das Titelbild „Glas“. LADEN_STANDARD = true seit Emres OK (02.10.2026, Rückweg Tag vor-lader-live); ?laden=alt = ohne.
+   Bestandteile: Stil am Ende des Kopfs (wirkt sofort, ohne Datei), HTML + Steuerung als erstes Element des Seiteninhalts (#lader).
+   Farben: das erste Bild des echten Glas-Verlaufs je Bildformat, winzig + weich (_code/werkzeuge/lader-farben.py). */
+(function () {
+  var LADEN_STANDARD = true, lq = new URLSearchParams(location.search).get('laden');
+  if (!window.ERGUN_GLAS || !(lq === 'neu' || (LADEN_STANDARD && lq !== 'alt'))) return;
+  var html = document.documentElement; html.classList.add('lader-an', 'glas-laden');
+  /* Statusleiste am Handy = obere Kante des Verlaufs im jeweiligen Format (beim Scrollen: Grund der Seite) */
+  var a = innerWidth / Math.max(1, innerHeight), oben = a >= 1.69 ? '#D27865' : a >= 1.45 ? '#DE7B59' : a >= 1.1 ? '#E6835B' : a >= 0.62 ? '#D4755B' : '#D5725D';
+  var tc = document.querySelector('meta[name="theme-color"]'); if (tc) tc.setAttribute('content', oben);
+  window.ERGUN_LADER_OBEN = oben;
+})();
+</script>
+
 <style>
 html, body { touch-action: pan-x pan-y; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
@@ -1273,6 +1289,59 @@ html.titel-neu {
 .titel-neu .footer a { color: var(--p-leise); }
 .titel-neu .online { color: var(--p-leise); }
 </style>
+<style>
+/* Ladezustand „Glas“ – nur mit html.glas-laden / .lader-geht sichtbar (Schalter oben). Alte Fassungen (Kopf .nav, Szene, alte Fußzeile) erscheinen
+   bei „Glas“ nie, auch wenn glas.css noch lädt. Während des Ladens ist die Seite darunter unsichtbar (kein Layout-Springen sichtbar, CLS 0). */
+html.lader-an.titel-glas :is(header.nav, .szene, footer.footer, .wechsel) { display: none !important; }
+.lader { display: none; }
+/* lader-grund:anfang – erstes Bild, bevor der Verlauf gemalt ist (Werte: _code/werkzeuge/lader-farben.py) */
+html.glas-laden, html.glas-laden body { background: linear-gradient(#DD7859 10%, #C0715B 50%, #4A251A 90%) fixed #A25945; }
+@media (min-aspect-ratio: 169/100) { html.glas-laden, html.glas-laden body { background: linear-gradient(#D17562 10%, #BC6E5A 50%, #47231A 90%) fixed #9C5647; } }
+@media (max-aspect-ratio: 145/100) { html.glas-laden, html.glas-laden body { background: linear-gradient(#E2805C 10%, #C9785C 50%, #4D271A 90%) fixed #A85F46; } }
+@media (max-aspect-ratio: 110/100) { html.glas-laden, html.glas-laden body { background: linear-gradient(#D87861 10%, #DA8665 50%, #3F2219 90%) fixed #A55E49; } }
+@media (max-aspect-ratio: 62/100) { html.glas-laden, html.glas-laden body { background: linear-gradient(#E3795B 10%, #D37657 50%, #3A2018 90%) fixed #A35841; } }
+/* lader-grund:ende */
+html.glas-laden .lader, html.lader-deckt .lader, html.lader-geht .lader { display: grid; place-items: center; position: fixed; inset: 0; z-index: 2147483000; overflow: hidden; pointer-events: auto; }
+html.glas-laden body > :not(.lader) { visibility: hidden; animation: lader-zeigen 0s linear 2.8s forwards; }
+html.glas-laden .lader { animation: lader-notaus 400ms ease 2.8s forwards; }   /* Sicherung ohne JavaScript-Steuerung: nach 2,8 s gibt CSS die Seite selbst frei */
+@keyframes lader-zeigen { to { visibility: visible; } }
+@keyframes lader-notaus { to { opacity: 0; visibility: hidden; } }
+/* Hero-Einblendungen warten, bis der Ladezustand geht */
+html.glas-laden .glas-hero :is(.ghr-eyebrow, .ghr-desc, .ghr-actions) { animation-play-state: paused; }
+html.glas-laden .glas-hero .ghr-title { transition: none !important; }
+/* Verlauf: erstes Bild des echten Glas-Verlaufs je Format, weich gezeichnet, bewegt sich ganz langsam */
+.lader__grund { position: absolute; inset: -8%; background: #A25945 url("data:image/webp;base64,UklGRuAAAABXRUJQVlA4INQAAAAwBgCdASogABQAPm0skUWkIqGYDAYAQAbEsgBOmUI6L92KsABwXO5FJGixewJfs23ZcGTgLLp74i/gAP7E667pLLDCAmIpN+pEK2bCYl2A0u2W+PqV5wDl8fEtnw43+//5Eu0ikqEIo0Zvh83/z3n4/yibk0tmbD7miYvd/uUaYOggZDxoulFXULr7jQ2yeZz2B6mGZVuTBGEaby5iNS4sHXM4JNwWfbk9i+DcIh73CdimmUNMjBg3dO3PZiPkoH4jmRfP17NsBG+ywKZyBi/X4TYAAA==") center / cover no-repeat;
+  filter: blur(22px) saturate(1.05); transform: translateZ(0); animation: lader-fluss 7s ease-in-out infinite alternate; }
+@media (min-aspect-ratio: 169/100) { .lader__grund { background-color: #9C5647; background-image: url("data:image/webp;base64,UklGRtYAAABXRUJQVlA4IMoAAADQBQCdASogABIAPmkoj0WkIqEYBgBABoSzAE6ZQjgb3S3DtlgXoMXp28vWQafYDtaY0bzhyTcAAP7E7Rjqx5kgg5m6EV3afhxQ7Yzx3XH/836alpzH/Bx2y0oT6lz/8Xppq4vYL7j/+e3kwKvmdnWCNoIlFbU1IR0HqUsGHrWJIcgJd6z5DHaH0Df6NnZ7pQm12fv9ZRrnB140DnFSPgV96beWP8QayMreZN8kzjw9qe3/KttMk9rW3qlCSPUaMiIKOBYQa2Z4isAA"); } }
+@media (max-aspect-ratio: 145/100) { .lader__grund { background-color: #A85F46; background-image: url("data:image/webp;base64,UklGRtIAAABXRUJQVlA4IMYAAAAwBgCdASocABUAPmkskkWkIqGYDAYAQAaEsgBOmUI4G9AtwAIgyryIGdYlr8L/+6z6as1j+SobrYWAAP7USiy7/ewCFnDfth1PoYrxrhC918MHC1T/uUVStPltoZmF7IKIp4//Ilubdq2uHIHezAv/0OizWG/vrlzHYbcDCD2w1muOyQH0QB/7nTr4VCjISzCxhprXmZgt6ac9eN8djdssMHeBq6EapNA9emZjS9OHmlTJsmbCtqmBAfqOG+yTELRQsZNs0AA="); } }
+@media (max-aspect-ratio: 110/100) { .lader__grund { background-color: #A55E49; background-image: url("data:image/webp;base64,UklGRuAAAABXRUJQVlA4INQAAABwBgCdASoWABsAPm0skEYkIqGhMBgMAIANiWwAnTM0NQe6cIAC9jLCC3UGILIDvT0jHl0wV0o3xWG9sAAA/ghwxaxNUxiUyRcUR/MMUc550X6NiAw54qrwMKKuzhgMeE5VVX/4YaHkpTBoPDbn/pNzL/ES4O2PjL0gVIDyZ/G+JDZ065sVlxSzJ42Y87M5J649fGRmeOy1W8nNM3l5GfglV0/AtRESgXs6BAcSpXoCZpETfuosgtJKr5BemiCKWiZruCWh6uSEqi4vdnZCwqACiAAAAA=="); } }
+@media (max-aspect-ratio: 62/100) { .lader__grund { background-color: #A35841; background-image: url("data:image/webp;base64,UklGRrwAAABXRUJQVlA4ILAAAACwBQCdASoQACMAPmUoj0WkIqEapABABkS1AE6ZQjgb3ThAnIwIlSwmmDvewEQHP7qat/B5xgAA/mu58hQC/4R0RNK5cN4waLoI8xyJd3OJyQjXJIfH5//hipqJUulikThXRxb/1Fhc37LvdgfFDH+HvwBjIoWUwbwvrZjbl3YR5Oh42tGO3ZPZ+H2cT3ZT6pkLIG21Et5XaoeK79fvMq73mD4qEm6ir4cVFzdv0xQAAA=="); } }
+@keyframes lader-fluss { from { transform: translate3d(-0.8%, -0.6%, 0) scale(1.02); } to { transform: translate3d(0.8%, 0.6%, 0) scale(1.06); } }
+/* kleines „ERGUN.“ im Glas-Look (Pfad aus Clash Display 700, keine Schrift nötig), Lichtstreifen läuft darüber */
+.lader__mitte { --lm: clamp(150px, 26vw, 240px); position: absolute; left: 50%; top: 50%; width: var(--lm); height: calc(var(--lm) * 0.29 + 22px); margin: calc(var(--lm) * -0.145 - 11px) 0 0 calc(var(--lm) * -0.5); }   /* feste Maße: nichts darf beim Nachladen springen */
+.lader__marke { position: absolute; left: 0; top: 0; display: block; width: var(--lm); height: calc(var(--lm) * 0.29); max-width: none; overflow: visible; transform-origin: 0 0;
+  filter: drop-shadow(0 6px 22px rgba(13, 10, 20, 0.38)); will-change: transform, opacity; }
+.lader__streif { animation: lader-licht 1.8s cubic-bezier(0.45, 0, 0.25, 1) 0.15s infinite; }
+@keyframes lader-licht { from { transform: translateX(-1700px); } 70%, to { transform: translateX(4300px); } }
+/* feiner Ladebalken in den Farben des Verlaufs */
+.lader__balken { position: absolute; left: 21%; bottom: 0; display: block; width: 58%; height: 2px; border-radius: 2px; background: rgba(255, 255, 255, 0.24); overflow: hidden; }
+.lader__balken i { display: block; height: 100%; border-radius: inherit; transform-origin: 0 50%; transform: scaleX(0.04);
+  background: linear-gradient(90deg, #FFE6B8, #FF9EC1 55%, #A9B4FF); animation: lader-balken 2.3s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+html.lader-wieder .lader__balken i { animation-duration: 0.5s; }
+@keyframes lader-balken { to { transform: scaleX(0.9); } }
+/* Übergang: Verlauf blendet in den echten Verlauf über, „ERGUN.“ wächst zum großen Schriftzug und geht dabei auf */
+html.lader-geht .lader { pointer-events: none; }
+html.lader-geht .lader__grund { opacity: 0; transition: opacity 560ms cubic-bezier(0.4, 0, 0.2, 1); }
+html.lader-geht .lader__marke { opacity: 0; transition: transform 640ms cubic-bezier(0.22, 1, 0.36, 1), opacity 440ms ease 160ms; }
+html.lader-geht .lader__balken { opacity: 0; transition: opacity 200ms ease; }
+html.lader-geht .lader__balken i { transform: none; transition: transform 160ms ease; animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .lader__grund, .lader__streif { animation: none; }
+  .lader__streif { display: none; }
+  html.lader-geht .lader { opacity: 0; transition: opacity 320ms ease; }
+  html.lader-geht :is(.lader__grund, .lader__marke, .lader__balken) { opacity: 1; transition: none; }
+}
+</style>
 <script>
 /* Ruhe (01.10.2026 spät, Vorschau ?ruhe=neu – Ausnahme auf ERGUNs Wunsch): kein Heranzoomen am Handy (Pinch, Doppeltipp, Eingabefelder),
    kein seitliches Verschieben, Strg+Mausrad/Trackpad-Pinch abgefangen (Strg +/− im Browser-Menü bleibt für die Barrierefreiheit).
@@ -1289,6 +1358,94 @@ html.titel-neu {
 </script>
 </head>
 <body>
+
+<!-- Ladezustand „Glas“ (02.10.2026, Stil + Schalter im <head>): erstes Element der Seite, damit vom ersten Bild an nur er zu sehen ist -->
+<div class="lader" id="lader" aria-hidden="true">
+  <div class="lader__grund"></div>
+  <div class="lader__mitte">
+    <svg class="lader__marke" viewBox="0 -890 3930 1140" width="240" height="70" focusable="false">
+      <defs>
+        <linearGradient id="lader-glas" x1="0" y1="0" x2="0.14" y2="1"><stop offset="0.08" stop-color="#FFFFFF"/><stop offset="0.4" stop-color="#FFEFE0"/><stop offset="0.64" stop-color="#FFD3BC"/><stop offset="0.92" stop-color="#F4B9D2"/></linearGradient>
+        <linearGradient id="lader-licht" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0.95"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient>
+        <clipPath id="lader-form"><path d="M218 0H30V-670H218ZM625 0H81V-169H625ZM610 -253H81V-421H610ZM625 -501H81V-670H625Z M866 0H678V-670H1069Q1158 -670 1218 -646Q1278 -622 1308.5 -576.5Q1339 -531 1339 -465Q1339 -412 1320.5 -373.5Q1302 -335 1262 -311.5Q1222 -288 1158 -280V-270Q1210 -257 1232.5 -231.5Q1255 -206 1274 -168L1357 0H1140L1060 -164Q1048 -189 1035 -203Q1022 -217 1001 -222.5Q980 -228 943 -228H866ZM866 -501V-368H1067Q1108 -368 1125 -380Q1142 -392 1142 -435Q1142 -475 1125 -488Q1108 -501 1067 -501Z M1711 10Q1606 10 1531 -32.5Q1456 -75 1416.5 -152.5Q1377 -230 1377 -335Q1377 -440 1423 -517.5Q1469 -595 1556 -637.5Q1643 -680 1765 -680Q1879 -680 1960 -648Q2041 -616 2084 -556.5Q2127 -497 2127 -414V-407H1917V-414Q1917 -461 1883 -480.5Q1849 -500 1760 -500Q1688 -500 1648.5 -486.5Q1609 -473 1593 -437.5Q1577 -402 1577 -335Q1577 -269 1592 -233Q1607 -197 1644.5 -183.5Q1682 -170 1750 -170Q1831 -170 1872 -175.5Q1913 -181 1926.5 -199.5Q1940 -218 1940 -257V-294L2128 -298V-284L1965 -143H1943Q1934 -104 1909.5 -69Q1885 -34 1837.5 -12Q1790 10 1711 10ZM2128 0H1953V-191L1940 -212V-357H2128ZM2128 -228H1732V-366H2128Z M2522 10Q2405 10 2329.5 -25.5Q2254 -61 2217 -126.5Q2180 -192 2180 -281V-670H2368V-296Q2368 -248 2380 -221Q2392 -194 2425.5 -183Q2459 -172 2522 -172Q2586 -172 2619 -183Q2652 -194 2664 -221Q2676 -248 2676 -296V-670H2864V-281Q2864 -192 2827 -126.5Q2790 -61 2714.5 -25.5Q2639 10 2522 10Z M3108 0H2920V-670H3120L3306 -419L3404 -265H3417L3408 -411V-670H3596V0H3396L3198 -258L3113 -390H3100L3108 -262Z M3900 0H3656V-192H3900Z"/></clipPath>
+      </defs>
+      <path d="M218 0H30V-670H218ZM625 0H81V-169H625ZM610 -253H81V-421H610ZM625 -501H81V-670H625Z M866 0H678V-670H1069Q1158 -670 1218 -646Q1278 -622 1308.5 -576.5Q1339 -531 1339 -465Q1339 -412 1320.5 -373.5Q1302 -335 1262 -311.5Q1222 -288 1158 -280V-270Q1210 -257 1232.5 -231.5Q1255 -206 1274 -168L1357 0H1140L1060 -164Q1048 -189 1035 -203Q1022 -217 1001 -222.5Q980 -228 943 -228H866ZM866 -501V-368H1067Q1108 -368 1125 -380Q1142 -392 1142 -435Q1142 -475 1125 -488Q1108 -501 1067 -501Z M1711 10Q1606 10 1531 -32.5Q1456 -75 1416.5 -152.5Q1377 -230 1377 -335Q1377 -440 1423 -517.5Q1469 -595 1556 -637.5Q1643 -680 1765 -680Q1879 -680 1960 -648Q2041 -616 2084 -556.5Q2127 -497 2127 -414V-407H1917V-414Q1917 -461 1883 -480.5Q1849 -500 1760 -500Q1688 -500 1648.5 -486.5Q1609 -473 1593 -437.5Q1577 -402 1577 -335Q1577 -269 1592 -233Q1607 -197 1644.5 -183.5Q1682 -170 1750 -170Q1831 -170 1872 -175.5Q1913 -181 1926.5 -199.5Q1940 -218 1940 -257V-294L2128 -298V-284L1965 -143H1943Q1934 -104 1909.5 -69Q1885 -34 1837.5 -12Q1790 10 1711 10ZM2128 0H1953V-191L1940 -212V-357H2128ZM2128 -228H1732V-366H2128Z M2522 10Q2405 10 2329.5 -25.5Q2254 -61 2217 -126.5Q2180 -192 2180 -281V-670H2368V-296Q2368 -248 2380 -221Q2392 -194 2425.5 -183Q2459 -172 2522 -172Q2586 -172 2619 -183Q2652 -194 2664 -221Q2676 -248 2676 -296V-670H2864V-281Q2864 -192 2827 -126.5Q2790 -61 2714.5 -25.5Q2639 10 2522 10Z M3108 0H2920V-670H3120L3306 -419L3404 -265H3417L3408 -411V-670H3596V0H3396L3198 -258L3113 -390H3100L3108 -262Z" fill="url(#lader-glas)"/>
+      <path d="M3900 0H3656V-192H3900Z" fill="#FF5A1F"/>
+      <g clip-path="url(#lader-form)"><rect class="lader__streif" x="0" y="-900" width="1300" height="1200" fill="url(#lader-licht)" transform="translate(-1700 0)"/></g>
+    </svg>
+    <span class="lader__balken"><i></i></span>
+  </div>
+</div>
+<script>
+/* Steuerung des Ladezustands: geht, sobald Schrift, Stylesheets und das erste Glas-Bild da sind – frühestens nach 600 ms (Wiederbesuch 250 ms),
+   spätestens nach 2,5 s (2,2 s + Malen darunter). Während des Ladens kein Scrollen, danach oben. Prüfgriff: window.__lader (Zeiten in ms ab Seitenaufruf). */
+(function () {
+  var html = document.documentElement, lader = document.getElementById('lader');
+  if (!lader) return;
+  if (!html.classList.contains('glas-laden')) { lader.parentNode.removeChild(lader); return; }
+  var jetzt = function () { return performance.now(); }, ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var wieder = false; try { wieder = localStorage.getItem('ergun-lader') === '1'; } catch (e) {}
+  var MIN = wieder ? 250 : 600, MAX = 2200, info = window.__lader = { wieder: wieder, start: Math.round(performance.now()), bereit: -1, aus: -1, fertig: -1, grund: '' };
+  if (wieder) html.classList.add('lader-wieder');
+  if (!location.hash && 'scrollRestoration' in history) history.scrollRestoration = 'manual';
+  var TASTEN = { 32: 1, 33: 1, 34: 1, 35: 1, 36: 1, 38: 1, 40: 1 }, EREIGNISSE = ['wheel', 'touchmove', 'keydown'];
+  function sperre(e) { if (e.type !== 'keydown' || TASTEN[e.keyCode]) e.preventDefault(); }
+  EREIGNISSE.forEach(function (n) { window.addEventListener(n, sperre, { passive: false }); });
+  var aus = false, bereitSeit = -1;
+  function bereit() {
+    if (document.readyState === 'loading' || !window.__glas || (document.fonts && document.fonts.status !== 'loaded')) return false;
+    var css = document.querySelectorAll('link[rel="stylesheet"]');
+    for (var i = 0; i < css.length; i++) if (!css[i].sheet) return false;
+    if (html.classList.contains('glas-ohne')) return true;   /* ohne WebGL: weiße Schrift über dem CSS-Verlauf */
+    var r = document.querySelector('[data-glas-root]'), z = window.__glas.zustand();
+    /* das erste Glas-Bild ist gemalt und das Glas hat genug Bilder gemessen, um über den Sparmodus zu entscheiden (langsame Geräte
+       wechseln sonst NACH dem Aufdecken sichtbar in den ruhigeren Verlauf) */
+    return !!r && r.getAttribute('data-glass') === 'true' && z.bilder > 0 && (ruhig || z.lite || z.geprueft >= 12 || z.geprueft === undefined);   /* „Bewegung reduzieren“: das Glas misst nicht */
+  }
+  function pruefen() {
+    if (aus) return;
+    if (bereitSeit < 0 && bereit()) info.bereit = Math.round(bereitSeit = jetzt());
+    if (bereitSeit >= 0 && jetzt() >= MIN && !window.__laderHalt) { weg('bereit'); return; }   /* __laderHalt: nur für Prüf-Aufnahmen (lader-farben) */
+    setTimeout(pruefen, 30);
+  }
+  function weg(grund) {
+    if (aus) return; aus = true; info.grund = grund; info.aus = Math.round(jetzt());
+    if (!location.hash) window.scrollTo(0, 0);
+    /* Schritt 1: die Seite wird unter dem noch deckenden Ladezustand sichtbar und einmal ganz gemalt (das dauert beim ersten Mal
+       spürbar – liefe dabei schon die Überblendung, spränge sie). Weiter, sobald zwei Bild-Takte kurz hintereinander kommen. */
+    html.classList.remove('glas-laden'); html.classList.add('lader-deckt');
+    var vorher = jetzt(), ruhigeTakte = 0, los = false;
+    function takt() { if (los) return; var n = jetzt(); ruhigeTakte = n - vorher < 40 ? ruhigeTakte + 1 : 0; vorher = n;
+      if (ruhigeTakte >= 2) aufdecken(); else requestAnimationFrame(takt); }
+    requestAnimationFrame(takt); setTimeout(aufdecken, 450);   /* stehender Bild-Takt (Hintergrund-Tab): spätestens nach 450 ms */
+    function aufdecken() {
+      if (los) return; los = true; info.auf = Math.round(jetzt());
+      var marke = lader.querySelector('.lader__marke'), titel = document.querySelector('[data-glas-titel]');
+      if (!ruhig && marke && titel && titel.textContent) {   /* Schritt 2: „ERGUN.“ wächst genau auf den großen Schriftzug */
+        var rg = document.createRange(); rg.selectNodeContents(titel);
+        var t = rg.getBoundingClientRect(), m = marke.getBoundingClientRect();
+        /* gleiche Schriftgröße (die Marke ist 1,14 Geviert hoch), mittig auf dem Schriftzug – dessen Abstände sind optisch ausgeglichen */
+        var px = parseFloat(getComputedStyle(titel).fontSize) || 0;
+        if (t.width > 0 && m.height > 0 && px > 0) { var s = px * 1.14 / m.height;
+          marke.style.transform = 'translate3d(' + (t.left + t.width / 2 - m.left - m.width * s / 2).toFixed(1) + 'px,' + (t.top + t.height / 2 - m.top - m.height * s / 2).toFixed(1) + 'px,0) scale(' + s.toFixed(4) + ')'; }
+      }
+      html.classList.remove('lader-deckt'); html.classList.add('lader-geht');
+      setTimeout(function () {
+        if (lader.parentNode) lader.parentNode.removeChild(lader);
+        html.classList.remove('lader-geht', 'lader-wieder'); info.fertig = Math.round(jetzt());
+        EREIGNISSE.forEach(function (n) { window.removeEventListener(n, sperre, { passive: false }); });
+        try { localStorage.setItem('ergun-lader', '1'); } catch (e) {}
+      }, ruhig ? 360 : 680);
+    }
+    /* Statusleiste: oben die Farbe des Verlaufs, weiter unten der Grund der Seite */
+    var tc = document.querySelector('meta[name="theme-color"]'), farbe = '';
+    function leiste() { var f = (window.scrollY || 0) < innerHeight * 0.5 ? window.ERGUN_LADER_OBEN : '#0D0A14'; if (tc && f && f !== farbe) tc.setAttribute('content', farbe = f); }
+    window.addEventListener('scroll', leiste, { passive: true }); leiste();
+  }
+  setTimeout(function () { if (!window.__laderHalt) weg('zeit'); }, Math.max(0, MAX - jetzt()));
+  pruefen();
+})();
+</script>
 
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
 
@@ -1693,7 +1850,7 @@ html.titel-neu {
 <script>
 /* Auftrag 44: je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
 (function () {
-  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=5'] : window.ERGUN_WAHL === 'all' ? ['js/all.js?v=1'] : window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'baum' ? ['js/baum.js?v=6', 'js/kristall.js?v=45'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris' || window.ERGUN_WAHL === 'lycoris3') ? ['js/blume.js?v=11', 'js/kristall.js?v=45'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=45'] : [];
+  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=7'] : window.ERGUN_WAHL === 'all' ? ['js/all.js?v=1'] : window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'baum' ? ['js/baum.js?v=6', 'js/kristall.js?v=45'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris' || window.ERGUN_WAHL === 'lycoris3') ? ['js/blume.js?v=11', 'js/kristall.js?v=45'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=45'] : [];
   liste.forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
 })();
 </script>
