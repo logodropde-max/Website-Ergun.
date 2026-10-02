@@ -30,3 +30,9 @@ Login und Datenbank für [[endo-ai|endo.ai]].
   - **Redirect URLs** → `https://endo-ergun.vercel.app/**` ergänzen (deckt `/` und `/cockpit` ab). Fehlt das, ignoriert Supabase das `redirect_to` unserer Seite und schickt auf die Site URL.
 - **Rate Limits (Authentication → Rate Limits):** „Rate limit for sending emails“ – mit eigenem SMTP selbst einstellbar (Supabase-Standard ohne SMTP: nur wenige Mails pro Stunde). Für den Start z. B. 30–60 pro Stunde. Unser eigenes Tageslimit je Besucher (registrieren/anmelden/passwort-vergessen/erneut-senden) kommt zusätzlich.
 - **Emails → „Email OTP Expiration“**: wie lange der Link gilt (die Vorlagen sagen „1 Stunde“ – passt zur Standardeinstellung 3600 s; bei Änderung den Satz anpassen).
+
+## Stand 03.10.2026 – eingerichtet (mit Claude im Dashboard)
+- URL Configuration: Site URL `https://endo-ergun.vercel.app/` ✓, Redirect URL `https://endo-ergun.vercel.app/**` ergänzt ✓ (alte `website-ergun…/**` bleibt).
+- SMTP: Gmail (`smtp.gmail.com`, **Port 465** – vorher stand fälschlich 464), Absender `logodropde@gmail.com`, Name „endo von ERGUN.“. Passwort = Gmail-App-Passwort (nur Emre).
+- Vorlagen: „Confirm sign up“ = Emres eigene Fassung; Reset password, Magic link, Change email address, Invite user = deutsch im selben Stil ([[Mail-Vorlagen (Übersicht)]]).
+- Rate limit for sending emails: 30 pro Stunde (passt für den Start).
