@@ -36,3 +36,4 @@ Login und Datenbank für [[endo-ai|endo.ai]].
 - SMTP: Gmail (`smtp.gmail.com`, **Port 465** – vorher stand fälschlich 464), Absender `logodropde@gmail.com`, Name „endo von ERGUN.“. Passwort = Gmail-App-Passwort (nur Emre).
 - Vorlagen: „Confirm sign up“ = Emres eigene Fassung; Reset password, Magic link, Change email address, Invite user = deutsch im selben Stil ([[Mail-Vorlagen (Übersicht)]]).
 - Rate limit for sending emails: 30 pro Stunde (passt für den Start).
+- 03.10. später: **„Confirm email“ war AUS** (Sign In / Providers → User Signups) – eingeschaltet. Bestätigungs-Mail = [[Konto bestätigen (Weltraum)]]. Versand geprüft: Mail an antiaggrox@ liegt im Gesendet-Ordner von logodropde@ → kommt sie nicht an, im Spam suchen (neuer Absender).
