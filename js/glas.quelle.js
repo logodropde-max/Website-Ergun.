@@ -467,7 +467,8 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       light.x = follow(light.x, tx, dt, idle ? 1.2 : 7);
       light.y = follow(light.y, ty, dt, idle ? 1.2 : 7);
       if (fein && !NAHTLOS) { const tief = unten >= 1 ? true : unten < 0.97 ? false : tiefStand; if (tief !== tiefStand) { tiefStand = tief; size(); } }
-      const sparen = fein && !RUHE && unten >= 1 && animating() && now - gemalt < 40;   /* Ruhe (Emre, 02.10.): immer volle Bildrate */
+      const sparen = fein && !RUHE && unten >= 1 && animating() && now - gemalt < 40   /* Ruhe (Emre, 02.10.): immer volle Bildrate */
+        || (html.classList.contains('papier-zu') && now - gemalt < 250);   /* Papier-Start (03.10.): das geschlossene Blatt deckt alles – nur ~4 Bilder/s, damit das Handy fürs Reißen frei ist */
       if (!sparen) { draw(); gemalt = now; }
       const catching = Math.abs(light.x - tx) + Math.abs(light.y - ty) > 0.0015;
       const visible = (fein || inView) && !document.hidden;
