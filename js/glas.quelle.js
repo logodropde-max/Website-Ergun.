@@ -56,7 +56,15 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
        (Platz bleibt reserviert, keine Verschiebung); kein „Wachsen“ des Glases beim Laden (form = 1, nur weiches Einblenden).
      · Adressleiste am Handy → nur bei echter Breitenänderung neu rechnen; Leinwand fest 100lvh (glas-fein.css). */
   const RUHE = FEIN && html.classList.contains('ruhe');
-  const inhalt = RUHE ? root.querySelector('.ghr-content') : null;
+  /* Schriftzug löst sich auf (?schrift=weg, 03.10.2026 – ERGUN.: „Das ERGUN. ist beim Runterscrollen etwas zu verschwommen, wie
+     Bewegungsunschärfe“). Ursache: das Glas wird in der Leinwand mit dem Scrollen verschoben (u_shift) – jedes Bild an neuer Stelle, dazu der
+     Titelbild-Inhalt per transform im selben Takt; bei schnellem Scrollen verwischt das am Handy. Jetzt: der Schriftzug wandert nur noch, solange er
+     sichtbar ist, und verschmilzt ab ~8 % der Titelbild-Höhe in ~0,6 s (nach Zeit, nicht nach Scroll-Weg) mit dem Verlauf – der vorhandene Aufbau („form“
+     der Vorlage) läuft rückwärts – und baut sich ganz oben wieder auf (Abstand der Schwellen gegen Flackern). Weg = keine Masken-Rechnung, kein
+     Verschieben, der Verlauf malt ohne Glas-Rechnung (u_ohne). Unterzeile und Knöpfe scrollen ganz normal mit der Seite (kein transform). */
+  const WEG = RUHE && html.classList.contains('schrift-weg');
+  const WEG_AB = 0.08, WEG_ZURUECK = 0.035, WEG_MS = 600;
+  const inhalt = RUHE && !WEG ? root.querySelector('.ghr-content') : null;
   let versatz = 0, breiteJetzt = window.innerWidth;
   const dprR = Math.min(window.devicePixelRatio || 1, 2);
   /* Ruhe + Handy (Emre, 02.10.: „alles auf höchste FPS“): Leinwand mit höchstens 1,5-facher Pixeldichte, Farbfeld mit 4 statt 5 Rausch-Stufen
@@ -168,7 +176,14 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     '  float mitte = exp(-pow((uv.x - 0.5) / 0.42, 2.0));\n  col *= mix(1.0, 0.36 - 0.1 * mitte, tief);\n  o = vec4(col, 1.0);\n}');
   const dbg = frage.get('glasdbg');   /* Prüfschalter: Kanäle der Höhenkarte zeigen (r = Kante, g = Maske, b = Wölbung) */
   if (FEIN && dbg) GLASS_FEIN = GLASS_FEIN.replace('o = vec4(col, 1.0);\n}', 'vec4 dh = texture(u_height, vec2(0.0, -u_shift) + uv); o = vec4(pow(vec3(' + (dbg === 'g' ? 'dh.g' : dbg === 'b' ? 'dh.b' : 'dh.r') + '), vec3(0.25)), 1.0);\n}');
-  const fehlt = BLUR_FEIN === BLUR || GLASS_FEIN.indexOf('u_shift') < 0;   /* Vorlage geändert? dann sicher die alte Fassung */
+  if (FEIN && WEG) {   /* Maske mit eigener Lage (u_maske, steht still, während der Verlauf mit u_shift weiter nach unten dunkler wird) */
+    const ohne = NAHTLOS ? '  float yDoc = (1.0 - uv.y) + u_shift;\n  float tief = smoothstep(0.55, 1.5, yDoc) * u_nahtlos;\n' +
+      '  float mitte = exp(-pow((uv.x - 0.5) / 0.42, 2.0));\n  col *= mix(1.0, 0.36 - 0.1 * mitte, tief);\n' : '';
+    GLASS_FEIN = GLASS_FEIN.split('texture(u_height, vec2(0.0, -u_shift) + ').join('texture(u_height, vec2(0.0, -u_maske) + ')
+      .replace('uniform float u_shift;', 'uniform float u_shift;\nuniform float u_maske;\nuniform float u_ohne;')
+      .replace('  vec2 uv = vUv;\n', '  vec2 uv = vUv;\n  if (u_ohne > 0.5) {\n  vec3 col = texture(u_field, uv).rgb;\n  col += (hash(floor(uv * u_res)) - 0.5) * 0.018;\n' + ohne + '  o = vec4(col, 1.0);\n  return;\n  }\n');
+  }
+  const fehlt = BLUR_FEIN === BLUR || GLASS_FEIN.indexOf('u_shift') < 0 || (FEIN && WEG && GLASS_FEIN.indexOf('u_ohne > 0.5') < 0);   /* Vorlage geändert? dann sicher die alte Fassung */
   const fein = FEIN && !fehlt;
 
   /* Schriftzug immer ganz: Größe aus der echten Breite (inkl. Kante, Glanz und Schatten), je Seite ≥ 6 % frei */
@@ -319,7 +334,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       const heading = titleEl, cr = canvas.getBoundingClientRect();
       const scale = lite ? Math.min(window.devicePixelRatio || 1, 1.25) : Math.min(window.devicePixelRatio || 1, 2);
       const w = Math.max(1, Math.round(cr.width * scale)), h = Math.max(1, Math.round(cr.height * scale));
-      const cs = getComputedStyle(heading), fontPx = parseFloat(cs.fontSize) || 64, sy = RUHE ? versatz : window.scrollY || 0;   /* Ruhe: der Inhalt ist um „versatz“ verschoben */
+      const cs = getComputedStyle(heading), fontPx = parseFloat(cs.fontSize) || 64, sy = RUHE && !WEG ? versatz : window.scrollY || 0;   /* Ruhe: der Inhalt ist um „versatz“ verschoben */
       const zeichen = [], tw = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
       for (let n = tw.nextNode(); n; n = tw.nextNode()) for (let i = 0; i < n.data.length; i++) {
         if (/\s/.test(n.data[i])) continue;
@@ -371,6 +386,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     const buildMask = () => {
       const heading = titleEl;
       if (!heading || !field) return;
+      if (WEG && schrift.ziel === 0) { schrift.offen = true; return; }   /* Schriftzug weg: nicht neu rechnen – erst beim Wiederkommen */
       if (fein) { const m = maskeFein(); if (m) hochladen(m.cnv, m.w, m.h, m.fontPx, m.scale); return; }
       const box = root.getBoundingClientRect();
       const scale = lite ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
@@ -436,16 +452,36 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       if (!field || !blurB) return;
       const pal = live.palette, aspect = canvas.width / canvas.height;
       run(P.field, field, { time, aspect, octaves: lite ? 3 : RUHE && HANDY_R ? 4 : 5, c0: pal[0], c1: pal[1], c2: pal[2], c3: pal[3], c4: pal[4] });
+      const ch = Math.max(1, canvas.clientHeight), w = WEG ? schriftJetzt(performance.now()) : 1;
       run(P.glass, null, {
-        field: field.tex, height: blurB.tex, htexel: [1 / blurB.w, 1 / blurB.h], bevel, aspect, light: [light.x, light.y], glass: 1,
-        form: RUHE || reduceMq.matches || readyAt < 0 ? 1 : formed(performance.now() - readyAt, FORM_MS), res: [canvas.width, canvas.height],
-        shift: fein ? (RUHE ? lageSetzen() : window.scrollY || 0) / Math.max(1, canvas.clientHeight) : 0, nahtlos: NAHTLOS ? 1 : 0
+        field: field.tex, height: blurB.tex, htexel: [1 / blurB.w, 1 / blurB.h], bevel, aspect, light: [light.x, light.y],
+        glass: WEG ? w : 1,
+        form: WEG ? (reduceMq.matches ? 1 : w) : RUHE || reduceMq.matches || readyAt < 0 ? 1 : formed(performance.now() - readyAt, FORM_MS), res: [canvas.width, canvas.height],   /* weg: Aufbau rückwärts; „Bewegung reduzieren“ = nur ausblenden */
+        shift: fein ? (RUHE && !WEG ? lageSetzen() : window.scrollY || 0) / ch : 0, nahtlos: NAHTLOS ? 1 : 0,
+        maske: WEG ? schrift.lage / ch : 0, ohne: WEG && w <= 0 ? 1 : 0
       });
       zustand.bilder++;
     };
 
     const animating = () => (fein || inView) && !document.hidden && !reduceMq.matches;   /* fein: die Bühne liegt hinter der ganzen Seite */
     let gemalt = 0, tiefStand = false;
+    /* Schriftzug weg/da (WEG): Ziel nach der Scroll-Lage, Wert nach der Zeit (weich), Lage der Maske steht still, sobald er ganz weg ist */
+    const schrift = window.__glasSchrift = { ziel: 1, von: 1, wert: 1, t0: 0, lage: 0, offen: false, neu: 0 };
+    const weich = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+    function schriftJetzt(now) {
+      const y = window.scrollY || 0, hh = root.offsetHeight || canvas.clientHeight || 1;
+      const ziel = schrift.ziel === 1 ? (y > WEG_AB * hh ? 0 : 1) : (y < WEG_ZURUECK * hh ? 1 : 0);
+      if (ziel !== schrift.ziel) {
+        schrift.von = schrift.wert; schrift.t0 = now; schrift.ziel = ziel;
+        if (ziel === 1 && schrift.offen) { schrift.offen = false; schrift.neu++; buildMask(); }   /* während „weg“ geändert (Größe, Schrift): jetzt einmal neu */
+      }
+      const x = Math.min(1, (now - schrift.t0) / (reduceMq.matches ? 250 : WEG_MS)), e = reduceMq.matches ? x : weich(x);
+      schrift.wert = schrift.von + (schrift.ziel - schrift.von) * e;
+      /* sichtbar (auch beim Auflösen): die Maske liegt auf dem Dokument und bleibt über der Unterzeile – sonst schöbe sich der Text über den
+         verschwindenden Schriftzug; ganz weg: sie bleibt stehen, nichts wird mehr verschoben */
+      if (schrift.wert > 0) schrift.lage = y;
+      return schrift.wert;
+    }
     const frame = (now) => {
       raf = 0; gerufen = performance.now();
       if (disposed) return;
@@ -468,11 +504,12 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       light.y = follow(light.y, ty, dt, idle ? 1.2 : 7);
       if (fein && !NAHTLOS) { const tief = unten >= 1 ? true : unten < 0.97 ? false : tiefStand; if (tief !== tiefStand) { tiefStand = tief; size(); } }
       const sparen = fein && !RUHE && unten >= 1 && animating() && now - gemalt < 40   /* Ruhe (Emre, 02.10.): immer volle Bildrate */
+        || (WEG && unten >= 1 && now - gemalt < 30)   /* Schriftzug weg (03.10.): unter dem Titelbild gleichmäßig ~30 Bilder/s – der Verlauf ist dort dunkel und langsam */
         || (html.classList.contains('papier-zu') && now - gemalt < 250);   /* Papier-Start (03.10.): das geschlossene Blatt deckt alles – nur ~4 Bilder/s, damit das Handy fürs Reißen frei ist */
       if (!sparen) { draw(); gemalt = now; }
       const catching = Math.abs(light.x - tx) + Math.abs(light.y - ty) > 0.0015;
       const visible = (fein || inView) && !document.hidden;
-      const forming = readyAt >= 0 && performance.now() - readyAt < FORM_MS;
+      const forming = readyAt >= 0 && performance.now() - readyAt < FORM_MS || (WEG && schrift.wert !== schrift.ziel);   /* auch bei „Bewegung reduzieren“ bis zum Ende ausblenden */
       if (visible && (animating() || catching || forming)) raf = requestAnimationFrame(frame);
     };
     let gerufen = 0;
@@ -564,5 +601,6 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   /* Bildrate messen (Prüfung): Bilder je Sekunde der letzten Sekunde */
   let fpsT = performance.now(), fpsN = 0;
   setInterval(() => { const n = zustand.bilder; zustand.fps = Math.round((n - fpsN) * 1000 / Math.max(1, performance.now() - fpsT)); fpsN = n; fpsT = performance.now(); }, 1000);
-  window.__glas = { zustand: () => ({ glas: zustand.glas, lite: zustand.lite, fps: zustand.fps, bilder: zustand.bilder, geprueft: zustand.geprueft || 0, angebote: angeboteFertig, masken: zustand.masken || 0, versatz, ruhe: RUHE, titel: titleEl.textContent, punkt: html.getAttribute('data-glas-punkt') || 'glas' }), zumKontakt, zuAngeboten };
+  window.__glas = { zustand: () => ({ glas: zustand.glas, lite: zustand.lite, fps: zustand.fps, bilder: zustand.bilder, geprueft: zustand.geprueft || 0, angebote: angeboteFertig, masken: zustand.masken || 0, versatz, ruhe: RUHE, titel: titleEl.textContent, punkt: html.getAttribute('data-glas-punkt') || 'glas',
+    weg: WEG, schrift: window.__glasSchrift ? Math.round(window.__glasSchrift.wert * 1000) / 1000 : 1 }), zumKontakt, zuAngeboten };
 })();

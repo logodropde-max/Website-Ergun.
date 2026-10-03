@@ -152,3 +152,22 @@ html.glas-ruhe .glas-hero :is(.ghr-eyebrow, .ghr-desc, .ghr-actions) { animation
 @media (max-width: 767px) {
   html.ruhe :is(.mf-extra__satz, .mf-stufe__punkt, .mf-alles li, .mf-betreuung__grund, .mf-ezeile__satz, .mf-satz, .glas-karte__satz) { font-size: 16px; line-height: 1.45; }
 }
+
+/* ======================= Schriftzug löst sich auf + flüssiger (?schrift=weg, 03.10.2026 – Ausnahme auf Emres Wunsch) =======================
+   Der Titelbild-Inhalt (Unterzeile, Knöpfe) scrollt ganz normal mit der Seite – kein Verschieben per transform je Bild; der Schriftzug selbst
+   verschmilzt beim Runterscrollen mit dem Verlauf (glas.quelle.js, WEG). */
+html.glas-ruhe.schrift-weg .glas-hero .ghr-content { position: relative; top: auto; left: auto; right: auto; height: 100%; will-change: auto; }
+/* Handy und Sparmodus: Glasflächen ohne Unschärfe (backdrop-filter muss bei jedem Scroll-Bild den Hintergrund neu weichzeichnen) – dieselbe
+   Tönung, etwas deckender; große weiche Schatten nur noch innen. Am Computer bleibt die Unschärfe. */
+@media (max-width: 899px) {
+  html.glas-fein.schrift-weg body * { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+  html.glas-fein.schrift-weg { --gf-flaeche: rgba(255, 255, 255, 0.095); --gf-flaeche-hover: rgba(255, 255, 255, 0.14); --gf-flaeche-wahl: rgba(255, 255, 255, 0.18);
+    --gf-schatten: inset 0 1px 0 rgba(255, 255, 255, 0.08); }
+  html.glas-nahtlos.schrift-weg .glas-kopf { background: linear-gradient(100deg, rgba(255, 90, 31, 0.1), rgba(255, 158, 193, 0.08) 45%, rgba(47, 76, 255, 0.1)), rgba(13, 10, 20, 0.56); }
+  html.glas-fein.schrift-weg .mf-summe { background: rgba(22, 17, 30, 0.94); }
+}
+html.glas-fein.schrift-weg[data-glas-lite="true"] body * { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+html.glas-fein.schrift-weg[data-glas-lite="true"] { --gf-flaeche: rgba(255, 255, 255, 0.095); --gf-flaeche-hover: rgba(255, 255, 255, 0.14); --gf-flaeche-wahl: rgba(255, 255, 255, 0.18);
+  --gf-schatten: inset 0 1px 0 rgba(255, 255, 255, 0.08); }
+html.glas-nahtlos.schrift-weg[data-glas-lite="true"] .glas-kopf { background: linear-gradient(100deg, rgba(255, 90, 31, 0.1), rgba(255, 158, 193, 0.08) 45%, rgba(47, 76, 255, 0.1)), rgba(13, 10, 20, 0.56); }
+html.glas-fein.schrift-weg[data-glas-lite="true"] .mf-summe { background: rgba(22, 17, 30, 0.94); }

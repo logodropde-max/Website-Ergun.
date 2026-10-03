@@ -1,13 +1,13 @@
-/* ERGUN. Papier-Start (ERGUN., 03.10.2026 – Ausnahme auf ERGUNs Wunsch; Vorschau ?start=papier, PAPIER_STANDARD = false in index.html; Rückweg Tag vor-papier).
-   Die Seite beginnt als Blatt mit „ERGUN.“ – Scrollen lässt es von der Mitte aus reißen (Vorlage), im Spalt erscheint der ECHTE Glas-Hintergrund
-   der Seite (der Spalt ist durchsichtig), kurzes Verweilen, dann reißt das Blatt ganz auf und verlässt den Bildschirm (eigener Schritt, ~1,4 s).
-   Danach: Ebene + alle Zuhörer weg, die Seite ist genau wie ohne Blatt. Nur einmal je Seitenaufruf, nichts wird im Browser gespeichert.
-   Blatt (Papier, Schrift, Hinweis) steht fertig im HTML/CSS von index.html – dieses Skript macht nur die Bewegung.
-   Nachgebaut statt aus der Vorlage: die React-Teile (Zustand, Effekte, JSX) als DOM-Aufbau; Tailwind-Klassen als CSS (.papier… in index.html). */
+/* ERGUN. Papier-Start (03.10.2026 – Ausnahme auf ERGUNs Wunsch; Schalter PAPIER_STANDARD in index.html, ?start=ohne = ohne Blatt).
+   Die Seite beginnt als Blatt mit „ERGUN.“ – Scrollen lässt es von der Mitte aus reißen (Vorlage), im Spalt der ECHTE Glas-Hintergrund,
+   kurzes Verweilen, dann reißt das Blatt ganz auf (~1,4 s). Danach: Ebene + Zuhörer weg. Nur einmal je Aufruf, nichts gespeichert.
+   Blatt steht fertig im HTML/CSS von index.html – dieses Skript macht nur die Bewegung (React-Teile als DOM-Aufbau nachgebaut). */
 var TEASER = 0.62;          /* open = 1: die Hälften sind so weit auseinander wie in der Vorlage */
 var VERWEILEN = 700;        /* ms: das Auge soll den Hintergrund im Spalt erkennen */
 var DAUER = 1400;           /* ms: komplettes Aufreißen */
-var STUFEN = [0.22, 0.42, TEASER];   /* Wischen: Riss → halb offen → offen (Teaser) – nach 2–3 Wischern reißt es von selbst auf */
+var STUFEN = [TEASER];   /* Wischen (ERGUN., 03.10. spät: „einmal scrollen weniger“): ein Wisch = Riss + Öffnen bis zum Teaser, der zweite reißt ganz auf */
+var SCHNELL = 160;          /* ms: nach dem zweiten Wisch (oder einem langen) reißt es fast sofort auf */
+var PAPIER = "#F2F1EE";
 var ZUSATZ = { top: { dx: -40, rot: -9 }, bottom: { dx: 40, rot: 8 } };   /* beim Aufreißen: oben fliegt nach oben, unten nach unten, beide kippen */
 var weich = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
 
@@ -67,7 +67,12 @@ function draussen(W, H, q) {
   q = q == null ? 1 : q;
   return { top: ausserhalb("top", lage("top", 1, q, W, H), W, H), bottom: ausserhalb("bottom", lage("bottom", 1, q, W, H), W, H) };
 }
-root.ERGUN_PAPIER = { endLage: endLage, lage: lage, draussen: draussen, tearLine: tearLine, stages: stages, TEASER: TEASER, DAUER: DAUER, STUFEN: STUFEN };
+/* Statusleiste/Browser-Leiste: beim Aufreißen weich vom Papier zur Farbe der Seite (a → b, Anteil t) */
+function mischen(a, b, t) {
+  var x = parseInt(a.slice(1), 16), y = parseInt(b.slice(1), 16), k = function (s) { return Math.round(((x >> s) & 255) + (((y >> s) & 255) - ((x >> s) & 255)) * t); };
+  return "#" + ((1 << 24) + (k(16) << 16) + (k(8) << 8) + k(0)).toString(16).slice(1).toUpperCase();
+}
+root.ERGUN_PAPIER = { endLage: endLage, lage: lage, draussen: draussen, tearLine: tearLine, stages: stages, mischen: mischen, TEASER: TEASER, DAUER: DAUER, STUFEN: STUFEN, SCHNELL: SCHNELL };
 
 if (typeof document === "undefined") return;
 var html = document.documentElement, ebene = document.getElementById("papier");
@@ -157,6 +162,14 @@ try {
     riss.style.display = zeigeRiss ? "" : "none";
     if (zeigeRiss) { riss.setAttribute("d", d(f.crack, false)); riss.setAttribute("opacity", (1 - s.open / 0.15).toFixed(3)); }
     if (hinweis) hinweis.style.opacity = q ? "0" : String(f.hint);
+    leiste(q);
+  }
+  /* Statusleiste: Papier, solange das Blatt liegt (kein anderes Skript setzt sie vorher – index.html Ladezustand), beim Aufreißen weich zur
+     Farbe oben auf der Seite */
+  var tc = document.querySelector('meta[name="theme-color"]'), tcJetzt = "";
+  function leiste(q) {
+    var f = q > 0 ? mischen(PAPIER, root.ERGUN_LADER_OBEN || root.ERGUN_PAPIER_THEMA || PAPIER, weich(Math.min(1, q * 1.25))) : PAPIER;
+    if (tc && f !== tcJetzt) tc.setAttribute("content", tcJetzt = f);
   }
   root.addEventListener("resize", messen); abbau.push(function () { root.removeEventListener("resize", messen); });
 
@@ -169,34 +182,47 @@ try {
     return (!!z && z.bilder > 0) || performance.now() - anfang > 6000;   /* Sicherung: nie hinter dem Blatt festsitzen */
   }
 
-  /* Eingaben (ERGUN., 03.10. abends: „nach zwei, drei Mal Wischen soll es gehen“): Stufen Riss → halb offen → offen (Teaser), danach reißt es
-     von selbst auf. Wischen: der Finger zieht mit, beim Loslassen rastet es auf der nächsten Stufe ein (ein langer Wisch = zwei Stufen).
-     Mausrad zieht stufenlos wie in der Vorlage; Pfeil runter / Bild runter / Leertaste = nächste Stufe. Die Seite darunter scrollt nicht. */
+  /* Eingaben (ERGUN., 03.10. spät: „einmal scrollen weniger“): höchstens ZWEI Wischer. Der erste reißt und öffnet bis zum Teaser (der Finger
+     zieht mit, beim Loslassen rastet es dort ein), der zweite reißt ganz auf; ein langer Wisch schafft beides. Wartet man nach dem ersten,
+     reißt es nach kurzem Verweilen von selbst auf. Mausrad: stufenlos bis zum Teaser, weiteres Drehen reißt auf; Pfeil runter / Bild runter /
+     Leertaste: einmal = Teaser, noch einmal = aufreißen; Ende = sofort. Die Seite darunter scrollt nicht. Alles zeitbasiert. */
   var naechste = function (x, n) { var i = 0; while (i < STUFEN.length && STUFEN[i] <= x + 0.01) i++; return STUFEN[Math.min(STUFEN.length - 1, i + (n || 1) - 1)]; };
   var vorige = function (x) { var v = 0; STUFEN.forEach(function (st) { if (st < x - 0.01) v = st; }); return v; };
-  var ziel = 0, p = 0, raf = 0, phase = "blatt", teaserSeit = 0, t0 = 0, letzt = 0, wisch = null;
+  var ziel = 0, p = 0, raf = 0, phase = "blatt", teaserSeit = 0, t0 = 0, letzt = 0, wisch = null, schnell = false, nachTeaser = 0;
+  /* zweite Eingabe: aufreißen (im Teaser sofort, davor gleich nach dem Erreichen des Teasers) */
+  function losReissen() { if (phase === "reissen" || phase === "halt") return; schnell = true; info.schnell = true; if (phase === "blatt") setzen(TEASER); }
   function setzen(z) {
     if (phase !== "blatt") return;
     if (ruhig) { phase = "geht"; return weiter(); }
     ziel = clamp01(z);
     if (!raf) { letzt = performance.now(); raf = requestAnimationFrame(tick); }
   }
-  function rad(e) { e.preventDefault(); setzen(ziel + (e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1)) / (1.6 * innerHeight)); }
+  function rad(e) {
+    e.preventDefault();
+    var dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1);
+    if (phase === "teaser") { if (dy > 0 && (nachTeaser += dy) > 0.2 * innerHeight) losReissen(); return; }   /* weiter drehen = aufreißen (Nachlauf des Trackpads reicht nicht) */
+    setzen(ziel + dy / (0.8 * innerHeight));
+  }
   function anfassen(e) { var t = e.touches && e.touches[0]; wisch = t ? { y0: t.clientY, dy: 0, basis: ziel } : null; }
   function wischen(e) {
     e.preventDefault();
     var t = e.touches && e.touches[0]; if (!wisch || !t) return;
     wisch.dy = wisch.y0 - t.clientY;
-    var grenze = naechste(wisch.basis, wisch.dy > 0.4 * innerHeight ? 2 : 1);
+    var grenze = naechste(wisch.basis, 1);
     setzen(Math.max(vorige(wisch.basis), Math.min(grenze, wisch.basis + wisch.dy / (0.8 * innerHeight))));   /* zieht mit, höchstens bis zur Stufe */
   }
   function loslassen() {
     if (!wisch) return;
     var w = wisch; wisch = null;
-    if (w.dy > 24) setzen(naechste(w.basis, w.dy > 0.4 * innerHeight ? 2 : 1)); else if (w.dy < -24) setzen(vorige(w.basis)); else setzen(w.basis);
+    if (phase === "teaser") { if (w.dy > 24) losReissen(); return; }   /* zweiter Wisch */
+    if (w.dy > 0.4 * innerHeight) losReissen(); else if (w.dy > 24) setzen(naechste(w.basis, 1)); else if (w.dy < -24) setzen(vorige(w.basis)); else setzen(w.basis);   /* langer Wisch = beides */
   }
   var TASTEN = { ArrowDown: 1, PageDown: 1, " ": 1, Spacebar: 1, End: 3, ArrowUp: -1, PageUp: -1, Home: -3 };
-  function taste(e) { if (!(e.key in TASTEN)) return; e.preventDefault(); var n = TASTEN[e.key]; setzen(n > 0 ? naechste(ziel, n) : n === -1 ? vorige(ziel) : 0); }
+  function taste(e) {
+    if (!(e.key in TASTEN)) return; e.preventDefault(); var n = TASTEN[e.key];
+    if (n > 0 && (phase === "teaser" || n > 1 || ziel >= TEASER - 0.01)) return losReissen();
+    setzen(n > 0 ? naechste(ziel, n) : n === -1 ? vorige(ziel) : 0);
+  }
   function tippen() { if (ruhig) setzen(0); }
   function oben() { if ((root.scrollY || 0) !== 0) root.scrollTo(0, 0); }
   var Z = [["wheel", rad], ["touchstart", anfassen], ["touchmove", wischen], ["touchend", loslassen], ["touchcancel", loslassen], ["keydown", taste], ["pointerdown", tippen], ["scroll", oben]];
@@ -219,7 +245,7 @@ try {
     info.p = p; zeichne(p, 0);
     if (p >= TEASER) {   /* Teaser erreicht: nicht mehr zurück, kurz verweilen, dann reißt das Blatt von selbst ganz auf */
       if (!teaserSeit) { teaserSeit = now; info.teaser = Math.round(now); info.phase = "teaser"; phase = "teaser"; }
-      if (now - teaserSeit >= VERWEILEN) { phase = info.phase = "reissen"; t0 = now; info.reissen = Math.round(now); }
+      if (now - teaserSeit >= (schnell ? SCHNELL : VERWEILEN)) { phase = info.phase = "reissen"; t0 = now; info.reissen = Math.round(now); }
       raf = requestAnimationFrame(tick); return;
     }
     if (p !== z || !ok || wisch) raf = requestAnimationFrame(tick);
@@ -238,8 +264,8 @@ try {
     stumm.forEach(function (e) { e.removeAttribute("inert"); });
     if (ebene.parentNode) ebene.parentNode.removeChild(ebene);
     html.classList.remove("papier-an", "papier-geht");
-    var tc = document.querySelector('meta[name="theme-color"]'); if (tc && root.ERGUN_PAPIER_THEMA) tc.setAttribute("content", root.ERGUN_PAPIER_THEMA);
     if ((root.scrollY || 0) !== 0) root.scrollTo(0, 0);
+    if (typeof root.ERGUN_LEISTE === "function") root.ERGUN_LEISTE(); else if (tc && root.ERGUN_PAPIER_THEMA) tc.setAttribute("content", root.ERGUN_PAPIER_THEMA);   /* ab jetzt wieder der Ladezustand: oben Verlauf, unten Grund */
     info.phase = "weg"; info.fertig = Math.round(performance.now());
   }
   info.fertigMachen = fertig;   /* Prüfgriffe für Aufnahmen: fertig machen · einen Zeitpunkt des Aufreißens anhalten */
