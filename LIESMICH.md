@@ -1,5 +1,9 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
+## Papier-Start (LIVE seit Emres OK, 03.10.2026; `PAPIER_STANDARD = true` im Kopf von index.html; `?start=ohne` = ohne; Rückweg Tag `vor-papier-live`)
+- Blatt (`#papier`, direkt nach `#lader`) mit Papier, „WEBDESIGN & AUTOMATISIERUNG“ und „ERGUN.“ steht fertig im HTML, Stil im Kopf (`.papier…`, nur mit `html.papier-an`). Kein Blatt bei `#`-Sprung, Zurückblättern, Rückkehr von Impressum/Datenschutz.
+- Bewegung: `js/papier.js` = gebaut von `_code/werkzeuge/papier-vorlage-ziehen.mjs` (Rechnung wörtlich aus der 21st-Vorlage „Tiger Tear Reveal“ ohne Tiger) + `js/papier.quelle.js` (Steuerung). Riss/Teaser folgen dem Scrollen (Mausrad, Wischen, Tasten), Öffnen erst nach dem Ladezustand + erstem Glas-Bild, dann Aufreißen 1,4 s (Weg je Fenster gerechnet: `endLage`, Prüfgriff `ERGUN_PAPIER.draussen`). Danach Ebene + Zuhörer weg. Prüfgriffe für Aufnahmen: `__papier.anhalten(q)`, `__papier.fertigMachen()`.
+
 ## Ladezustand „Glas“ (LIVE seit Emres OK, 02.10.2026; `LADEN_STANDARD = true` in `index.html`, `?laden=alt` = ohne; Rückweg Tag `vor-lader-live`)
 - Stil am Ende des `<head>` (nicht das erste `<style>` – Tests lesen es), `#lader` + Steuerung als erstes Element im `<body>`. Klassen: `lader-an` (Schalter an), `glas-laden` (lädt: Seite unsichtbar, Verlauf in `glas.js` steht still), `lader-deckt` (Seite wird darunter gemalt), `lader-geht` (Überblendung). Prüfgriff `window.__lader` (Zeiten), `__laderHalt = true` hält ihn fest (nur Prüfungen).
 - Farben NIE von Hand: `python _code/werkzeuge/lader-farben.py` (Server 8791 an) nimmt das erste Glas-Bild je Format mit Grafikkarte auf und trägt Kleinbild, Grundfläche und `theme-color` ein – nach jeder Änderung an Shader, Farben oder Schriftzug-Lage neu laufen lassen.

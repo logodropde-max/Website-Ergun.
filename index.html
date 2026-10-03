@@ -1356,6 +1356,40 @@ html.lader-geht .lader__balken i { transform: none; transition: transform 160ms 
   window.addEventListener('wheel', function (e) { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
 })();
 </script>
+<script>
+/* Papier-Start (03.10.2026, Vorschau ?start=papier – Ausnahme auf ERGUNs Wunsch): die Seite beginnt als Blatt mit „ERGUN.“, das beim Scrollen
+   aufreißt (21st-Vorlage „Tiger Tear Reveal“ ohne Tiger, js/papier.js). PAPIER_STANDARD = true seit ERGUNs OK (03.10.2026, Rückweg Tag vor-papier-live); ?start=ohne = ohne Blatt.
+   Kein Blatt bei einem Sprung (#preise, #kontakt), beim Zurückblättern und bei der Rückkehr von Impressum/Datenschutz. Ohne JavaScript nie ein Blatt. */
+(function () {
+  var PAPIER_STANDARD = true, sq = new URLSearchParams(location.search).get('start');
+  if (!window.ERGUN_GLAS || !(sq === 'papier' || (PAPIER_STANDARD && sq !== 'ohne'))) return;
+  if (location.hash) return;
+  var nav = performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
+  if (nav && nav.type === 'back_forward') return;
+  try { var r = document.referrer ? new URL(document.referrer) : null; if (r && r.origin === location.origin && /impressum|datenschutz/.test(r.pathname)) return; } catch (e) {}
+  var html = document.documentElement; html.classList.add('papier-an');
+  var tc = document.querySelector('meta[name="theme-color"]'); if (tc) { window.ERGUN_PAPIER_THEMA = tc.getAttribute('content'); tc.setAttribute('content', '#F2F1EE'); }
+  /* Sicherung: läuft die Steuerung nicht an (Datei fehlt, Fehler), nach 8 s ohne Blatt – niemand sitzt dahinter fest */
+  setTimeout(function () { if (!window.__papier) html.classList.remove('papier-an'); }, 8000);
+})();
+</script>
+<style>
+/* Papier-Start – das Blatt (nur mit html.papier-an, Schalter im Kopf). Nachgebaut aus den Tailwind-Klassen der Vorlage:
+   sticky/absolute inset-0 → fest über der ganzen Seite · Hinweis „bottom-6 flex flex-col items-center gap-2 font-mono text-[10px] uppercase
+   tracking-[0.35em]“ + „h-6 w-px animate-pulse“ → .papier__hinweis. Farben: Wort Orange #FF5A1F (Glas), Papier #F2F1EE, Zeile #2A2A2A (12,8 : 1). */
+.papier { display: none; }
+html.papier-an .papier { display: block; position: fixed; inset: 0; z-index: 2147483600; overflow: hidden; touch-action: none; pointer-events: auto; }
+html.papier-an.glas-laden body > .papier { visibility: visible; animation: none; }   /* der Ladezustand blendet alles außer sich aus – das Blatt liegt darüber */
+.papier__svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-width: none; }
+.papier__wort { font-family: "Clash Display", "Clash Ersatz", Impact, "Arial Black", sans-serif; font-size: 250px; font-weight: 700; letter-spacing: 0; }
+.papier__zeile { font-family: "Satoshi", "Satoshi Ersatz", Arial, sans-serif; font-size: 27px; font-weight: 700; letter-spacing: 0.3em; }
+.papier__hinweis { position: absolute; left: 0; right: 0; bottom: 24px; display: flex; flex-direction: column; align-items: center; gap: 8px; color: #2A2A2A; opacity: 0.7;
+  font: 600 11px/1 "Geist Mono", ui-monospace, Consolas, monospace; letter-spacing: 0.35em; text-transform: uppercase; pointer-events: none; padding-left: 0.35em; }
+.papier__hinweis i { display: block; width: 1px; height: 24px; background: #2A2A2A; animation: papier-puls 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+@keyframes papier-puls { 50% { opacity: 0.5; } }
+html.papier-geht .papier { opacity: 0; transition: opacity 320ms ease; }
+@media (prefers-reduced-motion: reduce) { .papier__hinweis i { animation: none; } }
+</style>
 </head>
 <body>
 
@@ -1446,6 +1480,28 @@ html.lader-geht .lader__balken i { transform: none; transition: transform 160ms 
   pruefen();
 })();
 </script>
+
+<!-- Papier-Start (03.10.2026, Stil + Schalter im <head>): das Blatt steht fertig im HTML (Papier, Zeile, Wort) – vom ersten Bild an sichtbar,
+     die Bewegung macht js/papier.js (nur geladen, wenn das Blatt an ist). Nur Schmuck für Screenreader (aria-hidden); die Überschrift der Seite bleibt. -->
+<div class="papier" id="papier" aria-hidden="true">
+  <svg class="papier__svg" viewBox="36 44 928 468" preserveAspectRatio="xMidYMid meet" focusable="false">
+    <defs>
+      <linearGradient id="papier-curl-top" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d9d4cb"/></linearGradient>
+      <linearGradient id="papier-curl-bottom" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d9d4cb"/></linearGradient>
+      <filter id="papier-soft" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="8"/></filter>
+    </defs>
+    <g class="papier__ruck">
+      <g class="papier__blatt">
+        <rect x="-4000" y="-4000" width="9000" height="8000" fill="#F2F1EE"/>
+        <text class="papier__zeile" x="500" y="150" text-anchor="middle" fill="#2A2A2A">WEBDESIGN &amp; AUTOMATISIERUNG</text>
+        <text class="papier__wort" x="500" y="404" text-anchor="middle" textLength="880" lengthAdjust="spacingAndGlyphs" fill="#FF5A1F">ERGUN.</text>
+      </g>
+    </g>
+  </svg>
+  <p class="papier__hinweis">Scrollen<i></i></p>
+</div>
+<script>(function () { var p = document.getElementById('papier'); if (!document.documentElement.classList.contains('papier-an')) { if (p) p.parentNode.removeChild(p); return; }
+  var s = document.createElement('script'); s.src = 'js/papier.js?v=1'; document.body.appendChild(s); })();</script>
 
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
 
