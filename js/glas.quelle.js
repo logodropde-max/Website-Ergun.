@@ -47,6 +47,11 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   const FEIN = html.classList.contains('glas-fein');
   /* Glas nahtlos (?glas=nahtlos): keine Fläche über dem Verlauf – er wird selbst nach unten weich dunkler (siehe GLASS_FEIN) */
   const NAHTLOS = FEIN && html.classList.contains('glas-nahtlos');
+  /* Blatt im Glas-Look (?start=glas, 03.10.2026 – Ausnahme auf ERGUNs Wunsch, Schalter BLATT_GLAS_STANDARD in index.html): Titelbild „Webdesign und
+     Automatisierung“ als Glas-Schriftzug (versteckt bleibt „ERGUN.“ im h1), Fußzeile „ERGUN. · Webdesign und Automatisierung · © Jahr“, hinter dem
+     Riss derselbe Verlauf klar und gezeichnet: hinten a = Glas-Bühne mit Zeichnung (Linien, Lichtkanten, Körnung, Tiefe) · hinten b = Illustration als Grund */
+  const GB = FEIN && html.classList.contains('blatt-glas');
+  const HINTEN = GB ? (html.getAttribute('data-hinten') === 'b' ? 'b' : 'a') : '';
   /* Ruhe (?ruhe=neu, 01.10.2026 – Emre: „Der Schriftzug zittert beim Laden und beim Scrollen“). Ursachen und Lösung:
      · Das Glas liegt in der festen Leinwand und wurde einen Bild-Takt NACH dem übrigen Titelbild-Text verschoben (der Browser scrollt Text
        sofort, die Leinwand malt im nächsten requestAnimationFrame) → der Schriftzug wackelte gegen „Digitalstudio“ und die Knöpfe.
@@ -93,7 +98,8 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     buehne.appendChild(canvas); document.body.insertBefore(buehne, document.body.firstChild);
     root.style.background = 'transparent';
     /* je Zeichen ein <span>: die Abstände werden optisch ausgeglichen (abstaende()); der Text bleibt „ERGUN.“ für Suche und Screenreader */
-    if (frage.get('punkt') !== 'orange') titleEl.innerHTML = '<span class="ghr-word">' + 'ERGUN.'.split('').map((z) => '<span class="glas-z">' + z + '</span>').join('') + '</span>';
+    if (GB) titleEl.innerHTML = '<span class="glas-versteckt">ERGUN. – </span><span class="ghr-word">Webdesign</span> <span class="ghr-word">und</span> <span class="ghr-word">Automatisierung</span>';   /* am Handy drei Zeilen (glas-marke.css) */
+    else if (frage.get('punkt') !== 'orange') titleEl.innerHTML = '<span class="ghr-word">' + 'ERGUN.'.split('').map((z) => '<span class="glas-z">' + z + '</span>').join('') + '</span>';
   }
   if (frage.get('punkt') === 'orange') {   /* Vergleich: der Punkt als solides Marken-Orange über dem Glas (nicht Teil des Glases) */
     titleEl.innerHTML = '<span class="ghr-word">ERGUN</span><span class="glas-punkt">.</span>';
@@ -109,6 +115,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   const haupt = $('main#inhalt'), P = window.PREISE;
   const fuss = el('footer', 'glas-fuss');
   fuss.innerHTML = '<div class="glas-fuss__zeile"><span class="glas-fuss__marke">ERGUN<span>.</span></span>' +
+    (GB ? '<span class="glas-fuss__satz">Webdesign und Automatisierung · © ' + new Date().getFullYear() + '</span>' : '') +
     '<nav aria-label="Rechtliches"><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></nav></div>' +
     '<p class="glas-fuss__klein" data-glas-klein></p>' +
     ''   /* NASA-/Saturn-Hinweis entfernt (Emre, 02.10.2026): die Glas-Seite zeigt keine Planetenbilder; die Fassung ?titel=all hat ihren eigenen Hinweis */;
@@ -174,6 +181,10 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   if (NAHTLOS) GLASS_FEIN = GLASS_FEIN.replace('uniform float u_shift;', 'uniform float u_shift;\nuniform float u_nahtlos;').replace('  o = vec4(col, 1.0);\n}',
     '  float yDoc = (1.0 - uv.y) + u_shift;\n  float tief = smoothstep(0.55, 1.5, yDoc) * u_nahtlos;\n' +
     '  float mitte = exp(-pow((uv.x - 0.5) / 0.42, 2.0));\n  col *= mix(1.0, 0.36 - 0.1 * mitte, tief);\n  o = vec4(col, 1.0);\n}');
+  /* Prüfschalter fürs Werkzeug _code/werkzeuge/glas-wort.py (03.10.2026): ?glasfeld=schwarz|weiss = Verlauf als feste Farbe, Licht fest, ohne Körnung –
+     aus zwei Aufnahmen wird der Glas-Schriftzug als Bild mit Durchsichtigkeit (Blatt im Glas-Look, Marken in Kopf und Fuß) */
+  const FELD_PRUEF = { schwarz: 0, weiss: 0.8 }[frage.get('glasfeld')];
+  if (FELD_PRUEF !== undefined) GLASS_FEIN = GLASS_FEIN.replace('  col += (hash(floor(uv * u_res)) - 0.5) * 0.018;\n', '');
   const dbg = frage.get('glasdbg');   /* Prüfschalter: Kanäle der Höhenkarte zeigen (r = Kante, g = Maske, b = Wölbung) */
   if (FEIN && dbg) GLASS_FEIN = GLASS_FEIN.replace('o = vec4(col, 1.0);\n}', 'vec4 dh = texture(u_height, vec2(0.0, -u_shift) + uv); o = vec4(pow(vec3(' + (dbg === 'g' ? 'dh.g' : dbg === 'b' ? 'dh.b' : 'dh.r') + '), vec3(0.25)), 1.0);\n}');
   if (FEIN && WEG) {   /* Maske mit eigener Lage (u_maske, steht still, während der Verlauf mit u_shift weiter nach unten dunkler wird) */
@@ -182,6 +193,27 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     GLASS_FEIN = GLASS_FEIN.split('texture(u_height, vec2(0.0, -u_shift) + ').join('texture(u_height, vec2(0.0, -u_maske) + ')
       .replace('uniform float u_shift;', 'uniform float u_shift;\nuniform float u_maske;\nuniform float u_ohne;')
       .replace('  vec2 uv = vUv;\n', '  vec2 uv = vUv;\n  if (u_ohne > 0.5) {\n  vec3 col = texture(u_field, uv).rgb;\n  col += (hash(floor(uv * u_res)) - 0.5) * 0.018;\n' + ohne + '  o = vec4(col, 1.0);\n  return;\n  }\n');
+  }
+  if (GB) {   /* hinten a: derselbe Verlauf, aber gezeichnet – feine Höhenlinien, Lichtkanten, Körnung, mehr Tiefe (u_detail = 0 bei hinten b) */
+    const ZEICHNUNG = 'uniform float u_detail;\n' +
+      'vec3 zeichnung(vec3 c, vec2 uv) {\n' +
+      '  if (u_detail <= 0.0) return c;\n' +
+      '  vec2 px = 1.0 / u_res; vec3 lw = vec3(0.299, 0.587, 0.114);\n' +
+      '  float l0 = dot(texture(u_field, uv).rgb, lw);\n' +
+      '  float lx = dot(texture(u_field, uv + vec2(px.x * 4.0, 0.0)).rgb, lw), ly = dot(texture(u_field, uv + vec2(0.0, px.y * 4.0)).rgb, lw);\n' +
+      '  float kante = clamp(length(vec2(lx - l0, ly - l0)) * 70.0, 0.0, 1.0);\n' +
+      '  float stufe = l0 * 16.0, d = min(fract(stufe), 1.0 - fract(stufe));\n' +
+      '  float linie = 1.0 - smoothstep(0.0, max(fwidth(stufe), 1e-4) * 1.15, d);\n' +
+      '  c = mix(c, smoothstep(vec3(0.0), vec3(1.0), c), 0.3 * u_detail);\n' +
+      '  c = mix(c, c * 1.18 + 0.025, linie * 0.3 * u_detail);\n' +
+      '  c += vec3(1.0, 0.93, 0.86) * kante * kante * 0.09 * u_detail;\n' +
+      '  c += (hash(floor(uv * u_res)) - 0.5) * 0.045 * u_detail;\n' +
+      '  return c;\n}\n';
+    /* kleinere, mehrzeilige Schrift: Kontaktschatten näher und leiser – sonst wirkt er wie eine zweite, versetzte Zeile */
+    GLASS_FEIN = GLASS_FEIN.replace('uv + away * 0.012', 'uv + away * 0.0045').replace('bg *= 1.0 - 0.32 * smoothstep', 'bg *= 1.0 - 0.2 * smoothstep');
+    GLASS_FEIN = GLASS_FEIN.replace('void main() {', ZEICHNUNG + 'void main() {')
+      .replace('  vec3 bg = texture(u_field, uv).rgb;\n', '  vec3 bg = zeichnung(texture(u_field, uv).rgb, uv);\n')
+      .replace('  vec3 col = texture(u_field, uv).rgb;\n', '  vec3 col = zeichnung(texture(u_field, uv).rgb, uv);\n');
   }
   const fehlt = BLUR_FEIN === BLUR || GLASS_FEIN.indexOf('u_shift') < 0 || (FEIN && WEG && GLASS_FEIN.indexOf('u_ohne > 0.5') < 0);   /* Vorlage geändert? dann sicher die alte Fassung */
   const fein = FEIN && !fehlt;
@@ -203,7 +235,12 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     titleEl.style.fontSize = '';
     abstaende();
     const wort = titleEl.querySelector('.ghr-word'); if (!wort) return;
-    const fs = parseFloat(getComputedStyle(titleEl).fontSize) || 64, breite = wort.getBoundingClientRect().width;
+    let breite = wort.getBoundingClientRect().width;
+    if (GB) {   /* mehrere Wörter: die breiteste Zeile zählt (Zeilen nach ihrer Höhe gruppiert) */
+      const z = {}; $$('.ghr-word', titleEl).forEach((w) => { const r = w.getBoundingClientRect(), k = Math.round(r.top / 4); z[k] = z[k] ? [Math.min(z[k][0], r.left), Math.max(z[k][1], r.right)] : [r.left, r.right]; });
+      breite = Math.max(...Object.values(z).map((x) => x[1] - x[0]));
+    }
+    const fs = parseFloat(getComputedStyle(titleEl).fontSize) || 64;
     const zugabe = fs * 0.16, frei = root.clientWidth * (1 - 2 * 0.06);
     if (breite + zugabe > frei) titleEl.style.fontSize = (fs * frei / (breite + zugabe)).toFixed(2) + 'px';
   }
@@ -309,6 +346,19 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     const releaseTargets = () => { for (const t of owned.tex) gl.deleteTexture(t); for (const f of owned.fbo) gl.deleteFramebuffer(f); owned.tex = []; owned.fbo = []; };
 
     let P = null, field = null, blurA = null, blurB = null, maskTex = null, bevel = 4;
+    /* hinten b: Illustration (bilder/glas/hinten-quer|hoch.webp) als Verlauf – cover, einmal in die Feld-Fläche gemalt */
+    let bildTex = null, bildGemalt = false;
+    const BILD = '#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 o;\nuniform sampler2D u_bild;\nuniform vec2 u_skala;\n' +
+      'void main() { vec2 uv = (vUv - 0.5) * u_skala + 0.5; o = vec4(texture(u_bild, uv).rgb, 1.0); }\n';
+    if (HINTEN === 'b') {
+      const img = new Image(); img.decoding = 'async';
+      img.onload = () => { if (disposed) return; const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t); gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img); gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        bildTex = { tex: t, w: img.naturalWidth, h: img.naturalHeight }; owned.tex.push(t); size(); kick(); };
+      img.src = 'bilder/glas/hinten-' + (window.innerWidth >= window.innerHeight ? 'quer' : 'hoch') + '.webp?v=1';
+    }
 
     const run = (p, dst, u) => {
       gl.useProgram(p.prog);
@@ -336,7 +386,8 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       const w = Math.max(1, Math.round(cr.width * scale)), h = Math.max(1, Math.round(cr.height * scale));
       const cs = getComputedStyle(heading), fontPx = parseFloat(cs.fontSize) || 64, sy = RUHE && !WEG ? versatz : window.scrollY || 0;   /* Ruhe: der Inhalt ist um „versatz“ verschoben */
       const zeichen = [], tw = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
-      for (let n = tw.nextNode(); n; n = tw.nextNode()) for (let i = 0; i < n.data.length; i++) {
+      const versteckt = (n) => !!(n.parentElement && n.parentElement.closest && n.parentElement.closest('.glas-versteckt'));   /* „ERGUN.“ nur für Suche und Screenreader */
+      for (let n = tw.nextNode(); n; n = tw.nextNode()) for (let i = 0; i < (versteckt(n) ? 0 : n.data.length); i++) {
         if (/\s/.test(n.data[i])) continue;
         const rg = document.createRange(); rg.setStart(n, i); rg.setEnd(n, i + 1);
         const b = rg.getBoundingClientRect(); zeichen.push([n.data[i], b.left - cr.left, b.top + sy]);
@@ -439,7 +490,8 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       const dpr = fein && tiefStand ? 0.35 : RUHE && HANDY_R && !lite ? Math.min(window.devicePixelRatio || 1, 1.5) : lite ? (fein ? Math.min(window.devicePixelRatio || 1, 1) : 0.65) : Math.min(window.devicePixelRatio || 1, 2);   /* fein: unter dem Hero grob (weich, unscharf, kaum Rechenzeit); Lite nie unter 1 – sonst zackige Buchstaben */
       const w = Math.max(1, Math.round(canvas.clientWidth * dpr)), h = Math.max(1, Math.round(canvas.clientHeight * dpr));
       if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
-      const fs = lite ? 0.25 : 0.4;
+      const fs = HINTEN === 'b' && bildTex ? 1 : lite ? 0.25 : 0.4;   /* hinten b: Illustration scharf, nur einmal gemalt */
+      bildGemalt = false;
       const fw = Math.max(1, Math.round(w * fs)), fh = Math.max(1, Math.round(h * fs));
       if (!field || field.w !== fw || field.h !== fh) {
         if (field) { gl.deleteTexture(field.tex); gl.deleteFramebuffer(field.fbo); }
@@ -451,14 +503,16 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     const draw = () => {
       if (!field || !blurB) return;
       const pal = live.palette, aspect = canvas.width / canvas.height;
-      run(P.field, field, { time, aspect, octaves: lite ? 3 : RUHE && HANDY_R ? 4 : 5, c0: pal[0], c1: pal[1], c2: pal[2], c3: pal[3], c4: pal[4] });
+      if (FELD_PRUEF !== undefined) { gl.bindFramebuffer(gl.FRAMEBUFFER, field.fbo); gl.viewport(0, 0, field.w, field.h); gl.clearColor(FELD_PRUEF, FELD_PRUEF, FELD_PRUEF, 1); gl.clear(gl.COLOR_BUFFER_BIT); }
+      else if (HINTEN === 'b' && bildTex && P.bild) { if (!bildGemalt) { const ia = bildTex.w / bildTex.h; run(P.bild, field, { bild: bildTex.tex, skala: aspect > ia ? [1, ia / aspect] : [aspect / ia, 1] }); bildGemalt = true; } }   /* steht still: einmal malen */
+      else run(P.field, field, { time, aspect, octaves: lite ? 3 : RUHE && HANDY_R ? 4 : 5, c0: pal[0], c1: pal[1], c2: pal[2], c3: pal[3], c4: pal[4] });
       const ch = Math.max(1, canvas.clientHeight), w = WEG ? schriftJetzt(performance.now()) : 1;
       run(P.glass, null, {
         field: field.tex, height: blurB.tex, htexel: [1 / blurB.w, 1 / blurB.h], bevel, aspect, light: [light.x, light.y],
         glass: WEG ? w : 1,
         form: WEG ? (reduceMq.matches ? 1 : w) : RUHE || reduceMq.matches || readyAt < 0 ? 1 : formed(performance.now() - readyAt, FORM_MS), res: [canvas.width, canvas.height],   /* weg: Aufbau rückwärts; „Bewegung reduzieren“ = nur ausblenden */
         shift: fein ? (RUHE && !WEG ? lageSetzen() : window.scrollY || 0) / ch : 0, nahtlos: NAHTLOS ? 1 : 0,
-        maske: WEG ? schrift.lage / ch : 0, ohne: WEG && w <= 0 ? 1 : 0
+        maske: WEG ? schrift.lage / ch : 0, ohne: WEG && w <= 0 ? 1 : 0, detail: HINTEN === 'a' ? 1 : 0
       });
       zustand.bilder++;
     };
@@ -502,6 +556,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       const [tx, ty] = idle && animating() ? orbit(time) : [pt.x, pt.y];
       light.x = follow(light.x, tx, dt, idle ? 1.2 : 7);
       light.y = follow(light.y, ty, dt, idle ? 1.2 : 7);
+      if (FELD_PRUEF !== undefined) { light.x = 0.5; light.y = 0.7; }   /* Prüfschalter: Licht fest (Glanz wie im Ruhebild) */
       if (fein && !NAHTLOS) { const tief = unten >= 1 ? true : unten < 0.97 ? false : tiefStand; if (tief !== tiefStand) { tiefStand = tief; size(); } }
       const sparen = fein && !RUHE && unten >= 1 && animating() && now - gemalt < 40   /* Ruhe (Emre, 02.10.): immer volle Bildrate */
         || (WEG && unten >= 1 && now - gemalt < 30)   /* Schriftzug weg (03.10.): unter dem Titelbild gleichmäßig ~30 Bilder/s – der Verlauf ist dort dunkel und langsam */
@@ -529,7 +584,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     canvas.addEventListener('webglcontextrestored', onRestored);
 
     try {
-      P = { field: program(FIELD), blur: program(fein ? BLUR_FEIN : BLUR), glass: program(fein ? GLASS_FEIN : GLASS) };
+      P = { field: program(FIELD), blur: program(fein ? BLUR_FEIN : BLUR), glass: program(fein ? GLASS_FEIN : GLASS), bild: HINTEN === 'b' ? program(BILD) : null };
       const vao = gl.createVertexArray();
       gl.bindVertexArray(vao);
       const buffer = gl.createBuffer();

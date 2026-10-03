@@ -76,6 +76,10 @@ root.ERGUN_PAPIER = { endLage: endLage, lage: lage, draussen: draussen, tearLine
 
 if (typeof document === "undefined") return;
 var html = document.documentElement, ebene = document.getElementById("papier");
+/* Blatt im Glas-Look (?start=glas, 03.10.2026): statt Papier der unscharfe Verlauf (.papier__grund = Standbild des Ladezustands), die Hälften tragen
+   dasselbe Bild mit; feine helle Glaskante statt Papierkern; Leiste = oberer Rand des Verlaufs, beim Aufreißen ohne Sprung */
+var GLAS = !!(html && html.classList.contains("blatt-glas"));
+if (GLAS) PAPIER = root.ERGUN_LADER_OBEN || PAPIER;
 if (!ebene) return;
 if (!html.classList.contains("papier-an")) { ebene.parentNode.removeChild(ebene); return; }
 
@@ -97,7 +101,11 @@ try {
        die Grafikkarte schiebt die fertigen Bilder (die Vorlage drehte SVG-Gruppen = jedes Bild neu malen)
      · Schatten aus drei weichen Linien statt Weichzeichner-Filter (der wurde bei jeder Bewegung neu gerechnet)
      · die Ebenen sind etwas größer als das Fenster, damit beim Kippen an den Rändern nichts fehlt */
-  var haelften = null, riss = el("path", { fill: "none", stroke: "#1d0f07", "stroke-width": "2.4", "stroke-linejoin": "bevel" });
+  var haelften = null, riss = el("path", { fill: "none", stroke: GLAS ? "rgba(255,255,255,0.92)" : "#1d0f07", "stroke-width": GLAS ? "1.6" : "2.4", "stroke-linejoin": "bevel" });
+  /* Glas: das Standbild des Verlaufs, wie es .papier__grund per CSS zeigt (cover auf Fenster + 8 % je Seite) – für die Hälften als SVG-Bild */
+  var grundEl = GLAS ? ebene.querySelector(".papier__grund") : null, grundBild = null, grundFarbe = "#A25945", grundListe = [];
+  if (grundEl) { var gs = getComputedStyle(grundEl), gm = /url\(["']?([^"')]+)["']?\)/.exec(gs.backgroundImage || ""); grundBild = gm ? gm[1] : null; grundFarbe = gs.backgroundColor || grundFarbe; }
+  function grundLage(b) { var m = masse; b.setAttribute("x", (m.vx - 0.08 * m.W / m.s).toFixed(2)); b.setAttribute("y", (m.vy - 0.08 * m.H / m.s).toFixed(2)); b.setAttribute("width", (1.16 * m.W / m.s).toFixed(2)); b.setAttribute("height", (1.16 * m.H / m.s).toFixed(2)); }
   ruck.appendChild(riss);
   var buehne = document.createElement("div"); buehne.className = "papier__haelften"; ebene.insertBefore(buehne, hinweis);
   var masse = null;   /* Abbildung SVG-Einheiten → Pixel für das aktuelle Fenster */
@@ -105,6 +113,7 @@ try {
     var W = innerWidth, H = innerHeight, fr = FRAME.split(" ").map(Number), s = Math.min(W / fr[2], H / fr[3]);
     masse = { W: W, H: H, s: s, vx: fr[0] - (W - fr[2] * s) / (2 * s), vy: fr[1] - (H - fr[3] * s) / (2 * s), ex: Math.round(0.14 * H + 0.06 * W) };
     if (haelften) haelften.forEach(boxSetzen);
+    grundListe.forEach(grundLage);
   }
   function boxSetzen(h) {
     var m = masse, oben = h.side === "top" ? -Math.round(0.3 * m.H) : 0, hoehe = Math.round(1.3 * m.H), breite = m.W + 2 * m.ex;
@@ -119,11 +128,15 @@ try {
       var div = document.createElement("div"); div.className = "papier__haelfte";
       var s = el("svg", { preserveAspectRatio: "none", focusable: "false" });
       var schatten = el("g", { fill: "none", stroke: "#000", transform: "translate(0 " + (side === "top" ? 10 : -10) + ")" });
-      [[54, 0.12], [36, 0.22], [20, 0.36]].forEach(function (w) { schatten.appendChild(el("path", { d: d(line, false), "stroke-width": String(w[0]), "stroke-opacity": String(w[1]), "stroke-linejoin": "round" })); });
+      (GLAS ? [[54, 0.05], [36, 0.09], [20, 0.15]] : [[54, 0.12], [36, 0.22], [20, 0.36]]).forEach(function (w) { schatten.appendChild(el("path", { d: d(line, false), "stroke-width": String(w[0]), "stroke-opacity": String(w[1]), "stroke-linejoin": "round" })); });
       var cp = el("clipPath", { id: "papier-" + side }); cp.appendChild(el("path", { d: d(g0.shape) }));
       var inhalt = el("g", { "clip-path": "url(#papier-" + side + ")" }), kopie = blatt.cloneNode(true); kopie.removeAttribute("id"); inhalt.appendChild(kopie);
-      var kern = el("path", { fill: "#ffffff" });
-      var rollen = CURLS[side].map(function () { return el("path", { fill: "url(#papier-curl-" + side + ")", stroke: "#fff", "stroke-width": "1" }); });
+      if (GLAS) {   /* Hälfte = Verlauf (Grundfarbe + Standbild) + Glas-Wort */
+        var r0 = kopie.querySelector("rect"); if (r0) r0.setAttribute("fill", grundFarbe);
+        if (grundBild && r0) { var gb = el("image", { preserveAspectRatio: "xMidYMid slice" }); gb.setAttribute("href", grundBild); grundLage(gb); grundListe.push(gb); kopie.insertBefore(gb, r0.nextSibling); }
+      }
+      var kern = el("path", { fill: GLAS ? "rgba(255,255,255,0.72)" : "#ffffff" });   /* Glas: feine helle Kante statt Papierkern */
+      var rollen = CURLS[side].map(function () { return el("path", GLAS ? { fill: "rgba(255,255,255,0.16)", stroke: "rgba(255,255,255,0.7)", "stroke-width": "1" } : { fill: "url(#papier-curl-" + side + ")", stroke: "#fff", "stroke-width": "1" }); });
       var defs = el("defs"); defs.appendChild(cp);   /* Verläufe der Kanten liegen einmal im Blatt-SVG (ids sind seitenweit) */
       [defs, schatten, inhalt, kern].concat(rollen).forEach(function (x) { s.appendChild(x); });
       div.appendChild(s); buehne.appendChild(div);
@@ -144,6 +157,7 @@ try {
     if (open > 0) {
       if (!haelften) haelftenBauen();
       svg.style.visibility = "hidden"; buehne.style.visibility = "";
+      if (grundEl) grundEl.style.visibility = "hidden";   /* der Spalt zeigt die Seite – das Standbild tragen jetzt die Hälften */
       haelften.forEach(function (h) {
         var l = q > 0 ? lage(h.side, 1, q, masse.W, masse.H) : pieceMotion(open)[h.side], t = cssVon(l);
         if (t !== h.letzte) { h.div.style.transform = t; h.letzte = t; }
@@ -157,6 +171,7 @@ try {
       });
     } else {
       svg.style.visibility = ""; buehne.style.visibility = "hidden";
+      if (grundEl) grundEl.style.visibility = "";
     }
     var zeigeRiss = s.crack > 0 && s.open < 0.15 && f.crack.length > 1 && !q;
     riss.style.display = zeigeRiss ? "" : "none";

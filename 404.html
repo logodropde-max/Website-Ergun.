@@ -23,6 +23,16 @@ p { margin: 0; color: var(--muted); text-wrap: pretty; }
 .knopf:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .zeile { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px; }
 </style>
+<script>
+/* Blatt im Glas-Look (03.10.2026, Vorschau ?start=glas): „ERGUN.“ im Glas-Look – dieselbe Regel und Datei wie auf der Startseite (glas-marke.css).
+   BLATT_GLAS_STANDARD = true seit ERGUNs OK (04.10.2026, Fassung a); ?start=papier = vorher (helles Papier-Blatt) – gleicher Schalter wie in index.html (Test). */
+(function () {
+  var BLATT_GLAS_STANDARD = true, sq = new URLSearchParams(location.search).get('start');
+  if (!(sq === 'glas' || (BLATT_GLAS_STANDARD && sq !== 'papier' && sq !== 'ohne'))) return;
+  document.documentElement.classList.add('blatt-glas');
+  var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = '/glas-marke.css?v=1'; document.head.appendChild(l);
+})();
+</script>
 </head>
 <body>
 <main>

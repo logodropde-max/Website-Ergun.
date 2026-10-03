@@ -75,7 +75,14 @@ window.PREISE = {
     komplett: { id: 'komplett', name: 'endo komplett', einmalig: 2800, monat: 250 },
     whatsapp: { id: 'whatsapp', name: 'WhatsApp-Kanal', satz: 'endo antwortet auch per WhatsApp.', einmalig: 500, monat: 40, hinweis: 'zzgl. WhatsApp-Gebühren (Meta)' },
     grenze: 'faire Nutzungsgrenze',
-    laufzeit: 6   /* Mindestlaufzeit je Fähigkeit in Monaten (Emre, 02.10.2026) */
+    laufzeit: 6,   /* Mindestlaufzeit je Fähigkeit in Monaten (Emre, 02.10.2026) */
+    /* Drei Stufen (ERGUN., 03.10.2026 – Ausnahme auf ERGUNs Wunsch, Vorschau ?preise=stufen): der Kunde wählt nur noch eine Stufe. Gleiche Werte
+       wie ENDO_PREISE.stufen (_code/endo-studio/js/endo-preise.js) und in Obsidian „02 Preise“ – ein Test vergleicht alle drei. */
+    stufen: [
+      { id: 'start', name: 'endo Start', faehigkeiten: ['empfang', 'kontakte', 'uebersicht'], einmalig: 1500, monat: 150, hinweise: ['bis 500 Gespräche/Monat'] },
+      { id: 'plus', name: 'endo Plus', faehigkeiten: ['empfang', 'kontakte', 'uebersicht', 'termine'], einmalig: 2200, monat: 200, hinweise: ['bis 500 Gespräche/Monat'] },
+      { id: 'komplett', name: 'endo Komplett', faehigkeiten: ['empfang', 'kontakte', 'uebersicht', 'termine', 'studio'], einmalig: 2800, monat: 250, hinweise: ['bis 500 Gespräche/Monat', 'inkl. 20 Bilder/Monat'] }
+    ]
   },
   mehrTitel: 'Automatisierung & KI → endo',
   mehrSatz: 'Automatisierung und KI für Ihren Betrieb laufen über endo – ebenfalls von ERGUN.',
@@ -137,6 +144,9 @@ window.LEITFADEN = {
       { id: 'uebersicht', name: 'Übersicht', satz: 'Ihr Wochenbericht', status: 'In Arbeit' },
       { id: 'studio', name: 'Studio', satz: 'Bilder und Videos aus Handyfotos', status: 'Live' }],
     komplett: 'Alle fünf Fähigkeiten zum Paketpreis.', leer: 'Bitte wählen Sie mindestens eine Fähigkeit.',
+    /* Stufen (03.10.2026, ?preise=stufen) */
+    titelStufen: 'Welche Stufe passt?', satzStufen: 'Wählen Sie eine Stufe. Später geht es jederzeit eine höher.', leerStufen: 'Bitte wählen Sie eine Stufe.',
+    whatsappStufe: 'Kommt zu einer gewählten Stufe dazu.',
     whatsappNur: 'Kommt zu einer gewählten Fähigkeit dazu.' },
   anfrage: { titel: 'Ihre Anfrage', satz: 'Antwort innerhalb von 24 Stunden.', leer: 'Nichts ausgewählt – schreiben Sie einfach, worum es geht.', auswahl: 'Auswahl treffen' }
 };
@@ -148,12 +158,23 @@ window.LEITFADEN = {
   P.monatText = function (x) { return (x.monatAb ? 'ab ' : '') + P.euro(x.monat); };
   /* endo je Fähigkeit (aus PREISE.endo) + abgeleitete Pakete für Karten und ältere Fassungen: mehr[0] = „Einzelne Fähigkeit“ (günstigste,
      einmalig und monatlich je für sich), mehr[1] = endo komplett. Nichts davon von Hand – alles aus PREISE.endo berechnet. */
+  /* Schalter Stufen (ERGUN., 03.10.2026): STUFEN_STANDARD = false bis ERGUNs OK – ansehen mit ?preise=stufen, ?preise=einzeln = vorher.
+     Gleicher Schalter auf der endo-Seite (js/endo-preise.js, Test). Vorgabe von außen (Tests): window.ENDO_STUFEN_AN = true|false. */
+  var STUFEN_STANDARD = false, sq = typeof location !== 'undefined' ? (/[?&]preise=(stufen|einzeln)\b/.exec(location.search || '') || [])[1] : '';
+  var W0 = typeof window !== 'undefined' ? window : {};
+  P.stufenAn = typeof W0.ENDO_STUFEN_AN === 'boolean' ? W0.ENDO_STUFEN_AN : sq === 'stufen' || (STUFEN_STANDARD && sq !== 'einzeln');
+  P.endoStufe = function (id) { return P.endo.stufen.filter(function (x) { return x.id === id; })[0] || null; };
+  /* kleinste Stufe, die alle gewählten Fähigkeiten enthält (leer = keine) */
+  P.endoStufeFuer = function (ids) { ids = ids || []; if (!ids.length) return null; return P.endo.stufen.filter(function (x) { return ids.every(function (k) { return x.faehigkeiten.indexOf(k) >= 0; }); })[0] || null; };
   P.endoFaehigkeit = function (id) { return P.endo.faehigkeiten.filter(function (f) { return f.id === id; })[0] || null; };
   P.endoEinzeln = function () { return P.endo.faehigkeiten.reduce(function (s, f) { return { einmalig: s.einmalig + f.einmalig, monat: s.monat + f.monat }; }, { einmalig: 0, monat: 0 }); };
   var minE = Math.min.apply(null, P.endo.faehigkeiten.map(function (f) { return f.einmalig; })), minM = Math.min.apply(null, P.endo.faehigkeiten.map(function (f) { return f.monat; }));
-  P.mehr = [
-    { id: 'faehigkeit', name: 'Einzelne Fähigkeit', satz: 'Zum Beispiel Empfang: Anfragen automatisch beantworten, sortieren und weiterleiten.', preis: minE, monat: minM, ab: true, monatAb: true },
-    { id: 'komplett', name: P.endo.komplett.name, satz: 'Alle Fähigkeiten: Empfang, Termine, Kontakte, Übersicht und Studio.', preis: P.endo.komplett.einmalig, monat: P.endo.komplett.monat, ab: false }];
+  P.mehr = P.stufenAn ? [   /* Stufen: kleinste Stufe statt „Einzelne Fähigkeit“ – nie ein Einzelpreis */
+    { id: 'start', name: P.endo.stufen[0].name, satz: 'Empfang, Kontakte und Übersicht.', preis: P.endo.stufen[0].einmalig, monat: P.endo.stufen[0].monat, ab: true, monatAb: false }
+  ] : [
+    { id: 'faehigkeit', name: 'Einzelne Fähigkeit', satz: 'Zum Beispiel Empfang: Anfragen automatisch beantworten, sortieren und weiterleiten.', preis: minE, monat: minM, ab: true, monatAb: true }];
+  P.mehr.push(
+    { id: 'komplett', name: P.stufenAn ? P.endo.stufen[2].name : P.endo.komplett.name, satz: 'Alle Fähigkeiten: Empfang, Termine, Kontakte, Übersicht und Studio.', preis: P.endo.komplett.einmalig, monat: P.endo.komplett.monat, ab: false });
   P.alleExtras = function () { return P.extras.reduce(function (l, g) { return l.concat(g.eintraege); }, []); };
   /* Standard-Betreuung (Rechner ohne ausdrückliche Wahl): Pro mit Terminbuchung oder Funktion → Aktiv · sonst Basis.
      endo setzt seit dem neuen Preismodell (01.10.2026) keine Betreuung mehr: den Betrieb der KI deckt die endo-Monatsgebühr. */
@@ -175,6 +196,12 @@ window.LEITFADEN = {
   P.endoPaket = function (ids, whatsapp) {
     ids = ids || []; var n = ids.length, k = P.endo.komplett, w = P.endo.whatsapp;
     if (!n) return null;
+    if (P.stufenAn) {   /* Stufen: immer die kleinste Stufe, die die Auswahl enthält */
+      var st = P.endoStufeFuer(ids) || P.endo.stufen[P.endo.stufen.length - 1];
+      var q = { id: st.id, name: st.name, preis: st.einmalig, monat: st.monat, faehigkeiten: st.faehigkeiten.slice(), stufe: true, ab: false, anzahl: st.faehigkeiten.length, whatsapp: !!whatsapp };
+      if (whatsapp) { q.preis += w.einmalig; q.monat += w.monat; }
+      return q;
+    }
     var gew = P.endo.faehigkeiten.filter(function (f) { return ids.indexOf(f.id) >= 0; });
     var s = gew.reduce(function (x, f) { return { einmalig: x.einmalig + f.einmalig, monat: x.monat + f.monat }; }, { einmalig: 0, monat: 0 });
     var alle = gew.length === P.endo.faehigkeiten.length, guenstiger = !alle && k.einmalig <= s.einmalig && k.monat <= s.monat;
@@ -412,6 +439,7 @@ window.LEITFADEN = {
        Symbol, Name, Stand, Kurzbeschreibung, rechts „einmalig“ und „monatlich“ getrennt; Auswahl per Haken. WhatsApp als Zusatz-Haken.
        Komplett ersetzt die Einzelauswahl (alle fünf gewählt). Darunter der Erklärsatz. Zahlen nur aus PREISE.endo. */
     endo: function (w) {
+      if (P.stufenAn) return endoStufen(w);
       w.titel = L.endo.titel; w.satz = L.endo.satz;
       var alle = L.endo.faehigkeiten.map(function (f) { return f.id; }), K = P.endo.komplett, komplett = A.endo.length === alle.length, einz = P.endoEinzeln();
       function preise(einmalig, monat, hinweis) {
@@ -458,6 +486,54 @@ window.LEITFADEN = {
       w.inhalt.appendChild(a);
     }
   };
+  /* Stufen (ERGUN., 03.10.2026 – Vorschau ?preise=stufen): drei Zeilen zur Wahl (eine Stufe), je Stufe Name, die enthaltenen Fähigkeiten als Symbole
+     mit Namen und einmalig/monatlich getrennt; WhatsApp als Zusatz; nie ein Preis je Fähigkeit. Zahlen nur aus PREISE.endo.stufen. */
+  function endoStufen(w) {
+    w.titel = L.endo.titelStufen; w.satz = L.endo.satzStufen;
+    var jetzt = P.endoStufeFuer(A.endo), NAME = {}; L.endo.faehigkeiten.forEach(function (f) { NAME[f.id] = f.name; });
+    function preise(einmalig, monat, hinweis) {
+      var s = el('span', 'mf-epreis');
+      var a = el('span', 'mf-epreis__teil'); a.appendChild(el('b', '', P.euro(einmalig))); a.appendChild(el('small', '', L.endo.einmalig)); s.appendChild(a);
+      var m = el('span', 'mf-epreis__teil'); m.appendChild(el('b', '', P.euro(monat))); m.appendChild(el('small', '', L.endo.monatlich)); s.appendChild(m);
+      if (hinweis) s.appendChild(el('small', 'mf-epreis__hinweis', hinweis));
+      return s;
+    }
+    function stufenZeile(st, nr) {
+      var an = !!(jetzt && jetzt.id === st.id), b = el('button', 'mf-ezeile mf-ezeile--stufe'); b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', String(an)); b.setAttribute('data-fokus', 'stufe-' + st.id);
+      var box = el('span', 'mf-haken__box'); box.setAttribute('aria-hidden', 'true'); box.innerHTML = HAKEN; b.appendChild(box);
+      var sy = el('span', 'mf-ezeile__symbol'); sy.setAttribute('aria-hidden', 'true'); sy.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + ESYM.endo + '</svg>'; b.appendChild(sy);
+      var tx = el('span', 'mf-ezeile__text'), kopf = el('span', 'mf-ezeile__kopf'); kopf.appendChild(el('b', 'mf-ezeile__name', st.name)); tx.appendChild(kopf);
+      var fl = el('span', 'mf-ezeile__satz mf-stufe-faehig');
+      st.faehigkeiten.forEach(function (k) {
+        var f = el('span', 'mf-sfaehig'), fs = el('span', 'mf-sfaehig__symbol'); fs.setAttribute('aria-hidden', 'true');
+        fs.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + (ESYM[k] || ESYM.endo) + '</svg>';
+        f.appendChild(fs); f.appendChild(document.createTextNode(NAME[k] || k)); fl.appendChild(f);
+      });
+      tx.appendChild(fl); b.appendChild(tx);
+      b.appendChild(preise(st.einmalig, st.monat, st.hinweise.join(' · ')));
+      b.addEventListener('click', function () { A.endo = an ? [] : st.faehigkeiten.slice(); if (!A.endo.length) A.whatsapp = false; neuZeichnen('stufe-' + st.id); });
+      return reihe(b, nr);
+    }
+    var c = el('div', 'mf-eliste'); c.setAttribute('role', 'radiogroup'); c.setAttribute('aria-label', L.endo.titelStufen);
+    P.endo.stufen.forEach(function (st, nr) { c.appendChild(stufenZeile(st, nr)); });
+    w.inhalt.appendChild(c);
+    /* Zusatz: WhatsApp-Kanal zu jeder Stufe */
+    var Wa = P.endo.whatsapp, wl = el('div', 'mf-eliste mf-eliste--zusatz'); wl.setAttribute('role', 'group'); wl.setAttribute('aria-label', L.endo.zusatz);
+    wl.appendChild(el('p', 'mf-extras__titel', L.endo.zusatz));
+    var wb = el('button', 'mf-ezeile mf-ezeile--zusatz'); wb.type = 'button'; wb.setAttribute('role', 'checkbox'); wb.setAttribute('aria-checked', String(A.whatsapp && A.endo.length > 0)); wb.setAttribute('data-fokus', 'whatsapp');
+    if (!A.endo.length) { wb.disabled = true; wb.setAttribute('aria-disabled', 'true'); }
+    var wbx = el('span', 'mf-haken__box'); wbx.setAttribute('aria-hidden', 'true'); wbx.innerHTML = HAKEN; wb.appendChild(wbx);
+    var wsy = el('span', 'mf-ezeile__symbol'); wsy.setAttribute('aria-hidden', 'true'); wsy.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + (ESYM.whatsapp || ESYM.endo) + '</svg>'; wb.appendChild(wsy);
+    var wt = el('span', 'mf-ezeile__text'), wk = el('span', 'mf-ezeile__kopf'); wk.appendChild(el('b', 'mf-ezeile__name', Wa.name)); wt.appendChild(wk); wt.appendChild(el('span', 'mf-ezeile__satz', A.endo.length ? Wa.satz : L.endo.whatsappStufe)); wb.appendChild(wt);
+    wb.appendChild(preise(Wa.einmalig, Wa.monat, Wa.hinweis));
+    if (A.endo.length) wb.addEventListener('click', function () { A.whatsapp = !A.whatsapp; neuZeichnen('whatsapp'); });
+    wl.appendChild(reihe(wb, P.endo.stufen.length)); w.inhalt.appendChild(wl);
+    var m = P.endoPaket(A.endo, A.whatsapp);
+    w.inhalt.appendChild(el('p', 'mf-stand', !m ? L.endo.leerStufen : m.name + (m.whatsapp ? ' + ' + Wa.name : '') + ': ' + P.euro(m.preis) + ' ' + L.endo.einmalig + ' + ' + P.euro(m.monat) + MONAT));
+    w.inhalt.appendChild(el('p', 'mf-erklaer', P.endo.erklaer + ' Mindestlaufzeit ' + P.endo.laufzeit + ' Monate, ' + P.endo.grenze + '.'));
+    var a = el('a', 'mf-link', L.endo.ansehen + ' ↗'); a.href = P.endoSeiteOeffentlich ? P.endoSeite : P.endoStart; a.target = '_blank'; a.rel = 'noopener';
+    w.inhalt.appendChild(a);
+  }
   /* Extras (Auftrag 28): ruhige Liste mit Haken in den 4 Gruppen, Preis rechtsbündig, je ein kurzer Satz. Enthaltenes = „enthalten“. */
   function hakenKnopf(an, label, key, gesperrt) {
     var k = el('button', 'mf-haken'); k.type = 'button'; k.setAttribute('role', 'checkbox'); k.setAttribute('aria-checked', String(!!an)); k.setAttribute('aria-label', label);
