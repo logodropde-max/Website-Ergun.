@@ -360,6 +360,20 @@ window.LEITFADEN = {
      Schritt ① (keine zweite Kartenreihe). Klick wählt und führt weich zum Formular darunter (② bzw. ③). Ohne Wahl zeigt das Formular gleich
      „Ihre Anfrage“ (allgemeine Anfrage); „Zurück“ in ② entfällt – die Angebote stehen ja darüber. ---------- */
   var ORD = !!window.ERGUN_ORDNUNG, angebote = null, oben = q('.mf__oben');
+  /* Paket 1f Teil E (ERGUN., 04.10.2026 21:46): „endo ansehen ↗“ steht direkt an der Wahl „Automatisierung“ und „Beides“ (mit endo-Zeichen),
+     nicht mehr unten neben „Lieber gleich schreiben“. Die Karte bleibt als Ganzes wählbar; der Link ist eine eigene Tippfläche (≥ 44 px) in einer Hülle
+     neben dem Knopf (ein <a> in einem <button> wäre ungültig). Schalter ENDO_LINK_STANDARD, ?endolink=an|aus. */
+  var ENDO_LINK_STANDARD = true, elq = typeof location !== 'undefined' ? (/[?&]endolink=(an|aus)\b/.exec(location.search || '') || [])[1] : '';
+  var ENDO_LINK = elq === 'an' || (ENDO_LINK_STANDARD && elq !== 'aus');
+  function endoLinkHuelle(knopf, o) {
+    if (!ENDO_LINK || (o.id !== 'endo' && o.id !== 'beides')) return knopf;
+    var hu = el('div', 'mf-wahl-huelle'); hu.appendChild(knopf); knopf.classList.add('hat-endo-link');
+    var a = el('a', 'mf-endo-link', 'endo ansehen ↗'); a.href = P.endoSeiteOeffentlich ? P.endoSeite : P.endoStart; a.target = '_blank'; a.rel = 'noopener';
+    a.setAttribute('data-endo-link', ''); a.setAttribute('aria-label', 'endo ansehen – ' + o.titel + ' (neues Fenster)');
+    a.addEventListener('click', function (e) { e.stopPropagation(); });
+    hu.appendChild(a); return hu;
+  }
+
   function zuAngeboten() {
     if (window.__kristall && window.__kristall.zuAngeboten) window.__kristall.zuAngeboten();
     else if (angebote) angebote.scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
@@ -378,7 +392,7 @@ window.LEITFADEN = {
       b.appendChild(el('span', 'k-angebot__wort', o.titel));
       var info = el('span', 'k-angebot__info k-sans'); info.appendChild(el('b', '', apreis[o.id])); info.appendChild(document.createTextNode(' · ' + (o.dezent ? o.dezent + ' – ' : '') + o.satz)); b.appendChild(info);
       b.addEventListener('click', function () { if (A.art !== o.id) { A.art = o.id; A.betreuung = null; A.betreuungAn = true; } neu(); gehe(schritte()[1], 1); });
-      aliste.appendChild(b);
+      aliste.appendChild(endoLinkHuelle(b, o));
     });
     angebote.appendChild(aliste);
     /* Unter den Angeboten: „Lieber gleich schreiben“ und – seit 04.10.2026 (ERGUN) – der direkte Weg zu endo. Wer „Automatisierung“
@@ -388,7 +402,7 @@ window.LEITFADEN = {
     adirekt.addEventListener('click', function () { A.art = null; neu(); gehe('anfrage', 1); });
     azeile.appendChild(adirekt);
     var aendo = L.art.optionen.filter(function (o) { return o.link; })[0];
-    if (aendo) {
+    if (aendo && !ENDO_LINK) {   /* mit ENDO_LINK steht er an der Wahl, nicht doppelt hier */
       var al = el('a', 'mf-link mf-angebote__endo', aendo.link + ' ↗');
       al.href = P.endoSeiteOeffentlich ? P.endoSeite : P.endoStart; al.target = '_blank'; al.rel = 'noopener';
       al.setAttribute('aria-label', aendo.link + ' – ' + aendo.titel + ' (neues Fenster)');
@@ -427,10 +441,10 @@ window.LEITFADEN = {
         b.addEventListener('click', function () { if (A.art !== o.id) { A.art = o.id; A.betreuung = null; A.betreuungAn = true; } neu(); gehe(schritte()[1], 1); });
         b.addEventListener('keydown', function (e) {   /* Pfeiltasten wandern zwischen den drei Karten, Enter/Leertaste wählt (Knopf) */
           var k = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key]; if (!k) return;
-          var alle = [].slice.call(g.querySelectorAll('.mf-karte')), i = alle.indexOf(b); e.preventDefault();
+          var alle = [].slice.call(g.querySelectorAll('.mf-karte')), i = alle.indexOf(b); e.preventDefault();   /* auch in Hüllen (Paket 1f E) */
           alle[(i + k + alle.length) % alle.length].focus();
         });
-        g.appendChild(b);
+        g.appendChild(endoLinkHuelle(b, o));
       });
       w.inhalt.appendChild(g);
       /* Links unter den Karten: wie bisher „Lieber gleich schreiben“, dazu seit 04.10.2026 (ERGUN) der direkte Weg zu endo –
@@ -441,7 +455,7 @@ window.LEITFADEN = {
       d.addEventListener('click', function () { A.art = null; neu(); gehe('anfrage', 1); });
       zeile.appendChild(d);
       var endoOpt = L.art.optionen.filter(function (o) { return o.link; })[0];
-      if (endoOpt) {
+      if (endoOpt && !ENDO_LINK) {
         var ea = el('a', 'mf-link', endoOpt.link + ' ↗');
         ea.href = P.endoSeiteOeffentlich ? P.endoSeite : P.endoStart; ea.target = '_blank'; ea.rel = 'noopener';
         ea.setAttribute('aria-label', endoOpt.link + ' – ' + endoOpt.titel + ' (neues Fenster)');

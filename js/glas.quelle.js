@@ -72,7 +72,14 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
      04.10.2026 (ERGUN: „soll früher zu sehen sein beim Hochscrollen“): 0.08/0.035 → 0.14/0.08 – der Abstand zwischen beiden bleibt,
      damit der Schriftzug an der Schwelle nicht flackert. */
   const WEG_AB = 0.14, WEG_ZURUECK = 0.08, WEG_MS = 600;
-  const inhalt = RUHE && !WEG ? root.querySelector('.ghr-content') : null;
+  /* Paket 1f Teil E (ERGUN., 04.10.2026 21:45: „Titel beim Wischen zeitgleich mit Unterzeile und Knöpfen nach oben, kein Nachziehen,
+     und beim Hochscrollen viel früher wieder da“), Schalter html.titel-takt (?takt=an):
+     · die GANZE Kopf-Gruppe (Schriftzug in der Leinwand + Unterzeile + Knöpfe) bewegt sich im selben Bild-Takt (lageSetzen im Bild der Leinwand) –
+       vorher scrollten Unterzeile und Knöpfe selbst, der gemalte Schriftzug kam ein Bild später = Nachziehen;
+     · Auflösen hängt direkt am Scroll-Weg (keine eigene Zeit-Animation): ganz da bis TAKT_VOLL, ganz weg bei TAKT_WEG (Fensterhöhen),
+       für die ganze Gruppe gleich – zurück kommt er, sobald der Kopf wieder ins Bild kommt. Kein Flackern: der Wert ist stetig, ohne Schwelle. */
+  const TAKT = WEG && html.classList.contains('titel-takt'), TAKT_VOLL = 0.5, TAKT_WEG = 0.6;
+  const inhalt = RUHE && (!WEG || TAKT) ? root.querySelector('.ghr-content') : null;
   let versatz = 0, breiteJetzt = window.innerWidth;
   const dprR = Math.min(window.devicePixelRatio || 1, 2);
   /* Ruhe + Handy (Emre, 02.10.: „alles auf höchste FPS“): Leinwand mit höchstens 1,5-facher Pixeldichte, Farbfeld mit 4 statt 5 Rausch-Stufen
@@ -515,7 +522,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
         field: field.tex, height: blurB.tex, htexel: [1 / blurB.w, 1 / blurB.h], bevel, aspect, light: [light.x, light.y],
         glass: WEG ? w : 1,
         form: WEG ? (reduceMq.matches ? 1 : w) : RUHE || reduceMq.matches || readyAt < 0 ? 1 : formed(performance.now() - readyAt, FORM_MS), res: [canvas.width, canvas.height],   /* weg: Aufbau rückwärts; „Bewegung reduzieren“ = nur ausblenden */
-        shift: fein ? (RUHE && !WEG ? lageSetzen() : window.scrollY || 0) / ch : 0, nahtlos: NAHTLOS ? 1 : 0,
+        shift: fein ? (RUHE && (!WEG || TAKT) ? lageSetzen() : window.scrollY || 0) / ch : 0, nahtlos: NAHTLOS ? 1 : 0,
         maske: WEG ? schrift.lage / ch : 0, ohne: WEG && w <= 0 ? 1 : 0, detail: HINTEN === 'a' ? 1 : 0
       });
       zustand.bilder++;
@@ -528,6 +535,13 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     const weich = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
     function schriftJetzt(now) {
       const y = window.scrollY || 0, hh = root.offsetHeight || canvas.clientHeight || 1;
+      if (TAKT) {   /* stetig aus dem Scroll-Stand, für die ganze Gruppe */
+        const w = Math.max(0, Math.min(1, (TAKT_WEG * hh - y) / Math.max(1, (TAKT_WEG - TAKT_VOLL) * hh)));
+        if (w > 0 && schrift.offen) { schrift.offen = false; schrift.neu++; buildMask(); }
+        schrift.ziel = w > 0 ? 1 : 0; schrift.wert = w; schrift.lage = lageSetzen();
+        if (inhalt) { const o = w >= 1 ? '' : w.toFixed(3); if (inhalt.style.opacity !== o) { inhalt.style.opacity = o; inhalt.style.pointerEvents = w < 0.05 ? 'none' : ''; } }   /* unsichtbar = fängt keine Klicks */
+        return w;
+      }
       const ziel = schrift.ziel === 1 ? (y > WEG_AB * hh ? 0 : 1) : (y < WEG_ZURUECK * hh ? 1 : 0);
       if (ziel !== schrift.ziel) {
         schrift.von = schrift.wert; schrift.t0 = now; schrift.ziel = ziel;

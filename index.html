@@ -88,7 +88,7 @@ window.ERGUN_TITEL = 'glas';
      Kopfzeile als Glas mit Tönung aus dem Verlauf, Logo-Punkt im Verlauf. GLAS_NAHTLOS_STANDARD = true seit Emres OK (01.10. spät); ?glas=fein = ohne nahtlos */
   var GLAS_NAHTLOS_STANDARD = true, gnaht = gfein && (gq === 'nahtlos' || (GLAS_NAHTLOS_STANDARD && gq !== 'fein'));
   html.classList.toggle('glas-nahtlos', gnaht);
-  if (glas) ['glas-vorlage.gen.css?v=1', 'glas.css?v=2'].concat(gfein ? ['glas-fein.css?v=5'] : []).forEach(function (h) { var gc = document.createElement('link'); gc.rel = 'stylesheet'; gc.href = h; document.head.appendChild(gc); });
+  if (glas) ['glas-vorlage.gen.css?v=1', 'glas.css?v=2'].concat(gfein ? ['glas-fein.css?v=6'] : []).forEach(function (h) { var gc = document.createElement('link'); gc.rel = 'stylesheet'; gc.href = h; document.head.appendChild(gc); });
   if (all) { var ac = document.createElement('link'); ac.rel = 'stylesheet'; ac.href = 'all.css?v=1'; document.head.appendChild(ac);
     var sw = new URLSearchParams(location.search).get('schrift'); if (sw === 'federant') { html.setAttribute('data-schrift', 'vorlage'); } }
   if (wahl === 'alt') ['emre3d-folge-1', 'emre3d-folge-2', 'hund-folge'].forEach(function (n) {   /* Vorlader der alten Figur nur hier */
@@ -1483,13 +1483,30 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
 <script>
   /* Paket 1e Punkt 14 (Auftrag 45, 04.10.2026): das gezeichnete endo-Zeichen neben „endo“ (Links zur endo-Seite, endo-Zeile in Schritt ②) – dieselbe Datei wie auf endo
      (bilder/endo-zeichen.svg, ein Test hält beide gleich). VORSCHAU ?zeichen=neu, ZEICHEN_STANDARD = false bis ERGUNs OK. */
-  var ZEICHEN_STANDARD = false, zq = (/[?&]zeichen=(neu|alt)\b/.exec(location.search) || [])[1];
+  var ZEICHEN_STANDARD = true, zq = (/[?&]zeichen=(neu|alt)\b/.exec(location.search) || [])[1];
   if (zq === 'neu' || (ZEICHEN_STANDARD && zq !== 'alt')) document.documentElement.classList.add('endo-zeichen-an');
+  /* Paket 1f Teil E: Titel, Unterzeile und Knöpfe im selben Takt, Auflösen am Scroll-Weg, früher zurück (js/glas.quelle.js TAKT). ?takt=an = Vorschau */
+  var TAKT_STANDARD = true, tq = (/[?&]takt=(an|aus)\b/.exec(location.search) || [])[1];
+  if (tq === 'an' || (TAKT_STANDARD && tq !== 'aus')) document.documentElement.classList.add('titel-takt');
+  /* Paket 1f Teil E: Riss schneller – „halb“ (700 ms statt 1,4 s) oder „mittel“ (950 ms); js/papier.quelle.js liest html[data-riss]. ?riss=halb|mittel|alt */
+  var RISS_STANDARD = 'halb', rq = (/[?&]riss=(halb|mittel|alt)\b/.exec(location.search) || [])[1];
+  var riss = rq === 'alt' ? '' : rq || RISS_STANDARD; if (riss) document.documentElement.setAttribute('data-riss', riss);
 </script>
 <style>
-html.endo-zeichen-an a[href^="https://endo-ergun.vercel.app"]::before { content: ""; display: inline-block; width: 1.15em; height: 1.15em; margin-right: 0.4em; vertical-align: -0.22em; background: url(bilder/endo-zeichen.svg?v=1) center / contain no-repeat; }
-html.endo-zeichen-an .mf-ezeile__symbol--endo { background: url(bilder/endo-zeichen.svg?v=1) center / 100% no-repeat; border-radius: 0; box-shadow: none; }
+html.endo-zeichen-an a[href^="https://endo-ergun.vercel.app"]::before { content: ""; display: inline-block; width: 1.15em; height: 1.15em; margin-right: 0.4em; vertical-align: -0.22em; background: url(bilder/endo-person.svg?v=1) center / contain no-repeat; }
+html.endo-zeichen-an .mf-ezeile__symbol--endo { background: url(bilder/endo-person.svg?v=1) center / 100% no-repeat; border-radius: 0; box-shadow: none; }
 html.endo-zeichen-an .mf-ezeile__symbol--endo svg { visibility: hidden; }
+</style>
+<style>
+/* Paket 1f Teil E: „endo ansehen ↗“ an der Wahl „Automatisierung“ und „Beides“ (js/preise.js endoLinkHuelle) – eigene Tippfläche in der Karte */
+.mf-wahl-huelle { position: relative; display: grid; }
+.mf-wahl-huelle > .hat-endo-link { padding-bottom: 68px !important; }
+.mf-endo-link { position: absolute; left: 16px; bottom: 8px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 999px; color: inherit; font-size: 15px !important; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.mf-endo-link::before { content: ""; width: 1.15em; height: 1.15em; flex: none; background: url(bilder/endo-person.svg?v=1) center / contain no-repeat; }
+.mf-endo-link:hover { text-decoration-thickness: 2px; }
+.mf-endo-link:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+html.endo-zeichen-an .mf-endo-link::before { content: ""; }
+.mf-endo-link { margin: 0; }
 </style>
 </head>
 <body>
@@ -1614,7 +1631,7 @@ html.endo-zeichen-an .mf-ezeile__symbol--endo svg { visibility: hidden; }
   <p class="papier__hinweis">Scrollen<i></i></p>
 </div>
 <script>(function () { var p = document.getElementById('papier'); if (!document.documentElement.classList.contains('papier-an')) { if (p) p.parentNode.removeChild(p); return; }
-  var s = document.createElement('script'); s.src = 'js/papier.js?v=4'; document.body.appendChild(s); })();</script>
+  var s = document.createElement('script'); s.src = 'js/papier.js?v=7'; document.body.appendChild(s); })();</script>
 
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
 
@@ -2019,7 +2036,7 @@ html.endo-zeichen-an .mf-ezeile__symbol--endo svg { visibility: hidden; }
 <script>
 /* Auftrag 44: je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
 (function () {
-  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=12'] : window.ERGUN_WAHL === 'all' ? ['js/all.js?v=1'] : window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'baum' ? ['js/baum.js?v=6', 'js/kristall.js?v=45'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris' || window.ERGUN_WAHL === 'lycoris3') ? ['js/blume.js?v=11', 'js/kristall.js?v=45'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=45'] : [];
+  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=15'] : window.ERGUN_WAHL === 'all' ? ['js/all.js?v=1'] : window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'baum' ? ['js/baum.js?v=6', 'js/kristall.js?v=45'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris' || window.ERGUN_WAHL === 'lycoris3') ? ['js/blume.js?v=11', 'js/kristall.js?v=45'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=45'] : [];
   liste.forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
 })();
 </script>
@@ -2044,7 +2061,7 @@ html.endo-zeichen-an .mf-ezeile__symbol--endo svg { visibility: hidden; }
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
-<script src="js/preise.js?v=22"></script>
+<script src="js/preise.js?v=24"></script>
 <script>
 /* Kostenloses Erstgespräch: eine Karte mit allen Feldern (seit 25.09. abends keine Schritte mehr).
    Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)

@@ -172,3 +172,5 @@ html.glas-fein.schrift-weg[data-glas-lite="true"] { --gf-flaeche: rgba(255, 255,
   --gf-schatten: inset 0 1px 0 rgba(255, 255, 255, 0.08); }
 html.glas-nahtlos.schrift-weg[data-glas-lite="true"] .glas-kopf { background: linear-gradient(100deg, rgba(255, 90, 31, 0.1), rgba(255, 158, 193, 0.08) 45%, rgba(47, 76, 255, 0.1)), rgba(13, 10, 20, 0.56); }
 html.glas-fein.schrift-weg[data-glas-lite="true"] .mf-summe { background: rgba(22, 17, 30, 0.94); }
+/* Paket 1f Teil E (?takt=an): Titel, Unterzeile und Knöpfe als EINE feste Gruppe, die im Bild-Takt der Leinwand verschoben wird (js/glas.quelle.js lageSetzen) – kein Nachziehen */
+html.glas-ruhe.schrift-weg.titel-takt .glas-hero .ghr-content { position: fixed; top: 0; left: 0; right: 0; height: 100svh; will-change: transform, opacity; }

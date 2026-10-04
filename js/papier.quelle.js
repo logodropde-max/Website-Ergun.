@@ -3,8 +3,11 @@
    kurzes Verweilen, dann reißt das Blatt ganz auf (~1,4 s). Danach: Ebene + Zuhörer weg. Nur einmal je Aufruf, nichts gespeichert.
    Blatt steht fertig im HTML/CSS von index.html – dieses Skript macht nur die Bewegung (React-Teile als DOM-Aufbau nachgebaut). */
 var TEASER = 0.62;          /* open = 1: die Hälften sind so weit auseinander wie in der Vorlage */
-var VERWEILEN = 700;        /* ms: das Auge soll den Hintergrund im Spalt erkennen */
-var DAUER = 1400;           /* ms: komplettes Aufreißen */
+/* Paket 1f Teil E (ERGUN., 04.10.2026 21:14: „die Animation, wo es zerreißt, schneller und flüssiger“): html[data-riss] aus dem Kopf-Skript von index.html –
+   „halb“ = halb so lang wie bisher, „mittel“ = zwei Drittel; ohne Angabe wie bisher (Rückweg ?riss=alt). */
+var RISS = typeof document !== 'undefined' && document.documentElement ? document.documentElement.getAttribute('data-riss') || '' : '';
+var VERWEILEN = RISS === 'halb' ? 350 : RISS === 'mittel' ? 470 : 700;   /* ms: das Auge soll den Hintergrund im Spalt erkennen */
+var DAUER = RISS === 'halb' ? 700 : RISS === 'mittel' ? 950 : 1400;   /* ms: komplettes Aufreißen */
 var STUFEN = [TEASER];   /* Wischen (ERGUN., 03.10. spät: „einmal scrollen weniger“): ein Wisch = Riss + Öffnen bis zum Teaser, der zweite reißt ganz auf */
 var SCHNELL = 160;          /* ms: nach dem zweiten Wisch (oder einem langen) reißt es fast sofort auf */
 var PAPIER = "#F2F1EE";
