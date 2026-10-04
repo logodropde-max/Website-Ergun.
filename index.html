@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>ERGUN. – Websites, Automatisierung & KI</title>
 <meta name="description" content="ERGUN.: Websites mit Design und Bewegung, persönlich geplant und gebaut – Automatisierung und eigene KI für Ihren Betrieb über endo. Kostenloses Erstgespräch.">
-<meta name="theme-color" content="#0f2027">
+<meta name="theme-color" content="#0C162C">
 <meta name="robots" content="noindex, nofollow"><!-- solange die Seite privat ist; beim Livegang entfernen -->
 
 <!-- Teilen in Social Media / Messengern -->
@@ -105,11 +105,11 @@ window.ERGUN_TITEL = 'glas';
    Farben: das erste Bild des echten Glas-Verlaufs je Bildformat, winzig + weich (_code/werkzeuge/lader-farben.py). */
 (function () {
   var LADEN_STANDARD = true, lq = new URLSearchParams(location.search).get('laden');
-  /* „Farbwechsel“ (04.10.2026, LIVE seit ERGUNs „Ja“): sein wandernder Farbverlauf ist der Seitengrund statt der Glas-Leinwand.
-     Dann gibt es beim Start weder Ladezustand noch Blatt, und der Schriftzug steht als normale Schrift da. ?grund=glas = alles wie vorher.
+  /* „Farbwechsel“ (04.10.2026): ERGUNs wandernder Farbverlauf als Seitengrund statt der Glas-Leinwand – war kurz live, auf seinen Wunsch
+     wieder aus (04.10.). Ansehen mit ?grund=farbwechsel; dort gibt es weder Ladezustand noch Blatt und kein WebGL.
      EINE Stelle für den Schalter – dieses Skript läuft als erstes, alle anderen lesen nur window.ERGUN_FARBWECHSEL bzw. die Klasse. */
-  var GRUND_FARBWECHSEL_STANDARD = true, gq = new URLSearchParams(location.search).get('grund');
-  window.ERGUN_FARBWECHSEL = gq === 'farbwechsel' || (GRUND_FARBWECHSEL_STANDARD && gq !== 'glas');
+  var GRUND_FARBWECHSEL_STANDARD = false, gq = new URLSearchParams(location.search).get('grund');
+  window.ERGUN_FARBWECHSEL = gq === 'farbwechsel' || (GRUND_FARBWECHSEL_STANDARD && gq !== 'glas');   /* Standard aus: nur mit ?grund=farbwechsel */
   if (window.ERGUN_FARBWECHSEL) { document.documentElement.classList.add('grund-farbwechsel'); return; }
   if (!window.ERGUN_GLAS || !(lq === 'neu' || (LADEN_STANDARD && lq !== 'alt'))) return;
   var html = document.documentElement; html.classList.add('lader-an', 'glas-laden');
@@ -122,6 +122,10 @@ window.ERGUN_TITEL = 'glas';
 
 <style>
 html, body { touch-action: pan-x pan-y; }
+/* iPhone (ERGUN, 04.10.2026: „ab und zu hört der Hintergrund vorher auf“): beim Überziehen am oberen und unteren Rand
+   zeigte Safari den flachen Seitengrund statt des Verlaufs. Kein Gummiband → nichts blitzt mehr auf; dazu färbt leiste() den
+   Seitengrund mit (für ältere iOS-Fassungen ohne overscroll-behavior). */
+html, body { overscroll-behavior-y: none; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
 /* Schriften liegen lokal (SIL Open Font License) – kein Google-Server */
@@ -1553,7 +1557,15 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
     /* Statusleiste: oben die Farbe des Verlaufs, weiter unten der Grund der Seite */
     /* Papier-Start: solange das Blatt liegt, gehört die Leiste dem Blatt (Papierfarbe, js/papier.js) – danach ruft es leiste() selbst auf */
     var tc = document.querySelector('meta[name="theme-color"]'), farbe = '';
-    function leiste() { if (html.classList.contains('papier-an')) return; var f = (window.scrollY || 0) < innerHeight * 0.5 ? window.ERGUN_LADER_OBEN : '#0D0A14'; if (tc && f && f !== farbe) tc.setAttribute('content', farbe = f); }
+    function leiste() {
+      if (html.classList.contains('papier-an')) return;
+      var f = (window.scrollY || 0) < innerHeight * 0.5 ? window.ERGUN_LADER_OBEN : '#0D0A14';
+      if (!f || f === farbe) return;
+      farbe = f;
+      if (tc) tc.setAttribute('content', f);
+      /* derselbe Ton auf dem Seitengrund: zieht jemand die Seite über den Rand, passt die Farbe oben wie unten (ERGUN, 04.10.) */
+      if (!html.classList.contains('glas-laden')) html.style.backgroundColor = f;
+    }
     window.ERGUN_LEISTE = leiste;
     window.addEventListener('scroll', leiste, { passive: true }); leiste();
   }
