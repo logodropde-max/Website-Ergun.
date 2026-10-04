@@ -67,7 +67,7 @@ window.PREISE = {
   endo: {
     erklaer: 'Ihr Programm gehört Ihnen. Die KI darin betreiben und verbessern wir.',
     faehigkeiten: [
-      { id: 'empfang', einmalig: 1200, monat: 120, hinweis: 'bis 500 Gespräche/Monat' },
+      { id: 'empfang', einmalig: 1200, monat: 120, hinweis: '3.000 Nachrichten/Monat im Kundenkontakt' },
       { id: 'termine', einmalig: 800, monat: 60 },
       { id: 'kontakte', einmalig: 500, monat: 40 },
       { id: 'uebersicht', einmalig: 400, monat: 30 },
@@ -80,9 +80,9 @@ window.PREISE = {
        GENAU einem Angebot, Angebotspreis = Summe seiner Fähigkeiten; die Einzelpreise oben sind dann nur noch Rechen-Grundlage. Gleiche Werte wie
        ENDO_PREISE.angebote (_code/endo-studio/js/endo-preise.js) und in Obsidian „02 Preise“ – ein Test vergleicht alle drei. */
     angebote: [
-      { id: 'kundenkontakt', name: 'Kundenkontakt', satz: 'Anfragen bleiben liegen.', faehigkeiten: ['empfang', 'kontakte'], einmalig: 1700, monat: 160, hinweise: ['bis 500 Gespräche/Monat'] },
-      { id: 'organisation', name: 'Organisation', satz: 'Termine im Hin und Her.', faehigkeiten: ['termine', 'uebersicht'], einmalig: 1200, monat: 90, hinweise: [] },
-      { id: 'studio', name: 'Studio-Paket', satz: 'Werbebilder kosten Zeit.', faehigkeiten: ['studio'], einmalig: 400, monat: 70, hinweise: ['inkl. 20 Bilder/Monat'] }
+      { id: 'kundenkontakt', name: 'Kundenkontakt', satz: 'Anfragen bleiben liegen.', faehigkeiten: ['empfang', 'kontakte'], einmalig: 1700, monat: 160, nachrichten: 3000, hinweise: ['3.000 Nachrichten/Monat'] },
+      { id: 'organisation', name: 'Organisation', satz: 'Termine im Hin und Her.', faehigkeiten: ['termine', 'uebersicht'], einmalig: 1200, monat: 90, nachrichten: 2000, hinweise: ['2.000 Nachrichten/Monat'] },
+      { id: 'studio', name: 'Studio-Paket', satz: 'Werbebilder kosten Zeit.', faehigkeiten: ['studio'], einmalig: 400, monat: 70, nachrichten: 500, hinweise: ['inkl. 20 Bilder/Monat', '500 Nachrichten/Monat'] }
     ]
   },
   mehrTitel: 'Automatisierung & KI → endo',
