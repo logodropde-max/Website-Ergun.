@@ -541,9 +541,8 @@ window.LEITFADEN = {
       if (faehig) {
         var fl = el('span', 'mf-angebot-faehig');
         faehig.forEach(function (k) {
-          var f = el('span', 'mf-sfaehig'), fs = el('span', 'mf-sfaehig__symbol'); fs.setAttribute('aria-hidden', 'true');
-          fs.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + (ESYM[k] || ESYM.endo) + '</svg>';
-          f.appendChild(fs); f.appendChild(document.createTextNode(NAME[k] || k));
+          var f = el('span', 'mf-sfaehig');   /* EIN Symbol je Paket (ERGUN., 04.10.2026) – die Teile nur als Name + Stand */
+          f.appendChild(document.createTextNode(NAME[k] || k));
           if (STAND[k]) f.appendChild(el('span', 'mf-chip__status mf-chip__status--' + STAND[k].replace(' ', '-').toLowerCase(), STAND[k]));   /* ehrlicher Stand als Wort */
           fl.appendChild(f);
         });
