@@ -8,7 +8,7 @@ html.blatt-glas :is(.glas-kopf__marke, .glas-fuss__marke, .marke) {
   background: var(--marke-bild) left center / 98px auto no-repeat !important; -webkit-background-clip: border-box !important; background-clip: border-box !important;
   filter: drop-shadow(0 1px 1.5px rgba(13, 10, 20, 0.35)); text-decoration: none; vertical-align: middle;
 }
-/* Echtes Glas statt Milchglas (04.10.2026, ERGUNs Auftrag – Vorschau ?marke=a|b, Schalter MARKE_ECHT_STANDARD in index.html und 404.html):
+/* Echtes Glas statt Milchglas (04.10.2026, ERGUNs Auftrag – LIVE seit seinem „Ok“ als Fassung b, Schalter MARKE_ECHT_STANDARD in index.html und 404.html; ?marke=a|milch = Vergleich):
    dieselbe Rechnung und dasselbe Bild wie das große „ERGUN.“ auf dem Blatt – Kante, Glanz und Lichtbrechung bleiben erhalten.
    a = durchsichtig (die Seite scheint durch die Zeichen) · b = mit eigenem Grund (Miniatur des großen Worts). Nur die Datei wechselt. */
 html.marke-a :is(.glas-kopf__marke, .glas-fuss__marke, .marke) { --marke-bild: url("bilder/glas/glas-marke-a.webp?v=1"); }

@@ -1370,9 +1370,10 @@ html.lader-geht .lader__balken i { transform: none; transition: transform 160ms 
   if (!window.ERGUN_GLAS || !(sq === 'glas' || (BLATT_GLAS_STANDARD && sq !== 'papier' && sq !== 'ohne'))) return;
   var html = document.documentElement; html.classList.add('blatt-glas');
   html.setAttribute('data-hinten', new URLSearchParams(location.search).get('hinten') === 'b' ? 'b' : 'a');
-  /* Marke in Kopf und Fuß als echtes Glas (04.10.2026, ERGUNs Auftrag – wartet auf sein OK): '' = Milchglas wie bisher,
-     'a' = durchsichtiges Glas, 'b' = Glas mit eigenem Grund. Ansehen mit ?marke=a bzw. ?marke=b, ?marke=milch = vorher. */
-  var MARKE_ECHT_STANDARD = '', mq = new URLSearchParams(location.search).get('marke');
+  /* Marke in Kopf und Fuß als echtes Glas (04.10.2026, ERGUNs Auftrag): 'b' = dasselbe Glas wie das große Wort auf dem Blatt,
+     mit seinem eigenen Verlauf (Kante, Glanz, Lichtbrechung) – LIVE seit ERGUNs „Ok“. 'a' = durchsichtiges Glas (in der Kopfzeile
+     fast unsichtbar, nur zum Vergleich), '' = Milchglas vom 03.10. Ansehen mit ?marke=a bzw. ?marke=milch (= vorher). */
+  var MARKE_ECHT_STANDARD = 'b', mq = new URLSearchParams(location.search).get('marke');
   var marke = mq === 'a' || mq === 'b' ? mq : mq === 'milch' ? '' : MARKE_ECHT_STANDARD;
   if (marke) html.classList.add('marke-' + marke);
   var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'glas-marke.css?v=2'; document.head.appendChild(l);
