@@ -76,7 +76,7 @@ window.PREISE = {
     whatsapp: { id: 'whatsapp', name: 'WhatsApp-Kanal', satz: 'endo antwortet auch per WhatsApp.', einmalig: 500, monat: 40, hinweis: 'zzgl. WhatsApp-Gebühren (Meta)' },
     grenze: 'faire Nutzungsgrenze',
     laufzeit: 6,   /* Mindestlaufzeit je Fähigkeit in Monaten (Emre, 02.10.2026) */
-    /* Drei Angebote (Emre, 04.10.2026, Auftrag 45 – ersetzt die Stufen-Vorschau vom 03.10.; Vorschau ?preise=angebote): jede Fähigkeit steckt in
+    /* Drei Angebote (ERGUN., 04.10.2026, Auftrag 45 – ersetzt die Stufen-Vorschau vom 03.10.; Vorschau ?preise=angebote): jede Fähigkeit steckt in
        GENAU einem Angebot, Angebotspreis = Summe seiner Fähigkeiten; die Einzelpreise oben sind dann nur noch Rechen-Grundlage. Gleiche Werte wie
        ENDO_PREISE.angebote (_code/endo-studio/js/endo-preise.js) und in Obsidian „02 Preise“ – ein Test vergleicht alle drei. */
     angebote: [
@@ -159,7 +159,7 @@ window.LEITFADEN = {
   P.monatText = function (x) { return (x.monatAb ? 'ab ' : '') + P.euro(x.monat); };
   /* endo je Fähigkeit (aus PREISE.endo) + abgeleitete Pakete für Karten und ältere Fassungen: mehr[0] = „Einzelne Fähigkeit“ (günstigste,
      einmalig und monatlich je für sich), mehr[1] = endo komplett. Nichts davon von Hand – alles aus PREISE.endo berechnet. */
-  /* Schalter Angebote (Auftrag 45, 04.10.2026): ANGEBOTE_STANDARD = true seit Emres „OK“ (Rückweg Tag vor-angebote-live) – ?preise=einzeln = vorher.
+  /* Schalter Angebote (Auftrag 45, 04.10.2026): ANGEBOTE_STANDARD = true seit ERGUNs „OK“ (Rückweg Tag vor-angebote-live) – ?preise=einzeln = vorher.
      Gleicher Schalter auf der endo-Seite (js/endo-preise.js, Test). Vorgabe von außen (Tests): window.ENDO_ANGEBOTE_AN = true|false. */
   var ANGEBOTE_STANDARD = true, aq = typeof location !== 'undefined' ? (/[?&]preise=(angebote|einzeln)\b/.exec(location.search || '') || [])[1] : '';
   var W0 = typeof window !== 'undefined' ? window : {};
