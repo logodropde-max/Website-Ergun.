@@ -3,10 +3,16 @@
    Glas-Shader gemalt (_code/werkzeuge/glas-wort.py), als Milchglas mit heller Kante und Glanz. Kein WebGL je Logo, kein backdrop-filter.
    Der Text bleibt im HTML (Screenreader, Suche) und wird nur unsichtbar (Schriftgröße 0). Dazu der neue Titelbild-Text. */
 html.blatt-glas :is(.glas-kopf__marke, .glas-fuss__marke, .marke) {
+  --marke-bild: url("bilder/glas/glas-marke.webp?v=1");
   display: inline-block; width: 98px; height: 44px; font-size: 0 !important; line-height: 0; color: transparent !important; -webkit-text-fill-color: transparent !important;
-  background: url("bilder/glas/glas-marke.webp?v=1") left center / 98px auto no-repeat !important; -webkit-background-clip: border-box !important; background-clip: border-box !important;
+  background: var(--marke-bild) left center / 98px auto no-repeat !important; -webkit-background-clip: border-box !important; background-clip: border-box !important;
   filter: drop-shadow(0 1px 1.5px rgba(13, 10, 20, 0.35)); text-decoration: none; vertical-align: middle;
 }
+/* Echtes Glas statt Milchglas (04.10.2026, ERGUNs Auftrag – Vorschau ?marke=a|b, Schalter MARKE_ECHT_STANDARD in index.html und 404.html):
+   dieselbe Rechnung und dasselbe Bild wie das große „ERGUN.“ auf dem Blatt – Kante, Glanz und Lichtbrechung bleiben erhalten.
+   a = durchsichtig (die Seite scheint durch die Zeichen) · b = mit eigenem Grund (Miniatur des großen Worts). Nur die Datei wechselt. */
+html.marke-a :is(.glas-kopf__marke, .glas-fuss__marke, .marke) { --marke-bild: url("bilder/glas/glas-marke-a.webp?v=1"); }
+html.marke-b :is(.glas-kopf__marke, .glas-fuss__marke, .marke) { --marke-bild: url("bilder/glas/glas-marke-b.webp?v=1"); }
 html.blatt-glas :is(.glas-kopf__marke, .glas-fuss__marke, .marke) :is(span, i) { display: none !important; }
 html.blatt-glas .glas-fuss__marke { width: 84px; height: 24px; background-size: 84px auto !important; }
 html.blatt-glas .glas-kopf__marke:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 3px; border-radius: 8px; }

@@ -1370,7 +1370,12 @@ html.lader-geht .lader__balken i { transform: none; transition: transform 160ms 
   if (!window.ERGUN_GLAS || !(sq === 'glas' || (BLATT_GLAS_STANDARD && sq !== 'papier' && sq !== 'ohne'))) return;
   var html = document.documentElement; html.classList.add('blatt-glas');
   html.setAttribute('data-hinten', new URLSearchParams(location.search).get('hinten') === 'b' ? 'b' : 'a');
-  var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'glas-marke.css?v=1'; document.head.appendChild(l);
+  /* Marke in Kopf und Fuß als echtes Glas (04.10.2026, ERGUNs Auftrag – wartet auf sein OK): '' = Milchglas wie bisher,
+     'a' = durchsichtiges Glas, 'b' = Glas mit eigenem Grund. Ansehen mit ?marke=a bzw. ?marke=b, ?marke=milch = vorher. */
+  var MARKE_ECHT_STANDARD = '', mq = new URLSearchParams(location.search).get('marke');
+  var marke = mq === 'a' || mq === 'b' ? mq : mq === 'milch' ? '' : MARKE_ECHT_STANDARD;
+  if (marke) html.classList.add('marke-' + marke);
+  var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'glas-marke.css?v=2'; document.head.appendChild(l);
   var v = document.createElement('link'); v.rel = 'preload'; v.as = 'image'; v.href = 'bilder/glas/glas-wort.webp?v=1'; document.head.appendChild(v);
 })();
 </script>

@@ -8,6 +8,19 @@
  "marke": {
   "breite": 481,
   "hoehe": 96,
-  "seitenverhaeltnis": 5.0104
+  "seitenverhaeltnis": 5.0104,
+  "kb": 20
+ },
+ "marke_a": {
+  "breite": 481,
+  "hoehe": 96,
+  "seitenverhaeltnis": 5.0104,
+  "kb": 24
+ },
+ "marke_b": {
+  "breite": 481,
+  "hoehe": 96,
+  "seitenverhaeltnis": 5.0104,
+  "kb": 18
  }
 }

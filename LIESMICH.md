@@ -1,5 +1,15 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
+## Blatt im Glas-Look (LIVE seit Emres „a und ok“, 04.10.2026; `BLATT_GLAS_STANDARD = true` in `index.html` UND `404.html`; `?start=papier` = helles Papier-Blatt, `?hinten=b` = Illustration; Rückweg Tag `vor-blatt-glas-live`)
+- Blatt = unscharfer Glas-Verlauf mit dem großen Glas-„ERGUN.“ (`bilder/glas/glas-wort.webp`, als SVG-`<image>` an der Lage aus `bilder/glas/glas-wort.json`), hinter dem Riss derselbe Verlauf klar: `a` = Glas-Bühne mit Zeichnung (`u_detail`), `b` = Illustration (`bilder/glas/hinten-quer|hoch.webp`). Titelbild „Webdesign und Automatisierung“ (versteckt „ERGUN.“ im h1), Regeln in `glas-marke.css`.
+- Alle Bilder entstehen **einmal** mit `python _code/werkzeuge/glas-wort.py` (Server 8791 an) aus dem echten Shader – nie von Hand zeichnen. Vier Aufnahmen: `?glasfeld=schwarz` + `?glasfeld=weiss` (daraus Deckkraft und Farbe: `A = (W − B) / 0,8`), der Verlauf ohne Wort und die Zeichen-Maske `?glasdbg=g`.
+
+## Marke als echtes Glas (VORSCHAU, wartet auf Emres OK – 04.10.2026; `MARKE_ECHT_STANDARD = ''` in `index.html` UND `404.html`, `?marke=a|b`, `?marke=milch` = Stand 03.10.)
+- Ziel: „ERGUN.“ in Kopfzeile, Fußzeile und 404 soll aussehen wie das große Glas-Wort auf dem Blatt. Zwei Fassungen aus demselben Shader-Lauf: **a** `glas-marke-a.webp` (echtes Glas, durchsichtig) · **b** `glas-marke-b.webp` (dasselbe Glas mit seinem eigenen Verlauf = Miniatur des großen Worts). Beide 481 × 96 px.
+- In `glas-marke.css` steht die Datei in `--marke-bild`; `html.marke-a` / `html.marke-b` tauschen **nur** die Datei. Größe (98 px Kopf · 84 px Fuß), Schatten, Fokus und der versteckte Text für Screenreader bleiben gleich; weiterhin kein WebGL und kein `backdrop-filter` je Logo. CSS-Version `?v=2`.
+- **a ist in der Kopfzeile fast unsichtbar** (Kontrast 1,07 : 1): echtes Glas lebt davon, dass es den Grund verzerrt – vor einem fast einfarbigen Grund bleibt nichts übrig. **b** liegt bei 3,06 : 1 (Desktop) / 3,58 : 1 (Handy) und damit über dem Milchglas von gestern (2,84 / 3,23 : 1). Empfehlung: **b**.
+- `glas-marke.webp` (Milchglas) bleibt als Rückweg **Bit für Bit** erhalten – `glas-wort.py` baut diese eine Datei absichtlich weiter auf dem alten Weg (ohne Vormultiplizieren). Test: `blatt-glas.test.mjs`.
+
 ## Blatt hell + Schriftzug löst sich auf (LIVE seit Emres OK, 03.10.2026 spät; Rückweg Tags `vor-schrift-weg-live` / `vor-blatt-hell`)
 - Blatt ganz hell: `theme-color` bleibt `#F2F1EE`, solange `html.papier-an` (Ladezustand-`leiste()` setzt dann nichts; `window.ERGUN_LEISTE` ruft das Blatt am Ende auf), beim Aufreißen weich gemischt (`mischen()` in `js/papier.quelle.js`). `html`/`body` in Papierfarbe, `.papier` und `.papier__svg` mit `overflow: visible` (Hälften reichen 30 % über den Rand), `overscroll-behavior: none`.
 - Zwei Wischer: `STUFEN = [TEASER]`, `losReissen()` (2. Wisch, langer Wisch > 0,4 Fensterhöhen, Mausrad nach dem Teaser > 0,2 Fensterhöhen, Taste im Teaser), dann `SCHNELL = 160` ms statt `VERWEILEN = 700` ms. Bauen: `node _code/werkzeuge/papier-vorlage-ziehen.mjs` (Datei < 24 KB, Test).
