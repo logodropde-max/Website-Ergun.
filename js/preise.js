@@ -146,7 +146,7 @@ window.LEITFADEN = {
       { id: 'studio', name: 'Studio', satz: 'Bilder und Videos aus Handyfotos', status: 'Demo' }],   /* 04.10.2026: Demo, bis Studio an der Firma hängt */
     komplett: 'Alle fünf Fähigkeiten zum Paketpreis.', leer: 'Bitte wählen Sie mindestens eine Fähigkeit.',
     /* Angebote (Auftrag 45, 04.10.2026, ?preise=angebote) */
-    titelAngebote: 'Welches Angebot passt?', satzAngebote: 'Wählen Sie ein Angebot oder mehrere. Alle drei zusammen sind endo komplett.', leerAngebote: 'Bitte wählen Sie ein Angebot.',
+    titelAngebote: 'Welches Angebot passt?', satzAngebote: 'Wählen Sie ein Angebot oder mehrere. Alle drei zusammen sind endo komplett.', satzEin: 'endo und Studio gibt es einzeln – oder beide zusammen.', leerAngebote: 'Bitte wählen Sie ein Angebot.',
     whatsappAngebot: 'Kommt zu einem gewählten Angebot dazu.', komplettAngebote: 'Alle drei Angebote zum Paketpreis.', guenstigerAngebote: 'endo komplett ist hier günstiger – Sie bekommen alle drei.', alleDrei: 'alle drei',
     whatsappNur: 'Kommt zu einer gewählten Fähigkeit dazu.' },
   anfrage: { titel: 'Ihre Anfrage', satz: 'Antwort innerhalb von 24 Stunden.', leer: 'Nichts ausgewählt – schreiben Sie einfach, worum es geht.', auswahl: 'Auswahl treffen' }
@@ -164,6 +164,18 @@ window.LEITFADEN = {
   var ANGEBOTE_STANDARD = true, aq = typeof location !== 'undefined' ? (/[?&]preise=(angebote|einzeln)\b/.exec(location.search || '') || [])[1] : '';
   var W0 = typeof window !== 'undefined' ? window : {};
   P.angeboteAn = typeof W0.ENDO_ANGEBOTE_AN === 'boolean' ? W0.ENDO_ANGEBOTE_AN : aq === 'angebote' || (ANGEBOTE_STANDARD && aq !== 'einzeln');
+  /* Paket 1e (ERGUN., 04.10.2026, 19:06): ZWEI Angebote – endo und Studio, jedes einzeln, beides = Summe. Gleich wie ENDO_PREISE (endo-Seite) und „02 Preise“.
+     EIN_STANDARD = true (Rückweg Tag vor-ein-endo), ?angebot=drei = vorher. Tests: ENDO_EIN_AN. */
+  var EIN_STANDARD = true, eq = typeof location !== 'undefined' ? (/[?&]angebot=(ein|drei)\b/.exec(location.search || '') || [])[1] : '';
+  P.ein = P.angeboteAn && (typeof W0.ENDO_EIN_AN === 'boolean' ? W0.ENDO_EIN_AN : eq === 'ein' || (EIN_STANDARD && eq !== 'drei'));
+  P.endo.angeboteDrei = P.endo.angebote; P.endo.komplettDrei = P.endo.komplett;
+  if (P.ein) {
+    P.endo.angebote = [
+      { id: 'endo', name: 'endo', satz: 'Anfragen, Kontakte, Termine – aus einem Chat.', faehigkeiten: ['empfang', 'kontakte', 'termine', 'uebersicht'], einmalig: 2400, monat: 180, nachrichten: 5000, hinweise: ['5.000 Nachrichten/Monat'] },
+      { id: 'studio', name: 'Studio', satz: 'Werbebilder aus Ihren Fotos.', faehigkeiten: ['studio'], einmalig: 400, monat: 70, nachrichten: 500, bilder: 20, hinweise: ['20 Bilder/Monat', '500 Nachrichten/Monat'] }
+    ];
+    P.endo.komplett = { id: 'komplett', name: 'endo + Studio', einmalig: 2800, monat: 250, nachrichten: 5500, bilder: 20 };
+  }
   P.endoAngebot = function (id) { return P.endo.angebote.filter(function (x) { return x.id === id; })[0] || null; };
   P.endoAngebotVon = function (k) { return P.endo.angebote.filter(function (x) { return x.faehigkeiten.indexOf(k) >= 0; })[0] || null; };
   /* Angebote, die eine Auswahl von Fähigkeiten berührt (jede Fähigkeit steckt in genau einem) – in der Reihenfolge der Angebote */
@@ -520,7 +532,7 @@ window.LEITFADEN = {
      je Angebot Name, das Problem des Kunden in einem Satz, die enthaltenen Fähigkeiten mit ehrlichem Stand (Live · Demo · In Arbeit) und
      einmalig/monatlich getrennt; WhatsApp als Zusatz; nie ein Preis je Fähigkeit. Zahlen nur aus PREISE.endo.angebote. */
   function endoAngebote(w) {
-    w.titel = L.endo.titelAngebote; w.satz = L.endo.satzAngebote;
+    w.titel = L.endo.titelAngebote; w.satz = P.ein ? L.endo.satzEin : L.endo.satzAngebote;   /* Paket 1e: endo und Studio, einzeln oder beide */
     var gew = P.endoAngeboteFuer(A.endo).map(function (a) { return a.id; }), K = P.endo.komplett, ids = P.endo.angebote.map(function (a) { return a.id; });
     var komplett = gew.length === ids.length, alleF = [], NAME = {}, STAND = {};
     L.endo.faehigkeiten.forEach(function (f) { NAME[f.id] = f.name; STAND[f.id] = f.status; alleF.push(f.id); });
@@ -553,14 +565,14 @@ window.LEITFADEN = {
       return b;
     }
     var c = el('div', 'mf-eliste'); c.setAttribute('role', 'group'); c.setAttribute('aria-label', L.endo.titelAngebote);
-    /* endo komplett = alle drei */
-    c.appendChild(reihe(zeile('mf-ezeile--komplett', komplett, 'komplett', 'endo', K.name, L.endo.komplettAngebote, null,
+    /* endo komplett = alle drei (Paket 1e: entfällt – beides = einfach beide ankreuzen, die Summe) */
+    if (!P.ein) c.appendChild(reihe(zeile('mf-ezeile--komplett', komplett, 'komplett', 'endo', K.name, L.endo.komplettAngebote, null,
       preise(K.einmalig, K.monat, L.endo.statt + ' ' + P.euro(summe.einmalig) + ' + ' + P.euro(summe.monat) + MONAT + ' ' + L.endo.alleDrei),
       function () { A.endo = komplett ? [] : alleF.slice(); if (!A.endo.length) A.whatsapp = false; neuZeichnen('komplett'); }), 0));
     /* drei Angebote: Ankreuzen nimmt alle Fähigkeiten des Angebots dazu bzw. weg */
     P.endo.angebote.forEach(function (an, nr) {
       var drin = gew.indexOf(an.id) >= 0;
-      c.appendChild(reihe(zeile('mf-ezeile--angebot', drin, 'angebot-' + an.id, an.faehigkeiten[0], an.name, an.satz, an.faehigkeiten, preise(an.einmalig, an.monat, an.hinweise.join(' · ')), function () {
+      c.appendChild(reihe(zeile('mf-ezeile--angebot', drin, 'angebot-' + an.id, an.id === 'endo' ? 'endo' : an.faehigkeiten[0], an.name, an.satz, an.faehigkeiten, preise(an.einmalig, an.monat, an.hinweise.join(' · ')), function () {
         if (drin) A.endo = A.endo.filter(function (k) { return an.faehigkeiten.indexOf(k) < 0; });
         else an.faehigkeiten.forEach(function (k) { if (A.endo.indexOf(k) < 0) A.endo.push(k); });
         if (!A.endo.length) A.whatsapp = false;
