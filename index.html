@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>ERGUN. – Websites, Automatisierung & KI</title>
 <meta name="description" content="ERGUN.: Websites mit Design und Bewegung, persönlich geplant und gebaut – Automatisierung und eigene KI für Ihren Betrieb über endo. Kostenloses Erstgespräch.">
-<meta name="theme-color" content="#0C162C">
+<meta name="theme-color" content="#0f2027">
 <meta name="robots" content="noindex, nofollow"><!-- solange die Seite privat ist; beim Livegang entfernen -->
 
 <!-- Teilen in Social Media / Messengern -->
@@ -105,9 +105,12 @@ window.ERGUN_TITEL = 'glas';
    Farben: das erste Bild des echten Glas-Verlaufs je Bildformat, winzig + weich (_code/werkzeuge/lader-farben.py). */
 (function () {
   var LADEN_STANDARD = true, lq = new URLSearchParams(location.search).get('laden');
-  /* VORSCHAU „Farbwechsel“ (04.10.2026): dort gibt es weder Ladezustand noch Blatt – man soll nur den Farbverlauf sehen. */
-  window.ERGUN_FARBWECHSEL = new URLSearchParams(location.search).get('grund') === 'farbwechsel';
-  if (window.ERGUN_FARBWECHSEL) return;
+  /* „Farbwechsel“ (04.10.2026, LIVE seit ERGUNs „Ja“): sein wandernder Farbverlauf ist der Seitengrund statt der Glas-Leinwand.
+     Dann gibt es beim Start weder Ladezustand noch Blatt, und der Schriftzug steht als normale Schrift da. ?grund=glas = alles wie vorher.
+     EINE Stelle für den Schalter – dieses Skript läuft als erstes, alle anderen lesen nur window.ERGUN_FARBWECHSEL bzw. die Klasse. */
+  var GRUND_FARBWECHSEL_STANDARD = true, gq = new URLSearchParams(location.search).get('grund');
+  window.ERGUN_FARBWECHSEL = gq === 'farbwechsel' || (GRUND_FARBWECHSEL_STANDARD && gq !== 'glas');
+  if (window.ERGUN_FARBWECHSEL) { document.documentElement.classList.add('grund-farbwechsel'); return; }
   if (!window.ERGUN_GLAS || !(lq === 'neu' || (LADEN_STANDARD && lq !== 'alt'))) return;
   var html = document.documentElement; html.classList.add('lader-an', 'glas-laden');
   /* Statusleiste am Handy = obere Kante des Verlaufs im jeweiligen Format (beim Scrollen: Grund der Seite) */
@@ -1400,8 +1403,6 @@ html.lader-geht .lader__balken i { transform: none; transition: transform 160ms 
   var marke = mq === 'a' || mq === 'b' ? mq : mq === 'milch' ? '' : MARKE_ECHT_STANDARD;
   if (marke) html.classList.add('marke-' + marke);
   var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'glas-marke.css?v=2'; document.head.appendChild(l);
-  /* VORSCHAU „Farbwechsel“ (04.10.2026): ERGUNs Farbverlauf statt der Glas-Leinwand – nur mit ?grund=farbwechsel, nie von selbst. */
-  if (new URLSearchParams(location.search).get('grund') === 'farbwechsel') html.classList.add('grund-farbwechsel');
   var v = document.createElement('link'); v.rel = 'preload'; v.as = 'image'; v.href = 'bilder/glas/glas-wort.webp?v=1'; document.head.appendChild(v);
 })();
 </script>
@@ -1420,7 +1421,7 @@ html.lader-geht .lader__balken i { transform: none; transition: transform 160ms 
    Kein Blatt bei einem Sprung (#preise, #kontakt), beim Zurückblättern und bei der Rückkehr von Impressum/Datenschutz. Ohne JavaScript nie ein Blatt. */
 (function () {
   var PAPIER_STANDARD = true, sq = new URLSearchParams(location.search).get('start');
-  if (window.ERGUN_FARBWECHSEL) return;   /* Vorschau „Farbwechsel“: ohne Blatt */
+  if (window.ERGUN_FARBWECHSEL) return;   /* „Farbwechsel“: ohne Blatt */
   if (!window.ERGUN_GLAS || !(sq === 'papier' || sq === 'glas' || (PAPIER_STANDARD && sq !== 'ohne'))) return;
   if (location.hash) return;
   var nav = performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
@@ -1988,7 +1989,7 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
 <script>
 /* Auftrag 44: je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
 (function () {
-  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=11'] : window.ERGUN_WAHL === 'all' ? ['js/all.js?v=1'] : window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'baum' ? ['js/baum.js?v=6', 'js/kristall.js?v=45'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris' || window.ERGUN_WAHL === 'lycoris3') ? ['js/blume.js?v=11', 'js/kristall.js?v=45'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=45'] : [];
+  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=12'] : window.ERGUN_WAHL === 'all' ? ['js/all.js?v=1'] : window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'baum' ? ['js/baum.js?v=6', 'js/kristall.js?v=45'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris' || window.ERGUN_WAHL === 'lycoris3') ? ['js/blume.js?v=11', 'js/kristall.js?v=45'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=45'] : [];
   liste.forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
 })();
 </script>

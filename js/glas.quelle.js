@@ -301,7 +301,8 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
 
   function start() {
     if (aufraeumen) { aufraeumen(); aufraeumen = null; }
-    const gl = /[?&]webgl=aus\b/.test(location.search) ? null : canvas.getContext('webgl2', { alpha: false, antialias: false, depth: false, stencil: false });
+    /* „Farbwechsel“ (04.10.2026): der Verlauf kommt aus der CSS – dann gar kein WebGL starten (spart Akku), der Schriftzug steht als Schrift da */
+    const gl = /[?&]webgl=aus\b/.test(location.search) || html.classList.contains('grund-farbwechsel') ? null : canvas.getContext('webgl2', { alpha: false, antialias: false, depth: false, stencil: false });
     if (!gl) return;
     const floatTargets = !!gl.getExtension('EXT_color_buffer_float') || (fein && !!gl.getExtension('EXT_color_buffer_half_float'));   /* fein: auch Halb-Fließkomma (iPhone) */
 
