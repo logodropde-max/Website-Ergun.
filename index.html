@@ -1480,6 +1480,17 @@ html.blatt-glas :is(.papier__wort, .papier__zeile) { display: none; }
 html.blatt-glas .papier__hinweis { color: #FFFFFF; opacity: 0.92; text-shadow: 0 1px 3px rgba(13, 10, 20, 0.45); }
 html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
 </style>
+<script>
+  /* Paket 1e Punkt 14 (Auftrag 45, 04.10.2026): das gezeichnete endo-Zeichen neben „endo“ (Links zur endo-Seite, endo-Zeile in Schritt ②) – dieselbe Datei wie auf endo
+     (bilder/endo-zeichen.svg, ein Test hält beide gleich). VORSCHAU ?zeichen=neu, ZEICHEN_STANDARD = false bis ERGUNs OK. */
+  var ZEICHEN_STANDARD = false, zq = (/[?&]zeichen=(neu|alt)\b/.exec(location.search) || [])[1];
+  if (zq === 'neu' || (ZEICHEN_STANDARD && zq !== 'alt')) document.documentElement.classList.add('endo-zeichen-an');
+</script>
+<style>
+html.endo-zeichen-an a[href^="https://endo-ergun.vercel.app"]::before { content: ""; display: inline-block; width: 1.15em; height: 1.15em; margin-right: 0.4em; vertical-align: -0.22em; background: url(bilder/endo-zeichen.svg?v=1) center / contain no-repeat; }
+html.endo-zeichen-an .mf-ezeile__symbol--endo { background: url(bilder/endo-zeichen.svg?v=1) center / 100% no-repeat; border-radius: 0; box-shadow: none; }
+html.endo-zeichen-an .mf-ezeile__symbol--endo svg { visibility: hidden; }
+</style>
 </head>
 <body>
 
@@ -2033,7 +2044,7 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
-<script src="js/preise.js?v=21"></script>
+<script src="js/preise.js?v=22"></script>
 <script>
 /* Kostenloses Erstgespräch: eine Karte mit allen Feldern (seit 25.09. abends keine Schritte mehr).
    Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)

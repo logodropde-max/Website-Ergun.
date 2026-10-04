@@ -495,7 +495,7 @@ window.LEITFADEN = {
         var b = el('button', 'mf-ezeile ' + cls); b.type = 'button'; b.setAttribute('role', 'checkbox'); b.setAttribute('aria-checked', String(!!an)); b.setAttribute('data-fokus', key);
         if (gesperrt) { b.disabled = true; b.setAttribute('aria-disabled', 'true'); }
         var box = el('span', 'mf-haken__box'); box.setAttribute('aria-hidden', 'true'); box.innerHTML = HAKEN; b.appendChild(box);
-        var sy = el('span', 'mf-ezeile__symbol'); sy.setAttribute('aria-hidden', 'true'); sy.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + (ESYM[symbol] || ESYM.endo) + '</svg>'; b.appendChild(sy);
+        var sy = el('span', 'mf-ezeile__symbol' + (symbol === 'endo' ? ' mf-ezeile__symbol--endo' : '')); sy.setAttribute('aria-hidden', 'true'); sy.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + (ESYM[symbol] || ESYM.endo) + '</svg>'; b.appendChild(sy);
         var tx = el('span', 'mf-ezeile__text'), kopf = el('span', 'mf-ezeile__kopf'); kopf.appendChild(el('b', 'mf-ezeile__name', name));
         if (status) kopf.appendChild(el('span', 'mf-chip__status mf-chip__status--' + status.replace(' ', '-').toLowerCase(), status));
         tx.appendChild(kopf); tx.appendChild(el('span', 'mf-ezeile__satz', satz)); b.appendChild(tx);
@@ -547,7 +547,7 @@ window.LEITFADEN = {
     function zeile(cls, an, key, symbol, name, satz, faehig, pr, klick) {
       var b = el('button', 'mf-ezeile ' + cls); b.type = 'button'; b.setAttribute('role', 'checkbox'); b.setAttribute('aria-checked', String(!!an)); b.setAttribute('data-fokus', key);
       var box = el('span', 'mf-haken__box'); box.setAttribute('aria-hidden', 'true'); box.innerHTML = HAKEN; b.appendChild(box);
-      var sy = el('span', 'mf-ezeile__symbol'); sy.setAttribute('aria-hidden', 'true'); sy.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + (ESYM[symbol] || ESYM.endo) + '</svg>'; b.appendChild(sy);
+      var sy = el('span', 'mf-ezeile__symbol' + (symbol === 'endo' ? ' mf-ezeile__symbol--endo' : '')); sy.setAttribute('aria-hidden', 'true'); sy.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + (ESYM[symbol] || ESYM.endo) + '</svg>'; b.appendChild(sy);
       var tx = el('span', 'mf-ezeile__text'), kopf = el('span', 'mf-ezeile__kopf'); kopf.appendChild(el('b', 'mf-ezeile__name', name)); tx.appendChild(kopf);
       tx.appendChild(el('span', 'mf-ezeile__satz', satz));
       if (faehig) {
