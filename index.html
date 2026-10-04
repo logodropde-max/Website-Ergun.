@@ -1493,19 +1493,16 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
   var riss = rq === 'alt' ? '' : rq || RISS_STANDARD; if (riss) document.documentElement.setAttribute('data-riss', riss);
 </script>
 <style>
-html.endo-zeichen-an a[href^="https://endo-ergun.vercel.app"]::before { content: ""; display: inline-block; width: 1.15em; height: 1.15em; margin-right: 0.4em; vertical-align: -0.22em; background: url(bilder/endo-person.svg?v=1) center / contain no-repeat; }
-html.endo-zeichen-an .mf-ezeile__symbol--endo { background: url(bilder/endo-person.svg?v=1) center / 100% no-repeat; border-radius: 0; box-shadow: none; }
-html.endo-zeichen-an .mf-ezeile__symbol--endo svg { visibility: hidden; }
+/* ERGUN., 05.10.2026: „endo mit Zeichen bei ERGUN. nur einmal oben, nicht überall“ – nur der Link im Menü oben */
+html.endo-zeichen-an .glas-kopf__links a[href^="https://endo-ergun.vercel.app"]::before, html.endo-zeichen-an .nav__link--endo::before { content: ""; display: inline-block; width: 1.15em; height: 1.15em; margin-right: 0.4em; vertical-align: -0.22em; background: url(bilder/endo-person.svg?v=1) center / contain no-repeat; }
 </style>
 <style>
 /* Paket 1f Teil E: „endo ansehen ↗“ an der Wahl „Automatisierung“ und „Beides“ (js/preise.js endoLinkHuelle) – eigene Tippfläche in der Karte */
 .mf-wahl-huelle { position: relative; display: grid; }
 .mf-wahl-huelle > .hat-endo-link { padding-bottom: 68px !important; }
 .mf-endo-link { position: absolute; left: 16px; bottom: 8px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 999px; color: inherit; font-size: 15px !important; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
-.mf-endo-link::before { content: ""; width: 1.15em; height: 1.15em; flex: none; background: url(bilder/endo-person.svg?v=1) center / contain no-repeat; }
 .mf-endo-link:hover { text-decoration-thickness: 2px; }
 .mf-endo-link:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-html.endo-zeichen-an .mf-endo-link::before { content: ""; }
 .mf-endo-link { margin: 0; }
 </style>
 </head>
