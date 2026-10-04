@@ -953,8 +953,9 @@ body { background: var(--f-grund-tief); }
 .mf-ezeile__kopf { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
 .mf-ezeile__name { font-size: 17px; line-height: 24px; font-weight: 600; letter-spacing: -0.01em; }
 .mf-ezeile__satz { font-size: 14px; line-height: 20px; color: var(--f-gedaempft); }
-/* endo-Stufen (03.10.2026, ?preise=stufen): die enthaltenen Fähigkeiten als Symbole mit Namen */
-.mf-stufe-faehig { display: flex; flex-wrap: wrap; gap: 6px; }
+/* endo-Angebote (Auftrag 45, 04.10.2026, ?preise=angebote): die enthaltenen Fähigkeiten als Symbole mit Namen und ehrlichem Stand */
+.mf-angebot-faehig { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.mf-sfaehig .mf-chip__status { margin-left: 2px; }
 .mf-sfaehig { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px 2px 4px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.14); font-size: 13px; line-height: 20px; }
 .mf-sfaehig__symbol { display: inline-grid; place-items: center; width: 18px; height: 18px; }
 .mf-sfaehig__symbol svg { width: 15px; height: 15px; }
@@ -1392,6 +1393,18 @@ html.lader-geht .lader__balken i { transform: none; transition: transform 160ms 
 })();
 </script>
 <script>
+/* Glas-Logo (04.10.2026, Emre: „in jeder Ansicht Glas“): „ERGUN.“ in Kopf- und Fußzeile ist IMMER das Glas-Logo – unabhängig vom Blatt-Schalter
+   (?start=ohne, ?start=papier). Klasse html.marke-glas + Fassung 'b' (glas-marke-b.webp, LIVE seit ERGUNs „Ok“); ?marke=a | ?marke=milch = Vergleich. Test blatt-glas.test.mjs. */
+(function () {
+  if (!window.ERGUN_GLAS) return;   /* nur auf der Glas-Startseite (ältere Titel-Fassungen haben eigene Logos) */
+  var html = document.documentElement; html.classList.add('marke-glas');
+  var MARKE_ECHT_STANDARD = 'b', mq = new URLSearchParams(location.search).get('marke');
+  var marke = mq === 'a' || mq === 'b' ? mq : mq === 'milch' ? '' : MARKE_ECHT_STANDARD;
+  if (marke) html.classList.add('marke-' + marke);
+  var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'glas-marke.css?v=3'; document.head.appendChild(l);
+})();
+</script>
+<script>
 /* Blatt im Glas-Look (03.10.2026, Vorschau ?start=glas – Ausnahme auf ERGUNs Wunsch): Blatt = unscharfer Live-Hintergrund mit Glas-„ERGUN.“, hinter
    dem Riss derselbe Hintergrund klar und gezeichnet (?hinten=a Glas-Bühne mit Zeichnung · ?hinten=b Illustration), Titelbild „Webdesign und
    Automatisierung“, alle „ERGUN.“ im Glas-Look. BLATT_GLAS_STANDARD = true seit ERGUNs OK (04.10.2026, Fassung a); ?start=papier = vorher (helles Papier-Blatt). */
@@ -1400,13 +1413,7 @@ html.lader-geht .lader__balken i { transform: none; transition: transform 160ms 
   if (!window.ERGUN_GLAS || !(sq === 'glas' || (BLATT_GLAS_STANDARD && sq !== 'papier' && sq !== 'ohne'))) return;
   var html = document.documentElement; html.classList.add('blatt-glas');
   html.setAttribute('data-hinten', new URLSearchParams(location.search).get('hinten') === 'b' ? 'b' : 'a');
-  /* Marke in Kopf und Fuß als echtes Glas (04.10.2026, ERGUNs Auftrag): 'b' = dasselbe Glas wie das große Wort auf dem Blatt,
-     mit seinem eigenen Verlauf (Kante, Glanz, Lichtbrechung) – LIVE seit ERGUNs „Ok“. 'a' = durchsichtiges Glas (in der Kopfzeile
-     fast unsichtbar, nur zum Vergleich), '' = Milchglas vom 03.10. Ansehen mit ?marke=a bzw. ?marke=milch (= vorher). */
-  var MARKE_ECHT_STANDARD = 'b', mq = new URLSearchParams(location.search).get('marke');
-  var marke = mq === 'a' || mq === 'b' ? mq : mq === 'milch' ? '' : MARKE_ECHT_STANDARD;
-  if (marke) html.classList.add('marke-' + marke);
-  var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'glas-marke.css?v=2'; document.head.appendChild(l);
+  /* Glas-Logo in Kopf und Fuß: eigenes Skript davor (html.marke-glas, gilt auch ohne Blatt) – lädt auch glas-marke.css */
   var v = document.createElement('link'); v.rel = 'preload'; v.as = 'image'; v.href = 'bilder/glas/glas-wort.webp?v=1'; document.head.appendChild(v);
 })();
 </script>
@@ -2026,7 +2033,7 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
-<script src="js/preise.js?v=17"></script>
+<script src="js/preise.js?v=19"></script>
 <script>
 /* Kostenloses Erstgespräch: eine Karte mit allen Feldern (seit 25.09. abends keine Schritte mehr).
    Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)

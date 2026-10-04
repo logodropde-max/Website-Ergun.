@@ -24,17 +24,24 @@ p { margin: 0; color: var(--muted); text-wrap: pretty; }
 .zeile { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px; }
 </style>
 <script>
+/* Glas-Logo (04.10.2026, Emre: „in jeder Ansicht Glas“): „ERGUN.“ in Kopf- und Fußzeile ist IMMER das Glas-Logo – unabhängig vom Blatt-Schalter
+   (?start=ohne, ?start=papier). Klasse html.marke-glas + Fassung 'b' (glas-marke-b.webp, LIVE seit ERGUNs „Ok“); ?marke=a | ?marke=milch = Vergleich. Test blatt-glas.test.mjs. */
+(function () {
+  var html = document.documentElement; html.classList.add('marke-glas');
+  var MARKE_ECHT_STANDARD = 'b', mq = new URLSearchParams(location.search).get('marke');
+  var marke = mq === 'a' || mq === 'b' ? mq : mq === 'milch' ? '' : MARKE_ECHT_STANDARD;
+  if (marke) html.classList.add('marke-' + marke);
+  var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = '/glas-marke.css?v=3'; document.head.appendChild(l);
+})();
+</script>
+<script>
 /* Blatt im Glas-Look (03.10.2026, Vorschau ?start=glas): „ERGUN.“ im Glas-Look – dieselbe Regel und Datei wie auf der Startseite (glas-marke.css).
    BLATT_GLAS_STANDARD = true seit ERGUNs OK (04.10.2026, Fassung a); ?start=papier = vorher (helles Papier-Blatt) – gleicher Schalter wie in index.html (Test). */
 (function () {
   var BLATT_GLAS_STANDARD = true, sq = new URLSearchParams(location.search).get('start');
   if (!(sq === 'glas' || (BLATT_GLAS_STANDARD && sq !== 'papier' && sq !== 'ohne'))) return;
   document.documentElement.classList.add('blatt-glas');
-  /* Marke als echtes Glas (04.10.2026, LIVE seit ERGUNs „Ok“: 'b') – gleicher Schalter und gleiche Werte wie in index.html (Test) */
-  var MARKE_ECHT_STANDARD = 'b', mq = new URLSearchParams(location.search).get('marke');
-  var marke = mq === 'a' || mq === 'b' ? mq : mq === 'milch' ? '' : MARKE_ECHT_STANDARD;
-  if (marke) document.documentElement.classList.add('marke-' + marke);
-  var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = '/glas-marke.css?v=2'; document.head.appendChild(l);
+  /* Glas-Logo: eigenes Skript davor (html.marke-glas, gilt auch ohne Blatt) – lädt auch glas-marke.css */
 })();
 </script>
 </head>
