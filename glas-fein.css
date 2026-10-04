@@ -71,12 +71,13 @@ html.glas-fein .glas-karte::after { content: ""; position: absolute; top: 24px; 
   opacity: 0; transform: scale(0.6); transition: opacity 200ms var(--g-ease), transform 200ms var(--g-ease); }
 html.glas-fein .glas-karte[aria-pressed="true"]::after { opacity: 1; transform: none; }
 html.glas-fein .glas-angebote.hat-wahl .glas-karte:not([aria-pressed="true"]) { opacity: 0.9; }
-/* „Lieber gleich schreiben“ als ruhige Glas-Pille – gut auffindbar, aber unter den Hauptknöpfen */
-html.glas-fein .glas-angebote .mf-angebote__direkt { width: max-content; min-height: 48px; margin-top: 24px; padding: 0 24px; border-radius: 999px; border: 1px solid var(--gf-kante);
+/* „Lieber gleich schreiben“ und „endo ansehen“ (04.10.2026) als ruhige Glas-Pillen – gut auffindbar, aber unter den Hauptknöpfen */
+html.glas-fein .glas-angebote .mf-angebote__zeile { justify-content: center; gap: 12px; margin-top: 24px; }
+html.glas-fein .glas-angebote :is(.mf-angebote__direkt, .mf-angebote__endo) { width: max-content; min-height: 48px; padding: 0 24px; border-radius: 999px; border: 1px solid var(--gf-kante);
   background: var(--gf-flaeche); -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); text-decoration: none; font-weight: 600; font-size: 15px;
   transition: background-color 200ms ease, border-color 200ms ease; }
-@media (hover: hover) and (pointer: fine) { html.glas-fein .glas-angebote .mf-angebote__direkt:hover { background: var(--gf-flaeche-hover); border-color: var(--gf-kante-hover); } }
-html.glas-fein .glas-angebote .mf-angebote__direkt:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { html.glas-fein .glas-angebote :is(.mf-angebote__direkt, .mf-angebote__endo):hover { background: var(--gf-flaeche-hover); border-color: var(--gf-kante-hover); } }
+html.glas-fein .glas-angebote :is(.mf-angebote__direkt, .mf-angebote__endo):focus-visible { outline: 2px solid #FFFFFF; outline-offset: 3px; }
 
 /* ---------- Formular (② ③): dieselbe Glasfläche ---------- */
 html.glas-fein :is(.mf-stufe, .mf-chip, .mf-komplett, .mf .auswahl, .lf-chip--gross) { border-radius: var(--gf-r); -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); }

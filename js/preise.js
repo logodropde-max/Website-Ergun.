@@ -119,7 +119,7 @@ window.LEITFADEN = {
   art: { titel: 'Was brauchen Sie?', satz: 'Tippen Sie auf das, was passt. Den Rest klären wir im Gespräch.', direkt: 'Lieber gleich schreiben',
     optionen: [
       { id: 'website', titel: 'Website', satz: 'Eine Website, die zu Ihrem Betrieb passt.' },
-      { id: 'endo', titel: 'Automatisierung', satz: 'endo beantwortet Anfragen, bucht Termine und mehr.' },
+      { id: 'endo', titel: 'Automatisierung', satz: 'endo beantwortet Anfragen, bucht Termine und mehr.', link: 'endo ansehen' },
       { id: 'beides', titel: 'Beides', satz: 'Ihre Website und endo zusammen.', dezent: 'alles aus einer Hand' }] },
   website: { titel: 'Welche Website passt?', satz: 'Der Preis ist ein Startwert.', alles: 'Alles, was drin ist', extras: 'Extras hinzufügen (optional)' },
   /* höchstens 3 Stichpunkte je Stufe (Auszug aus PREISE.stufen[].punkte, in Alltagssprache) */
@@ -362,9 +362,20 @@ window.LEITFADEN = {
       aliste.appendChild(b);
     });
     angebote.appendChild(aliste);
+    /* Unter den Angeboten: „Lieber gleich schreiben“ und – seit 04.10.2026 (ERGUN) – der direkte Weg zu endo. Wer „Automatisierung“
+       sucht, soll endo gleich hier ansehen können. Die Angebote selbst sind Knöpfe, darum steht der Link daneben. */
+    var azeile = el('div', 'mf-linkzeile mf-angebote__zeile');
     var adirekt = el('button', 'mf-link mf-angebote__direkt', L.art.direkt + ' →'); adirekt.type = 'button';
     adirekt.addEventListener('click', function () { A.art = null; neu(); gehe('anfrage', 1); });
-    angebote.appendChild(adirekt);
+    azeile.appendChild(adirekt);
+    var aendo = L.art.optionen.filter(function (o) { return o.link; })[0];
+    if (aendo) {
+      var al = el('a', 'mf-link mf-angebote__endo', aendo.link + ' ↗');
+      al.href = P.endoSeiteOeffentlich ? P.endoSeite : P.endoStart; al.target = '_blank'; al.rel = 'noopener';
+      al.setAttribute('aria-label', aendo.link + ' – ' + aendo.titel + ' (neues Fenster)');
+      azeile.appendChild(al);
+    }
+    angebote.appendChild(azeile);
     var ainnen = q('.preise__innen'); ainnen.insertBefore(angebote, ainnen.firstChild);
   }
 
@@ -403,9 +414,21 @@ window.LEITFADEN = {
         g.appendChild(b);
       });
       w.inhalt.appendChild(g);
+      /* Links unter den Karten: wie bisher „Lieber gleich schreiben“, dazu seit 04.10.2026 (ERGUN) der direkte Weg zu endo –
+         wer „Automatisierung“ sucht, soll endo gleich hier ansehen können, nicht erst im nächsten Schritt. Die Karten selbst sind
+         Knöpfe, darum steht der Link daneben (ein <a> in einem <button> wäre ungültig und würde das Tippen stören). */
+      var zeile = el('div', 'mf-linkzeile');
       var d = el('button', 'mf-link', L.art.direkt + ' →'); d.type = 'button';
       d.addEventListener('click', function () { A.art = null; neu(); gehe('anfrage', 1); });
-      w.inhalt.appendChild(d);
+      zeile.appendChild(d);
+      var endoOpt = L.art.optionen.filter(function (o) { return o.link; })[0];
+      if (endoOpt) {
+        var ea = el('a', 'mf-link', endoOpt.link + ' ↗');
+        ea.href = P.endoSeiteOeffentlich ? P.endoSeite : P.endoStart; ea.target = '_blank'; ea.rel = 'noopener';
+        ea.setAttribute('aria-label', endoOpt.link + ' – ' + endoOpt.titel + ' (neues Fenster)');
+        zeile.appendChild(ea);
+      }
+      w.inhalt.appendChild(zeile);
     },
     website: function (w) {
       w.titel = L.website.titel; w.satz = L.website.satz;

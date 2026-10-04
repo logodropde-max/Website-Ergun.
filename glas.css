@@ -82,7 +82,8 @@ html.titel-glas .preise__innen { position: relative; width: min(1120px, calc(100
 .glas-karte[aria-pressed="true"] { border-color: var(--g-creme); background: rgba(255, 230, 184, 0.08); box-shadow: 0 0 0 1px var(--g-creme), 0 0 44px -12px rgba(255, 230, 184, 0.5); }
 .glas-karte[aria-pressed="true"] .glas-karte__titel::after { content: ""; display: inline-block; width: 0.22em; height: 0.22em; margin-left: 0.12em; border-radius: 50%; background: var(--g-creme); vertical-align: 0.05em; }
 .glas-angebote.hat-wahl .glas-karte:not([aria-pressed="true"]) { opacity: 0.72; }
-.glas-angebote .mf-angebote__direkt { display: flex; align-items: center; justify-content: center; min-height: 44px; margin: 18px auto 0; color: var(--g-text); font-family: var(--g-schrift);
+.glas-angebote .mf-angebote__zeile { justify-content: center; gap: 18px; }
+.glas-angebote :is(.mf-angebote__direkt, .mf-angebote__endo) { display: flex; align-items: center; justify-content: center; min-height: 44px; margin: 18px 0 0; color: var(--g-text); font-family: var(--g-schrift);
   font-size: 15px; text-decoration: underline; text-decoration-color: rgba(255, 255, 255, 0.4); text-underline-offset: 4px; }
 
 /* ---------- Formular (② ③) im selben Stil ---------- */

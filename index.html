@@ -88,7 +88,7 @@ window.ERGUN_TITEL = 'glas';
      Kopfzeile als Glas mit Tönung aus dem Verlauf, Logo-Punkt im Verlauf. GLAS_NAHTLOS_STANDARD = true seit Emres OK (01.10. spät); ?glas=fein = ohne nahtlos */
   var GLAS_NAHTLOS_STANDARD = true, gnaht = gfein && (gq === 'nahtlos' || (GLAS_NAHTLOS_STANDARD && gq !== 'fein'));
   html.classList.toggle('glas-nahtlos', gnaht);
-  if (glas) ['glas-vorlage.gen.css?v=1', 'glas.css?v=1'].concat(gfein ? ['glas-fein.css?v=4'] : []).forEach(function (h) { var gc = document.createElement('link'); gc.rel = 'stylesheet'; gc.href = h; document.head.appendChild(gc); });
+  if (glas) ['glas-vorlage.gen.css?v=1', 'glas.css?v=2'].concat(gfein ? ['glas-fein.css?v=5'] : []).forEach(function (h) { var gc = document.createElement('link'); gc.rel = 'stylesheet'; gc.href = h; document.head.appendChild(gc); });
   if (all) { var ac = document.createElement('link'); ac.rel = 'stylesheet'; ac.href = 'all.css?v=1'; document.head.appendChild(ac);
     var sw = new URLSearchParams(location.search).get('schrift'); if (sw === 'federant') { html.setAttribute('data-schrift', 'vorlage'); } }
   if (wahl === 'alt') ['emre3d-folge-1', 'emre3d-folge-2', 'hund-folge'].forEach(function (n) {   /* Vorlader der alten Figur nur hier */
@@ -108,7 +108,7 @@ window.ERGUN_TITEL = 'glas';
   if (!window.ERGUN_GLAS || !(lq === 'neu' || (LADEN_STANDARD && lq !== 'alt'))) return;
   var html = document.documentElement; html.classList.add('lader-an', 'glas-laden');
   /* Statusleiste am Handy = obere Kante des Verlaufs im jeweiligen Format (beim Scrollen: Grund der Seite) */
-  var a = innerWidth / Math.max(1, innerHeight), oben = a >= 1.69 ? '#D27865' : a >= 1.45 ? '#DE7B59' : a >= 1.1 ? '#E6835B' : a >= 0.62 ? '#D4755B' : '#D5725D';
+  var a = innerWidth / Math.max(1, innerHeight), oben = a >= 1.69 ? '#E07B5F' : a >= 1.45 ? '#E58461' : a >= 1.1 ? '#F19477' : a >= 0.62 ? '#EA8065' : '#FD714A';
   var tc = document.querySelector('meta[name="theme-color"]'); if (tc) tc.setAttribute('content', oben);
   window.ERGUN_LADER_OBEN = oben;
 })();
@@ -667,6 +667,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 @media (min-width: 720px) { .mf-karte { min-height: 200px; } .mf-karte__preis { margin-top: auto; padding-top: 12px; } }
 .mf-link { justify-self: start; display: inline-flex; align-items: center; min-height: 44px; padding: 0; border: 0; background: none; color: var(--text); font: 500 15px/1.3 var(--sans); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(242, 239, 232, 0.3); cursor: pointer; }
 .mf-link--klein { min-height: 32px; font-size: 14px; }
+.mf-linkzeile { display: flex; flex-wrap: wrap; align-items: center; gap: 0 24px; }   /* „Lieber gleich schreiben“ + „endo ansehen“ (04.10.2026) */
 
 /* ② Website: Stufen mit höchstens drei Stichpunkten */
 .mf-stufen { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
@@ -864,7 +865,7 @@ body { background: var(--f-grund-tief); }
   .mf-karte__satz { font-size: 15px; line-height: 22px; }
   .mf-karte__preis { font-size: 16px; }
 }
-.mf-schritt > .mf-inhalt > .mf-link { color: var(--f-gedaempft); text-decoration-color: rgba(148, 169, 197, 0.4); }
+.mf-schritt > .mf-inhalt > .mf-link, .mf-schritt > .mf-inhalt > .mf-linkzeile > .mf-link { color: var(--f-gedaempft); text-decoration-color: rgba(148, 169, 197, 0.4); }
 .mf-link { color: var(--f-text); text-decoration-color: rgba(242, 180, 92, 0.55); }
 
 /* ② Website-Stufen */
@@ -1254,7 +1255,7 @@ html.titel-neu {
   .titel-neu .mf-karte__preis { font-size: 14px; padding-top: 20px; border-top: 1px solid var(--p-linie); }
 }
 .titel-neu .mf-link { color: var(--p-text); text-decoration-color: var(--p-linie-hell); }
-.titel-neu .mf-schritt > .mf-inhalt > .mf-link { color: var(--p-leise); text-decoration-color: var(--p-linie-hell); }
+.titel-neu .mf-schritt > .mf-inhalt > .mf-link, .titel-neu .mf-schritt > .mf-inhalt > .mf-linkzeile > .mf-link { color: var(--p-leise); text-decoration-color: var(--p-linie-hell); }
 /* ② Stufen wie eine Produktauswahl: Name, großer Preis, monatlich klein, 3 Punkte, „Auswählen“ als Rand-Knopf. Kein Schild „Empfehlung“. */
 .titel-neu .mf-stufe__schild { display: none; }
 .titel-neu .mf-stufe { padding: 28px 24px 24px; border-radius: 20px; }
@@ -1300,11 +1301,11 @@ html.titel-neu {
 html.lader-an.titel-glas :is(header.nav, .szene, footer.footer, .wechsel) { display: none !important; }
 .lader { display: none; }
 /* lader-grund:anfang – erstes Bild, bevor der Verlauf gemalt ist (Werte: _code/werkzeuge/lader-farben.py) */
-html.glas-laden, html.glas-laden body, html.papier-an.blatt-glas, html.papier-an.blatt-glas body { background: linear-gradient(#DD7859 10%, #C0715B 50%, #4A251A 90%) fixed #A25945; }
-@media (min-aspect-ratio: 169/100) { html.glas-laden, html.glas-laden body, html.papier-an.blatt-glas, html.papier-an.blatt-glas body { background: linear-gradient(#D17562 10%, #BC6E5A 50%, #47231A 90%) fixed #9C5647; } }
-@media (max-aspect-ratio: 145/100) { html.glas-laden, html.glas-laden body, html.papier-an.blatt-glas, html.papier-an.blatt-glas body { background: linear-gradient(#E2805C 10%, #C9785C 50%, #4D271A 90%) fixed #A85F46; } }
-@media (max-aspect-ratio: 110/100) { html.glas-laden, html.glas-laden body, html.papier-an.blatt-glas, html.papier-an.blatt-glas body { background: linear-gradient(#D87861 10%, #DA8665 50%, #3F2219 90%) fixed #A55E49; } }
-@media (max-aspect-ratio: 62/100) { html.glas-laden, html.glas-laden body, html.papier-an.blatt-glas, html.papier-an.blatt-glas body { background: linear-gradient(#E3795B 10%, #D37657 50%, #3A2018 90%) fixed #A35841; } }
+html.glas-laden, html.glas-laden body, html.papier-an.blatt-glas, html.papier-an.blatt-glas body { background: linear-gradient(#E18461 10%, #B88170 50%, #693125 90%) fixed #AE6954; }
+@media (min-aspect-ratio: 169/100) { html.glas-laden, html.glas-laden body, html.papier-an.blatt-glas, html.papier-an.blatt-glas body { background: linear-gradient(#DB7B60 10%, #B27E6D 50%, #673120 90%) fixed #A86651; } }
+@media (max-aspect-ratio: 145/100) { html.glas-laden, html.glas-laden body, html.papier-an.blatt-glas, html.papier-an.blatt-glas body { background: linear-gradient(#ED9172 10%, #C1856E 50%, #6E3721 90%) fixed #B67057; } }
+@media (max-aspect-ratio: 110/100) { html.glas-laden, html.glas-laden body, html.papier-an.blatt-glas, html.papier-an.blatt-glas body { background: linear-gradient(#EA8168 10%, #C7886F 50%, #5F301D 90%) fixed #B46A52; } }
+@media (max-aspect-ratio: 62/100) { html.glas-laden, html.glas-laden body, html.papier-an.blatt-glas, html.papier-an.blatt-glas body { background: linear-gradient(#FB764F 10%, #C67157 50%, #50251A 90%) fixed #B25B42; } }
 /* lader-grund:ende */
 html.glas-laden .lader, html.lader-deckt .lader, html.lader-geht .lader { display: grid; place-items: center; position: fixed; inset: 0; z-index: 2147483000; overflow: hidden; pointer-events: auto; }
 html.glas-laden body > :not(.lader) { visibility: hidden; animation: lader-zeigen 0s linear 2.8s forwards; }
@@ -1315,12 +1316,12 @@ html.glas-laden .lader { animation: lader-notaus 400ms ease 2.8s forwards; }   /
 html.glas-laden .glas-hero :is(.ghr-eyebrow, .ghr-desc, .ghr-actions) { animation-play-state: paused; }
 html.glas-laden .glas-hero .ghr-title { transition: none !important; }
 /* Verlauf: erstes Bild des echten Glas-Verlaufs je Format, weich gezeichnet, bewegt sich ganz langsam */
-.lader__grund, .papier__grund { position: absolute; inset: -8%; background: #A25945 url("data:image/webp;base64,UklGRuAAAABXRUJQVlA4INQAAAAwBgCdASogABQAPm0skUWkIqGYDAYAQAbEsgBOmUI6L92KsABwXO5FJGixewJfs23ZcGTgLLp74i/gAP7E667pLLDCAmIpN+pEK2bCYl2A0u2W+PqV5wDl8fEtnw43+//5Eu0ikqEIo0Zvh83/z3n4/yibk0tmbD7miYvd/uUaYOggZDxoulFXULr7jQ2yeZz2B6mGZVuTBGEaby5iNS4sHXM4JNwWfbk9i+DcIh73CdimmUNMjBg3dO3PZiPkoH4jmRfP17NsBG+ywKZyBi/X4TYAAA==") center / cover no-repeat;
+.lader__grund, .papier__grund { position: absolute; inset: -8%; background: #AE6954 url("data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAADwBACdASogABQAPm0ukkYkIqGhMBgIAIANiUAVgAIH9dKVc0TyjzRsX40oY4Y7u0AA/u1hBPfiQpYlQgAj8GK0/GecW3+ZSfxPWTnaBf/JhP/eoHztalGll/GuUEW0MiQhKtGpWlTgMUmbJkHHAteJokElGJCkmKkXfnE0QWMf4AAA") center / cover no-repeat;
   filter: blur(22px) saturate(1.05); transform: translateZ(0); animation: lader-fluss 7s ease-in-out infinite alternate; }
-@media (min-aspect-ratio: 169/100) { .lader__grund, .papier__grund { background-color: #9C5647; background-image: url("data:image/webp;base64,UklGRtYAAABXRUJQVlA4IMoAAADQBQCdASogABIAPmkoj0WkIqEYBgBABoSzAE6ZQjgb3S3DtlgXoMXp28vWQafYDtaY0bzhyTcAAP7E7Rjqx5kgg5m6EV3afhxQ7Yzx3XH/836alpzH/Bx2y0oT6lz/8Xppq4vYL7j/+e3kwKvmdnWCNoIlFbU1IR0HqUsGHrWJIcgJd6z5DHaH0Df6NnZ7pQm12fv9ZRrnB140DnFSPgV96beWP8QayMreZN8kzjw9qe3/KttMk9rW3qlCSPUaMiIKOBYQa2Z4isAA"); } }
-@media (max-aspect-ratio: 145/100) { .lader__grund, .papier__grund { background-color: #A85F46; background-image: url("data:image/webp;base64,UklGRtIAAABXRUJQVlA4IMYAAAAwBgCdASocABUAPmkskkWkIqGYDAYAQAaEsgBOmUI4G9AtwAIgyryIGdYlr8L/+6z6as1j+SobrYWAAP7USiy7/ewCFnDfth1PoYrxrhC918MHC1T/uUVStPltoZmF7IKIp4//Ilubdq2uHIHezAv/0OizWG/vrlzHYbcDCD2w1muOyQH0QB/7nTr4VCjISzCxhprXmZgt6ac9eN8djdssMHeBq6EapNA9emZjS9OHmlTJsmbCtqmBAfqOG+yTELRQsZNs0AA="); } }
-@media (max-aspect-ratio: 110/100) { .lader__grund, .papier__grund { background-color: #A55E49; background-image: url("data:image/webp;base64,UklGRuAAAABXRUJQVlA4INQAAABwBgCdASoWABsAPm0skEYkIqGhMBgMAIANiWwAnTM0NQe6cIAC9jLCC3UGILIDvT0jHl0wV0o3xWG9sAAA/ghwxaxNUxiUyRcUR/MMUc550X6NiAw54qrwMKKuzhgMeE5VVX/4YaHkpTBoPDbn/pNzL/ES4O2PjL0gVIDyZ/G+JDZ065sVlxSzJ42Y87M5J649fGRmeOy1W8nNM3l5GfglV0/AtRESgXs6BAcSpXoCZpETfuosgtJKr5BemiCKWiZruCWh6uSEqi4vdnZCwqACiAAAAA=="); } }
-@media (max-aspect-ratio: 62/100) { .lader__grund, .papier__grund { background-color: #A35841; background-image: url("data:image/webp;base64,UklGRrwAAABXRUJQVlA4ILAAAACwBQCdASoQACMAPmUoj0WkIqEapABABkS1AE6ZQjgb3ThAnIwIlSwmmDvewEQHP7qat/B5xgAA/mu58hQC/4R0RNK5cN4waLoI8xyJd3OJyQjXJIfH5//hipqJUulikThXRxb/1Fhc37LvdgfFDH+HvwBjIoWUwbwvrZjbl3YR5Oh42tGO3ZPZ+H2cT3ZT6pkLIG21Et5XaoeK79fvMq73mD4qEm6ir4cVFzdv0xQAAA=="); } }
+@media (min-aspect-ratio: 169/100) { .lader__grund, .papier__grund { background-color: #A86651; background-image: url("data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAADQBACdASogABIAPm0wkkYkIyGhMBgIAIANiUAQNYkwB0aDb6UWKayOWEWKr8HMAAD+54+9K1KsEYJs/kBu4aiF9/+tWDYJyh//8c126Juqecjk/qLqKdUFIJ8J9jUgaZXnEFQFn5QxCLwHtQ74vjfLopn1AAAA"); } }
+@media (max-aspect-ratio: 145/100) { .lader__grund, .papier__grund { background-color: #B67057; background-image: url("data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACwBQCdASocABUAPmksj0WkIqEYBgBABoSgC1GyYBf6qAYVOtUUZviGuA3tpyZr5V3nM+HXZgAA/u1LA3/G0axojRzPZHl74D8f/TOQM8v/5bViWNIXXb9rye5DdOb30V88gW+gPVgOmYST/A+fmc2UxJbJFYxvMGA7mEXZ0MAAAA=="); } }
+@media (max-aspect-ratio: 110/100) { .lader__grund, .papier__grund { background-color: #B46A52; background-image: url("data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAABQBQCdASoWABsAPm0sk0YkIqGhKA1QgA2JQBOmYjbb+SgOzHc1zedIJoIZCH47lgYH38AA/o0opbNeIOoqJdtYgf+Nsx2N/+LQ9UBz0iwW/9Dlh/st/UFKE0LxBsSKMTkjKn/PxVAWx77W2plM2dbILel+SYbvmR0NvY+gLis9OCxgAAA="); } }
+@media (max-aspect-ratio: 62/100) { .lader__grund, .papier__grund { background-color: #B25B42; background-image: url("data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAAAwBQCdASoQACMAPmUoj0WkIqEapABABkSyAE6ZQkFn0D8VQEGuyAFFzL9TBs+h1targAD8U/B6eJFpwjm//KOMokq8//ZYFxXESJ5Pto/bN9QZNKYLTavt2TKJHyzeCzelgVujMtUaWtUgIIRVBUAA"); } }
 @keyframes lader-fluss { from { transform: translate3d(-0.8%, -0.6%, 0) scale(1.02); } to { transform: translate3d(0.8%, 0.6%, 0) scale(1.06); } }
 /* kleines „ERGUN.“ im Glas-Look (Pfad aus Clash Display 700, keine Schrift nötig), Lichtstreifen läuft darüber */
 .lader__mitte { --lm: clamp(150px, 26vw, 240px); position: absolute; left: 50%; top: 50%; width: var(--lm); height: calc(var(--lm) * 0.29 + 22px); margin: calc(var(--lm) * -0.145 - 11px) 0 0 calc(var(--lm) * -0.5); }   /* feste Maße: nichts darf beim Nachladen springen */
@@ -1962,7 +1963,7 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
 <script>
 /* Auftrag 44: je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
 (function () {
-  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=10'] : window.ERGUN_WAHL === 'all' ? ['js/all.js?v=1'] : window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'baum' ? ['js/baum.js?v=6', 'js/kristall.js?v=45'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris' || window.ERGUN_WAHL === 'lycoris3') ? ['js/blume.js?v=11', 'js/kristall.js?v=45'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=45'] : [];
+  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=11'] : window.ERGUN_WAHL === 'all' ? ['js/all.js?v=1'] : window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'baum' ? ['js/baum.js?v=6', 'js/kristall.js?v=45'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris' || window.ERGUN_WAHL === 'lycoris3') ? ['js/blume.js?v=11', 'js/kristall.js?v=45'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=45'] : [];
   liste.forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
 })();
 </script>
@@ -1987,7 +1988,7 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
-<script src="js/preise.js?v=16"></script>
+<script src="js/preise.js?v=17"></script>
 <script>
 /* Kostenloses Erstgespräch: eine Karte mit allen Feldern (seit 25.09. abends keine Schritte mehr).
    Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)

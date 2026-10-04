@@ -68,7 +68,10 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
      der Vorlage) läuft rückwärts – und baut sich ganz oben wieder auf (Abstand der Schwellen gegen Flackern). Weg = keine Masken-Rechnung, kein
      Verschieben, der Verlauf malt ohne Glas-Rechnung (u_ohne). Unterzeile und Knöpfe scrollen ganz normal mit der Seite (kein transform). */
   const WEG = RUHE && html.classList.contains('schrift-weg');
-  const WEG_AB = 0.08, WEG_ZURUECK = 0.035, WEG_MS = 600;
+  /* Schwellen in Fensterhöhen: runter löst sich „Webdesign und Automatisierung“ ab WEG_AB auf, hoch kommt es ab WEG_ZURUECK zurück.
+     04.10.2026 (ERGUN: „soll früher zu sehen sein beim Hochscrollen“): 0.08/0.035 → 0.14/0.08 – der Abstand zwischen beiden bleibt,
+     damit der Schriftzug an der Schwelle nicht flackert. */
+  const WEG_AB = 0.14, WEG_ZURUECK = 0.08, WEG_MS = 600;
   const inhalt = RUHE && !WEG ? root.querySelector('.ghr-content') : null;
   let versatz = 0, breiteJetzt = window.innerWidth;
   const dprR = Math.min(window.devicePixelRatio || 1, 2);
