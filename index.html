@@ -1485,6 +1485,10 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
      (bilder/endo-zeichen.svg, ein Test hält beide gleich). VORSCHAU ?zeichen=neu, ZEICHEN_STANDARD = false bis ERGUNs OK. */
   var ZEICHEN_STANDARD = true, zq = (/[?&]zeichen=(neu|alt)\b/.exec(location.search) || [])[1];
   if (zq === 'neu' || (ZEICHEN_STANDARD && zq !== 'alt')) document.documentElement.classList.add('endo-zeichen-an');
+  /* Paket 1h Teil B (05.10.2026): das endo-Zeichen als Glas-Figur mit Glanz – VORSCHAU ?zeichen=1|2|3 (oder ?1h=an = Nr. 1), gleiche Dateien wie auf endo (bilder/zeichen/) */
+  var GLANZ_STANDARD = '1';   /* LIVE seit ERGUNs OK (05.10.2026): Zeichen Nr. 1 (Glas); ?zeichen=neu = Zeichen aus Paket 1f */
+  var gzq = (/[?&]zeichen=([123])\b/.exec(location.search) || [])[1] || (/[?&]1h=an\b/.test(location.search) ? '1' : zq === 'neu' ? '' : GLANZ_STANDARD);
+  if (gzq) document.documentElement.classList.add('zeichen-glanz-' + gzq);
   /* Paket 1f Teil E: Titel, Unterzeile und Knöpfe im selben Takt, Auflösen am Scroll-Weg, früher zurück (js/glas.quelle.js TAKT). ?takt=an = Vorschau */
   var TAKT_STANDARD = true, tq = (/[?&]takt=(an|aus)\b/.exec(location.search) || [])[1];
   if (tq === 'an' || (TAKT_STANDARD && tq !== 'aus')) document.documentElement.classList.add('titel-takt');
@@ -1495,6 +1499,9 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
 <style>
 /* ERGUN., 05.10.2026: „endo mit Zeichen bei ERGUN. nur einmal oben, nicht überall“ – nur der Link im Menü oben */
 html.endo-zeichen-an .glas-kopf__links a[href^="https://endo-ergun.vercel.app"]::before, html.endo-zeichen-an .nav__link--endo::before { content: ""; display: inline-block; width: 1.15em; height: 1.15em; margin-right: 0.4em; vertical-align: -0.22em; background: url(bilder/endo-person.svg?v=1) center / contain no-repeat; }
+html.zeichen-glanz-1.endo-zeichen-an .glas-kopf__links a[href^="https://endo-ergun.vercel.app"]::before, html.zeichen-glanz-1.endo-zeichen-an .nav__link--endo::before { background-image: url(bilder/zeichen/endo-zeichen-1.svg?v=1); }
+html.zeichen-glanz-2.endo-zeichen-an .glas-kopf__links a[href^="https://endo-ergun.vercel.app"]::before, html.zeichen-glanz-2.endo-zeichen-an .nav__link--endo::before { background-image: url(bilder/zeichen/endo-zeichen-2-klein.svg?v=1); }
+html.zeichen-glanz-3.endo-zeichen-an .glas-kopf__links a[href^="https://endo-ergun.vercel.app"]::before, html.zeichen-glanz-3.endo-zeichen-an .nav__link--endo::before { background-image: url(bilder/zeichen/endo-zeichen-3.svg?v=1); }
 </style>
 <style>
 /* Paket 1f Teil E: „endo ansehen ↗“ an der Wahl „Automatisierung“ und „Beides“ (js/preise.js endoLinkHuelle) – eigene Tippfläche in der Karte */
