@@ -1498,11 +1498,12 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
   var riss = rq === 'alt' ? '' : rq || RISS_STANDARD; if (riss) document.documentElement.setAttribute('data-riss', riss);
 </script>
 <style>
-/* ERGUN., 05.10.2026 (2. Wunsch): das endo-Zeichen nur in der Anfrage an „endo ansehen“ (js/preise.js .mf-endo-link) – nicht mehr im Menü oben */
-html.endo-zeichen-an .mf-endo-link::before { content: ""; display: inline-block; width: 1.15em; height: 1.15em; margin-right: 0.4em; vertical-align: -0.22em; background: url(bilder/endo-person.svg?v=1) center / contain no-repeat; }
-html.zeichen-glanz-1.endo-zeichen-an .mf-endo-link::before { background-image: url(bilder/zeichen/endo-zeichen-1.svg?v=1); }
-html.zeichen-glanz-2.endo-zeichen-an .mf-endo-link::before { background-image: url(bilder/zeichen/endo-zeichen-2-klein.svg?v=1); }
-html.zeichen-glanz-3.endo-zeichen-an .mf-endo-link::before { background-image: url(bilder/zeichen/endo-zeichen-3.svg?v=1); }
+/* ERGUN., 05.10.2026 (3. Wunsch: „endo nur bei Automatisierung Logo, also beim Paket, und im Titel unter Anfrage starten, mehr nicht“):
+   das endo-Zeichen nur an „endo ansehen“ beim Paket Automatisierung (js/preise.js .mf-wahl-huelle--endo) und an „endo ansehen“ im Titel (.ghr-secondary) */
+html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeichen-an .ghr-actions .ghr-secondary::before { content: ""; display: inline-block; width: 1.15em; height: 1.15em; margin-right: 0.4em; vertical-align: -0.22em; background: url(bilder/endo-person.svg?v=1) center / contain no-repeat; }
+html.zeichen-glanz-1.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.zeichen-glanz-1.endo-zeichen-an .ghr-actions .ghr-secondary::before { background-image: url(bilder/zeichen/endo-zeichen-1.svg?v=1); }
+html.zeichen-glanz-2.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.zeichen-glanz-2.endo-zeichen-an .ghr-actions .ghr-secondary::before { background-image: url(bilder/zeichen/endo-zeichen-2-klein.svg?v=1); }
+html.zeichen-glanz-3.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.zeichen-glanz-3.endo-zeichen-an .ghr-actions .ghr-secondary::before { background-image: url(bilder/zeichen/endo-zeichen-3.svg?v=1); }
 </style>
 <style>
 /* Paket 1f Teil E: „endo ansehen ↗“ an der Wahl „Automatisierung“ und „Beides“ (js/preise.js endoLinkHuelle) – eigene Tippfläche in der Karte */
@@ -2066,7 +2067,7 @@ html.zeichen-glanz-3.endo-zeichen-an .mf-endo-link::before { background-image: u
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
-<script src="js/preise.js?v=24"></script>
+<script src="js/preise.js?v=25"></script>
 <script>
 /* Kostenloses Erstgespräch: eine Karte mit allen Feldern (seit 25.09. abends keine Schritte mehr).
    Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)

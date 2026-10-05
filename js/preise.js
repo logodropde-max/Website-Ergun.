@@ -367,7 +367,7 @@ window.LEITFADEN = {
   var ENDO_LINK = elq === 'an' || (ENDO_LINK_STANDARD && elq !== 'aus');
   function endoLinkHuelle(knopf, o) {
     if (!ENDO_LINK || (o.id !== 'endo' && o.id !== 'beides')) return knopf;
-    var hu = el('div', 'mf-wahl-huelle'); hu.appendChild(knopf); knopf.classList.add('hat-endo-link');
+    var hu = el('div', 'mf-wahl-huelle mf-wahl-huelle--' + o.id); hu.appendChild(knopf);   /* ERGUN., 05.10.: das endo-Logo nur bei „Automatisierung“ (--endo) */ knopf.classList.add('hat-endo-link');
     var a = el('a', 'mf-endo-link', 'endo ansehen ↗'); a.href = P.endoSeiteOeffentlich ? P.endoSeite : P.endoStart; a.target = '_blank'; a.rel = 'noopener';
     a.setAttribute('data-endo-link', ''); a.setAttribute('aria-label', 'endo ansehen – ' + o.titel + ' (neues Fenster)');
     a.addEventListener('click', function (e) { e.stopPropagation(); });
