@@ -100,11 +100,11 @@ window.ERGUN_TITEL = 'glas';
 
 <script>
 /* Ladezustand „Glas“ (02.10.2026, Vorschau ?laden=neu – Auftrag 3): vom ersten Bild an nur der Ladezustand, dann weicher Übergang in die
-   Glas-Seite. Gilt nur für das Titelbild „Glas“. LADEN_STANDARD = true seit Emres OK (02.10.2026, Rückweg Tag vor-lader-live); ?laden=alt = ohne.
+   Glas-Seite. Gilt nur für das Titelbild „Glas“. AUS seit ERGUNs Wunsch (05.10.2026: „der Ladevorgang soll weg, nur am Anfang die Animation, wo es zerreißt“); ?laden=neu = mit Ladezustand.
    Bestandteile: Stil am Ende des Kopfs (wirkt sofort, ohne Datei), HTML + Steuerung als erstes Element des Seiteninhalts (#lader).
    Farben: das erste Bild des echten Glas-Verlaufs je Bildformat, winzig + weich (_code/werkzeuge/lader-farben.py). */
 (function () {
-  var LADEN_STANDARD = true, lq = new URLSearchParams(location.search).get('laden');
+  var LADEN_STANDARD = false, lq = new URLSearchParams(location.search).get('laden');
   /* „Farbwechsel“ (04.10.2026): ERGUNs wandernder Farbverlauf als Seitengrund statt der Glas-Leinwand – war kurz live, auf seinen Wunsch
      wieder aus (04.10.). Ansehen mit ?grund=farbwechsel; dort gibt es weder Ladezustand noch Blatt und kein WebGL.
      EINE Stelle für den Schalter – dieses Skript läuft als erstes, alle anderen lesen nur window.ERGUN_FARBWECHSEL bzw. die Klasse. */
@@ -1492,16 +1492,17 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
   /* Paket 1f Teil E: Titel, Unterzeile und Knöpfe im selben Takt, Auflösen am Scroll-Weg, früher zurück (js/glas.quelle.js TAKT). ?takt=an = Vorschau */
   var TAKT_STANDARD = true, tq = (/[?&]takt=(an|aus)\b/.exec(location.search) || [])[1];
   if (tq === 'an' || (TAKT_STANDARD && tq !== 'aus')) document.documentElement.classList.add('titel-takt');
-  /* Paket 1f Teil E: Riss schneller – „halb“ (700 ms statt 1,4 s) oder „mittel“ (950 ms); js/papier.quelle.js liest html[data-riss]. ?riss=halb|mittel|alt */
-  var RISS_STANDARD = 'halb', rq = (/[?&]riss=(halb|mittel|alt)\b/.exec(location.search) || [])[1];
+  /* Paket 1f Teil E: Riss schneller – „halb“ (700 ms statt 1,4 s) oder „mittel“ (950 ms); js/papier.quelle.js liest html[data-riss]. ?riss=halb|mittel|alt
+     ERGUN., 05.10.2026: „zuegig“ = Standard – einmal tippen/wischen reißt sofort ganz auf (~0,6 s, kein Halt im Spalt). Rückweg ?riss=halb */
+  var RISS_STANDARD = 'zuegig', rq = (/[?&]riss=(zuegig|halb|mittel|alt)\b/.exec(location.search) || [])[1];
   var riss = rq === 'alt' ? '' : rq || RISS_STANDARD; if (riss) document.documentElement.setAttribute('data-riss', riss);
 </script>
 <style>
-/* ERGUN., 05.10.2026: „endo mit Zeichen bei ERGUN. nur einmal oben, nicht überall“ – nur der Link im Menü oben */
-html.endo-zeichen-an .glas-kopf__links a[href^="https://endo-ergun.vercel.app"]::before, html.endo-zeichen-an .nav__link--endo::before { content: ""; display: inline-block; width: 1.15em; height: 1.15em; margin-right: 0.4em; vertical-align: -0.22em; background: url(bilder/endo-person.svg?v=1) center / contain no-repeat; }
-html.zeichen-glanz-1.endo-zeichen-an .glas-kopf__links a[href^="https://endo-ergun.vercel.app"]::before, html.zeichen-glanz-1.endo-zeichen-an .nav__link--endo::before { background-image: url(bilder/zeichen/endo-zeichen-1.svg?v=1); }
-html.zeichen-glanz-2.endo-zeichen-an .glas-kopf__links a[href^="https://endo-ergun.vercel.app"]::before, html.zeichen-glanz-2.endo-zeichen-an .nav__link--endo::before { background-image: url(bilder/zeichen/endo-zeichen-2-klein.svg?v=1); }
-html.zeichen-glanz-3.endo-zeichen-an .glas-kopf__links a[href^="https://endo-ergun.vercel.app"]::before, html.zeichen-glanz-3.endo-zeichen-an .nav__link--endo::before { background-image: url(bilder/zeichen/endo-zeichen-3.svg?v=1); }
+/* ERGUN., 05.10.2026 (2. Wunsch): das endo-Zeichen nur in der Anfrage an „endo ansehen“ (js/preise.js .mf-endo-link) – nicht mehr im Menü oben */
+html.endo-zeichen-an .mf-endo-link::before { content: ""; display: inline-block; width: 1.15em; height: 1.15em; margin-right: 0.4em; vertical-align: -0.22em; background: url(bilder/endo-person.svg?v=1) center / contain no-repeat; }
+html.zeichen-glanz-1.endo-zeichen-an .mf-endo-link::before { background-image: url(bilder/zeichen/endo-zeichen-1.svg?v=1); }
+html.zeichen-glanz-2.endo-zeichen-an .mf-endo-link::before { background-image: url(bilder/zeichen/endo-zeichen-2-klein.svg?v=1); }
+html.zeichen-glanz-3.endo-zeichen-an .mf-endo-link::before { background-image: url(bilder/zeichen/endo-zeichen-3.svg?v=1); }
 </style>
 <style>
 /* Paket 1f Teil E: „endo ansehen ↗“ an der Wahl „Automatisierung“ und „Beides“ (js/preise.js endoLinkHuelle) – eigene Tippfläche in der Karte */
@@ -1635,7 +1636,7 @@ html.zeichen-glanz-3.endo-zeichen-an .glas-kopf__links a[href^="https://endo-erg
   <p class="papier__hinweis">Scrollen<i></i></p>
 </div>
 <script>(function () { var p = document.getElementById('papier'); if (!document.documentElement.classList.contains('papier-an')) { if (p) p.parentNode.removeChild(p); return; }
-  var s = document.createElement('script'); s.src = 'js/papier.js?v=7'; document.body.appendChild(s); })();</script>
+  var s = document.createElement('script'); s.src = 'js/papier.js?v=8'; document.body.appendChild(s); })();</script>
 
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
 

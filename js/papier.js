@@ -119,10 +119,13 @@ var TEASER = 0.62;          /* open = 1: die Hälften sind so weit auseinander w
 /* Paket 1f Teil E (ERGUN., 04.10.2026 21:14: „die Animation, wo es zerreißt, schneller und flüssiger“): html[data-riss] aus dem Kopf-Skript von index.html –
    „halb“ = halb so lang wie bisher, „mittel“ = zwei Drittel; ohne Angabe wie bisher (Rückweg ?riss=alt). */
 var RISS = typeof document !== 'undefined' && document.documentElement ? document.documentElement.getAttribute('data-riss') || '' : '';
-var VERWEILEN = RISS === 'halb' ? 350 : RISS === 'mittel' ? 470 : 700;   /* ms: das Auge soll den Hintergrund im Spalt erkennen */
-var DAUER = RISS === 'halb' ? 700 : RISS === 'mittel' ? 950 : 1400;   /* ms: komplettes Aufreißen */
+/* ERGUN., 05.10.2026: „sobald man einmal auf den Bildschirm tippt, soll das alles ganz zügig gehen“ – „zuegig“: die ERSTE Eingabe (Tippen, Wischen,
+   Mausrad, Taste) reißt sofort ganz auf, ohne Halt im Spalt; Öffnen ~0,2 s + Aufreißen 420 ms. */
+var ZUEGIG = RISS === 'zuegig';
+var VERWEILEN = ZUEGIG ? 0 : RISS === 'halb' ? 350 : RISS === 'mittel' ? 470 : 700;   /* ms: das Auge soll den Hintergrund im Spalt erkennen */
+var DAUER = ZUEGIG ? 420 : RISS === 'halb' ? 700 : RISS === 'mittel' ? 950 : 1400;   /* ms: komplettes Aufreißen */
 var STUFEN = [TEASER];   /* Wischen (ERGUN., 03.10. spät: „einmal scrollen weniger“): ein Wisch = Riss + Öffnen bis zum Teaser, der zweite reißt ganz auf */
-var SCHNELL = 160;          /* ms: nach dem zweiten Wisch (oder einem langen) reißt es fast sofort auf */
+var SCHNELL = ZUEGIG ? 0 : 160;          /* ms: nach dem zweiten Wisch (oder einem langen) reißt es fast sofort auf */
 var PAPIER = "#F2F1EE";
 var ZUSATZ = { top: { dx: -40, rot: -9 }, bottom: { dx: 40, rot: 8 } };   /* beim Aufreißen: oben fliegt nach oben, unten nach unten, beide kippen */
 var weich = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
@@ -324,6 +327,7 @@ try {
   function losReissen() { if (phase === "reissen" || phase === "halt") return; schnell = true; info.schnell = true; if (phase === "blatt") setzen(TEASER); }
   function setzen(z) {
     if (phase !== "blatt") return;
+    if (ZUEGIG && (schnell || z > 0)) { schnell = true; info.schnell = true; z = TEASER; }   /* zügig: jede erste Bewegung nach vorn = ganz aufreißen */
     if (ruhig) { phase = "geht"; return weiter(); }
     ziel = clamp01(z);
     if (!raf) { letzt = performance.now(); raf = requestAnimationFrame(tick); }
@@ -354,7 +358,7 @@ try {
     if (n > 0 && (phase === "teaser" || n > 1 || ziel >= TEASER - 0.01)) return losReissen();
     setzen(n > 0 ? naechste(ziel, n) : n === -1 ? vorige(ziel) : 0);
   }
-  function tippen() { if (ruhig) setzen(0); }
+  function tippen() { if (ruhig) setzen(0); else if (ZUEGIG) losReissen(); }   /* zügig: einmal tippen genügt */
   function oben() { if ((root.scrollY || 0) !== 0) root.scrollTo(0, 0); }
   var Z = [["wheel", rad], ["touchstart", anfassen], ["touchmove", wischen], ["touchend", loslassen], ["touchcancel", loslassen], ["keydown", taste], ["pointerdown", tippen], ["scroll", oben]];
   Z.forEach(function (z) { root.addEventListener(z[0], z[1], { passive: false }); });
@@ -371,7 +375,7 @@ try {
     }
     var ok = bereit(), z = ok ? ziel : Math.min(ziel, 0.15);   /* vor dem fertigen Hintergrund höchstens der Riss */
     if (ok && ziel >= TEASER - 0.02 && !wisch) z = Math.max(z, TEASER);
-    p += (z - p) * (1 - Math.pow(0.86, dt * 60)); if (Math.abs(z - p) < 0.0005) p = z;   /* wie die Vorlage (0,14 je Bild bei 60 Bildern/s), aber zeitbasiert */
+    p += (z - p) * (1 - Math.pow(ZUEGIG ? 0.7 : 0.86, dt * 60)); if (Math.abs(z - p) < 0.0005) p = z;   /* wie die Vorlage (0,14 je Bild bei 60 Bildern/s), aber zeitbasiert */
     if (p >= TEASER - 0.004 && !wisch) p = TEASER;
     info.p = p; zeichne(p, 0);
     if (p >= TEASER) {   /* Teaser erreicht: nicht mehr zurück, kurz verweilen, dann reißt das Blatt von selbst ganz auf */
