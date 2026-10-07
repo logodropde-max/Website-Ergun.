@@ -27,74 +27,29 @@
 <link rel="preload" href="schriften/ClashDisplay-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="schriften/Satoshi-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="schriften/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<!-- Bildfolgen von ERGUN. und dem Hund früh, aber mit niedriger Priorität holen: das Winken (erstes Runterwischen) wartet sonst auf sie -->
 <script>document.documentElement.classList.add('js'); if (new URLSearchParams(location.search).get('farbe') === 'b') document.documentElement.setAttribute('data-farbe', 'b');   /* Auftrag 28: vorsichtigere Farbe zum Vergleich */
-/* Auftrag 36 (Figur blendet nach der Wahl aus + Auswahl premium): EIN Schalter. false = bis zu ERGUNs OK bleibt live alles wie bisher, das Neue gibt es nur
-   mit ?karten=neu bzw. ?ausblenden=a|b (Vorschau). true = Neues ist Standard, der bisherige Look bleibt mit ?karten=alt erreichbar. */
-window.ERGUN_A36 = true;
-(function (k) { if (window.ERGUN_A36 ? k !== 'alt' : k === 'neu') document.documentElement.setAttribute('data-karten', 'neu'); })(new URLSearchParams(location.search).get('karten'));</script>
+/* Auftrag 36 (30.09.2026): Auswahl-Karten premium – fest an (Schalter ERGUN_A36 und Rückweg ?karten=alt seit 07.10.2026 entfernt, Tag vor-aufraeumen-2026-10-07) */
+document.documentElement.setAttribute('data-karten', 'neu');</script>
 <script>
-/* Titelbild-Schalter (01.10.2026). ?titel=… wählt, sonst gilt ERGUN_TITEL.
-   · alt       = gezeichnete Landschaft mit Figur + Hund
-   · maschine  = tropisches Büro, scroll-gebunden mit Karten ①–④ (live bis 01.10. abends)
-   · dschungel = tropisches Büro, neueste Fassung: 4K, geführt, Premium-Angebote (eingelagert – Tag dschungel-final, _archiv/ERGUN-Dschungel-2026-10-01/)
-     (?titel=neu = derselbe Stand)
-   · kristall  = Startseite 01.10.2026 bis zur Blume – Vorlage „Lycoris Specimen“, pinker Brillant
-   · all       = Startseite seit 01.10.2026 abends (Emres „Ok“): Erde → Saturn (Angebote, endo-Mond) → Erde bei Nacht (Formular), js/all.js
-   · lycoris3  = Startseite 01.10.2026 nachmittags bis „All“ (Emres „Ok“): Vorlage Lycoris mit 3 Seiten (Start · Angebote · Kontakt), Leiste oben,
-                 volle Dahlie in Lila (?blume=lilie = rote Spinnenlilie)
-                 ?ordnung=neu (Aufräumen, Vorschau): keine Dopplungen, Angebote = Schritt ① direkt über dem Formular, Themen oben auch am Handy
-                 ohne „Menü“, Blume immer ganz (fester Stiel, sie bewegt sich statt zu wachsen). ORDNUNG_STANDARD = true seit Emres OK („Stelle Seite dann online“, 01.10.); ?ordnung=alt = vorher.
-   · baum      = Startseite am 01.10.2026 bis Lycoris 3 (Emres „Ok“): Lebensbaum im Kreis (Formvorlage Feld 5) im Stil der Vorlage, wächst mit jedem Bild
-   · lycoris   = Startseite am 01.10.2026 bis zum Lebensbaum: die Vorlage „Lycoris Specimen“ 1:1 (rote Spinnenlilie, Karmin), nur ERGUNs Texte
-   · blume     = Startseite am 01.10.2026 bis Lycoris: Kristall-Seite näher an der Vorlage, der Diamant öffnet sich zur Blüte (?blume=rose|tulpe|lilie)
-   Die Dschungel-Fassung liegt als <template> im HTML: ohne ihren Schalter lädt sie nichts (keine Bilder, kein CSS, kein Skript). */
+/* Titelbild-Schalter (01.10.2026). Es gibt nur noch „glas“ (Startseite seit 01.10.2026 spät, Emres „ok“).
+   Gezeichnete Landschaft mit Figur + Hund (?titel=alt), Maschine/Dschungel (tropisches Büro), Kristall, Blume, Lycoris, Lebensbaum, Lycoris 3 und All liegen seit 07.10.2026 im Archiv (_archiv/ERGUN-Titelbilder (entfernt 07.10.)/,
+   Rückweg Tag vor-aufraeumen-2026-10-07); ihre ?titel=… zeigen jetzt Glas.
+*/
 window.ERGUN_TITEL = 'glas';
 (function () {
-  var t = new URLSearchParams(location.search).get('titel'); if (t === 'neu') t = 'dschungel'; if (t === 'a') t = 'alt';
-  var wahl = ['alt', 'maschine', 'dschungel', 'kristall', 'blume', 'lycoris', 'baum', 'lycoris3', 'all', 'glas'].indexOf(t) >= 0 ? t : window.ERGUN_TITEL;
-  var m = wahl === 'maschine' || wahl === 'dschungel', neu = wahl === 'dschungel';
-  var k = wahl === 'kristall' || wahl === 'blume' || wahl === 'lycoris' || wahl === 'baum' || wahl === 'lycoris3', bl = wahl === 'blume' || wahl === 'lycoris' || wahl === 'lycoris3';
-  window.ERGUN_WAHL = wahl; window.ERGUN_MASCHINE = m; window.ERGUN_NEU = neu; window.ERGUN_KRISTALL = k;
-  var all = wahl === 'all', glas = wahl === 'glas'; window.ERGUN_GLAS = glas;   /* „Glas“ (01.10., Vorschau ?titel=glas): 21st-Vorlage „Glass Headline Hero“ als neues Design – js/glas.js + glas.css, kein three.js */   /* „All“ (01.10., Vorschau ?titel=all): Erde → Saturn → Erde bei Nacht, endo-Form als Mond – eigene Szene js/all.js, Formular-Look aus kristall.css */
-  var ORDNUNG_STANDARD = true, ow = new URLSearchParams(location.search).get('ordnung');
-  window.ERGUN_ORDNUNG = all || glas || (wahl === 'lycoris3' && new URLSearchParams(location.search).get('blume') !== 'lilie' && (ow === 'neu' || (ORDNUNG_STANDARD && ow !== 'alt')));
+  var t = new URLSearchParams(location.search).get('titel');
+  var wahl = ['glas'].indexOf(t) >= 0 ? t : window.ERGUN_TITEL;
+  window.ERGUN_WAHL = wahl;
+  var glas = wahl === 'glas'; window.ERGUN_GLAS = glas;   /* „Glas“ (01.10., Vorschau ?titel=glas): 21st-Vorlage „Glass Headline Hero“ als neues Design – js/glas.js + glas.css, kein three.js */
+  window.ERGUN_ORDNUNG = glas;   /* Ordnung (01.10.): Angebote = Schritt ① direkt über dem Formular – gilt für Glas */
   var html = document.documentElement;
-  html.classList.toggle('ordnung-neu', window.ERGUN_ORDNUNG);
-  /* Ablauf der Blume (01.10. abends, Vorschau ?ablauf=neu): Start → Angebote um die Rosette von oben → Formular. ABLAUF_STANDARD = true seit Emres OK (01.10.); ?ablauf=alt = vorher */
-  var ABLAUF_STANDARD = true, ab = new URLSearchParams(location.search).get('ablauf');
-  window.ERGUN_ABLAUF = window.ERGUN_ORDNUNG && (ab === 'neu' || (ABLAUF_STANDARD && ab !== 'alt'));
-  html.classList.toggle('ablauf-neu', window.ERGUN_ABLAUF);
-  html.classList.toggle('titel-maschine', m); html.classList.toggle('titel-neu', neu); html.classList.toggle('titel-kristall', k || all); html.classList.toggle('titel-blume', bl || wahl === 'baum'); html.classList.toggle('titel-lycoris', wahl === 'lycoris' || wahl === 'lycoris3'); html.classList.toggle('titel-drei', wahl === 'lycoris3'); html.classList.toggle('titel-baum', wahl === 'baum'); html.classList.toggle('titel-all', all); html.classList.toggle('titel-glas', glas);
-  if (m) {   /* nur dann: CSS + Vorlader des Morgenbilds */
-    var c = document.createElement('link'); c.rel = 'stylesheet'; c.href = 'maschine.css?v=3'; document.head.appendChild(c);
-    [
-    ['(min-aspect-ratio: 4/5)', 'bilder/hero/tropen/quer-morgen-1280.avif 1280w, bilder/hero/tropen/quer-morgen-1920.avif 1920w, bilder/hero/tropen/quer-morgen-2560.avif 2560w', '(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw'],
-    ['(max-aspect-ratio: 4/5)', 'bilder/hero/tropen/hoch-morgen-720.avif 720w, bilder/hero/tropen/hoch-morgen-1080.avif 1080w, bilder/hero/tropen/hoch-morgen-1440.avif 1440w', '100vw']
-    ].forEach(function (v) {
-      var l = document.createElement('link'); l.rel = 'preload'; l.as = 'image'; l.type = 'image/avif'; l.media = v[0]; l.setAttribute('imagesrcset', v[1]); l.setAttribute('imagesizes', v[2]); l.setAttribute('fetchpriority', 'high'); document.head.appendChild(l);
-    });
-  }
-  if (bl && !new URLSearchParams(location.search).get('schrift')) {   /* Blume: Display-Schrift der Vorlage (Federant, lokal) ist Standard (Emre, 01.10.); ?schrift=clash = Clash Display */
-    html.setAttribute('data-schrift', 'vorlage');
-    var fl = document.createElement('link'); fl.rel = 'preload'; fl.as = 'font'; fl.type = 'font/woff2'; fl.href = 'schriften/Federant-Regular.woff2'; fl.setAttribute('crossorigin', ''); document.head.appendChild(fl);
-  }
-  if (k || all) { var kc = document.createElement('link'); kc.rel = 'stylesheet'; kc.href = 'kristall.css?v=38'; document.head.appendChild(kc); }
-  /* Glas fein (01.10. spät, Vorschau ?glas=fein – Ausnahme auf Emres Wunsch): sauberer Schriftzug, Logo im Glas-Look, Verlauf läuft gedämpft hinter
-     der ganzen Seite weiter. GLAS_FEIN_STANDARD = true seit Emres OK (01.10. spät); ?glas=alt = vorher */
-  var GLAS_FEIN_STANDARD = true, gq = new URLSearchParams(location.search).get('glas');
-  var gfein = glas && (gq === 'fein' || gq === 'nahtlos' || (GLAS_FEIN_STANDARD && gq !== 'alt')); window.ERGUN_GLAS_FEIN = gfein; html.classList.toggle('glas-fein', gfein);
-  /* Glas nahtlos (01.10. spät, Vorschau ?glas=nahtlos – Ausnahme auf Emres Wunsch): keine Fläche hinter #preise, der Verlauf selbst wird weich dunkler;
-     Kopfzeile als Glas mit Tönung aus dem Verlauf, Logo-Punkt im Verlauf. GLAS_NAHTLOS_STANDARD = true seit Emres OK (01.10. spät); ?glas=fein = ohne nahtlos */
-  var GLAS_NAHTLOS_STANDARD = true, gnaht = gfein && (gq === 'nahtlos' || (GLAS_NAHTLOS_STANDARD && gq !== 'fein'));
-  html.classList.toggle('glas-nahtlos', gnaht);
-  if (glas) ['glas-vorlage.gen.css?v=1', 'glas.css?v=2'].concat(gfein ? ['glas-fein.css?v=6'] : []).forEach(function (h) { var gc = document.createElement('link'); gc.rel = 'stylesheet'; gc.href = h; document.head.appendChild(gc); });
-  if (all) { var ac = document.createElement('link'); ac.rel = 'stylesheet'; ac.href = 'all.css?v=1'; document.head.appendChild(ac);
-    var sw = new URLSearchParams(location.search).get('schrift'); if (sw === 'federant') { html.setAttribute('data-schrift', 'vorlage'); } }
-  if (wahl === 'alt') ['emre3d-folge-1', 'emre3d-folge-2', 'hund-folge'].forEach(function (n) {   /* Vorlader der alten Figur nur hier */
-    var l = document.createElement('link'); l.rel = 'preload'; l.as = 'image'; l.href = 'bilder/hero/figuren/' + n + '.webp?v=19';
-    l.setAttribute('fetchpriority', 'low'); l.media = '(prefers-reduced-motion: no-preference)'; document.head.appendChild(l);
-  });
+  html.classList.toggle('titel-glas', glas);
+  /* Glas fein + Glas nahtlos (01.10.2026 spät, Emres OK): sauberer Schriftzug, Logo im Glas-Look, Verlauf läuft hinter der ganzen Seite weiter und
+     wird unter dem Titelbild weich dunkler (keine Fläche hinter #preise), Kopfzeile als getöntes Glas. Fest an – die Rückwege ?glas=alt / ?glas=fein
+     und der Blumen-Schalter ?ablauf= sind seit 07.10.2026 entfernt (Tag vor-aufraeumen-2026-10-07). */
+  var gfein = glas; window.ERGUN_GLAS_FEIN = gfein; html.classList.toggle('glas-fein', gfein);
+  html.classList.toggle('glas-nahtlos', gfein);
+  if (glas) ['glas-vorlage.gen.css?v=1', 'glas.css?v=2', 'glas-fein.css?v=6'].forEach(function (h) { var gc = document.createElement('link'); gc.rel = 'stylesheet'; gc.href = h; document.head.appendChild(gc); });
 })();
 </script>
 
@@ -200,213 +155,6 @@ img { display: block; max-width: 100%; height: auto; }
 @media (max-width: 700px) { .nav { padding: 8px 16px; } .nav__links { gap: 20px; } .nav__link { font-size: 13px; } }
 @media (pointer: coarse) { .nav__mark, .nav__link, .footer a { display: inline-flex; align-items: center; min-height: 44px; } }
 
-/* ---------- Startbild: gezeichnete Landschaft (js/szene.js) ---------- */
-/* Jede Ebene liegt in drei Lichtstimmungen übereinander (Tag, Gold, Nacht); das Skript setzt nur
-   --gold, --nacht usw. und verschiebt die Ebenen. Nur transform/opacity, keine Filter. */
-.szene { position: relative; z-index: 1; --gold: 0; --blau: 0; --nacht: 0; --himmel-nacht: 0; --tief: 0; --mond: 0; }
-.szene__buehne { position: relative; height: 100svh; min-height: 560px; overflow: hidden; background: #070B16; isolation: isolate; }
-/* weicher Übergang ohne Maske (Masken über bewegten Ebenen flackern in Safari): unten ein Verlauf genau
-   in der Farbe, mit der die Studio-Sektion beginnt */
-.szene__ebene { position: absolute; inset: 0; pointer-events: none; will-change: transform; }
-/* Parallaxe im Browser selbst (Scroll-Animation): Himmel fast stehend, vorne wenig Weg – ohne JavaScript-Nachlauf */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .szene { view-timeline: --szene block; }
-    .szene--css .szene__ebene { animation: ebene-weg linear both; animation-timeline: --szene; animation-range: exit 0% exit 100%; }
-  }
-}
-@keyframes ebene-weg { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, var(--weg, 0px), 0); } }
-
-/* Abstieg zur Erde (25.09. abends, ERGUN.): nach der Nacht kommt die Wiese mit dem Hund näher, das Gras wächst ins Bild,
-   der Schriftzug blendet aus, und von unten steigt das Dunkel der Erde auf – in genau der Farbe, mit der endo Studio
-   beginnt. So endet das Titelbild ohne Kante. Alles über die Scroll-Animation des Browsers (kein Nachlauf). */
-.szene__erde { position: absolute; left: 0; right: 0; bottom: -1px; height: 100%; z-index: 3; pointer-events: none; transform: translate3d(0, 100%, 0);
-  background: linear-gradient(to top, #070B16 0%, #070B16 42%, rgba(7, 11, 22, 0.88) 58%, rgba(7, 11, 22, 0.45) 78%, rgba(7, 11, 22, 0) 100%); }
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .szene--css .szene__erde { animation: erde-steigt linear both; animation-timeline: --szene; animation-range: exit 30% exit 92%; }
-    .szene--css .szene__ebene[data-ebene="gras"] { animation-name: gras-nah; transform-origin: 50% 100%; }
-    .szene--css .szene__ebene[data-ebene="wiese"] { animation-name: wiese-nah; transform-origin: 56% 100%; }
-    .szene--css .szene__ebene[data-ebene="vorn"] { animation-name: vorn-nah; }   /* Auftrag 34: ERGUN.s 3D-Figur über der Erde – Weg wie die Wiese, aber ohne Vergrößern (sonst rutscht sie am Handy rechts aus dem Bild) */
-    .szene--css .szene__ebene[data-ebene="wald"] { animation-name: wald-nah; transform-origin: 50% 100%; }
-    .szene--css .szene__ebene[data-ebene="titel"] { animation-name: ebene-weg, titel-aus; animation-timeline: --szene, --szene; animation-range: exit 0% exit 100%, exit 32% exit 62%; }
-  }
-}
-@keyframes erde-steigt { from { transform: translate3d(0, 100%, 0); } to { transform: translate3d(0, 0, 0); } }
-/* Der Funke (27.09., ERGUN.): Glühwürmchen im Gras → lädt sich mit der Tageszeit auf → taucht in die Erde → wird zum Lichtpunkt der
-   Linie. Bahn, Größe und Leuchten hängen an derselben Scroll-Animation wie die Wiese; die Keyframes rechnet js/szene.js. */
-.gluehwurm { position: absolute; left: 0; top: 0; width: 0; height: 0; pointer-events: none; transition: opacity 400ms var(--ease); }
-.gluehwurm.ist-aus, .szene:not(.szene--bereit) .gluehwurm { opacity: 0; transition: opacity 280ms ease-out; }
-.gluehwurm__weg, .gluehwurm__glimm, .gluehwurm__koerper, .gluehwurm__ring, .gluehwurm__spritzer { position: absolute; left: 0; top: 0; width: 0; height: 0; }
-.gluehwurm__weg, .gluehwurm__koerper { will-change: transform; }
-.gluehwurm__koerper i, .gluehwurm__blitz { position: absolute; left: 0; top: 0; border-radius: 50%; transform: translate(-50%, -50%); }
-.gluehwurm__warm { width: 92px; height: 92px; background: radial-gradient(closest-side, rgba(255, 238, 180, 0.72), rgba(255, 216, 138, 0.34) 30%, rgba(255, 198, 112, 0.1) 60%, rgba(255, 190, 100, 0) 100%); }
-.gluehwurm__kalt { width: 92px; height: 92px; opacity: 0; background: radial-gradient(closest-side, rgba(222, 234, 252, 0.46), rgba(206, 222, 248, 0.2) 32%, rgba(196, 212, 244, 0.06) 62%, rgba(190, 206, 240, 0) 100%); }
-.gluehwurm__kern { width: 9px; height: 9px; background: radial-gradient(circle, #FFFFFF 0 34%, rgba(255, 248, 226, 0.92) 50%, rgba(255, 238, 200, 0) 100%); }
-.gluehwurm__blitz { width: 70px; height: 70px; opacity: 0; background: radial-gradient(closest-side, rgba(255, 255, 255, 0.9), rgba(255, 240, 210, 0.35) 40%, rgba(255, 236, 200, 0)); }
-.gluehwurm__ring i { position: absolute; left: -1px; top: -1px; width: 2px; height: 2px; border-radius: 50%; opacity: 0; background: #FFF4DA; box-shadow: 0 0 4px 1px rgba(255, 218, 150, 0.7); }
-.gluehwurm__spritzer i { position: absolute; left: -1px; top: -1px; width: 2px; height: 2px; border-radius: 50%; opacity: 0; background: #FFFFFF; box-shadow: 0 0 5px 1px rgba(226, 236, 252, 0.85); }
-.gluehwurm.ist-oben .gluehwurm__glimm { animation: gw-glimmen 3.6s ease-in-out infinite; }
-@keyframes gw-glimmen { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
-@media (max-width: 640px) { .gluehwurm__warm, .gluehwurm__kalt { width: 72px; height: 72px; } }
-@media (prefers-reduced-motion: reduce) { .gluehwurm { display: none; } }
-@keyframes gras-nah { 0%, 30% { transform: translate3d(0, 0, 0) scale(1); } 100% { transform: translate3d(0, -10svh, 0) scale(1.6); } }
-@keyframes vorn-nah { 0% { transform: translate3d(0, 0, 0); } 38% { transform: translate3d(0, calc(var(--weg, 0px) * 0.38), 0); } 100% { transform: translate3d(0, calc(var(--weg, 0px) - 3svh), 0); } }
-@keyframes wiese-nah { 0% { transform: translate3d(0, 0, 0) scale(1); } 38% { transform: translate3d(0, calc(var(--weg, 0px) * 0.38), 0) scale(1); } 100% { transform: translate3d(0, calc(var(--weg, 0px) - 3svh), 0) scale(1.28); } }
-@keyframes wald-nah { 0% { transform: translate3d(0, 0, 0) scale(1); } 38% { transform: translate3d(0, calc(var(--weg, 0px) * 0.38), 0) scale(1); } 100% { transform: translate3d(0, var(--weg, 0px), 0) scale(1.1); } }
-@keyframes titel-aus { from { opacity: 1; } to { opacity: 0; } }
-/* Start: Himmel und Titel stehen sofort, die gezeichnete Landschaft blendet einmal weich ein */
-.szene__ebene[data-ebene]:not([data-ebene="himmel"]):not([data-ebene="titel"]) { transition: opacity 500ms var(--ease); }
-.szene:not(.szene--bereit) .szene__ebene[data-ebene]:not([data-ebene="himmel"]):not([data-ebene="titel"]) { opacity: 0; }
-.szene__bild { position: absolute; left: 0; width: 100%; display: block; opacity: 0; }
-.szene--bereit .szene__bild[data-licht="tag"] { opacity: var(--tag, 1); }
-.szene--bereit .szene__bild[data-licht="gold"] { opacity: var(--gold); }
-.szene--bereit .szene__bild[data-licht="nacht"] { opacity: var(--nacht); }
-.szene__hund { position: absolute; display: block; }
-/* Mondlicht hinter ERGUN. + Hund (Nachtlauf): kühler Schein, nur nachts (js/szene.js setzt Lage und Größe) */
-.szene__mondlicht { position: absolute; border-radius: 50%; pointer-events: none; opacity: var(--nacht); background: radial-gradient(closest-side, rgba(150, 178, 235, 0.17), rgba(150, 178, 235, 0.07) 50%, rgba(150, 178, 235, 0) 100%); }
-/* Sterne (28.09., ERGUN.: „weniger, edler“ – ca. 60–80 kleine klare Punkte): drei Leinwände in der Himmels-Ebene hinter Mond und Wolken,
-   die Hülle bekommt eine leichte Parallaxe (js/szene.js), zwei Leinwände funkeln sehr sanft und nicht synchron */
-.szene__sternhuelle { position: absolute; left: 0; top: 0; width: 100%; pointer-events: none; opacity: var(--himmel-nacht); will-change: transform, opacity; }
-.szene__sterne { position: absolute; left: 0; top: 0; width: 100%; display: block; pointer-events: none; }
-@media (prefers-reduced-motion: no-preference) {
-  .szene__sterne--1 { animation: sterne-funkeln 5.6s ease-in-out -1.3s infinite alternate; }
-  .szene__sterne--2 { animation: sterne-funkeln 7.9s ease-in-out -4.1s infinite alternate; }
-  .szene--weg .szene__sterne--1, .szene--weg .szene__sterne--2 { animation-play-state: paused; }
-}
-@keyframes sterne-funkeln { from { opacity: 0.55; } to { opacity: 1; } }
-/* sehr seltene Sternschnuppe (28.09.): feiner Strich, der einmal quer über den Nachthimmel zieht; js/szene.js setzt Lage und startet */
-.szene__schnuppe { position: absolute; left: 0; top: 0; width: 120px; height: 1.5px; pointer-events: none; opacity: 0; transform-origin: 100% 50%;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(226, 236, 255, 0.55) 60%, #FFFFFF 100%); border-radius: 2px; }
-.szene__schnuppe.ist-an { animation: schnuppe 1.1s cubic-bezier(0.2, 0.7, 0.3, 1) 1; }
-@keyframes schnuppe { 0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-24deg) scaleX(0.2); } 12% { opacity: 1; } 100% { opacity: 0; transform: translate3d(-260px, 116px, 0) rotate(-24deg) scaleX(1.2); } }
-/* ERGUN. und der Hund liegen in einer eigenen Hülle über allen Fassungen der Wiese (Füße, Schatten und Halme davor) */
-.szene__figuren { position: absolute; inset: 0; z-index: 1; }
-/* Auftrag 36 (ERGUN., 30.09.2026): Nach der Wahl hat die Figur ihren Job erledigt und verschwindet ruhig – als EINE Ebene (diese Hülle), nie
-   Bild für Bild gemischt. Ausnahme zur Regel oben: hier läuft für gut eine Sekunde ein kleiner Weichzeichner (nur auf der Figur, ca. 226 × 600 px).
-   a = „tritt zurück“ (kleiner, Tiefenunschärfe; js/szene.js spielt dazu die Schritte rückwärts) · b = „löst sich im Licht“ (js/szene.js hellt die
-   Figur zum Szenenlicht auf). Zurück (ganz oben / Schritt ①) blendet sie weich ein. Fußgras, Schatten und Mondschein der Figur gehen mit. */
-.szene__figur { position: absolute; transition: opacity 800ms var(--ease), transform 900ms var(--ease), filter 800ms var(--ease), visibility 0s; }
-.szene__figur.ist-weg { opacity: 0; visibility: hidden; }
-.szene__figur[data-aus="a"].ist-weg { transform: translate3d(0, -1.5%, 0) scale(0.92); filter: blur(3px);
-  transition: opacity 1200ms cubic-bezier(0.65, 0, 0.35, 1) 250ms, transform 1500ms cubic-bezier(0.65, 0, 0.35, 1), filter 1500ms cubic-bezier(0.65, 0, 0.35, 1), visibility 0s linear 1500ms; }
-.szene__figur[data-aus="b"].ist-weg { transform: translate3d(0, -5px, 0) scale(1.02); filter: blur(6px);
-  transition: opacity 1000ms cubic-bezier(0.65, 0, 0.35, 1) 200ms, transform 1200ms cubic-bezier(0.65, 0, 0.35, 1), filter 1200ms cubic-bezier(0.4, 0, 0.6, 1), visibility 0s linear 1200ms; }
-.szene__fuss { position: absolute; inset: 0; transition: opacity 700ms var(--ease); }
-.szene__mondlicht--figur { transition: opacity 700ms var(--ease); }
-.szene--figur-weg .szene__fuss, .szene--figur-weg .szene__mondlicht--figur { opacity: 0; }
-@media (prefers-reduced-motion: reduce) {
-  .szene__figur, .szene__figur[data-aus].ist-weg { transform: none; filter: none; transition: opacity 250ms linear, visibility 0s linear 250ms; }
-  .szene__figur:not(.ist-weg) { transition: opacity 250ms linear, visibility 0s; }
-  .szene__fuss, .szene__mondlicht--figur { transition: opacity 250ms linear; }
-}
-.szene__vorn { z-index: 3; }   /* Auftrag 34: nach .szene__erde im Code = darüber; die Figur wird zur Unterkante hin per Maske ausgeblendet wie .szene__fade */
-/* alles, was beim Scrollen überblendet wird, auf eigene Grafikebene – sonst malt das Handy den Himmel jedes Bild neu */
-.szene__bild[data-licht="gold"], .szene__bild[data-licht="nacht"], .himmel--gold, .himmel--blau, .himmel--nacht, .sonne__glut, .sonne__hof, .sonne__kern--abend, .sonne, .mond { will-change: opacity; }
-.sonne, .mond { will-change: transform, opacity; }
-
-/* Himmel: Farbverlauf hängt an der Sonnenhöhe – Tag, Goldene Stunde, blaue Stunde, Nacht */
-/* Himmel reicht 60 % über den oberen Rand hinaus (gleiche Farbe wie ganz oben) – beim Scrollen auf dem iPhone
-   entsteht oben hinter der Navigation sonst eine Lücke, durch die die Grundfarbe schien (ERGUN., 25.09.) */
-.himmel { position: absolute; inset: -60% 0 0 0; }
-/* 26.09. (ERGUN.): dezenter und edler – Tag ruhig-satt und zum Horizont dunstig, Gold Pfirsich → Blau-Violett,
-   blaue Stunde mit schmalem, erlöschendem Warmstreifen, Nacht tiefes Nachtblau statt Schwarz (Horizont minimal heller).
-   Alle vier hängen per opacity am gemeinsamen Scroll-Takt; darüber feines Korn gegen Streifen (Banding). */
-/* 28.09. (ERGUN.: „mehr Farbverläufe“): mehr Stufen je Himmel – Tag mit tiefem Zenit-Blau, Türkis-Hauch und warmem Dunst am Horizont,
-   Gold mit Violett → Magenta → Pfirsich → Gelb, blaue Stunde mit Indigo → Purpur → Rosarest, Nacht mit Tiefblau → Stahlblau → Horizontschein */
-.himmel--tag { background: linear-gradient(180deg, #17509A 0%, #1F5CA3 30%, #2C6DB4 44%, #4488C6 55%, #6FA9D4 63%, #92C0DE 69%, #B7D4E7 74.5%, #D2E3EC 78.5%, #E6ECEB 81.5%, #F0EFE8 83%); }
-.himmel--gold { opacity: var(--gold); background: linear-gradient(180deg, #1F2D5A 0%, #283863 30%, #3F4478 44%, #5B5288 52%, #7E6392 58%, #A47A92 63.5%, #C98B8C 68%, #E39C80 71.5%, #F0B47F 74.5%, #F7CE96 77.5%, #FAE0B4 80.5%, #FBEBCB 83%); }
-.himmel--blau { opacity: var(--blau); background: linear-gradient(180deg, #08112E 0%, #0B1636 30%, #101F4A 46%, #182B60 57%, #223A78 65%, #34488A 71%, #4F5B98 75.5%, #6D6AA1 78.5%, #927BA0 80.8%, #B08C95 82%, #C99A8E 83%); }
-.himmel--nacht { opacity: var(--himmel-nacht); background: linear-gradient(180deg, #03071A 0%, #050A1B 30%, #070F26 46%, #0A1630 58%, #0E1D3C 68%, #142545 75%, #1A2E52 79.5%, #21385C 82%, #274064 83%); }
-.himmel--korn { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0.03'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23k)'/%3E%3C/svg%3E"); background-size: 180px 180px; pointer-events: none; }
-
-/* Sonne: weicher Kern, Hof und Glut – kein harter Rand. Wird tiefer, wärmer und größer im Hof. */
-.sonne, .mond { position: absolute; left: 0; top: 0; width: 0; height: 0; will-change: transform; }
-.sonne { opacity: calc(1 - var(--himmel-nacht)); }
-.sonne i, .mond i, .sonne b, .mond b { position: absolute; left: 0; top: 0; border-radius: 50%; transform: translate(-50%, -50%); }
-.sonne__hof { width: calc(var(--sonne-r) * 14); height: calc(var(--sonne-r) * 14); background: radial-gradient(closest-side, rgba(255, 247, 222, 0.46), rgba(255, 236, 196, 0.15) 40%, rgba(255, 232, 186, 0) 100%); opacity: calc((1 - var(--tief) * 0.5) * (1 - var(--verdeckt-sonne, 0) * 0.85)); }
-/* Gestirn hinter einer Wolke (28.09., ERGUN.: „der Teil, der hinter der Wolke ist, wird verdeckt“): Die Wolke liegt VOR dem Gestirn und ihr
-   Kern (.wolke__koerper) wird dicht, sobald die Scheibe sie berührt – so verdeckt sie genau den Teil dahinter, der Rest bleibt sichtbar.
-   Scheibe und enger Schein werden deshalb NICHT mehr ausgeblendet; nur der weite Hof und die Abendglut verschwinden mit der Verdeckung
-   (--verdeckt-* aus js/wolken.js), und die Wolke leuchtet von innen (.wolke__licht) und am Saum (.wolke__rand). */
-/* Abendschein: je tiefer die Sonne, desto breiter und wärmer (nur transform/opacity) */
-.sonne .sonne__glut { width: calc(var(--sonne-r) * 26); height: calc(var(--sonne-r) * 16); background: radial-gradient(closest-side, rgba(255, 170, 96, 0.5), rgba(255, 124, 66, 0.16) 45%, rgba(255, 104, 56, 0) 100%); opacity: calc(var(--tief) * (1 - var(--verdeckt-sonne, 0) * 0.85));
-  transform: translate(-50%, -50%) scale(calc(0.72 + var(--tief) * 0.42), calc(0.85 + var(--tief) * 0.2)); }
-.sonne__kern { width: calc(var(--sonne-r) * 2); height: calc(var(--sonne-r) * 2); background: radial-gradient(circle, #FFFFFA 0 50%, #FFF6D8 62%, rgba(255, 240, 200, 0) 71%); }
-.sonne__kern--abend { background: radial-gradient(circle, #FFF1C8 0 38%, #FFC06A 56%, rgba(255, 150, 70, 0) 71%); opacity: var(--tief); }
-.mond { opacity: var(--mond); }
-/* 26.09. (ERGUN.): Mond leuchtender – weiter, weicher Schein, dazu ein enger heller Hof */
-.mond__hof { width: calc(var(--sonne-r) * 18); height: calc(var(--sonne-r) * 18); background: radial-gradient(closest-side, rgba(205, 220, 255, 0.24), rgba(175, 195, 248, 0.1) 30%, rgba(165, 185, 242, 0.035) 60%, rgba(160, 180, 240, 0) 100%); }
-.mond__schein { width: calc(var(--sonne-r) * 4.6); height: calc(var(--sonne-r) * 4.6); background: radial-gradient(closest-side, rgba(235, 242, 255, 0.55), rgba(215, 228, 255, 0.22) 45%, rgba(200, 215, 255, 0) 100%); }
-.mond__hof { opacity: calc(1 - var(--verdeckt-mond, 0) * 0.85); }   /* Scheibe + enger Schein bleiben: die Wolke deckt den Teil dahinter selbst ab */
-.mond__kern { width: calc(var(--sonne-r) * 1.5); height: calc(var(--sonne-r) * 1.5);
-  background: radial-gradient(circle at 36% 40%, rgba(170, 170, 160, 0.35) 0 9%, transparent 10%), radial-gradient(circle at 60% 62%, rgba(170, 170, 160, 0.28) 0 12%, transparent 13%), radial-gradient(circle at 62% 30%, rgba(170, 170, 160, 0.22) 0 6%, transparent 7%), radial-gradient(circle at 44% 44%, #FDFBF3 0 40%, #E9E5D8 60%, #D5D0C3 68%, rgba(210, 205, 190, 0) 71%); }
-
-
-/* Titel */
-.szene__titel { display: flex; flex-direction: column; align-items: center; padding: 0 var(--pad); }
-/* „Webdesigner“ groß im Himmel, darüber die Einordnung (zwei Bereiche). Kein Slogan (ERGUN., 25.09. nachmittags).
-   Die Sonne startet dahinter und sinkt durch den Schriftzug; ein leichter Schatten hält ihn auf hellem Grund lesbar. */
-.titel { position: absolute; left: 0; right: 0; top: var(--titel-oben, 20svh); display: grid; justify-items: center; gap: clamp(10px, 1.4vh, 18px); padding: 0 var(--pad); text-align: center; color: #FFF9F0; }
-.titel__studio { display: flex; align-items: center; gap: 14px; font-size: clamp(11px, 1vw, 14px); font-weight: 500; letter-spacing: 0.26em; text-transform: uppercase; text-shadow: 0 1px 2px rgba(10, 16, 32, 0.45), 0 0 18px rgba(10, 16, 32, 0.35); }
-.titel__studio::before, .titel__studio::after { content: ""; width: clamp(18px, 2.4vw, 32px); height: 1px; background: rgba(255, 249, 240, 0.6); }
-/* 28.09. abends (ERGUN., Ausnahme auf seinen Wunsch): groß „Websites · Automatisierung · KI“ statt „Webdesigner“ (bald Kunden in allen drei
-   Bereichen), klein „Digitalstudio für Unternehmen“ (ERGUN.: Name und Ort nicht nennen).
-   28.09. nachts (ERGUN.): immer nebeneinander – auch auf dem Handy eine Zeile; statt Punkt eine kleine Wolke, die sanft zieht wie die
-   Wolken im Bild. Schriftgröße passt sich der Breite an (Zeile ≈ 14,9 em inkl. Wolken, Rand je Seite 5 % der Breite, 18–80 px).
-   Alte Fassung zum Vergleich: ?titel=a. */
-.titel__haupt.titel__haupt--drei { font-size: min(7rem, calc((100vw - 2 * clamp(18px, 5vw, 80px)) / 15.2)); line-height: 1; letter-spacing: -0.03em; white-space: nowrap; }
-.titel__haupt--drei .titel__punkt { display: inline-block; width: 0.5em; height: 0.28em; margin: 0 0.24em; vertical-align: 0.16em; }
-.titel__punkt svg { display: block; width: 100%; height: 100%; fill: currentColor; opacity: 0.78; filter: drop-shadow(0 1px 2px rgba(10, 16, 32, 0.35)); animation: wolke-zieht 7s ease-in-out infinite alternate; }
-.titel__punkt + .hinweis-versteckt + .titel__zeile + .titel__punkt svg { animation-delay: -3.5s; }
-@keyframes wolke-zieht { from { transform: translateX(-7%); } to { transform: translateX(7%); } }
-@media (prefers-reduced-motion: reduce) { .titel__punkt svg { animation: none; } }
-.titel__haupt { font-family: var(--serif); font-weight: 500; font-size: clamp(3.3rem, 10.5vw, 9.2rem); line-height: 0.92; letter-spacing: -0.035em; text-wrap: balance; text-shadow: 0 2px 6px rgba(10, 16, 32, 0.28), 0 0 42px rgba(10, 16, 32, 0.3); }
-@media (max-width: 700px) { .titel__studio { font-size: 11px; letter-spacing: 0.12em; } .titel__studio::before, .titel__studio::after { display: none; } }
-
-/* Gras im Wind: zwei Gruppen, eigener Takt, nur Neigung (transform) */
-.szene__wind { position: absolute; left: 0; width: 100%; transform-origin: 50% 100%; }
-@media (prefers-reduced-motion: no-preference) {
-  .szene--bereit .szene__wind--0 { animation: wind 6.8s ease-in-out -2s infinite alternate; }
-  .szene--bereit .szene__wind--1 { animation: wind 5.2s ease-in-out -4s infinite alternate-reverse; }
-  .szene--weg .szene__wind { animation-play-state: paused; }
-}
-@keyframes wind { 0% { transform: skewX(-1.4deg); } 55% { transform: skewX(0.6deg); } 100% { transform: skewX(1.6deg); } }
-/* Wolken (js/wolken.js; Nachtlauf 27./28.09.): Lage per JavaScript (nur transform, endlos), Atmen per CSS, Farbe folgt dem Licht.
-   Sonne/Mond hinter der Wolke: der dichte Kern (.wolke__koerper, Körpermaske) wird undurchsichtig, die Wolke leuchtet von innen
-   (.wolke__licht, radial um das Gestirn, in die Wolkenform maskiert) und bekommt einen hellen Saum zur Lichtseite (.wolke__rand). */
-.wolken { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
-.wolken--hoch { opacity: 1; }   /* 28.09.: volle Deckkraft – sonst schimmert das Gestirn zu 10 % durch den dichten Kern */
-.wolke { position: absolute; left: 0; top: 0; opacity: 0; will-change: transform; transition: opacity 1600ms var(--ease); }
-.wolke.ist-da { opacity: 1; }
-/* 28.09.: Die Wolkenform ist eine Maske auf der ganzen Wolke; darin liegen vier deckende Farb-Fassungen, die mit denselben
-   Variablen wie der Himmel überblenden (Tag immer unten, Gold → blaue Stunde → Nacht darüber) – weiche, lange Farbkurve ohne Sprung. */
-.wolke__atem { position: absolute; inset: 0; transform-origin: 50% 70%; isolation: isolate; -webkit-mask-image: var(--form); mask-image: var(--form); -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
-.wolke__bild { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; display: block; opacity: 0; }
-.wolke__bild[data-licht="tag"] { opacity: 1; }
-.wolke__bild[data-licht="gold"] { opacity: var(--gold, 0); }
-.wolke__bild[data-licht="blau"] { opacity: var(--blau, 0); }
-.wolke__bild[data-licht="nacht"] { opacity: var(--himmel-nacht, 0); }
-.wolke__koerper { position: absolute; inset: 0; opacity: 0; -webkit-mask-image: var(--maske); mask-image: var(--maske); -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
-.wolke__licht { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
-  background: radial-gradient(circle var(--sr, 200px) at var(--sx, -9999px) var(--sy, -9999px), rgba(var(--sf, 255, 248, 228), var(--sa, 0)) 0%, rgba(var(--sf, 255, 248, 228), calc(var(--sa, 0) * 0.6)) 40%, rgba(var(--sf, 255, 248, 228), calc(var(--sa, 0) * 0.2)) 70%, rgba(var(--sf, 255, 248, 228), 0) 100%),
-              radial-gradient(circle var(--mr, 160px) at var(--mx, -9999px) var(--my, -9999px), rgba(var(--mf, 214, 226, 255), var(--ma, 0)) 0%, rgba(var(--mf, 214, 226, 255), calc(var(--ma, 0) * 0.6)) 40%, rgba(var(--mf, 214, 226, 255), calc(var(--ma, 0) * 0.2)) 70%, rgba(var(--mf, 214, 226, 255), 0) 100%); }
-.wolke__rand { position: absolute; inset: 0; pointer-events: none; opacity: var(--la, 0);
-  -webkit-mask-image: var(--maske), var(--maske); mask-image: var(--maske), var(--maske); -webkit-mask-size: 100% 100%, 100% 100%; mask-size: 100% 100%, 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-  -webkit-mask-position: 0 0, calc(var(--ux, 0) * var(--d, 4px)) calc(var(--uy, 0) * var(--d, 4px)); mask-position: 0 0, calc(var(--ux, 0) * var(--d, 4px)) calc(var(--uy, 0) * var(--d, 4px));
-  -webkit-mask-composite: source-out; mask-composite: subtract;
-  background: radial-gradient(circle var(--lr, 200px) at var(--lx, -9999px) var(--ly, -9999px), rgba(var(--lf, 255, 248, 228), 1) 0%, rgba(var(--lf, 255, 248, 228), 0.6) 40%, rgba(var(--lf, 255, 248, 228), 0) 100%); }
-@media (prefers-reduced-motion: no-preference) {
-  .wolke__atem { animation: wolke-atmet var(--atem, 40s) ease-in-out var(--atem-versatz, 0s) infinite alternate; }
-  .szene--weg .wolke__atem { animation-play-state: paused; }
-}
-@keyframes wolke-atmet { from { transform: scale(1, 1); } to { transform: scale(1.03, 1.02) translate3d(0, -1.2%, 0); } }
-
-/* Übergang ins Schwarz der Seite: keine Kante zur endo.ai-Sektion */
-/* leichter Bodennebel über der Unterkante, in der Farbe der endo-Sektion */
-.szene__fade { position: absolute; left: 0; right: 0; bottom: -1px; height: 36%; z-index: 2; pointer-events: none; background: linear-gradient(to top, #070B16 0%, rgba(7, 11, 22, 0.88) 16%, rgba(7, 11, 22, 0.5) 45%, rgba(7, 11, 22, 0.16) 75%, rgba(7, 11, 22, 0) 100%); }
-.szene__oben { position: absolute; inset: 0 0 auto 0; height: 22%; z-index: 2; pointer-events: none; background: linear-gradient(rgba(6, 12, 28, 0.28), rgba(6, 12, 28, 0)); }
-
 /* ---------- Buttons ---------- */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 13px 22px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--text); font: 500 15px/1 var(--sans); cursor: pointer; transition: transform 160ms var(--ease-out), border-color 300ms var(--ease), background-color 300ms var(--ease), color 300ms var(--ease); }
 .btn:active { transform: scale(0.97); }
@@ -485,13 +233,6 @@ img { display: block; max-width: 100%; height: auto; }
 }
 
 /* ---------- ERGUN. = reine Webdesign-Seite (ERGUN., 27.09.): Hero → Kontakt → Fußzeile ---------- */
-/* Scroll-Hinweis: eine feine Linie, die ruhig nach unten atmet */
-.szene__weiter { position: absolute; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); z-index: 4; display: grid; justify-items: center; gap: 8px; min-width: 44px; min-height: 44px; padding: 6px 10px; translate: -50% 0; color: rgba(242, 239, 232, 0.75); text-decoration: none; }
-.szene__weiter-text { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.85; }
-.szene__weiter i { width: 1px; height: 34px; background: linear-gradient(rgba(242, 239, 232, 0.9), rgba(242, 239, 232, 0)); transform-origin: 50% 0; animation: weiter-atmen 2.6s var(--ease) infinite; }
-@keyframes weiter-atmen { 0%, 100% { transform: scaleY(0.55); opacity: 0.5; } 50% { transform: scaleY(1); opacity: 1; } }
-.szene__weiter:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
-@media (prefers-reduced-motion: reduce) { .szene__weiter i { animation: none; } }
 
 /* endo-Schriftzug: Chrom mit langsam wanderndem Glanz, Pfeil ↗ + hauchdünne Linie (eigene Seite) */
 @keyframes endo-glanz { from { background-position: 130% 0; } to { background-position: -130% 0; } }
@@ -1084,7 +825,7 @@ html[data-farbe="b"] .mf__linie i { background: var(--f-text); }
    (Kante Gold → Dämmerungsrosa), am Handy ein kurzer Lichtimpuls am Finger. Gewählt: hebt sich 2 px, die Goldkante leuchtet ruhig, das Häkchen
    zeichnet sich als Linie; die nicht gewählten treten leicht zurück. Preis groß (Clash Display, Tabellenziffern), feine Trennlinie, kleine Beschriftung.
    EINE Stelle für die Werte: die --k-… hier. Übergänge 150–260 ms, Versatz 50 ms, nichts hüpft; „Bewegung reduzieren“ = sofort.
-   Alter Look zum Vergleich: ?karten=alt (dann fehlt data-karten="neu" am <html>, alle Regeln hier greifen nicht). */
+   Fest an seit 07.10.2026 (Rückweg ?karten=alt entfernt). */
 @property --k-an { syntax: "<number>"; inherits: false; initial-value: 0; }
 :root {
   --k-flaeche: linear-gradient(180deg, rgba(126, 154, 204, 0.17) 0%, rgba(94, 120, 168, 0.11) 40%, rgba(40, 51, 76, 0.26) 100%);           /* Emaille: oben heller, unten tiefes Blau */
@@ -1213,119 +954,6 @@ html[data-farbe="b"] {   /* Vergleich ?farbe=b (Auftrag 28): Gewählt in Creme s
 }
 </style>
 <style>
-/* Auftrag 44: Titelbild „Maschine“ statt der gezeichneten Szene (Schalter ERGUN_TITEL im Kopf) */
-html:not(.titel-maschine) .m-strecke { display: none; }
-.titel-maschine .szene, .titel-kristall .szene { display: none; }
-.titel-maschine .m-strecke .m-text { top: 50%; }
-@media (max-aspect-ratio: 4/5) { .titel-maschine .m-strecke .m-text { top: 64px; } }   /* unter der festen Navigation */
-/* „Was brauchen Sie?“ liegt über dem letzten Bild der Maschine und öffnet sich aus dem Laptop-Bildschirm (js/maschine-foto.js) */
-@media (prefers-reduced-motion: no-preference) {
-  .titel-maschine #preise { margin-top: -100svh; z-index: 6; }
-}
-.titel-neu #preise { min-height: 100svh; }   /* deckt die Bühne immer ganz ab */
-</style>
-<style>
-/* ================= PREMIUM-ANGEBOTE (01.10.2026, Vorschau ?titel=neu – Ausnahme auf ERGUNs Wunsch: „dieses Blau-Gelb wirkt billig,
-   ich will eine Premium-Auswahl“). EINE Stelle für die Farben: überschreibt die --f-/--k-Werte nur im neuen Modus; die alten
-   Werte (Nachtblau/Gold) bleiben für ?titel=alt und die jetzige Live-Fassung unverändert.
-   Graphit-Grund, Graphit-Flächen mit 1-px-Haarlinie, Elfenbein-Text, warmes Steingrau. Einziger Akzent: ERGUN.-Orange nur für
-   „Anfrage senden“. Gewählt = Elfenbein-Rand + etwas hellere Fläche, kein Leuchten. ================= */
-html.titel-neu {
-  --p-grund: #0B0B0C; --p-grund-2: #121214; --p-flaeche: #151517; --p-flaeche-hell: #1C1C1F; --p-flaeche-hover: #19191C;
-  --p-linie: rgba(243, 240, 234, 0.08); --p-linie-hell: rgba(243, 240, 234, 0.18);
-  --p-text: #F3F0EA; --p-leise: #A8A39A; --p-marke: #FF5A1F;
-  --f-grund-oben: var(--p-grund); --f-grund: var(--p-grund); --f-grund-tief: var(--p-grund);
-  --f-blau: #3A3936; --f-blau-tief: #1C1C1F;
-  --f-flaeche: var(--p-flaeche); --f-flaeche-hover: var(--p-flaeche-hover);
-  --f-kante: linear-gradient(var(--p-linie), var(--p-linie)); --f-linie: var(--p-linie);
-  --f-text: var(--p-text); --f-gedaempft: var(--p-leise);
-  --f-gold: var(--p-text); --f-gold-hell: var(--p-text); --f-bernstein: var(--p-text); --f-rosa: transparent; --f-hof: transparent;
-  --f-wahl: var(--p-text); --f-schein: 0 0 0 1px var(--p-text); --f-tiefe: none;
-  --f-knopf: var(--p-marke); --f-knopf-text: #0B0B0C;
-  --bg: var(--p-grund); --text: var(--p-text); --muted: var(--p-leise); --accent: var(--p-text); --line: var(--p-linie);
-  --k-flaeche: var(--p-flaeche); --k-flaeche-wahl: var(--p-flaeche-hell); --k-flaeche-zurueck: var(--p-flaeche);
-  --k-kante: linear-gradient(var(--p-linie), var(--p-linie)); --k-kante-wahl: linear-gradient(var(--p-text), var(--p-text));
-  --k-glanz: inset 0 1px 0 rgba(243, 240, 234, 0.035); --k-tiefe: none; --k-tiefe-hoch: 0 18px 36px -24px rgba(0, 0, 0, 0.9); --k-tiefe-flach: none;
-  --k-schein: none; --k-korn: none; --k-licht: none;
-  --k-linie: linear-gradient(90deg, var(--p-linie-hell), rgba(243, 240, 234, 0));
-}
-.titel-neu body { background: var(--p-grund); }
-.titel-neu .preise { background: linear-gradient(180deg, var(--p-grund) 0%, var(--p-grund-2) 100%); }
-.titel-neu .mf-agentur, .titel-neu .mf__stand { color: var(--p-leise); }
-.titel-neu .mf__linie { background: var(--p-linie); }
-.titel-neu .mf__linie i { background: var(--p-text); }
-/* Typografie: große, ruhige Überschrift, viel Luft */
-.titel-neu .mf-titel { font-size: clamp(2.5rem, 5.4vw, 4.5rem); line-height: 1.02; letter-spacing: -0.035em; font-weight: 400; }
-.titel-neu .mf-satz { max-width: 44ch; font-size: 17px; line-height: 1.55; color: var(--p-leise); }
-.titel-neu .mf-schritt > .mf-inhalt { margin-top: clamp(28px, 4vw, 48px); }
-/* Karten und Stufen: Graphit, Haarlinie, gewählt = Elfenbein-Rand */
-.titel-neu :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett) { background: var(--p-flaeche); border-color: var(--p-linie); box-shadow: none; }
-.titel-neu :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett)[aria-pressed="true"] { background: var(--p-flaeche-hell); border-color: var(--p-text); box-shadow: 0 0 0 1px var(--p-text); }
-@media (hover: hover) and (pointer: fine) {
-  .titel-neu :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett):hover { background: var(--p-flaeche-hover); border-color: var(--p-linie-hell); box-shadow: none; transform: translateY(-2px); }
-  .titel-neu :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett)[aria-pressed="true"]:hover { background: var(--p-flaeche-hell); border-color: var(--p-text); box-shadow: 0 0 0 1px var(--p-text); }
-}
-.titel-neu :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett)::before, .titel-neu :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett)::after { display: none; }
-.titel-neu :where(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .mf-haken, .lf-schalter, .lf-chip, .mf-link, .mf-zurueck, .btn):focus-visible { outline: 2px solid var(--p-text); outline-offset: 3px; }
-/* ① Was brauchen Sie? – Handy: saubere Liste, Grafik klein links · ab 720 px: drei große, gleich hohe Karten mit Linienzeichnung */
-.titel-neu .mf-karte { border-radius: 18px; }
-.titel-neu .mf-karte__bild { color: rgba(243, 240, 234, 0.82); }
-.titel-neu .mf-grafik { display: block; width: 64px; height: auto; }
-.titel-neu .mf-karte { grid-template-columns: 64px minmax(0, 1fr); gap: 18px; padding: 18px; }
-.titel-neu .mf-karte__titel { font-weight: 500; letter-spacing: -0.02em; }
-.titel-neu .mf-karte__dezent { color: var(--p-leise); }
-.titel-neu .mf-karte__preis { font-weight: 450; color: var(--p-leise); }
-.titel-neu .mf-karte__preis b, .titel-neu .mf-karte__preis strong { color: var(--p-text); }
-@media (min-width: 720px) {
-  .titel-neu .mf-karten { gap: 20px; }
-  .titel-neu .mf-karte { grid-template-columns: minmax(0, 1fr); gap: 32px; min-height: 340px; padding: 32px 28px 28px; border-radius: 20px; }
-  .titel-neu .mf-grafik { width: 136px; }
-  .titel-neu .mf-karte__titel { font-size: 28px; line-height: 34px; }
-  .titel-neu .mf-karte__satz { font-size: 15px; line-height: 23px; }
-  .titel-neu .mf-karte__preis { font-size: 14px; padding-top: 20px; border-top: 1px solid var(--p-linie); }
-}
-.titel-neu .mf-link { color: var(--p-text); text-decoration-color: var(--p-linie-hell); }
-.titel-neu .mf-schritt > .mf-inhalt > .mf-link, .titel-neu .mf-schritt > .mf-inhalt > .mf-linkzeile > .mf-link { color: var(--p-leise); text-decoration-color: var(--p-linie-hell); }
-/* ② Stufen wie eine Produktauswahl: Name, großer Preis, monatlich klein, 3 Punkte, „Auswählen“ als Rand-Knopf. Kein Schild „Empfehlung“. */
-.titel-neu .mf-stufe__schild { display: none; }
-.titel-neu .mf-stufe { padding: 28px 24px 24px; border-radius: 20px; }
-.titel-neu .mf-stufe__name { font-size: 20px; line-height: 26px; font-weight: 500; color: var(--p-text); }
-.titel-neu .mf-stufe__preis { margin-top: 10px; font-size: clamp(30px, 3vw, 38px); line-height: 1.1; font-weight: 450; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
-.titel-neu .mf-stufe__monat { display: block; margin-top: 6px; font-size: 13px; line-height: 18px; color: var(--p-leise); font-variant-numeric: tabular-nums; }
-.titel-neu .mf-stufe__punkte { gap: 10px; padding-top: 18px; border-top: 1px solid var(--p-linie); color: rgba(243, 240, 234, 0.84); }
-.titel-neu .mf-stufe__punkt svg { color: var(--p-text); stroke-width: 1.6; }
-.titel-neu .mf-stufe__haken { display: none; }
-.titel-neu .mf-stufe__waehlen { display: flex; align-items: center; justify-content: center; min-height: 44px; margin-top: auto; border: 1px solid var(--p-linie-hell); border-radius: 999px; font-size: 14px; font-weight: 500; color: var(--p-text); transition: background-color 200ms var(--ease-out), color 200ms var(--ease-out), border-color 200ms var(--ease-out); }
-.titel-neu .mf-stufe[aria-pressed="true"] .mf-stufe__waehlen { background: var(--p-text); border-color: var(--p-text); color: #0B0B0C; }
-.titel-neu .mf-stufe { display: flex; flex-direction: column; }
-/* Extras, Betreuung, Aufklapper: ruhig, Elfenbein-Haken */
-.titel-neu .mf-extras__titel { color: var(--p-leise); }
-.titel-neu .mf-haken__box { border-color: rgba(243, 240, 234, 0.36); }
-.titel-neu .mf-haken[aria-checked="true"] .mf-haken__box { background: var(--p-text); border-color: var(--p-text); color: #0B0B0C; }
-.titel-neu .mf-auf > summary::before { border-color: var(--p-linie-hell); color: var(--p-text); }
-.titel-neu .lf-chip, .titel-neu .lf-chip--gross { background: var(--p-flaeche); border-color: var(--p-linie); color: var(--p-text); }
-.titel-neu .lf-chip[aria-pressed="true"] { background: var(--p-flaeche-hell); border-color: var(--p-text); box-shadow: 0 0 0 1px var(--p-text); }
-/* ③ Ihre Anfrage + Summe: Graphit, Orange nur „Anfrage senden“ */
-.titel-neu .btn--wa { background: var(--p-marke); color: #0B0B0C; box-shadow: none; }
-.titel-neu .btn--wa:hover { background: #FF6A33; }
-.titel-neu .btn:not(.btn--wa) { background: transparent; border-color: var(--p-linie-hell); color: var(--p-text); }
-.titel-neu .auswahl, .titel-neu .mf-anfrage { border-color: var(--p-linie); }
-.titel-neu .auswahl { background: var(--p-flaeche); }
-.titel-neu .field input, .titel-neu .field textarea { background: var(--p-flaeche); border-color: var(--p-linie-hell); color: var(--p-text); }
-.titel-neu .field input:focus, .titel-neu .field textarea:focus { border-color: var(--p-text); box-shadow: 0 0 0 1px var(--p-text); }
-.titel-neu .weg__option span { background: var(--p-flaeche); border-color: var(--p-linie-hell); }
-.titel-neu .weg__option input:checked + span { border-color: var(--p-text); background: var(--p-flaeche-hell); box-shadow: 0 0 0 1px var(--p-text); }
-.titel-neu .haken__box { border-color: rgba(243, 240, 234, 0.36); }
-.titel-neu .anfrage__haken input:checked + .haken__box { background: var(--p-text); border-color: var(--p-text); color: #0B0B0C; }
-.titel-neu .mf-summe { background: var(--p-flaeche); border: 1px solid var(--p-linie); box-shadow: none; }
-@media (max-width: 899px) { .titel-neu .mf-summe { background: rgba(21, 21, 23, 0.94); } }
-.titel-neu .mf-summe b { font-variant-numeric: tabular-nums; color: var(--p-text); }
-/* Navigation + Fußzeile */
-.titel-neu .footer { background: var(--p-grund); border-top-color: var(--p-linie); color: var(--p-leise); }
-.titel-neu .footer a { color: var(--p-leise); }
-.titel-neu .online { color: var(--p-leise); }
-</style>
-<style>
 /* Ladezustand „Glas“ – nur mit html.glas-laden / .lader-geht sichtbar (Schalter oben). Alte Fassungen (Kopf .nav, Szene, alte Fußzeile) erscheinen
    bei „Glas“ nie, auch wenn glas.css noch lädt. Während des Ladens ist die Seite darunter unsichtbar (kein Layout-Springen sichtbar, CLS 0). */
 html.lader-an.titel-glas :is(header.nav, .szene, footer.footer, .wechsel) { display: none !important; }
@@ -1420,11 +1048,8 @@ html.lader-geht .lader__balken i { transform: none; transition: transform 160ms 
 <script>
 /* Schriftzug löst sich auf (03.10.2026, Vorschau ?schrift=weg – Ausnahme auf ERGUNs Wunsch): beim Runterscrollen verschmilzt „ERGUN.“ in ~0,6 s
    mit dem Verlauf, ganz oben baut er sich wieder auf; Unterzeile und Knöpfe scrollen normal (js/glas.quelle.js). Dazu flüssiger: am Handy und im
-   Sparmodus Flächen ohne Unschärfe, Verlauf unter dem Titelbild gleichmäßig ~30 Bilder/s. SCHRIFT_WEG_STANDARD = true seit ERGUNs OK (03.10.2026, Rückweg Tag vor-schrift-weg-live); ?schrift=alt = vorher. */
-(function () {
-  var SCHRIFT_WEG_STANDARD = true, wq = new URLSearchParams(location.search).get('schrift');
-  if (wq === 'weg' || (SCHRIFT_WEG_STANDARD && wq !== 'alt')) document.documentElement.classList.add('schrift-weg');
-})();
+   Sparmodus Flächen ohne Unschärfe, Verlauf unter dem Titelbild gleichmäßig ~30 Bilder/s. Fest an seit ERGUNs OK (03.10.2026); Schalter und Rückweg ?schrift=alt seit 07.10.2026 entfernt (Tag vor-aufraeumen-2026-10-07). */
+document.documentElement.classList.add('schrift-weg');
 </script>
 <script>
 /* Papier-Start (03.10.2026, Vorschau ?start=papier – Ausnahme auf ERGUNs Wunsch): die Seite beginnt als Blatt mit „ERGUN.“, das beim Scrollen
@@ -1496,7 +1121,18 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
      ERGUN., 05.10.2026: „zuegig“ = Standard – einmal tippen/wischen reißt sofort ganz auf (~0,6 s, kein Halt im Spalt). Rückweg ?riss=halb */
   var RISS_STANDARD = 'zuegig', rq = (/[?&]riss=(zuegig|halb|mittel|alt)\b/.exec(location.search) || [])[1];
   var riss = rq === 'alt' ? '' : rq || RISS_STANDARD; if (riss) document.documentElement.setAttribute('data-riss', riss);
+  /* Texte „wir“ (07.10.2026, Text-Vorschläge 8–13 des texter, freigegeben von ERGUN.): die Seite spricht mit „wir/uns“ statt „ich/mir“,
+     „bereitet Termine vor“ statt „bucht Termine und mehr“, ohne grünen „online“-Punkt, Punkt in .mf-agentur, ohne „alles aus einer Hand“.
+     LIVE seit ERGUNs „okay und wir“ (07.10.2026); ?texte=alt = vorher. Statische Stellen: .t-alt/.t-neu (Regel darunter),
+     Texte in js/preise.js (LEITFADEN) und im Formular-Skript lesen window.ERGUN_TEXTE_NEU. */
+  var TEXTE_STANDARD = true, txq = (/[?&]texte=(neu|alt)\b/.exec(location.search) || [])[1];
+  window.ERGUN_TEXTE_NEU = txq === 'neu' || (TEXTE_STANDARD && txq !== 'alt');
+  if (window.ERGUN_TEXTE_NEU) document.documentElement.classList.add('texte-neu');
 </script>
+<style>
+/* Texte „wir“ (07.10.2026): je Stelle beide Fassungen im HTML, sichtbar nur die passende – kein Umschreiben per Skript, nichts blitzt auf */
+html:not(.texte-neu) .t-neu, html.texte-neu .t-alt, html.texte-neu .mf-satz .online { display: none; }
+</style>
 <style>
 /* ERGUN., 05.10.2026 (3. Wunsch: „endo nur bei Automatisierung Logo, also beim Paket, und im Titel unter Anfrage starten, mehr nicht“):
    das endo-Zeichen nur an „endo ansehen“ beim Paket Automatisierung (js/preise.js .mf-wahl-huelle--endo) und an „endo ansehen“ im Titel (.ghr-secondary) */
@@ -1649,243 +1285,6 @@ html.zeichen-glanz-3.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before
   </nav>
 </header>
 
-<div class="szene" id="top" data-szene>
-  <section class="szene__buehne" aria-label="Einstieg">
-    <div class="szene__ebene" data-ebene="himmel" aria-hidden="true">
-      <div class="himmel himmel--tag"></div>
-      <div class="himmel himmel--gold"></div>
-      <div class="himmel himmel--blau"></div>
-      <div class="himmel himmel--nacht"></div>
-      <div class="himmel himmel--korn"></div>
-      <div class="sonne"><b class="sonne__glut"></b><b class="sonne__hof"></b><i class="sonne__kern"></i><i class="sonne__kern sonne__kern--abend"></i></div>
-      <div class="mond"><b class="mond__hof"></b><b class="mond__schein"></b><i class="mond__kern"></i></div>
-    </div>
-    <div class="szene__ebene" data-ebene="weit" aria-hidden="true"></div>
-    <div class="szene__ebene" data-ebene="fern" aria-hidden="true"></div>
-    <div class="szene__ebene" data-ebene="mitte" aria-hidden="true"></div>
-    <div class="szene__ebene szene__titel" data-ebene="titel">
-      <div class="titel">
-        <p class="titel__studio" data-titel-klein>Digitalstudio für Unternehmen</p>
-        <h1 class="titel__haupt titel__haupt--drei" data-titel-gross><span class="hinweis-versteckt">ERGUN. </span><span class="titel__zeile">Websites</span><span class="titel__punkt" aria-hidden="true"><svg viewBox="0 0 40 22" focusable="false"><path d="M8 21H32A7 7 0 0 0 33 7.1A9 9 0 0 0 16 5A7 7 0 0 0 7.5 11A5 5 0 0 0 8 21Z"/></svg></span><span class="hinweis-versteckt">, </span><span class="titel__zeile">Automatisierung</span><span class="titel__punkt" aria-hidden="true"><svg viewBox="0 0 40 22" focusable="false"><path d="M8 21H32A7 7 0 0 0 33 7.1A9 9 0 0 0 16 5A7 7 0 0 0 7.5 11A5 5 0 0 0 8 21Z"/></svg></span><span class="hinweis-versteckt">, </span><span class="titel__zeile">KI</span></h1>
-      </div>
-      <script>/* ?titel=a: alte Fassung zum Vergleich (klein „Websites, Automatisierung & KI“, groß „Webdesigner“) */ if (/[?&]titel=a(?![a-z])/.test(location.search)) { var tk = document.querySelector('[data-titel-klein]'), tg = document.querySelector('[data-titel-gross]'); tk.textContent = 'Websites, Automatisierung & KI'; tg.classList.remove('titel__haupt--drei'); tg.innerHTML = '<span class="hinweis-versteckt">ERGUN. </span>Webdesigner'; }</script>
-    </div>
-    <div class="szene__ebene" data-ebene="huegel" aria-hidden="true"></div>
-    <div class="szene__ebene" data-ebene="wald" aria-hidden="true"></div>
-    <div class="szene__ebene" data-ebene="wiese" aria-hidden="true"></div>
-    <div class="szene__ebene" data-ebene="gras" aria-hidden="true"></div>
-    <div class="szene__oben" aria-hidden="true"></div>
-    <div class="szene__fade" aria-hidden="true"></div>
-    <div class="szene__erde" aria-hidden="true"></div>
-    <div class="szene__ebene szene__vorn" data-ebene="vorn" aria-hidden="true"></div>
-    <a class="szene__weiter" href="#preise" aria-label="Weiter: Ihr Preis in 4 Fragen"><span class="szene__weiter-text">Ihr Preis</span><i aria-hidden="true"></i></a>
-  </section>
-</div>
-
-<template id="dschungel-vorlage">
-<div class="m-strecke" id="titel" data-strecke>
-  <div class="m-buehne">
-    <div class="t-foto" data-foto>
-      <picture class="t-licht " data-licht="morgen"><source media="(max-aspect-ratio: 4/5)" type="image/avif" srcset="bilder/hero/tropen/hoch-morgen-720.avif 720w, bilder/hero/tropen/hoch-morgen-1080.avif 1080w, bilder/hero/tropen/hoch-morgen-1440.avif 1440w" sizes="100vw"><source media="(max-aspect-ratio: 4/5)" type="image/webp" srcset="bilder/hero/tropen/hoch-morgen-720.webp 720w, bilder/hero/tropen/hoch-morgen-1080.webp 1080w, bilder/hero/tropen/hoch-morgen-1440.webp 1440w" sizes="100vw"><source type="image/avif" srcset="bilder/hero/tropen/quer-morgen-1280.avif 1280w, bilder/hero/tropen/quer-morgen-1920.avif 1920w, bilder/hero/tropen/quer-morgen-2560.avif 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><source type="image/webp" srcset="bilder/hero/tropen/quer-morgen-1280.webp 1280w, bilder/hero/tropen/quer-morgen-1920.webp 1920w, bilder/hero/tropen/quer-morgen-2560.webp 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><img src="bilder/hero/tropen/quer-morgen-1920.webp" width="3840" height="2160" alt="Ruhiges Büro mit offenem Blick in einen tropischen Regenwald, auf einem hellen Eichentisch steht ein aufgeklappter Laptop" decoding="async" fetchpriority="high"></picture>
-      <video class="t-video" data-video muted playsinline loop preload="none" aria-hidden="true" data-src="bilder/hero/tropen/tropen-loop-720.mp4"></video>
-      <picture class="t-licht " data-licht="gold"><source media="(max-aspect-ratio: 4/5)" type="image/avif" data-srcset="bilder/hero/tropen/hoch-gold-720.avif 720w, bilder/hero/tropen/hoch-gold-1080.avif 1080w, bilder/hero/tropen/hoch-gold-1440.avif 1440w" sizes="100vw"><source media="(max-aspect-ratio: 4/5)" type="image/webp" data-srcset="bilder/hero/tropen/hoch-gold-720.webp 720w, bilder/hero/tropen/hoch-gold-1080.webp 1080w, bilder/hero/tropen/hoch-gold-1440.webp 1440w" sizes="100vw"><source type="image/avif" data-srcset="bilder/hero/tropen/quer-gold-1280.avif 1280w, bilder/hero/tropen/quer-gold-1920.avif 1920w, bilder/hero/tropen/quer-gold-2560.avif 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><source type="image/webp" data-srcset="bilder/hero/tropen/quer-gold-1280.webp 1280w, bilder/hero/tropen/quer-gold-1920.webp 1920w, bilder/hero/tropen/quer-gold-2560.webp 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><img data-src="bilder/hero/tropen/quer-gold-1920.webp" width="3840" height="2160" alt="" decoding="async" loading="eager"></picture>
-      <picture class="t-licht " data-licht="abend"><source media="(max-aspect-ratio: 4/5)" type="image/avif" data-srcset="bilder/hero/tropen/hoch-abend-720.avif 720w, bilder/hero/tropen/hoch-abend-1080.avif 1080w, bilder/hero/tropen/hoch-abend-1440.avif 1440w" sizes="100vw"><source media="(max-aspect-ratio: 4/5)" type="image/webp" data-srcset="bilder/hero/tropen/hoch-abend-720.webp 720w, bilder/hero/tropen/hoch-abend-1080.webp 1080w, bilder/hero/tropen/hoch-abend-1440.webp 1440w" sizes="100vw"><source type="image/avif" data-srcset="bilder/hero/tropen/quer-abend-1280.avif 1280w, bilder/hero/tropen/quer-abend-1920.avif 1920w, bilder/hero/tropen/quer-abend-2560.avif 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><source type="image/webp" data-srcset="bilder/hero/tropen/quer-abend-1280.webp 1280w, bilder/hero/tropen/quer-abend-1920.webp 1920w, bilder/hero/tropen/quer-abend-2560.webp 2560w" sizes="(max-aspect-ratio: 16/9) calc(100vh * 1.78), 100vw"><img data-src="bilder/hero/tropen/quer-abend-1920.webp" width="3840" height="2160" alt="" decoding="async" loading="eager"></picture>
-      <img class="t-weich" data-weich data-quer="bilder/hero/tropen/quer-abend-weich.webp" data-hoch="bilder/hero/tropen/hoch-abend-weich.webp" alt="" aria-hidden="true">
-      <div class="t-schirm" data-schirm aria-hidden="true">
-        <div class="m-anzeige">
-            <div class="w w-skizze" data-w="skizze"><div class="w-nav"><div class="w-logo"></div><div class="w-links"><i></i><i></i><i></i></div></div><div class="w-held"><div class="w-titel"><i></i><i></i><i class="w-zeile"></i><i class="w-zeile"></i><i class="w-knopf"></i></div><div class="w-bild"></div></div><div class="w-reihe"><div class="w-bild"></div><div class="w-bild"></div><div class="w-bild"></div></div></div>
-            <div class="w w-farbe" data-w="farbe"><div class="w-nav"><div class="w-logo"></div><div class="w-links"><i></i><i></i><i></i></div></div><div class="w-held"><div class="w-titel"><i></i><i></i><i class="w-zeile"></i><i class="w-zeile"></i><i class="w-knopf"></i></div><div class="w-bild"></div></div><div class="w-reihe"><div class="w-bild"></div><div class="w-bild"></div><div class="w-bild"></div></div></div>
-            <div class="w w-bilder" data-w="bilder"><div class="w-nav"><div class="w-logo"></div><div class="w-links"><i></i><i></i><i></i></div></div><div class="w-held"><div class="w-titel"><i></i><i></i><i class="w-zeile"></i><i class="w-zeile"></i><i class="w-knopf"></i></div><div class="w-bild"><img src="bilder/hero/layer-1-sky-960.webp" alt=""></div></div><div class="w-reihe"><div class="w-bild"><img src="bilder/hero/layer-2-ridge-960.webp" alt=""></div><div class="w-bild"><img src="bilder/hero/layer-1-sky-blaue-stunde-960.webp" alt=""></div><div class="w-bild"><img src="bilder/hero/layer-1-sky-ohne-sonne-960.webp" alt=""></div></div></div>
-            <div class="m-endo" data-endo><b>Neue Anfrage</b>Beantwortet. Termin eingetragen <span>✓</span></div>
-            <div class="w w-formular" data-w="formular"><strong>Was brauchen Sie?</strong><div><span>Website</span><span>Automatisierung</span><span>Beides</span></div></div>
-          </div>
-        <div class="t-aus" data-aus></div>
-        <div class="t-glanz"></div>
-      </div>
-    </div>
-    <div class="t-dunkel" data-dunkel aria-hidden="true"></div>
-    <img class="t-blaetter" data-blaetter src="bilder/hero/tropen/blaetter-900.webp" srcset="bilder/hero/tropen/blaetter-900.webp 900w, bilder/hero/tropen/blaetter-1400.webp 1400w" sizes="(max-aspect-ratio: 4/5) 96vw, 44vw" alt="" aria-hidden="true" decoding="async">
-    <div class="t-verlauf" aria-hidden="true"></div>
-    <div class="m-weiter" data-weiter aria-hidden="true"><span>Scrollen</span><i></i></div>
-
-    <div class="m-text">
-      <p class="t-klein">Digitalstudio für Unternehmen</p>
-      <h1><span class="t-versteckt">ERGUN. </span>Websites<svg class="t-wolke" viewBox="0 0 40 22" aria-hidden="true"><path d="M8 21H32A7 7 0 0 0 33 7.1A9 9 0 0 0 16 5A7 7 0 0 0 7.5 11A5 5 0 0 0 8 21Z"/></svg>Automatisierung<svg class="t-wolke" viewBox="0 0 40 22" aria-hidden="true"><path d="M8 21H32A7 7 0 0 0 33 7.1A9 9 0 0 0 16 5A7 7 0 0 0 7.5 11A5 5 0 0 0 8 21Z"/></svg>KI</h1>
-      <div class="m-schritte" aria-live="polite">
-        <p class="m-schritt" data-schritt="0"><b>So arbeitet Ihr System</b></p>
-        <p class="m-schritt" data-schritt="1"><b>Ihre Website entsteht</b></p>
-        <p class="m-schritt" data-schritt="2"><b>Eine Anfrage kommt</b></p>
-        <p class="m-schritt" data-schritt="3"><b>Automatisch erledigt</b></p>
-        <p class="m-schritt" data-schritt="4"><b>Alles greift ineinander</b></p>
-      </div>
-      <div class="m-fort" aria-hidden="true">
-        <div class="m-fort__teil" data-fort="web">
-          <ol><li><span>1</span><i></i></li><li><span>2</span><i></i></li><li><span>3</span></li></ol>
-          <p class="m-fort__titel" data-fort-titel></p>
-        </div>
-        <div class="m-fort__teil" data-fort="ablauf">
-          <ol><li><span>1</span><i></i></li><li><span>2</span><i></i></li><li><span>3</span><i></i></li><li><span>4</span></li></ol>
-          <p class="m-fort__titel" data-fort-titel></p>
-        </div>
-      </div>
-    </div>
-
-    <div class="t-karten" data-m-karten aria-hidden="true">
-      <div class="m-karte" data-karte="1"><div class="k-innen">
-            <div class="k-kopf"><span class="k-nr">1</span><h3>Anfrage kommt an</h3><svg class="k-sym" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h5l1.5 3h5L16 13h5"/><path d="M5.5 5h13L21 13v5.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5V13z"/></svg></div>
-            <div class="k-inhalt k-post">
-              <div class="k-zeile k-zeile--neu"><i></i><div><b>Termin für Freitag?</b><span>Neue Anfrage</span></div><em>jetzt</em></div>
-              <div class="k-zeile k-zeile--alt"><i></i><div class="k-balken"><u style="width:46%"></u><u style="width:78%"></u></div><em>09:12</em></div>
-              <div class="k-zeile k-zeile--alt"><i></i><div class="k-balken"><u style="width:38%"></u><u style="width:64%"></u></div><em>Mo</em></div>
-            </div>
-          </div>
-          <div class="k-faden"><b></b></div></div>
-      <div class="m-karte" data-karte="2"><div class="k-innen">
-            <div class="k-kopf"><span class="k-nr">2</span><h3>Automatisch sortiert</h3><svg class="k-sym" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></div>
-            <div class="k-inhalt k-sort">
-              <div class="k-nachricht"><b>Termin für Freitag?</b><span class="k-etikett k-etikett--termin">Termin</span><span class="k-etikett k-etikett--neu">Neukunde</span></div>
-              <div class="k-spalten">
-                <div class="k-spalte k-spalte--ziel"><svg viewBox="0 0 24 24" aria-label="Termine"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><b class="k-gelandet">Termin für Freitag?</b><i></i></div>
-                <div class="k-spalte"><svg viewBox="0 0 24 24" aria-label="Fragen"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.2A8 8 0 1 1 20 12z"/><path d="M10 9.5a2 2 0 1 1 2.8 1.8c-.5.3-.8.7-.8 1.2v.5M12 16h.01"/></svg><i></i><i></i></div>
-                <div class="k-spalte"><svg viewBox="0 0 24 24" aria-label="Angebote"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg><i></i></div>
-              </div>
-            </div>
-          </div>
-          <div class="k-faden"><b></b></div></div>
-      <div class="m-karte" data-karte="3"><div class="k-innen">
-            <div class="k-kopf"><span class="k-nr">3</span><h3>Termin eingetragen</h3><svg class="k-sym" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></div>
-            <div class="k-inhalt">
-              <div class="k-kal">
-                <span class="k-zeit"></span><span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span>
-                <span class="k-zeit">9:00</span><i class="b"></i><i></i><i></i><i class="b"></i><i></i>
-                <span class="k-zeit">10:00</span><i></i><i class="b"></i><i class="b"></i><i></i><i class="k-frei"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></i>
-                <span class="k-zeit">11:00</span><i class="b"></i><i></i><i></i><i></i><i class="b"></i>
-              </div>
-              <p class="k-kal-notiz"><b>Fr 10:00</b> ✓</p>
-            </div>
-          </div>
-          <div class="k-faden"><b></b></div></div>
-      <div class="m-karte" data-karte="4"><div class="k-innen">
-            <div class="k-kopf"><span class="k-nr">4</span><h3>Antwort geht raus</h3><svg class="k-sym" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3 10 14"/><path d="M21 3 14.5 21 10 14 3 9.5z"/></svg></div>
-            <div class="k-inhalt"><div class="k-chat">
-              <div class="k-blase k-blase--kunde">Termin für Freitag?</div>
-              <div class="k-blase k-blase--antwort">Ihr Termin am Freitag, 10 Uhr, ist eingetragen <span>✓</span></div>
-              <div class="k-status">Gesendet <span>✓</span></div>
-              <div class="k-eingabe"><i></i><i></i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></div>
-            </div></div>
-          </div>
-          <div class="k-faden"><b></b></div></div>
-    </div>
-    <div class="m-brief" data-brief aria-hidden="true"><svg viewBox="0 0 44 30"><rect x="1" y="1" width="42" height="28" rx="4" fill="#F4F1E6"/><path d="M3 4 22 17 41 4" fill="none" stroke="#0C162C" stroke-width="1.5" stroke-linejoin="round"/><circle cx="22" cy="17" r="3" fill="#FF7A1A"/></svg></div>
-
-    <div class="m-formular" data-formular aria-hidden="true">
-      <h2>Was brauchen Sie?</h2>
-      <div class="m-karten"><div>Website<small>Ihr Auftritt im Netz</small></div><div>Automatisierung<small>Anfragen, Termine, Antworten</small></div><div>Beides<small>Website + Automatisierung</small></div></div>
-      <p>(Vorschau – hier geht es in Ihr Kontaktformular über)</p>
-    </div>
-  </div>
-</div>
-</template>
-<script>if (window.ERGUN_MASCHINE) { var dv = document.getElementById('dschungel-vorlage'); dv.parentNode.insertBefore(dv.content.cloneNode(true), dv); }</script>
-
-<template id="kristall-vorlage">
-<div class="k-root" id="kristall" data-k-root>
-  <div class="k-buehne" data-k-buehne>
-    <div class="k-rahmen" aria-hidden="true"></div>
-    <div class="k-muster" data-k-muster aria-hidden="true"></div>
-    <div class="k-schein" data-k-schein aria-hidden="true"></div>
-    <canvas class="k-leinwand" data-k-leinwand aria-hidden="true"></canvas>
-
-    <!-- ================================ 01 · ERGUN. (Cover) ================================ -->
-    <div class="k-ebene">
-      <div class="k-cover-oben">
-        <div class="k-display k-cover-titel" data-sc="0" data-fx="clip" data-d="0">Websites,<br>Automatisierung &amp; KI</div>
-        <p class="k-display k-cover-text k-weg-md" data-sc="0" data-fx="rise" data-d="0.2">Websites mit Design und Bewegung, persönlich geplant und gebaut – Automatisierung und eigene KI für Ihren Betrieb über endo.</p>
-        <ul class="k-display k-cover-liste k-weg-md" data-sc="0" data-fx="rise" data-d="0.35">
-          <li>Websites <span data-k-preis="ab-start"></span></li>
-          <li>Automatisierung mit endo</li>
-          <li>Kostenloses Erstgespräch</li>
-          <li>Antwort innerhalb von 24 Stunden</li>
-        </ul>
-        <div class="k-display k-cover-rechts k-weg-sm" data-sc="0" data-fx="clip" data-d="0.5">Faire<br>Preise für<br>gute Arbeit.</div>
-      </div>
-      <div class="k-display k-wort" data-k-wort>
-        <span class="k-wort__klein" data-sc="0" data-fx="rise" data-d="0.6">Digitalstudio</span>
-        <h1 aria-label="ERGUN. – Websites, Automatisierung und KI"><span data-ch aria-hidden="true"><span class="k-char" style="animation-delay:.15s">E</span></span><span data-ch aria-hidden="true"><span class="k-char" style="animation-delay:.22s">R</span></span><span data-ch aria-hidden="true"><span class="k-char" style="animation-delay:.29s">G</span></span><span data-ch aria-hidden="true"><span class="k-char" style="animation-delay:.36s">U</span></span><span data-ch aria-hidden="true"><span class="k-char" style="animation-delay:.43s">N</span></span><span data-ch aria-hidden="true"><span class="k-char k-punkt-marke" style="animation-delay:.5s">.</span></span></h1>
-        <span class="k-wort__titel" data-sc="0" data-fx="rise" data-d="0.7" data-k-baum-titel hidden>Website &amp; Automatisierung</span>
-      </div>
-      <div class="k-cover-unten">
-        <div class="k-signatur" data-sc="0" data-fx="rise" data-d="0.3">
-          <svg class="k-marke" data-k-marke width="30" height="30" viewBox="0 0 40 40" aria-hidden="true"></svg>
-          <span class="k-sans k-jahr">2026</span>
-          <span class="k-sans k-von">Digitalstudio für<br>Unternehmen</span>
-        </div>
-        <div class="k-sans k-spalten k-weg-sm" data-sc="0" data-fx="rise" data-d="0.5">
-          <span>Persönlich<br>geplant und gebaut</span>
-          <span>Für Handy<br>und PC</span>
-          <span>Scrollen<br>zum Entdecken</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================================ 02 · Kristall (Krone) ================================ -->
-    <div class="k-ebene">
-      <div class="k-display k-mitte-klein" data-sc="1" data-fx="fade" data-d="0.5">ERGUN.</div>
-      <div class="k-sans k-bildnr" data-sc="1" data-fx="rise" data-d="0.7"><b>02</b> — Der Kristall, von oben</div>
-    </div>
-
-    <!-- ================================ 03 · Websites (Muster-Blatt) ================================ -->
-    <div class="k-ebene k-display">
-      <div class="k-spec" data-k-spec>
-        <div class="k-spec-seite" data-k-spec-seite="l"></div>
-        <div class="k-spec-mitte">
-          <div class="k-spec-name" data-sc="2" data-fx="rise" data-d="0.35">Websites<small>von ERGUN.</small></div>
-          <div class="k-spec-lupe" data-k-lupe data-sc="2" data-fx="rise" data-d="0.45">
-            <div class="k-spec-lupe__wort" data-k-lupe-wort>&amp; mehr</div>
-            <div class="k-spec-lupe__satz" data-k-lupe-satz>Zeigen Sie auf ein Wort</div>
-            <div class="k-spec-preise" data-k-lupe-preise></div>
-          </div>
-        </div>
-        <div class="k-spec-seite k-spec-seite--r" data-k-spec-seite="r"></div>
-      </div>
-      <div class="k-spec-linie" data-sc="2" data-fx="line" data-d="0.5"></div>
-      <div class="k-spec-extras" data-k-extras data-sc="2" data-fx="rise" data-d="0.6"></div>
-    </div>
-
-    <!-- ================================ 04 · Preise (Fächer) ================================ -->
-    <div class="k-ebene k-display">
-      <div class="k-faecher" data-k-faecher>
-        <span class="k-faecher__seite k-faecher__seite--l" data-sc="3" data-fx="fade" data-d="0.3">Websites<br>von ERGUN.</span>
-      </div>
-      <div class="k-faecher-unten">
-        <div class="k-sans k-faecher-endo" data-sc="3" data-fx="rise" data-d="0.6">Automatisierung mit endo · <span data-k-preis="endo"></span></div>
-      </div>
-    </div>
-
-    <!-- ================================ 05 · Anspruch (Bloom) ================================ -->
-    <div class="k-ebene k-display">
-      <div class="k-bloom">
-        <div data-sc="4" data-fx="clip" data-d="0">Faire</div>
-        <div class="k-bloom__klein" data-sc="4" data-fx="clip" data-d="0.14" style="margin-left:5.2em">Preise für</div>
-        <div data-sc="4" data-fx="clip" data-d="0.28" style="margin-left:0.45em">gute Arbeit.</div>
-        <div class="k-bloom__klein" data-sc="4" data-fx="clip" data-d="0.42" style="margin-left:4.2em">von ERGUN.</div>
-        <div class="k-sans k-bloom__fuss" data-sc="4" data-fx="rise" data-d="0.7">ERGUN. — Websites, Automatisierung &amp; KI</div>
-      </div>
-    </div>
-
-    <!-- 06 · Anfrage: das Formular selbst ist #preise (in <main>, schiebt sich über die Bühne) -->
-
-    <!-- ================================ Navigation 01–06 ================================ -->
-    <nav class="k-nav k-weg-sm" aria-label="Bilder der Startseite" data-k-nav></nav>
-
-    <!-- Körnung, fest – das Blatt ist gedruckt, nicht gerendert -->
-    <svg class="k-korn" aria-hidden="true" width="100%" height="100%"><filter id="k-korn"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.55 0"/></filter><rect width="100%" height="100%" filter="url(#k-korn)"/></svg>
-  </div>
-  <div class="k-strecke" data-k-strecke aria-hidden="true"></div>
-</div>
-</template>
-<script>if (window.ERGUN_KRISTALL) { var kv = document.getElementById('kristall-vorlage'); kv.parentNode.insertBefore(kv.content.cloneNode(true), kv); }</script>
-
 <!-- „Glas“ (01.10.2026, ?titel=glas – Ausnahme auf ERGUNs Wunsch): Hero nach der 21st.dev-Vorlage „Glass Headline Hero“
      (_code/vorlagen-21st/glass-headline-hero/). Die Überschrift bleibt ein echtes <h1>, je Wort ein <span class="ghr-word">; das Glas malt
      js/glas.js (WebGL2) genau dorthin. Ohne WebGL2: weiße Schrift über dem CSS-Verlauf. Logik: js/glas.quelle.js · Aussehen: glas.css -->
@@ -1917,7 +1316,7 @@ html.zeichen-glanz-3.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before
   <!-- EIN ABLAUF (Auftrag 25 ERGUN. minimal, 29.09.2026 – Ausnahme auf Emres Wunsch: Preis-Bereich und Kontakt sind ein Ablauf):
        ① Was brauchen Sie? (Website · Automatisierung · Beides) → ② nur das Passende → ③ Ihre Anfrage (Zusammenfassung + Formular).
        Schritt ① und ② baut js/preise.js (Zahlen PREISE, Texte LEITFADEN), Schritt ③ steht hier. Alte Anker: #preise = Ablauf, #kontakt = Schritt ③. -->
-  <section class="preise mf" id="preise" aria-label="Anfrage an ERGUN." data-preise data-maschine-ziel>
+  <section class="preise mf" id="preise" aria-label="Anfrage an ERGUN." data-preise>
    <span class="mf-anker" id="kontakt" aria-hidden="true"></span>
    <div class="preise__innen">
     <div class="mf__oben">
@@ -2004,12 +1403,12 @@ html.zeichen-glanz-3.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before
           <div class="anfrage__danke" data-danke hidden tabindex="-1">
             <span class="anfrage__check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12.5 4 4 8-9"/></svg></span>
             <h3 class="anfrage__danke-titel" data-danke-titel>Danke!</h3>
-            <p data-danke-text>Ich melde mich persönlich bei Ihnen.</p>
+            <p data-danke-text><span class="t-alt">Ich melde mich</span><span class="t-neu">Wir melden uns</span> persönlich bei Ihnen.</p>
             <div class="anfrage__danke-knoepfe">
               <a class="btn btn--wa" href="#" data-nochmal>WhatsApp erneut öffnen</a>
               <button class="btn" type="button" data-bearbeiten>Nachricht bearbeiten</button>
             </div>
-            <p class="form__hint">Klappt es nicht? Schreiben Sie mir direkt an <a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a>.</p>
+            <p class="form__hint">Klappt es nicht? Schreiben Sie <span class="t-alt">mir</span><span class="t-neu">uns</span> direkt an <a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a>.</p>
           </div>
         </form>
         </div>
@@ -2024,7 +1423,7 @@ html.zeichen-glanz-3.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before
       </aside>
     </div>
     <p class="hinweis-versteckt" aria-live="polite" data-preise-live></p>
-    <p class="mf-agentur">ERGUN. baut Websites, Automatisierung und KI kommen über endo · <a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a></p>
+    <p class="mf-agentur"><span class="t-alt">ERGUN. baut Websites, Automatisierung und KI kommen über endo</span><span class="t-neu">ERGUN. baut Websites. Automatisierung und KI gibt es über endo.</span> ·<a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a></p>
    </div>
   </section>
 </main>
@@ -2039,14 +1438,15 @@ html.zeichen-glanz-3.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before
 </footer>
 <div class="wechsel" aria-hidden="true"></div>
 
+<!-- preise.js vor dem Titelbild-Skript: glas.js liest beim Start window.PREISE (Kleingedrucktes in der Fußzeile) – so ist die Reihenfolge immer gleich (07.10.2026) -->
+<script src="js/preise.js?v=26"></script>
 <script>
-/* Auftrag 44: je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
+/* je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
 (function () {
-  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=15'] : window.ERGUN_WAHL === 'all' ? ['js/all.js?v=1'] : window.ERGUN_MASCHINE ? ['js/maschine-foto.js?v=11'] : window.ERGUN_WAHL === 'alt' ? ['js/szene.js?v=63', 'js/wolken.js?v=6'] : window.ERGUN_WAHL === 'baum' ? ['js/baum.js?v=6', 'js/kristall.js?v=45'] : (window.ERGUN_WAHL === 'blume' || window.ERGUN_WAHL === 'lycoris' || window.ERGUN_WAHL === 'lycoris3') ? ['js/blume.js?v=11', 'js/kristall.js?v=45'] : window.ERGUN_WAHL === 'kristall' ? ['js/kristall.js?v=45'] : [];
+  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=15'] : [];
   liste.forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
 })();
 </script>
-<script>window.TROPEN_SCHIRM = {"quer": {"w": 3840, "h": 2160, "ecken": [[0.64932, 0.455], [0.81339, 0.45338], [0.80784, 0.66176], [0.64042, 0.64745]]}, "hoch": {"w": 2160, "h": 3840, "ecken": [[0.34755, 0.5419], [0.65931, 0.54214], [0.66611, 0.65406], [0.33833, 0.65396]]}};</script>
 <script>
 /* Navigation beim Runterscrollen ausblenden, Inhalte einmal sanft einblenden */
 (function () {
@@ -2067,7 +1467,6 @@ html.zeichen-glanz-3.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before
   els.forEach(function (el) { io.observe(el); });
 })();
 </script>
-<script src="js/preise.js?v=25"></script>
 <script>
 /* Kostenloses Erstgespräch: eine Karte mit allen Feldern (seit 25.09. abends keine Schritte mehr).
    Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)
@@ -2141,7 +1540,7 @@ html.zeichen-glanz-3.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before
   /* ---- Prüfung: Pflichtfelder, deutsche Meldung direkt am Feld, Fokus auf den ersten Fehler ---- */
   var regeln = {
     name: function (v) { return v.length >= 2 ? '' : 'Bitte geben Sie Ihren Namen ein.'; },
-    weg: function () { return weg() ? '' : 'Bitte wählen Sie, wie ich Ihnen antworten soll.'; },
+    weg: function () { return weg() ? '' : (window.ERGUN_TEXTE_NEU ? 'Bitte wählen Sie, wie wir Ihnen antworten sollen.' : 'Bitte wählen Sie, wie ich Ihnen antworten soll.'); },
     tel: function (v) { return !v ? 'Bitte geben Sie Ihre Telefonnummer ein.' : (/^\+?[\d\s()\/.-]{6,20}$/.test(v) && v.replace(/\D/g, '').length >= 6 ? '' : 'Bitte geben Sie eine gültige Telefonnummer ein, z. B. +49 170 1234567.'); },
     email: function (v) { return !v ? 'Bitte geben Sie Ihre E-Mail-Adresse ein.' : (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? '' : 'Bitte geben Sie eine gültige E-Mail ein.'); },
     datenschutz: function () { return form.elements.datenschutz.checked ? '' : 'Bitte stimmen Sie der Datenschutzerklärung zu.'; }
@@ -2262,7 +1661,7 @@ html.zeichen-glanz-3.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before
     var vorname = wert('name').split(/\s+/)[0] || '', wa = weg() === 'whatsapp';
     danke.querySelector('[data-danke-titel]').textContent = 'Danke' + (vorname ? ', ' + vorname : '') + '!';
     danke.querySelector('[data-danke-text]').textContent = (wa ? 'WhatsApp ist geöffnet – tippen Sie dort nur noch auf Senden.' : 'Ihr Mailprogramm ist geöffnet – bitte dort nur noch auf Senden tippen.') +
-      ' Ich melde mich persönlich bei Ihnen.' + (selbstAnhaengen().length ? ' Hängen Sie die Dateien, die nicht hochgeladen werden konnten, bitte dort an.' : '');
+      (window.ERGUN_TEXTE_NEU ? ' Wir melden uns persönlich bei Ihnen.' : ' Ich melde mich persönlich bei Ihnen.') + (selbstAnhaengen().length ? ' Hängen Sie die Dateien, die nicht hochgeladen werden konnten, bitte dort an.' : '');
     nochmal.textContent = wa ? 'WhatsApp erneut öffnen' : 'E-Mail erneut öffnen';
     nochmal.href = echt ? (wa ? waLink() : mailLink()) : '#';
     if (wa) { nochmal.target = '_blank'; nochmal.rel = 'noopener'; } else { nochmal.removeAttribute('target'); nochmal.removeAttribute('rel'); }
@@ -2283,7 +1682,7 @@ html.zeichen-glanz-3.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before
     if (!pruefen()) { status.textContent = 'Bitte prüfen Sie die markierten Felder.'; return; }
     if (laufend()) { status.setAttribute('data-wartet', '1'); status.textContent = 'Ihre Dateien werden noch hochgeladen. Einen Moment, dann bitte erneut auf Senden tippen.'; return; }
     try { oeffnen(); dankeZeigen(true); }
-    catch (err) { status.innerHTML = ''; status.append('Das hat leider nicht geklappt. Schreiben Sie mir gern direkt: '); var a = document.createElement('a'); a.href = 'mailto:' + MAIL; a.textContent = MAIL; status.append(a); }
+    catch (err) { status.innerHTML = ''; status.append((window.ERGUN_TEXTE_NEU ? 'Das hat leider nicht geklappt. Schreiben Sie uns gern direkt: ' : 'Das hat leider nicht geklappt. Schreiben Sie mir gern direkt: ')); var a = document.createElement('a'); a.href = 'mailto:' + MAIL; a.textContent = MAIL; status.append(a); }
   });
 })();
 </script>

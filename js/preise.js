@@ -115,13 +115,17 @@ window.BEGRIFFE = {
 };
 
 /* Texte des Ablaufs „Website · Automatisierung · Beides“ (Auftrag 25 ERGUN. minimal, 29.09.2026; Grundlage Auftrag 27).
-   Keine Zahlen hier – Preise kommen immer aus PREISE. Pro Schritt eine Überschrift und höchstens ein kurzer Satz, ohne Fachbegriffe. */
+   Keine Zahlen hier – Preise kommen immer aus PREISE. Pro Schritt eine Überschrift und höchstens ein kurzer Satz, ohne Fachbegriffe.
+   Texte „wir“ (07.10.2026, Text-Vorschläge 9/12/13): LEITFADEN_NEU = Vorschau ?texte=neu (Schalter TEXTE_STANDARD im Kopf von index.html) –
+   „bereitet Termine vor“ statt „bucht Termine und mehr“, ohne „alles aus einer Hand“, Termine „zum Bestätigen“, ohne „alle fünf“. */
+var LEITFADEN_NEU = !!window.ERGUN_TEXTE_NEU;
 window.LEITFADEN = {
   art: { titel: 'Was brauchen Sie?', satz: 'Tippen Sie auf das, was passt. Den Rest klären wir im Gespräch.', direkt: 'Lieber gleich schreiben',
     optionen: [
       { id: 'website', titel: 'Website', satz: 'Eine Website, die zu Ihrem Betrieb passt.' },
-      { id: 'endo', titel: 'Automatisierung', satz: 'endo beantwortet Anfragen, bucht Termine und mehr.', link: 'endo ansehen' },
-      { id: 'beides', titel: 'Beides', satz: 'Ihre Website und endo zusammen.', dezent: 'alles aus einer Hand' }] },
+      { id: 'endo', titel: 'Automatisierung', satz: LEITFADEN_NEU ? 'endo beantwortet Anfragen und bereitet Termine vor.' : 'endo beantwortet Anfragen, bucht Termine und mehr.', link: 'endo ansehen' },
+      LEITFADEN_NEU ? { id: 'beides', titel: 'Beides', satz: 'Ihre Website und endo zusammen.' }
+        : { id: 'beides', titel: 'Beides', satz: 'Ihre Website und endo zusammen.', dezent: 'alles aus einer Hand' }] },
   website: { titel: 'Welche Website passt?', satz: 'Der Preis ist ein Startwert.', alles: 'Alles, was drin ist', extras: 'Extras hinzufügen (optional)' },
   /* höchstens 3 Stichpunkte je Stufe (Auszug aus PREISE.stufen[].punkte, in Alltagssprache) */
   stufenKurz: {
@@ -137,10 +141,10 @@ window.LEITFADEN = {
     ohne: 'Ohne Betreuung', ohneSatz: 'Hosting, Domain und Updates übernehmen Sie dann selbst.' },
   /* endo-Fähigkeiten (5 seit Auftrag 30, 29.09.2026: Social entfernt) mit ehrlichem Status – Stand aus endo (_code/endo-studio/js/assistenten.js), dort ändern und hier nachziehen */
   endo: { titel: 'Wo soll endo helfen?', satz: 'Wählen Sie eine oder mehrere Fähigkeiten – oder alles zusammen.', ansehen: 'So sieht das aus: endo ansehen',
-    einmalig: 'einmalig', monatlich: 'monatlich', zusatz: 'Zusatz', statt: 'statt', einzeln: 'einzeln', guenstiger: 'endo komplett ist hier günstiger – Sie bekommen alle fünf.',
+    einmalig: 'einmalig', monatlich: 'monatlich', zusatz: 'Zusatz', statt: 'statt', einzeln: 'einzeln', guenstiger: LEITFADEN_NEU ? 'endo komplett ist hier günstiger.' : 'endo komplett ist hier günstiger – Sie bekommen alle fünf.',
     faehigkeiten: [
       { id: 'empfang', name: 'Empfang', satz: 'beantwortet Anfragen rund um die Uhr', status: 'Demo' },
-      { id: 'termine', name: 'Termine', satz: 'Kunden buchen selbst, mit Erinnerung', status: 'In Arbeit' },
+      { id: 'termine', name: 'Termine', satz: LEITFADEN_NEU ? 'Terminwünsche zum Bestätigen, mit Erinnerung' : 'Kunden buchen selbst, mit Erinnerung', status: 'In Arbeit' },
       { id: 'kontakte', name: 'Kontakte', satz: 'Ihre Kundenkartei mit Erinnerungen', status: 'In Arbeit' },
       { id: 'uebersicht', name: 'Übersicht', satz: 'Ihr Wochenbericht', status: 'In Arbeit' },
       { id: 'studio', name: 'Studio', satz: 'Bilder und Videos aus Handyfotos', status: 'Demo' }],   /* 04.10.2026: Demo, bis Studio an der Firma hängt */

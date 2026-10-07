@@ -1,5 +1,9 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
+> **Aufgeräumt 07.10.2026:** Es gibt nur noch das Titelbild „Glas“. Gezeichnete Landschaft mit Figur + Hund, Maschine/Dschungel, Kristall,
+> Blume, Lycoris, Lebensbaum, Lycoris 3 und All liegen in `_archiv/ERGUN-Titelbilder (entfernt 07.10.)/` (Tag `vor-aufraeumen-2026-10-07`).
+> Abschnitte unten zu diesen Fassungen sind Geschichte. Fest eingebaut (ohne Rückweg): Karten premium, Glas fein + nahtlos, Schriftzug löst sich auf.
+
 ## Blatt im Glas-Look (LIVE seit Emres „a und ok“, 04.10.2026; `BLATT_GLAS_STANDARD = true` in `index.html` UND `404.html`; `?start=papier` = helles Papier-Blatt, `?hinten=b` = Illustration; Rückweg Tag `vor-blatt-glas-live`)
 - Blatt = unscharfer Glas-Verlauf mit dem großen Glas-„ERGUN.“ (`bilder/glas/glas-wort.webp`, als SVG-`<image>` an der Lage aus `bilder/glas/glas-wort.json`), hinter dem Riss derselbe Verlauf klar: `a` = Glas-Bühne mit Zeichnung (`u_detail`), `b` = Illustration (`bilder/glas/hinten-quer|hoch.webp`). Titelbild „Webdesign und Automatisierung“ (versteckt „ERGUN.“ im h1), Regeln in `glas-marke.css`.
 - Alle Bilder entstehen **einmal** mit `python _code/werkzeuge/glas-wort.py` (Server 8791 an) aus dem echten Shader – nie von Hand zeichnen. Vier Aufnahmen: `?glasfeld=schwarz` + `?glasfeld=weiss` (daraus Deckkraft und Farbe: `A = (W − B) / 0,8`), der Verlauf ohne Wort und die Zeichen-Maske `?glasdbg=g`.
