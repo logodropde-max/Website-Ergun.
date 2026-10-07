@@ -90,6 +90,14 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
      der Verlauf bewegt sich nur im Kopf (darunter, hinter dem Blatt und bei verdeckter Seite steht er), höchstens ~60 Bilder/s, und ganz unten,
      wo das Bild nicht mehr vom Scrollen abhängt, wird gar nicht neu gemalt. Ohne die Klasse läuft alles wie vorher. */
   const LEICHT = html.classList.contains('handy-leicht');
+  /* Titel scharf (07.10.2026, Vorschau ?titel=scharf – Schalter TITEL_SCHARF_STANDARD in index.html, html.titel-scharf; nur Ruhe + Handy-Breite, der PC
+     bleibt Bit für Bit gleich). Am iPhone (3-fache Pixeldichte) rechnete die Leinwand mit höchstens 1,5-facher Dichte – der Browser zieht das Bild
+     auf das Doppelte, der Glas-Schriftzug wirkt weich. Jetzt: solange der Kopf im Bild ist, Leinwand und Maske in voller Gerätedichte (höchstens
+     SCHARF_MAX, Vergleich ?scharf=2.5); unter dem Kopf rechnet die Leinwand wieder mit der heutigen Dichte. Der Wächter senkt im Kopf nie unter die
+     heutige Stufe (Leinwand 1,5 · Maske 2). Die Maske deckt nur noch das Band um den Schriftzug statt des ganzen Fensters – weniger Grafikspeicher
+     und weniger Weichzeichner-Arbeit; der Shader liest sie über hoehe() an derselben Stelle wie vorher. Farbfeld behält seine heutige Pixelgröße. */
+  const SCHARF = FEIN && RUHE && HANDY_R && html.classList.contains('titel-scharf');
+  const SCHARF_MAX = Math.min(3, Math.max(1.5, parseFloat(html.getAttribute('data-scharf')) || 3));
   function lageSetzen() {   /* Ruhe: Titelbild-Inhalt im selben Takt wie das Glas – auf ganze Gerätepixel gerundet */
     if (!inhalt) return versatz;
     const r = Math.round((window.scrollY || 0) * dprR) / dprR;
@@ -230,7 +238,12 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       .replace('  vec3 bg = texture(u_field, uv).rgb;\n', '  vec3 bg = zeichnung(texture(u_field, uv).rgb, uv);\n')
       .replace('  vec3 col = texture(u_field, uv).rgb;\n', '  vec3 col = zeichnung(texture(u_field, uv).rgb, uv);\n');
   }
-  const fehlt = BLUR_FEIN === BLUR || GLASS_FEIN.indexOf('u_shift') < 0 || (FEIN && WEG && GLASS_FEIN.indexOf('u_ohne > 0.5') < 0);   /* Vorlage geändert? dann sicher die alte Fassung */
+  /* Titel scharf: die Maske ist nur noch ein Band um den Schriftzug – jeder Zugriff geht über hoehe(), das die Fenster-Lage (wie vorher) in die
+     Lage im Band umrechnet (u_band = Maßstab, Versatz); außerhalb des Bands liefert der Rand der Maske 0 (genug Luft rundum) */
+  if (SCHARF) GLASS_FEIN = GLASS_FEIN.split('texture(u_height, ').join('hoehe(').replace('uniform vec2 u_res;',
+    'uniform vec2 u_res;\nuniform vec2 u_band;\nvec4 hoehe(vec2 p) { return texture(u_height, vec2(p.x, p.y * u_band.x + u_band.y)); }');
+  const fehlt = BLUR_FEIN === BLUR || GLASS_FEIN.indexOf('u_shift') < 0 || (FEIN && WEG && GLASS_FEIN.indexOf('u_ohne > 0.5') < 0)
+    || (SCHARF && GLASS_FEIN.split('texture(u_height, ').length !== 2);   /* Vorlage geändert? dann sicher die alte Fassung (scharf: nur noch EIN Zugriff, in hoehe()) */
   const fein = FEIN && !fehlt;
 
   /* Schriftzug immer ganz: Größe aus der echten Breite (inkl. Kante, Glanz und Schatten), je Seite ≥ 6 % frei */
@@ -364,6 +377,9 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     const releaseTargets = () => { for (const t of owned.tex) gl.deleteTexture(t); for (const f of owned.fbo) gl.deleteFramebuffer(f); owned.tex = []; owned.fbo = []; };
 
     let P = null, field = null, blurA = null, blurB = null, maskTex = null, bevel = 4;
+    /* Titel scharf: Band der Maske (u_band), Abstand der Nachbar-Abfragen, „unter dem Kopf“ (dann heutige Dichte) */
+    const scharf = SCHARF && fein;
+    let bandU = null, hTexel = null, scharfTief = false;
     /* hinten b: Illustration (bilder/glas/hinten-quer|hoch.webp) als Verlauf – cover, einmal in die Feld-Fläche gemalt */
     let bildTex = null, bildGemalt = false;
     const BILD = '#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 o;\nuniform sampler2D u_bild;\nuniform vec2 u_skala;\n' +
@@ -401,16 +417,26 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       einpassen();
       const heading = titleEl, cr = canvas.getBoundingClientRect();
       const scale = lite ? Math.min(window.devicePixelRatio || 1, 1.25) : Math.min(window.devicePixelRatio || 1, 2);
-      const w = Math.max(1, Math.round(cr.width * scale)), h = Math.max(1, Math.round(cr.height * scale));
+      /* Titel scharf: Maske in voller Gerätedichte (höchstens SCHARF_MAX); Sparmodus nie unter der heutigen Stufe 2 */
+      const sk = scharf ? Math.min(window.devicePixelRatio || 1, lite ? 2 : SCHARF_MAX) : scale;
       const cs = getComputedStyle(heading), fontPx = parseFloat(cs.fontSize) || 64, sy = RUHE && !WEG ? versatz : window.scrollY || 0;   /* Ruhe: der Inhalt ist um „versatz“ verschoben */
       const zeichen = [], tw = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
       const versteckt = (n) => !!(n.parentElement && n.parentElement.closest && n.parentElement.closest('.glas-versteckt'));   /* „ERGUN.“ nur für Suche und Screenreader */
       for (let n = tw.nextNode(); n; n = tw.nextNode()) for (let i = 0; i < (versteckt(n) ? 0 : n.data.length); i++) {
         if (/\s/.test(n.data[i])) continue;
         const rg = document.createRange(); rg.setStart(n, i); rg.setEnd(n, i + 1);
-        const b = rg.getBoundingClientRect(); zeichen.push([n.data[i], b.left - cr.left, b.top + sy]);
+        const b = rg.getBoundingClientRect(); zeichen.push([n.data[i], b.left - cr.left, b.top + sy, b.height]);
       }
-      const layout = [w, h, scale, cs.font].concat(zeichen.map((z) => z[0] + '@' + z[1].toFixed(1) + ',' + z[2].toFixed(1))).join('|');
+      /* Band (scharf): von der obersten bis zur untersten Zeile + Luft für Kante, Weichzeichner (≈ 5 × Kante) und Kontaktschatten (1,2 % der Höhe) */
+      let y0 = 0, y1 = cr.height;
+      if (scharf && zeichen.length) {
+        const luft = Math.ceil(bevelPx(fontPx, 1) * 8 + cr.height * 0.015 + 16);
+        y0 = Math.max(0, Math.floor(Math.min(...zeichen.map((z) => z[2])) - luft));
+        y1 = Math.min(cr.height, Math.ceil(Math.max(...zeichen.map((z) => z[2] + (z[3] || fontPx))) + luft));
+        if (y1 - y0 < 8) { y0 = 0; y1 = cr.height; }
+      }
+      const w = Math.max(1, Math.round(cr.width * sk)), h = Math.max(1, Math.round((y1 - y0) * sk));
+      const layout = [w, h, sk, y0, cs.font].concat(zeichen.map((z) => z[0] + '@' + z[1].toFixed(1) + ',' + z[2].toFixed(1))).join('|');
       if (layout === built) return;
       built = layout;
       const cnv = document.createElement('canvas');
@@ -418,15 +444,17 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       const c = cnv.getContext('2d');
       if (!c) return;
       c.fillStyle = '#000'; c.fillRect(0, 0, w, h);
-      c.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + (fontPx * scale).toFixed(2) + 'px ' + cs.fontFamily;
+      c.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + (fontPx * sk).toFixed(2) + 'px ' + cs.fontFamily;
       if ('letterSpacing' in c) c.letterSpacing = '0px';
       c.fillStyle = '#fff'; c.textBaseline = 'alphabetic';
       zeichen.forEach((z) => {
-        const ascent = c.measureText(z[0]).fontBoundingBoxAscent || fontPx * scale * 0.8;
-        c.fillText(z[0], z[1] * scale, z[2] * scale + ascent);
+        const ascent = c.measureText(z[0]).fontBoundingBoxAscent || fontPx * sk * 0.8;
+        c.fillText(z[0], z[1] * sk, (z[2] - y0) * sk + ascent);
       });
-      kanteAusAbstand(c, w, h, bevelPx(fontPx, scale));
-      return { cnv, w, h, fontPx, scale };
+      kanteAusAbstand(c, w, h, bevelPx(fontPx, sk));
+      /* Fenster-Lage p.y (unten = 0) → Lage im Band: p.y · H/D + 1 − (H − y0)/D; Abstand der Nachbar-Abfragen wie bei einer Maske in Fenstergröße */
+      if (scharf) { const H = cr.height, D = y1 - y0; bandU = [H / D, 1 - (H - y0) / D]; hTexel = [1 / w, 1 / Math.max(1, Math.round(H * sk))]; }
+      return { cnv, w, h, fontPx, scale: sk };
     };
     const hochladen = (cnv, w, h, fontPx, scale) => {   /* dieselben Schritte wie im Pfad der Vorlage darunter */
       zustand.masken = (zustand.masken || 0) + 1;   /* Prüfung: wie oft der Schriftzug neu aufgebaut wurde */
@@ -506,11 +534,14 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
 
     const size = () => {
       const dpr = fein && tiefStand ? 0.35 : RUHE && HANDY_R && !lite ? Math.min(window.devicePixelRatio || 1, 1.5) : lite ? (fein ? Math.min(window.devicePixelRatio || 1, 1) : 0.65) : Math.min(window.devicePixelRatio || 1, 2);   /* fein: unter dem Hero grob (weich, unscharf, kaum Rechenzeit); Lite nie unter 1 – sonst zackige Buchstaben */
-      const w = Math.max(1, Math.round(canvas.clientWidth * dpr)), h = Math.max(1, Math.round(canvas.clientHeight * dpr));
+      /* Titel scharf: im Kopf volle Gerätedichte (Sparmodus: die heutige 1,5), unter dem Kopf die heutige Dichte – nie weniger als heute */
+      const dprJetzt = !scharf || scharfTief ? dpr : Math.max(dpr, Math.min(window.devicePixelRatio || 1, lite ? 1.5 : SCHARF_MAX));
+      const w = Math.max(1, Math.round(canvas.clientWidth * dprJetzt)), h = Math.max(1, Math.round(canvas.clientHeight * dprJetzt));
       if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
       /* Handy leicht: Leinwand in 1-facher Pixeldichte (Sparmodus), das Farbfeld behält aber seine heutige Größe in Pixeln (0,4 × 1,5) –
          es kostet wenig und trägt das Muster; so bleibt der Verlauf so fein wie heute */
-      const fs = HINTEN === 'b' && bildTex ? 1 : LEICHT ? 0.4 * Math.min(window.devicePixelRatio || 1, 1.5) / dpr : lite ? 0.25 : 0.4;   /* hinten b: Illustration scharf, nur einmal gemalt */
+      const fs0 = HINTEN === 'b' && bildTex ? 1 : LEICHT ? 0.4 * Math.min(window.devicePixelRatio || 1, 1.5) / dpr : lite ? 0.25 : 0.4;   /* hinten b: Illustration scharf, nur einmal gemalt */
+      const fs = dprJetzt === dpr ? fs0 : fs0 * dpr / dprJetzt;   /* Titel scharf: das Farbfeld behält seine heutige Pixelgröße */
       bildGemalt = false; gemaltTief = ''; gemaltY = -1; feldZeit = -1;
       const fw = Math.max(1, Math.round(w * fs)), fh = Math.max(1, Math.round(h * fs));
       if (!field || field.w !== fw || field.h !== fh) {
@@ -529,7 +560,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       else { feldZeit = LEICHT ? time : -1; run(P.field, field, { time, aspect, octaves: LEICHT ? 4 : lite ? 3 : RUHE && HANDY_R ? 4 : 5, c0: pal[0], c1: pal[1], c2: pal[2], c3: pal[3], c4: pal[4] }); }
       const ch = Math.max(1, canvas.clientHeight), w = WEG ? schriftJetzt(performance.now()) : 1;
       run(P.glass, null, {
-        field: field.tex, height: blurB.tex, htexel: [1 / blurB.w, 1 / blurB.h], bevel, aspect, light: [light.x, light.y],
+        field: field.tex, height: blurB.tex, htexel: hTexel || [1 / blurB.w, 1 / blurB.h], bevel, aspect, light: [light.x, light.y], ...(bandU ? { band: bandU } : {}),
         glass: WEG ? w : 1,
         form: WEG ? (reduceMq.matches ? 1 : w) : RUHE || reduceMq.matches || readyAt < 0 ? 1 : formed(performance.now() - readyAt, FORM_MS), res: [canvas.width, canvas.height],   /* weg: Aufbau rückwärts; „Bewegung reduzieren“ = nur ausblenden */
         shift: fein ? (RUHE && (!WEG || TAKT) ? lageSetzen() : window.scrollY || 0) / ch : 0, nahtlos: NAHTLOS ? 1 : 0,
@@ -575,7 +606,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       if (!lite && judged < 40 && animating()) {
         judged += 1; zustand.geprueft = judged;   /* Ladezustand wartet, bis über den Sparmodus entschieden ist (kein Wechsel nach dem Aufdecken) */
         if (judged > 3 && raw > SLOW_FRAME_S) slow += raw > CRAWL_FRAME_S ? 3 : 1;
-        if (slow >= SLOW_FRAMES) { lite = true; zustand.lite = true; html.setAttribute('data-glas-lite', 'true'); size(); }
+        if (slow >= SLOW_FRAMES) { lite = true; zustand.lite = true; zustand.liteBei = { bild: judged, ms: Math.round(performance.now() - readyAt), blatt: html.classList.contains('papier-an') }; html.setAttribute('data-glas-lite', 'true'); size(); }
       }
       if (LEICHT && !standbild && judged2 < 120 && animating()) {   /* Handy leicht: ruckelt es trotz Sparmodus weiter, bleibt der Verlauf als Standbild stehen */
         judged2 += 1; zustand.geprueft = judged2;
@@ -584,6 +615,9 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       }
       /* fein: unter dem Hero fließt der Verlauf langsamer (bis 0,3×) und wird höchstens ~24-mal je Sekunde neu gemalt */
       const unten = fein ? Math.min(Math.max((window.scrollY || 0) / Math.max(1, canvas.clientHeight), 0), 1) : 0;
+      /* Titel scharf: ab 0,74 Fensterhöhen (Schriftzug längst weg) wieder die heutige Dichte, zurück schon ab 0,66 – vor dem Wiederkommen (0,6) */
+      if (scharf) { const y = window.scrollY || 0, hh = Math.max(1, canvas.clientHeight); const tief = scharfTief ? y > 0.66 * hh : y > 0.74 * hh;
+        if (tief !== scharfTief) { scharfTief = tief; zustand.wechsel = (zustand.wechsel || 0) + 1; size(); } }
       /* Ladezustand (index.html #lader, 02.10.): solange er steht, bleibt der Verlauf beim ersten Bild stehen – genau das Bild, aus dem
          die Ladefarben gemacht sind; so gehen beide ohne Farbsprung ineinander über */
       if (animating() && !html.classList.contains('glas-laden')) time += dt * (1 - 0.7 * unten);
@@ -640,6 +674,12 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       return;
     }
     root.setAttribute('data-glass', 'true'); zustand.glas = true;   /* Vorlage: setGlass(true) */
+    /* Prüfung: Größen und Grafikspeicher (gerechnet: Leinwand ×2 für Vorder-/Hintergrund, Farbfeld, Maske + zwei Weichzeichner-Flächen) */
+    zustand.grafik = () => {
+      const mb = (n) => Math.round(n / 104857.6) / 10, f = floatTargets ? 8 : 4;
+      return { leinwand: canvas.width + 'x' + canvas.height, feld: field ? field.w + 'x' + field.h : '', maske: blurB ? blurB.w + 'x' + blurB.h : '',
+        mb: mb(canvas.width * canvas.height * 8 + (field ? field.w * field.h * 4 : 0) + (blurB ? blurB.w * blurB.h * (4 + 2 * f) : 0)) };
+    };
     readyAt = performance.now();
     kick();
 
@@ -700,5 +740,6 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   let fpsT = performance.now(), fpsN = 0;
   setInterval(() => { const n = zustand.bilder; zustand.fps = Math.round((n - fpsN) * 1000 / Math.max(1, performance.now() - fpsT)); fpsN = n; fpsT = performance.now(); }, 1000);
   window.__glas = { zustand: () => ({ glas: zustand.glas, lite: zustand.lite, fps: zustand.fps, bilder: zustand.bilder, geprueft: zustand.geprueft || 0, leicht: LEICHT, standbild: !!zustand.standbild, angebote: angeboteFertig, masken: zustand.masken || 0, versatz, ruhe: RUHE, titel: titleEl.textContent, punkt: html.getAttribute('data-glas-punkt') || 'glas',
-    weg: WEG, schrift: window.__glasSchrift ? Math.round(window.__glasSchrift.wert * 1000) / 1000 : 1 }), zumKontakt, zuAngeboten };
+    weg: WEG, schrift: window.__glasSchrift ? Math.round(window.__glasSchrift.wert * 1000) / 1000 : 1,
+    scharf: SCHARF, grafik: zustand.grafik ? zustand.grafik() : null, liteBei: zustand.liteBei || null, wechsel: zustand.wechsel || 0 }), zumKontakt, zuAngeboten };
 })();
