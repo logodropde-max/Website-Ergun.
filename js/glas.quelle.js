@@ -85,6 +85,11 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   /* Ruhe + Handy (Emre, 02.10.: „alles auf höchste FPS“): Leinwand mit höchstens 1,5-facher Pixeldichte, Farbfeld mit 4 statt 5 Rausch-Stufen
      (der Schriftzug selbst bleibt scharf: seine Maske hat eine eigene Auflösung bis 2×), unter dem Titelbild kein Drosseln mehr */
   const HANDY_R = window.matchMedia('(max-width: 899px)').matches;
+  /* Handy leicht (07.10.2026, Paket „ERGUN. Handy flüssig“, Vorschau ?handy=leicht – Schalter HANDY_LEICHT_STANDARD in index.html, nur Berührung +
+     schmaler Bildschirm, html.handy-leicht): Sparmodus der Vorlage (lite) von Anfang an, der Wächter schaltet bei weiterem Ruckeln auf ein Standbild;
+     der Verlauf bewegt sich nur im Kopf (darunter, hinter dem Blatt und bei verdeckter Seite steht er), höchstens ~60 Bilder/s, und ganz unten,
+     wo das Bild nicht mehr vom Scrollen abhängt, wird gar nicht neu gemalt. Ohne die Klasse läuft alles wie vorher. */
+  const LEICHT = html.classList.contains('handy-leicht');
   function lageSetzen() {   /* Ruhe: Titelbild-Inhalt im selben Takt wie das Glas – auf ganze Gerätepixel gerundet */
     if (!inhalt) return versatz;
     const r = Math.round((window.scrollY || 0) * dprR) / dprR;
@@ -314,6 +319,8 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     const floatTargets = !!gl.getExtension('EXT_color_buffer_float') || (fein && !!gl.getExtension('EXT_color_buffer_half_float'));   /* fein: auch Halb-Fließkomma (iPhone) */
 
     let disposed = false, raf = 0, last = 0, time = 0, inView = true, lite = false, judged = 0, slow = 0;
+    let standbild = false, judged2 = 0, slow2 = 0, gemaltY = -1, gemaltTief = '', feldZeit = -1;   /* Handy leicht: zweite Stufe des Wächters + „schon gemalt“ */
+    if (LEICHT) { lite = true; zustand.lite = true; html.setAttribute('data-glas-lite', 'true'); }
     const light = { x: 0.5, y: 0.56 };
     let readyAt = -1;
     const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -501,8 +508,10 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       const dpr = fein && tiefStand ? 0.35 : RUHE && HANDY_R && !lite ? Math.min(window.devicePixelRatio || 1, 1.5) : lite ? (fein ? Math.min(window.devicePixelRatio || 1, 1) : 0.65) : Math.min(window.devicePixelRatio || 1, 2);   /* fein: unter dem Hero grob (weich, unscharf, kaum Rechenzeit); Lite nie unter 1 – sonst zackige Buchstaben */
       const w = Math.max(1, Math.round(canvas.clientWidth * dpr)), h = Math.max(1, Math.round(canvas.clientHeight * dpr));
       if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
-      const fs = HINTEN === 'b' && bildTex ? 1 : lite ? 0.25 : 0.4;   /* hinten b: Illustration scharf, nur einmal gemalt */
-      bildGemalt = false;
+      /* Handy leicht: Leinwand in 1-facher Pixeldichte (Sparmodus), das Farbfeld behält aber seine heutige Größe in Pixeln (0,4 × 1,5) –
+         es kostet wenig und trägt das Muster; so bleibt der Verlauf so fein wie heute */
+      const fs = HINTEN === 'b' && bildTex ? 1 : LEICHT ? 0.4 * Math.min(window.devicePixelRatio || 1, 1.5) / dpr : lite ? 0.25 : 0.4;   /* hinten b: Illustration scharf, nur einmal gemalt */
+      bildGemalt = false; gemaltTief = ''; gemaltY = -1; feldZeit = -1;
       const fw = Math.max(1, Math.round(w * fs)), fh = Math.max(1, Math.round(h * fs));
       if (!field || field.w !== fw || field.h !== fh) {
         if (field) { gl.deleteTexture(field.tex); gl.deleteFramebuffer(field.fbo); }
@@ -516,7 +525,8 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       const pal = live.palette, aspect = canvas.width / canvas.height;
       if (FELD_PRUEF !== undefined) { gl.bindFramebuffer(gl.FRAMEBUFFER, field.fbo); gl.viewport(0, 0, field.w, field.h); gl.clearColor(FELD_PRUEF, FELD_PRUEF, FELD_PRUEF, 1); gl.clear(gl.COLOR_BUFFER_BIT); }
       else if (HINTEN === 'b' && bildTex && P.bild) { if (!bildGemalt) { const ia = bildTex.w / bildTex.h; run(P.bild, field, { bild: bildTex.tex, skala: aspect > ia ? [1, ia / aspect] : [aspect / ia, 1] }); bildGemalt = true; } }   /* steht still: einmal malen */
-      else run(P.field, field, { time, aspect, octaves: lite ? 3 : RUHE && HANDY_R ? 4 : 5, c0: pal[0], c1: pal[1], c2: pal[2], c3: pal[3], c4: pal[4] });
+      else if (LEICHT && feldZeit === time) { /* Handy leicht: Verlauf steht – das Farbfeld ist schon gemalt */ }
+      else { feldZeit = LEICHT ? time : -1; run(P.field, field, { time, aspect, octaves: LEICHT ? 4 : lite ? 3 : RUHE && HANDY_R ? 4 : 5, c0: pal[0], c1: pal[1], c2: pal[2], c3: pal[3], c4: pal[4] }); }
       const ch = Math.max(1, canvas.clientHeight), w = WEG ? schriftJetzt(performance.now()) : 1;
       run(P.glass, null, {
         field: field.tex, height: blurB.tex, htexel: [1 / blurB.w, 1 / blurB.h], bevel, aspect, light: [light.x, light.y],
@@ -528,7 +538,9 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       zustand.bilder++;
     };
 
-    const animating = () => (fein || inView) && !document.hidden && !reduceMq.matches;   /* fein: die Bühne liegt hinter der ganzen Seite */
+    /* Handy leicht: Bewegung nur, solange der Kopf im Bild ist, kein Blatt darüber liegt und der Wächter nicht auf Standbild steht */
+    const bewegt = () => !LEICHT || (!standbild && (window.scrollY || 0) < canvas.clientHeight && !html.classList.contains('papier-an'));
+    const animating = () => (fein || inView) && !document.hidden && !reduceMq.matches && bewegt();   /* fein: die Bühne liegt hinter der ganzen Seite */
     let gemalt = 0, tiefStand = false;
     /* Schriftzug weg/da (WEG): Ziel nach der Scroll-Lage, Wert nach der Zeit (weich), Lage der Maske steht still, sobald er ganz weg ist */
     const schrift = window.__glasSchrift = { ziel: 1, von: 1, wert: 1, t0: 0, lage: 0, offen: false, neu: 0 };
@@ -565,13 +577,18 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
         if (judged > 3 && raw > SLOW_FRAME_S) slow += raw > CRAWL_FRAME_S ? 3 : 1;
         if (slow >= SLOW_FRAMES) { lite = true; zustand.lite = true; html.setAttribute('data-glas-lite', 'true'); size(); }
       }
+      if (LEICHT && !standbild && judged2 < 120 && animating()) {   /* Handy leicht: ruckelt es trotz Sparmodus weiter, bleibt der Verlauf als Standbild stehen */
+        judged2 += 1; zustand.geprueft = judged2;
+        if (judged2 > 3 && raw > SLOW_FRAME_S) slow2 += raw > CRAWL_FRAME_S ? 3 : 1;
+        if (slow2 >= SLOW_FRAMES) { standbild = true; zustand.standbild = true; html.setAttribute('data-glas-standbild', 'true'); }
+      }
       /* fein: unter dem Hero fließt der Verlauf langsamer (bis 0,3×) und wird höchstens ~24-mal je Sekunde neu gemalt */
       const unten = fein ? Math.min(Math.max((window.scrollY || 0) / Math.max(1, canvas.clientHeight), 0), 1) : 0;
       /* Ladezustand (index.html #lader, 02.10.): solange er steht, bleibt der Verlauf beim ersten Bild stehen – genau das Bild, aus dem
          die Ladefarben gemacht sind; so gehen beide ohne Farbsprung ineinander über */
       if (animating() && !html.classList.contains('glas-laden')) time += dt * (1 - 0.7 * unten);
       const pt = pointer, idle = (now - pt.at) / 1000 > IDLE_S;
-      const [tx, ty] = idle && animating() ? orbit(time) : [pt.x, pt.y];
+      const [tx, ty] = !bewegt() ? [light.x, light.y] : idle && animating() ? orbit(time) : [pt.x, pt.y];   /* Handy leicht: Standbild = Licht steht */
       light.x = follow(light.x, tx, dt, idle ? 1.2 : 7);
       light.y = follow(light.y, ty, dt, idle ? 1.2 : 7);
       if (FELD_PRUEF !== undefined) { light.x = 0.5; light.y = 0.7; }   /* Prüfschalter: Licht fest (Glanz wie im Ruhebild) */
@@ -579,7 +596,13 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       const sparen = fein && !RUHE && unten >= 1 && animating() && now - gemalt < 40   /* Ruhe (Emre, 02.10.): immer volle Bildrate */
         || (WEG && unten >= 1 && now - gemalt < 30)   /* Schriftzug weg (03.10.): unter dem Titelbild gleichmäßig ~30 Bilder/s – der Verlauf ist dort dunkel und langsam */
         || (html.classList.contains('papier-zu') && now - gemalt < 250);   /* Papier-Start (03.10.): das geschlossene Blatt deckt alles – nur ~4 Bilder/s, damit das Handy fürs Reißen frei ist */
-      if (!sparen) { draw(); gemalt = now; }
+      let leichtSpart = false, tiefJetzt = '';
+      if (LEICHT) {   /* bewegt: höchstens ~60 Bilder/s, solange nichts scrollt · Standbild: nur neu malen, wenn das Scrollen das Bild ändert */
+        const y = window.scrollY || 0;
+        tiefJetzt = y / Math.max(1, canvas.clientHeight) >= 1.55 && schrift.wert <= 0 ? 'tief@' + time : '';   /* ab 1,5 Fensterhöhen ist alles gleich dunkel (u_nahtlos) */
+        leichtSpart = bewegt() ? now - gemalt < 14 && y === gemaltY : y === gemaltY || (!!tiefJetzt && tiefJetzt === gemaltTief);
+      }
+      if (LEICHT ? !leichtSpart : !sparen) { draw(); gemalt = now; if (LEICHT) { gemaltY = window.scrollY || 0; gemaltTief = tiefJetzt; } }
       const catching = Math.abs(light.x - tx) + Math.abs(light.y - ty) > 0.0015;
       const visible = (fein || inView) && !document.hidden;
       const forming = readyAt >= 0 && performance.now() - readyAt < FORM_MS || (WEG && schrift.wert !== schrift.ziel);   /* auch bei „Bewegung reduzieren“ bis zum Ende ausblenden */
@@ -594,7 +617,9 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     };
     pointer.neustart = () => { if (disposed) return; cancelAnimationFrame(raf); raf = 0; kick(); };
     pointer.kick = kick;
-    pointer.rebuild = () => { if (disposed) return; buildMask(); kick(); };
+    pointer.rebuild = () => { if (disposed) return; buildMask(); gemaltY = -1; kick(); };
+    const klassen = LEICHT ? new MutationObserver(() => { gemaltY = -1; kick(); }) : null;
+    if (klassen) klassen.observe(html, { attributes: true, attributeFilter: ['class'] });   /* Blatt weg → wieder bewegen */
 
     const onLost = (e) => { e.preventDefault(); cancelAnimationFrame(raf); raf = 0; };
     const onRestored = () => start();   /* Vorlage: setGeneration(g + 1) → der Effekt läuft neu */
@@ -637,7 +662,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     aufraeumen = () => {
       disposed = true;
       cancelAnimationFrame(raf); cancelAnimationFrame(pending);
-      observer.disconnect(); io.disconnect(); window.removeEventListener('scroll', onScroll);
+      observer.disconnect(); io.disconnect(); if (klassen) klassen.disconnect(); window.removeEventListener('scroll', onScroll);
       document.removeEventListener('visibilitychange', onVisibility);
       reduceMq.removeEventListener('change', kick);
       canvas.removeEventListener('webglcontextlost', onLost);
@@ -674,6 +699,6 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   /* Bildrate messen (Prüfung): Bilder je Sekunde der letzten Sekunde */
   let fpsT = performance.now(), fpsN = 0;
   setInterval(() => { const n = zustand.bilder; zustand.fps = Math.round((n - fpsN) * 1000 / Math.max(1, performance.now() - fpsT)); fpsN = n; fpsT = performance.now(); }, 1000);
-  window.__glas = { zustand: () => ({ glas: zustand.glas, lite: zustand.lite, fps: zustand.fps, bilder: zustand.bilder, geprueft: zustand.geprueft || 0, angebote: angeboteFertig, masken: zustand.masken || 0, versatz, ruhe: RUHE, titel: titleEl.textContent, punkt: html.getAttribute('data-glas-punkt') || 'glas',
+  window.__glas = { zustand: () => ({ glas: zustand.glas, lite: zustand.lite, fps: zustand.fps, bilder: zustand.bilder, geprueft: zustand.geprueft || 0, leicht: LEICHT, standbild: !!zustand.standbild, angebote: angeboteFertig, masken: zustand.masken || 0, versatz, ruhe: RUHE, titel: titleEl.textContent, punkt: html.getAttribute('data-glas-punkt') || 'glas',
     weg: WEG, schrift: window.__glasSchrift ? Math.round(window.__glasSchrift.wert * 1000) / 1000 : 1 }), zumKontakt, zuAngeboten };
 })();

@@ -1052,6 +1052,17 @@ html.lader-geht .lader__balken i { transform: none; transition: transform 160ms 
 document.documentElement.classList.add('schrift-weg');
 </script>
 <script>
+/* Handy leicht (07.10.2026, Paket „ERGUN. Handy flüssig“ – VORSCHAU ?handy=leicht, HANDY_LEICHT_STANDARD = false bis ERGUNs OK; ?handy=voll = wie heute):
+   NUR Berührungs-Geräte mit schmalem Bildschirm – der PC bleibt unverändert. Sparmodus des Glases von Anfang an, Verlauf bewegt sich nur im Kopf,
+   unter dem Kopf und hinter dem Blatt steht er als Standbild (js/glas.quelle.js LEICHT). Milchglas ist am Handy schon ohne Unschärfe (glas-fein.css). */
+(function () {
+  var HANDY_LEICHT_STANDARD = false, hq = new URLSearchParams(location.search).get('handy');
+  if (!(hq === 'leicht' || (HANDY_LEICHT_STANDARD && hq !== 'voll'))) return;
+  if (!window.matchMedia || !window.matchMedia('(pointer: coarse) and (max-width: 820px)').matches) return;
+  document.documentElement.classList.add('handy-leicht');
+})();
+</script>
+<script>
 /* Papier-Start (03.10.2026, Vorschau ?start=papier – Ausnahme auf ERGUNs Wunsch): die Seite beginnt als Blatt mit „ERGUN.“, das beim Scrollen
    aufreißt (21st-Vorlage „Tiger Tear Reveal“ ohne Tiger, js/papier.js). PAPIER_STANDARD = true seit ERGUNs OK (03.10.2026, Rückweg Tag vor-papier-live); ?start=ohne = ohne Blatt.
    Kein Blatt bei einem Sprung (#preise, #kontakt), beim Zurückblättern und bei der Rückkehr von Impressum/Datenschutz. Ohne JavaScript nie ein Blatt. */
@@ -1443,7 +1454,7 @@ html.zeichen-glanz-3.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before
 <script>
 /* je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
 (function () {
-  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=15'] : [];
+  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=16'] : [];
   liste.forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
 })();
 </script>
