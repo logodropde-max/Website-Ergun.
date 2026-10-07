@@ -1,3 +1,8 @@
 # Notizen und Doku gehören ins Repo (Obsidian), aber nicht auf die öffentliche Website
 /notizen
 /LIESMICH.md
+
+# Vercel-Speicher (07.10.2026): Quellen zum Bündeln und Werkzeuge lädt keine Seite – nur das gebündelte Ergebnis geht hoch
+*.quelle.js
+*.py
+*.test.mjs
