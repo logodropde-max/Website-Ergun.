@@ -1,0 +1,49 @@
+/* ERGUN. „Website mit eingebautem Empfang“ (endo klar Teil 2, Teil D, 07.10.2026) – VORSCHAU ?empfang=an, lädt nur mit dem Schalter (index.html).
+   Aussehen des Abschnitts (Präfix emp-); die Szene selbst kommt unverändert aus endo-szene.css (Präfix esz-, 1:1 aus endo-studio).
+   Glas-Tokens der Seite (glas.css / glas-fein.css): Schrift --g-schrift, Überschrift --gf-h, Text Weiß .8, Abstand --gf-abstand,
+   Knopf wie „endo ansehen ↗“ im Titel (.ghr-secondary) – „Anfrage senden“ bleibt der einzige weiße Hauptknopf.
+   Handy zuerst: Text über der Szene, mittig. Ab 1100 px Text links, Szene rechts. Bewegung nur transform/opacity, einmal. */
+.emp { position: relative; z-index: 1; overflow-x: clip; color: var(--g-text, #FFFFFF); }   /* clip: weiche Schleier/Schatten nie als Querscrollen */
+/* Hintergrund: mit „Glas nahtlos“ (live) ist #preise durchsichtig und der Verlauf dunkelt selbst ab – der Abschnitt bleibt dann auch durchsichtig.
+   Nur „Glas fein“ ohne nahtlos dämpft #preise ab 0,3 – dort von 0 auf genau 0,3 abdunkeln, dann gibt es oben und unten keine Kante */
+html.glas-fein:not(.glas-nahtlos) .emp { background: linear-gradient(to bottom, rgba(13, 10, 20, 0) 0, rgba(13, 10, 20, 0.3) 100%); }
+.emp__innen { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 40px; width: min(1120px, calc(100% - 40px)); margin: 0 auto;
+  padding: var(--gf-abstand, clamp(64px, 10vh, 112px)) 0 16px; text-align: center; }
+.emp__text { position: relative; z-index: 0; display: grid; justify-items: center; max-width: 32rem; }
+/* Lesbarkeit über dem lebhaften Verlauf: derselbe weiche Schleier wie hinter der Beschreibung im Titel (glas.css .ghr-desc::before);
+   am Handy nur so breit wie der Seitenrand (20 px), damit nichts seitlich übersteht */
+.emp__text::before { content: ""; position: absolute; inset: -32px -20px; z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(13, 10, 20, 0.74), rgba(13, 10, 20, 0.66) 62%, rgba(13, 10, 20, 0)); }
+.emp__titel { margin: 0; font-family: var(--g-schrift, inherit); font-size: var(--gf-h, clamp(2.25rem, 4.8vw, 3.75rem)); font-weight: 700; line-height: 0.98;
+  letter-spacing: -0.025em; color: var(--g-text, #FFFFFF); text-wrap: balance; }
+.emp__satz { margin: 16px 0 0; font-size: var(--gf-text, 1rem); line-height: 1.5; color: var(--g-leise, rgba(255, 255, 255, 0.8)); text-wrap: pretty; }
+.emp__knopf { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 48px; margin-top: 24px; padding: 0 24px; border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.24); background: rgba(255, 255, 255, 0.07); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 600; text-decoration: none;
+  transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), background-color 200ms ease, border-color 200ms ease; }
+.emp__knopf:active { transform: scale(0.97); }
+.emp__knopf:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .emp__knopf:hover { background: rgba(255, 255, 255, 0.13); border-color: rgba(255, 255, 255, 0.4); } }
+.emp__szene { width: 100%; min-width: 0; }
+/* einzige Anpassung der Szene: die Schrift der Seite (Kurzschreibweisen wie „font: 600 12px/16px …“ brauchen einen echten Namen statt „inherit“).
+   Farben bleiben die Standardwerte des Bausteins – die Szene zeigt endo und den Chat eines Beispiel-Betriebs, nicht die ERGUN.-Marke. */
+.emp__szene > .esz { --esz-schrift: var(--g-schrift, system-ui, sans-serif); }
+
+/* einmal einblenden (nur wenn das Skript den Beobachter gesetzt hat – sonst steht der Text sofort da) */
+.emp--rein .emp__text { opacity: 0; transform: translateY(12px); transition: opacity 700ms cubic-bezier(0.23, 1, 0.32, 1), transform 700ms cubic-bezier(0.23, 1, 0.32, 1); }
+.emp--rein .emp__text.ist-da { opacity: 1; transform: none; }
+
+/* ab 640 px stehen Chat und Handy nebeneinander (feste Spalten im Baustein) – die Hülle so breit wie der Inhalt, dann steht die Szene mittig */
+@media (min-width: 640px) { .emp__szene { width: auto; max-width: 100%; } }
+/* PC: Text links, Szene rechts (die Szene ist ab 1280 px 660 px breit, darunter 624 px) */
+@media (min-width: 1100px) {
+  .emp__innen { grid-template-columns: minmax(0, 1fr) auto; justify-items: stretch; align-items: center; column-gap: 64px; text-align: left; }
+  .emp__text { justify-items: start; max-width: 30rem; }
+  .emp__text::before { inset: -56px -64px; }
+  .emp__szene { width: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emp--rein .emp__text { transform: none; transition: none; opacity: 1; }
+  .emp__knopf { transition: none; }
+}

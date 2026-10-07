@@ -1,0 +1,118 @@
+/* endo-Szene (endo klar Teil 2, 07.10.2026) – Aussehen zum Baustein js/endo-szene.js. Präfix esz-, eigenständig (gleiche Datei später auf der ERGUN.-Seite).
+   Farben und Schrift nur über CSS-Variablen mit Standardwerten – die Seite, die den Baustein einbaut, darf sie setzen:
+   --esz-akzent / --esz-akzent-hell / --esz-auf-akzent (Licht, Neu-Schild) · --esz-chat-akzent / --esz-chat-grund / --esz-chat-flaeche / --esz-chat-text / --esz-chat-leise
+   (Chat-Fenster des Betriebs) · --esz-schrift · --esz-leise (Beschriftungen auf dunklem Grund).
+   Bewegung nur transform/opacity, einmal. Handy zuerst: unter 640 px ohne Handy-Rahmen, die Karte schiebt sich über die Chat-Unterkante. */
+.esz {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr); width: min(100%, 400px); margin: 0 auto; text-align: left;
+  font-family: var(--esz-schrift, inherit); color: #fff; }
+.esz *, .esz *::before, .esz *::after { box-sizing: border-box; }
+
+/* ---------- Chat-Fenster ---------- */
+.esz-chat { position: relative; z-index: 1; display: grid; grid-template-rows: auto 1fr auto; min-width: 0; overflow: hidden;
+  background: var(--esz-chat-grund, #F5F7FB); color: var(--esz-chat-text, #16181d); border-radius: 20px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 2px 4px rgba(0, 0, 0, 0.25), 0 28px 64px -24px rgba(0, 0, 0, 0.85); }
+.esz-chat__kopf { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 8px 12px 8px 16px; background: var(--esz-chat-akzent, #3B5BDB); color: #fff; }
+.esz-logo { display: inline-grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 50%; background: #fff; color: var(--esz-chat-akzent, #3B5BDB); font: 700 12px/1 var(--esz-schrift, inherit); }
+.esz-chat__wer { display: grid; flex: 1; min-width: 0; }
+.esz-chat__wer b { font-size: 15px; line-height: 20px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.esz-chat__wer small { font-size: 12px; line-height: 16px; opacity: 0.86; }
+.esz-schild { flex: none; padding: 2px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.18); font: 500 12px/16px var(--esz-schrift, inherit); color: #fff; }
+.esz-chat__verlauf { display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 8px; padding: 16px; }
+.esz-blase { margin: 0; max-width: 86%; padding: 8px 12px; font-size: 14px; line-height: 20px; border-radius: 16px; overflow-wrap: break-word; }
+.esz-blase--k { justify-self: end; background: var(--esz-chat-akzent, #3B5BDB); color: #fff; border-bottom-right-radius: 4px; }
+.esz-blase--e { justify-self: start; background: var(--esz-chat-flaeche, #E6E9F2); color: var(--esz-chat-text, #16181d); border-bottom-left-radius: 4px; }
+/* „tippt“ liegt in derselben Zelle wie die Antwort – nichts springt */
+.esz-chat__verlauf > .esz-blase:nth-child(1) { grid-row: 1; }
+.esz-chat__verlauf > .esz-tippt, .esz-chat__verlauf > .esz-tippt + .esz-blase { grid-row: 2; grid-column: 1; }
+.esz-chat__verlauf > .esz-blase--drei { grid-row: 3; }
+.esz-tippt { display: inline-flex; gap: 4px; align-items: center; align-self: start; padding: 12px 14px; opacity: 0; transition: opacity 200ms ease-out; }
+.esz-tippt i { width: 6px; height: 6px; border-radius: 50%; background: var(--esz-chat-leise, #5b6170); }
+.esz-tippt.ist-da { opacity: 1; }
+.esz-tippt.ist-da i { animation: esz-tippen 1s ease-in-out infinite; }
+.esz-tippt i:nth-child(2) { animation-delay: 0.15s; } .esz-tippt i:nth-child(3) { animation-delay: 0.3s; }
+.esz-tippt.ist-weg { opacity: 0; }
+@keyframes esz-tippen { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+.esz-chat__feld { display: none; align-items: center; justify-content: space-between; gap: 8px; margin: 0 12px 12px; padding: 4px 4px 4px 14px; min-height: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 20px; color: var(--esz-chat-leise, #5b6170); font-size: 14px; line-height: 20px; }
+.esz-chat__senden { display: inline-grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 16px; background: var(--esz-chat-akzent, #3B5BDB); color: #fff; }
+.esz-chat__senden svg { width: 16px; height: 16px; }
+
+/* ---------- Karte „Neue Anfrage“ ---------- */
+.esz-karte { position: relative; display: grid; gap: 12px; padding: 16px; border-radius: 20px; background: #11141c; color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 2px 4px rgba(0, 0, 0, 0.3), 0 24px 48px -20px rgba(0, 0, 0, 0.8); }
+.esz-karte__kopf { display: flex; align-items: center; gap: 8px; }
+.esz-karte__kopf b { flex: 1; font-size: 15px; line-height: 20px; font-weight: 600; }
+.esz-karte__zeichen { display: inline-grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 8px; background: rgba(122, 162, 255, 0.16); color: var(--esz-akzent-hell, #c9d8ff); }
+.esz-karte__zeichen svg { width: 16px; height: 16px; }
+.esz-neu { position: relative; padding: 2px 8px; border-radius: 999px; background: var(--esz-akzent, #7aa2ff); color: var(--esz-auf-akzent, #04121a); font: 600 12px/16px var(--esz-schrift, inherit); }
+.esz-neu::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--esz-akzent, #7aa2ff); opacity: 0; pointer-events: none; }
+.esz-neu.ist-schein { animation: esz-schild 160ms cubic-bezier(0.23, 1, 0.32, 1) both; }
+.esz-neu.ist-schein::after { animation: esz-schein 600ms cubic-bezier(0.23, 1, 0.32, 1) both; }
+@keyframes esz-schild { from { transform: scale(0.96); } to { transform: none; } }
+@keyframes esz-schein { from { opacity: 0.5; transform: scale(1); } to { opacity: 0; transform: scale(1.8); } }
+.esz-felder { display: grid; gap: 8px; margin: 0; }
+.esz-feld { display: grid; gap: 0; min-width: 0; }
+.esz-feld dt { font-size: 12px; line-height: 16px; color: var(--esz-leise, rgba(255, 255, 255, 0.62)); }
+.esz-feld dd { margin: 0; font-size: 14px; line-height: 20px; color: #fff; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.esz-feld dd small { display: block; font-size: 12px; line-height: 16px; color: var(--esz-leise, rgba(255, 255, 255, 0.62)); }
+.esz-karte__fuss { margin: 0; font-size: 12px; line-height: 16px; color: var(--esz-leise, rgba(255, 255, 255, 0.62)); }
+
+/* ---------- Handy des Inhabers (nur ab 640 px sichtbar als Rahmen) ---------- */
+.esz-handy { position: relative; z-index: 2; min-width: 0; }
+.esz-handy__leiste, .esz-handy__titel, .esz-alt { display: none; }
+.esz-handy__insel { position: absolute; left: 50%; top: 2px; width: 72px; height: 20px; margin-left: -36px; border-radius: 999px; background: #000; }
+.esz-handy__akku { width: 20px; height: 10px; border-radius: 3px; border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: inset -8px 0 0 0 #0b0d13, inset 0 0 0 1px #0b0d13; background: #fff; }
+
+/* ---------- Linie + Lichtpunkt (Lage aus js/endo-szene.js messen(), bewegt nur per transform) ---------- */
+.esz-weg { position: absolute; z-index: 1; left: 0; top: 0; width: 0; height: 0; border-radius: 1px; background: var(--esz-akzent, #7aa2ff); opacity: 0; transform-origin: 0 0; pointer-events: none; }
+.esz--senkrecht .esz-weg { z-index: 3; }
+.esz-weg.ist-da { opacity: 0.55; }
+.esz--spielt .esz-weg { transform: scaleX(0); transition: transform 650ms cubic-bezier(0.77, 0, 0.175, 1), opacity 200ms ease-out; }
+.esz--spielt.esz--senkrecht .esz-weg { transform: scaleY(0); }
+.esz--spielt .esz-weg.ist-da { transform: none; }
+.esz-punkt { position: absolute; z-index: 4; left: 0; top: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--esz-akzent-hell, #c9d8ff);
+  box-shadow: 0 0 0 4px rgba(122, 162, 255, 0.18); opacity: 0; pointer-events: none; }
+.esz-punkt.ist-unterwegs { opacity: 1; transition: transform 650ms cubic-bezier(0.77, 0, 0.175, 1), opacity 160ms ease-out; }
+.esz-punkt.ist-angekommen { opacity: 0; transition: opacity 160ms ease-out; }
+
+/* ---------- Ablauf: vorher unsichtbar, dann einmal nacheinander ---------- */
+.esz--spielt .esz-chat .esz-blase:not(.esz-tippt), .esz--spielt .esz-karte { opacity: 0; transform: translateY(8px); transition: opacity 360ms cubic-bezier(0.23, 1, 0.32, 1), transform 360ms cubic-bezier(0.23, 1, 0.32, 1); }
+.esz--spielt .esz-karte { transform: translateY(12px) scale(0.98); transform-origin: 50% 0; transition-duration: 480ms; }
+.esz--spielt .esz-chat .esz-blase.ist-da, .esz--spielt .esz-karte.ist-da { opacity: 1; transform: none; }
+
+/* ---------- Handy (< 640 px): Chat volle Breite, darunter die Karte – 32 px über die Chat-Unterkante geschoben, 16 px eingerückt ---------- */
+@media (max-width: 639px) {
+  .esz-chat__verlauf { padding: 12px 12px 44px; }
+  .esz__handy { margin: -32px 0 0 16px; }
+  .esz .esz-felder { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 12px; }
+  .esz .esz-feld--anliegen { grid-column: 1 / -1; }
+}
+/* kleine Handys: die dritte Blase entfällt (der Name steht ja in der Karte) */
+@media (max-width: 639px) and (max-height: 760px) {
+  .esz .esz-blase--drei, .esz .esz-karte__fuss { display: none; }
+}
+
+/* ---------- ab 640 px: Chat · Linie · Handy nebeneinander ---------- */
+@media (min-width: 640px) {
+  .esz { grid-template-columns: minmax(0, 320px) 248px; column-gap: 56px; align-items: center; width: auto; }
+  .esz-chat__feld { display: flex; }
+  .esz__handy { width: 248px; padding: 8px; border-radius: 44px; background: #17191f;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14), inset 0 0 0 3px #0b0d13, 0 32px 64px -24px rgba(0, 0, 0, 0.9); }
+  .esz-handy__schirm { display: grid; align-content: start; gap: 12px; min-height: 360px; padding: 12px 12px 20px; border-radius: 36px; background: #0b0d13; }
+  .esz-handy__leiste { position: relative; display: flex; align-items: center; justify-content: space-between; height: 24px; padding: 0 12px; font: 600 12px/16px var(--esz-schrift, inherit); }
+  .esz-handy__titel { display: block; margin: 4px 4px 0; font: 600 17px/24px var(--esz-schrift, inherit); }
+  .esz-alt { display: grid; padding: 12px 16px; border-radius: 16px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08); }
+  .esz-alt b { font-size: 14px; line-height: 20px; font-weight: 600; color: rgba(255, 255, 255, 0.86); }
+  .esz-alt span { font-size: 12px; line-height: 16px; color: var(--esz-leise, rgba(255, 255, 255, 0.62)); }
+  .esz-handy .esz-karte { background: rgba(255, 255, 255, 0.07); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
+}
+@media (min-width: 1280px) {
+  .esz { grid-template-columns: 340px 256px; column-gap: 64px; }
+  .esz__handy { width: 256px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .esz--spielt .esz-chat .esz-blase, .esz--spielt .esz-karte, .esz-weg, .esz-punkt, .esz-tippt { transition: none !important; }
+  .esz-tippt i, .esz-neu, .esz-neu::after { animation: none !important; }
+}
