@@ -174,3 +174,7 @@ html.glas-nahtlos.schrift-weg[data-glas-lite="true"] .glas-kopf { background: li
 html.glas-fein.schrift-weg[data-glas-lite="true"] .mf-summe { background: rgba(22, 17, 30, 0.94); }
 /* Paket 1f Teil E (?takt=an): Titel, Unterzeile und Knöpfe als EINE feste Gruppe, die im Bild-Takt der Leinwand verschoben wird (js/glas.quelle.js lageSetzen) – kein Nachziehen */
 html.glas-ruhe.schrift-weg.titel-takt .glas-hero .ghr-content { position: fixed; top: 0; left: 0; right: 0; height: 100svh; will-change: transform, opacity; }
+/* Kopf nativ (?kopf=nativ, 08.10.2026): Unterzeile und Knöpfe im normalen Fluss des Titelbilds (der Browser scrollt sie, kein Skript-Versatz),
+   der Glas-Schriftzug als eigene Leinwand im Titelbild darunter (js/glas.quelle.js NATIV, titelMalen) – beide scrollen im selben Takt */
+html.glas-ruhe.schrift-weg.titel-takt.kopf-nativ .glas-hero .ghr-content { position: relative; top: auto; left: auto; right: auto; height: 100%; will-change: opacity; }
+.glas-hero .glas-titel-ebene { position: absolute; left: 0; top: 0; width: 100%; height: 0; z-index: 0; pointer-events: none; display: block; }
