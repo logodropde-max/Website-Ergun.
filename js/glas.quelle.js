@@ -633,6 +633,19 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     /* Schriftzug weg/da (WEG): Ziel nach der Scroll-Lage, Wert nach der Zeit (weich), Lage der Maske steht still, sobald er ganz weg ist */
     const schrift = window.__glasSchrift = { ziel: 1, von: 1, wert: 1, t0: 0, lage: 0, offen: false, neu: 0 };
     const weich = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+    /* Kopf nativ, gestalter 08.10.: jedes Teil (Schriftzug, Pille, Unterzeile, Knöpfe) blendet aus, BEVOR es unter die durchsichtige Kopfleiste
+       rutscht – sonst stehen am Handy zwei Schriften übereinander bzw. „Anfrage starten“ halb durchsichtig auf dem Menü. Nur Deckkraft, die Lage
+       macht weiter allein der Browser. Erst alles lesen, dann schreiben. */
+    const KOPF_LUFT = 56;
+    const teile = NATIV ? ['.ghr-title', '.ghr-eyebrow', '.ghr-desc', '.ghr-actions'].map((s) => root.querySelector(s)) : [];
+    const leiste = NATIV ? document.querySelector('.glas-kopf') : null;
+    function teileAusblenden(w) {
+      const unten = leiste ? leiste.getBoundingClientRect().bottom : 0;
+      const o = teile.map((t) => (t ? Math.max(0, Math.min(1, (t.getBoundingClientRect().top - unten) / KOPF_LUFT)) : 1));
+      teile.forEach((t, i) => { if (!t || i === 0) return; const v = o[i] >= 1 ? '' : o[i].toFixed(3); if (t.style.opacity !== v) { t.style.opacity = v; t.style.pointerEvents = o[i] < 0.05 ? 'none' : ''; } });
+      const ws = Math.min(w, o[0]); schrift.wert = ws; schrift.ziel = ws > 0 ? 1 : 0;   /* der gemalte Schriftzug folgt seinem (unsichtbaren) h1 */
+      return ws;
+    }
     function schriftJetzt(now) {
       const y = window.scrollY || 0, hh = root.offsetHeight || canvas.clientHeight || 1;
       if (TAKT) {   /* stetig aus dem Scroll-Stand, für die ganze Gruppe */
@@ -640,6 +653,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
         if (w > 0 && schrift.offen) { schrift.offen = false; schrift.neu++; buildMask(); }
         schrift.ziel = w > 0 ? 1 : 0; schrift.wert = w; schrift.lage = NATIV ? 0 : lageSetzen();
         if (inhalt) { const o = w >= 1 ? '' : w.toFixed(3); if (inhalt.style.opacity !== o) { inhalt.style.opacity = o; inhalt.style.pointerEvents = w < 0.05 ? 'none' : ''; } if (NATIV && inhalt.style.visibility !== (w <= 0 ? 'hidden' : '')) inhalt.style.visibility = w <= 0 ? 'hidden' : ''; }   /* unsichtbar = fängt keine Klicks */
+        if (NATIV) return teileAusblenden(w);
         return w;
       }
       const ziel = schrift.ziel === 1 ? (y > WEG_AB * hh ? 0 : 1) : (y < WEG_ZURUECK * hh ? 1 : 0);
