@@ -49,7 +49,7 @@ window.ERGUN_TITEL = 'glas';
      und der Blumen-Schalter ?ablauf= sind seit 07.10.2026 entfernt (Tag vor-aufraeumen-2026-10-07). */
   var gfein = glas; window.ERGUN_GLAS_FEIN = gfein; html.classList.toggle('glas-fein', gfein);
   html.classList.toggle('glas-nahtlos', gfein);
-  if (glas) ['glas-vorlage.gen.css?v=1', 'glas.css?v=2', 'glas-fein.css?v=7'].forEach(function (h) { var gc = document.createElement('link'); gc.rel = 'stylesheet'; gc.href = h; document.head.appendChild(gc); });
+  if (glas) ['glas-vorlage.gen.css?v=1', 'glas.css?v=2', 'glas-fein.css?v=8'].forEach(function (h) { var gc = document.createElement('link'); gc.rel = 'stylesheet'; gc.href = h; document.head.appendChild(gc); });
 })();
 </script>
 
@@ -1150,9 +1150,10 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
   var TAKT_STANDARD = true, tq = (/[?&]takt=(an|aus)\b/.exec(location.search) || [])[1];
   if (tq === 'an' || (TAKT_STANDARD && tq !== 'aus')) document.documentElement.classList.add('titel-takt');
   /* Kopf nativ (08.10.2026, ERGUN.: Titel, Unterzeile und Knöpfe scrollen ganz normal mit, ohne Zittern; js/glas.quelle.js NATIV, nur mit dem Takt).
-     VORSCHAU ?kopf=nativ, KOPF_NATIV_STANDARD = false bis ERGUNs OK; ?kopf=alt = heute */
-  var KOPF_NATIV_STANDARD = false, kfq = (/[?&]kopf=(nativ|alt)\b/.exec(location.search) || [])[1];
-  if (kfq === 'nativ' || (KOPF_NATIV_STANDARD && kfq !== 'alt')) document.documentElement.classList.add('kopf-nativ');
+     Fest an seit ERGUNs OK (08.10.2026). Der alte Weg (feste Gruppe + Versatz je Bild) ist entfernt, ?kopf=… gibt es nicht mehr –
+     Rückweg nur der Git-Tag vor-kopf-nativ. (false = Schriftzug blendet nach Zeit aus wie mit ?takt=aus.) */
+  var KOPF_NATIV_STANDARD = true;
+  if (KOPF_NATIV_STANDARD) document.documentElement.classList.add('kopf-nativ');
   /* Paket 1f Teil E: Riss schneller – „halb“ (700 ms statt 1,4 s) oder „mittel“ (950 ms); js/papier.quelle.js liest html[data-riss]. ?riss=halb|mittel|alt
      ERGUN., 05.10.2026: „zuegig“ = Standard – einmal tippen/wischen reißt sofort ganz auf (~0,6 s, kein Halt im Spalt). Rückweg ?riss=halb */
   var RISS_STANDARD = 'zuegig', rq = (/[?&]riss=(zuegig|halb|mittel|alt)\b/.exec(location.search) || [])[1];
@@ -1493,7 +1494,7 @@ html.zeichen-glanz-3.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before
 <script>
 /* je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
 (function () {
-  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=19'] : [];
+  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=20'] : [];
   liste.forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
 })();
 </script>

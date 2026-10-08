@@ -74,12 +74,12 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   const WEG_AB = 0.14, WEG_ZURUECK = 0.08, WEG_MS = 600;
   /* Paket 1f Teil E (ERGUN., 04.10.2026 21:45: „Titel beim Wischen zeitgleich mit Unterzeile und Knöpfen nach oben, kein Nachziehen,
      und beim Hochscrollen viel früher wieder da“), Schalter html.titel-takt (?takt=an):
-     · die GANZE Kopf-Gruppe (Schriftzug in der Leinwand + Unterzeile + Knöpfe) bewegt sich im selben Bild-Takt (lageSetzen im Bild der Leinwand) –
-       vorher scrollten Unterzeile und Knöpfe selbst, der gemalte Schriftzug kam ein Bild später = Nachziehen;
      · Auflösen hängt direkt am Scroll-Weg (keine eigene Zeit-Animation): ganz da bis TAKT_VOLL, ganz weg bei TAKT_WEG (Fensterhöhen),
-       für die ganze Gruppe gleich – zurück kommt er, sobald der Kopf wieder ins Bild kommt. Kein Flackern: der Wert ist stetig, ohne Schwelle. */
+       für die ganze Gruppe gleich – zurück kommt er, sobald der Kopf wieder ins Bild kommt. Kein Flackern: der Wert ist stetig, ohne Schwelle.
+     · Die Lage der Gruppe macht seit „Kopf nativ“ (08.10.2026) allein der Browser – der frühere Versatz per transform je Bild ist entfernt (Tag vor-kopf-nativ). */
   const TAKT = WEG && html.classList.contains('titel-takt'), TAKT_VOLL = 0.5, TAKT_WEG = 0.6;
-  const inhalt = RUHE && (!WEG || TAKT) ? root.querySelector('.ghr-content') : null;
+  const NATIV = TAKT && html.classList.contains('kopf-nativ');   /* Kopf nativ (Beschreibung unten); ohne die Klasse läuft der Schriftzug wie mit ?takt=aus */
+  const inhalt = RUHE && (!WEG || NATIV) ? root.querySelector('.ghr-content') : null;   /* nativ: nur Deckkraft; ohne Schriftzug-weg (alte Ruhe): Versatz */
   let versatz = 0, breiteJetzt = window.innerWidth;
   const dprR = Math.min(window.devicePixelRatio || 1, 2);
   /* Ruhe + Handy (Emre, 02.10.: „alles auf höchste FPS“): Leinwand mit höchstens 1,5-facher Pixeldichte, Farbfeld mit 4 statt 5 Rausch-Stufen
@@ -107,8 +107,8 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
        IM Titelbild kopiert (.glas-titel-ebene) – sie scrollt wie Text, also exakt im Takt mit den Knöpfen; der Verlauf dahinter bleibt die feste
        Bühne. Nur der Verlauf, den man DURCH die Buchstaben sieht (Lichtbrechung), wird aus dem Scroll-Stand nachgerechnet – weich und im Glas
        verzerrt, ein Bild Verzug sieht man dort nicht. Ein Grafik-Kontext bleibt (kein zweiter WebGL-Kontext, keine doppelte Masken-Rechnung).
-     · Ausblenden wie im Takt (TAKT_VOLL → TAKT_WEG), ganz weg = unsichtbar und nicht antippbar. */
-  const NATIV = TAKT && html.classList.contains('kopf-nativ');
+     · Ausblenden wie im Takt (TAKT_VOLL → TAKT_WEG), ganz weg = unsichtbar und nicht antippbar.
+     Fest an seit ERGUNs OK (08.10.2026); der alte Weg (feste Gruppe + Versatz je Bild) ist entfernt, Rückweg nur der Git-Tag vor-kopf-nativ. */
   function lageSetzen() {   /* Ruhe: Titelbild-Inhalt im selben Takt wie das Glas – auf ganze Gerätepixel gerundet */
     if (NATIV) return Math.round((window.scrollY || 0) * dprR) / dprR;   /* Kopf nativ: nichts verschieben; der Wert dient nur dem Verlauf */
     if (!inhalt) return versatz;
@@ -615,7 +615,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
         field: field.tex, height: blurB.tex, htexel: hTexel || [1 / blurB.w, 1 / blurB.h], bevel, aspect, light: [light.x, light.y], ...(bandU ? { band: bandU } : {}),
         glass: WEG ? w : 1,
         form: WEG ? (reduceMq.matches ? 1 : w) : RUHE || reduceMq.matches || readyAt < 0 ? 1 : formed(performance.now() - readyAt, FORM_MS), res: [canvas.width, canvas.height],   /* weg: Aufbau rückwärts; „Bewegung reduzieren“ = nur ausblenden */
-        shift: fein ? (RUHE && (!WEG || TAKT) ? lageSetzen() : window.scrollY || 0) / ch : 0, nahtlos: NAHTLOS ? 1 : 0,
+        shift: fein ? (RUHE && (!WEG || NATIV) ? lageSetzen() : window.scrollY || 0) / ch : 0, nahtlos: NAHTLOS ? 1 : 0,
         maske: WEG ? schrift.lage / ch : 0, ohne: WEG && w <= 0 ? 1 : 0, detail: HINTEN === 'a' ? 1 : 0
       };
       if (NATIV) {   /* Kopf nativ: erst die Glas-Ebene (nur das Band um den Schriftzug) malen und ins Titelbild kopieren, dann die Bühne ohne Glas */
@@ -648,13 +648,12 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     }
     function schriftJetzt(now) {
       const y = window.scrollY || 0, hh = root.offsetHeight || canvas.clientHeight || 1;
-      if (TAKT) {   /* stetig aus dem Scroll-Stand, für die ganze Gruppe */
+      if (NATIV) {   /* Takt: stetig aus dem Scroll-Stand, für die ganze Gruppe; die Maske liegt im Titelbild (Lage 0) */
         const w = Math.max(0, Math.min(1, (TAKT_WEG * hh - y) / Math.max(1, (TAKT_WEG - TAKT_VOLL) * hh)));
         if (w > 0 && schrift.offen) { schrift.offen = false; schrift.neu++; buildMask(); }
-        schrift.ziel = w > 0 ? 1 : 0; schrift.wert = w; schrift.lage = NATIV ? 0 : lageSetzen();
-        if (inhalt) { const o = w >= 1 ? '' : w.toFixed(3); if (inhalt.style.opacity !== o) { inhalt.style.opacity = o; inhalt.style.pointerEvents = w < 0.05 ? 'none' : ''; } if (NATIV && inhalt.style.visibility !== (w <= 0 ? 'hidden' : '')) inhalt.style.visibility = w <= 0 ? 'hidden' : ''; }   /* unsichtbar = fängt keine Klicks */
-        if (NATIV) return teileAusblenden(w);
-        return w;
+        schrift.ziel = w > 0 ? 1 : 0; schrift.wert = w; schrift.lage = 0;
+        if (inhalt) { const o = w >= 1 ? '' : w.toFixed(3); if (inhalt.style.opacity !== o) { inhalt.style.opacity = o; inhalt.style.pointerEvents = w < 0.05 ? 'none' : ''; } if (inhalt.style.visibility !== (w <= 0 ? 'hidden' : '')) inhalt.style.visibility = w <= 0 ? 'hidden' : ''; }   /* unsichtbar = fängt keine Klicks */
+        return teileAusblenden(w);
       }
       const ziel = schrift.ziel === 1 ? (y > WEG_AB * hh ? 0 : 1) : (y < WEG_ZURUECK * hh ? 1 : 0);
       if (ziel !== schrift.ziel) {
@@ -799,8 +798,9 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     setTimeout(go, 2500);
     /* ohne WebGL (oder bevor das Glas läuft) bewegt ein eigener Takt den festen Inhalt mit dem Scrollen */
     /* eigener Scroll-Takt: hält den Titelbild-Inhalt IMMER an seinem Platz – auch wenn der Glas-Takt einmal hängt (Emre, 02.10.:
-       „Digitalstudio bleibt stehen, wenn man die Seite verlässt und wiederkommt“). Gleicher gerundeter Wert wie das Glas. */
-    let gt = 0; window.addEventListener('scroll', () => { if (gt) return; gt = requestAnimationFrame(() => { gt = 0; lageSetzen(); }); }, { passive: true });
+       „Digitalstudio bleibt stehen, wenn man die Seite verlässt und wiederkommt“). Gleicher gerundeter Wert wie das Glas.
+       Nur, wenn lageSetzen wirklich etwas verschiebt – mit „Kopf nativ“ scrollt der Browser den Inhalt selbst, beim Scrollen läuft dann nichts. */
+    if (inhalt && !NATIV) { let gt = 0; window.addEventListener('scroll', () => { if (gt) return; gt = requestAnimationFrame(() => { gt = 0; lageSetzen(); }); }, { passive: true }); }
     const zurueck = () => { lageSetzen(); if (pointer.neustart) pointer.neustart(); };
     window.addEventListener('pageshow', zurueck);   /* zurück aus dem Verlauf (Seite war eingefroren) */
     document.addEventListener('visibilitychange', () => { if (!document.hidden) zurueck(); });
