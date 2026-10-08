@@ -1158,6 +1158,11 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
      ERGUN., 05.10.2026: „zuegig“ = Standard – einmal tippen/wischen reißt sofort ganz auf (~0,6 s, kein Halt im Spalt). Rückweg ?riss=halb */
   var RISS_STANDARD = 'zuegig', rq = (/[?&]riss=(zuegig|halb|mittel|alt)\b/.exec(location.search) || [])[1];
   var riss = rq === 'alt' ? '' : rq || RISS_STANDARD; if (riss) document.documentElement.setAttribute('data-riss', riss);
+  /* Karte neu (08.10.2026, Feinschliff): Karte „Automatisierung“/„Beides“ wie die endo-Seite (Chat + fertiger Kontakt, Preis = Angebot endo aus
+     PREISE.endo, Texte in js/preise.js an KARTE_NEU) und „Auswahl treffen“ mit 44-px-Tippfläche (Regel .karte-neu unten). ?karte=alt = vorher. */
+  var KARTE_STANDARD = true, krq = (/[?&]karte=(neu|alt)\b/.exec(location.search) || [])[1];
+  window.ERGUN_KARTE_NEU = krq === 'neu' || (KARTE_STANDARD && krq !== 'alt');
+  if (window.ERGUN_KARTE_NEU) document.documentElement.classList.add('karte-neu');
   /* Texte „wir“ (07.10.2026, Text-Vorschläge 8–13 des texter, freigegeben von ERGUN.): die Seite spricht mit „wir/uns“ statt „ich/mir“,
      „bereitet Termine vor“ statt „bucht Termine und mehr“, ohne grünen „online“-Punkt, Punkt in .mf-agentur, ohne „alles aus einer Hand“.
      LIVE seit ERGUNs „okay und wir“ (07.10.2026); ?texte=alt = vorher. Statische Stellen: .t-alt/.t-neu (Regel darunter),
@@ -1183,6 +1188,9 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
 <style>
 /* Texte „wir“ (07.10.2026): je Stelle beide Fassungen im HTML, sichtbar nur die passende – kein Umschreiben per Skript, nichts blitzt auf */
 html:not(.texte-neu) .t-neu, html.texte-neu .t-alt, html.texte-neu .mf-satz .online { display: none; }
+/* Karte neu (08.10.2026): „Auswahl treffen“ bekommt eine Tippfläche von mindestens 44 px. Innenabstand an einem Inline-Link verändert die
+   Zeilen nicht (senkrecht) bzw. wird vom negativen Außenabstand aufgehoben (waagrecht) – Text und Lage bleiben Pixel für Pixel gleich. */
+html.karte-neu .auswahl__leer a[data-auswahl-treffen] { padding: 14px 8px; margin: 0 -8px; border-radius: 12px; }
 </style>
 <style>
 /* ERGUN., 05.10.2026 (3. Wunsch: „endo nur bei Automatisierung Logo, also beim Paket, und im Titel unter Anfrage starten, mehr nicht“):
@@ -1490,7 +1498,7 @@ html.zeichen-glanz-3.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before
 <div class="wechsel" aria-hidden="true"></div>
 
 <!-- preise.js vor dem Titelbild-Skript: glas.js liest beim Start window.PREISE (Kleingedrucktes in der Fußzeile) – so ist die Reihenfolge immer gleich (07.10.2026) -->
-<script src="js/preise.js?v=26"></script>
+<script src="js/preise.js?v=27"></script>
 <script>
 /* je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
 (function () {

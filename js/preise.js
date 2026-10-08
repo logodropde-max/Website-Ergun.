@@ -119,12 +119,19 @@ window.BEGRIFFE = {
    Texte „wir“ (07.10.2026, Text-Vorschläge 9/12/13): LEITFADEN_NEU = Vorschau ?texte=neu (Schalter TEXTE_STANDARD im Kopf von index.html) –
    „bereitet Termine vor“ statt „bucht Termine und mehr“, ohne „alles aus einer Hand“, Termine „zum Bestätigen“, ohne „alle fünf“. */
 var LEITFADEN_NEU = !!window.ERGUN_TEXTE_NEU;
+/* Karte neu (08.10.2026, Feinschliff – Auftrag der Hauptsitzung „mach 1–4“): „Automatisierung“ und „Beides“ erzählen dieselbe Geschichte wie die
+   endo-Seite (Chat antwortet sofort, jede Anfrage kommt als fertiger Kontakt an – Sätze aus „Texte (texter)“ endo klar Teil 2), Preis = Angebot
+   „endo“ aus PREISE.endo (gelesen, nie getippt). Schalter KARTE_STANDARD im Kopf von index.html (window.ERGUN_KARTE_NEU), ?karte=alt = vorher.
+   Ohne Kopf-Skript (Tests mit eigenem window) bleibt alles wie vorher. */
+var KARTE_NEU = !!window.ERGUN_KARTE_NEU;
 window.LEITFADEN = {
   art: { titel: 'Was brauchen Sie?', satz: 'Tippen Sie auf das, was passt. Den Rest klären wir im Gespräch.', direkt: 'Lieber gleich schreiben',
     optionen: [
       { id: 'website', titel: 'Website', satz: 'Eine Website, die zu Ihrem Betrieb passt.' },
-      { id: 'endo', titel: 'Automatisierung', satz: LEITFADEN_NEU ? 'endo beantwortet Anfragen und bereitet Termine vor.' : 'endo beantwortet Anfragen, bucht Termine und mehr.', link: 'endo ansehen' },
-      LEITFADEN_NEU ? { id: 'beides', titel: 'Beides', satz: 'Ihre Website und endo zusammen.' }
+      { id: 'endo', titel: 'Automatisierung', satz: KARTE_NEU ? 'Ein Chat auf Ihrer Website antwortet sofort. Jede Anfrage kommt als fertiger Kontakt an.'
+        : LEITFADEN_NEU ? 'endo beantwortet Anfragen und bereitet Termine vor.' : 'endo beantwortet Anfragen, bucht Termine und mehr.', link: 'endo ansehen' },
+      KARTE_NEU ? { id: 'beides', titel: 'Beides', satz: 'Ihre Website mit dem Chat endo gleich eingebaut.' }
+        : LEITFADEN_NEU ? { id: 'beides', titel: 'Beides', satz: 'Ihre Website und endo zusammen.' }
         : { id: 'beides', titel: 'Beides', satz: 'Ihre Website und endo zusammen.', dezent: 'alles aus einer Hand' }] },
   website: { titel: 'Welche Website passt?', satz: 'Der Preis ist ein Startwert.', alles: 'Alles, was drin ist', extras: 'Extras hinzufügen (optional)' },
   /* höchstens 3 Stichpunkte je Stufe (Auszug aus PREISE.stufen[].punkte, in Alltagssprache) */
@@ -152,7 +159,8 @@ window.LEITFADEN = {
     /* Angebote (Auftrag 45, 04.10.2026, ?preise=angebote) */
     titelAngebote: 'Welches Angebot passt?', satzAngebote: 'Wählen Sie ein Angebot oder mehrere. Alle drei zusammen sind endo komplett.', satzEin: 'endo und Studio gibt es einzeln – oder beide zusammen.', leerAngebote: 'Bitte wählen Sie ein Angebot.',
     whatsappAngebot: 'Kommt zu einem gewählten Angebot dazu.', komplettAngebote: 'Alle drei Angebote zum Paketpreis.', guenstigerAngebote: 'endo komplett ist hier günstiger – Sie bekommen alle drei.', alleDrei: 'alle drei',
-    whatsappNur: 'Kommt zu einer gewählten Fähigkeit dazu.' },
+    whatsappNur: 'Kommt zu einer gewählten Fähigkeit dazu.',
+    satzEndoKarte: 'Ein Chat antwortet Ihren Kunden sofort. Jede Anfrage kommt als fertiger Kontakt an.' },   /* Karte neu: Satz am Angebot endo in Schritt ② */
   anfrage: { titel: 'Ihre Anfrage', satz: 'Antwort innerhalb von 24 Stunden.', leer: 'Nichts ausgewählt – schreiben Sie einfach, worum es geht.', auswahl: 'Auswahl treffen' }
 };
 
@@ -356,6 +364,9 @@ window.LEITFADEN = {
   var aktiv = 'art', dyn = q('[data-mf-dyn]'), anfrageBox = q('[data-mf-anfrage]'), stand = q('[data-mf-stand]'), linie = q('[data-mf-linie]');
   var zurueck = q('[data-mf-zurueck]'), weiter = q('[data-mf-weiter]'), hinweis = q('[data-mf-hinweis]'), summe = q('[data-mf-summe]'), live = q('[data-preise-live]'), liveT;
   function artPreise() {   /* aus PREISE berechnet: günstigste Fähigkeit (einmalig und monatlich je für sich); Beides = Website-Start + endo ab */
+    var en = KARTE_NEU && P.ein ? P.endoAngebot('endo') : null;
+    if (en) return { website: 'ab ' + P.euro(P.stufen[0].preis), endo: P.euro(en.einmalig) + ' + ' + P.euro(en.monat) + MONAT,   /* Karte neu: Angebot endo, fester Preis */
+      beides: 'ab ' + P.euro(P.stufen[0].preis + en.einmalig) + ' + ab ' + P.euro(en.monat) + MONAT };   /* „ab“ zweimal: größere Website-Stufe kostet mehr, Betreuung (vorausgewählt) kommt monatlich dazu */
     var f = P.mehr[0];
     return { website: 'ab ' + P.euro(P.stufen[0].preis), endo: P.betrag(f) + ' + ' + P.monatText(f) + MONAT, beides: 'ab ' + P.euro(P.stufen[0].preis + f.preis) + ' + ' + P.monatText(f) + MONAT };
   }
@@ -590,7 +601,7 @@ window.LEITFADEN = {
     /* drei Angebote: Ankreuzen nimmt alle Fähigkeiten des Angebots dazu bzw. weg */
     P.endo.angebote.forEach(function (an, nr) {
       var drin = gew.indexOf(an.id) >= 0;
-      c.appendChild(reihe(zeile('mf-ezeile--angebot', drin, 'angebot-' + an.id, an.id === 'endo' ? 'endo' : an.faehigkeiten[0], an.name, an.satz, an.faehigkeiten, preise(an.einmalig, an.monat, an.hinweise.join(' · ')), function () {
+      c.appendChild(reihe(zeile('mf-ezeile--angebot', drin, 'angebot-' + an.id, an.id === 'endo' ? 'endo' : an.faehigkeiten[0], an.name, KARTE_NEU && an.id === 'endo' ? L.endo.satzEndoKarte : an.satz, an.faehigkeiten, preise(an.einmalig, an.monat, an.hinweise.join(' · ')), function () {
         if (drin) A.endo = A.endo.filter(function (k) { return an.faehigkeiten.indexOf(k) < 0; });
         else an.faehigkeiten.forEach(function (k) { if (A.endo.indexOf(k) < 0) A.endo.push(k); });
         if (!A.endo.length) A.whatsapp = false;
