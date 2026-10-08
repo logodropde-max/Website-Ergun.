@@ -1,4 +1,4 @@
-/* ERGUN. „Website mit eingebautem Empfang“ (endo klar Teil 2, Teil D, 07.10.2026) – VORSCHAU ?empfang=an, lädt nur mit dem Schalter (index.html).
+/* ERGUN. „Website mit eingebautem Empfang“ (endo klar Teil 2, Teil D, 07.10.2026) – LIVE seit 08.10.2026 (EMPFANG_STANDARD = true, ?empfang=aus = vorher), lädt nur über den Schalter (index.html).
    Aussehen des Abschnitts (Präfix emp-); die Szene selbst kommt unverändert aus endo-szene.css (Präfix esz-, 1:1 aus endo-studio).
    Glas-Tokens der Seite (glas.css / glas-fein.css): Schrift --g-schrift, Überschrift --gf-h, Text Weiß .8, Abstand --gf-abstand,
    Knopf wie „endo ansehen ↗“ im Titel (.ghr-secondary) – „Anfrage senden“ bleibt der einzige weiße Hauptknopf.
@@ -25,9 +25,11 @@ html.glas-fein:not(.glas-nahtlos) .emp { background: linear-gradient(to bottom, 
 .emp__knopf:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) { .emp__knopf:hover { background: rgba(255, 255, 255, 0.13); border-color: rgba(255, 255, 255, 0.4); } }
 .emp__szene { width: 100%; min-width: 0; }
-/* einzige Anpassung der Szene: die Schrift der Seite (Kurzschreibweisen wie „font: 600 12px/16px …“ brauchen einen echten Namen statt „inherit“).
+/* einzige Anpassung der Szene: die Schrift (Kurzschreibweisen wie „font: 600 12px/16px …“ brauchen einen echten Namen statt „inherit“).
+   Seit dem Livegang (08.10.2026) Satoshi = dieselbe Schrift wie auf endo (endo-system.css --sans), auf ERGUN. schon geladen (index.html --sans):
+   mit der breiten Clash Display brach „Neue Anfrage“ am PC (1280) auf zwei Zeilen um. Überschrift und Text des Abschnitts bleiben Clash Display.
    Farben bleiben die Standardwerte des Bausteins – die Szene zeigt endo und den Chat eines Beispiel-Betriebs, nicht die ERGUN.-Marke. */
-.emp__szene > .esz { --esz-schrift: var(--g-schrift, system-ui, sans-serif); }
+.emp__szene > .esz { --esz-schrift: var(--sans, "Satoshi", system-ui, sans-serif); }
 
 /* einmal einblenden (nur wenn das Skript den Beobachter gesetzt hat – sonst steht der Text sofort da) */
 .emp--rein .emp__text { opacity: 0; transform: translateY(12px); transition: opacity 700ms cubic-bezier(0.23, 1, 0.32, 1), transform 700ms cubic-bezier(0.23, 1, 0.32, 1); }

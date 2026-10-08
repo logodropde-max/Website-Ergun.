@@ -1162,14 +1162,14 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
   if (window.ERGUN_TEXTE_NEU) document.documentElement.classList.add('texte-neu');
 </script>
 <script>
-/* Website mit eingebautem Empfang (endo klar Teil 2, Teil D, 07.10.2026 – VORSCHAU ?empfang=an, EMPFANG_STANDARD = false bis ERGUNs OK; ?empfang=aus = Rückweg):
+/* Website mit eingebautem Empfang (endo klar Teil 2, Teil D, 07.10.2026 – LIVE seit 08.10.2026 auf ERGUNs Wunsch, EMPFANG_STANDARD = true; ?empfang=aus = vorher):
    ein Abschnitt vor dem Anfrage-Ablauf mit der Kopf-Szene der endo-Seite (js/endo-szene.js + endo-szene.css = 1:1-Kopien aus endo-studio,
    gezogen mit _code/werkzeuge/endo-szene-ziehen.mjs). Ohne Schalter wird keine dieser Dateien geladen. Test endo-szene-ergun.test.mjs. */
 (function () {
-  var EMPFANG_STANDARD = false, emq = (/[?&]empfang=(an|aus)\b/.exec(location.search) || [])[1];
+  var EMPFANG_STANDARD = true, emq = (/[?&]empfang=(an|aus)\b/.exec(location.search) || [])[1];
   if (!(emq === 'an' || (EMPFANG_STANDARD && emq !== 'aus'))) return;
   document.documentElement.classList.add('empfang-an');
-  ['endo-szene.css?v=1', 'empfang.css?v=1'].forEach(function (h) { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = h; document.head.appendChild(l); });
+  ['endo-szene.css?v=1', 'empfang.css?v=2'].forEach(function (h) { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = h; document.head.appendChild(l); });
   document.addEventListener('DOMContentLoaded', function () {
     ['js/endo-szene.js?v=1', 'js/empfang.js?v=1'].forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
   });
