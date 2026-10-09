@@ -157,7 +157,7 @@ window.LEITFADEN = {
       { id: 'studio', name: 'Studio', satz: 'Bilder und Videos aus Handyfotos', status: 'Demo' }],   /* 04.10.2026: Demo, bis Studio an der Firma hängt */
     komplett: 'Alle fünf Fähigkeiten zum Paketpreis.', leer: 'Bitte wählen Sie mindestens eine Fähigkeit.',
     /* Angebote (Auftrag 45, 04.10.2026, ?preise=angebote) */
-    titelAngebote: 'Welches Angebot passt?', satzAngebote: 'Wählen Sie ein Angebot oder mehrere. Alle drei zusammen sind endo komplett.', satzEin: 'endo und Studio gibt es einzeln – oder beide zusammen.', leerAngebote: 'Bitte wählen Sie ein Angebot.',
+    titelAngebote: 'Welches Angebot passt?', satzAngebote: 'Wählen Sie ein Angebot oder mehrere. Alle drei zusammen sind endo komplett.', satzEin: 'endo und Studio gibt es einzeln – oder beide zusammen.', satzZwei: 'Vergeben Sie Termine? Dann Empfang + Termine, sonst reicht Empfang. Studio gibt es einzeln dazu.', leerAngebote: 'Bitte wählen Sie ein Angebot.',
     whatsappAngebot: 'Kommt zu einem gewählten Angebot dazu.', komplettAngebote: 'Alle drei Angebote zum Paketpreis.', guenstigerAngebote: 'endo komplett ist hier günstiger – Sie bekommen alle drei.', alleDrei: 'alle drei',
     whatsappNur: 'Kommt zu einer gewählten Fähigkeit dazu.',
     satzEndoKarte: 'Ein Chat antwortet Ihren Kunden sofort. Jede Anfrage kommt als fertiger Kontakt an.' },   /* Karte neu: Satz am Angebot endo in Schritt ② */
@@ -188,10 +188,36 @@ window.LEITFADEN = {
     ];
     P.endo.komplett = { id: 'komplett', name: 'endo + Studio', einmalig: 2800, monat: 250, nachrichten: 5500, bilder: 20 };
   }
+  /* endo zwei Pakete (ERGUN., 09.10.2026, Auftrag „endo zwei Pakete“ Teil A): endo Empfang 490 € + 79 €/Monat (1.000 Nachrichten) · endo Empfang + Termine
+     790 € + 119 €/Monat (2.000 Nachrichten, alle vier Fähigkeiten = das bisherige endo) · Studio unverändert. Gleich wie ENDO_PREISE.pakete (endo-Seite) und
+     „02 Preise“ (Test ein.test.mjs). Die Karte „Automatisierung“ zeigt „ab 490 € + 79 €/Monat“, „Beides“ rechnet daraus. Schalter ZWEI_STANDARD
+     (gleich in js/endo-preise.js), ?pakete=alt = vorher. Tests: window.ENDO_PAKETE_ZWEI. */
+  P.endo.pakete = [
+    { id: 'empfang', name: 'endo Empfang', satz: 'Jede Anfrage von Ihrer Website landet bei Ihnen.', faehigkeiten: ['empfang', 'kontakte', 'uebersicht'], einmalig: 490, monat: 79, nachrichten: 1000 },
+    { id: 'empfang-termine', name: 'endo Empfang + Termine', satz: 'Dazu vergibt endo Ihre Termine selbst.', faehigkeiten: ['empfang', 'kontakte', 'termine', 'uebersicht'], einmalig: 790, monat: 119, nachrichten: 2000 }];
+  var ZWEI_STANDARD = true, zwq = typeof location !== 'undefined' ? (/[?&]pakete=(an|alt)\b/.exec(location.search || '') || [])[1] : '';
+  P.zwei = P.ein && (typeof W0.ENDO_PAKETE_ZWEI === 'boolean' ? W0.ENDO_PAKETE_ZWEI : zwq === 'an' || (ZWEI_STANDARD && zwq !== 'alt'));
+  if (P.zwei) {
+    var pt2 = P.endo.pakete[1], st2 = P.endo.angebote[1];
+    /* Schritt ②: beide Pakete gleichrangig ankreuzbar (pruefer 09.10.) – sie schließen sich aus (Empfang + Termine enthält Empfang), Studio kommt dazu */
+    P.endo.angebote = P.endo.pakete.map(function (p) { return { id: p.id, name: p.name, satz: p.satz, faehigkeiten: p.faehigkeiten.slice(), einmalig: p.einmalig, monat: p.monat, nachrichten: p.nachrichten,
+      hinweise: [p.nachrichten.toLocaleString('de-DE') + ' Nachrichten/Monat'], paket: true }; }).concat([st2]);
+    P.endo.komplett = { id: 'komplett', name: 'endo + Studio', einmalig: pt2.einmalig + st2.einmalig, monat: pt2.monat + st2.monat, nachrichten: pt2.nachrichten + st2.nachrichten, bilder: st2.bilder };
+  }
+  /* günstigstes endo-Paket (Karte „Automatisierung“: „ab …“) */
+  P.endoAb = function () { var l = P.zwei ? P.endo.pakete : P.endo.angebote.filter(function (a) { return a.id === 'endo'; }); return { einmalig: Math.min.apply(null, l.map(function (a) { return a.einmalig; })), monat: Math.min.apply(null, l.map(function (a) { return a.monat; })) }; };
   P.endoAngebot = function (id) { return P.endo.angebote.filter(function (x) { return x.id === id; })[0] || null; };
-  P.endoAngebotVon = function (k) { return P.endo.angebote.filter(function (x) { return x.faehigkeiten.indexOf(k) >= 0; })[0] || null; };
+  P.endoAngebotVon = function (k) {
+    if (P.zwei) return P.endoAngebot(k === 'studio' ? 'studio' : k === 'termine' ? 'empfang-termine' : 'empfang');
+    return P.endo.angebote.filter(function (x) { return x.faehigkeiten.indexOf(k) >= 0; })[0] || null; };
   /* Angebote, die eine Auswahl von Fähigkeiten berührt (jede Fähigkeit steckt in genau einem) – in der Reihenfolge der Angebote */
-  P.endoAngeboteFuer = function (ids) { ids = ids || []; return P.endo.angebote.filter(function (x) { return x.faehigkeiten.some(function (k) { return ids.indexOf(k) >= 0; }); }); };
+  P.endoAngeboteFuer = function (ids) { ids = ids || [];
+    if (P.zwei) {   /* zwei Pakete: „termine“ gewählt = Empfang + Termine, sonst Empfang; Studio für sich */
+      var z = [], end = ids.some(function (k) { return k !== 'studio'; });
+      if (end) z.push(P.endoAngebot(ids.indexOf('termine') >= 0 ? 'empfang-termine' : 'empfang'));
+      if (ids.indexOf('studio') >= 0) z.push(P.endoAngebot('studio'));
+      return z;
+    } return P.endo.angebote.filter(function (x) { return x.faehigkeiten.some(function (k) { return ids.indexOf(k) >= 0; }); }); };
   P.endoFaehigkeit = function (id) { return P.endo.faehigkeiten.filter(function (f) { return f.id === id; })[0] || null; };
   P.endoEinzeln = function () { return P.endo.faehigkeiten.reduce(function (s, f) { return { einmalig: s.einmalig + f.einmalig, monat: s.monat + f.monat }; }, { einmalig: 0, monat: 0 }); };
   var minE = Math.min.apply(null, P.endo.faehigkeiten.map(function (f) { return f.einmalig; })), minM = Math.min.apply(null, P.endo.faehigkeiten.map(function (f) { return f.monat; }));
@@ -225,7 +251,7 @@ window.LEITFADEN = {
     if (!n) return null;
     if (P.angeboteAn) {   /* Angebote: immer ganze Angebote (jede Fähigkeit zieht ihr Angebot mit) – alle drei oder nicht teurer = endo komplett */
       var ang = P.endoAngeboteFuer(ids), sa = ang.reduce(function (x, a) { return { einmalig: x.einmalig + a.einmalig, monat: x.monat + a.monat }; }, { einmalig: 0, monat: 0 });
-      var alleA = ang.length === P.endo.angebote.length, billiger = !alleA && ang.length > 1 && k.einmalig <= sa.einmalig && k.monat <= sa.monat;
+      var alleA = !P.zwei && ang.length === P.endo.angebote.length, billiger = !P.zwei && !alleA && ang.length > 1 && k.einmalig <= sa.einmalig && k.monat <= sa.monat;   /* zwei Pakete: nie „komplett“, immer die Summe */
       var q = alleA || billiger
         ? { id: k.id, name: k.name, preis: k.einmalig, monat: k.monat, angebote: P.endo.angebote.map(function (a) { return a.id; }), faehigkeiten: [], guenstiger: billiger, statt: sa }
         : { id: 'angebote', name: ang.map(function (a) { return a.name; }).join(' + '), preis: sa.einmalig, monat: sa.monat, angebote: ang.map(function (a) { return a.id; }), faehigkeiten: [] };
@@ -364,6 +390,8 @@ window.LEITFADEN = {
   var aktiv = 'art', dyn = q('[data-mf-dyn]'), anfrageBox = q('[data-mf-anfrage]'), stand = q('[data-mf-stand]'), linie = q('[data-mf-linie]');
   var zurueck = q('[data-mf-zurueck]'), weiter = q('[data-mf-weiter]'), hinweis = q('[data-mf-hinweis]'), summe = q('[data-mf-summe]'), live = q('[data-preise-live]'), liveT;
   function artPreise() {   /* aus PREISE berechnet: günstigste Fähigkeit (einmalig und monatlich je für sich); Beides = Website-Start + endo ab */
+    if (P.zwei) { var ab = P.endoAb();   /* endo zwei Pakete: günstigstes Paket mit „ab“, Beides = Website-Start + endo ab */
+      return { website: 'ab ' + P.euro(P.stufen[0].preis), endo: 'ab ' + P.euro(ab.einmalig) + ' + ' + P.euro(ab.monat) + MONAT, beides: 'ab ' + P.euro(P.stufen[0].preis + ab.einmalig) + ' + ab ' + P.euro(ab.monat) + MONAT }; }
     var en = KARTE_NEU && P.ein ? P.endoAngebot('endo') : null;
     if (en) return { website: 'ab ' + P.euro(P.stufen[0].preis), endo: P.euro(en.einmalig) + ' + ' + P.euro(en.monat) + MONAT,   /* Karte neu: Angebot endo, fester Preis */
       beides: 'ab ' + P.euro(P.stufen[0].preis + en.einmalig) + ' + ab ' + P.euro(en.monat) + MONAT };   /* „ab“ zweimal: größere Website-Stufe kostet mehr, Betreuung (vorausgewählt) kommt monatlich dazu */
@@ -561,7 +589,7 @@ window.LEITFADEN = {
      je Angebot Name, das Problem des Kunden in einem Satz, die enthaltenen Fähigkeiten mit ehrlichem Stand (Live · Demo · In Arbeit) und
      einmalig/monatlich getrennt; WhatsApp als Zusatz; nie ein Preis je Fähigkeit. Zahlen nur aus PREISE.endo.angebote. */
   function endoAngebote(w) {
-    w.titel = L.endo.titelAngebote; w.satz = P.ein ? L.endo.satzEin : L.endo.satzAngebote;   /* Paket 1e: endo und Studio, einzeln oder beide */
+    w.titel = L.endo.titelAngebote; w.satz = P.zwei ? L.endo.satzZwei : P.ein ? L.endo.satzEin : L.endo.satzAngebote;   /* Paket 1e: endo und Studio, einzeln oder beide */
     var gew = P.endoAngeboteFuer(A.endo).map(function (a) { return a.id; }), K = P.endo.komplett, ids = P.endo.angebote.map(function (a) { return a.id; });
     var komplett = gew.length === ids.length, alleF = [], NAME = {}, STAND = {};
     L.endo.faehigkeiten.forEach(function (f) { NAME[f.id] = f.name; STAND[f.id] = f.status; alleF.push(f.id); });
@@ -601,8 +629,9 @@ window.LEITFADEN = {
     /* drei Angebote: Ankreuzen nimmt alle Fähigkeiten des Angebots dazu bzw. weg */
     P.endo.angebote.forEach(function (an, nr) {
       var drin = gew.indexOf(an.id) >= 0;
-      c.appendChild(reihe(zeile('mf-ezeile--angebot', drin, 'angebot-' + an.id, an.id === 'endo' ? 'endo' : an.faehigkeiten[0], an.name, KARTE_NEU && an.id === 'endo' ? L.endo.satzEndoKarte : an.satz, an.faehigkeiten, preise(an.einmalig, an.monat, an.hinweise.join(' · ')), function () {
-        if (drin) A.endo = A.endo.filter(function (k) { return an.faehigkeiten.indexOf(k) < 0; });
+      c.appendChild(reihe(zeile('mf-ezeile--angebot', drin, 'angebot-' + an.id, an.id === 'endo' || an.paket ? 'endo' : an.faehigkeiten[0], an.name, KARTE_NEU && an.id === 'endo' ? L.endo.satzEndoKarte : an.satz, an.faehigkeiten, preise(an.einmalig, an.monat, an.hinweise.join(' · ')), function () {
+        if (an.paket) A.endo = A.endo.filter(function (k) { return k === 'studio'; }).concat(drin ? [] : an.faehigkeiten);   /* ein Paket ersetzt das andere */
+        else if (drin) A.endo = A.endo.filter(function (k) { return an.faehigkeiten.indexOf(k) < 0; });
         else an.faehigkeiten.forEach(function (k) { if (A.endo.indexOf(k) < 0) A.endo.push(k); });
         if (!A.endo.length) A.whatsapp = false;
         neuZeichnen('angebot-' + an.id);
