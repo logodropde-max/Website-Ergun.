@@ -236,7 +236,7 @@ window.LEITFADEN = {
   P.endo.werkbankBeispiel = false;   /* ERGUN. 11.10.: Preise endgültig – kein Etikett mehr (gleich wie ENDO_PREISE) */
   P.endo.werkbankEtikett = '';
   P.wbEtikett = function () { return P.endo.werkbankBeispiel && P.endo.werkbankEtikett ? P.endo.werkbankEtikett : ''; };   /* leer = nirgends ein Etikett */
-  P.endo.lizenzSatz = 'zzgl. Lizenz des Systemanbieters, ca. 20–25 € je Benutzer/Monat, direkt an den Anbieter';   /* Ausnahme auf ERGUN.s Wunsch, Wortlaut vom Anwalt prüfen */
+  P.endo.lizenzSatz = 'zzgl. Lizenz des Systemanbieters je Benutzer und Monat, direkt an den Anbieter';   /* Ausnahme auf ERGUN.s Wunsch, Wortlaut vom Anwalt prüfen */
   var WERKBANK_STANDARD = true,   /* LIVE seit 11.10.2026 */ wbq = typeof location !== 'undefined' ? (/[?&]endo=(werkbank|alt)\b/.exec(location.search || '') || [])[1] : '';
   P.werkbankAn = typeof W0.ENDO_WERKBANK_AN === 'boolean' ? W0.ENDO_WERKBANK_AN : wbq === 'werkbank' || (WERKBANK_STANDARD && wbq !== 'alt');
   P.endoWerkbank = function (id) { return P.endo.werkbank.filter(function (x) { return x.id === id; })[0] || null; };
