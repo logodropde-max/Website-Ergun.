@@ -1181,7 +1181,7 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
   document.documentElement.classList.add('empfang-an');
   ['endo-szene.css?v=1', 'empfang.css?v=2'].forEach(function (h) { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = h; document.head.appendChild(l); });
   document.addEventListener('DOMContentLoaded', function () {
-    ['js/endo-szene.js?v=1', 'js/empfang.js?v=1'].forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
+    ['js/endo-szene.js?v=1', 'js/empfang.js?v=2'].forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
   });
 })();
 </script>
@@ -1498,11 +1498,11 @@ html.zeichen-glanz-3.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before
 <div class="wechsel" aria-hidden="true"></div>
 
 <!-- preise.js vor dem Titelbild-Skript: glas.js liest beim Start window.PREISE (Kleingedrucktes in der Fußzeile) – so ist die Reihenfolge immer gleich (07.10.2026) -->
-<script src="js/preise.js?v=27"></script>
+<script src="js/preise.js?v=33"></script>
 <script>
 /* je nach Titelbild die passenden Skripte (Reihenfolge bleibt, async = false) */
 (function () {
-  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=20'] : [];
+  var liste = window.ERGUN_WAHL === 'glas' ? ['js/glas.js?v=21'] : [];
   liste.forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); });
 })();
 </script>
@@ -1562,16 +1562,16 @@ html.zeichen-glanz-3.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before
     e.extras.forEach(function (m) { dl.appendChild(zeile(m.name + (m.anzahl > 1 ? ' × ' + m.anzahl : ''), P.betrag(m))); });
     if (e.anfrage.length) dl.appendChild(zeile('Auf Anfrage', e.anfrage.map(function (x) { return x.name; }).join(', ')));
     if (e.mehr.length) { var em = e.mehr[0];   /* endo (neues Preismodell, 01.10.2026): einmalig + monatlich getrennt */
-      dl.appendChild(zeile('endo', (em.id === 'faehigkeiten' && em.anzahl > 1 ? em.faehigkeiten.join(', ') : em.name) + (em.whatsapp ? ' + ' + P.endo.whatsapp.name : '') + ' · ' + P.euro(em.preis) + ' + ' + P.euro(em.monat) + M)); }
+      dl.appendChild(zeile('endo', (em.id === 'faehigkeiten' && em.anzahl > 1 ? em.faehigkeiten.join(', ') : em.name) + (em.whatsapp ? ' + ' + P.endo.whatsapp.name : '') + ' · ' + P.betrag(em) + ' + ' + P.monatText(em) + M + (em.werkbank && P.wbEtikett() ? ' · ' + P.wbEtikett() : ''))); }   /* Werkbank (11.10.): „ab“ aus PREISE, Etikett nur solange PREISE.endo.werkbankBeispiel; ohne Werkbank gleicher Text wie vorher */
     if (e.betreuung) dl.appendChild(zeile('Betreuung', e.betreuung.name + ' · ' + P.euro(e.betreuungMonat) + M + (e.selbst ? ' (Hosting selbst)' : '')));
     else if (e.stufe) { var ob = zeile('Betreuung', L.betreuung.ohne); ob.className = 'auswahl__ohne'; var os = document.createElement('small'); os.textContent = L.betreuung.ohneSatz; ob.querySelector('dd').appendChild(os); dl.appendChild(ob); }   /* Auftrag 28: ohne Betreuung + was der Kunde selbst übernimmt */
     var ab = e.ab ? 'ab ' : '';
     auswahlBox.innerHTML = ''; auswahlBox.appendChild(dl);
     /* nur zwei Summen (einmalig · monatlich), das erste Jahr klein darunter */
     var su = document.createElement('div'); su.className = 'auswahl__summen';
-    [['einmalig', ab + P.euro(e.einmalig)], ['monatlich', P.euro(e.monatlich) + M]].forEach(function (x) { var d = document.createElement('p'), t = document.createElement('span'), b = document.createElement('b'); t.textContent = x[0]; b.textContent = x[1]; d.appendChild(t); d.appendChild(b); su.appendChild(d); });
+    [['einmalig', ab + P.euro(e.einmalig)], ['monatlich', (e.monatAb ? 'ab ' : '') + P.euro(e.monatlich) + M]].forEach(function (x) { var d = document.createElement('p'), t = document.createElement('span'), b = document.createElement('b'); t.textContent = x[0]; b.textContent = x[1]; d.appendChild(t); d.appendChild(b); su.appendChild(d); });
     auswahlBox.appendChild(su);
-    var j = document.createElement('small'); j.className = 'auswahl__jahr'; j.textContent = 'Im ersten Jahr ' + ab + P.euro(e.jahr) + '. ' + P.klein + ' ' + P.steuer; auswahlBox.appendChild(j);
+    var j = document.createElement('small'); j.className = 'auswahl__jahr'; j.textContent = 'Im ersten Jahr ' + (e.ab || e.monatAb ? 'ab ' : '') + P.euro(e.jahr) + (e.werkbank ? ' – ' + P.endo.lizenzSatz : '') + '. ' + P.klein + ' ' + P.steuer;   /* B1 (11.10.): Werkbank – Monat „ab“, Lizenz direkt an der Jahressumme */ auswahlBox.appendChild(j);
   }
   document.addEventListener('preise:auswahl', auswahlZeigen);
   auswahlZeigen();

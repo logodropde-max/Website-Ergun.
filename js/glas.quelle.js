@@ -182,11 +182,13 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       const preis = info && info.querySelector('b') ? info.querySelector('b').textContent.trim() : '';
       const satz = info ? info.textContent.replace(preis, '').replace(/^\s*·\s*/, '').trim() : '';
       const teile = preis.split(' + ');
+      const behalten = $$('[data-glas-behalten]', b);   /* endo Werkbank (11.10.): Etikett + Lizenz-Hinweis aus preise.js bleiben unter dem Preis */
       b.classList.add('glas-karte'); b.innerHTML = '';
       b.appendChild(el('span', 'k-angebot__wort glas-karte__titel', wort ? wort.textContent : ''));
       b.appendChild(el('span', 'glas-karte__satz', satz));
       const p = el('span', 'glas-karte__preis'); p.appendChild(el('b', '', teile[0]));
       if (teile[1]) p.appendChild(el('small', '', '+ ' + teile.slice(1).join(' + '))); b.appendChild(p);
+      behalten.forEach((x) => b.appendChild(x));
     });
     angeboteFertig = true; return true;
   }

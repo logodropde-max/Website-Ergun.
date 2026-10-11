@@ -1,5 +1,10 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
+## endo Werkbank auf der ERGUN.-Seite (11.10.2026 – gebaut, Livegang nach ERGUN.s Preis-OK; Rückweg-Tag `vor-endo-werkbank`)
+- Schalter `WERKBANK_STANDARD` in `js/preise.js` (`?endo=werkbank`, Rückweg `?endo=alt`; `?karte=alt` bleibt Rückweg der Karte). Daten `PREISE.endo.werkbank` (= `ENDO_PREISE.werkbank` = Notiz `02 Preise`), Helfer `P.endoWerkbank(id)`, `P.werkbankAn`.
+- Karte „Automatisierung“: „ab 499 € + ab 49 €/Monat“ + Etikett „Beispielpreise“ + Lizenz kurz; „Beides“ = Website-Start + Endo Start. Schritt ②: Endo Start · Endo Business · Endo AI (gesperrt). Schritt ③ nennt Paket + Lizenzsatz. Abschnitt „Website und Büro …“ (`js/empfang.js` `TEXTE_WB`, `wbBild()`): ruhiges Glas-Feld statt Chat-Szene. „endo ansehen“ mit stiller Blüte `bilder/zeichen/endo-bluete.svg`. CSS `ergun-werkbank.css` nur mit Schalter. Test `ergun-werkbank.test.mjs`.
+
+
 > **Aufgeräumt 07.10.2026:** Es gibt nur noch das Titelbild „Glas“. Gezeichnete Landschaft mit Figur + Hund, Maschine/Dschungel, Kristall,
 > Blume, Lycoris, Lebensbaum, Lycoris 3 und All liegen in `_archiv/ERGUN-Titelbilder (entfernt 07.10.)/` (Tag `vor-aufraeumen-2026-10-07`).
 > Abschnitte unten zu diesen Fassungen sind Geschichte. Fest eingebaut (ohne Rückweg): Karten premium, Glas fein + nahtlos, Schriftzug löst sich auf.

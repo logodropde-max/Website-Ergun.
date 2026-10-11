@@ -1,0 +1,85 @@
+/* ERGUN. – endo Werkbank (11.10.2026, Paket „endo Werkbank“ Teil E, ergun-seite). Lädt NUR mit Schalter (js/preise.js: PREISE.werkbankAn →
+   Klasse html.endo-werkbank + diese Datei; Vorschau ?endo=werkbank). Ohne Schalter: keine Datei, keine Regel – die Seite bleibt wie heute.
+   Glas-Look der ERGUN.-Seite bleibt: Flächen weiß .06–.07, Kante .16–.2, Radius 24 / Pillen rund, Text Weiß .8/.62, Creme #FFE6B8 nur für das
+   Etikett „Beispielpreise“ (seit 11.10. aus – Preise endgültig), Orange bleibt der Auswahl vorbehalten. Bewegung nur transform/opacity, einmal; „Bewegung reduzieren“ = Endzustand. */
+
+/* ① Karte „Automatisierung“ / „Beides“: Etikett + Lizenz-Hinweis unter dem Preis */
+html.endo-werkbank .wb-hinweis { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-top: 12px; }
+html.endo-werkbank .wb-etikett { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px; border: 1px solid rgba(255, 230, 184, 0.42);
+  color: #FFE6B8; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.01em; white-space: nowrap; }
+html.endo-werkbank .wb-lizenz { font-size: 13px; line-height: 18px; color: rgba(255, 255, 255, 0.72); text-wrap: pretty; }
+/* Handy (Karten untereinander): jede Karte so hoch wie ihr Inhalt – „gleich hoch“ gilt nur für die Dreier-Reihe (glas.css: ab 760 px) */
+@container (max-width: 759px) { html.endo-werkbank .glas-angebote .mf-angebote__liste { grid-auto-rows: auto; } }
+/* Nachbesserung (Gestalter-Urteil 11.10., Befund 2): ab drei Spalten teilen sich die Karten ihre Zeilen (subgrid) – Titel · Satz · Preis · Hinweis.
+   So steht jeder Preis auf derselben Linie, auch wenn die Website-Karte keinen Hinweis und keinen endo-Link hat. Handy: unverändert (untereinander). */
+@container (min-width: 760px) {
+  html.endo-werkbank .glas-angebote .mf-angebote__liste { grid-auto-rows: auto; row-gap: 0; }
+  html.endo-werkbank .glas-angebote .mf-angebote__liste > .glas-karte,
+  html.endo-werkbank .glas-angebote .mf-angebote__liste > .mf-wahl-huelle { grid-row: span 4; display: grid; grid-template-rows: subgrid; }
+  html.endo-werkbank .glas-angebote .mf-wahl-huelle > .glas-karte { grid-row: 1 / -1; display: grid; grid-template-rows: subgrid; }
+  html.endo-werkbank .glas-angebote .glas-karte { align-content: start; row-gap: 10px; }
+  html.endo-werkbank .glas-angebote .glas-karte__preis { margin-top: 0; align-self: start; }
+  html.endo-werkbank .glas-angebote .wb-hinweis { align-self: start; }
+}
+/* Befund 12 (b, Entscheidung der Hauptsitzung): „endo ansehen“ trägt bei der Werkbank statt der 3D-Figur die stille Blüte (16 px, wie das
+   endo-Zeichen der neuen endo-Seite, hier im Glas-Ton auf dunklem Grund nachgebaut: bilder/zeichen/endo-bluete.svg) – keine Bewegung. */
+html.endo-werkbank.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-werkbank.endo-zeichen-an .ghr-actions .ghr-secondary::before {
+  width: 16px; height: 16px; margin-right: 8px; vertical-align: -3px; background-image: url(bilder/zeichen/endo-bluete.svg?v=1); animation: none; }
+html.endo-werkbank.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before { margin-right: 2px; }   /* der Link hat schon 6 px Abstand (gap) */
+
+/* ② Schritt „Welches endo-Paket passt?“: dieselben Karten wie die Website-Stufen (.mf-stufen), nur Zusätze */
+html.endo-werkbank .mf-stufe--wb { grid-template-rows: auto auto 1fr; }
+html.endo-werkbank .mf-stufe__monat { display: block; font-size: 14px; line-height: 20px; color: rgba(255, 255, 255, 0.72); font-variant-numeric: tabular-nums; }
+html.endo-werkbank .mf-stufe__wbsatz { display: block; font-size: 15px; line-height: 22px; color: rgba(255, 255, 255, 0.8); text-wrap: pretty; }
+/* Endo AI: sichtbar, aber nicht wählbar – keine Hebe-Bewegung, kein Licht, kein Haken; Text bleibt lesbar (Kontrast > 4,5 : 1) */
+html.endo-werkbank .mf-stufe.mf-stufe--spaeter { cursor: default; box-shadow: none; background: rgba(255, 255, 255, 0.035); }
+html.endo-werkbank .mf-stufe.mf-stufe--spaeter::before { background: rgba(255, 255, 255, 0.14); }
+html.endo-werkbank .mf-stufe.mf-stufe--spaeter::after { content: none; }
+html.endo-werkbank .mf-stufe.mf-stufe--spaeter:hover, html.endo-werkbank .mf-stufe.mf-stufe--spaeter:active { transform: none; box-shadow: none; opacity: 1; background: rgba(255, 255, 255, 0.035); }
+html.endo-werkbank .mf-stufen--wb.hat-wahl > .mf-stufe--spaeter { opacity: 1; }
+html.endo-werkbank .mf-stufe--spaeter .mf-stufe__name { color: rgba(255, 255, 255, 0.78); }
+html.endo-werkbank .mf-stufe--spaeter .mf-stufe__wbsatz { color: rgba(255, 255, 255, 0.7); }
+html.endo-werkbank .mf-stufe__schild--spaeter { border-color: rgba(255, 255, 255, 0.28); color: rgba(255, 255, 255, 0.86); }
+html.endo-werkbank .mf-stufe__schild--spaeter::before { content: none; }
+html.endo-werkbank .wb-klein { display: block; max-width: 64ch; margin-top: 16px; font-size: 14px; line-height: 22px; color: rgba(255, 255, 255, 0.72); }
+html.endo-werkbank .wb-klein .wb-etikett { margin-right: 6px; vertical-align: 1px; }
+/* Befund 11: Summen-Kasten erst nach einer Wahl mit Zahlen – vorher „Noch nichts gewählt“ (13, gedämpft) statt „Einmalig – / Monatlich –“ */
+html.endo-werkbank .wb-summe-leer { display: none; margin: 0; font-size: 13px; line-height: 18px; color: rgba(255, 255, 255, 0.62); }
+html.endo-werkbank .mf-summe.ist-leer > div { display: none; }
+html.endo-werkbank .mf-summe.ist-leer .wb-summe-leer { display: block; grid-column: 1 / -1; }
+/* B1 (11.10.): Lizenz-Hinweis direkt unter den Summen, sobald ein endo-Paket gewählt ist (Handy-Leiste: über beide Spalten) */
+html.endo-werkbank .wb-summe-lizenz { grid-column: 1 / -1; margin: 0; font-size: 12px; line-height: 16px; color: rgba(255, 255, 255, 0.72); text-wrap: pretty; }
+html.endo-werkbank .wb-summe-lizenz[hidden] { display: none; }
+/* Handy/Tablet: unten im Schritt so viel Platz, wie die feste Summen-Leiste hoch ist + 16 px – sie verdeckt dann keinen Kartentext */
+@media (max-width: 1023px) { html.endo-werkbank .mit-summe .mf__nav { padding-bottom: calc(var(--wb-leiste, 72px) + 16px); } }
+
+/* ③ Abschnitt „Website und Büro, die zusammenpassen“: ruhiges Glas-Feld statt Chat-Szene – drei Stufen Anfrage · Angebot · Auftrag (Beispiel).
+   Außen 24, innen Karten 12 (24 − 12 Innenabstand); Handy: Stufen untereinander (Name links, Kärtchen rechts), ab 560 px drei Spalten. */
+.emp--wb .emp__szene { width: 100%; max-width: 560px; }
+@media (min-width: 1100px) { .emp--wb .emp__szene { width: 520px; } }
+.wbb { padding: 16px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.16); background: rgba(255, 255, 255, 0.07);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2); backdrop-filter: blur(18px) saturate(1.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 24px 48px -28px rgba(0, 0, 0, 0.75); text-align: left; }
+.wbb__kopf { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 4px 14px; }
+.wbb__marke { font-family: var(--g-schrift, inherit); font-size: 18px; line-height: 24px; font-weight: 600; color: #FFFFFF; }
+.wbb__beispiel { padding: 2px 10px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.24); font-size: 12px; line-height: 16px; font-weight: 600; color: rgba(255, 255, 255, 0.86); }
+.wbb__stufen { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.wbb__stufe { display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: start; gap: 8px; padding: 12px; border-radius: 12px; background: rgba(13, 10, 20, 0.34); }
+.wbb__name { margin: 0; padding-top: 6px; font-size: 13px; line-height: 18px; font-weight: 600; color: rgba(255, 255, 255, 0.8); }
+.wbb__name b { margin-left: 4px; font-weight: 600; color: rgba(255, 255, 255, 0.62); font-variant-numeric: tabular-nums; }
+.wbb__karten { display: grid; gap: 6px; }
+.wbb__karte { display: grid; gap: 2px; padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.06); }
+.wbb__karte b { font-size: 14px; line-height: 20px; font-weight: 600; color: #FFFFFF; }
+.wbb__karte small { font-size: 12px; line-height: 16px; color: rgba(255, 255, 255, 0.7); }
+/* letzte Stufe = erledigt: Creme-Punkt vor dem Namen (einziger Farbton im Feld) */
+.wbb__stufe--fertig .wbb__karte b::before { content: ""; display: inline-block; width: 6px; height: 6px; margin: 0 6px 2px 0; border-radius: 50%; background: #FFE6B8; vertical-align: middle; }
+@media (min-width: 560px) {
+  .wbb { padding: 20px; }
+  .wbb__stufen { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .wbb__stufe { grid-template-columns: minmax(0, 1fr); align-content: start; }
+  .wbb__name { padding: 0 2px 4px; }
+}
+/* einmal einblenden zusammen mit dem Text (empfang.js setzt .ist-da) */
+.emp--rein .wbb { opacity: 0; transform: translateY(12px); transition: opacity 700ms cubic-bezier(0.23, 1, 0.32, 1) 120ms, transform 700ms cubic-bezier(0.23, 1, 0.32, 1) 120ms; }
+.emp--rein .wbb.ist-da { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .emp--rein .wbb { opacity: 1; transform: none; transition: none; } }

@@ -12,7 +12,38 @@
     satz2: 'Er antwortet Ihren Kunden sofort, und jede Anfrage kommt bei Ihnen als fertiger Kontakt an.',
     knopf: 'endo ansehen', pfeil: '↗', knopfHilfe: 'endo ansehen (endo-Seite)'
   };
+  /* endo Werkbank (11.10.2026, Paket „endo Werkbank“ Teil E – nur mit PREISE.werkbankAn, Vorschau ?endo=werkbank): Texte wörtlich aus
+     „Texte Werkbank (texter).md“ Abschnitt 11. Die Chat-Szene passt dann nicht mehr (endo ist kein Chat mehr, sondern das System für Kunden,
+     Anfragen und Angebote) – statt der Szene ein ruhiges Glas-Feld mit drei Stufen Anfrage · Angebot · Auftrag, als „Beispiel“ gekennzeichnet,
+     ohne Zahlen, ohne Bewegung außer dem einmaligen Einblenden. Aussehen in ergun-werkbank.css (Präfix wbb-). */
+  var TEXTE_WB = {
+    titel: 'Website und Büro, die zusammenpassen',
+    satz1: 'Ihre Website bringt Anfragen. Mit endo behalten Sie jede davon im Blick, zusammen mit Kontakten und Aufgaben.',
+    satz2: 'Wir richten das System ein und schulen Ihr Team.',
+    knopf: 'endo ansehen', pfeil: '↗', knopfHilfe: 'endo ansehen (endo-Seite)',
+    bildHilfe: 'Beispiel: Anfragen, Angebote und Aufträge an einem Ort', beispiel: 'Beispiel',
+    stufen: [
+      { name: 'Anfragen', karten: [['Badsanierung', 'über die Website'], ['Rückruf', 'per Telefon']] },
+      { name: 'Angebote', karten: [['Dachrinne', 'als PDF verschickt']] },
+      { name: 'Aufträge', karten: [['Fassade', 'unterschrieben']] }]
+  };
   var ENDO_STANDARD = 'https://endo-ergun.vercel.app/';
+  function werkbank() { var P = window.PREISE; return !!(P && P.werkbankAn); }
+  /* das Glas-Feld (role="img": für Vorleseprogramme ein Satz statt vieler Kärtchen) */
+  function wbBild() {
+    var b = el('div', 'wbb'); b.setAttribute('role', 'img'); b.setAttribute('aria-label', TEXTE_WB.bildHilfe);
+    var kopf = el('div', 'wbb__kopf'); kopf.appendChild(el('span', 'wbb__marke', 'endo')); kopf.appendChild(el('span', 'wbb__beispiel', TEXTE_WB.beispiel)); b.appendChild(kopf);
+    var sp = el('div', 'wbb__stufen');
+    TEXTE_WB.stufen.forEach(function (s, i) {
+      var st = el('div', 'wbb__stufe' + (i === TEXTE_WB.stufen.length - 1 ? ' wbb__stufe--fertig' : ''));
+      var n = el('p', 'wbb__name', s.name + ' '); n.appendChild(el('b', null, String(s.karten.length))); st.appendChild(n);
+      var l = el('div', 'wbb__karten');
+      s.karten.forEach(function (k) { var c = el('div', 'wbb__karte'); c.appendChild(el('b', null, k[0])); c.appendChild(el('small', null, k[1])); l.appendChild(c); });
+      st.appendChild(l); sp.appendChild(st);
+    });
+    b.appendChild(sp);
+    return b;
+  }
 
   function el(tag, k, t) { var e = document.createElement(tag); if (k) e.className = k; if (t != null) e.textContent = t; return e; }
   function ruhig() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
@@ -24,32 +55,35 @@
     var haupt = document.getElementById('inhalt'), preise = document.getElementById('preise');
     if (!haupt || !preise || preise.parentNode !== haupt) return null;
 
-    var s = el('section', 'emp'); s.id = 'empfang'; s.setAttribute('aria-labelledby', 'empfang-titel');
+    var WB = werkbank(), T = WB ? TEXTE_WB : TEXTE;
+    var s = el('section', 'emp' + (WB ? ' emp--wb' : '')); s.id = 'empfang'; s.setAttribute('aria-labelledby', 'empfang-titel');
     var innen = el('div', 'emp__innen');
     var text = el('div', 'emp__text');
-    var h = el('h2', 'emp__titel', TEXTE.titel); h.id = 'empfang-titel';
-    var p = el('p', 'emp__satz', TEXTE.satz1 + ' ' + TEXTE.satz2);
-    var a = el('a', 'emp__knopf', TEXTE.knopf + ' ');
-    var pf = el('span', null, TEXTE.pfeil); pf.setAttribute('aria-hidden', 'true'); a.appendChild(pf);
-    a.href = endoZiel(); a.target = '_blank'; a.rel = 'noopener'; a.setAttribute('data-endo-link', ''); a.setAttribute('aria-label', TEXTE.knopfHilfe);
+    var h = el('h2', 'emp__titel', T.titel); h.id = 'empfang-titel';
+    var p = el('p', 'emp__satz', T.satz1 + ' ' + T.satz2);
+    var a = el('a', 'emp__knopf', T.knopf + ' ');
+    var pf = el('span', null, T.pfeil); pf.setAttribute('aria-hidden', 'true'); a.appendChild(pf);
+    a.href = endoZiel(); a.target = '_blank'; a.rel = 'noopener'; a.setAttribute('data-endo-link', ''); a.setAttribute('aria-label', T.knopfHilfe);
     text.appendChild(h); text.appendChild(p); text.appendChild(a);
-    var szene = el('div', 'emp__szene');
+    var szene = el('div', 'emp__szene'), bild = WB ? wbBild() : null;
+    if (bild) szene.appendChild(bild);
     innen.appendChild(text); innen.appendChild(szene); s.appendChild(innen);
     haupt.insertBefore(s, preise);
 
-    var sz = window.ENDO_SZENE ? window.ENDO_SZENE.bauen(szene, { start: 'sichtbar' }) : null;
+    var sz = !WB && window.ENDO_SZENE ? window.ENDO_SZENE.bauen(szene, { start: 'sichtbar' }) : null;
 
-    /* Text einmal einblenden, sobald er ins Bild kommt – ohne Beobachter oder mit „Bewegung reduzieren“ sofort da */
-    if (ruhig() || !('IntersectionObserver' in window)) text.classList.add('ist-da');
+    /* Text (bei der Werkbank auch das Glas-Feld) einmal einblenden, sobald er ins Bild kommt – ohne Beobachter oder mit „Bewegung reduzieren“ sofort da */
+    function da() { text.classList.add('ist-da'); if (bild) bild.classList.add('ist-da'); }
+    if (ruhig() || !('IntersectionObserver' in window)) da();
     else {
       s.classList.add('emp--rein');
-      var io = new IntersectionObserver(function (e) { if (e.some(function (x) { return x.isIntersecting; })) { io.disconnect(); text.classList.add('ist-da'); } }, { rootMargin: '0px 0px -10% 0px' });
+      var io = new IntersectionObserver(function (e) { if (e.some(function (x) { return x.isIntersecting; })) { io.disconnect(); da(); } }, { rootMargin: '0px 0px -10% 0px' });
       io.observe(text);
-      setTimeout(function () { var r = text.getBoundingClientRect(); if (r.top < window.innerHeight) text.classList.add('ist-da'); }, 2500);   /* Hintergrund-Tab */
+      setTimeout(function () { var r = text.getBoundingClientRect(); if (r.top < window.innerHeight) da(); }, 2500);   /* Hintergrund-Tab */
     }
     return { element: s, szene: sz };
   }
 
-  window.ERGUN_EMPFANG = { bauen: bauen, TEXTE: TEXTE, endoZiel: endoZiel };
+  window.ERGUN_EMPFANG = { bauen: bauen, TEXTE: TEXTE, TEXTE_WB: TEXTE_WB, endoZiel: endoZiel };
   window.ERGUN_EMPFANG.jetzt = bauen();
 })();
