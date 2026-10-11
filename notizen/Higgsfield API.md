@@ -3,14 +3,14 @@ tags: [endo-ai, dienst]
 ---
 # Higgsfield API
 
-Haupt-KI von [[endo-ai|endo.ai]]. Plattform: cloud.higgsfield.ai.
+Haupt-KI von endo.ai. Plattform: cloud.higgsfield.ai.
 
 - Über 50 Modelle für Bilder und Videos (Soul, Seedream, Nano Banana, Ideogram, Kling, Seedance …). Keine fertigen Websites.
 - Zugang über Key + Secret, zusammen als `HF_KEY` = `key:secret`. Nur in [[Vercel]] eintragen, nie in Chat oder Code.
 - Bezahlt wird pro Ergebnis aus einem Dollar-Guthaben. Beispiel: 10 Sekunden Kling 3.0 etwa 1,12 $.
 - Die Nutzungsbedingungen erlauben Anwendungen für eigene Endkunden (Abschnitt 11 lesen).
-- Auch die Bilder der [[Startseite]] stammen aus Higgsfield.
-- Ausführlich: [[KI-Studio mit Higgsfield]]
+- Auch die Bilder der Startseite stammen aus Higgsfield.
+- Ausführlich: KI-Studio mit Higgsfield
 
 ## Abo oder API – zwei getrennte Dinge (Stand 26.09.2026)
 - **higgsfield.ai-Abo** (Ultra, Credits): das nutzt der **Higgsfield-Connector in Claude**. Alles, was Claude bisher erzeugt hat, lief darüber – nicht über die API.
@@ -37,7 +37,7 @@ Oberfläche für die **API** (nicht das Abo): Bilder und Videos mit ~38 Modellen
 
 - **Ordner:** `_code/werkzeuge/higgsfield-api/` – eigenes `package.json`, darin das **offizielle SDK** `@higgsfield/client` (Version 0.2.6, MIT, spricht nur mit `api.higgsfield.ai`; liegt in `node_modules/`, wird nicht mit Git gesichert). Neu installieren: im Ordner `npm install`.
 - **Skript:** `hf.mjs` – fragt zuerst den Preis ab (`/estimate`), erzeugt nur mit `--ok`, bricht über `--max` (Standard 1,00 $) ab, lädt das Ergebnis nach `05 Higgsfield-Assets/Bilder/` und trägt es oben in [[Higgsfield-Galerie]] ein. Fehlgeschlagene/abgelehnte Aufträge kosten nichts.
-- **Regel für Claude:** vor jeder Generierung Modell, Prompt und Preis in $ nennen und auf Emres OK warten. Prompt-Wissen und Modellwahl: Skill `higgsfield-api-prompts` ([[Skills-Übersicht]]).
+- **Regel für Claude:** vor jeder Generierung Modell, Prompt und Preis in $ nennen und auf Emres OK warten. Prompt-Wissen und Modellwahl: Skill `higgsfield-api-prompts` (Skills-Übersicht).
 
 ### Schlüssel eintragen (macht nur Emre)
 1. Im Explorer öffnen: `C:\Users\emrer\Documents\WebDesign\_code\werkzeuge\higgsfield-api\.env.local` (Rechtsklick → „Öffnen mit“ → Editor). Die Datei ist schon da.

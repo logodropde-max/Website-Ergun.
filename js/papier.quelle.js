@@ -1,18 +1,15 @@
-/* ERGUN. Papier-Start (03.10.2026 – Ausnahme auf ERGUNs Wunsch; Schalter PAPIER_STANDARD in index.html, ?start=ohne = ohne Blatt).
+/* ERGUN. Papier-Start (seit 03.10.2026 – Ausnahme auf ERGUNs Wunsch; Blatt im Glas-Look seit 04.10.2026).
    Die Seite beginnt als Blatt mit „ERGUN.“ – Scrollen lässt es von der Mitte aus reißen (Vorlage), im Spalt der ECHTE Glas-Hintergrund,
    kurzes Verweilen, dann reißt das Blatt ganz auf (~1,4 s). Danach: Ebene + Zuhörer weg. Nur einmal je Aufruf, nichts gespeichert.
    Blatt steht fertig im HTML/CSS von index.html – dieses Skript macht nur die Bewegung (React-Teile als DOM-Aufbau nachgebaut). */
 var TEASER = 0.62;          /* open = 1: die Hälften sind so weit auseinander wie in der Vorlage */
-/* Paket 1f Teil E (ERGUN., 04.10.2026 21:14: „die Animation, wo es zerreißt, schneller und flüssiger“): html[data-riss] aus dem Kopf-Skript von index.html –
-   „halb“ = halb so lang wie bisher, „mittel“ = zwei Drittel; ohne Angabe wie bisher (Rückweg ?riss=alt). */
-var RISS = typeof document !== 'undefined' && document.documentElement ? document.documentElement.getAttribute('data-riss') || '' : '';
-/* ERGUN., 05.10.2026: „sobald man einmal auf den Bildschirm tippt, soll das alles ganz zügig gehen“ – „zuegig“: die ERSTE Eingabe (Tippen, Wischen,
-   Mausrad, Taste) reißt sofort ganz auf, ohne Halt im Spalt; Öffnen ~0,2 s + Aufreißen 420 ms. */
-var ZUEGIG = RISS === 'zuegig';
-var VERWEILEN = ZUEGIG ? 0 : RISS === 'halb' ? 350 : RISS === 'mittel' ? 470 : 700;   /* ms: das Auge soll den Hintergrund im Spalt erkennen */
-var DAUER = ZUEGIG ? 420 : RISS === 'halb' ? 700 : RISS === 'mittel' ? 950 : 1400;   /* ms: komplettes Aufreißen */
+/* Riss „zügig“ (ERGUN., 05.10.2026: „sobald man einmal auf den Bildschirm tippt, soll das alles ganz zügig gehen“): die ERSTE Eingabe (Tippen,
+   Wischen, Mausrad, Taste) reißt sofort ganz auf, ohne Halt im Spalt; Öffnen ~0,2 s + Aufreißen 420 ms. */
+var ZUEGIG = true;
+var VERWEILEN = 0;      /* ms: kein Halt im Spalt */
+var DAUER = 420;        /* ms: komplettes Aufreißen */
 var STUFEN = [TEASER];   /* Wischen (ERGUN., 03.10. spät: „einmal scrollen weniger“): ein Wisch = Riss + Öffnen bis zum Teaser, der zweite reißt ganz auf */
-var SCHNELL = ZUEGIG ? 0 : 160;          /* ms: nach dem zweiten Wisch (oder einem langen) reißt es fast sofort auf */
+var SCHNELL = 0;         /* ms: nach dem zweiten Wisch (oder einem langen) reißt es sofort auf */
 var PAPIER = "#F2F1EE";
 var ZUSATZ = { top: { dx: -40, rot: -9 }, bottom: { dx: 40, rot: 8 } };   /* beim Aufreißen: oben fliegt nach oben, unten nach unten, beide kippen */
 var weich = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
@@ -82,10 +79,8 @@ root.ERGUN_PAPIER = { endLage: endLage, lage: lage, draussen: draussen, tearLine
 
 if (typeof document === "undefined") return;
 var html = document.documentElement, ebene = document.getElementById("papier");
-/* Blatt im Glas-Look (?start=glas, 03.10.2026): statt Papier der unscharfe Verlauf (.papier__grund = Standbild des Ladezustands), die Hälften tragen
-   dasselbe Bild mit; feine helle Glaskante statt Papierkern; Leiste = oberer Rand des Verlaufs, beim Aufreißen ohne Sprung */
-var GLAS = !!(html && html.classList.contains("blatt-glas"));
-if (GLAS) PAPIER = root.ERGUN_LADER_OBEN || PAPIER;
+/* Blatt im Glas-Look (seit 04.10.2026): statt Papier der unscharfe Verlauf (.papier__grund = Standbild des Verlaufs), die Hälften tragen
+   dasselbe Bild mit; feine helle Glaskante statt Papierkern */
 if (!ebene) return;
 if (!html.classList.contains("papier-an")) { ebene.parentNode.removeChild(ebene); return; }
 
@@ -107,9 +102,9 @@ try {
        die Grafikkarte schiebt die fertigen Bilder (die Vorlage drehte SVG-Gruppen = jedes Bild neu malen)
      · Schatten aus drei weichen Linien statt Weichzeichner-Filter (der wurde bei jeder Bewegung neu gerechnet)
      · die Ebenen sind etwas größer als das Fenster, damit beim Kippen an den Rändern nichts fehlt */
-  var haelften = null, riss = el("path", { fill: "none", stroke: GLAS ? "rgba(255,255,255,0.92)" : "#1d0f07", "stroke-width": GLAS ? "1.6" : "2.4", "stroke-linejoin": "bevel" });
+  var haelften = null, riss = el("path", { fill: "none", stroke: "rgba(255,255,255,0.92)", "stroke-width": "1.6", "stroke-linejoin": "bevel" });
   /* Glas: das Standbild des Verlaufs, wie es .papier__grund per CSS zeigt (cover auf Fenster + 8 % je Seite) – für die Hälften als SVG-Bild */
-  var grundEl = GLAS ? ebene.querySelector(".papier__grund") : null, grundBild = null, grundFarbe = "#A25945", grundListe = [];
+  var grundEl = ebene.querySelector(".papier__grund"), grundBild = null, grundFarbe = "#A25945", grundListe = [];
   if (grundEl) { var gs = getComputedStyle(grundEl), gm = /url\(["']?([^"')]+)["']?\)/.exec(gs.backgroundImage || ""); grundBild = gm ? gm[1] : null; grundFarbe = gs.backgroundColor || grundFarbe; }
   function grundLage(b) { var m = masse; b.setAttribute("x", (m.vx - 0.08 * m.W / m.s).toFixed(2)); b.setAttribute("y", (m.vy - 0.08 * m.H / m.s).toFixed(2)); b.setAttribute("width", (1.16 * m.W / m.s).toFixed(2)); b.setAttribute("height", (1.16 * m.H / m.s).toFixed(2)); }
   ruck.appendChild(riss);
@@ -134,15 +129,15 @@ try {
       var div = document.createElement("div"); div.className = "papier__haelfte";
       var s = el("svg", { preserveAspectRatio: "none", focusable: "false" });
       var schatten = el("g", { fill: "none", stroke: "#000", transform: "translate(0 " + (side === "top" ? 10 : -10) + ")" });
-      (GLAS ? [[54, 0.05], [36, 0.09], [20, 0.15]] : [[54, 0.12], [36, 0.22], [20, 0.36]]).forEach(function (w) { schatten.appendChild(el("path", { d: d(line, false), "stroke-width": String(w[0]), "stroke-opacity": String(w[1]), "stroke-linejoin": "round" })); });
+      [[54, 0.05], [36, 0.09], [20, 0.15]].forEach(function (w) { schatten.appendChild(el("path", { d: d(line, false), "stroke-width": String(w[0]), "stroke-opacity": String(w[1]), "stroke-linejoin": "round" })); });
       var cp = el("clipPath", { id: "papier-" + side }); cp.appendChild(el("path", { d: d(g0.shape) }));
       var inhalt = el("g", { "clip-path": "url(#papier-" + side + ")" }), kopie = blatt.cloneNode(true); kopie.removeAttribute("id"); inhalt.appendChild(kopie);
-      if (GLAS) {   /* Hälfte = Verlauf (Grundfarbe + Standbild) + Glas-Wort */
+      {   /* Hälfte = Verlauf (Grundfarbe + Standbild) + Glas-Wort */
         var r0 = kopie.querySelector("rect"); if (r0) r0.setAttribute("fill", grundFarbe);
         if (grundBild && r0) { var gb = el("image", { preserveAspectRatio: "xMidYMid slice" }); gb.setAttribute("href", grundBild); grundLage(gb); grundListe.push(gb); kopie.insertBefore(gb, r0.nextSibling); }
       }
-      var kern = el("path", { fill: GLAS ? "rgba(255,255,255,0.72)" : "#ffffff" });   /* Glas: feine helle Kante statt Papierkern */
-      var rollen = CURLS[side].map(function () { return el("path", GLAS ? { fill: "rgba(255,255,255,0.16)", stroke: "rgba(255,255,255,0.7)", "stroke-width": "1" } : { fill: "url(#papier-curl-" + side + ")", stroke: "#fff", "stroke-width": "1" }); });
+      var kern = el("path", { fill: "rgba(255,255,255,0.72)" });   /* Glas: feine helle Kante statt Papierkern */
+      var rollen = CURLS[side].map(function () { return el("path", { fill: "rgba(255,255,255,0.16)", stroke: "rgba(255,255,255,0.7)", "stroke-width": "1" }); });
       var defs = el("defs"); defs.appendChild(cp);   /* Verläufe der Kanten liegen einmal im Blatt-SVG (ids sind seitenweit) */
       [defs, schatten, inhalt, kern].concat(rollen).forEach(function (x) { s.appendChild(x); });
       div.appendChild(s); buehne.appendChild(div);
@@ -185,19 +180,18 @@ try {
     if (hinweis) hinweis.style.opacity = q ? "0" : String(f.hint);
     leiste(q);
   }
-  /* Statusleiste: Papier, solange das Blatt liegt (kein anderes Skript setzt sie vorher – index.html Ladezustand), beim Aufreißen weich zur
+  /* Statusleiste: Papier, solange das Blatt liegt, beim Aufreißen weich zur
      Farbe oben auf der Seite */
   var tc = document.querySelector('meta[name="theme-color"]'), tcJetzt = "";
   function leiste(q) {
-    var f = q > 0 ? mischen(PAPIER, root.ERGUN_LADER_OBEN || root.ERGUN_PAPIER_THEMA || PAPIER, weich(Math.min(1, q * 1.25))) : PAPIER;
+    var f = q > 0 ? mischen(PAPIER, root.ERGUN_PAPIER_THEMA || PAPIER, weich(Math.min(1, q * 1.25))) : PAPIER;
     if (tc && f !== tcJetzt) tc.setAttribute("content", tcJetzt = f);
   }
   root.addEventListener("resize", messen); abbau.push(function () { root.removeEventListener("resize", messen); });
 
-  /* Bereit zum Öffnen erst, wenn der Ladezustand weg ist und das erste echte Glas-Bild steht – sonst sähe man im Spalt den Ladezustand */
+  /* Bereit zum Öffnen erst, wenn das erste echte Glas-Bild steht */
   var anfang = performance.now();
   function bereit() {
-    if (document.getElementById("lader")) return false;
     if (html.classList.contains("glas-ohne")) return true;
     var z = root.__glas && root.__glas.zustand && root.__glas.zustand();
     return (!!z && z.bilder > 0) || performance.now() - anfang > 6000;   /* Sicherung: nie hinter dem Blatt festsitzen */
@@ -287,7 +281,7 @@ try {
     if (ebene.parentNode) ebene.parentNode.removeChild(ebene);
     html.classList.remove("papier-an", "papier-geht");
     if ((root.scrollY || 0) !== 0) root.scrollTo(0, 0);
-    if (typeof root.ERGUN_LEISTE === "function") root.ERGUN_LEISTE(); else if (tc && root.ERGUN_PAPIER_THEMA) tc.setAttribute("content", root.ERGUN_PAPIER_THEMA);   /* ab jetzt wieder der Ladezustand: oben Verlauf, unten Grund */
+    if (tc && root.ERGUN_PAPIER_THEMA) tc.setAttribute("content", root.ERGUN_PAPIER_THEMA);   /* ab jetzt wieder die Farbe der Seite */
     info.phase = "weg"; info.fertig = Math.round(performance.now());
   }
   info.fertigMachen = fertig;   /* Prüfgriffe für Aufnahmen: fertig machen · einen Zeitpunkt des Aufreißens anhalten */

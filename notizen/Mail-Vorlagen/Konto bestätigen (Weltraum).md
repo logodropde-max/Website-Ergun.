@@ -3,7 +3,7 @@ tags: [endo, supabase, mail-vorlage]
 ---
 # Mail-Vorlage: Konto bestätigen – Weltraum („Confirm sign up“)
 
-Emres Wunsch (03.10.2026): Bestätigungs-Mail mit endo-Hero und galaktischem Hintergrund. **Diese Fassung steht in Supabase** → Authentication → Emails → Templates → **Confirm sign up**. Die vorherige helle Fassung: [[Konto bestätigen (hell, vorher)]].
+Emres Wunsch (03.10.2026): Bestätigungs-Mail mit endo-Hero und galaktischem Hintergrund. **Diese Fassung steht in Supabase** → Authentication → Emails → Templates → **Confirm sign up**. Die vorherige helle Fassung: Konto bestätigen (hell, vorher).
 
 - Kopfbild: echte endo-Form von der Startseite vor Sternenhimmel – `https://endo-ergun.vercel.app/bilder/mail/endo-kopf.jpg` (1200 × 560, in der Mail 600 breit). Neu bauen: `_code/werkzeuge/mail-kopf-bauen.py <Aufnahme>` (Aufnahme der Startseite ohne Text mit `cdp-shot.mjs`, `"gpu": true`, 1200 × 700, dpr 2), danach `?v=` in der Vorlage hochzählen.
 - Aufbau als Tabellen (läuft auch in Outlook/Gmail), dunkler Grund mit `bgcolor` UND `style` (bleibt im Dunkelmodus dunkel), Text hell, Knopf Orange #FF5A1F wie bisher.

@@ -7,7 +7,7 @@ Stand 02.10.2026. Emre kopiert Betreff + HTML selbst ins Dashboard: Supabase →
 
 | Vorlage in Supabase | Notiz | Wann |
 |---|---|---|
-| Confirm sign up | **[[Konto bestätigen (Weltraum)]]** – steht seit 03.10. in Supabase (endo-Form + Sternenhimmel, dunkel) · vorher: [[Konto bestätigen (hell, vorher)]] | Konto erstellen auf der endo-Startseite, auch „Mail erneut senden“ |
+| Confirm sign up | **[[Konto bestätigen (Weltraum)]]** – steht seit 03.10. in Supabase (endo-Form + Sternenhimmel, dunkel) · vorher: Konto bestätigen (hell, vorher) | Konto erstellen auf der endo-Startseite, auch „Mail erneut senden“ |
 | Reset Password | [[Passwort zurücksetzen]] | „Passwort vergessen?“ |
 | Magic Link | [[Magic Link]] | Anmelde-Link ohne Passwort, wenn er im Dashboard verschickt wird (die Seite nutzt ihn nicht) |
 | Change Email Address | [[E-Mail ändern]] | Adresse ändern (gibt es auf der Seite noch nicht, Vorlage für später) |

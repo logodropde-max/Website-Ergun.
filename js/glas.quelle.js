@@ -47,11 +47,10 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   const FEIN = html.classList.contains('glas-fein');
   /* Glas nahtlos (?glas=nahtlos): keine Fläche über dem Verlauf – er wird selbst nach unten weich dunkler (siehe GLASS_FEIN) */
   const NAHTLOS = FEIN && html.classList.contains('glas-nahtlos');
-  /* Blatt im Glas-Look (?start=glas, 03.10.2026 – Ausnahme auf ERGUNs Wunsch, Schalter BLATT_GLAS_STANDARD in index.html): Titelbild „Webdesign und
+  /* Blatt im Glas-Look (seit 04.10.2026 – Ausnahme auf ERGUNs Wunsch, html.blatt-glas fest in index.html): Titelbild „Webdesign und
      Automatisierung“ als Glas-Schriftzug (versteckt bleibt „ERGUN.“ im h1), Fußzeile „ERGUN. · Webdesign und Automatisierung · © Jahr“, hinter dem
-     Riss derselbe Verlauf klar und gezeichnet: hinten a = Glas-Bühne mit Zeichnung (Linien, Lichtkanten, Körnung, Tiefe) · hinten b = Illustration als Grund */
+     Riss derselbe Verlauf klar und gezeichnet (Glas-Bühne mit Linien, Lichtkanten, Körnung, Tiefe) */
   const GB = FEIN && html.classList.contains('blatt-glas');
-  const HINTEN = GB ? (html.getAttribute('data-hinten') === 'b' ? 'b' : 'a') : '';
   /* Ruhe (?ruhe=neu, 01.10.2026 – Emre: „Der Schriftzug zittert beim Laden und beim Scrollen“). Ursachen und Lösung:
      · Das Glas liegt in der festen Leinwand und wurde einen Bild-Takt NACH dem übrigen Titelbild-Text verschoben (der Browser scrollt Text
        sofort, die Leinwand malt im nächsten requestAnimationFrame) → der Schriftzug wackelte gegen „Digitalstudio“ und die Knöpfe.
@@ -85,21 +84,16 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   /* Ruhe + Handy (Emre, 02.10.: „alles auf höchste FPS“): Leinwand mit höchstens 1,5-facher Pixeldichte, Farbfeld mit 4 statt 5 Rausch-Stufen
      (der Schriftzug selbst bleibt scharf: seine Maske hat eine eigene Auflösung bis 2×), unter dem Titelbild kein Drosseln mehr */
   const HANDY_R = window.matchMedia('(max-width: 899px)').matches;
-  /* Handy leicht (07.10.2026, Paket „ERGUN. Handy flüssig“, Vorschau ?handy=leicht – Schalter HANDY_LEICHT_STANDARD in index.html, nur Berührung +
-     schmaler Bildschirm, html.handy-leicht): Sparmodus der Vorlage (lite) von Anfang an, der Wächter schaltet bei weiterem Ruckeln auf ein Standbild;
-     der Verlauf bewegt sich nur im Kopf (darunter, hinter dem Blatt und bei verdeckter Seite steht er), höchstens ~60 Bilder/s, und ganz unten,
-     wo das Bild nicht mehr vom Scrollen abhängt, wird gar nicht neu gemalt. Ohne die Klasse läuft alles wie vorher. */
-  const LEICHT = html.classList.contains('handy-leicht');
-  /* Titel scharf (07.10.2026, Vorschau ?titel=scharf – Schalter TITEL_SCHARF_STANDARD in index.html, html.titel-scharf; nur Ruhe + Handy-Breite, der PC
+  /* Titel scharf (seit 07.10.2026, html.titel-scharf fest in index.html; nur Ruhe + Handy-Breite, der PC
      bleibt Bit für Bit gleich). Am iPhone (3-fache Pixeldichte) rechnete die Leinwand mit höchstens 1,5-facher Dichte – der Browser zieht das Bild
      auf das Doppelte, der Glas-Schriftzug wirkt weich. Jetzt: solange der Kopf im Bild ist, Leinwand und Maske in voller Gerätedichte (höchstens
-     SCHARF_MAX, Vergleich ?scharf=2.5); unter dem Kopf rechnet die Leinwand wieder mit der heutigen Dichte. Der Wächter senkt im Kopf nie unter die
+     SCHARF_MAX); unter dem Kopf rechnet die Leinwand wieder mit der heutigen Dichte. Der Wächter senkt im Kopf nie unter die
      heutige Stufe (Leinwand 1,5 · Maske 2). Die Maske deckt nur noch das Band um den Schriftzug statt des ganzen Fensters – weniger Grafikspeicher
      und weniger Weichzeichner-Arbeit; der Shader liest sie über hoehe() an derselben Stelle wie vorher. Farbfeld behält seine heutige Pixelgröße. */
   const SCHARF = FEIN && RUHE && HANDY_R && html.classList.contains('titel-scharf');
-  const SCHARF_MAX = Math.min(3, Math.max(1.5, parseFloat(html.getAttribute('data-scharf')) || 3));
+  const SCHARF_MAX = 3;
   /* Kopf nativ (08.10.2026, ERGUN.: „Titel, Unterzeile und Knöpfe sollen ganz normal mitscrollen, nur ohne Zittern“), Schalter html.kopf-nativ
-     (?kopf=nativ, KOPF_NATIV_STANDARD in index.html), nur zusammen mit dem Takt. Ursache des Zitterns: lageSetzen schob die feste Gruppe bei jedem
+     (fest in index.html), nur zusammen mit dem Takt. Ursache des Zitterns: lageSetzen schob die feste Gruppe bei jedem
      Bild per transform hinter dem Scrollen her, und der Schriftzug wurde in der festen Leinwand um dieselbe Strecke versetzt gemalt – ein Skript
      läuft dem Schwung-Scrollen am iPhone immer etwas hinterher. Jetzt bewegt NUR der Browser die Lage:
      · Unterzeile und Knöpfe stehen im normalen Fluss des Titelbilds (kein fixed, kein transform);
@@ -135,16 +129,11 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     root.style.background = 'transparent';
     /* je Zeichen ein <span>: die Abstände werden optisch ausgeglichen (abstaende()); der Text bleibt „ERGUN.“ für Suche und Screenreader */
     if (GB) titleEl.innerHTML = '<span class="glas-versteckt">ERGUN. – </span><span class="ghr-word">Webdesign</span> <span class="ghr-word">und</span> <span class="ghr-word">Automatisierung</span>';   /* am Handy drei Zeilen (glas-marke.css) */
-    else if (frage.get('punkt') !== 'orange') titleEl.innerHTML = '<span class="ghr-word">' + 'ERGUN.'.split('').map((z) => '<span class="glas-z">' + z + '</span>').join('') + '</span>';
+    else titleEl.innerHTML = '<span class="ghr-word">' + 'ERGUN.'.split('').map((z) => '<span class="glas-z">' + z + '</span>').join('') + '</span>';
   }
-  if (frage.get('punkt') === 'orange') {   /* Vergleich: der Punkt als solides Marken-Orange über dem Glas (nicht Teil des Glases) */
-    titleEl.innerHTML = '<span class="ghr-word">ERGUN</span><span class="glas-punkt">.</span>';
-    html.setAttribute('data-glas-punkt', 'orange');
-  }
-  if (NAHTLOS && frage.get('text') !== 'b') {   /* Emre (01.10. spät): im Titelbild steht „Websites und Automatisierung“ */
+  if (NAHTLOS) {   /* Emre (01.10. spät): im Titelbild steht „Websites und Automatisierung“ */
     const d = root.querySelector('[data-glas-text]'); if (d) { d.textContent = 'Websites und Automatisierung'; d.classList.add('glas-unterzeile'); }
   }
-  if (frage.get('text') === 'b') { const d = root.querySelector('[data-glas-text]'); if (d) d.textContent = 'Website & Automatisierung für Unternehmen.'; }
 
   /* ---------- Seite um den Hero: Altlasten raus, Angebote + Formular + Fußzeile im Glas-Stil ---------- */
   ['header.nav', 'footer.footer', '.szene', '#dschungel-vorlage', '#kristall-vorlage', '#glas-vorlage', '.mf-agentur'].forEach((s) => { const e = $(s); if (e) e.remove(); });
@@ -355,13 +344,11 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   function start() {
     if (aufraeumen) { aufraeumen(); aufraeumen = null; }
     /* „Farbwechsel“ (04.10.2026): der Verlauf kommt aus der CSS – dann gar kein WebGL starten (spart Akku), der Schriftzug steht als Schrift da */
-    const gl = /[?&]webgl=aus\b/.test(location.search) || html.classList.contains('grund-farbwechsel') ? null : canvas.getContext('webgl2', { alpha: NATIV, antialias: false, depth: false, stencil: false });
+    const gl = /[?&]webgl=aus\b/.test(location.search) ? null : canvas.getContext('webgl2', { alpha: NATIV, antialias: false, depth: false, stencil: false });
     if (!gl) return;
     const floatTargets = !!gl.getExtension('EXT_color_buffer_float') || (fein && !!gl.getExtension('EXT_color_buffer_half_float'));   /* fein: auch Halb-Fließkomma (iPhone) */
 
     let disposed = false, raf = 0, last = 0, time = 0, inView = true, lite = false, judged = 0, slow = 0;
-    let standbild = false, judged2 = 0, slow2 = 0, gemaltY = -1, gemaltTief = '', feldZeit = -1;   /* Handy leicht: zweite Stufe des Wächters + „schon gemalt“ */
-    if (LEICHT) { lite = true; zustand.lite = true; html.setAttribute('data-glas-lite', 'true'); }
     const light = { x: 0.5, y: 0.56 };
     let readyAt = -1;
     const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -408,19 +395,6 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     /* Titel scharf: Band der Maske (u_band), Abstand der Nachbar-Abfragen, „unter dem Kopf“ (dann heutige Dichte) */
     const scharf = SCHARF && fein;
     let bandU = null, hTexel = null, scharfTief = false;
-    /* hinten b: Illustration (bilder/glas/hinten-quer|hoch.webp) als Verlauf – cover, einmal in die Feld-Fläche gemalt */
-    let bildTex = null, bildGemalt = false;
-    const BILD = '#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 o;\nuniform sampler2D u_bild;\nuniform vec2 u_skala;\n' +
-      'void main() { vec2 uv = (vUv - 0.5) * u_skala + 0.5; o = vec4(texture(u_bild, uv).rgb, 1.0); }\n';
-    if (HINTEN === 'b') {
-      const img = new Image(); img.decoding = 'async';
-      img.onload = () => { if (disposed) return; const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t); gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img); gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        bildTex = { tex: t, w: img.naturalWidth, h: img.naturalHeight }; owned.tex.push(t); size(); kick(); };
-      img.src = 'bilder/glas/hinten-' + (window.innerWidth >= window.innerHeight ? 'quer' : 'hoch') + '.webp?v=1';
-    }
 
     const run = (p, dst, u) => {
       gl.useProgram(p.prog);
@@ -573,9 +547,8 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
       /* Handy leicht: Leinwand in 1-facher Pixeldichte (Sparmodus), das Farbfeld behält aber seine heutige Größe in Pixeln (0,4 × 1,5) –
          es kostet wenig und trägt das Muster; so bleibt der Verlauf so fein wie heute */
-      const fs0 = HINTEN === 'b' && bildTex ? 1 : LEICHT ? 0.4 * Math.min(window.devicePixelRatio || 1, 1.5) / dpr : lite ? 0.25 : 0.4;   /* hinten b: Illustration scharf, nur einmal gemalt */
+      const fs0 = lite ? 0.25 : 0.4;
       const fs = dprJetzt === dpr ? fs0 : fs0 * dpr / dprJetzt;   /* Titel scharf: das Farbfeld behält seine heutige Pixelgröße */
-      bildGemalt = false; gemaltTief = ''; gemaltY = -1; feldZeit = -1;
       const fw = Math.max(1, Math.round(w * fs)), fh = Math.max(1, Math.round(h * fs));
       if (!field || field.w !== fw || field.h !== fh) {
         if (field) { gl.deleteTexture(field.tex); gl.deleteFramebuffer(field.fbo); }
@@ -609,16 +582,14 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       if (!field || !blurB) return;
       const pal = live.palette, aspect = canvas.width / canvas.height;
       if (FELD_PRUEF !== undefined) { gl.bindFramebuffer(gl.FRAMEBUFFER, field.fbo); gl.viewport(0, 0, field.w, field.h); gl.clearColor(FELD_PRUEF, FELD_PRUEF, FELD_PRUEF, 1); gl.clear(gl.COLOR_BUFFER_BIT); }
-      else if (HINTEN === 'b' && bildTex && P.bild) { if (!bildGemalt) { const ia = bildTex.w / bildTex.h; run(P.bild, field, { bild: bildTex.tex, skala: aspect > ia ? [1, ia / aspect] : [aspect / ia, 1] }); bildGemalt = true; } }   /* steht still: einmal malen */
-      else if (LEICHT && feldZeit === time) { /* Handy leicht: Verlauf steht – das Farbfeld ist schon gemalt */ }
-      else { feldZeit = LEICHT ? time : -1; run(P.field, field, { time, aspect, octaves: LEICHT ? 4 : lite ? 3 : RUHE && HANDY_R ? 4 : 5, c0: pal[0], c1: pal[1], c2: pal[2], c3: pal[3], c4: pal[4] }); }
+      else run(P.field, field, { time, aspect, octaves: lite ? 3 : RUHE && HANDY_R ? 4 : 5, c0: pal[0], c1: pal[1], c2: pal[2], c3: pal[3], c4: pal[4] });
       const ch = Math.max(1, canvas.clientHeight), w = WEG ? schriftJetzt(performance.now()) : 1;
       const u = {
         field: field.tex, height: blurB.tex, htexel: hTexel || [1 / blurB.w, 1 / blurB.h], bevel, aspect, light: [light.x, light.y], ...(bandU ? { band: bandU } : {}),
         glass: WEG ? w : 1,
         form: WEG ? (reduceMq.matches ? 1 : w) : RUHE || reduceMq.matches || readyAt < 0 ? 1 : formed(performance.now() - readyAt, FORM_MS), res: [canvas.width, canvas.height],   /* weg: Aufbau rückwärts; „Bewegung reduzieren“ = nur ausblenden */
         shift: fein ? (RUHE && (!WEG || NATIV) ? lageSetzen() : window.scrollY || 0) / ch : 0, nahtlos: NAHTLOS ? 1 : 0,
-        maske: WEG ? schrift.lage / ch : 0, ohne: WEG && w <= 0 ? 1 : 0, detail: HINTEN === 'a' ? 1 : 0
+        maske: WEG ? schrift.lage / ch : 0, ohne: WEG && w <= 0 ? 1 : 0, detail: GB ? 1 : 0
       };
       if (NATIV) {   /* Kopf nativ: erst die Glas-Ebene (nur das Band um den Schriftzug) malen und ins Titelbild kopieren, dann die Bühne ohne Glas */
         if (P.titel) { titelMalen(w, u); u.ohne = 1; }
@@ -628,9 +599,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       zustand.bilder++;
     };
 
-    /* Handy leicht: Bewegung nur, solange der Kopf im Bild ist, kein Blatt darüber liegt und der Wächter nicht auf Standbild steht */
-    const bewegt = () => !LEICHT || (!standbild && (window.scrollY || 0) < canvas.clientHeight && !html.classList.contains('papier-an'));
-    const animating = () => (fein || inView) && !document.hidden && !reduceMq.matches && bewegt();   /* fein: die Bühne liegt hinter der ganzen Seite */
+    const animating = () => (fein || inView) && !document.hidden && !reduceMq.matches;   /* fein: die Bühne liegt hinter der ganzen Seite */
     let gemalt = 0, tiefStand = false;
     /* Schriftzug weg/da (WEG): Ziel nach der Scroll-Lage, Wert nach der Zeit (weich), Lage der Maske steht still, sobald er ganz weg ist */
     const schrift = window.__glasSchrift = { ziel: 1, von: 1, wert: 1, t0: 0, lage: 0, offen: false, neu: 0 };
@@ -680,21 +649,14 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
         if (judged > 3 && raw > SLOW_FRAME_S) slow += raw > CRAWL_FRAME_S ? 3 : 1;
         if (slow >= SLOW_FRAMES) { lite = true; zustand.lite = true; zustand.liteBei = { bild: judged, ms: Math.round(performance.now() - readyAt), blatt: html.classList.contains('papier-an') }; html.setAttribute('data-glas-lite', 'true'); size(); }
       }
-      if (LEICHT && !standbild && judged2 < 120 && animating()) {   /* Handy leicht: ruckelt es trotz Sparmodus weiter, bleibt der Verlauf als Standbild stehen */
-        judged2 += 1; zustand.geprueft = judged2;
-        if (judged2 > 3 && raw > SLOW_FRAME_S) slow2 += raw > CRAWL_FRAME_S ? 3 : 1;
-        if (slow2 >= SLOW_FRAMES) { standbild = true; zustand.standbild = true; html.setAttribute('data-glas-standbild', 'true'); }
-      }
       /* fein: unter dem Hero fließt der Verlauf langsamer (bis 0,3×) und wird höchstens ~24-mal je Sekunde neu gemalt */
       const unten = fein ? Math.min(Math.max((window.scrollY || 0) / Math.max(1, canvas.clientHeight), 0), 1) : 0;
       /* Titel scharf: ab 0,74 Fensterhöhen (Schriftzug längst weg) wieder die heutige Dichte, zurück schon ab 0,66 – vor dem Wiederkommen (0,6) */
       if (scharf) { const y = window.scrollY || 0, hh = Math.max(1, canvas.clientHeight); const tief = scharfTief ? y > 0.66 * hh : y > 0.74 * hh;
         if (tief !== scharfTief) { scharfTief = tief; zustand.wechsel = (zustand.wechsel || 0) + 1; size(); } }
-      /* Ladezustand (index.html #lader, 02.10.): solange er steht, bleibt der Verlauf beim ersten Bild stehen – genau das Bild, aus dem
-         die Ladefarben gemacht sind; so gehen beide ohne Farbsprung ineinander über */
-      if (animating() && !html.classList.contains('glas-laden')) time += dt * (1 - 0.7 * unten);
+      if (animating()) time += dt * (1 - 0.7 * unten);
       const pt = pointer, idle = (now - pt.at) / 1000 > IDLE_S;
-      const [tx, ty] = !bewegt() ? [light.x, light.y] : idle && animating() ? orbit(time) : [pt.x, pt.y];   /* Handy leicht: Standbild = Licht steht */
+      const [tx, ty] = idle && animating() ? orbit(time) : [pt.x, pt.y];
       light.x = follow(light.x, tx, dt, idle ? 1.2 : 7);
       light.y = follow(light.y, ty, dt, idle ? 1.2 : 7);
       if (FELD_PRUEF !== undefined) { light.x = 0.5; light.y = 0.7; }   /* Prüfschalter: Licht fest (Glanz wie im Ruhebild) */
@@ -702,13 +664,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       const sparen = fein && !RUHE && unten >= 1 && animating() && now - gemalt < 40   /* Ruhe (Emre, 02.10.): immer volle Bildrate */
         || (WEG && unten >= 1 && now - gemalt < 30)   /* Schriftzug weg (03.10.): unter dem Titelbild gleichmäßig ~30 Bilder/s – der Verlauf ist dort dunkel und langsam */
         || (html.classList.contains('papier-zu') && now - gemalt < 250);   /* Papier-Start (03.10.): das geschlossene Blatt deckt alles – nur ~4 Bilder/s, damit das Handy fürs Reißen frei ist */
-      let leichtSpart = false, tiefJetzt = '';
-      if (LEICHT) {   /* bewegt: höchstens ~60 Bilder/s, solange nichts scrollt · Standbild: nur neu malen, wenn das Scrollen das Bild ändert */
-        const y = window.scrollY || 0;
-        tiefJetzt = y / Math.max(1, canvas.clientHeight) >= 1.55 && schrift.wert <= 0 ? 'tief@' + time : '';   /* ab 1,5 Fensterhöhen ist alles gleich dunkel (u_nahtlos) */
-        leichtSpart = bewegt() ? now - gemalt < 14 && y === gemaltY : y === gemaltY || (!!tiefJetzt && tiefJetzt === gemaltTief);
-      }
-      if (LEICHT ? !leichtSpart : !sparen) { draw(); gemalt = now; if (LEICHT) { gemaltY = window.scrollY || 0; gemaltTief = tiefJetzt; } }
+      if (!sparen) { draw(); gemalt = now; }
       const catching = Math.abs(light.x - tx) + Math.abs(light.y - ty) > 0.0015;
       const visible = (fein || inView) && !document.hidden;
       const forming = readyAt >= 0 && performance.now() - readyAt < FORM_MS || (WEG && schrift.wert !== schrift.ziel);   /* auch bei „Bewegung reduzieren“ bis zum Ende ausblenden */
@@ -723,9 +679,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     };
     pointer.neustart = () => { if (disposed) return; cancelAnimationFrame(raf); raf = 0; kick(); };
     pointer.kick = kick;
-    pointer.rebuild = () => { if (disposed) return; buildMask(); gemaltY = -1; kick(); };
-    const klassen = LEICHT ? new MutationObserver(() => { gemaltY = -1; kick(); }) : null;
-    if (klassen) klassen.observe(html, { attributes: true, attributeFilter: ['class'] });   /* Blatt weg → wieder bewegen */
+    pointer.rebuild = () => { if (disposed) return; buildMask(); kick(); };
 
     const onLost = (e) => { e.preventDefault(); cancelAnimationFrame(raf); raf = 0; };
     const onRestored = () => start();   /* Vorlage: setGeneration(g + 1) → der Effekt läuft neu */
@@ -733,7 +687,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     canvas.addEventListener('webglcontextrestored', onRestored);
 
     try {
-      P = { field: program(FIELD), blur: program(fein ? BLUR_FEIN : BLUR), glass: program(fein ? GLASS_FEIN : GLASS), bild: HINTEN === 'b' ? program(BILD) : null, titel: NATIV && GLASS_NATIV && fein ? program(GLASS_NATIV) : null };
+      P = { field: program(FIELD), blur: program(fein ? BLUR_FEIN : BLUR), glass: program(fein ? GLASS_FEIN : GLASS), titel: NATIV && GLASS_NATIV && fein ? program(GLASS_NATIV) : null };
       const vao = gl.createVertexArray();
       gl.bindVertexArray(vao);
       const buffer = gl.createBuffer();
@@ -774,7 +728,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     aufraeumen = () => {
       disposed = true;
       cancelAnimationFrame(raf); cancelAnimationFrame(pending);
-      observer.disconnect(); io.disconnect(); if (klassen) klassen.disconnect(); window.removeEventListener('scroll', onScroll);
+      observer.disconnect(); io.disconnect(); window.removeEventListener('scroll', onScroll);
       document.removeEventListener('visibilitychange', onVisibility);
       reduceMq.removeEventListener('change', kick);
       canvas.removeEventListener('webglcontextlost', onLost);
@@ -812,7 +766,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   /* Bildrate messen (Prüfung): Bilder je Sekunde der letzten Sekunde */
   let fpsT = performance.now(), fpsN = 0;
   setInterval(() => { const n = zustand.bilder; zustand.fps = Math.round((n - fpsN) * 1000 / Math.max(1, performance.now() - fpsT)); fpsN = n; fpsT = performance.now(); }, 1000);
-  window.__glas = { zustand: () => ({ glas: zustand.glas, lite: zustand.lite, fps: zustand.fps, bilder: zustand.bilder, geprueft: zustand.geprueft || 0, leicht: LEICHT, standbild: !!zustand.standbild, angebote: angeboteFertig, masken: zustand.masken || 0, versatz, ruhe: RUHE, titel: titleEl.textContent, punkt: html.getAttribute('data-glas-punkt') || 'glas',
+  window.__glas = { zustand: () => ({ glas: zustand.glas, lite: zustand.lite, fps: zustand.fps, bilder: zustand.bilder, geprueft: zustand.geprueft || 0, angebote: angeboteFertig, masken: zustand.masken || 0, versatz, ruhe: RUHE, titel: titleEl.textContent,
     weg: WEG, kopfNativ: NATIV, titelBand: zustand.titelBand || null, schrift: window.__glasSchrift ? Math.round(window.__glasSchrift.wert * 1000) / 1000 : 1,
     scharf: SCHARF, grafik: zustand.grafik ? zustand.grafik() : null, liteBei: zustand.liteBei || null, wechsel: zustand.wechsel || 0 }), zumKontakt, zuAngeboten };
 })();

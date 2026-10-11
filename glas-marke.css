@@ -1,19 +1,13 @@
-/* ERGUN. – Blatt im Glas-Look (03.10.2026, Vorschau ?start=glas – Ausnahme auf ERGUNs Wunsch; Schalter BLATT_GLAS_STANDARD in index.html und 404.html).
-   EINE Regel für alle „ERGUN.“-Marken (Kopfzeile oben links, Fußzeile, 404): dasselbe Bild bilder/glas/glas-marke.webp – einmal aus dem echten
-   Glas-Shader gemalt (_code/werkzeuge/glas-wort.py), als Milchglas mit heller Kante und Glanz. Kein WebGL je Logo, kein backdrop-filter.
-   Der Text bleibt im HTML (Screenreader, Suche) und wird nur unsichtbar (Schriftgröße 0). Dazu der neue Titelbild-Text. */
-/* Seit 04.10.2026 an html.marke-glas (nicht mehr an html.blatt-glas): das Glas-Logo gilt in JEDER Ansicht, auch ?start=ohne / papier. */
+/* ERGUN. – alle „ERGUN.“-Marken (Kopfzeile oben links, Fußzeile, 404) im Glas-Look: EINE Regel, EIN Bild bilder/glas/glas-marke-b.webp –
+   echtes Glas, einmal aus dem Glas-Shader gemalt (_code/werkzeuge/glas-wort.py), dieselbe Rechnung wie das große „ERGUN.“ auf dem Blatt.
+   Kein WebGL je Logo, kein backdrop-filter. Der Text bleibt im HTML (Screenreader, Suche) und wird nur unsichtbar (Schriftgröße 0).
+   Dazu der Titelbild-Text und die Fußzeile des Blatts im Glas-Look. */
 html.marke-glas :is(.glas-kopf__marke, .glas-fuss__marke, .marke) {
-  --marke-bild: url("bilder/glas/glas-marke.webp?v=1");
+  --marke-bild: url("bilder/glas/glas-marke-b.webp?v=1");
   display: inline-block; width: 98px; height: 44px; font-size: 0 !important; line-height: 0; color: transparent !important; -webkit-text-fill-color: transparent !important;
   background: var(--marke-bild) left center / 98px auto no-repeat !important; -webkit-background-clip: border-box !important; background-clip: border-box !important;
   filter: drop-shadow(0 1px 1.5px rgba(13, 10, 20, 0.35)); text-decoration: none; vertical-align: middle;
 }
-/* Echtes Glas statt Milchglas (04.10.2026, ERGUNs Auftrag – LIVE seit seinem „Ok“ als Fassung b, Schalter MARKE_ECHT_STANDARD in index.html und 404.html; ?marke=a|milch = Vergleich):
-   dieselbe Rechnung und dasselbe Bild wie das große „ERGUN.“ auf dem Blatt – Kante, Glanz und Lichtbrechung bleiben erhalten.
-   a = durchsichtig (die Seite scheint durch die Zeichen) · b = mit eigenem Grund (Miniatur des großen Worts). Nur die Datei wechselt. */
-html.marke-a :is(.glas-kopf__marke, .glas-fuss__marke, .marke) { --marke-bild: url("bilder/glas/glas-marke-a.webp?v=1"); }
-html.marke-b :is(.glas-kopf__marke, .glas-fuss__marke, .marke) { --marke-bild: url("bilder/glas/glas-marke-b.webp?v=1"); }
 html.marke-glas :is(.glas-kopf__marke, .glas-fuss__marke, .marke) :is(span, i) { display: none !important; }
 html.marke-glas .glas-fuss__marke { width: 84px; height: 24px; background-size: 84px auto !important; }
 html.marke-glas .glas-kopf__marke:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 3px; border-radius: 8px; }

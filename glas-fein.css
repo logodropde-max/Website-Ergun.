@@ -102,10 +102,6 @@ html.glas-fein .upload__symbol { color: #FFFFFF; background: rgba(255, 255, 255,
 }
 
 /* ② endo-Liste (neues Preismodell, 01.10.2026) in derselben Glasfläche */
-html.glas-fein .mf-ezeile { border-radius: var(--gf-r); -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); }
-html.glas-fein .mf-ezeile[aria-checked="true"] { background: var(--gf-flaeche-wahl); }
-html.glas-fein .mf-ezeile__satz, html.glas-fein .mf-epreis__teil small, html.glas-fein .mf-epreis__hinweis { color: rgba(255, 255, 255, 0.78); }
-html.glas-fein .mf-ezeile__name, html.glas-fein .mf-epreis__teil b { font-family: var(--g-schrift); }
 
 /* ---------- Fußzeile ---------- */
 html.glas-fein .glas-fuss { border-top: 0; background: rgba(13, 10, 20, 0.8); }

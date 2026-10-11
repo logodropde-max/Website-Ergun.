@@ -1,12 +1,9 @@
-/* ERGUN. – endo Werkbank (11.10.2026, Paket „endo Werkbank“ Teil E, ergun-seite). Lädt NUR mit Schalter (js/preise.js: PREISE.werkbankAn →
-   Klasse html.endo-werkbank + diese Datei; Vorschau ?endo=werkbank). Ohne Schalter: keine Datei, keine Regel – die Seite bleibt wie heute.
-   Glas-Look der ERGUN.-Seite bleibt: Flächen weiß .06–.07, Kante .16–.2, Radius 24 / Pillen rund, Text Weiß .8/.62, Creme #FFE6B8 nur für das
-   Etikett „Beispielpreise“ (seit 11.10. aus – Preise endgültig), Orange bleibt der Auswahl vorbehalten. Bewegung nur transform/opacity, einmal; „Bewegung reduzieren“ = Endzustand. */
+/* ERGUN. – endo-Pakete (seit 11.10.2026): Karte „Automatisierung“/„Beides“, Schritt ② „Welches endo-Paket passt?“, Summen und Abschnitt
+   „Website und Büro“. Klasse html.endo-werkbank (fest im Kopf von index.html). Glas-Look der ERGUN.-Seite: Flächen weiß .06–.07, Kante .16–.2,
+   Radius 24 / Pillen rund, Text Weiß .8/.62, Orange bleibt der Auswahl vorbehalten. Bewegung nur transform/opacity, einmal; „Bewegung reduzieren“ = Endzustand. */
 
-/* ① Karte „Automatisierung“ / „Beides“: Etikett + Lizenz-Hinweis unter dem Preis */
+/* ① Karte „Automatisierung“ / „Beides“: Lizenz-Hinweis unter dem Preis */
 html.endo-werkbank .wb-hinweis { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-top: 12px; }
-html.endo-werkbank .wb-etikett { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px; border: 1px solid rgba(255, 230, 184, 0.42);
-  color: #FFE6B8; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.01em; white-space: nowrap; }
 html.endo-werkbank .wb-lizenz { font-size: 13px; line-height: 18px; color: rgba(255, 255, 255, 0.72); text-wrap: pretty; }
 /* Handy (Karten untereinander): jede Karte so hoch wie ihr Inhalt – „gleich hoch“ gilt nur für die Dreier-Reihe (glas.css: ab 760 px) */
 @container (max-width: 759px) { html.endo-werkbank .glas-angebote .mf-angebote__liste { grid-auto-rows: auto; } }
@@ -42,7 +39,6 @@ html.endo-werkbank .mf-stufe--spaeter .mf-stufe__wbsatz { color: rgba(255, 255, 
 html.endo-werkbank .mf-stufe__schild--spaeter { border-color: rgba(255, 255, 255, 0.28); color: rgba(255, 255, 255, 0.86); }
 html.endo-werkbank .mf-stufe__schild--spaeter::before { content: none; }
 html.endo-werkbank .wb-klein { display: block; max-width: 64ch; margin-top: 16px; font-size: 14px; line-height: 22px; color: rgba(255, 255, 255, 0.72); }
-html.endo-werkbank .wb-klein .wb-etikett { margin-right: 6px; vertical-align: 1px; }
 /* Befund 11: Summen-Kasten erst nach einer Wahl mit Zahlen – vorher „Noch nichts gewählt“ (13, gedämpft) statt „Einmalig – / Monatlich –“ */
 html.endo-werkbank .wb-summe-leer { display: none; margin: 0; font-size: 13px; line-height: 18px; color: rgba(255, 255, 255, 0.62); }
 html.endo-werkbank .mf-summe.ist-leer > div { display: none; }
@@ -53,37 +49,6 @@ html.endo-werkbank .wb-summe-lizenz[hidden] { display: none; }
 /* Handy/Tablet: unten im Schritt so viel Platz, wie die feste Summen-Leiste hoch ist + 16 px – sie verdeckt dann keinen Kartentext */
 @media (max-width: 1023px) { html.endo-werkbank .mit-summe .mf__nav { padding-bottom: calc(var(--wb-leiste, 72px) + 16px); } }
 
-/* ③ Abschnitt „Website und Büro, die zusammenpassen“: ruhiges Glas-Feld statt Chat-Szene – drei Stufen Anfrage · Angebot · Auftrag (Beispiel).
-   Außen 24, innen Karten 12 (24 − 12 Innenabstand); Handy: Stufen untereinander (Name links, Kärtchen rechts), ab 560 px drei Spalten. */
-.emp--wb .emp__szene { width: 100%; max-width: 560px; }
-@media (min-width: 1100px) { .emp--wb .emp__szene { width: 520px; } }
-.wbb { padding: 16px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.16); background: rgba(255, 255, 255, 0.07);
-  -webkit-backdrop-filter: blur(18px) saturate(1.2); backdrop-filter: blur(18px) saturate(1.2);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 24px 48px -28px rgba(0, 0, 0, 0.75); text-align: left; }
-.wbb__kopf { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 4px 14px; }
-.wbb__marke { font-family: var(--g-schrift, inherit); font-size: 18px; line-height: 24px; font-weight: 600; color: #FFFFFF; }
-.wbb__beispiel { padding: 2px 10px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.24); font-size: 12px; line-height: 16px; font-weight: 600; color: rgba(255, 255, 255, 0.86); }
-.wbb__stufen { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
-.wbb__stufe { display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: start; gap: 8px; padding: 12px; border-radius: 12px; background: rgba(13, 10, 20, 0.34); }
-.wbb__name { margin: 0; padding-top: 6px; font-size: 13px; line-height: 18px; font-weight: 600; color: rgba(255, 255, 255, 0.8); }
-.wbb__name b { margin-left: 4px; font-weight: 600; color: rgba(255, 255, 255, 0.62); font-variant-numeric: tabular-nums; }
-.wbb__karten { display: grid; gap: 6px; }
-.wbb__karte { display: grid; gap: 2px; padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.06); }
-.wbb__karte b { font-size: 14px; line-height: 20px; font-weight: 600; color: #FFFFFF; }
-.wbb__karte small { font-size: 12px; line-height: 16px; color: rgba(255, 255, 255, 0.7); }
-/* letzte Stufe = erledigt: Creme-Punkt vor dem Namen (einziger Farbton im Feld) */
-.wbb__stufe--fertig .wbb__karte b::before { content: ""; display: inline-block; width: 6px; height: 6px; margin: 0 6px 2px 0; border-radius: 50%; background: #FFE6B8; vertical-align: middle; }
-@media (min-width: 560px) {
-  .wbb { padding: 20px; }
-  .wbb__stufen { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .wbb__stufe { grid-template-columns: minmax(0, 1fr); align-content: start; }
-  .wbb__name { padding: 0 2px 4px; }
-}
-/* einmal einblenden zusammen mit dem Text (empfang.js setzt .ist-da) */
-.emp--rein .wbb { opacity: 0; transform: translateY(12px); transition: opacity 700ms cubic-bezier(0.23, 1, 0.32, 1) 120ms, transform 700ms cubic-bezier(0.23, 1, 0.32, 1) 120ms; }
-.emp--rein .wbb.ist-da { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { .emp--rein .wbb { opacity: 1; transform: none; transition: none; } }
-
-/* Ohne Vorschau (11.10.2026 abends, ?empfang=ohne): nur Titel, Satz und Knopf – eine Spalte, mittig, auch am PC */
+/* ③ Abschnitt „Website und Büro“ (seit 11.10.2026 ohne Bild): nur Titel, Satz und Knopf – eine Spalte, mittig, auch am PC */
 html.endo-werkbank .emp--ohne-bild .emp__innen { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
 html.endo-werkbank .emp--ohne-bild .emp__text { justify-items: center; max-width: 36rem; }
