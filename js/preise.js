@@ -166,14 +166,14 @@ window.LEITFADEN = {
      und Abschnitt 4 (Punkte). Gelten NUR mit PREISE.werkbankAn (Schalter WERKBANK_STANDARD unten, ?endo=werkbank). Keine Zahlen hier – Preise,
      Etikett und Lizenzsatz kommen aus PREISE.endo.werkbank / werkbankEtikett / lizenzSatz. Studio fällt hier weg (braucht ERGUN.s Ja). */
   werkbank: {
-    karteSatz: 'Kontakte, Anfragen und Aufgaben an einem Ort. Wir richten das System ein und schulen Ihr Team.',
+    karteSatz: 'Kontakte, Anfragen und Aufgaben an einem Ort. Wir richten das System ein und betreuen Sie danach per E-Mail.',
     beidesSatz: 'Ihre Website und endo zusammen.',
     titel: 'Welches endo-Paket passt?', satz: 'Schreiben Sie viele Angebote? Dann Endo Business, sonst reicht Endo Start.', leer: 'Bitte wählen Sie ein Paket.', summeLeer: 'Noch nichts gewählt',
     karten: {
       start: { satz: 'Kontakte, Anfragen und Aufgaben an einem Ort.', punkte: ['Kontakte: Kunden und Ansprechpartner', 'Pipeline: Ihre Anfragen nach Stufen', 'Aufgaben und Wiedervorlagen'] },
       business: { satz: 'Dazu Angebote, Unterschrift online und Projekte.', punkte: ['Alles aus Endo Start', 'Angebote direkt aus der Anfrage, als PDF', 'E-Signatur: online unterschreiben lassen'] },
       ai: { satz: 'Für Betriebe, die Anfragen auch nachts annehmen wollen.', status: 'Später verfügbar' } },
-    dazu: 'Einrichtung, Schulung und Betreuung durch uns', einmalig: 'einmalig', monat: 'im Monat Betreuung', zeile: 'endo-Paket' }
+    dazu: 'Einrichtung und Betreuung durch uns', einmalig: 'einmalig', monat: 'im Monat Betreuung', zeile: 'endo-Paket' }
 };
 
 /* ---------- Rechnen (auch für die Tests) ---------- */
@@ -223,22 +223,46 @@ window.LEITFADEN = {
   P.endo.werkbank = [
     { id: 'start', name: 'Endo Start', kurz: 'Kundenverwaltung', satz: 'Alle Anfragen und Kontakte an einem Ort.',
       apps: ['kontakte', 'pipeline', 'aufgaben', 'auswertungen', 'newsletter'],
-      haken: ['Kontakte – Firmen und Personen', 'Pipeline mit Stufen, Wert und Quote', 'Aufgaben und Wiedervorlagen', 'Einfache Auswertungen', 'E-Mail-Marketing (Newsletter)', 'Einrichtung, Schulung (2 h), Betreuung'],
-      einmalig: 499, monat: 49, ab: true, schulung: '2 h', betreuung: 'E-Mail, 2 Werktage' },
+      haken: ['Kontakte – Firmen und Personen', 'Pipeline mit Stufen, Wert und Quote', 'Aufgaben und Wiedervorlagen', 'Einfache Auswertungen', 'E-Mail-Marketing (Newsletter)', 'Einrichtung, Kurzanleitung, Betreuung per E-Mail'],
+      einmalig: 800, monat: 60, ab: true, anleitung: 'Kurzanleitung + Lernvideos', betreuung: 'E-Mail, 2 Werktage' },
     { id: 'business', name: 'Endo Business', kurz: 'Büroautomatisierung', satz: 'Vom Angebot bis zur Unterschrift.',
       apps: ['kontakte', 'pipeline', 'aufgaben', 'auswertungen', 'newsletter', 'angebote', 'signatur', 'projekte', 'uebergabe'],
-      haken: ['Alles aus Endo Start', 'Angebote direkt aus der Chance, als PDF', 'E-Signatur – online unterschreiben lassen', 'Projekte – vom Auftrag bis zur Abnahme', 'Automatische Übergabe von Anfragen ans Team', 'Einrichtung, Schulung (4 h), Betreuung mit Vorrang'],
-      einmalig: 1000, monat: 99, ab: true, schulung: '4 h', betreuung: 'Telefon, 1 Werktag' },
+      haken: ['Alles aus Endo Start', 'Angebote direkt aus der Chance, als PDF', 'E-Signatur – online unterschreiben lassen', 'Projekte – vom Auftrag bis zur Abnahme', 'Automatische Übergabe von Anfragen ans Team', 'Einrichtung, Kurzanleitung, Betreuung mit Vorrang'],
+      einmalig: 1200, monat: 120, ab: true, anleitung: 'Kurzanleitung + Lernvideos', betreuung: 'E-Mail, 1 Werktag' },
     { id: 'ai', name: 'Endo AI', kurz: 'KI-Unternehmenssystem', satz: 'Anfragen erfassen sich selbst.',
       apps: ['kontakte', 'pipeline', 'aufgaben', 'auswertungen', 'newsletter', 'angebote', 'signatur', 'projekte', 'uebergabe', 'chat', 'erfassen', 'ablaeufe'],
       haken: ['Alles aus Endo Business', 'Chat auf Ihrer Website', 'Anfragen automatisch erfassen und zuordnen', 'Abläufe, die von selbst laufen', 'Monatliches KI-Kontingent, transparent angezeigt'],
-      anfrage: true, spaeter: true, schulung: 'nach Bedarf', betreuung: 'Telefon, 1 Werktag' }];
+      anfrage: true, spaeter: true, anleitung: 'nach Bedarf', betreuung: 'E-Mail, 1 Werktag' }];
   P.endo.werkbankBeispiel = false;   /* ERGUN. 11.10.: Preise endgültig – kein Etikett mehr (gleich wie ENDO_PREISE) */
   P.endo.werkbankEtikett = '';
   P.wbEtikett = function () { return P.endo.werkbankBeispiel && P.endo.werkbankEtikett ? P.endo.werkbankEtikett : ''; };   /* leer = nirgends ein Etikett */
   P.endo.lizenzSatz = 'zzgl. Lizenz des Systemanbieters je Benutzer und Monat, direkt an den Anbieter';   /* Ausnahme auf ERGUN.s Wunsch, Wortlaut vom Anwalt prüfen */
   var WERKBANK_STANDARD = true,   /* LIVE seit 11.10.2026 */ wbq = typeof location !== 'undefined' ? (/[?&]endo=(werkbank|alt)\b/.exec(location.search || '') || [])[1] : '';
   P.werkbankAn = typeof W0.ENDO_WERKBANK_AN === 'boolean' ? W0.ENDO_WERKBANK_AN : wbq === 'werkbank' || (WERKBANK_STANDARD && wbq !== 'alt');
+  /* endo Umbau (Nachtrag ERGUN. 11.10.2026 abends, Teil 8): Karte „Automatisierung“ und Schritt ② mit denselben drei Stufen wie die neue endo-Seite
+     (ENDO_PREISE.umbau in _code/endo-studio/js/endo-preise.js – Test hält beide gleich). NUR RICHTWERTE, immer mit Etikett „Richtwerte – endgültige Preise folgen“;
+     Monatlich heißt „Betreuung“, Lizenz ohne Zahl. Schalter UMBAU_STANDARD = false, Vorschau ?endo=umbau, Rückweg ?endo=werkbank. Endo AI bleibt „im Erstgespräch“ (nicht wählbar). */
+  P.endo.umbau = [
+    { id: 'start', einmalig: 800, monat: 60, satz: 'Anfragen und Kunden an einem Ort.', punkte: ['Kontakte und Anfragen an einem Ort', 'Aufgaben und Wiedervorlagen', 'Newsletter an Ihre Kunden'] },
+    { id: 'business', einmalig: 1200, monat: 120, satz: 'Vom Angebot bis zur Unterschrift.', punkte: ['Alles aus Start', 'Angebote als PDF, direkt aus der Anfrage', 'Online unterschreiben lassen'] },
+    { id: 'ai', einmalig: 3000, monat: 250, ab: true, satz: 'Mit KI, die Ihnen Arbeit abnimmt.' }];
+  var UMBAU_STANDARD = true, ubq = typeof location !== 'undefined' ? (/[?&]endo=(umbau|werkbank)\b/.exec(location.search || '') || [])[1] : '';
+  P.umbauAn = typeof W0.ENDO_UMBAU_AN === 'boolean' ? W0.ENDO_UMBAU_AN : P.werkbankAn && (ubq === 'umbau' || (UMBAU_STANDARD && ubq !== 'werkbank'));
+  if (P.umbauAn) {
+    P.endo.umbau.forEach(function (u) {
+      var p = P.endo.werkbank.filter(function (x) { return x.id === u.id; })[0]; if (!p) return;
+      p.einmalig = u.einmalig; p.monat = u.monat; p.ab = !!u.ab; p.satz = u.satz;
+      if (u.id === 'ai') { p.anfrage = false; p.spaeter = true; }
+    });
+    P.endo.werkbankBeispiel = false; P.endo.werkbankEtikett = '';   /* ERGUN. 11.10. nachts: Preise endgültig */
+    P.endo.lizenzSatz = 'zzgl. Lizenz des Systems dahinter, je Benutzer und Monat, direkt an den Hersteller';
+    var LU = W0.LEITFADEN && W0.LEITFADEN.werkbank;
+    if (LU) {
+      LU.karteSatz = 'Wir richten Ihnen ein fertiges System ein und betreuen es jeden Monat – auf Wunsch mit KI.';
+      LU.satz = 'Schreiben Sie viele Angebote? Dann Endo Business, sonst reicht Endo Start. Endo AI besprechen wir im Erstgespräch.';
+      P.endo.umbau.forEach(function (u) { var k = LU.karten[u.id]; if (!k) return; k.satz = u.satz; if (u.punkte) k.punkte = u.punkte.slice(); if (u.id === 'ai') k.status = 'Im Erstgespräch'; });
+    }
+  }
   P.endoWerkbank = function (id) { return P.endo.werkbank.filter(function (x) { return x.id === id; })[0] || null; };
   /* Darstellung Werkbank (Teil E, ergun-seite): ein wählbares Paket als Rechen-Posten (Endo AI ist „später“ und nie wählbar → null) */
   P.endoWerkbankPaket = function (id) {
@@ -369,7 +393,7 @@ window.LEITFADEN = {
   var WB = !!P.werkbankAn, LW = L.werkbank;
   if (WB) {
     document.documentElement.classList.add('endo-werkbank');
-    var wbl = document.createElement('link'); wbl.rel = 'stylesheet'; wbl.href = 'ergun-werkbank.css?v=3'; document.head.appendChild(wbl);
+    var wbl = document.createElement('link'); wbl.rel = 'stylesheet'; wbl.href = 'ergun-werkbank.css?v=4'; document.head.appendChild(wbl);
   }
   var ruhig = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }

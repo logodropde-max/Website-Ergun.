@@ -19,7 +19,7 @@
   var TEXTE_WB = {
     titel: 'Website und Büro, die zusammenpassen',
     satz1: 'Ihre Website bringt Anfragen. Mit endo behalten Sie jede davon im Blick, zusammen mit Kontakten und Aufgaben.',
-    satz2: 'Wir richten das System ein und schulen Ihr Team.',
+    satz2: 'Wir richten das System ein und betreuen Sie danach per E-Mail.',
     knopf: 'endo ansehen', pfeil: '↗', knopfHilfe: 'endo ansehen (endo-Seite)',
     bildHilfe: 'Beispiel: Anfragen, Angebote und Aufträge an einem Ort', beispiel: 'Beispiel',
     stufen: [
@@ -28,6 +28,10 @@
       { name: 'Aufträge', karten: [['Fassade', 'unterschrieben']] }]
   };
   var ENDO_STANDARD = 'https://endo-ergun.vercel.app/';
+  /* Ohne Vorschau (ERGUN. 11.10.2026 abends: „die endo-Vorschau mit dem Diagramm soll weg“): bei der Werkbank nur Titel, Satz und Knopf,
+     kein Glas-Feld Anfragen · Angebote · Aufträge. OHNE_BILD_STANDARD = false bis „live“; Vorschau ?empfang=ohne, Rückweg ?empfang=bild. */
+  var OHNE_BILD_STANDARD = true;   /* LIVE seit 11.10.2026 nachts (ERGUN.: „Live“), Tag vor-endo-umbau */
+  function ohneBild() { var such = (typeof location !== 'undefined' && location.search) || '', q = (/[?&]empfang=(ohne|bild)\b/.exec(such) || [])[1]; return q === 'ohne' || (OHNE_BILD_STANDARD && q !== 'bild'); }
   function werkbank() { var P = window.PREISE; return !!(P && P.werkbankAn); }
   /* das Glas-Feld (role="img": für Vorleseprogramme ein Satz statt vieler Kärtchen) */
   function wbBild() {
@@ -55,8 +59,8 @@
     var haupt = document.getElementById('inhalt'), preise = document.getElementById('preise');
     if (!haupt || !preise || preise.parentNode !== haupt) return null;
 
-    var WB = werkbank(), T = WB ? TEXTE_WB : TEXTE;
-    var s = el('section', 'emp' + (WB ? ' emp--wb' : '')); s.id = 'empfang'; s.setAttribute('aria-labelledby', 'empfang-titel');
+    var WB = werkbank(), T = WB ? TEXTE_WB : TEXTE, OHNE = WB && ohneBild();
+    var s = el('section', 'emp' + (WB ? ' emp--wb' : '') + (OHNE ? ' emp--ohne-bild' : '')); s.id = 'empfang'; s.setAttribute('aria-labelledby', 'empfang-titel');
     var innen = el('div', 'emp__innen');
     var text = el('div', 'emp__text');
     var h = el('h2', 'emp__titel', T.titel); h.id = 'empfang-titel';
@@ -65,9 +69,9 @@
     var pf = el('span', null, T.pfeil); pf.setAttribute('aria-hidden', 'true'); a.appendChild(pf);
     a.href = endoZiel(); a.target = '_blank'; a.rel = 'noopener'; a.setAttribute('data-endo-link', ''); a.setAttribute('aria-label', T.knopfHilfe);
     text.appendChild(h); text.appendChild(p); text.appendChild(a);
-    var szene = el('div', 'emp__szene'), bild = WB ? wbBild() : null;
+    var szene = el('div', 'emp__szene'), bild = WB && !OHNE ? wbBild() : null;
     if (bild) szene.appendChild(bild);
-    innen.appendChild(text); innen.appendChild(szene); s.appendChild(innen);
+    innen.appendChild(text); if (!OHNE) innen.appendChild(szene); s.appendChild(innen);
     haupt.insertBefore(s, preise);
 
     var sz = !WB && window.ENDO_SZENE ? window.ENDO_SZENE.bauen(szene, { start: 'sichtbar' }) : null;
@@ -84,6 +88,6 @@
     return { element: s, szene: sz };
   }
 
-  window.ERGUN_EMPFANG = { bauen: bauen, TEXTE: TEXTE, TEXTE_WB: TEXTE_WB, endoZiel: endoZiel };
+  window.ERGUN_EMPFANG = { bauen: bauen, TEXTE: TEXTE, TEXTE_WB: TEXTE_WB, endoZiel: endoZiel, ohneBild: ohneBild, OHNE_BILD_STANDARD: OHNE_BILD_STANDARD };
   window.ERGUN_EMPFANG.jetzt = bauen();
 })();
