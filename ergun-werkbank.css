@@ -24,21 +24,12 @@ html.endo-werkbank.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, 
   width: 16px; height: 16px; margin-right: 8px; vertical-align: -3px; background-image: url(bilder/zeichen/endo-bluete.svg?v=1); animation: none; }
 html.endo-werkbank.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before { margin-right: 2px; }   /* der Link hat schon 6 px Abstand (gap) */
 
-/* ② Schritt „Welches endo-Paket passt?“: dieselben Karten wie die Website-Stufen (.mf-stufen), nur Zusätze */
-html.endo-werkbank .mf-stufe--wb { grid-template-rows: auto auto 1fr; }
-html.endo-werkbank .mf-stufe__monat { display: block; font-size: 14px; line-height: 20px; color: rgba(255, 255, 255, 0.72); font-variant-numeric: tabular-nums; }
-html.endo-werkbank .mf-stufe__wbsatz { display: block; font-size: 15px; line-height: 22px; color: rgba(255, 255, 255, 0.8); text-wrap: pretty; }
-/* Endo AI: sichtbar, aber nicht wählbar – keine Hebe-Bewegung, kein Licht, kein Haken; Text bleibt lesbar (Kontrast > 4,5 : 1) */
-html.endo-werkbank .mf-stufe.mf-stufe--spaeter { cursor: default; box-shadow: none; background: rgba(255, 255, 255, 0.035); }
-html.endo-werkbank .mf-stufe.mf-stufe--spaeter::before { background: rgba(255, 255, 255, 0.14); }
-html.endo-werkbank .mf-stufe.mf-stufe--spaeter::after { content: none; }
-html.endo-werkbank .mf-stufe.mf-stufe--spaeter:hover, html.endo-werkbank .mf-stufe.mf-stufe--spaeter:active { transform: none; box-shadow: none; opacity: 1; background: rgba(255, 255, 255, 0.035); }
-html.endo-werkbank .mf-stufen--wb.hat-wahl > .mf-stufe--spaeter { opacity: 1; }
-html.endo-werkbank .mf-stufe--spaeter .mf-stufe__name { color: rgba(255, 255, 255, 0.78); }
-html.endo-werkbank .mf-stufe--spaeter .mf-stufe__wbsatz { color: rgba(255, 255, 255, 0.7); }
-html.endo-werkbank .mf-stufe__schild--spaeter { border-color: rgba(255, 255, 255, 0.28); color: rgba(255, 255, 255, 0.86); }
-html.endo-werkbank .mf-stufe__schild--spaeter::before { content: none; }
+/* ② Schritt „endo für Ihre Branche“ (seit 12.10.2026): ein ruhiger Glas-Kasten ohne Auswahl – Preiszeile, darunter KI-Zusatz und Lizenz */
+html.endo-werkbank .mf-branche { padding: 20px 24px; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 24px; background: rgba(255, 255, 255, 0.06); }
+html.endo-werkbank .mf-branche__preis { margin: 0; font-size: 18px; line-height: 26px; font-weight: 500; color: #fff; font-variant-numeric: tabular-nums; text-wrap: balance; }
 html.endo-werkbank .wb-klein { display: block; max-width: 64ch; margin-top: 16px; font-size: 14px; line-height: 22px; color: rgba(255, 255, 255, 0.72); }
+html.endo-werkbank .mf-branche .wb-klein { margin: 8px 0 0; }
+html.endo-werkbank .mf-branche + .mf-link { margin-top: 16px; }
 /* Befund 11: Summen-Kasten erst nach einer Wahl mit Zahlen – vorher „Noch nichts gewählt“ (13, gedämpft) statt „Einmalig – / Monatlich –“ */
 html.endo-werkbank .wb-summe-leer { display: none; margin: 0; font-size: 13px; line-height: 18px; color: rgba(255, 255, 255, 0.62); }
 html.endo-werkbank .mf-summe.ist-leer > div { display: none; }

@@ -943,7 +943,7 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
 .mf-endo-link:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .mf-endo-link { margin: 0; }
 </style>
-<link rel="stylesheet" href="ergun-werkbank.css?v=5">
+<link rel="stylesheet" href="ergun-werkbank.css?v=6">
 </head>
 <body>
 
@@ -1135,7 +1135,7 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
 <div class="wechsel" aria-hidden="true"></div>
 
 <!-- preise.js vor dem Titelbild-Skript: glas.js liest beim Start window.PREISE (Kleingedrucktes in der Fußzeile) – so ist die Reihenfolge immer gleich (07.10.2026) -->
-<script src="js/preise.js?v=39"></script>
+<script src="js/preise.js?v=40"></script>
 <script>
 /* Glas-Startseite (js/glas.js) gleich nach den Preisen; der Abschnitt „Website und Büro“ (js/empfang.js) nach dem Aufbau der Seite */
 (function () {
@@ -1179,8 +1179,8 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
     if (e.stufe) dl.appendChild(zeile('Website', e.stufe.name + ' · ' + P.betrag(e.stufe)));
     e.extras.forEach(function (m) { dl.appendChild(zeile(m.name + (m.anzahl > 1 ? ' × ' + m.anzahl : ''), P.betrag(m))); });
     if (e.anfrage.length) dl.appendChild(zeile('Auf Anfrage', e.anfrage.map(function (x) { return x.name; }).join(', ')));
-    if (e.mehr.length) { var em = e.mehr[0];   /* endo-Paket: einmalig + monatlich getrennt */
-      dl.appendChild(zeile('endo', em.name + ' · ' + P.betrag(em) + ' + ' + P.monatText(em) + M)); }
+    if (e.mehr.length) { var em = e.mehr[0];   /* endo für Ihre Branche: einmalig + monatlich getrennt */
+      dl.appendChild(zeile('endo', P.betrag(em) + ' einmalig + ' + P.monatText(em) + M)); }
     if (e.betreuung) dl.appendChild(zeile('Betreuung', e.betreuung.name + ' · ' + P.euro(e.betreuungMonat) + M + (e.selbst ? ' (Hosting selbst)' : '')));
     else if (e.stufe) { var ob = zeile('Betreuung', L.betreuung.ohne); ob.className = 'auswahl__ohne'; var os = document.createElement('small'); os.textContent = L.betreuung.ohneSatz; ob.querySelector('dd').appendChild(os); dl.appendChild(ob); }   /* Auftrag 28: ohne Betreuung + was der Kunde selbst übernimmt */
     var ab = e.ab ? 'ab ' : '';
@@ -1189,7 +1189,7 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
     var su = document.createElement('div'); su.className = 'auswahl__summen';
     [['einmalig', ab + P.euro(e.einmalig)], ['monatlich', (e.monatAb ? 'ab ' : '') + P.euro(e.monatlich) + M]].forEach(function (x) { var d = document.createElement('p'), t = document.createElement('span'), b = document.createElement('b'); t.textContent = x[0]; b.textContent = x[1]; d.appendChild(t); d.appendChild(b); su.appendChild(d); });
     auswahlBox.appendChild(su);
-    var j = document.createElement('small'); j.className = 'auswahl__jahr'; j.textContent = 'Im ersten Jahr ' + (e.ab || e.monatAb ? 'ab ' : '') + P.euro(e.jahr) + (e.werkbank ? ' – ' + P.endo.lizenzSatz : '') + '. ' + P.klein + ' ' + P.steuer;   /* endo-Paket: Lizenz direkt an der Jahressumme */ auswahlBox.appendChild(j);
+    var j = document.createElement('small'); j.className = 'auswahl__jahr'; j.textContent = 'Im ersten Jahr ' + (e.ab || e.monatAb ? 'ab ' : '') + P.euro(e.jahr) + (e.mitEndo ? ' – ' + P.endo.lizenzSatz : '') + '. ' + P.klein + ' ' + P.steuer;   /* endo: Lizenz direkt an der Jahressumme */ auswahlBox.appendChild(j);
   }
   document.addEventListener('preise:auswahl', auswahlZeigen);
   auswahlZeigen();

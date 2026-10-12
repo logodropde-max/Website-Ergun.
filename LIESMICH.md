@@ -1,8 +1,8 @@
 # Agentur-Website ERGUN. – Stand 29.09.2026 (Auftrag 28)
 
-## endo Werkbank auf der ERGUN.-Seite (11.10.2026 – gebaut, Livegang nach ERGUN.s Preis-OK; Rückweg-Tag `vor-endo-werkbank`)
-- Schalter `WERKBANK_STANDARD` in `js/preise.js` (`?endo=werkbank`, Rückweg `?endo=alt`; `?karte=alt` bleibt Rückweg der Karte). Daten `PREISE.endo.werkbank` (= `ENDO_PREISE.werkbank` = Notiz `02 Preise`), Helfer `P.endoWerkbank(id)`, `P.werkbankAn`.
-- Karte „Automatisierung“: „ab 499 € + ab 49 €/Monat“ + Etikett „Beispielpreise“ + Lizenz kurz; „Beides“ = Website-Start + Endo Start. Schritt ②: Endo Start · Endo Business · Endo AI (gesperrt). Schritt ③ nennt Paket + Lizenzsatz. Abschnitt „Website und Büro …“ (`js/empfang.js` `TEXTE_WB`, `wbBild()`): ruhiges Glas-Feld statt Chat-Szene. „endo ansehen“ mit stiller Blüte `bilder/zeichen/endo-bluete.svg`. CSS `ergun-werkbank.css` nur mit Schalter. Test `ergun-werkbank.test.mjs`.
+## endo auf der ERGUN.-Seite – Branchenmodell (13.10.2026, ersetzt die drei Stufen von 11.10.2026)
+- Daten `PREISE.endo.branche = { einrichtungAb, monatAb }` (= niedrigster Einstieg aus `ENDO_PREISE.branchen` = Notizen `02 Preise`), `PREISE.endoBranchenSeite` (/immobilien). `P.endoPaket(true)` = Posten „endo“ mit „ab“; `P.rechnen({ endo: true })`, Ergebnis-Feld `mitEndo`.
+- Karte „Automatisierung“ ab 1.000 € + ab 60 €/Monat, „Beides“ = Website-Start + endo. Schritt ② „endo für Ihre Branche“ (`LEITFADEN.branche`, `endoBranche()`): ohne Auswahl, Kasten `.mf-branche` (Preiszeile, KI-Zusatz, Lizenzsatz), Link „endo ansehen“. CSS `ergun-werkbank.css`. Tests `ergun-werkbank.test.mjs`, `preise-quelle.test.mjs`, `ergun-preise.test.mjs`.
 
 
 > **Aufgeräumt 07.10.2026:** Es gibt nur noch das Titelbild „Glas“. Gezeichnete Landschaft mit Figur + Hund, Maschine/Dschungel, Kristall,
