@@ -107,7 +107,7 @@ window.LEITFADEN = {
   art: { titel: 'Was brauchen Sie?', satz: 'Tippen Sie auf das, was passt. Den Rest klären wir im Gespräch.', direkt: 'Lieber gleich schreiben',
     optionen: [
       { id: 'website', titel: 'Website', satz: 'Eine Website, die zu Ihrem Betrieb passt.' },
-      { id: 'endo', titel: 'Automatisierung', satz: 'Wir richten Ihnen ein fertiges System ein und betreuen es jeden Monat – auf Wunsch mit KI.' },
+      { id: 'endo', titel: 'Automatisierung', satz: 'endo richtet Ihrem Betrieb ein fertiges System ein. Ihr Betrieb läuft von selbst.' },
       { id: 'beides', titel: 'Beides', satz: 'Ihre Website und endo zusammen.' }] },
   website: { titel: 'Welche Website passt?', satz: 'Der Preis ist ein Startwert.', alles: 'Alles, was drin ist', extras: 'Extras hinzufügen (optional)' },
   /* höchstens 3 Stichpunkte je Stufe (Auszug aus PREISE.stufen[].punkte, in Alltagssprache) */
