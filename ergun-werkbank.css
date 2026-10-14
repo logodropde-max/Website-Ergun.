@@ -21,7 +21,7 @@ html.endo-werkbank .wb-lizenz { font-size: 13px; line-height: 18px; color: rgba(
 /* Befund 12 (b, Entscheidung der Hauptsitzung): „endo ansehen“ trägt bei der Werkbank statt der 3D-Figur die stille Blüte (16 px, wie das
    endo-Zeichen der neuen endo-Seite, hier im Glas-Ton auf dunklem Grund nachgebaut: bilder/zeichen/endo-bluete.svg) – keine Bewegung. */
 html.endo-werkbank.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-werkbank.endo-zeichen-an .ghr-actions .ghr-secondary::before {
-  width: 16px; height: 16px; margin-right: 8px; vertical-align: -3px; background-image: url(bilder/zeichen/endo-bluete.svg?v=1); animation: none; }
+  width: 16px; height: 16px; margin-right: 8px; vertical-align: -3px; background-image: url(https://endo-ergun.vercel.app/marke/endo-logo.svg); animation: none; }
 html.endo-werkbank.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before { margin-right: 2px; }   /* der Link hat schon 6 px Abstand (gap) */
 
 /* ② Schritt „endo für Ihre Branche“ (seit 12.10.2026): ein ruhiger Glas-Kasten ohne Auswahl – Preiszeile, darunter KI-Zusatz und Lizenz */

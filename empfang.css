@@ -9,6 +9,9 @@
    am Handy nur so breit wie der Seitenrand (20 px), damit nichts seitlich übersteht */
 .emp__text::before { content: ""; position: absolute; inset: -32px -20px; z-index: -1; pointer-events: none;
   background: radial-gradient(closest-side, rgba(13, 10, 20, 0.74), rgba(13, 10, 20, 0.66) 62%, rgba(13, 10, 20, 0)); }
+.emp__kopf { display: grid; justify-items: center; gap: 16px; }
+.emp__logo { display: block; width: 44px; height: 44px; }
+@media (min-width: 1100px) { .emp__logo { width: 48px; height: 48px; } }
 .emp__titel { margin: 0; font-family: var(--g-schrift, inherit); font-size: var(--gf-h, clamp(2.25rem, 4.8vw, 3.75rem)); font-weight: 700; line-height: 0.98;
   letter-spacing: -0.025em; color: var(--g-text, #FFFFFF); text-wrap: balance; }
 .emp__satz { margin: 16px 0 0; font-size: var(--gf-text, 1rem); line-height: 1.5; color: var(--g-leise, rgba(255, 255, 255, 0.8)); text-wrap: pretty; }

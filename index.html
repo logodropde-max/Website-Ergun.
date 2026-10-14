@@ -923,7 +923,7 @@ html.blatt-glas .papier__hinweis { color: #FFFFFF; opacity: 0.92; text-shadow: 0
 html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
 </style>
 <!-- Abschnitt „Website und Büro, die zusammenpassen“ vor dem Anfrage-Ablauf (js/empfang.js) -->
-<link rel="stylesheet" href="empfang.css?v=3">
+<link rel="stylesheet" href="empfang.css?v=4">
 <style>
 /* „Auswahl treffen“ bekommt eine Tippfläche von mindestens 44 px. Innenabstand an einem Inline-Link verändert die
    Zeilen nicht (senkrecht) bzw. wird vom negativen Außenabstand aufgehoben (waagrecht) – Text und Lage bleiben Pixel für Pixel gleich. */
@@ -932,7 +932,7 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
 <style>
 /* ERGUN., 05.10.2026: das endo-Zeichen nur an „endo ansehen“ beim Paket Automatisierung (js/preise.js .mf-wahl-huelle--endo) und an „endo ansehen“
    im Titel (.ghr-secondary) – seit der Werkbank die stille Blüte (Größe in ergun-werkbank.css) */
-html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeichen-an .ghr-actions .ghr-secondary::before { content: ""; display: inline-block; width: 1.15em; height: 1.15em; margin-right: 0.4em; vertical-align: -0.22em; background: url(bilder/zeichen/endo-bluete.svg?v=1) center / contain no-repeat; }
+html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeichen-an .ghr-actions .ghr-secondary::before { content: ""; display: inline-block; width: 1.15em; height: 1.15em; margin-right: 0.4em; vertical-align: -0.22em; background: url(https://endo-ergun.vercel.app/marke/endo-logo.svg) center / contain no-repeat; }
 </style>
 <style>
 /* Paket 1f Teil E: „endo ansehen ↗“ an der Wahl „Automatisierung“ und „Beides“ (js/preise.js endoLinkHuelle) – eigene Tippfläche in der Karte */
@@ -943,7 +943,7 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
 .mf-endo-link:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .mf-endo-link { margin: 0; }
 </style>
-<link rel="stylesheet" href="ergun-werkbank.css?v=6">
+<link rel="stylesheet" href="ergun-werkbank.css?v=7">
 </head>
 <body>
 
@@ -1141,7 +1141,7 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
 (function () {
   function laden(s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); }
   laden('js/glas.js?v=22');
-  document.addEventListener('DOMContentLoaded', function () { laden('js/empfang.js?v=5'); });
+  document.addEventListener('DOMContentLoaded', function () { laden('js/empfang.js?v=6'); });
 })();
 </script>
 <script>
