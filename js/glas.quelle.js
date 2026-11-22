@@ -25,9 +25,9 @@ function formed(t, ms) { const x = Math.min(Math.max(t / ms, 0), 1); return 1 - 
 function fallbackBackground(palette) {
   const rgba = (c, a) => 'rgba(' + c.map((v) => Math.round(v * 255)).join(',') + ',' + a + ')';
   return (
-    'radial-gradient(60% 50% at 25% 30%,' + rgba(palette[1], 0.4) + ',transparent 70%),' +
-    'radial-gradient(50% 45% at 78% 35%,' + rgba(palette[3], 0.4) + ',transparent 70%),' +
-    'radial-gradient(45% 40% at 60% 80%,' + rgba(palette[2], 0.27) + ',transparent 70%),' +
+    'radial-gradient(70% 60% at 25% 30%,' + rgba(palette[1], 0.3) + ',transparent 72%),' +   /* ruhiger (22.11.2026): weiter, leiser */
+    'radial-gradient(60% 55% at 78% 35%,' + rgba(palette[3], 0.32) + ',transparent 72%),' +
+    'radial-gradient(55% 50% at 60% 80%,' + rgba(palette[2], 0.12) + ',transparent 72%),' +
     rgba(palette[0], 1)
   );
 }
@@ -39,8 +39,26 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   const root = document.querySelector('[data-glas-root]');
   if (!root) return;
   const html = document.documentElement, frage = new URLSearchParams(location.search);
-  const COLORS = ['#0D0A14', '#FF5A1F', '#FF9EC1', '#2F4CFF', '#FFE6B8'];   /* Farben 1:1 aus der Vorlage (das Orange = Marken-Orange) */
+  /* Ruhiger Hintergrund (seit 22.11.2026, „langsam fließendes Licht statt Wirbel“): dieselben Farbfamilien wie die Vorlage, aber gedämpft –
+     Glut statt grellem Orange, Rosa und Creme nur noch als Hauch (siehe FIELD_RUHIG). Vorher: ['#0D0A14', '#FF5A1F', '#FF9EC1', '#2F4CFF', '#FFE6B8']. */
+  const COLORS = ['#0B0C17', '#D4642F', '#B98CA6', '#2B44B8', '#EAD7B6'];
   const palette = paletteOf(COLORS);
+  /* Farbwechsel (seit 22.11.2026, „Hintergrund interessanter, Farbwechsel immer wieder“): der Verlauf wandert langsam und ohne Ende durch fünf
+     Farbwelten – je FARB_MS ganz weich (smoothstep) in die nächste. Grund immer dunkel, damit Text und Karten lesbar bleiben.
+     Nach der echten Zeit, nicht nach dem Fluss-Tempo; „Bewegung reduzieren“: es wird nicht neu gemalt, die erste Welt bleibt stehen. */
+  const FARBWELTEN = [
+    COLORS,                                                     /* Glut: Orange, Rosa, Blau */
+    ['#06111C', '#1FA6A0', '#6E8BFF', '#1B3F9E', '#CFF4EE'],   /* Ozean: Türkis, Himmelblau */
+    ['#0D0918', '#9B4DFF', '#FF6FB5', '#3A2C9E', '#F3D9FF'],   /* Violett: Lila, Pink */
+    ['#07120F', '#2FBF71', '#7FD8FF', '#14506B', '#E2FFD6'],   /* Aurora: Grün, Eisblau */
+    ['#140A10', '#FF7A45', '#FFB84D', '#8A2C6E', '#FFE9C7']    /* Abendrot: Orange, Gold, Beere */
+  ].map(paletteOf);
+  const FARB_MS = 9000;
+  function farbenJetzt(ms) {
+    const x = ms / FARB_MS, i = Math.floor(x) % FARBWELTEN.length, j = (i + 1) % FARBWELTEN.length;
+    const f = x - Math.floor(x), t = f * f * (3 - 2 * f);
+    return FARBWELTEN[i].map((c, k) => c.map((v, n) => v + (FARBWELTEN[j][k][n] - v) * t));
+  }
   const canvas = root.querySelector('[data-glas-canvas]'), titleEl = root.querySelector('[data-glas-titel]');
   /* Glas fein (?glas=fein, Ausnahme auf Emres Wunsch): Schriftzug Zeichen für Zeichen aus der echten Lage gemalt, nie angeschnitten, Verlauf als
      feste Bühne hinter der GANZEN Seite (ein WebGL-Kontext), unter dem Hero gedämpft und langsamer. Ohne den Schalter bleibt alles wie vorher. */
@@ -51,6 +69,8 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
      Glas-Schriftzug (versteckt bleibt „ERGUN.“ im h1; bis 22.11.2026 „Webdesign und Automatisierung“), Fußzeile „ERGUN. · Webdesign · © Jahr“, hinter dem
      Riss derselbe Verlauf klar und gezeichnet (Glas-Bühne mit Linien, Lichtkanten, Körnung, Tiefe) */
   const GB = FEIN && html.classList.contains('blatt-glas');
+  /* Klartext (seit 22.11.2026, „ERGUN.-Seite schöner“): steht im h1 ein .glas-klartext, wird nichts davon ins Glas gemalt (Maske leer) */
+  const KLARTEXT = !!document.querySelector('[data-glas-titel] .glas-klartext');
   /* Ruhe (?ruhe=neu, 01.10.2026 – Emre: „Der Schriftzug zittert beim Laden und beim Scrollen“). Ursachen und Lösung:
      · Das Glas liegt in der festen Leinwand und wurde einen Bild-Takt NACH dem übrigen Titelbild-Text verschoben (der Browser scrollt Text
        sofort, die Leinwand malt im nächsten requestAnimationFrame) → der Schriftzug wackelte gegen „Digitalstudio“ und die Knöpfe.
@@ -80,6 +100,8 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   const NATIV = TAKT && html.classList.contains('kopf-nativ');   /* Kopf nativ (Beschreibung unten); ohne die Klasse läuft der Schriftzug wie mit ?takt=aus */
   const inhalt = RUHE && (!WEG || NATIV) ? root.querySelector('.ghr-content') : null;   /* nativ: nur Deckkraft; ohne Schriftzug-weg (alte Ruhe): Versatz */
   let versatz = 0, breiteJetzt = window.innerWidth;
+  /* Tempo des Verlaufs (seit 22.11.2026): PC 0,4×, Handy 0,3× der früheren Geschwindigkeit */
+  const TEMPO_PC = 0.4, TEMPO_HANDY = 0.3;
   const dprR = Math.min(window.devicePixelRatio || 1, 2);
   /* Ruhe + Handy (Emre, 02.10.: „alles auf höchste FPS“): Leinwand mit höchstens 1,5-facher Pixeldichte, Farbfeld mit 4 statt 5 Rausch-Stufen
      (der Schriftzug selbst bleibt scharf: seine Maske hat eine eigene Auflösung bis 2×), unter dem Titelbild kein Drosseln mehr */
@@ -128,7 +150,8 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     if (NATIV) { titelEbene = el('canvas', 'glas-titel-ebene'); titelEbene.setAttribute('aria-hidden', 'true'); titelEbene.style.visibility = 'hidden'; root.insertBefore(titelEbene, root.firstChild); }
     root.style.background = 'transparent';
     /* je Zeichen ein <span>: die Abstände werden optisch ausgeglichen (abstaende()); der Text bleibt „ERGUN.“ für Suche und Screenreader */
-    if (GB) titleEl.innerHTML = '<span class="glas-versteckt">ERGUN. · </span><span class="ghr-word">Webdesign</span>';
+    if (KLARTEXT) { /* seit 22.11.2026: Verkaufssatz als echte Schrift – kein Glas-Schriftzug, der Verlauf läuft weiter */ }
+    else if (GB) titleEl.innerHTML = '<span class="glas-versteckt">ERGUN. · </span><span class="ghr-word">Webdesign</span>';
     else titleEl.innerHTML = '<span class="ghr-word">' + 'ERGUN.'.split('').map((z) => '<span class="glas-z">' + z + '</span>').join('') + '</span>';
   }
   if (NAHTLOS) {   /* Unterzeile im Titelbild (seit 22.11.2026): der Satz aus index.html */
@@ -157,7 +180,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     const marke = FEIN && e.target.closest && e.target.closest('.glas-kopf__marke');   /* Logo = nach oben (Start) */
     if (marke) { e.preventDefault(); window.scrollTo({ top: 0, behavior: ruhigMq.matches ? 'auto' : 'smooth' }); return; }
     const a = e.target.closest && e.target.closest('[data-glas-ziel]'); if (!a) return;
-    e.preventDefault(); if (a.getAttribute('data-glas-ziel') === 'kontakt') zumKontakt(); else zuAngeboten();
+    e.preventDefault(); if (a.getAttribute('data-glas-ziel') === 'kontakt') { if (P && P.zumFormular) P.zumFormular(); else zumKontakt(); } else zuAngeboten();
   });
 
   /* Angebote (Schritt ①, gebaut von preise.js): Glas-Karten im Stil der Vorlagen-Pillen – Titel, kurzer Satz, Preis aus PREISE */
@@ -201,6 +224,12 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
      · Weichzeichner: die Vorlage schneidet den Gauß-Kern schon bei 2 σ ab (Gewicht dort noch 13 %); auf manchen Grafikwegen zeichnet die
        Schnittkante ein Kästchen um jeden Buchstaben. Fein: dieselbe Breite (σ), aber Abtastung bis 3 σ.
      · Glas: die Höhenkarte sitzt fest auf dem Dokument, die Leinwand auf dem Fenster → Lage um die Scroll-Strecke verschieben (u_shift). */
+  /* Ruhiger Verlauf (seit 22.11.2026): weniger Verwirbelung (Verzerrung 3,5/3,0 → 1,6/1,4), weichere Übergänge, Rosa und Creme-Glanz nur
+     noch als Hauch – höchstens zwei Farben treten gleichzeitig hervor. Die gezogene Datei bleibt wörtlich, ersetzt wird hier. */
+  /* seit dem Farbwechsel etwas lebendiger (Verzerrung 2,3/2,0 statt 1,6/1,4, zweite und dritte Farbe kräftiger), bleibt aber langsam */
+  const FIELD_RUHIG = FIELD.split('p + 3.5 * q').join('p + 2.3 * q').replace('fbm(p + 3.0 * r)', 'fbm(p + 2.0 * r)')
+    .replace('smoothstep(0.34, 0.74, f))', 'smoothstep(0.3, 0.86, f) * 0.9)').replace('smoothstep(0.42, 0.8, r.y) * 0.8)', 'smoothstep(0.42, 0.9, r.y) * 0.55)')
+    .replace('smoothstep(0.55, 0.9, f * r.x * 1.8) * 0.7)', 'smoothstep(0.58, 0.96, f * r.x * 1.8) * 0.4)');
   const BLUR_FEIN = BLUR.replace('float x = float(i) * u_radius / 24.0;', 'float x = float(i) * u_radius * 1.5 / 24.0;');
   let GLASS_FEIN = GLASS.split('texture(u_height, ').join('texture(u_height, vec2(0.0, -u_shift) + ').replace('uniform vec2 u_res;', 'uniform vec2 u_res;\nuniform float u_shift;');
   /* nahtlos: Lage im Dokument in Fensterhöhen (yDoc) → ab etwa der Hälfte des Heros stufenlos dunkler (über ~0,95 Fensterhöhen, ohne Kante),
@@ -423,7 +452,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       const sk = scharf ? Math.min(window.devicePixelRatio || 1, lite ? 2 : SCHARF_MAX) : scale;
       const cs = getComputedStyle(heading), fontPx = parseFloat(cs.fontSize) || 64, sy = RUHE && !WEG ? versatz : window.scrollY || 0;   /* Ruhe: der Inhalt ist um „versatz“ verschoben */
       const zeichen = [], tw = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
-      const versteckt = (n) => !!(n.parentElement && n.parentElement.closest && n.parentElement.closest('.glas-versteckt'));   /* „ERGUN.“ nur für Suche und Screenreader */
+      const versteckt = (n) => !!(n.parentElement && n.parentElement.closest && n.parentElement.closest('.glas-versteckt, .glas-klartext'));   /* Klartext: echte Schrift, kein Glas */   /* „ERGUN.“ nur für Suche und Screenreader */
       for (let n = tw.nextNode(); n; n = tw.nextNode()) for (let i = 0; i < (versteckt(n) ? 0 : n.data.length); i++) {
         if (/\s/.test(n.data[i])) continue;
         const rg = document.createRange(); rg.setStart(n, i); rg.setEnd(n, i + 1);
@@ -580,9 +609,9 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
 
     const draw = () => {
       if (!field || !blurB) return;
-      const pal = live.palette, aspect = canvas.width / canvas.height;
+      const pal = reduceMq.matches ? live.palette : farbenJetzt(performance.now()), aspect = canvas.width / canvas.height;
       if (FELD_PRUEF !== undefined) { gl.bindFramebuffer(gl.FRAMEBUFFER, field.fbo); gl.viewport(0, 0, field.w, field.h); gl.clearColor(FELD_PRUEF, FELD_PRUEF, FELD_PRUEF, 1); gl.clear(gl.COLOR_BUFFER_BIT); }
-      else run(P.field, field, { time, aspect, octaves: lite ? 3 : RUHE && HANDY_R ? 4 : 5, c0: pal[0], c1: pal[1], c2: pal[2], c3: pal[3], c4: pal[4] });
+      else run(P.field, field, { time, aspect, octaves: lite || HANDY_R ? 3 : 4, c0: pal[0], c1: pal[1], c2: pal[2], c3: pal[3], c4: pal[4] });
       const ch = Math.max(1, canvas.clientHeight), w = WEG ? schriftJetzt(performance.now()) : 1;
       const u = {
         field: field.tex, height: blurB.tex, htexel: hTexel || [1 / blurB.w, 1 / blurB.h], bevel, aspect, light: [light.x, light.y], ...(bandU ? { band: bandU } : {}),
@@ -613,7 +642,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     function teileAusblenden(w) {
       const unten = leiste ? leiste.getBoundingClientRect().bottom : 0;
       const o = teile.map((t) => (t ? Math.max(0, Math.min(1, (t.getBoundingClientRect().top - unten) / KOPF_LUFT)) : 1));
-      teile.forEach((t, i) => { if (!t || i === 0) return; const v = o[i] >= 1 ? '' : o[i].toFixed(3); if (t.style.opacity !== v) { t.style.opacity = v; t.style.pointerEvents = o[i] < 0.05 ? 'none' : ''; } });
+      teile.forEach((t, i) => { if (!t || (i === 0 && !KLARTEXT)) return;   /* Klartext: die Überschrift blendet wie Unterzeile und Knöpfe aus */ const v = o[i] >= 1 ? '' : o[i].toFixed(3); if (t.style.opacity !== v) { t.style.opacity = v; t.style.pointerEvents = o[i] < 0.05 ? 'none' : ''; } });
       const ws = Math.min(w, o[0]); schrift.wert = ws; schrift.ziel = ws > 0 ? 1 : 0;   /* der gemalte Schriftzug folgt seinem (unsichtbaren) h1 */
       return ws;
     }
@@ -654,7 +683,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       /* Titel scharf: ab 0,74 Fensterhöhen (Schriftzug längst weg) wieder die heutige Dichte, zurück schon ab 0,66 – vor dem Wiederkommen (0,6) */
       if (scharf) { const y = window.scrollY || 0, hh = Math.max(1, canvas.clientHeight); const tief = scharfTief ? y > 0.66 * hh : y > 0.74 * hh;
         if (tief !== scharfTief) { scharfTief = tief; zustand.wechsel = (zustand.wechsel || 0) + 1; size(); } }
-      if (animating()) time += dt * (1 - 0.7 * unten);
+      if (animating()) time += dt * (HANDY_R ? TEMPO_HANDY : TEMPO_PC) * (1 - 0.5 * unten);
       const pt = pointer, idle = (now - pt.at) / 1000 > IDLE_S;
       const [tx, ty] = idle && animating() ? orbit(time) : [pt.x, pt.y];
       light.x = follow(light.x, tx, dt, idle ? 1.2 : 7);
@@ -662,7 +691,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
       if (FELD_PRUEF !== undefined) { light.x = 0.5; light.y = 0.7; }   /* Prüfschalter: Licht fest (Glanz wie im Ruhebild) */
       if (fein && !NAHTLOS) { const tief = unten >= 1 ? true : unten < 0.97 ? false : tiefStand; if (tief !== tiefStand) { tiefStand = tief; size(); } }
       const sparen = fein && !RUHE && unten >= 1 && animating() && now - gemalt < 40   /* Ruhe (Emre, 02.10.): immer volle Bildrate */
-        || (WEG && unten >= 1 && now - gemalt < 30)   /* Schriftzug weg (03.10.): unter dem Titelbild gleichmäßig ~30 Bilder/s – der Verlauf ist dort dunkel und langsam */
+        /* bis 22.11.2026 unter dem Titelbild höchstens ~30 Bilder/s – jetzt volle Bildrate (der ruhige Verlauf ist leicht genug, Handy 60 Bilder/s) */
         || (html.classList.contains('papier-zu') && now - gemalt < 250);   /* Papier-Start (03.10.): das geschlossene Blatt deckt alles – nur ~4 Bilder/s, damit das Handy fürs Reißen frei ist */
       if (!sparen) { draw(); gemalt = now; }
       const catching = Math.abs(light.x - tx) + Math.abs(light.y - ty) > 0.0015;
@@ -687,7 +716,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     canvas.addEventListener('webglcontextrestored', onRestored);
 
     try {
-      P = { field: program(FIELD), blur: program(fein ? BLUR_FEIN : BLUR), glass: program(fein ? GLASS_FEIN : GLASS), titel: NATIV && GLASS_NATIV && fein ? program(GLASS_NATIV) : null };
+      P = { field: program(FIELD_RUHIG.indexOf('2.3 * q') > 0 ? FIELD_RUHIG : FIELD), blur: program(fein ? BLUR_FEIN : BLUR), glass: program(fein ? GLASS_FEIN : GLASS), titel: NATIV && GLASS_NATIV && fein ? program(GLASS_NATIV) : null };
       const vao = gl.createVertexArray();
       gl.bindVertexArray(vao);
       const buffer = gl.createBuffer();

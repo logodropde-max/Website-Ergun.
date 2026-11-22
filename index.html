@@ -30,8 +30,8 @@
 <script>document.documentElement.classList.add('js');</script>
 <!-- Aussehen der Glas-Startseite (Vorlage 21st „Glass Headline Hero“, _code/vorlagen-21st/glass-headline-hero/) -->
 <link rel="stylesheet" href="glas-vorlage.gen.css?v=1">
-<link rel="stylesheet" href="glas.css?v=3">
-<link rel="stylesheet" href="glas-fein.css?v=10">
+<link rel="stylesheet" href="glas.css?v=4">
+<link rel="stylesheet" href="glas-fein.css?v=11">
 
 <style>
 html, body { touch-action: pan-x pan-y; }
@@ -162,7 +162,7 @@ img { display: block; max-width: 100%; height: auto; }
 @media (hover: hover) and (pointer: fine) { .footer a:hover { color: var(--text); } }
 
 /* ---------- Einblenden beim Scrollen (nur mit JS) ---------- */
-.js .reveal { opacity: 0; transform: translateY(24px); transition: opacity 900ms var(--ease), transform 900ms var(--ease); }
+.js .reveal { opacity: 0; transform: translateY(10px); transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out); }
 .js .reveal.ist-da { opacity: 1; transform: none; }
 
 @media (max-width: 700px) {
@@ -816,21 +816,20 @@ html.papier-an.blatt-glas, html.papier-an.blatt-glas body { background: linear-g
 })();
 </script>
 <!-- Glas-Logo: „ERGUN.“ in Kopf- und Fußzeile ist immer das echte Glas (bilder/glas/glas-marke-b.webp) – EINE Regel, auch für 404.html -->
-<link rel="stylesheet" href="glas-marke.css?v=5">
+<link rel="stylesheet" href="glas-marke.css?v=6">
 <link rel="preload" as="image" href="bilder/glas/glas-wort.webp?v=1">
 <script>
-/* Papier-Start (seit 03.10.2026, Ausnahme auf ERGUNs Wunsch): die Seite beginnt als Blatt im Glas-Look mit „ERGUN.“, das beim Scrollen aufreißt
-   (21st-Vorlage „Tiger Tear Reveal“ ohne Tiger, js/papier.js). Kein Blatt bei einem Sprung (#preise, #kontakt), beim Zurückblättern und bei der
-   Rückkehr von Impressum/Datenschutz. Ohne JavaScript nie ein Blatt. */
+/* Intro (seit 22.11.2026 kurz und weich, vorher ein Blatt zum Aufreißen): das große „ERGUN.“ steht höchstens 1,2 s da, sperrt nie das
+   Scrollen (keine Zeigerereignisse), Scrollen oder Tippen überspringt es sofort. Bei weiteren Besuchen in derselben Sitzung gar nicht (sessionStorage).
+   Kein Intro bei einem Sprung (#preise, #kontakt), beim Zurückblättern und bei der Rückkehr von Impressum/Datenschutz. Ohne JavaScript nie. */
 (function () {
   if (location.hash) return;
   var nav = performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
   if (nav && nav.type === 'back_forward') return;
-  try { var r = document.referrer ? new URL(document.referrer) : null; if (r && r.origin === location.origin && /impressum|datenschutz/.test(r.pathname)) return; } catch (e) {}
-  var html = document.documentElement; html.classList.add('papier-an');
-  var tc = document.querySelector('meta[name="theme-color"]'); if (tc) window.ERGUN_PAPIER_THEMA = tc.getAttribute('content');
-  /* Sicherung: läuft die Steuerung nicht an (Datei fehlt, Fehler), nach 8 s ohne Blatt – niemand sitzt dahinter fest */
-  setTimeout(function () { if (!window.__papier) html.classList.remove('papier-an'); }, 8000);
+  try { var r = document.referrer ? new URL(document.referrer) : null; if (r && r.origin === location.origin && /impressum|datenschutz|agb/.test(r.pathname)) return; } catch (e) {}
+  try { if (sessionStorage.getItem('ergun-intro')) return; sessionStorage.setItem('ergun-intro', '1'); } catch (e) {}
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.documentElement.classList.add('papier-an');
 })();
 </script>
 <style>
@@ -838,7 +837,7 @@ html.papier-an.blatt-glas, html.papier-an.blatt-glas body { background: linear-g
    sticky/absolute inset-0 → fest über der ganzen Seite · Hinweis „bottom-6 flex flex-col items-center gap-2 font-mono text-[10px] uppercase
    tracking-[0.35em]“ + „h-6 w-px animate-pulse“ → .papier__hinweis. Farben: Wort Orange #FF5A1F (Glas), Papier #F2F1EE, Zeile #2A2A2A (12,8 : 1). */
 .papier { display: none; }
-html.papier-an .papier { display: block; position: fixed; inset: 0; z-index: 2147483600; overflow: visible; touch-action: none; pointer-events: auto; }
+html.papier-an .papier { display: block; position: fixed; inset: 0; z-index: 2147483600; overflow: visible; pointer-events: none; }   /* Intro sperrt nie (22.11.2026) */
 /* ganz hell (ERGUN., 03.10. spät: „der ganze Bildschirm soll weiß sein“): das Blatt reicht über das Fenster hinaus (Statusleiste, Kerbe,
    Browser-Leisten, Gummiband) – Papier und Hälften malen über den Rand (overflow: visible), Grund der Seite in Papierfarbe, kein Nachfedern */
 html.papier-an.papier-an, html.papier-an.papier-an body { overscroll-behavior: none; }
@@ -854,7 +853,10 @@ html.papier-an .papier__svg { overflow: visible; }
   font: 600 11px/1 "Geist Mono", ui-monospace, Consolas, monospace; letter-spacing: 0.35em; text-transform: uppercase; pointer-events: none; padding-left: 0.35em; }
 .papier__hinweis i { display: block; width: 1px; height: 24px; background: #2A2A2A; animation: papier-puls 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
 @keyframes papier-puls { 50% { opacity: 0.5; } }
-html.papier-geht .papier { opacity: 0; transition: opacity 320ms ease; }
+html.papier-geht .papier { opacity: 0; transition: opacity 480ms cubic-bezier(0.23, 1, 0.32, 1); }
+html.papier-geht .papier__svg { transform: scale(1.025); transition: transform 480ms cubic-bezier(0.23, 1, 0.32, 1); }
+html.papier-geht.papier-schnell .papier, html.papier-geht.papier-schnell .papier__svg { transition-duration: 240ms; }
+.papier__hinweis { display: none !important; }   /* kein „Scrollen“-Hinweis mehr: das Intro geht von selbst */
 @media (prefers-reduced-motion: reduce) { .papier__hinweis i { animation: none; } }
 /* Blatt im Glas-Look (03.10.2026, Vorschau ?start=glas – Ausnahme auf ERGUNs Wunsch): statt Papier der Verlauf des Ladezustands (weich, wie hinter
    Milchglas – dasselbe winzige Standbild, .papier__grund, keine lebende Unschärfe), darauf das Glas-„ERGUN.“ als Bild (bilder/glas/glas-wort.webp,
@@ -872,12 +874,12 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
    Zeilen nicht (senkrecht) bzw. wird vom negativen Außenabstand aufgehoben (waagrecht) – Text und Lage bleiben Pixel für Pixel gleich. */
 .auswahl__leer a[data-auswahl-treffen] { padding: 14px 8px; margin: 0 -8px; border-radius: 12px; }
 </style>
-<link rel="stylesheet" href="ergun-abschnitte.css?v=1">
+<link rel="stylesheet" href="ergun-abschnitte.css?v=5">
 </head>
 <body>
 
 <!-- Papier-Start (03.10.2026, Stil + Schalter im <head>): das Blatt steht fertig im HTML (Papier, Zeile, Wort) – vom ersten Bild an sichtbar,
-     die Bewegung macht js/papier.js (nur geladen, wenn das Blatt an ist). Nur Schmuck für Screenreader (aria-hidden); die Überschrift der Seite bleibt. -->
+     seit 22.11.2026 nur noch ein kurzes Intro (Steuerung im Skript darunter). Nur Schmuck für Screenreader (aria-hidden); die Überschrift der Seite bleibt. -->
 <div class="papier" id="papier" aria-hidden="true">
   <div class="papier__grund"></div>
   <svg class="papier__svg" viewBox="36 44 928 468" preserveAspectRatio="xMidYMid meet" focusable="false">
@@ -897,8 +899,22 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
   </svg>
   <p class="papier__hinweis">Scrollen<i></i></p>
 </div>
-<script>(function () { var p = document.getElementById('papier'); if (!document.documentElement.classList.contains('papier-an')) { if (p) p.parentNode.removeChild(p); return; }
-  var s = document.createElement('script'); s.src = 'js/papier.js?v=9'; document.body.appendChild(s); })();</script>
+<script>(function () {
+  /* Intro: nach 0,65 s weich ausblenden (0,48 s, ease-out), Scrollen/Tippen/Taste = sofort (0,24 s); danach ist das Blatt ganz weg */
+  var p = document.getElementById('papier'), html = document.documentElement;
+  if (!html.classList.contains('papier-an')) { if (p) p.parentNode.removeChild(p); return; }
+  var NAMEN = ['wheel', 'touchstart', 'pointerdown', 'keydown', 'scroll'], weg = false;
+  function geh(schnell) {
+    if (weg) return; weg = true;
+    NAMEN.forEach(function (n) { window.removeEventListener(n, sofort, true); });
+    if (schnell === true) html.classList.add('papier-schnell');
+    html.classList.add('papier-geht');
+    setTimeout(function () { html.classList.remove('papier-an', 'papier-geht', 'papier-schnell'); if (p && p.parentNode) p.parentNode.removeChild(p); }, schnell === true ? 260 : 500);
+  }
+  function sofort() { geh(true); }
+  NAMEN.forEach(function (n) { window.addEventListener(n, sofort, { capture: true, passive: true }); });
+  setTimeout(geh, 650);
+})();</script>
 
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
 
@@ -906,8 +922,8 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
   <a class="nav__mark" href="#top" data-nach-oben aria-label="ERGUN – nach oben">ERGUN<span class="dot">.</span></a>
   <nav class="nav__links" aria-label="Seitennavigation">
     <a class="nav__link" href="#ablauf">Ablauf</a>
-    <a class="nav__link" href="#beispiele">Beispiele</a>
     <a class="nav__link" href="#preise">Preise</a>
+    <a class="nav__link" href="#kontakt">Kontakt</a>
   </nav>
 </header>
 
@@ -918,7 +934,6 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
 <header class="glas-kopf" data-glas-kopf>
   <a class="glas-kopf__marke" href="#top" aria-label="ERGUN. – nach oben">ERGUN<span>.</span></a>
   <nav class="glas-kopf__links" aria-label="Hauptnavigation">
-    <a href="#beispiele">Beispiele</a>
     <a href="#angebote" data-glas-ziel="angebote">Preise</a>
     <a href="#kontakt" data-glas-ziel="kontakt">Kontakt</a>
   </nav>
@@ -927,10 +942,12 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
   <canvas class="ghr-canvas" data-glas-canvas aria-hidden="true"></canvas>
   <div class="ghr-content">
     <span class="ghr-eyebrow">Digitalstudio</span>
-    <h1 class="ghr-title" data-glas-titel><span class="ghr-word">ERGUN.</span></h1>
-    <p class="ghr-desc" data-glas-text>Websites, die auffallen und Kunden bringen.</p>
+    <!-- seit 22.11.2026 („ERGUN.-Seite schöner“): ein klarer Verkaufssatz als echte Schrift statt des Glas-Worts „Webdesign“; der Preis kommt aus PREISE -->
+    <h1 class="ghr-title" data-glas-titel><span class="glas-versteckt">ERGUN. Webdesign: </span><span class="glas-klartext">Websites, die Kunden bringen.</span></h1>
+    <p class="ghr-desc" data-glas-text>Für Selbstständige und kleine Betriebe. Festpreis ab&nbsp;<span data-preis-ab>290&nbsp;€</span>.</p>
     <div class="ghr-actions">
-      <a class="ghr-btn ghr-primary" href="#angebote" data-glas-ziel="angebote">Anfrage starten<svg class="ghr-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="ghr-btn ghr-primary" href="#kontakt" data-glas-ziel="kontakt">Anfrage starten<svg class="ghr-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="ghr-btn ghr-secondary" href="#angebote" data-glas-ziel="angebote">Preise ansehen</a>
     </div>
   </div>
 </section>
@@ -938,90 +955,16 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
 <script>(function () { var gv = document.getElementById('glas-vorlage'); gv.parentNode.insertBefore(gv.content.cloneNode(true), gv); })();</script>
 
 <main id="inhalt" tabindex="-1">
-  <!-- So läuft es ab + Beispiele (seit 22.11.2026, Auftrag „ERGUN.-Seite startklar“). Statisches HTML: sichtbar auch ohne JavaScript und ohne WebGL.
-       Aussehen: ergun-abschnitte.css. Paket-Preise in den Schildern gleicht ein Test mit PREISE ab (js/preise.js = die eine Stelle für Zahlen). -->
+  <!-- So läuft es ab (seit 22.11.2026 „ruhiger“: eine schmale Zeile mit drei Schritten; die Beispiele stehen als Links in den Preiskarten, js/preise.js).
+       Statisches HTML: sichtbar auch ohne JavaScript und ohne WebGL. Aussehen: ergun-abschnitte.css. -->
   <section class="ab-abschnitt ab-ablauf" id="ablauf" aria-labelledby="ablauf-titel">
     <div class="ab-innen">
       <h2 class="glas-h2 ab-rein" id="ablauf-titel">So läuft es ab</h2>
-      <p class="ab-satz ab-rein">Drei Schritte von der ersten Nachricht bis zur fertigen Website.</p>
-      <ol class="ab-schritte">
-        <li class="ab-karte ab-schritt ab-rein" style="--ab-i:0"><span class="ab-schritt__nr" aria-hidden="true">1</span><h3>Kostenloses Erstgespräch</h3><p>Wir klären, was Ihr Betrieb braucht. Unverbindlich.</p></li>
-        <li class="ab-karte ab-schritt ab-rein" style="--ab-i:1"><span class="ab-schritt__nr" aria-hidden="true">2</span><h3>Entwurf und Feinschliff</h3><p>Sie sehen Ihre Seite, bevor sie online geht, und geben Ihre Wünsche in Korrekturrunden.</p></li>
-        <li class="ab-karte ab-schritt ab-rein" style="--ab-i:2"><span class="ab-schritt__nr" aria-hidden="true">3</span><h3>Online und betreut</h3><p>Ihre Seite geht live. Auf Wunsch kümmern wir uns danach um Technik und Änderungen.</p></li>
+      <ol class="ab-schritte ab-rein">
+        <li class="ab-schritt"><span class="ab-schritt__nr" aria-hidden="true">1</span><div><h3>Erstgespräch</h3><p>Kostenlos und unverbindlich.</p></div></li>
+        <li class="ab-schritt"><span class="ab-schritt__nr" aria-hidden="true">2</span><div><h3>Entwurf</h3><p>Sie sehen alles, bevor es online geht.</p></div></li>
+        <li class="ab-schritt"><span class="ab-schritt__nr" aria-hidden="true">3</span><div><h3>Online</h3><p>Auf Wunsch betreuen wir die Seite danach.</p></div></li>
       </ol>
-    </div>
-  </section>
-
-  <section class="ab-abschnitt ab-beispiele" id="beispiele" aria-labelledby="beispiele-titel">
-    <div class="ab-innen">
-      <h2 class="glas-h2 ab-rein" id="beispiele-titel">Beispiele</h2>
-      <p class="ab-satz ab-rein">So sieht gute Arbeit in jedem Paket aus.</p>
-      <div class="ab-pakete">
-        <div class="ab-paket" data-paket="start" aria-label="Paket Start" role="group">
-          <p class="ab-paket__schild ab-rein"><span>Start</span><b data-preis-stufe="start">500 €</b></p>
-          <article class="ab-karte ab-beispiel ab-rein" style="--ab-i:0">
-            <a class="ab-beispiel__bild" href="beispiele/elektro-rehder/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="beispiele/elektro-rehder/vorschau.webp" width="800" height="500" alt="" loading="lazy" decoding="async"></a>
-            <div class="ab-beispiel__text">
-              <h3>Elektro Rehder</h3>
-              <p class="ab-beispiel__branche">Elektrobetrieb</p>
-              <ul><li>Notdienst-Nummer groß im Blick</li><li>Leistungen und Einsatzgebiet auf einer Seite</li><li>Für Handy und PC gebaut</li></ul>
-              <a class="ab-ansehen" href="beispiele/elektro-rehder/" target="_blank" rel="noopener" aria-label="Elektro Rehder ansehen (Beispielseite, neuer Tab)">Ansehen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
-            </div>
-          </article>
-          <article class="ab-karte ab-beispiel ab-rein" style="--ab-i:1">
-            <a class="ab-beispiel__bild" href="beispiele/praxis-lindhorst/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="beispiele/praxis-lindhorst/vorschau.webp" width="800" height="500" alt="" loading="lazy" decoding="async"></a>
-            <div class="ab-beispiel__text">
-              <h3>Praxis Lindhorst</h3>
-              <p class="ab-beispiel__branche">Physiotherapie</p>
-              <ul><li>Freie Termine auf einen Blick</li><li>Behandlungen klar erklärt</li><li>Ruhiges, vertrauenswürdiges Design</li></ul>
-              <a class="ab-ansehen" href="beispiele/praxis-lindhorst/" target="_blank" rel="noopener" aria-label="Praxis Lindhorst ansehen (Beispielseite, neuer Tab)">Ansehen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
-            </div>
-          </article>
-        </div>
-        <div class="ab-paket" data-paket="business" aria-label="Paket Business" role="group">
-          <p class="ab-paket__schild ab-rein"><span>Business</span><b data-preis-stufe="business">ab 1.000 €</b></p>
-          <article class="ab-karte ab-beispiel ab-rein" style="--ab-i:2">
-            <a class="ab-beispiel__bild" href="beispiele/yilmaz-realty/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="beispiele/yilmaz-realty/vorschau.webp" width="800" height="500" alt="" loading="lazy" decoding="async"></a>
-            <div class="ab-beispiel__text">
-              <h3>Yilmaz &amp; Co. Realty</h3>
-              <p class="ab-beispiel__branche">Immobilien und Auswanderung</p>
-              <ul><li>Eigenes Design mit Bewegung</li><li>Ablauf, Leistungen und Fragen klar gegliedert</li><li>Anfrage-Formular für das Erstgespräch</li></ul>
-              <a class="ab-ansehen" href="beispiele/yilmaz-realty/" target="_blank" rel="noopener" aria-label="Yilmaz &amp; Co. Realty ansehen (Beispielseite, neuer Tab)">Ansehen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
-            </div>
-          </article>
-          <article class="ab-karte ab-beispiel ab-rein" style="--ab-i:0">
-            <a class="ab-beispiel__bild" href="beispiele/voltiq/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="beispiele/voltiq/vorschau.webp" width="800" height="500" alt="" loading="lazy" decoding="async"></a>
-            <div class="ab-beispiel__text">
-              <h3>Voltiq</h3>
-              <p class="ab-beispiel__branche">Online-Shop für Powerbanks</p>
-              <ul><li>Produkt groß in Szene gesetzt</li><li>Farbwahl direkt auf der Seite</li><li>Eigenes Design mit Bewegung</li></ul>
-              <a class="ab-ansehen" href="beispiele/voltiq/" target="_blank" rel="noopener" aria-label="Voltiq ansehen (Beispielseite, neuer Tab)">Ansehen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
-            </div>
-          </article>
-        </div>
-        <div class="ab-paket" data-paket="pro" aria-label="Paket Pro" role="group">
-          <p class="ab-paket__schild ab-rein"><span>Pro</span><b data-preis-stufe="pro">ab 1.900 €</b></p>
-          <article class="ab-karte ab-beispiel ab-rein" style="--ab-i:1">
-            <a class="ab-beispiel__bild" href="beispiele/orbis/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="beispiele/orbis/vorschau.webp" width="800" height="500" alt="" loading="lazy" decoding="async"></a>
-            <div class="ab-beispiel__text">
-              <h3>Orbis</h3>
-              <p class="ab-beispiel__branche">Uhrenmarke</p>
-              <ul><li>Eigenes Konzept mit edler Bildsprache</li><li>Kollektion mit fünf Modellen</li><li>Aufwendige Animationen beim Scrollen</li></ul>
-              <a class="ab-ansehen" href="beispiele/orbis/" target="_blank" rel="noopener" aria-label="Orbis ansehen (Beispielseite, neuer Tab)">Ansehen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
-            </div>
-          </article>
-          <article class="ab-karte ab-beispiel ab-rein" style="--ab-i:2">
-            <a class="ab-beispiel__bild" href="beispiele/lumora/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="beispiele/lumora/vorschau.webp" width="800" height="500" alt="" loading="lazy" decoding="async"></a>
-            <div class="ab-beispiel__text">
-              <h3>Lumora</h3>
-              <p class="ab-beispiel__branche">Online-Shop für Beamer</p>
-              <ul><li>Videos im Kopfbereich und beim Scrollen</li><li>Eigenes Konzept von Grund auf</li><li>Shop-Ansicht mit Warenkorb</li></ul>
-              <a class="ab-ansehen" href="beispiele/lumora/" target="_blank" rel="noopener" aria-label="Lumora ansehen (Beispielseite, neuer Tab)">Ansehen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
-            </div>
-          </article>
-        </div>
-      </div>
-      <p class="ab-klein">Beispielseiten zur Veranschaulichung der Pakete.</p>
     </div>
   </section>
 
@@ -1126,6 +1069,9 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
   </section>
 </main>
 
+<!-- Fester Knopf „Anfrage“ (nur Handy, seit 22.11.2026): erscheint nach dem Titelbild, verschwindet, sobald das Formular oder die Fußzeile im Bild ist -->
+<a class="anfrage-fix" href="#kontakt" data-glas-ziel="kontakt" data-anfrage-fix tabindex="-1" aria-hidden="true">Anfrage<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+
 <footer class="footer">
   <span>ERGUN. · Webdesign · © <span data-jahr>2026</span></span>
   <nav aria-label="Rechtliches">
@@ -1136,12 +1082,12 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
 </footer>
 
 <!-- preise.js vor dem Titelbild-Skript: glas.js liest beim Start window.PREISE (Kleingedrucktes in der Fußzeile) – so ist die Reihenfolge immer gleich (07.10.2026) -->
-<script src="js/preise.js?v=41"></script>
+<script src="js/preise.js?v=44"></script>
 <script>
 /* Glas-Startseite (js/glas.js) gleich nach den Preisen */
 (function () {
   function laden(s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); }
-  laden('js/glas.js?v=23');
+  laden('js/glas.js?v=26');
 })();
 </script>
 <script>
@@ -1299,19 +1245,40 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
 })();
 </script>
 <script>
-/* So läuft es ab + Beispiele: ruhig einblenden, sobald sie ins Bild kommen (ohne Beobachter alles sofort da); Preise in den Paket-Schildern
-   kommen aus PREISE (die eine Stelle für Zahlen), im HTML steht derselbe Wert für Besucher ohne JavaScript. */
+/* Kopfbereich: „Festpreis ab …“ = günstigstes Paket aus PREISE (die eine Stelle für Zahlen; im HTML steht derselbe Wert für Besucher ohne JavaScript) */
 (function () {
-  var P = window.PREISE;
-  if (P) [].forEach.call(document.querySelectorAll('[data-preis-stufe]'), function (b) {
-    var s = P.stufen.filter(function (x) { return x.id === b.getAttribute('data-preis-stufe'); })[0]; if (s) b.textContent = P.betrag(s);
-  });
+  var P = window.PREISE, z = document.querySelector('[data-preis-ab]');
+  if (P && z) z.textContent = P.euro(Math.min.apply(null, P.stufen.map(function (s) { return s.preis; })));
+})();
+/* So läuft es ab: ruhig einblenden, sobald es ins Bild kommt (ohne Beobachter alles sofort da) */
+(function () {
   var rein = [].slice.call(document.querySelectorAll('.ab-rein'));
   if (!rein.length || !('IntersectionObserver' in window)) return;
   document.documentElement.classList.add('ab-bewegung');
   var io = new IntersectionObserver(function (es) { es.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add('ist-da'); io.unobserve(x.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
   rein.forEach(function (e) { io.observe(e); });
   setTimeout(function () { rein.forEach(function (e) { if (e.getBoundingClientRect().top < window.innerHeight) e.classList.add('ist-da'); }); }, 2500);   /* Hintergrund-Tab */
+})();
+/* Fester Knopf „Anfrage“ (Handy): sichtbar ab dem Ende des Titelbilds, weg, sobald Formular-Bereich oder Fußzeile im Bild sind – er verdeckt nie ein Feld */
+(function () {
+  var k = document.querySelector('[data-anfrage-fix]'); if (!k) return;
+  var mq = window.matchMedia('(max-width: 760px)'), imBild = {}, geplant = 0;
+  function pruefen() {
+    geplant = 0;
+    var hero = document.getElementById('top'), ab = hero ? hero.offsetHeight * 0.7 : window.innerHeight * 0.7;
+    var an = mq.matches && (window.scrollY || 0) > ab && !imBild.raster && !imBild.fuss;
+    if (k.classList.contains('ist-an') !== an) { k.classList.toggle('ist-an', an); k.setAttribute('aria-hidden', String(!an)); k.tabIndex = an ? 0 : -1; }
+  }
+  window.addEventListener('scroll', function () { if (!geplant) geplant = requestAnimationFrame(pruefen); }, { passive: true });
+  if (mq.addEventListener) mq.addEventListener('change', pruefen);
+  function beobachten() {
+    if (!('IntersectionObserver' in window)) return;
+    var ziele = { raster: document.querySelector('#preise .mf__raster'), fuss: document.querySelector('.glas-fuss, footer.footer') };
+    var io = new IntersectionObserver(function (es) { es.forEach(function (x) { imBild[x.target === ziele.raster ? 'raster' : 'fuss'] = x.isIntersecting; }); pruefen(); });
+    Object.keys(ziele).forEach(function (n) { if (ziele[n]) io.observe(ziele[n]); });
+  }
+  setTimeout(beobachten, 300);   /* die Glas-Fußzeile baut js/glas.js */
+  pruefen();
 })();
 </script>
 <script>

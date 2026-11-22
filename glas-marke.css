@@ -3,12 +3,13 @@
    Kein WebGL je Logo, kein backdrop-filter. Der Text bleibt im HTML (Screenreader, Suche) und wird nur unsichtbar (Schriftgröße 0).
    Dazu der Titelbild-Text und die Fußzeile des Blatts im Glas-Look. */
 html.marke-glas :is(.glas-kopf__marke, .glas-fuss__marke, .marke) {
-  --marke-bild: url("bilder/glas/glas-marke-b.webp?v=1");
+  --marke-bild: url("bilder/glas/glas-marke-kuehl.webp?v=1");   /* seit 22.11.2026 „Glas kühl“ (silbrig-blau, aus glas-marke-b.webp umgefärbt); vorher glas-marke-b.webp */
   display: inline-block; width: 98px; height: 44px; font-size: 0 !important; line-height: 0; color: transparent !important; -webkit-text-fill-color: transparent !important;
   background: var(--marke-bild) left center / 98px auto no-repeat !important; -webkit-background-clip: border-box !important; background-clip: border-box !important;
   filter: drop-shadow(0 1px 1.5px rgba(13, 10, 20, 0.35)); text-decoration: none; vertical-align: middle;
 }
 html.marke-glas :is(.glas-kopf__marke, .glas-fuss__marke, .marke) :is(span, i) { display: none !important; }
+html.marke-glas .glas-kopf__marke { width: 112px; height: 46px; background-size: 112px auto !important; }
 html.marke-glas .glas-fuss__marke { width: 84px; height: 24px; background-size: 84px auto !important; }
 html.marke-glas .glas-kopf__marke:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 3px; border-radius: 8px; }
 
@@ -20,3 +21,13 @@ html.blatt-glas .glas-hero .ghr-title { line-height: 1.02; word-spacing: 0.22em;
 html.blatt-glas .glas-fuss__satz { font-size: 14px; line-height: 20px; color: rgba(255, 255, 255, 0.78); }
 html.blatt-glas .glas-fuss__satz::before { content: "·"; margin: 0 8px 0 2px; }
 @media (max-width: 599px) { html.blatt-glas .glas-fuss__satz { flex-basis: 100%; } html.blatt-glas .glas-fuss__satz::before { content: none; } }
+
+/* Kopfbereich mit Verkaufssatz (seit 22.11.2026, „ERGUN.-Seite schöner“): echte Schrift, zwei Zeilen, ruhig und groß; „Preise ansehen“ als leiser Glas-Knopf */
+html.blatt-glas .glas-hero .ghr-title { white-space: normal; }
+.glas-hero .ghr-title .glas-klartext, .ghr-root[data-glass='true'] .ghr-title .glas-klartext {
+  display: block; max-width: 13ch; margin: 0 auto; color: #FFFFFF; -webkit-text-fill-color: #FFFFFF;
+  font-size: clamp(2.75rem, 8.4cqw, 6.5rem); line-height: 0.98; letter-spacing: -0.035em; word-spacing: normal; text-wrap: balance;
+  text-shadow: 0 2px 40px rgba(5, 8, 20, 0.35);
+}
+.glas-hero .ghr-desc [data-preis-ab] { color: #FFFFFF; font-weight: 600; white-space: nowrap; }
+@media (max-width: 599px) { .glas-hero .ghr-title .glas-klartext { font-size: clamp(2.4rem, 11.5vw, 3.4rem); max-width: 11ch; } .glas-hero .ghr-actions { gap: 10px; } }

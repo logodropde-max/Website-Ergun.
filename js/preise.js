@@ -10,137 +10,97 @@
    b = Begriff(e) aus BEGRIFFE, die das ⓘ neben einem Punkt öffnet. enthaelt = Extras, die in der Stufe schon drin sind (Leitfaden zählt sie nicht doppelt).
    ======================================================================================================== */
 window.PREISE = {
-  /* ① Website – drei Stufen (eine wählbar). empfehlung = dezentes Schild „Empfehlung“ (Ausnahme auf ERGUNs Wunsch). */
+  /* ① Website – drei Stufen (eine wählbar), alle zum Festpreis (seit 22.11.2026 „ruhiger und günstiger“, vorher 500/1.000/1.900 €).
+     empfehlung = dezentes Schild „Empfehlung“. beispiele = zwei Beispielseiten als schlichte Links unten in der Preiskarte (neuer Tab). */
   stufen: [
-    { id: 'start', name: 'Start', preis: 500, ab: false, enthaelt: [], fuer: 'Für Selbstständige, Handwerker und kleine Betriebe',
-      punkte: [{ t: 'Website für Handy & PC' }, { t: 'Bis zu 3 Seiten' }, { t: 'Kontaktformular (WhatsApp & E-Mail)' }, { t: 'SEO-Grundlagen', b: ['seo'] },
-        { t: 'Rechtstexte eingebunden', b: ['rechtstexte'] }, { t: 'Hosting-Einrichtung & SSL', b: ['hosting', 'ssl'] }, { t: '3 eigene Bilder' }, { t: '1 Korrekturrunde', b: ['korrektur'] }] },
-    { id: 'business', name: 'Business', preis: 1000, ab: true, empfehlung: true, enthaelt: ['loop'],   /* Schild „Empfehlung“ – seit 9b keine Vorauswahl */
-      fuer: 'Für Unternehmen, die professionell auftreten wollen',
-      punkte: [{ t: 'Bis zu 8 Seiten' }, { t: 'Individuelles Design' }, { t: 'Animationen & Parallax', b: ['parallax'] }, { t: 'Leistungsseiten & Referenzen' },
-        { t: 'Anfrage-Formular' }, { t: '10 eigene Bilder + Video-Loop', b: ['loop'] }, { t: 'SEO-Grundlagen', b: ['seo'] }, { t: 'Schnelle Ladezeit', b: ['ladezeit'] }, { t: '2 Korrekturrunden', b: ['korrektur'] }] },
-    { id: 'pro', name: 'Pro', preis: 1900, ab: true, enthaelt: ['loop', '3d', 'termin', 'formular', 'funktion'], fuer: 'Für Unternehmen mit höheren Ansprüchen',
-      punkte: [{ t: 'Premium-Website mit eigenem Konzept' }, { t: 'Aufwendige Animationen (Scroll-Story, 3D-Element)', b: ['3d'] }, { t: '20 eigene Bilder + Video im Kopfbereich' },
-        { t: 'Individuelle Funktion (z. B. Terminbuchung, Rechner)', b: ['funktion'] }, { t: 'Erweiterte Formulare' }, { t: 'Mehrsprachig möglich' },
-        { t: 'Besucherstatistik ohne Cookies', b: ['statistik'] }, { t: 'Schnelle Ladezeit', b: ['ladezeit'] }, { t: '3 Korrekturrunden', b: ['korrektur'] }] }
+    { id: 'start', name: 'Start', preis: 290, ab: false, enthaelt: [], fuer: 'Für Selbstständige und kleine Betriebe',
+      punkte: [{ t: 'Onepager' }, { t: 'Für Handy und PC' }, { t: '3 eigene Bilder' }, { t: 'Kontakt per WhatsApp und E-Mail' }, { t: '1 Korrekturrunde', b: ['korrektur'] }],
+      beispiele: [{ name: 'Elektro Rehder', pfad: 'beispiele/elektro-rehder/' }, { name: 'Praxis Lindhorst', pfad: 'beispiele/praxis-lindhorst/' }] },
+    { id: 'business', name: 'Business', preis: 590, ab: false, empfehlung: true, enthaelt: [], fuer: 'Für Betriebe, die professionell auftreten wollen',
+      punkte: [{ t: 'Bis zu 5 Seiten' }, { t: 'Eigenes Design mit ruhiger Animation' }, { t: '8 eigene Bilder' }, { t: 'Anfrage-Formular' }, { t: '2 Korrekturrunden', b: ['korrektur'] }],
+      beispiele: [{ name: 'Yilmaz & Co. Realty', pfad: 'beispiele/yilmaz-realty/' }, { name: 'Voltiq', pfad: 'beispiele/voltiq/' }] },
+    { id: 'pro', name: 'Pro', preis: 990, ab: false, enthaelt: ['loop', 'termin'], fuer: 'Für Betriebe mit höheren Ansprüchen',
+      punkte: [{ t: 'Bis zu 8 Seiten' }, { t: 'Video im Kopfbereich' }, { t: 'Scroll-Effekte' }, { t: '15 eigene Bilder' },
+        { t: 'Terminbuchung über ein fertiges Tool eingebunden' }, { t: '3 Korrekturrunden', b: ['korrektur'] }],
+      beispiele: [{ name: 'Orbis', pfad: 'beispiele/orbis/' }, { name: 'Lumora', pfad: 'beispiele/lumora/' }] }
   ],
-  /* ② Extras – in Gruppen. Im Rechner zählt der „ab“-Wert. Seit Auftrag 28 (29.09.2026) deutlich günstiger, passend zum Aufwand (alte Preise: Preis-Notiz). */
+  /* ② Extras – nur noch fünf (seit 22.11.2026). Google-Profil: Ausnahme auf ERGUNs Wunsch. */
   extras: [
-    { gruppe: 'Seiten & Inhalte', eintraege: [
-      { id: 'unterseite', name: 'Zusätzliche Unterseite', satz: 'Zum Beispiel für ein neues Angebot oder einen Standort.', preis: 50, ab: true },
-      { id: 'sprache', name: 'Zusätzliche Sprache', satz: 'Komplett übersetzt, mit Sprachumschalter.', preis: 150, ab: true },
-      { id: 'bilder', name: '10 weitere eigene Bilder', satz: 'Zehn zusätzliche Bilder, eigens für Sie gestaltet.', preis: 40 }] },
-    { gruppe: 'Design & Bewegung', eintraege: [
-      { id: 'animation', name: 'Premium-Animation', satz: 'Aufwendige Scroll- und Bewegungseffekte.', preis: 80, ab: true },
-      { id: 'loop', name: 'Video-Loop', satz: 'Kurzes, lautloses Video in Schleife.', preis: 60, b: ['loop'] },
-      { id: '3d', name: '3D-Element', satz: 'Ein Objekt, zum Beispiel Ihr Produkt, zum Drehen.', preis: 120, ab: true, b: ['3d'] }] },
+    { gruppe: 'Inhalte', eintraege: [
+      { id: 'unterseite', name: 'Zusätzliche Unterseite', satz: 'Zum Beispiel für ein neues Angebot.', preis: 40 },
+      { id: 'bilder', name: '10 weitere eigene Bilder', satz: 'Eigens für Sie gestaltet.', preis: 50 },
+      { id: 'loop', name: 'Video in Schleife', satz: 'Kurz und lautlos.', preis: 60 }] },
     { gruppe: 'Funktionen', eintraege: [
-      { id: 'formular', name: 'Erweitertes Anfrage-Formular', satz: 'Mit Wunschtermin und Datei-Upload.', preis: 60, ab: true },
-      { id: 'termin', name: 'Terminbuchung', satz: 'Ihre Kunden buchen Termine direkt auf der Website.', preis: 120, ab: true },
-      { id: 'regler', name: 'Vorher/Nachher-Regler', satz: 'Zwei Bilder zum Vergleichen, per Schieberegler.', preis: 40 },
-      { id: 'funktion', name: 'Individuelle Funktion', satz: 'Zum Beispiel ein Rechner oder Konfigurator.', preis: 150, ab: true, b: ['funktion'] }] },
-    { gruppe: 'Sichtbarkeit', eintraege: [
-      { id: 'seo', name: 'SEO-Paket', satz: 'Ausrichtung auf Ihre Suchbegriffe, strukturierte Daten.', preis: 150, b: ['seoPaket'] },
-      { id: 'google', name: 'Google-Unternehmensprofil', satz: 'Eintrag in Suche und Maps einrichten und pflegen.', preis: 60, b: ['google'] }] }
+      { id: 'termin', name: 'Terminbuchung einbinden', satz: 'Über ein fertiges Tool, für Start und Business.', preis: 60 },
+      { id: 'google', name: 'Google-Unternehmensprofil einrichten', satz: 'Ihr Eintrag in Suche und Maps.', preis: 50 }] }
   ],
-  /* Auf Anfrage: ohne Preis, nicht im Rechner – nur für die Anfrage vormerken */
-  aufAnfrage: [
-    { id: 'cms', name: 'Inhalte selbst pflegen (CMS)' },
-    { id: 'login', name: 'Kundenbereich mit Login' },
-    { id: 'dashboard', name: 'Übersicht/Dashboard' }],
-  /* ③ Betreuung – drei Stufen (eine wählbar). selbst = so viel günstiger, wenn Hosting & Domain selbst gestellt werden. */
+  /* ③ Betreuung – eine Stufe (seit 22.11.2026). */
   betreuung: {
-    satz: 'Ein fester Monatspreis – Hosting, Domain und SSL sind enthalten. Eine Rechnung statt drei.',
-    selbst: 20, selbstText: 'Hosting & Domain stelle ich selbst',
+    satz: 'Hosting, Updates, Sicherheit und kleine Textänderungen.',
     stufen: [
-      { id: 'basis', name: 'Basis', monat: 50, fuer: 'Websites ohne Login und Datenbank',
-        punkte: ['Hosting, Domain & SSL', 'Updates & Sicherheit', 'Sicherungen', 'Erreichbarkeit geprüft', 'Kleine Textänderungen'] },
-      { id: 'aktiv', name: 'Aktiv', monat: 100, fuer: 'Websites mit Terminbuchung, Formularen, regelmäßigen Änderungen',
-        punkte: ['Alles aus Basis', 'Betreuung der Funktionen', 'E-Mail-Versand der Formulare', 'Inhaltsänderungen nach Absprache', 'Kurzer Monatsbericht'] },
-      { id: 'rundum', name: 'Rundum', monat: 200, fuer: 'Websites mit Datenbank, Login oder vielen eigenen Funktionen',
-        punkte: ['Alles aus Aktiv', 'Betrieb & Sicherung der Datenbank', 'Betreuung von Login und Schnittstellen', 'Bevorzugte Bearbeitung', 'Weiterentwicklung nach Absprache'] }
+      { id: 'basis', name: 'Betreuung', monat: 25, fuer: 'Hosting, Updates, Sicherheit und kleine Textänderungen',
+        punkte: ['Hosting', 'Updates', 'Sicherheit', 'Kleine Textänderungen'] }
     ]
   },
-  klein: 'Unverbindliche Einschätzung, kein Festpreis. Die genaue Kalkulation klären wir im kostenlosen Erstgespräch.',
-  steuer: 'Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.'   /* Kleinunternehmer laut Impressum;   = kein Zeilenumbruch */
+  klein: 'Alle Pakete zum Festpreis. Die Details klären wir im kostenlosen Erstgespräch.',
+  steuer: 'Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.'   /* Kleinunternehmer laut Impressum; geschütztes Leerzeichen = kein Zeilenumbruch */
 };
 
-/* Begriffe erklärt (eingeklappt unter ④). Die ⓘ-Punkte öffnen den passenden Begriff. Keine Platzierungs-Versprechen. */
+/* Begriffe erklärt. Keine Platzierungs-Versprechen. */
 window.BEGRIFFE = {
-  seo: { name: 'SEO-Grundlagen', text: 'Saubere Titel, Beschreibungen und Struktur, damit Suchmaschinen Ihre Seite richtig lesen – ohne Werbekampagne und ohne Platzierungs-Versprechen.' },
-  seoPaket: { name: 'SEO-Paket', text: 'Zusätzlich Ausrichtung auf Ihre wichtigsten Suchbegriffe und strukturierte Daten für ausführlichere Suchergebnisse.' },
   google: { name: 'Google-Unternehmensprofil', text: 'Ihr Eintrag in Suche und Maps mit Öffnungszeiten, Fotos und Kontakt.' },
-  rechtstexte: { name: 'Rechtstexte eingebunden', text: 'Wir binden Ihr Impressum und Ihre Datenschutzerklärung ein, zum Beispiel aus einem Generator. Für den Inhalt sind Sie verantwortlich. Formulare datenschutzfreundlich, ohne Cookie-Banner.' },
-  ssl: { name: 'SSL', text: 'Verschlüsselte Verbindung (das Schloss im Browser), immer enthalten.' },
-  hosting: { name: 'Hosting', text: 'Der Ort, an dem Ihre Website im Internet liegt.' },
-  ladezeit: { name: 'Schnelle Ladezeit', text: 'Optimierte Bilder und schlanker Code – auch auf dem Handy sofort da.' },
-  parallax: { name: 'Parallax', text: 'Ebenen, die sich beim Scrollen unterschiedlich schnell bewegen.' },
-  loop: { name: 'Video-Loop', text: 'Kurzes, lautloses Video in Schleife.' },
-  '3d': { name: '3D-Element', text: 'Ein Objekt, zum Beispiel Ihr Produkt, zum Drehen.' },
-  statistik: { name: 'Besucherstatistik ohne Cookies', text: 'Wie viele Besucher kommen und was sie ansehen – ohne persönliche Daten.' },
-  korrektur: { name: 'Korrekturrunde', text: 'Sie sammeln Änderungswünsche, wir setzen sie gemeinsam um.' },
-  funktion: { name: 'Individuelle Funktion', text: 'Etwas, das genau Ihr Betrieb braucht, zum Beispiel ein Preisrechner.' }
+  loop: { name: 'Video in Schleife', text: 'Kurzes, lautloses Video, das immer wieder abläuft.' },
+  korrektur: { name: 'Korrekturrunde', text: 'Sie sammeln Änderungswünsche, wir setzen sie gemeinsam um.' }
 };
 
-/* Texte des Ablaufs (Stimme „wir“ seit 07.10.2026; seit 22.11.2026 nur Website). Keine Zahlen hier – Preise kommen immer aus PREISE.
-   Pro Schritt eine Überschrift und höchstens ein kurzer Satz, ohne Fachbegriffe. */
+/* Texte des Ablaufs (Stimme „wir“). Keine Zahlen hier – Preise kommen immer aus PREISE. */
 window.LEITFADEN = {
-  /* ① die drei Pakete als Karten über dem Formular (Name, Preis, „fuer“ und die Stichpunkte aus stufenKurz) */
-  art: { titel: 'Preise', direkt: 'Lieber gleich schreiben' },
+  art: { titel: 'Preise', direkt: 'Lieber gleich schreiben', beispiele: 'Beispiele:' },
   unternehmen: 'Alle Angebote richten sich ausschließlich an Unternehmen und Selbstständige.',
-  website: { titel: 'Extras und Betreuung', satz: 'Beides ist optional. Der Preis ist ein Startwert.', alles: 'Alles, was drin ist', extras: 'Extras hinzufügen (optional)' },
-  /* höchstens 3 Stichpunkte je Stufe (Auszug aus PREISE.stufen[].punkte, in Alltagssprache) */
+  website: { titel: 'Extras und Betreuung', satz: 'Beides ist optional.', alles: 'Alles, was drin ist', extras: 'Extras hinzufügen (optional)' },
+  /* höchstens 3 Stichpunkte je Stufe (Auszug aus PREISE.stufen[].punkte) */
   stufenKurz: {
-    start: ['Bis zu 3 Seiten', 'Für Handy und PC', 'Kontaktformular'],
-    business: ['Bis zu 8 Seiten', 'Eigenes Design mit Bewegung', '10 eigene Bilder und Video'],
-    pro: ['Eigenes Konzept', 'Aufwendige Animationen und 3D', 'Terminbuchung oder eigene Funktion'] },
-  /* Extras (Auftrag 28): ruhige Liste mit Haken in den 4 Gruppen aus PREISE.extras (Name, Satz, Preis rechtsbündig) – nichts als „beliebt“ markiert */
+    start: ['Onepager für Handy und PC', '3 eigene Bilder', 'Kontakt per WhatsApp und E-Mail'],
+    business: ['Bis zu 5 Seiten', 'Eigenes Design mit ruhiger Animation', '8 eigene Bilder und Anfrage-Formular'],
+    pro: ['Bis zu 8 Seiten', 'Video im Kopfbereich und Scroll-Effekte', '15 eigene Bilder und Terminbuchung'] },
   extrasSchon: 'enthalten', extrasJeSeite: 'je Seite', extrasAnzahl: 'Wie viele zusätzliche Seiten?',
-  /* Betreuung (Auftrag 28): Haken = mit Betreuung (Stufe vorgewählt, „ändern“ öffnet die Stufen), Haken weg = ohne Betreuung, 0 € im Monat. */
-  betreuung: { titel: 'Betreuung', grund: { basis: 'Passt für eine Website ohne eigene Funktionen.', aktiv: 'Passt, weil Ihre Website Termine oder Formulare verarbeitet.', rundum: 'Passt, weil Ihre Website viel Eigenes kann.' },
-    selbst: 'Ich habe eigenes Hosting und eine eigene Domain', aendern: 'ändern',
-    ohne: 'Ohne Betreuung', ohneSatz: 'Hosting, Domain und Updates übernehmen Sie dann selbst.' },
+  betreuung: { titel: 'Betreuung', grund: { basis: 'Hosting, Updates, Sicherheit und kleine Textänderungen.' },
+    ohne: 'Ohne Betreuung', ohneSatz: 'Hosting und Updates übernehmen Sie dann selbst.' },
   anfrage: { titel: 'Ihre Anfrage', satz: 'Antwort innerhalb von 24 Stunden.', leer: 'Nichts ausgewählt. Schreiben Sie einfach, worum es geht.', auswahl: 'Auswahl treffen' },
   summeLeer: 'Noch nichts gewählt'
 };
 
-/* ---------- Rechnen (auch für die Tests) ---------- */
+/* ---------- Rechnen (auch für die Tests): Paket + Extras einmalig, Betreuung monatlich, Summe im ersten Jahr ---------- */
 (function (P) {
   P.euro = function (n) { return Math.round(n).toLocaleString('de-DE') + ' €'; };
   P.betrag = function (x) { return (x.ab ? 'ab ' : '') + P.euro(x.preis); };
   P.alleExtras = function () { return P.extras.reduce(function (l, g) { return l.concat(g.eintraege); }, []); };
-  /* Standard-Betreuung (Rechner ohne ausdrückliche Wahl): Pro mit Terminbuchung oder Funktion → Aktiv · sonst Basis. */
-  P.betreuungStandard = function (a) {
-    a = a || {};
-    if (a.stufe === 'pro' && (a.extras || []).some(function (x) { return x === 'termin' || x === 'funktion'; })) return 'aktiv';
-    return 'basis';
-  };
-  /* auswahl = { stufe: 'business', extras: ['termin'], anzahl: { unterseite: 2 }, betreuung: 'basis', selbst: false, anfrage: [] } */
+  P.betreuungStandard = function () { return 'basis'; };   /* nur noch eine Stufe */
+  /* auswahl = { stufe: 'business', extras: ['termin'], anzahl: { unterseite: 2 }, betreuung: 'basis' | null } */
   P.rechnen = function (auswahl) {
     var a = auswahl || {}, anzahl = a.anzahl || {};
     var stufe = P.stufen.filter(function (s) { return s.id === a.stufe; })[0] || null;
-    var extras = P.alleExtras().filter(function (m) { return (a.extras || []).indexOf(m.id) >= 0; }).map(function (m) {
+    var drin = stufe ? stufe.enthaelt || [] : [];   /* im Paket Enthaltenes zählt nicht doppelt */
+    var extras = P.alleExtras().filter(function (m) { return (a.extras || []).indexOf(m.id) >= 0 && drin.indexOf(m.id) < 0; }).map(function (m) {
       var n = Math.max(1, Math.min(20, anzahl[m.id] || 1));
       if (n === 1) return m;
       var x = {}; for (var k in m) x[k] = m[k]; x.preis = m.preis * n; x.anzahl = n; return x;
     });
-    var bId = a.betreuung === undefined ? P.betreuungStandard(a) : a.betreuung;
+    var bId = a.betreuung === undefined ? P.betreuungStandard() : a.betreuung;
     var betreuung = P.betreuung.stufen.filter(function (b) { return b.id === bId; })[0] || null;
-    var betreuungMonat = betreuung ? betreuung.monat - (a.selbst ? P.betreuung.selbst : 0) : 0;
-    var monatlich = betreuungMonat;   /* einmalig und monatlich getrennt: monatlich ist nur die Betreuung */
+    var betreuungMonat = betreuung ? betreuung.monat : 0;
     var teile = [stufe].concat(extras).filter(Boolean);
     var einmalig = teile.reduce(function (s, x) { return s + x.preis; }, 0);
-    return { stufe: stufe, extras: extras, betreuung: betreuung, selbst: !!a.selbst, anfrage: P.aufAnfrage.filter(function (x) { return (a.anfrage || []).indexOf(x.id) >= 0; }),
-      einmalig: einmalig, ab: teile.some(function (x) { return x.ab; }), monatlich: monatlich, betreuungMonat: betreuungMonat, jahr: einmalig + 12 * monatlich };
+    return { stufe: stufe, extras: extras, betreuung: betreuung, anfrage: [],
+      einmalig: einmalig, ab: teile.some(function (x) { return x.ab; }), monatlich: betreuungMonat, betreuungMonat: betreuungMonat, jahr: einmalig + 12 * betreuungMonat };
   };
   /* Text fürs Kontaktformular (landet in der Nachricht – gesendet wird erst, wenn der Besucher selbst abschickt) */
   P.anfrageText = function (e) {
-    var z = ['Meine Auswahl aus dem Preis-Leitfaden:'], ab = e.ab ? 'ab ' : '';
+    var z = ['Meine Auswahl:'], ab = e.ab ? 'ab ' : '';
     if (e.stufe) z.push('• Website: ' + e.stufe.name + ' (' + P.betrag(e.stufe) + ')');
     if (e.extras.length) z.push('• Extras: ' + e.extras.map(function (m) { return m.name + (m.anzahl > 1 ? ' × ' + m.anzahl : '') + ' (' + P.betrag(m) + ')'; }).join(', '));
-    if (e.anfrage.length) z.push('• Im Erstgespräch besprechen: ' + e.anfrage.map(function (x) { return x.name; }).join(', '));
-    if (e.stufe) z.push('• Betreuung: ' + (e.betreuung ? e.betreuung.name + ' (' + P.euro(e.betreuungMonat) + ' / Monat' + (e.selbst ? ', Hosting & Domain stelle ich selbst' : '') + ')' : 'ohne Betreuung (Hosting, Domain und Updates übernehme ich selbst)'));
-    z.push('Einmalig ' + ab + P.euro(e.einmalig) + ' · monatlich ' + P.euro(e.monatlich) + ' · erstes Jahr ' + ab + P.euro(e.jahr) + ' (unverbindliche Einschätzung)');
+    if (e.stufe) z.push('• Betreuung: ' + (e.betreuung ? P.euro(e.betreuungMonat) + ' / Monat' : 'ohne Betreuung (Hosting und Updates übernehme ich selbst)'));
+    z.push('Einmalig ' + ab + P.euro(e.einmalig) + ' · monatlich ' + P.euro(e.monatlich) + ' · im ersten Jahr ' + ab + P.euro(e.jahr));
     return z.join('\n').replace(/ /g, ' ');   /* feste Leerzeichen → normale (WhatsApp/Mail) */
   };
 })(window.PREISE);
@@ -171,15 +131,15 @@ window.LEITFADEN = {
   var HAKEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 12.5l4.5 4.5L18.5 7.5"/></svg>';
 
   /* ---------- Antworten (nur Arbeitsspeicher) ---------- */
-  var A = { stufe: null, extras: [], seiten: 1, betreuung: null, betreuungAn: true, selbst: false, extrasOffen: false, betreuungOffen: false };
+  var A = { stufe: null, extras: [], seiten: 1, betreuungAn: true, extrasOffen: false };
   function stufeDaten() { return P.stufen.filter(function (x) { return x.id === A.stufe; })[0] || null; }
   function enthalten(id) { var s = stufeDaten(); return !!(s && (s.enthaelt || []).indexOf(id) >= 0); }
   function extrasIds() { return A.stufe ? A.extras.filter(function (x) { return !enthalten(x); }) : []; }   /* Enthaltenes zählt nicht doppelt */
-  function betreuungJetzt() { return A.betreuung || P.betreuungStandard({ stufe: A.stufe, extras: extrasIds() }); }   /* vorausgewählt wie im Rechner: meist Basis */
+  function betreuungJetzt() { return P.betreuungStandard(); }   /* eine Stufe, vorausgewählt */
   function betreuungAn() { return !!A.stufe && A.betreuungAn; }
   function auswahl() {
     return { stufe: A.stufe, extras: extrasIds(), anzahl: { unterseite: A.seiten },
-      betreuung: betreuungAn() ? betreuungJetzt() : null, selbst: A.selbst && betreuungAn() };
+      betreuung: betreuungAn() ? betreuungJetzt() : null };
   }
   /* Anfrage-Box: Auswahl ist fertig, sobald ein Paket gewählt ist */
   P.auswahlJetzt = function () { return A.stufe ? P.rechnen(auswahl()) : null; };
@@ -213,8 +173,27 @@ window.LEITFADEN = {
       var pu = el('span', 'k-angebot__punkte'); pu.setAttribute('data-glas-behalten', '');
       (L.stufenKurz[s.id] || []).forEach(function (t) { var z = el('span', 'k-angebot__punkt'); z.innerHTML = HAKEN; z.appendChild(document.createTextNode(t)); pu.appendChild(z); });
       b.appendChild(pu);
-      b.addEventListener('click', function () { if (A.stufe !== s.id) { A.stufe = s.id; A.betreuung = null; A.betreuungAn = true; } neu(); gehe('website', 1); });
-      aliste.appendChild(b);
+      b.addEventListener('click', function () { if (A.stufe !== s.id) { A.stufe = s.id; A.betreuungAn = true; } neu(); gehe('website', 1); });
+      /* Beispiele (seit 22.11.2026): zwei schlichte Text-Links unten in der Karte, neuer Tab. Ein Link darf nicht im Knopf liegen –
+         darum stehen Knopf und Zeile gemeinsam in einer Zelle, die Zeile liegt optisch im unteren Rand der Karte. */
+      var zelle = el('div', 'k-zelle' + (s.empfehlung ? ' ist-empfehlung' : '')); zelle.appendChild(b);
+      /* Schild „Empfehlung“ (Ausnahme auf ERGUNs Wunsch) – liegt in der Zelle über der Kartenkante, für Vorleser im Knopf-Namen */
+      if (s.empfehlung) { var sch = el('span', 'k-schild', 'Empfehlung'); sch.setAttribute('aria-hidden', 'true'); zelle.appendChild(sch); b.setAttribute('aria-label', s.name + ', ' + P.betrag(s) + ', Empfehlung'); }
+      if (s.beispiele && s.beispiele.length) {
+        var bz = el('p', 'k-beispiele'); bz.appendChild(el('span', 'k-beispiele__wort', L.art.beispiele));
+        s.beispiele.forEach(function (x) {
+          var a = el('a', 'k-beispiele__link', x.name); a.href = x.pfad; a.target = '_blank'; a.rel = 'noopener';
+          a.setAttribute('aria-label', x.name + ' ansehen (Beispielseite, neuer Tab)');
+          var pf = el('span', 'k-beispiele__pfeil', '↗'); pf.setAttribute('aria-hidden', 'true'); a.appendChild(pf);
+          bz.appendChild(a);
+        });
+        zelle.appendChild(bz); zelle.classList.add('mit-beispielen');
+        /* Platzhalter im Knopf mit demselben Text: reserviert genau die Höhe der Zeile (auch wenn sie umbricht) – nichts überlappt */
+        var platz = el('span', 'k-beispiele k-beispiele--platz'); platz.setAttribute('aria-hidden', 'true'); platz.setAttribute('data-glas-behalten', '');
+        [].forEach.call(bz.children, function (c) { platz.appendChild(el('span', c.className, c.textContent)); });
+        b.appendChild(platz);
+      }
+      aliste.appendChild(zelle);
     });
     angebote.appendChild(aliste);
     /* direkt unter den Preisen: nur für Unternehmen */
@@ -294,38 +273,16 @@ window.LEITFADEN = {
     });
     return w;
   }
-  /* Betreuung (Auftrag 28): eine Zeile mit Haken „☑ Betreuung Basis · 50 € / Monat · ändern“. Haken weg = ohne Betreuung (0 € im Monat).
-     „ändern“ öffnet die drei Stufen + Hosting selbst. */
+  /* Betreuung (seit 22.11.2026 eine Stufe): eine Zeile mit Haken „☑ Betreuung · 25 € / Monat“. Haken weg = ohne Betreuung (0 € im Monat). */
   function betreuungZeile() {
-    var an = betreuungAn(), gesperrt = false, id = betreuungJetzt(), b = P.betreuung.stufen.filter(function (x) { return x.id === id; })[0], selbst = A.selbst && !!A.stufe;
+    var an = betreuungAn(), b = P.betreuung.stufen.filter(function (x) { return x.id === betreuungJetzt(); })[0];
     var wrap = el('div', 'mf-betreuung' + (an ? '' : ' ist-aus'));
     var zeile = el('div', 'mf-betreuung__zeile');
-    var k = hakenKnopf(an, L.betreuung.titel, 'betreuung-an', gesperrt);
-    k.appendChild(el('span', 'mf-betreuung__text', an ? L.betreuung.titel + ' ' + b.name + ' · ' + P.euro(b.monat - (selbst ? P.betreuung.selbst : 0)) + MONAT : L.betreuung.ohne + ' · ' + P.euro(0) + MONAT));
-    if (!gesperrt) k.addEventListener('click', function () { A.betreuungAn = !A.betreuungAn; if (!A.betreuungAn) A.betreuungOffen = false; neuZeichnen('betreuung-an'); });
-    zeile.appendChild(k);
-    if (an) {
-      var ae = el('button', 'mf-link mf-link--klein', A.betreuungOffen ? 'fertig' : L.betreuung.aendern); ae.type = 'button'; ae.setAttribute('aria-expanded', String(A.betreuungOffen)); ae.setAttribute('data-fokus', 'betreuung');
-      ae.addEventListener('click', function () { A.betreuungOffen = !A.betreuungOffen; zeigen(aktiv, 0, true, 'betreuung'); });
-      zeile.appendChild(ae);
-    }
-    wrap.appendChild(zeile);
-    wrap.appendChild(el('p', 'mf-betreuung__grund', !an ? L.betreuung.ohneSatz : L.betreuung.grund[id]));
-    if (an && A.betreuungOffen) {
-      var g = el('div', 'mf-betreuung__wahl hat-wahl'); g.setAttribute('role', 'group'); g.setAttribute('aria-label', L.betreuung.titel);
-      P.betreuung.stufen.forEach(function (x) {
-        var o = el('button', 'lf-chip lf-chip--gross'); o.type = 'button'; o.setAttribute('aria-pressed', String(id === x.id)); o.setAttribute('data-fokus', 'b-' + x.id);
-        o.appendChild(el('b', '', x.name + ' · ' + P.euro(x.monat - (selbst ? P.betreuung.selbst : 0)) + MONAT)); o.appendChild(el('span', '', x.fuer));
-        o.addEventListener('click', function () { A.betreuung = x.id; neuZeichnen('b-' + x.id); });
-        g.appendChild(o);
-      });
-      wrap.appendChild(g);
-      if (A.stufe) {
-        var s = el('div', 'lf-unter mf-selbst'); s.appendChild(el('span', 'lf-frage__was', L.betreuung.selbst)); s.appendChild(el('span', 'lf-frage__preis', '− ' + P.euro(P.betreuung.selbst) + MONAT));
-        s.appendChild(schalter(A.selbst, L.betreuung.selbst, function () { A.selbst = !A.selbst; neuZeichnen('selbst'); }, 'selbst'));
-        wrap.appendChild(s);
-      }
-    }
+    var k = hakenKnopf(an, L.betreuung.titel, 'betreuung-an', false);
+    k.appendChild(el('span', 'mf-betreuung__text', an ? b.name + ' · ' + P.euro(b.monat) + MONAT : L.betreuung.ohne + ' · ' + P.euro(0) + MONAT));
+    k.addEventListener('click', function () { A.betreuungAn = !A.betreuungAn; neuZeichnen('betreuung-an'); });
+    zeile.appendChild(k); wrap.appendChild(zeile);
+    wrap.appendChild(el('p', 'mf-betreuung__grund', an ? L.betreuung.grund.basis : L.betreuung.ohneSatz));
     return wrap;
   }
 
@@ -377,7 +334,7 @@ window.LEITFADEN = {
       }
     }
   }
-  function gehe(id, richtung) { A.betreuungOffen = false; zeigen(id, richtung); }   /* neuer Schritt: Betreuung wieder eine Zeile */
+  function gehe(id, richtung) { zeigen(id, richtung); }
   weiter.addEventListener('click', function () { var l = schritte(); gehe(l[l.indexOf(aktiv) + 1], 1); });
   zurueck.addEventListener('click', function () { var l = schritte(); gehe(l[Math.max(0, l.indexOf(aktiv) - 1)], -1); });
 
@@ -387,7 +344,7 @@ window.LEITFADEN = {
     summe.hidden = !an;
     box.classList.toggle('mit-summe', an);
     q('[data-mf-summe-einmalig]').textContent = e ? (e.ab ? 'ab ' : '') + P.euro(e.einmalig) : '–';
-    q('[data-mf-summe-monatlich]').textContent = e ? (e.monatlich ? 'ab ' : '') + P.euro(e.monatlich) + MONAT : '–';   /* Betreuung „ab“ wie Karte, Schritt ② und Anfrage */
+    q('[data-mf-summe-monatlich]').textContent = e ? P.euro(e.monatlich) + MONAT : '–';
     /* ohne Wahl „Noch nichts gewählt“ statt leerer Striche */
     var sl = summe.querySelector('.wb-summe-leer');
     if (!sl) { sl = el('p', 'wb-summe-leer', L.summeLeer); summe.appendChild(sl); }
@@ -398,13 +355,15 @@ window.LEITFADEN = {
     var e = P.auswahlJetzt();
     summeZeigen();
     clearTimeout(liveT);
-    liveT = setTimeout(function () { if (e && live) live.textContent = 'Einmalig ' + (e.ab ? 'ab ' : '') + P.euro(e.einmalig) + ', monatlich ' + (e.monatlich ? 'ab ' : '') + P.euro(e.monatlich) + '.'; }, 500);
+    liveT = setTimeout(function () { if (e && live) live.textContent = 'Einmalig ' + (e.ab ? 'ab ' : '') + P.euro(e.einmalig) + ', monatlich ' + P.euro(e.monatlich) + '.'; }, 500);
     document.dispatchEvent(new CustomEvent('preise:auswahl', { detail: e }));
   }
   /* „ändern“ in der Anfrage → zurück zu Schritt ② (ohne Auswahl → Schritt ①); alte Anker #preise/#kontakt */
   P.zeigeSchritt = function (id) { var l = schritte(), z = id || (l.length > 2 ? l[1] : 'art'); if (z === 'art') { zuAngeboten(); return; } gehe(z, -1); };
   function ausAnker() { if (location.hash === '#kontakt') gehe('anfrage', 0); }
   window.addEventListener('hashchange', ausAnker);
+  /* „Kontakt“, „Anfrage starten“ und der feste Handy-Knopf: weich direkt zum Formular (Auswahl bleibt erhalten) */
+  P.zumFormular = function () { gehe('anfrage', 1); };
   P.antworten = A;   /* für Tests und Aufnahmen */
 
   /* ---------- Licht auf den Karten (Auftrag 36) ----------

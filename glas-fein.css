@@ -12,7 +12,7 @@ html.glas-fein {
   --gf-r: 24px; --gf-r-feld: 14px;
   /* Schrift-Hierarchie */
   --gf-h: clamp(2.25rem, 4.8vw, 3.75rem); --gf-titel: clamp(1.5rem, 2vw, 1.75rem); --gf-text: 1rem; --gf-klein: 0.875rem;
-  --gf-abstand: clamp(64px, 10vh, 112px);
+  --gf-abstand: clamp(88px, 14vh, 148px);   /* mehr Luft zwischen den Abschnitten (22.11.2026, vorher clamp(64px, 10vh, 112px)) */
   /* das Formular liest diese Variablen */
   --f-flaeche: var(--gf-flaeche); --f-flaeche-hover: var(--gf-flaeche-hover); --k-flaeche: var(--gf-flaeche);
   --f-kante: linear-gradient(var(--gf-kante), var(--gf-kante)); --k-kante: linear-gradient(var(--gf-kante), var(--gf-kante));
