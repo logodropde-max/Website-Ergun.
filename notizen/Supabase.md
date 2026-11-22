@@ -1,0 +1,42 @@
+---
+tags: [endo-ai, dienst]
+---
+# Supabase
+
+Datenbank und Anmeldung für endo (Projekt **ENDO**, Frankfurt, Tarif Free).
+
+## Stand heute (11.10.2026, zusammengeführt mit der Notiz aus dem neuen Vault)
+- Eingerichtet: „Confirm email“ an, eigener Versand über Gmail (Port 465, Absender „endo von ERGUN.“), fünf deutsche Vorlagen ([[Mail-Vorlagen (Übersicht)]]), Adresse der endo-Seite als Start- und Weiterleitungs-Adresse, höchstens 30 E-Mails pro Stunde.
+- Seit dem Odoo-Modell (11.10.) arbeiten Kunden in ihrem eigenen System; Supabase trägt nur noch die endo-Seite, das Büro und die gesperrten Bereiche.
+- Offen: neue Domain der endo-Seite eintragen (falls es eine gibt) · SQL aus `schema.sql` nach jeder Änderung ausführen · reicht der Free-Tarif (Sicherungen, Pause bei Inaktivität)?
+- Regeln: Passwörter und Schlüssel nie in den Vault. Im Dashboard ein Schritt nach dem anderen, nie eine Seite mit Ungespeichertem neu laden.
+
+Ab hier die Geschichte (Stand bis 03.10.2026).
+
+## Stand 26.09.2026 – eingerichtet für endo Phase C
+- Über den **Vercel-Marketplace** angelegt: Organisation „Ergun“ (Free, Abrechnung über Vercel), Projekt **ENDO**, Region **eu-central-1 (Frankfurt)**, verbunden mit website-ergun (Production).
+- Vercel-Variablen (automatisch): u. a. `SUPABASE_SECRET_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_ANON_KEY`, `POSTGRES_*`. Der Server nutzt nur Adresse + geheimen Schlüssel.
+- Datenbank-Aufbau: `_code/werkzeuge/endo-datenbank/schema.sql` (im SQL-Editor ausgeführt). Tabellen `endo_konten`, `endo_auftraege`, `endo_tageskosten`; Funktionen nur für den Server. Test-Konto `test-emre` mit 1000 Test-Credits.
+- Login (Supabase Auth) kommt später → endo Phase C – Bauplan.
+
+## Stand 26.09.2026 abends – Kundenkonten (Supabase Auth)
+- **E-Mail + Passwort**, „Confirm email“ an, Anmelden erlaubt. Server spricht Auth über den öffentlichen Schlüssel (`SUPABASE_PUBLISHABLE_KEY` bzw. `SUPABASE_ANON_KEY`, von der Integration angelegt), Datenbank weiter über den geheimen Schlüssel.
+- **URL-Einstellungen:** Site URL `https://website-ergun.vercel.app/ki/`, Weiterleitungen `https://website-ergun.vercel.app/**` (nach eigener Domain hier ergänzen!).
+- **Konten bei uns:** `endo_konten` mit ID `u-<Supabase-Nutzer-ID>`, Name = E-Mail, Start **0 Credits**. Neue Tabelle `endo_fotos` (Meine Fotos), Spalte `geloescht` bei Aufträgen, Funktionen `endo_konto_sicherstellen`, `endo_foto_merken`, `endo_meine_dateien`, `endo_datei_loeschen`, `endo_alte_dateien_austragen` – alle nur für den Server (geprüft: anon = false).
+- **E-Mails:** vorerst Supabase-Standardversand – englische Vorlagen, nur wenige Mails pro Stunde, nur an Team-Mitglieder der Organisation. Vorlagen lassen sich erst mit **eigenem SMTP** ändern (Emails → SMTP Settings, z. B. über einen Mail-Dienst) → offen in To-dos.
+- **Credits gutschreiben** (bis der Kauf läuft): Claude Code macht es im SQL-Editor (`update endo_konten set credits = credits + N where id = 'u-…'`).
+
+## Stand 02.10.2026 – Bestätigungs-Mail für die endo-Startseite
+- Emre: eigenes SMTP eingerichtet, „Confirm email“ an, Vorlage „Confirm sign up“ deutsch. Weitere deutsche Vorlagen: [[Mail-Vorlagen (Übersicht)]].
+- **Prüfen in Authentication → URL Configuration** (oben steht noch der alte Stand vom 26.09.):
+  - **Site URL** → `https://endo-ergun.vercel.app/` (ist sie noch `https://website-ergun.vercel.app/ki/`, landet jeder Link ohne erlaubtes Ziel auf einer Seite, die es nicht mehr gibt).
+  - **Redirect URLs** → `https://endo-ergun.vercel.app/**` ergänzen (deckt `/` und `/cockpit` ab). Fehlt das, ignoriert Supabase das `redirect_to` unserer Seite und schickt auf die Site URL.
+- **Rate Limits (Authentication → Rate Limits):** „Rate limit for sending emails“ – mit eigenem SMTP selbst einstellbar (Supabase-Standard ohne SMTP: nur wenige Mails pro Stunde). Für den Start z. B. 30–60 pro Stunde. Unser eigenes Tageslimit je Besucher (registrieren/anmelden/passwort-vergessen/erneut-senden) kommt zusätzlich.
+- **Emails → „Email OTP Expiration“**: wie lange der Link gilt (die Vorlagen sagen „1 Stunde“ – passt zur Standardeinstellung 3600 s; bei Änderung den Satz anpassen).
+
+## Stand 03.10.2026 – eingerichtet (mit Claude im Dashboard)
+- URL Configuration: Site URL `https://endo-ergun.vercel.app/` ✓, Redirect URL `https://endo-ergun.vercel.app/**` ergänzt ✓ (alte `website-ergun…/**` bleibt).
+- SMTP: Gmail (`smtp.gmail.com`, **Port 465** – vorher stand fälschlich 464), Absender `logodropde@gmail.com`, Name „endo von ERGUN.“. Passwort = Gmail-App-Passwort (nur Emre).
+- Vorlagen: „Confirm sign up“ = Emres eigene Fassung; Reset password, Magic link, Change email address, Invite user = deutsch im selben Stil ([[Mail-Vorlagen (Übersicht)]]).
+- Rate limit for sending emails: 30 pro Stunde (passt für den Start).
+- 03.10. später: **„Confirm email“ war AUS** (Sign In / Providers → User Signups) – eingeschaltet. Bestätigungs-Mail = [[Konto bestätigen (Weltraum)]]. Versand geprüft: Mail an antiaggrox@ liegt im Gesendet-Ordner von logodropde@ → kommt sie nicht an, im Spam suchen (neuer Absender).

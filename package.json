@@ -1,0 +1,9 @@
+{
+  "name": "website-ergun",
+  "private": true,
+  "type": "module",
+  "description": "Statische Webdesign-Seite ERGUN. · Webdesign; Middleware nur für den Privat-Schalter, solange die Seite bei Vercel liegt",
+  "dependencies": {
+    "@vercel/functions": "^3.9.9"
+  }
+}
