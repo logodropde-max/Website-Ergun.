@@ -14,21 +14,20 @@ window.PREISE = {
      empfehlung = dezentes Schild „Empfehlung“. beispiele = zwei Beispielseiten als schlichte Links unten in der Preiskarte (neuer Tab). */
   stufen: [
     { id: 'start', name: 'Start', preis: 290, ab: false, enthaelt: [], fuer: 'Für Selbstständige und kleine Betriebe',
-      punkte: [{ t: 'Onepager' }, { t: 'Für Handy und PC' }, { t: '3 eigene Bilder' }, { t: 'Kontakt per WhatsApp und E-Mail' }, { t: '1 Korrekturrunde', b: ['korrektur'] }],
+      punkte: [{ t: 'Onepager' }, { t: 'Für Handy und PC' }, { t: 'Unbegrenzt eigene Bilder' }, { t: 'Kontakt per WhatsApp und E-Mail' }, { t: '1 Korrekturrunde', b: ['korrektur'] }],
       beispiele: [{ name: 'Elektro Rehder', pfad: 'beispiele/elektro-rehder/' }, { name: 'Praxis Lindhorst', pfad: 'beispiele/praxis-lindhorst/' }] },
     { id: 'business', name: 'Business', preis: 590, ab: false, empfehlung: true, enthaelt: [], fuer: 'Für Betriebe, die professionell auftreten wollen',
-      punkte: [{ t: 'Bis zu 5 Seiten' }, { t: 'Eigenes Design mit ruhiger Animation' }, { t: '8 eigene Bilder' }, { t: 'Anfrage-Formular' }, { t: '2 Korrekturrunden', b: ['korrektur'] }],
+      punkte: [{ t: 'Bis zu 5 Seiten' }, { t: 'Eigenes Design mit ruhiger Animation' }, { t: 'Unbegrenzt eigene Bilder' }, { t: 'Anfrage-Formular' }, { t: '2 Korrekturrunden', b: ['korrektur'] }],
       beispiele: [{ name: 'Yilmaz & Co. Realty', pfad: 'beispiele/yilmaz-realty/' }, { name: 'Voltiq', pfad: 'beispiele/voltiq/' }] },
     { id: 'pro', name: 'Pro', preis: 990, ab: false, enthaelt: ['loop', 'termin'], fuer: 'Für Betriebe mit höheren Ansprüchen',
-      punkte: [{ t: 'Bis zu 8 Seiten' }, { t: 'Video im Kopfbereich' }, { t: 'Scroll-Effekte' }, { t: '15 eigene Bilder' },
+      punkte: [{ t: 'Bis zu 8 Seiten' }, { t: 'Video im Kopfbereich' }, { t: 'Scroll-Effekte' }, { t: 'Unbegrenzt eigene Bilder' },
         { t: 'Terminbuchung über ein fertiges Tool eingebunden' }, { t: '3 Korrekturrunden', b: ['korrektur'] }],
       beispiele: [{ name: 'Orbis', pfad: 'beispiele/orbis/' }, { name: 'Lumora', pfad: 'beispiele/lumora/' }] }
   ],
-  /* ② Extras – nur noch fünf (seit 22.11.2026). Google-Profil: Ausnahme auf ERGUNs Wunsch. */
+  /* ② Extras – nur noch vier (seit 22.11.2026; „10 weitere Bilder“ entfällt, Bilder sind in jedem Paket unbegrenzt). Google-Profil: Ausnahme auf ERGUNs Wunsch. */
   extras: [
     { gruppe: 'Inhalte', eintraege: [
       { id: 'unterseite', name: 'Zusätzliche Unterseite', satz: 'Zum Beispiel für ein neues Angebot.', preis: 40 },
-      { id: 'bilder', name: '10 weitere eigene Bilder', satz: 'Eigens für Sie gestaltet.', preis: 50 },
       { id: 'loop', name: 'Video in Schleife', satz: 'Kurz und lautlos.', preis: 60 }] },
     { gruppe: 'Funktionen', eintraege: [
       { id: 'termin', name: 'Terminbuchung einbinden', satz: 'Über ein fertiges Tool, für Start und Business.', preis: 60 },
@@ -60,9 +59,9 @@ window.LEITFADEN = {
   website: { titel: 'Extras und Betreuung', satz: 'Beides ist optional.', alles: 'Alles, was drin ist', extras: 'Extras hinzufügen (optional)' },
   /* höchstens 3 Stichpunkte je Stufe (Auszug aus PREISE.stufen[].punkte) */
   stufenKurz: {
-    start: ['Onepager für Handy und PC', '3 eigene Bilder', 'Kontakt per WhatsApp und E-Mail'],
-    business: ['Bis zu 5 Seiten', 'Eigenes Design mit ruhiger Animation', '8 eigene Bilder und Anfrage-Formular'],
-    pro: ['Bis zu 8 Seiten', 'Video im Kopfbereich und Scroll-Effekte', '15 eigene Bilder und Terminbuchung'] },
+    start: ['Onepager für Handy und PC', 'Unbegrenzt eigene Bilder', 'Kontakt per WhatsApp und E-Mail'],
+    business: ['Bis zu 5 Seiten', 'Eigenes Design mit ruhiger Animation', 'Unbegrenzt eigene Bilder und Anfrage-Formular'],
+    pro: ['Bis zu 8 Seiten', 'Video im Kopfbereich und Scroll-Effekte', 'Unbegrenzt eigene Bilder und Terminbuchung'] },
   extrasSchon: 'enthalten', extrasJeSeite: 'je Seite', extrasAnzahl: 'Wie viele zusätzliche Seiten?',
   betreuung: { titel: 'Betreuung', grund: { basis: 'Hosting, Updates, Sicherheit und kleine Textänderungen.' },
     ohne: 'Ohne Betreuung', ohneSatz: 'Hosting und Updates übernehmen Sie dann selbst.' },
