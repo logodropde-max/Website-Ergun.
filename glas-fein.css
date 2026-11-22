@@ -71,13 +71,13 @@ html.glas-fein .glas-karte::after { content: ""; position: absolute; top: 24px; 
   opacity: 0; transform: scale(0.6); transition: opacity 200ms var(--g-ease), transform 200ms var(--g-ease); }
 html.glas-fein .glas-karte[aria-pressed="true"]::after { opacity: 1; transform: none; }
 html.glas-fein .glas-angebote.hat-wahl .glas-karte:not([aria-pressed="true"]) { opacity: 0.9; }
-/* „Lieber gleich schreiben“ und „endo ansehen“ (04.10.2026) als ruhige Glas-Pillen – gut auffindbar, aber unter den Hauptknöpfen */
+/* „Lieber gleich schreiben“ als ruhige Glas-Pille – gut auffindbar, aber unter den Hauptknöpfen */
 html.glas-fein .glas-angebote .mf-angebote__zeile { justify-content: center; gap: 12px; margin-top: 24px; }
-html.glas-fein .glas-angebote :is(.mf-angebote__direkt, .mf-angebote__endo) { width: max-content; min-height: 48px; padding: 0 24px; border-radius: 999px; border: 1px solid var(--gf-kante);
+html.glas-fein .glas-angebote .mf-angebote__direkt { width: max-content; min-height: 48px; padding: 0 24px; border-radius: 999px; border: 1px solid var(--gf-kante);
   background: var(--gf-flaeche); -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); text-decoration: none; font-weight: 600; font-size: 15px;
   transition: background-color 200ms ease, border-color 200ms ease; }
-@media (hover: hover) and (pointer: fine) { html.glas-fein .glas-angebote :is(.mf-angebote__direkt, .mf-angebote__endo):hover { background: var(--gf-flaeche-hover); border-color: var(--gf-kante-hover); } }
-html.glas-fein .glas-angebote :is(.mf-angebote__direkt, .mf-angebote__endo):focus-visible { outline: 2px solid #FFFFFF; outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { html.glas-fein .glas-angebote .mf-angebote__direkt:hover { background: var(--gf-flaeche-hover); border-color: var(--gf-kante-hover); } }
+html.glas-fein .glas-angebote .mf-angebote__direkt:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 3px; }
 
 /* ---------- Formular (② ③): dieselbe Glasfläche ---------- */
 html.glas-fein :is(.mf-stufe, .mf-chip, .mf-komplett, .mf .auswahl, .lf-chip--gross) { border-radius: var(--gf-r); -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); }
@@ -91,8 +91,6 @@ html.glas-fein .mf__linie { background: rgba(255, 255, 255, 0.12); }
 html.glas-fein .mf__linie i { background: var(--gf-akzent); }
 html.glas-fein body .anfrage .field :is(input, textarea, select) { background: var(--gf-flaeche); border-color: var(--gf-kante); border-radius: var(--gf-r-feld);
   -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); }
-html.glas-fein .upload { border-radius: var(--gf-r-feld); border-color: rgba(255, 255, 255, 0.22); background: var(--gf-flaeche); }
-html.glas-fein .upload__symbol { color: #FFFFFF; background: rgba(255, 255, 255, 0.1); }
 @media (min-width: 1024px) {
   html.glas-fein .mf-summe { padding: 20px; border: 1px solid var(--gf-kante); border-top: 1px solid var(--gf-kante); border-radius: var(--gf-r); background: var(--gf-flaeche);
     -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); box-shadow: var(--gf-schatten); }
@@ -101,7 +99,6 @@ html.glas-fein .upload__symbol { color: #FFFFFF; background: rgba(255, 255, 255,
   html.glas-fein .mf-summe { border: 1px solid var(--gf-kante); background: rgba(22, 17, 30, 0.82); -webkit-backdrop-filter: var(--gf-blur); backdrop-filter: var(--gf-blur); }
 }
 
-/* ② endo-Liste (neues Preismodell, 01.10.2026) in derselben Glasfläche */
 
 /* ---------- Fußzeile ---------- */
 html.glas-fein .glas-fuss { border-top: 0; background: rgba(13, 10, 20, 0.8); }
@@ -132,7 +129,7 @@ html.glas-nahtlos :is(.glas-kopf__marke, .glas-fuss__marke) span {
 }
 @keyframes glas-punkt { to { background-position: 100% 50%; } }
 @media (prefers-reduced-motion: reduce) { html.glas-nahtlos :is(.glas-kopf__marke, .glas-fuss__marke) span { animation: none; background-position: 15% 50%; } }
-/* Unterzeile im Titelbild (Emre, 01.10. spät): „Websites und Automatisierung“ – ruhig, etwas größer als vorher der Satz */
+/* Unterzeile im Titelbild (seit 22.11.2026 „Websites, die auffallen und Kunden bringen.“) – ruhig, etwas größer als vorher der Satz */
 html.glas-nahtlos .glas-hero .ghr-desc.glas-unterzeile { font-size: clamp(1.125rem, 2.2cqw, 1.5rem); font-weight: 500; letter-spacing: 0.01em; color: rgba(255, 255, 255, 0.92); }
 
 /* Ruhe (?ruhe=neu, 01.10.2026): kein Zoom, kein seitliches Schieben, Eingabefelder am Handy ≥ 16 px (iOS zoomt sonst beim Antippen) */

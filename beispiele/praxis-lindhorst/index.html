@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta content="noindex, nofollow" name="robots">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<style>html{background:#FAFCFD;color-scheme:light}</style>
+<title>Praxis Lindhorst: Physiotherapie in Pinneberg · Beispielseite von ERGUN.</title>
+<meta name="description" content="Beispielseite von ERGUN. Physiotherapie mit Terminvergabe, Kassenzulassung und Hausbesuchen.">
+
+<style>
+/* Beispielprojekt. Dritte Handschrift: hell, weich, viel Luft, runde
+   Ecken, gedeckte Farben. Eine Praxis muss beruhigen, nicht auffallen.
+   Genau eine Schrift, nur in verschiedenen Schnitten: das haelt es
+   ruhig und laedt schnell. */
+:root{
+  --weiss:#FAFCFD; --karte:#FFFFFF; --feld:#EDF3F6;
+  --tinte:#16232B; --tinte-2:#4A5C67; --leise:#7C8D97;
+  --ton:#1F6B78; --ton-hell:#D9EAED; --linie:#DDE7EC;
+  --rund:14px; --breit:1080px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--weiss);color:var(--tinte);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:17px;line-height:1.7;
+  font-variation-settings:"wght" 400;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--breit);margin:0 auto;padding-inline:clamp(20px,5vw,40px)}
+h1,h2,h3{margin:0;line-height:1.15;letter-spacing:-.018em;
+  font-variation-settings:"wght" 600}
+a{color:inherit}
+
+.probe{background:var(--ton);color:#E6F3F5;font-size:13.5px;padding:9px 0}
+.probe .wrap{display:flex;gap:10px 18px;flex-wrap:wrap;align-items:center}
+.probe b{font-variation-settings:"wght" 650;color:#fff}
+.probe a{margin-left:auto;color:#BFE3E8}
+
+header{position:sticky;top:0;z-index:20;background:rgba(250,252,253,.9);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--linie)}
+.bar{display:flex;align-items:center;gap:20px;height:72px}
+.marke{display:flex;align-items:center;gap:11px;text-decoration:none;
+  font-size:19px;font-variation-settings:"wght" 600;letter-spacing:-.02em}
+.marke i{width:30px;height:30px;border-radius:50%;background:var(--ton-hell);
+  display:grid;place-items:center;color:var(--ton);font-size:14px;
+  font-variation-settings:"wght" 700}
+nav{margin-left:auto;display:flex;gap:24px;align-items:center;font-size:15.5px}
+nav a{color:var(--tinte-2);text-decoration:none}
+nav a:hover{color:var(--ton)}
+.termin{background:var(--ton);color:#fff;text-decoration:none;border-radius:999px;
+  padding:11px 20px;font-size:15px;font-variation-settings:"wght" 550}
+.termin:hover{background:#17555F}
+
+.hero .wrap{padding-block:clamp(48px,8vw,96px);
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));
+  gap:clamp(30px,5vw,58px);align-items:center}
+.hero h1{font-size:clamp(34px,5.6vw,58px);max-width:15ch;text-wrap:balance}
+.hero p{color:var(--tinte-2);max-width:42ch;margin:20px 0 0;font-size:clamp(16px,1.9vw,18.5px)}
+.marker{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;list-style:none;padding:0}
+.marker li{background:var(--feld);border-radius:999px;padding:7px 15px;font-size:14.5px;
+  color:var(--tinte-2)}
+
+/* Terminkarte: das Ding, weswegen die meisten die Seite aufrufen. */
+.buchen{background:var(--karte);border:1px solid var(--linie);border-radius:var(--rund);
+  padding:clamp(22px,3vw,30px);box-shadow:0 1px 2px rgba(22,35,43,.04),0 16px 40px rgba(22,35,43,.07)}
+.buchen h2{font-size:20px;margin-bottom:4px}
+.buchen > p{margin:0 0 18px;color:var(--leise);font-size:15px}
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;
+  margin-bottom:18px}
+.slots button{border:1px solid var(--linie);background:var(--karte);border-radius:9px;
+  padding:11px 6px;font:inherit;font-size:14.5px;color:var(--tinte);cursor:pointer;
+  transition:border-color .2s cubic-bezier(.32,.72,0,1),background .2s cubic-bezier(.32,.72,0,1)}
+.slots button:hover{border-color:var(--ton);background:var(--ton-hell)}
+.slots button[aria-pressed=true]{border-color:var(--ton);background:var(--ton);color:#fff}
+.slots button:disabled{color:var(--leise);background:var(--feld);cursor:not-allowed;
+  text-decoration:line-through}
+.buchen .weiter{display:block;width:100%;border:0;border-radius:10px;background:var(--ton);
+  color:#fff;padding:14px;font:inherit;font-size:16px;font-variation-settings:"wght" 550;
+  cursor:pointer}
+.buchen .weiter:hover{background:#17555F}
+.buchen .klein{margin:12px 0 0;font-size:13.5px;color:var(--leise);text-align:center}
+
+.leistung{background:var(--feld);border-block:1px solid var(--linie)}
+.leistung .wrap{padding-block:clamp(46px,6vw,80px)}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--ton);
+  margin:0 0 10px;font-variation-settings:"wght" 600}
+.leistung h2{font-size:clamp(26px,3.8vw,38px);margin-bottom:30px;max-width:20ch}
+.karten{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:16px}
+.karten article{background:var(--karte);border:1px solid var(--linie);border-radius:var(--rund);
+  padding:22px}
+.karten h3{font-size:18px;margin-bottom:7px}
+.karten p{margin:0;color:var(--tinte-2);font-size:15.5px}
+
+.info .wrap{padding-block:clamp(46px,6vw,80px);
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:30px}
+.info h2{font-size:clamp(22px,3vw,28px);margin-bottom:14px}
+.info dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:10px 16px;font-size:16px}
+.info dt{color:var(--leise)}
+.info dd{margin:0}
+.info ul{list-style:none;margin:0;padding:0;font-size:16px;color:var(--tinte-2)}
+.info li{padding:7px 0 7px 26px;position:relative}
+.info li::before{content:"";position:absolute;left:0;top:14px;width:13px;height:7px;
+  border-left:2px solid var(--ton);border-bottom:2px solid var(--ton);
+  transform:rotate(-45deg)}
+
+footer{border-top:1px solid var(--linie);padding-block:32px;font-size:14.5px;
+  color:var(--leise)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px}
+footer a{color:var(--tinte-2)}
+
+@media(max-width:620px){ nav a:not(.termin){display:none} }
+@media(prefers-reduced-motion:no-preference){
+  .hero h1,.hero p,.marker,.buchen{animation:sanft .9s cubic-bezier(.32,.72,0,1) both}
+  .hero p{animation-delay:.08s} .marker{animation-delay:.16s} .buchen{animation-delay:.24s}
+  @keyframes sanft{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+}
+
+/* ── Beim Lesen bewegt sich die Seite ──────────────────────
+   Dieselbe Bewegung wie auf der Hauptseite, damit es eine Handschrift
+   bleibt. Ohne Skript bekommt nichts die Klasse "da" - dafuer steht
+   im Kopf ein <noscript>, das alles sofort sichtbar macht. Eine leere
+   Seite ohne Skript waere der schlimmere Fehler. */
+.auf{opacity:0;transform:translateY(22px);filter:blur(5px);
+  transition:opacity .82s cubic-bezier(.32,.72,0,1),
+             transform .82s cubic-bezier(.32,.72,0,1),
+             filter .82s cubic-bezier(.32,.72,0,1);
+  transition-delay:var(--auf-warten,0ms)}
+.auf.da{opacity:1;transform:none;filter:none}
+@media(prefers-reduced-motion:reduce){
+  .auf{opacity:1;transform:none;filter:none;transition:none}
+}
+
+/* -- Die Terminkarte antwortet ----------------------------
+   Ein Knopf, der nichts tut, faellt in drei Sekunden auf. Die Karte
+   sagt jetzt, was sie verstanden hat, und sagt dazu, dass sie eine
+   Vorfuehrung ist: eine Beispielseite darf beeindrucken, aber nicht
+   so tun, als ginge die Anfrage irgendwohin. */
+.buchen .klein[data-fertig]{color:var(--ton);font-variation-settings:"wght" 550}
+</style>
+<noscript><style>.auf{opacity:1 !important;transform:none !important;filter:none !important}</style></noscript>
+<style>/* Schriften lokal (keine externen Dienste) */
+@font-face{font-family:"Archivo";src:url("schriften/archivo.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"IBM Plex Sans";src:url("schriften/plex-400.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"IBM Plex Sans";src:url("schriften/plex-500.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"IBM Plex Sans";src:url("schriften/plex-600.woff2") format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"IBM Plex Sans";src:url("schriften/plex-700.woff2") format("woff2");font-weight:700;font-display:swap}</style>
+<link href="../beispiel-balken.css" rel="stylesheet"><script defer src="../beispiel-balken.js"></script></head>
+<body>
+
+
+<header>
+  <div class="wrap bar">
+    <a class="marke" href="#top"><i aria-hidden="true">L</i>Praxis Lindhorst</a>
+    <nav>
+      <a href="#behandlung">Behandlungen</a>
+      <a href="#praxis">Praxis</a>
+      <a class="termin" href="#buchen">Termin</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Termin in dieser Woche, nicht in sechs.</h1>
+        <p>Physiotherapie und manuelle Therapie in Pinneberg. Vier Behandlerinnen, alle Kassen, und ein Kalender, der wirklich stimmt.</p>
+        <ul class="marker">
+          <li>Alle Kassen</li>
+          <li>Hausbesuche</li>
+          <li>Barrierefrei</li>
+          <li>Rezeptfrei möglich</li>
+        </ul>
+      </div>
+
+      <div class="buchen" id="buchen">
+        <h2>Freie Termine</h2>
+        <p data-tag="">Der nächste Werktag</p>
+        <div class="slots">
+          <button type="button" aria-pressed="false">08:00</button>
+          <button type="button" disabled>09:30</button>
+          <button type="button" aria-pressed="false">11:00</button>
+          <button type="button" disabled>13:30</button>
+          <button type="button" aria-pressed="false">15:00</button>
+          <button type="button" aria-pressed="false">16:30</button>
+        </div>
+        <button class="weiter" type="button" data-weiter="">Termin anfragen</button>
+        <p class="klein" data-antwort="" role="status" hidden></p>
+        <p class="klein">Oder anrufen: 04101 9000</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="leistung" id="behandlung">
+    <div class="wrap">
+      <p class="eyebrow">Behandlungen</p>
+      <h2>Was wir machen, und wobei es hilft</h2>
+      <div class="karten">
+        <article class="auf">
+          <h3>Manuelle Therapie</h3>
+          <p>Bei blockierten Gelenken, Nackensteife und nach Verstauchungen.</p>
+        </article>
+        <article class="auf">
+          <h3>Krankengymnastik</h3>
+          <p>Nach Operationen, bei Rückenschmerz und zum Aufbau nach langer Schonung.</p>
+        </article>
+        <article class="auf">
+          <h3>Lymphdrainage</h3>
+          <p>Bei Schwellungen nach Eingriffen und bei Lymphödemen.</p>
+        </article>
+        <article class="auf">
+          <h3>Gerätetraining</h3>
+          <p>Angeleitet, in kleinen Gruppen, mit Plan statt nach Gefühl.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="info" id="praxis">
+    <div class="wrap">
+      <div class="auf">
+        <h2>Sprechzeiten</h2>
+        <dl>
+          <dt>Mo bis Do</dt><dd>07:00 bis 19:00</dd>
+          <dt>Freitag</dt><dd>07:00 bis 15:00</dd>
+          <dt>Samstag</dt><dd>nach Absprache</dd>
+          <dt>Telefon</dt><dd>04101 9000</dd>
+          <dt>Adresse</dt><dd>Fahltskamp 22, 25421 Pinneberg</dd>
+        </dl>
+      </div>
+      <div class="auf">
+        <h2>Gut zu wissen</h2>
+        <ul>
+          <li>Zugelassen für alle gesetzlichen Kassen</li>
+          <li>Hausbesuche im Stadtgebiet Pinneberg</li>
+          <li>Ebenerdig, keine Stufen, Rollstuhl-WC</li>
+          <li>Parkplätze hinter dem Haus</li>
+          <li>Rezept bitte zum ersten Termin mitbringen</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Praxis Lindhorst, Fahltskamp 22, 25421 Pinneberg</span>
+    <span>04101 9000</span>
+  </div>
+</footer>
+
+<script>
+/* Nur so viel Verhalten, wie die Vorfuehrung braucht: eine Zeit
+   auswaehlen. Ohne Skript bleiben es normale Knoepfe. */
+document.querySelectorAll('.slots button:not([disabled])').forEach(k => {
+  k.addEventListener('click', () => {
+    document.querySelectorAll('.slots button').forEach(a => a.setAttribute('aria-pressed', 'false'));
+    k.setAttribute('aria-pressed', 'true');
+  });
+});
+</script>
+<script>
+/* Das Datum stand fest im Code. In zwei Wochen haette hier ein
+   vergangener Donnerstag gestanden - genau so sterben
+   Vorfuehrungsseiten. Jetzt rechnet die Karte.
+
+   Welche Zeiten belegt sind, haengt am Tag im Jahr, nicht am Zufall:
+   die Karte soll beim Neuladen nicht wuerfeln. */
+(function () {
+  var feld = document.querySelector('[data-tag]');
+  var knoepfe = [].slice.call(document.querySelectorAll('.slots button'));
+  if (!feld || !knoepfe.length) return;
+
+  var n = new Date();
+  var tag = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+  // Nach 16 Uhr lohnt heute nicht mehr, Wochenende hat die Praxis zu.
+  if (n.getHours() >= 16) tag.setDate(tag.getDate() + 1);
+  while (tag.getDay() === 0 || tag.getDay() === 6) tag.setDate(tag.getDate() + 1);
+
+  var heute = tag.getTime() === new Date(n.getFullYear(), n.getMonth(), n.getDate()).getTime();
+  var lang = tag.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+  feld.textContent = heute ? 'Heute, ' + lang : lang;
+
+  // Ein stabiler Startwert je Tag: gleicher Tag, gleiches Bild.
+  var kern = Math.floor(tag.getTime() / 86400000);
+  knoepfe.forEach(function (k, i) {
+    var stunde = parseInt(k.textContent, 10);
+    var belegt = ((kern * 7 + i * 13) % 5) < 2;
+    if (heute && stunde <= n.getHours()) belegt = true;
+    k.disabled = belegt;
+    if (belegt) k.setAttribute('aria-pressed', 'false');
+  });
+  // Alles belegt sieht nach Fehler aus: die letzte Zeit bleibt frei.
+  if (knoepfe.every(function (k) { return k.disabled; })) {
+    knoepfe[knoepfe.length - 1].disabled = false;
+  }
+
+  var antwort = document.querySelector('[data-antwort]');
+  var weiter = document.querySelector('[data-weiter]');
+  if (!antwort || !weiter) return;
+  weiter.addEventListener('click', function () {
+    var gewaehlt = document.querySelector('.slots button[aria-pressed="true"]');
+    if (!gewaehlt) {
+      antwort.textContent = 'Bitte zuerst eine Uhrzeit w\u00E4hlen.';
+      antwort.removeAttribute('data-fertig');
+      antwort.hidden = false;
+      return;
+    }
+    antwort.textContent = 'Beispielseite: hier ginge ' + feld.textContent
+      + ', ' + gewaehlt.textContent + ' an die Praxis.';
+    antwort.setAttribute('data-fertig', '');
+    antwort.hidden = false;
+  });
+})();
+</script>
+<script src="probe.js" defer></script>
+</body>
+</html>

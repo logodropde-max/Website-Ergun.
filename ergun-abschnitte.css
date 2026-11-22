@@ -1,0 +1,78 @@
+/* ERGUN. · Webdesign – Abschnitte „So läuft es ab“ und „Beispiele“ (seit 22.11.2026, Auftrag „ERGUN.-Seite startklar“)
+   und der Satz „nur für Unternehmen“ unter den Preisen. Glas-Look wie die Preis-Karten (Werte aus glas.css/glas-fein.css mit Rückfall,
+   damit alles auch ohne JavaScript und ohne WebGL gleich aussieht). Bewegung nur transform/opacity, „Bewegung reduzieren“ = nur Einblenden. */
+.ab-abschnitt { position: relative; z-index: 1; color: var(--g-text, #FFFFFF); font-family: var(--g-schrift, "Satoshi", system-ui, sans-serif); }
+.ab-innen { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: var(--gf-abstand, clamp(64px, 10vh, 112px)) 0 0; }
+.ab-abschnitt .glas-h2 { margin-bottom: 16px; }
+.ab-satz { max-width: 40rem; margin: 0 auto clamp(28px, 4vh, 44px); text-align: center; font-size: 1rem; line-height: 1.5; color: var(--g-leise, rgba(255, 255, 255, 0.8)); text-wrap: pretty; }
+.ab-abschnitt h2:not(.glas-h2) { margin: 0 0 16px; text-align: center; font-size: clamp(2.25rem, 4.8vw, 3.75rem); font-weight: 700; line-height: 0.98; letter-spacing: -0.025em; }
+
+/* Karten: gleiche Glasfläche wie die Preis-Karten */
+.ab-karte { position: relative; display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 28px; box-sizing: border-box; border-radius: var(--gf-r, 24px);
+  border: 1px solid var(--gf-kante, rgba(255, 255, 255, 0.16)); background: var(--gf-flaeche, rgba(255, 255, 255, 0.07));
+  -webkit-backdrop-filter: var(--gf-blur, blur(18px)); backdrop-filter: var(--gf-blur, blur(18px)); box-shadow: var(--gf-schatten, 0 24px 48px -28px rgba(0, 0, 0, 0.75)); }
+
+/* ---------- So läuft es ab: drei gleich große Karten in einer Reihe, am Handy untereinander ---------- */
+.ab-schritte { list-style: none; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; margin: 0; padding: 0; counter-reset: ab; }
+@media (min-width: 760px) { .ab-schritte { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
+.ab-schritt__nr { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--gf-kante, rgba(255, 255, 255, 0.16));
+  background: rgba(255, 255, 255, 0.06); font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; color: #FFFFFF; }
+.ab-schritt h3 { margin: 8px 0 0; font-size: var(--gf-titel, clamp(1.5rem, 2vw, 1.75rem)); font-weight: 600; line-height: 1.1; letter-spacing: -0.015em; text-wrap: balance; }
+.ab-schritt p { margin: 0; font-size: 1rem; line-height: 1.5; color: var(--g-leise, rgba(255, 255, 255, 0.8)); text-wrap: pretty; }
+
+/* ---------- Beispiele: drei Spalten (Start · Business · Pro) mit je zwei Karten, am Handy drei Gruppen untereinander ---------- */
+.ab-pakete { display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; }
+@media (min-width: 900px) { .ab-pakete { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
+.ab-paket { display: grid; grid-template-rows: auto 1fr 1fr; gap: 14px; min-width: 0; }
+.ab-paket__schild { display: flex; align-items: baseline; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; margin: 0; padding: 0 4px;
+  font-size: 15px; font-weight: 600; color: #FFFFFF; }
+.ab-paket__schild span { font-size: 22px; letter-spacing: -0.01em; }
+.ab-paket__schild b { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--g-leise, rgba(255, 255, 255, 0.8)); }
+.ab-beispiel { padding: 0; overflow: hidden; gap: 0; }
+.ab-beispiel__bild { display: block; aspect-ratio: 16 / 10; overflow: hidden; background: rgba(255, 255, 255, 0.04); border-bottom: 1px solid var(--gf-kante, rgba(255, 255, 255, 0.16)); }
+.ab-beispiel__bild img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: transform 600ms var(--g-ease, cubic-bezier(0.23, 1, 0.32, 1)); }
+.ab-beispiel__text { display: flex; flex-direction: column; gap: 10px; flex: 1; padding: 20px 22px 22px; }
+.ab-beispiel h3 { margin: 0; font-size: 20px; font-weight: 600; line-height: 1.15; letter-spacing: -0.01em; }
+.ab-beispiel__branche { margin: -6px 0 0; font-size: 14px; color: var(--g-klein, rgba(255, 255, 255, 0.62)); }
+.ab-beispiel ul { list-style: none; display: grid; gap: 6px; margin: 4px 0 0; padding: 0; }
+.ab-beispiel li { position: relative; padding-left: 22px; font-size: 15px; line-height: 1.4; color: var(--g-leise, rgba(255, 255, 255, 0.8)); }
+.ab-beispiel li::before { content: ""; position: absolute; left: 2px; top: 0.42em; width: 10px; height: 6px; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-45deg); opacity: 0.8; }
+.ab-ansehen { display: inline-flex; align-items: center; gap: 8px; width: max-content; min-height: 44px; margin-top: auto; padding: 0 20px; border-radius: 999px;
+  border: 1px solid var(--gf-kante, rgba(255, 255, 255, 0.16)); background: rgba(255, 255, 255, 0.06); color: #FFFFFF; text-decoration: none; font-size: 15px; font-weight: 600;
+  transition: background-color 200ms ease, border-color 200ms ease; }
+.ab-ansehen svg { width: 14px; height: 14px; transition: transform 200ms var(--g-ease, ease); }
+.ab-ansehen:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) {
+  .ab-ansehen:hover { background: var(--gf-flaeche-hover, rgba(255, 255, 255, 0.11)); border-color: var(--gf-kante-hover, rgba(255, 255, 255, 0.32)); }
+  .ab-ansehen:hover svg { transform: translate(2px, -2px); }
+  .ab-beispiel:hover .ab-beispiel__bild img { transform: scale(1.03); }
+}
+.ab-klein { margin: 24px 0 0; text-align: center; font-size: 13px; line-height: 1.5; color: var(--g-klein, rgba(255, 255, 255, 0.62)); }
+
+/* ---------- „nur für Unternehmen“ unter den Preis-Karten und im Formular ---------- */
+.mf-unternehmen { margin: 20px 0 0; text-align: center; font-size: 15px; line-height: 1.5; font-weight: 500; color: var(--g-leise, rgba(255, 255, 255, 0.8)); }
+.anfrage__unternehmen { font-weight: 500; }
+.anfrage__dateien { margin: -4px 0 0; }
+
+/* Stichpunkte in den Preis-Karten (preise.js, data-glas-behalten) */
+.k-angebot__punkte { display: grid; gap: 6px; margin-top: 6px; }
+.k-angebot__punkt { display: flex; align-items: flex-start; gap: 8px; font-size: 15px; line-height: 1.4; color: var(--g-leise, rgba(255, 255, 255, 0.8)); text-align: left; }
+.k-angebot__punkt svg { flex: none; width: 16px; height: 16px; margin-top: 2px; }
+/* volle Reihen, Preise auf einer Linie (vorher ergun-werkbank.css) */
+@container (min-width: 760px) {
+  .glas-angebote .mf-angebote__liste { grid-auto-rows: auto; }
+  .glas-angebote .glas-karte__preis { order: 2; margin-top: 0; padding-top: 6px; }
+  .glas-angebote .k-angebot__punkte { order: 3; }
+}
+.wb-summe-leer { display: none; margin: 0; font-size: 13px; line-height: 18px; color: rgba(255, 255, 255, 0.62); }
+.mf-summe.ist-leer > div { display: none; }
+.mf-summe.ist-leer .wb-summe-leer { display: block; grid-column: 1 / -1; }
+@media (max-width: 1023px) { .mit-summe .mf__nav { padding-bottom: calc(var(--wb-leiste, 72px) + 16px); } }
+
+/* ---------- ruhige Bewegung beim Hineinscrollen (Klasse ab-rein setzt das Skript in index.html, ohne JavaScript ist alles sofort da) ---------- */
+html.ab-bewegung .ab-rein { opacity: 0; transform: translateY(16px); transition: opacity 700ms var(--g-ease, ease), transform 700ms var(--g-ease, ease); transition-delay: calc(var(--ab-i, 0) * 80ms); }
+html.ab-bewegung .ab-rein.ist-da { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  html.ab-bewegung .ab-rein { transform: none; transition: opacity 300ms ease; transition-delay: 0ms; }
+  .ab-beispiel__bild img, .ab-ansehen, .ab-ansehen svg { transition: none; }
+}

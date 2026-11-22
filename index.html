@@ -1,20 +1,19 @@
 <!doctype html>
-<html lang="de" class="titel-glas glas-fein glas-nahtlos ruhe marke-glas blatt-glas schrift-weg titel-scharf endo-zeichen-an titel-takt kopf-nativ endo-werkbank" data-karten="neu">
+<html lang="de" class="titel-glas glas-fein glas-nahtlos ruhe marke-glas blatt-glas schrift-weg titel-scharf titel-takt kopf-nativ" data-karten="neu">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>ERGUN. – Websites, Automatisierung & KI</title>
-<meta name="description" content="ERGUN.: Websites mit Design und Bewegung, persönlich geplant und gebaut – Automatisierung und eigene KI für Ihren Betrieb über endo. Kostenloses Erstgespräch.">
+<title>ERGUN. · Webdesign</title>
+<meta name="description" content="ERGUN. · Webdesign: Websites mit Design und Bewegung, persönlich geplant und gebaut. Drei Pakete mit offenen Preisen, kostenloses Erstgespräch. Nur für Unternehmen.">
 <meta name="theme-color" content="#0C162C">
 <meta name="robots" content="noindex, nofollow"><!-- solange die Seite privat ist; beim Livegang entfernen -->
 
 <!-- Teilen in Social Media / Messengern -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="ERGUN. – Websites, Automatisierung & KI">
-<meta property="og:description" content="ERGUN. baut Ihre Website. endo automatisiert Ihren Betrieb. Kostenloses Erstgespräch.">
-<meta property="og:image" content="https://website-ergun.vercel.app/bilder/og.jpg?v=7">
-<meta property="og:url" content="https://website-ergun.vercel.app/">
-<link rel="canonical" href="https://website-ergun.vercel.app/">
+<meta property="og:title" content="ERGUN. · Webdesign">
+<meta property="og:description" content="Websites, die auffallen und Kunden bringen. Kostenloses Erstgespräch.">
+<!-- canonical, og:url und ein absolutes og:image kommen mit der eigenen Domain (Livegang bei IONOS) -->
+<meta property="og:image" content="bilder/og.jpg?v=7">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="de_DE">
@@ -31,8 +30,8 @@
 <script>document.documentElement.classList.add('js');</script>
 <!-- Aussehen der Glas-Startseite (Vorlage 21st „Glass Headline Hero“, _code/vorlagen-21st/glass-headline-hero/) -->
 <link rel="stylesheet" href="glas-vorlage.gen.css?v=1">
-<link rel="stylesheet" href="glas.css?v=2">
-<link rel="stylesheet" href="glas-fein.css?v=9">
+<link rel="stylesheet" href="glas.css?v=3">
+<link rel="stylesheet" href="glas-fein.css?v=10">
 
 <style>
 html, body { touch-action: pan-x pan-y; }
@@ -133,23 +132,6 @@ img { display: block; max-width: 100%; height: auto; }
 .field select option { background: var(--f-knopf-text); color: var(--text); }
 .field.hat-fehler input, .field.hat-fehler textarea { border-color: var(--accent); }
 .field__error { min-height: 1.2em; font-size: 13px; color: var(--accent); }
-.upload { position: relative; display: flex; align-items: center; gap: 16px; padding: 14px 16px; border: 1.5px dashed rgba(242, 239, 232, 0.22); border-radius: 12px; background: rgba(242, 239, 232, 0.02); transition: border-color 200ms var(--ease), background-color 200ms var(--ease); }
-.upload__symbol { width: 38px; height: 38px; flex: none; padding: 9px; border-radius: 50%; color: var(--accent); background: rgba(242, 180, 92, 0.12); transition: transform 200ms var(--ease-out); }
-.upload__text b { display: block; font-weight: 500; font-size: 15px; color: var(--text); }
-.upload__text small { display: block; margin-top: 3px; font-size: 13px; color: var(--muted); }
-.upload input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-.upload:focus-within { border-color: var(--accent); }
-.upload.ist-drueber { border-color: var(--accent); background: rgba(242, 180, 92, 0.08); }
-.upload.ist-drueber .upload__symbol { transform: translateY(-3px); }
-@media (hover: hover) and (pointer: fine) { .upload:hover { border-color: rgba(242, 180, 92, 0.6); } .upload:hover .upload__symbol { transform: translateY(-2px); } }
-.datei__liste { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-.datei__liste:empty { display: none; }
-.datei__liste li { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px 5px 5px; }
-.datei__liste img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; }
-.datei__liste i { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: rgba(242, 180, 92, 0.14); color: var(--accent); font-style: normal; font-size: 11px; font-weight: 500; }
-.datei__stand { font-size: 12px; color: var(--muted); }
-.datei__stand.ist-ok { color: #3fb96b; }
-.datei__stand.ist-fehler { color: var(--accent); }
 .form__status { min-height: 1.4em; font-size: 14px; color: var(--text); }
 .form__hint { color: var(--muted); font-size: 13px; text-wrap: pretty; }
 .weg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
@@ -193,20 +175,7 @@ img { display: block; max-width: 100%; height: auto; }
 
 /* ---------- ERGUN. = reine Webdesign-Seite (ERGUN., 27.09.): Hero → Kontakt → Fußzeile ---------- */
 
-/* endo-Schriftzug: Chrom mit langsam wanderndem Glanz, Pfeil ↗ + hauchdünne Linie (eigene Seite) */
-@keyframes endo-glanz { from { background-position: 130% 0; } to { background-position: -130% 0; } }
 /* Position A: oben rechts unter der Navigation · Position B: unten links */
-/* Übergang zur endo-Seite: Schriftzug leuchtet kurz auf, die Seite blendet in tiefes Schwarz */
-.wechsel { position: fixed; inset: 0; z-index: 100; background: #000; opacity: 0; pointer-events: none; transition: opacity 420ms var(--ease); }
-html.zu-endo .wechsel { opacity: 1; pointer-events: auto; }
-html.zu-endo .nav__link--endo { filter: drop-shadow(0 0 10px rgba(226, 234, 248, 0.95)) drop-shadow(0 0 22px rgba(196, 212, 244, 0.7)); }
-.nav__link--endo span { display: inline-block; transition: transform 300ms var(--ease-out); }
-.nav__link--endo:hover span { transform: translate(2px, -2px); }
-/* endo nur noch oben rechts (ERGUN., 27.09.): schlichter Link wie die Navigation, beim Hover ein ruhiger Chrom-Glanz, Tippfläche 44 px */
-.nav__link--endo { display: inline-flex; align-items: center; min-height: 44px; }
-.nav__link--endo::after { background: linear-gradient(90deg, #C9CED6, #FFFFFF 45%, #9AA2AD 70%, #E8ECF1); }
-@media (hover: hover) and (pointer: fine) { .nav__link--endo:hover { background: linear-gradient(110deg, #DDE1E7 0%, #FFFFFF 30%, #AEB5BF 55%, #FFFFFF 80%); -webkit-background-clip: text; background-clip: text; color: transparent; } .nav__link--endo:hover span { color: #F2EFE8; } }
-@media (prefers-reduced-motion: reduce) { .wechsel { transition: none; } }
 
 /* Kontakt folgt direkt auf das Titelbild: Farbe läuft aus der Nacht in den Seitenhintergrund */
 /* Direktkontakt: drei Wege (Handy oben als große Knöpfe, Desktop als ruhige Zeile) */
@@ -233,7 +202,6 @@ html.zu-endo .nav__link--endo { filter: drop-shadow(0 0 10px rgba(226, 234, 248,
 .auswahl__liste dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
 .auswahl__liste div:last-child { padding-top: 6px; border-top: 1px solid var(--line); }
 .auswahl__liste div:last-child dd { font-family: var(--serif); font-size: 18px; }
-/* „Wo soll endo helfen?“ – schlichte Chips (Stil wie „Auf Anfrage“ im Preis-Assistenten) */
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip-wahl { position: relative; display: inline-flex; }
 .chip-wahl input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
@@ -305,7 +273,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 @media (prefers-reduced-motion: reduce) { .anfrage__pfeil { transition: none; } }
 /* ---------- Kontakt übersichtlich (ERGUN., 27.09. spät): Auswahl-Karten, Pflichtfelder, Antwort-Weg mit passendem Feld ---------- */
 .pflicht { color: var(--accent); font-weight: 500; margin-left: 2px; }
-/* Auftrag 9b (29.09.2026): keine Themen-Karten mehr – oben „Ihre Auswahl“ + „Wo soll endo helfen?“ (Chips). */
+/* Auftrag 9b (29.09.2026): keine Themen-Karten mehr – oben „Ihre Auswahl“. */
 .anfrage { container-type: inline-size; container-name: anfrage; }
 .anfrage__gruppe .field__error { display: block; margin-top: 8px; }
 .anfrage .anfrage__gruppe.hat-fehler .weg__option span { border-color: rgba(242, 160, 138, 0.7); }
@@ -331,7 +299,6 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 .anfrage .weg { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 @media (prefers-reduced-motion: reduce) { .anfrage__kontakt.ist-neu { animation: none; } }
 
-/* endo-Hinweis direkt unter „Anfrage senden“ (Nachtlauf, ERGUN.): ruhige Zeile, gedämpft, „endo“ leicht hervorgehoben, weich ein-/ausblenden */
 /* Tipps unter „Anfrage senden“ (28.09., ERGUN.): je Auswahl ein Satz mit Pill „Tipp:“; Platz ist reserviert (kein Springen), weich ein-/ausblenden */
 
 /* Übergang Titelbild → erster Bereich (seit Auftrag 9: Preise): ruhiger, dunkler Grund, weich aus dem Dunkel am Ende des Titelbilds (#070B16).
@@ -381,7 +348,7 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
    oben nur so weit wie der Abstand zum Haken darüber (nichts wird verdeckt), unten liegt nur Text */
 .mf-link--klein { position: relative; }
 .mf-link--klein::after { content: ""; position: absolute; inset: -4px 0 -8px; }
-.mf-linkzeile { display: flex; flex-wrap: wrap; align-items: center; gap: 0 24px; }   /* „Lieber gleich schreiben“ + „endo ansehen“ (04.10.2026) */
+.mf-linkzeile { display: flex; flex-wrap: wrap; align-items: center; gap: 0 24px; }   /* „Lieber gleich schreiben“ */
 
 
 /* ② Website: Stufen mit höchstens drei Stichpunkten */
@@ -418,10 +385,6 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
 @media (min-width: 720px) { .mf-betreuung__wahl { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .mf-selbst { margin-left: 0; }
 
-/* ② Automatisierung: endo-Aufgaben mit ehrlichem Status */
-/* Auftrag 30: 5 Aufgaben → Liste untereinander (Kartenreihen-Regel: nie 2 + 2 + 1 oder 3 + 2); ab 720 px Name + Stand links, Satz rechts */
-.mf-endo { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
-@media (min-width: 720px) { .mf-endo .mf-chip { grid-template-columns: minmax(170px, 0.8fr) minmax(0, 1.2fr); align-items: center; column-gap: 16px; } }
 .mf-chip { display: grid; align-content: start; gap: 4px; padding: 14px 16px; border: 1px solid rgba(242, 239, 232, 0.1); border-radius: 16px; background: rgba(242, 239, 232, 0.03); color: var(--text); font: inherit; text-align: left; cursor: pointer; transition: border-color 150ms var(--ease-out), transform 160ms var(--ease-out); }
 .mf-chip[aria-pressed="true"] { border-color: rgba(242, 239, 232, 0.6); background: rgba(242, 239, 232, 0.07); }
 .mf-chip__kopf { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; }
@@ -514,13 +477,6 @@ p, .wege span { text-wrap: pretty; hyphens: auto; -webkit-hyphens: auto; }
   .mf-schritt.ist-rein, .mf-schritt.ist-rein--zurueck, .mf-anfrage.ist-rein, .mf-anfrage.ist-rein--zurueck { animation: none; }
   .mf__linie i, .mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .mf-stufe__haken, .lf-schalter::before, .lf-schalter span, .lf-chip, .mf-auf > summary::before { transition: none; }
 }
-/* Auftrag 27: Dateien im Formular eingeklappt (weniger Ablenkung) */
-.anfrage__mehr > summary { display: flex; align-items: center; gap: 10px; min-height: 48px; cursor: pointer; list-style: none; font-size: 15px; color: var(--muted); }
-.anfrage__mehr > summary::-webkit-details-marker { display: none; }
-.anfrage__mehr > summary::before { content: "+"; display: grid; place-items: center; width: 24px; height: 24px; border: 1px solid var(--line); border-radius: 50%; font-size: 15px; line-height: 1; color: var(--text); transition: transform 200ms var(--ease-out); }
-.anfrage__mehr[open] > summary::before { transform: rotate(45deg); }
-.anfrage__mehr[open] > summary { margin-bottom: 8px; }
-@media (prefers-reduced-motion: reduce) { .anfrage__mehr > summary::before { transition: none; } }
 
 /* ---------- Auftrag 28 (29.09.2026): premium & farbig – Farbwelt aus dem Titelbild (Variablen --f-… oben in :root) ----------
    Typografie in 4 Stufen: ① Schritt-Überschrift (groß, leicht, eng) ② Karten-Namen ③ Fließtext 15–16 px ④ Klein 13 px. Preise in Tabellenziffern.
@@ -544,7 +500,7 @@ body { background: var(--f-grund-tief); }
 .mf__linie i { background: linear-gradient(90deg, var(--f-gold), var(--f-gold-hell)); }
 .mf-zurueck { color: var(--f-text); }
 
-/* Karten: eine Optik für Schritt ①, Stufen, endo-Aufgaben, endo komplett, Zusammenfassung */
+/* Karten: eine Optik für Schritt ①, Stufen, Zusammenfassung */
 .mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .mf .auswahl { position: relative; border: 0; border-radius: 20px; background: var(--f-flaeche); box-shadow: var(--f-tiefe); color: var(--f-text);
   transition: transform 200ms var(--ease-out), background-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out); }
 .mf-karte::before, .mf-stufe::before, .mf-chip::before, .mf-komplett::before, .mf .auswahl::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
@@ -629,7 +585,6 @@ body { background: var(--f-grund-tief); }
 .mf-betreuung__grund { margin-left: 36px; color: var(--f-gedaempft); }
 .mf-betreuung__wahl { margin-top: 12px; }
 
-/* ② endo-Aufgaben */
 .mf-chip { padding: 16px; border-radius: 16px; }
 .mf-chip__status { border-color: rgba(148, 169, 197, 0.35); color: var(--f-gedaempft); }
 .mf-chip__status--demo { border-color: rgba(242, 180, 92, 0.5); color: var(--f-gold-hell); }
@@ -683,14 +638,6 @@ body { background: var(--f-grund-tief); }
 .anfrage__haken input:checked + .haken__box { background: var(--f-wahl); border-color: var(--f-wahl); }
 .anfrage__haken input:focus-visible + .haken__box { border-color: var(--f-gold); box-shadow: 0 0 0 3px rgba(242, 180, 92, 0.22); }
 .pflicht { color: var(--f-gold); }
-.upload { border-color: rgba(148, 169, 197, 0.3); background: rgba(94, 120, 168, 0.06); }
-.upload__symbol { color: var(--f-gold); background: rgba(242, 180, 92, 0.12); }
-.upload:focus-within, .upload.ist-drueber { border-color: var(--f-gold); }
-.upload.ist-drueber { background: rgba(242, 180, 92, 0.08); }
-@media (hover: hover) and (pointer: fine) { .upload:hover { border-color: rgba(242, 180, 92, 0.6); } }
-.datei__liste i { background: rgba(242, 180, 92, 0.14); color: var(--f-gold); }
-.datei__stand.ist-fehler { color: var(--f-fehler); }
-.anfrage__mehr > summary::before { border-color: rgba(242, 180, 92, 0.5); color: var(--f-gold-hell); }
 .anfrage__check { background: var(--f-gold); color: var(--f-knopf-text); }
 .btn { border-color: rgba(148, 169, 197, 0.35); transition: transform 160ms var(--ease-out), border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out), filter 200ms var(--ease-out); }
 .btn--wa { border: 0; background: var(--f-knopf); color: var(--f-knopf-text); font-weight: 600; box-shadow: 0 10px 28px -12px rgba(255, 170, 96, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.35); }
@@ -713,7 +660,7 @@ body { background: var(--f-grund-tief); }
   .mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .mf-haken__box, .mf-haken__box svg, .btn { transition: none; }
   .mf-karte:hover, .mf-stufe:hover, .mf-chip:hover, .mf-komplett:hover { transform: none; }
 }
-.mf-chip__haken { display: none; }   /* Haken in den endo-Aufgaben: erst im neuen Look (Auftrag 36) */
+.mf-chip__haken { display: none; }
 .mf-chip__name { display: contents; }   /* ?karten=alt: der Name steht wie bisher direkt in der Kopfzeile */
 
 /* ---------- Auftrag 36 (30.09.2026): Auswahl premium – „Emaille im Dämmerlicht“ ----------
@@ -740,7 +687,7 @@ body { background: var(--f-grund-tief); }
   --k-dauer: 200ms;
   --k-versatz: 50ms;
 }
-/* Material: Schritt ①, Website-Stufen, endo-Aufgaben, endo komplett, Betreuungs-Stufen, Zusammenfassung */
+/* Material: Schritt ①, Website-Stufen, Betreuungs-Stufen, Zusammenfassung */
 [data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross, .mf .auswahl) { background: var(--k-korn), var(--k-flaeche); box-shadow: var(--k-glanz), var(--k-tiefe); }
 [data-karten="neu"] .lf-chip--gross { position: relative; border: 0; }
 [data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross) {
@@ -761,7 +708,6 @@ body { background: var(--f-grund-tief); }
 /* gewählt – deutlich, aber edel */
 [data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross)[aria-pressed="true"] { background: var(--k-licht), var(--k-korn), var(--k-flaeche-wahl); box-shadow: var(--k-glanz), var(--k-schein), var(--k-tiefe-hoch); transform: translateY(-2px); }
 [data-karten="neu"] :is(.mf-karte, .mf-stufe, .mf-chip, .mf-komplett, .lf-chip--gross)[aria-pressed="true"]::before { background: var(--k-kante-wahl); }
-[data-karten="neu"] .mf-endo .mf-chip[aria-pressed="true"] { transform: none; }   /* Liste untereinander: gewählte Zeilen bleiben in der Reihe (gleiche Abstände) */
 /* nur eine wählbar (Schritt ①, Stufen, Betreuung): die anderen treten leicht zurück, damit die Wahl hervorsticht – Hover/Fokus holt sie wieder nach vorn */
 [data-karten="neu"] .hat-wahl > :is(.mf-karte, .mf-stufe, .lf-chip--gross):not([aria-pressed="true"]) { background: var(--k-licht), var(--k-korn), var(--k-flaeche-zurueck); box-shadow: var(--k-glanz), var(--k-tiefe-flach); opacity: 0.8; }
 [data-karten="neu"] .hat-wahl > :is(.mf-karte, .mf-stufe, .lf-chip--gross):not([aria-pressed="true"]):focus-visible { opacity: 1; }
@@ -778,7 +724,7 @@ body { background: var(--f-grund-tief); }
 @keyframes k-punkt { from { opacity: 0; transform: scale(0.7); } }
 @keyframes k-haken { from { stroke-dashoffset: 21; } }
 @keyframes k-rein { from { opacity: 0; transform: translateY(10px); } }
-/* Häkchen zeichnet sich als Linie: rund = eine wählbar (Stufe, endo komplett), eckig = mehrere (Extras, endo-Aufgaben, Betreuung) */
+/* Häkchen zeichnet sich als Linie: rund = eine wählbar (Stufe), eckig = mehrere (Extras, Betreuung) */
 [data-karten="neu"] :is(.mf-stufe__haken, .mf-haken__box, .mf-chip__haken) svg path { stroke-dasharray: 21; stroke-dashoffset: 0; }
 [data-karten="neu"] .mf-stufe__haken { top: 20px; right: 18px; background: linear-gradient(180deg, var(--f-gold-hell), var(--f-gold)); color: var(--f-knopf-text); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 0 4px rgba(242, 180, 92, 0.14); opacity: 0; transition: none; }
 [data-karten="neu"] .mf-stufe__haken svg { stroke-width: 2.4; }
@@ -795,7 +741,6 @@ body { background: var(--f-grund-tief); }
 [data-karten="neu"] .mf-chip__haken { flex: none; display: grid; place-items: center; width: 22px; height: 22px; border: 1.5px solid rgba(148, 169, 197, 0.55); color: var(--f-knopf-text); transition: border-color 150ms var(--ease-out); }
 [data-karten="neu"] .mf-chip__haken svg { width: 14px; height: 14px; stroke-width: 2.4; visibility: hidden; }
 [data-karten="neu"] .mf-chip__satz { padding-left: 34px; }
-@media (min-width: 720px) { [data-karten="neu"] .mf-endo .mf-chip__satz { padding-left: 0; } }
 @media (hover: hover) and (pointer: fine) { [data-karten="neu"] .mf-chip:hover .mf-chip__haken { border-color: var(--f-gold); } }
 [data-karten="neu"] .mf-extra.ist-an:not(.ist-schon) .mf-extra__preis { color: var(--f-gold-hell); }
 /* Typografie: Preis groß in Clash Display mit Tabellenziffern, kleine Beschriftung in Satoshi, feine Trennlinie */
@@ -864,14 +809,14 @@ html.papier-an.blatt-glas, html.papier-an.blatt-glas body { background: linear-g
 </style>
 <script>
 /* Ruhe (seit 01.10.2026, Ausnahme auf ERGUNs Wunsch): kein Heranzoomen am Handy (Pinch, Doppeltipp, Eingabefelder), kein seitliches Verschieben,
-   Strg+Mausrad/Trackpad-Pinch abgefangen (Strg +/− im Browser-Menü bleibt für die Barrierefreiheit). Gleiche Regel auf ERGUN. und endo (Test). */
+   Strg+Mausrad/Trackpad-Pinch abgefangen (Strg +/− im Browser-Menü bleibt für die Barrierefreiheit). Gleiche Regel auf allen Seiten von ERGUN. (Test). */
 (function () {
   ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (n) { document.addEventListener(n, function (e) { e.preventDefault(); }, { passive: false }); });
   window.addEventListener('wheel', function (e) { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
 })();
 </script>
 <!-- Glas-Logo: „ERGUN.“ in Kopf- und Fußzeile ist immer das echte Glas (bilder/glas/glas-marke-b.webp) – EINE Regel, auch für 404.html -->
-<link rel="stylesheet" href="glas-marke.css?v=4">
+<link rel="stylesheet" href="glas-marke.css?v=5">
 <link rel="preload" as="image" href="bilder/glas/glas-wort.webp?v=1">
 <script>
 /* Papier-Start (seit 03.10.2026, Ausnahme auf ERGUNs Wunsch): die Seite beginnt als Blatt im Glas-Look mit „ERGUN.“, das beim Scrollen aufreißt
@@ -922,28 +867,12 @@ html.blatt-glas :is(.papier__wort, .papier__zeile) { display: none; }
 html.blatt-glas .papier__hinweis { color: #FFFFFF; opacity: 0.92; text-shadow: 0 1px 3px rgba(13, 10, 20, 0.45); }
 html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
 </style>
-<!-- Abschnitt „Website und Büro, die zusammenpassen“ vor dem Anfrage-Ablauf (js/empfang.js) -->
-<link rel="stylesheet" href="empfang.css?v=4">
 <style>
 /* „Auswahl treffen“ bekommt eine Tippfläche von mindestens 44 px. Innenabstand an einem Inline-Link verändert die
    Zeilen nicht (senkrecht) bzw. wird vom negativen Außenabstand aufgehoben (waagrecht) – Text und Lage bleiben Pixel für Pixel gleich. */
 .auswahl__leer a[data-auswahl-treffen] { padding: 14px 8px; margin: 0 -8px; border-radius: 12px; }
 </style>
-<style>
-/* ERGUN., 05.10.2026: das endo-Zeichen nur an „endo ansehen“ beim Paket Automatisierung (js/preise.js .mf-wahl-huelle--endo) und an „endo ansehen“
-   im Titel (.ghr-secondary) – seit der Werkbank die stille Blüte (Größe in ergun-werkbank.css) */
-html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeichen-an .ghr-actions .ghr-secondary::before { content: ""; display: inline-block; width: 1.15em; height: 1.15em; margin-right: 0.4em; vertical-align: -0.22em; background: url(https://endo-ergun.vercel.app/marke/endo-logo.svg) center / contain no-repeat; }
-</style>
-<style>
-/* Paket 1f Teil E: „endo ansehen ↗“ an der Wahl „Automatisierung“ und „Beides“ (js/preise.js endoLinkHuelle) – eigene Tippfläche in der Karte */
-.mf-wahl-huelle { position: relative; display: grid; }
-.mf-wahl-huelle > .hat-endo-link { padding-bottom: 68px !important; }
-.mf-endo-link { position: absolute; left: 16px; bottom: 8px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 999px; color: inherit; font-size: 15px !important; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
-.mf-endo-link:hover { text-decoration-thickness: 2px; }
-.mf-endo-link:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-.mf-endo-link { margin: 0; }
-</style>
-<link rel="stylesheet" href="ergun-werkbank.css?v=7">
+<link rel="stylesheet" href="ergun-abschnitte.css?v=1">
 </head>
 <body>
 
@@ -960,7 +889,7 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
     <g class="papier__ruck">
       <g class="papier__blatt">
         <rect x="-4000" y="-4000" width="9000" height="8000" fill="#F2F1EE"/>
-        <text class="papier__zeile" x="500" y="150" text-anchor="middle" fill="#2A2A2A">WEBDESIGN &amp; AUTOMATISIERUNG</text>
+        <text class="papier__zeile" x="500" y="150" text-anchor="middle" fill="#2A2A2A">WEBDESIGN</text>
         <text class="papier__wort" x="500" y="404" text-anchor="middle" textLength="880" lengthAdjust="spacingAndGlyphs" fill="#FF5A1F">ERGUN.</text>
         <image class="papier__glaswort" href="bilder/glas/glas-wort.webp?v=1" x="51.6" y="232.7" width="895.7" height="178.6" preserveAspectRatio="none"/>
       </g>
@@ -976,8 +905,9 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
 <header class="nav">
   <a class="nav__mark" href="#top" data-nach-oben aria-label="ERGUN – nach oben">ERGUN<span class="dot">.</span></a>
   <nav class="nav__links" aria-label="Seitennavigation">
-    <a class="nav__link" href="#preise">Anfrage</a>
-    <a class="nav__link nav__link--endo" href="https://endo-ergun.vercel.app/" data-endo-link>endo <span aria-hidden="true">↗</span></a>
+    <a class="nav__link" href="#ablauf">Ablauf</a>
+    <a class="nav__link" href="#beispiele">Beispiele</a>
+    <a class="nav__link" href="#preise">Preise</a>
   </nav>
 </header>
 
@@ -988,9 +918,9 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
 <header class="glas-kopf" data-glas-kopf>
   <a class="glas-kopf__marke" href="#top" aria-label="ERGUN. – nach oben">ERGUN<span>.</span></a>
   <nav class="glas-kopf__links" aria-label="Hauptnavigation">
-    <a href="#angebote" data-glas-ziel="angebote">Angebote</a>
+    <a href="#beispiele">Beispiele</a>
+    <a href="#angebote" data-glas-ziel="angebote">Preise</a>
     <a href="#kontakt" data-glas-ziel="kontakt">Kontakt</a>
-    <a href="https://endo-ergun.vercel.app/" data-endo-link>endo <span aria-hidden="true">↗</span></a>
   </nav>
 </header>
 <section class="ghr-root glas-hero" id="top" data-glas-root aria-label="Einstieg">
@@ -998,10 +928,9 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
   <div class="ghr-content">
     <span class="ghr-eyebrow">Digitalstudio</span>
     <h1 class="ghr-title" data-glas-titel><span class="ghr-word">ERGUN.</span></h1>
-    <p class="ghr-desc" data-glas-text>Websites, die auffallen – und Abläufe, die von allein laufen.</p>
+    <p class="ghr-desc" data-glas-text>Websites, die auffallen und Kunden bringen.</p>
     <div class="ghr-actions">
       <a class="ghr-btn ghr-primary" href="#angebote" data-glas-ziel="angebote">Anfrage starten<svg class="ghr-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      <a class="ghr-btn ghr-secondary" href="https://endo-ergun.vercel.app/" target="_blank" rel="noopener">endo ansehen <span aria-hidden="true">↗</span></a>
     </div>
   </div>
 </section>
@@ -1009,9 +938,93 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
 <script>(function () { var gv = document.getElementById('glas-vorlage'); gv.parentNode.insertBefore(gv.content.cloneNode(true), gv); })();</script>
 
 <main id="inhalt" tabindex="-1">
-  <!-- EIN ABLAUF (Auftrag 25 ERGUN. minimal, 29.09.2026 – Ausnahme auf Emres Wunsch: Preis-Bereich und Kontakt sind ein Ablauf):
-       ① Was brauchen Sie? (Website · Automatisierung · Beides) → ② nur das Passende → ③ Ihre Anfrage (Zusammenfassung + Formular).
-       Schritt ① und ② baut js/preise.js (Zahlen PREISE, Texte LEITFADEN), Schritt ③ steht hier. Alte Anker: #preise = Ablauf, #kontakt = Schritt ③. -->
+  <!-- So läuft es ab + Beispiele (seit 22.11.2026, Auftrag „ERGUN.-Seite startklar“). Statisches HTML: sichtbar auch ohne JavaScript und ohne WebGL.
+       Aussehen: ergun-abschnitte.css. Paket-Preise in den Schildern gleicht ein Test mit PREISE ab (js/preise.js = die eine Stelle für Zahlen). -->
+  <section class="ab-abschnitt ab-ablauf" id="ablauf" aria-labelledby="ablauf-titel">
+    <div class="ab-innen">
+      <h2 class="glas-h2 ab-rein" id="ablauf-titel">So läuft es ab</h2>
+      <p class="ab-satz ab-rein">Drei Schritte von der ersten Nachricht bis zur fertigen Website.</p>
+      <ol class="ab-schritte">
+        <li class="ab-karte ab-schritt ab-rein" style="--ab-i:0"><span class="ab-schritt__nr" aria-hidden="true">1</span><h3>Kostenloses Erstgespräch</h3><p>Wir klären, was Ihr Betrieb braucht. Unverbindlich.</p></li>
+        <li class="ab-karte ab-schritt ab-rein" style="--ab-i:1"><span class="ab-schritt__nr" aria-hidden="true">2</span><h3>Entwurf und Feinschliff</h3><p>Sie sehen Ihre Seite, bevor sie online geht, und geben Ihre Wünsche in Korrekturrunden.</p></li>
+        <li class="ab-karte ab-schritt ab-rein" style="--ab-i:2"><span class="ab-schritt__nr" aria-hidden="true">3</span><h3>Online und betreut</h3><p>Ihre Seite geht live. Auf Wunsch kümmern wir uns danach um Technik und Änderungen.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="ab-abschnitt ab-beispiele" id="beispiele" aria-labelledby="beispiele-titel">
+    <div class="ab-innen">
+      <h2 class="glas-h2 ab-rein" id="beispiele-titel">Beispiele</h2>
+      <p class="ab-satz ab-rein">So sieht gute Arbeit in jedem Paket aus.</p>
+      <div class="ab-pakete">
+        <div class="ab-paket" data-paket="start" aria-label="Paket Start" role="group">
+          <p class="ab-paket__schild ab-rein"><span>Start</span><b data-preis-stufe="start">500 €</b></p>
+          <article class="ab-karte ab-beispiel ab-rein" style="--ab-i:0">
+            <a class="ab-beispiel__bild" href="beispiele/elektro-rehder/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="beispiele/elektro-rehder/vorschau.webp" width="800" height="500" alt="" loading="lazy" decoding="async"></a>
+            <div class="ab-beispiel__text">
+              <h3>Elektro Rehder</h3>
+              <p class="ab-beispiel__branche">Elektrobetrieb</p>
+              <ul><li>Notdienst-Nummer groß im Blick</li><li>Leistungen und Einsatzgebiet auf einer Seite</li><li>Für Handy und PC gebaut</li></ul>
+              <a class="ab-ansehen" href="beispiele/elektro-rehder/" target="_blank" rel="noopener" aria-label="Elektro Rehder ansehen (Beispielseite, neuer Tab)">Ansehen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+            </div>
+          </article>
+          <article class="ab-karte ab-beispiel ab-rein" style="--ab-i:1">
+            <a class="ab-beispiel__bild" href="beispiele/praxis-lindhorst/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="beispiele/praxis-lindhorst/vorschau.webp" width="800" height="500" alt="" loading="lazy" decoding="async"></a>
+            <div class="ab-beispiel__text">
+              <h3>Praxis Lindhorst</h3>
+              <p class="ab-beispiel__branche">Physiotherapie</p>
+              <ul><li>Freie Termine auf einen Blick</li><li>Behandlungen klar erklärt</li><li>Ruhiges, vertrauenswürdiges Design</li></ul>
+              <a class="ab-ansehen" href="beispiele/praxis-lindhorst/" target="_blank" rel="noopener" aria-label="Praxis Lindhorst ansehen (Beispielseite, neuer Tab)">Ansehen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+            </div>
+          </article>
+        </div>
+        <div class="ab-paket" data-paket="business" aria-label="Paket Business" role="group">
+          <p class="ab-paket__schild ab-rein"><span>Business</span><b data-preis-stufe="business">ab 1.000 €</b></p>
+          <article class="ab-karte ab-beispiel ab-rein" style="--ab-i:2">
+            <a class="ab-beispiel__bild" href="beispiele/yilmaz-realty/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="beispiele/yilmaz-realty/vorschau.webp" width="800" height="500" alt="" loading="lazy" decoding="async"></a>
+            <div class="ab-beispiel__text">
+              <h3>Yilmaz &amp; Co. Realty</h3>
+              <p class="ab-beispiel__branche">Immobilien und Auswanderung</p>
+              <ul><li>Eigenes Design mit Bewegung</li><li>Ablauf, Leistungen und Fragen klar gegliedert</li><li>Anfrage-Formular für das Erstgespräch</li></ul>
+              <a class="ab-ansehen" href="beispiele/yilmaz-realty/" target="_blank" rel="noopener" aria-label="Yilmaz &amp; Co. Realty ansehen (Beispielseite, neuer Tab)">Ansehen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+            </div>
+          </article>
+          <article class="ab-karte ab-beispiel ab-rein" style="--ab-i:0">
+            <a class="ab-beispiel__bild" href="beispiele/voltiq/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="beispiele/voltiq/vorschau.webp" width="800" height="500" alt="" loading="lazy" decoding="async"></a>
+            <div class="ab-beispiel__text">
+              <h3>Voltiq</h3>
+              <p class="ab-beispiel__branche">Online-Shop für Powerbanks</p>
+              <ul><li>Produkt groß in Szene gesetzt</li><li>Farbwahl direkt auf der Seite</li><li>Eigenes Design mit Bewegung</li></ul>
+              <a class="ab-ansehen" href="beispiele/voltiq/" target="_blank" rel="noopener" aria-label="Voltiq ansehen (Beispielseite, neuer Tab)">Ansehen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+            </div>
+          </article>
+        </div>
+        <div class="ab-paket" data-paket="pro" aria-label="Paket Pro" role="group">
+          <p class="ab-paket__schild ab-rein"><span>Pro</span><b data-preis-stufe="pro">ab 1.900 €</b></p>
+          <article class="ab-karte ab-beispiel ab-rein" style="--ab-i:1">
+            <a class="ab-beispiel__bild" href="beispiele/orbis/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="beispiele/orbis/vorschau.webp" width="800" height="500" alt="" loading="lazy" decoding="async"></a>
+            <div class="ab-beispiel__text">
+              <h3>Orbis</h3>
+              <p class="ab-beispiel__branche">Uhrenmarke</p>
+              <ul><li>Eigenes Konzept mit edler Bildsprache</li><li>Kollektion mit fünf Modellen</li><li>Aufwendige Animationen beim Scrollen</li></ul>
+              <a class="ab-ansehen" href="beispiele/orbis/" target="_blank" rel="noopener" aria-label="Orbis ansehen (Beispielseite, neuer Tab)">Ansehen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+            </div>
+          </article>
+          <article class="ab-karte ab-beispiel ab-rein" style="--ab-i:2">
+            <a class="ab-beispiel__bild" href="beispiele/lumora/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="beispiele/lumora/vorschau.webp" width="800" height="500" alt="" loading="lazy" decoding="async"></a>
+            <div class="ab-beispiel__text">
+              <h3>Lumora</h3>
+              <p class="ab-beispiel__branche">Online-Shop für Beamer</p>
+              <ul><li>Videos im Kopfbereich und beim Scrollen</li><li>Eigenes Konzept von Grund auf</li><li>Shop-Ansicht mit Warenkorb</li></ul>
+              <a class="ab-ansehen" href="beispiele/lumora/" target="_blank" rel="noopener" aria-label="Lumora ansehen (Beispielseite, neuer Tab)">Ansehen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+            </div>
+          </article>
+        </div>
+      </div>
+      <p class="ab-klein">Beispielseiten zur Veranschaulichung der Pakete.</p>
+    </div>
+  </section>
+
   <section class="preise mf" id="preise" aria-label="Anfrage an ERGUN." data-preise>
    <span class="mf-anker" id="kontakt" aria-hidden="true"></span>
    <div class="preise__innen">
@@ -1034,7 +1047,7 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
         <form class="anfrage" id="anfrage" novalidate>
           <div class="auswahl" data-ihre-auswahl aria-live="polite">
             <div class="auswahl__kopf"><p class="auswahl__titel">Ihre Auswahl</p><a class="auswahl__aendern" href="#preise" data-auswahl-aendern>ändern</a></div>
-            <div class="auswahl__inhalt" data-auswahl-inhalt><p class="auswahl__leer">Nichts ausgewählt – schreiben Sie einfach, worum es geht. <a href="#preise" data-auswahl-treffen>Auswahl treffen</a></p></div>
+            <div class="auswahl__inhalt" data-auswahl-inhalt><p class="auswahl__leer">Nichts ausgewählt. Schreiben Sie einfach, worum es geht. <a href="#preise" data-auswahl-treffen>Auswahl treffen</a></p></div>
           </div>
           <div class="anfrage__punkte" aria-hidden="true"></div>
 
@@ -1069,22 +1082,10 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
             <textarea id="f-text" name="text" rows="3" placeholder="Was machen Sie? Ein, zwei Sätze genügen."></textarea>
           </div>
 
-          <details class="field field--datei anfrage__mehr">
-              <summary>Logo oder Fotos anhängen <small>(optional)</small></summary>
-              <label class="hinweis-versteckt" for="f-datei">Dateien auswählen</label>
-              <div class="upload" data-upload>
-                <svg class="upload__symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4"/><path d="m7 9 5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-                <span class="upload__text"><b>Dateien auswählen</b><small>Antippen oder hierher ziehen · Bilder, PDF, Word, ZIP</small></span>
-                <input id="f-datei" name="dateien" type="file" multiple accept="image/*,.pdf,.doc,.docx,.svg,.ai,.zip">
-              </div>
-              <ul class="datei__liste" data-datei-liste aria-live="polite"></ul>
-              <span class="form__hint">Die Dateien werden beim Auswählen hochgeladen und kommen als Link in die Nachricht. Nach 30 Tagen werden sie automatisch gelöscht.</span>
-            </details>
-
-
+          <p class="form__hint anfrage__dateien">Logo oder Fotos können Sie uns danach einfach per WhatsApp oder E-Mail schicken.</p>
 
           <div class="field anfrage__ok">
-            <label class="anfrage__haken"><input type="checkbox" name="datenschutz" aria-required="true" aria-describedby="f-ds-err"><span class="haken__box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.5 4.5L18.5 7.5"/></svg></span><span>Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a> gelesen und bin einverstanden, dass ich zu meiner Anfrage kontaktiert werde. <span class="pflicht" aria-hidden="true">*</span></span></label>
+            <label class="anfrage__haken"><input type="checkbox" name="datenschutz" aria-required="true" aria-describedby="f-ds-err"><span class="haken__box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.5 4.5L18.5 7.5"/></svg></span><span>Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a> gelesen und bin einverstanden, dass ich zu meiner Anfrage kontaktiert werde, und bestätige, dass ich als Unternehmer anfrage. <span class="pflicht" aria-hidden="true">*</span></span></label>
             <span class="field__error" id="f-ds-err" aria-live="polite"></span>
           </div>
 
@@ -1093,7 +1094,8 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
             <span class="anfrage__pfeil" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
           </button>
           <p class="form__status" data-status aria-live="polite"></p>
-          <p class="form__hint">Felder mit * sind Pflicht. „Anfrage senden“ öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Ihre Angaben speichert die Website nicht, nur hochgeladene Dateien liegen bis zu 30 Tage bei Vercel.</p>
+          <p class="form__hint">Felder mit * sind Pflicht. „Anfrage senden“ öffnet WhatsApp bzw. Ihr Mailprogramm mit der fertigen Nachricht. Ihre Angaben speichert die Website nicht.</p>
+          <p class="form__hint anfrage__unternehmen" data-nur-unternehmen>Alle Angebote richten sich ausschließlich an Unternehmen und Selbstständige.</p>
           <!-- Honigtopf gegen Spam: für Menschen unsichtbar -->
           <div class="anfrage__hp" aria-hidden="true"><label>Website <input type="text" name="webseite" tabindex="-1" autocomplete="off"></label></div>
           <div class="anfrage__danke" data-danke hidden tabindex="-1">
@@ -1119,36 +1121,33 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
       </aside>
     </div>
     <p class="hinweis-versteckt" aria-live="polite" data-preise-live></p>
-    <p class="mf-agentur">ERGUN. baut Websites. Automatisierung und KI gibt es über endo. ·<a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a></p>
+    <p class="mf-agentur">ERGUN. · Webdesign ·<a href="mailto:ergun.eu@gmail.com">ergun.eu@gmail.com</a></p>
    </div>
   </section>
 </main>
 
 <footer class="footer">
-  <span>ERGUN. · Websites, Automatisierung &amp; KI · © <span data-jahr>2026</span></span>
+  <span>ERGUN. · Webdesign · © <span data-jahr>2026</span></span>
   <nav aria-label="Rechtliches">
     <a href="impressum.html">Impressum</a>
     <a href="datenschutz.html">Datenschutz</a>
-    <a href="https://endo-ergun.vercel.app/" data-endo-link>endo <span aria-hidden="true">↗</span></a>
+    <a href="agb.html">AGB</a>
   </nav>
 </footer>
-<div class="wechsel" aria-hidden="true"></div>
 
 <!-- preise.js vor dem Titelbild-Skript: glas.js liest beim Start window.PREISE (Kleingedrucktes in der Fußzeile) – so ist die Reihenfolge immer gleich (07.10.2026) -->
-<script src="js/preise.js?v=40"></script>
+<script src="js/preise.js?v=41"></script>
 <script>
-/* Glas-Startseite (js/glas.js) gleich nach den Preisen; der Abschnitt „Website und Büro“ (js/empfang.js) nach dem Aufbau der Seite */
+/* Glas-Startseite (js/glas.js) gleich nach den Preisen */
 (function () {
   function laden(s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); }
-  laden('js/glas.js?v=22');
-  document.addEventListener('DOMContentLoaded', function () { laden('js/empfang.js?v=6'); });
+  laden('js/glas.js?v=23');
 })();
 </script>
 <script>
 /* Kostenloses Erstgespräch: eine Karte mit allen Feldern (seit 25.09. abends keine Schritte mehr).
-   Versand über WhatsApp oder Mailprogramm. Dateien gehen beim Auswählen an /api/upload (Vercel Blob)
-   und landen als Link in der Nachricht; klappt das nicht, hängt man sie selbst an.
-   Ohne JavaScript bleibt das Formular sichtbar und tut nichts Falsches. */
+   Versand über WhatsApp oder Mailprogramm. Die Website speichert nichts und lädt nichts hoch (seit 22.11.2026 kein Datei-Upload mehr:
+   Logo und Fotos schickt der Kunde danach per WhatsApp oder E-Mail). Ohne JavaScript bleibt das Formular sichtbar und tut nichts Falsches. */
 (function () {
   /* ===== Formular (Auftrag 27, 29.09.2026): die Auswahl kommt aus dem Leitfaden (js/preise.js: PREISE.auswahlJetzt() + Ereignis
      „preise:auswahl“); keine Frage wird hier wiederholt. ===== */
@@ -1179,17 +1178,15 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
     if (e.stufe) dl.appendChild(zeile('Website', e.stufe.name + ' · ' + P.betrag(e.stufe)));
     e.extras.forEach(function (m) { dl.appendChild(zeile(m.name + (m.anzahl > 1 ? ' × ' + m.anzahl : ''), P.betrag(m))); });
     if (e.anfrage.length) dl.appendChild(zeile('Auf Anfrage', e.anfrage.map(function (x) { return x.name; }).join(', ')));
-    if (e.mehr.length) { var em = e.mehr[0];   /* endo für Ihre Branche: einmalig + monatlich getrennt */
-      dl.appendChild(zeile('endo', P.betrag(em) + ' einmalig + ' + P.monatText(em) + M)); }
     if (e.betreuung) dl.appendChild(zeile('Betreuung', e.betreuung.name + ' · ' + P.euro(e.betreuungMonat) + M + (e.selbst ? ' (Hosting selbst)' : '')));
     else if (e.stufe) { var ob = zeile('Betreuung', L.betreuung.ohne); ob.className = 'auswahl__ohne'; var os = document.createElement('small'); os.textContent = L.betreuung.ohneSatz; ob.querySelector('dd').appendChild(os); dl.appendChild(ob); }   /* Auftrag 28: ohne Betreuung + was der Kunde selbst übernimmt */
     var ab = e.ab ? 'ab ' : '';
     auswahlBox.innerHTML = ''; auswahlBox.appendChild(dl);
     /* nur zwei Summen (einmalig · monatlich), das erste Jahr klein darunter */
     var su = document.createElement('div'); su.className = 'auswahl__summen';
-    [['einmalig', ab + P.euro(e.einmalig)], ['monatlich', (e.monatAb ? 'ab ' : '') + P.euro(e.monatlich) + M]].forEach(function (x) { var d = document.createElement('p'), t = document.createElement('span'), b = document.createElement('b'); t.textContent = x[0]; b.textContent = x[1]; d.appendChild(t); d.appendChild(b); su.appendChild(d); });
+    [['einmalig', ab + P.euro(e.einmalig)], ['monatlich', P.euro(e.monatlich) + M]].forEach(function (x) { var d = document.createElement('p'), t = document.createElement('span'), b = document.createElement('b'); t.textContent = x[0]; b.textContent = x[1]; d.appendChild(t); d.appendChild(b); su.appendChild(d); });
     auswahlBox.appendChild(su);
-    var j = document.createElement('small'); j.className = 'auswahl__jahr'; j.textContent = 'Im ersten Jahr ' + (e.ab || e.monatAb ? 'ab ' : '') + P.euro(e.jahr) + (e.mitEndo ? ' – ' + P.endo.lizenzSatz : '') + '. ' + P.klein + ' ' + P.steuer;   /* endo: Lizenz direkt an der Jahressumme */ auswahlBox.appendChild(j);
+    var j = document.createElement('small'); j.className = 'auswahl__jahr'; j.textContent = 'Im ersten Jahr ' + ab + P.euro(e.jahr) + '. ' + P.klein + ' ' + P.steuer; auswahlBox.appendChild(j);
   }
   document.addEventListener('preise:auswahl', auswahlZeigen);
   auswahlZeigen();
@@ -1220,7 +1217,7 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
     weg: function () { return weg() ? '' : 'Bitte wählen Sie, wie wir Ihnen antworten sollen.'; },
     tel: function (v) { return !v ? 'Bitte geben Sie Ihre Telefonnummer ein.' : (/^\+?[\d\s()\/.-]{6,20}$/.test(v) && v.replace(/\D/g, '').length >= 6 ? '' : 'Bitte geben Sie eine gültige Telefonnummer ein, z. B. +49 170 1234567.'); },
     email: function (v) { return !v ? 'Bitte geben Sie Ihre E-Mail-Adresse ein.' : (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? '' : 'Bitte geben Sie eine gültige E-Mail ein.'); },
-    datenschutz: function () { return form.elements.datenschutz.checked ? '' : 'Bitte stimmen Sie der Datenschutzerklärung zu.'; }
+    datenschutz: function () { return form.elements.datenschutz.checked ? '' : 'Bitte stimmen Sie der Datenschutzerklärung zu und bestätigen Sie, dass Sie als Unternehmer anfragen.'; }
   };
   var FEHLER_ORT = { weg: 'f-weg-err', name: 'f-name-err', tel: 'f-tel-err', email: 'f-mail-err', datenschutz: 'f-ds-err' };
   function fokusZiel(k) { return k === 'weg' ? form.querySelector('input[name="weg"]') : form.elements[k]; }
@@ -1246,68 +1243,9 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
     el.addEventListener('input', function () { if (el.getAttribute('aria-invalid') === 'true') pruefeFeld(k); });
   });
 
-  /* ---- Dateien ---- */
-  var dateiFeld = form.elements['dateien'], dateiListe = form.querySelector('[data-datei-liste]');
-  var MAX_BYTES = 4 * 1024 * 1024;
-  var eintraege = [], runde = 0;
-  function laufend() { return eintraege.some(function (e) { return e.stand === 'laedt'; }); }
-  function selbstAnhaengen() { return eintraege.filter(function (e) { return e.stand !== 'ok'; }); }
-  function standSetzen(e, stand) {
-    e.stand = stand;
-    e.anzeige.className = 'datei__stand' + (stand === 'ok' ? ' ist-ok' : stand === 'fehler' ? ' ist-fehler' : '');
-    e.anzeige.textContent = stand === 'ok' ? '✓ hochgeladen' : stand === 'fehler' ? 'bitte selbst anhängen' : 'lädt …';
-    if (!laufend() && status.getAttribute('data-wartet')) { status.removeAttribute('data-wartet'); status.textContent = 'Dateien sind hochgeladen. Jetzt können Sie senden.'; }
-  }
-  /* Große Fotos im Browser verkleinern, damit sie unter das Limit der Vercel-Funktion passen */
-  function vorbereiten(f) {
-    if (f.size <= 3.5 * 1024 * 1024 || !/^image\/(jpeg|png|webp|heic|heif)$/.test(f.type) || !window.createImageBitmap) return Promise.resolve({ daten: f, name: f.name });
-    return createImageBitmap(f).then(function (bild) {
-      var faktor = Math.min(1, 2560 / Math.max(bild.width, bild.height));
-      var c = document.createElement('canvas');
-      c.width = Math.round(bild.width * faktor); c.height = Math.round(bild.height * faktor);
-      c.getContext('2d').drawImage(bild, 0, 0, c.width, c.height);
-      function alsJpeg(q) { return new Promise(function (ok) { c.toBlob(ok, 'image/jpeg', q); }); }
-      return alsJpeg(0.85).then(function (b) { return b && b.size > MAX_BYTES ? alsJpeg(0.7) : b; }).then(function (b) {
-        return b ? { daten: b, name: f.name.replace(/\.[^.]+$/, '') + '.jpg' } : { daten: f, name: f.name };
-      });
-    }).catch(function () { return { daten: f, name: f.name }; });
-  }
-  function hochladen(e, meineRunde) {
-    return vorbereiten(e.datei).then(function (v) {
-      if (v.daten.size > MAX_BYTES) throw new Error('zu gross');
-      return fetch('/api/upload', { method: 'POST', headers: { 'content-type': 'application/octet-stream', 'x-dateiname': encodeURIComponent(v.name) }, body: v.daten });
-    }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(function (j) { if (meineRunde !== runde) return; if (!j || !j.url) throw new Error('kein Link'); e.url = j.url; standSetzen(e, 'ok'); })
-      .catch(function () { if (meineRunde === runde) standSetzen(e, 'fehler'); });
-  }
-  var upload = form.querySelector('[data-upload]');
-  if (upload) {
-    ['dragenter', 'dragover'].forEach(function (t) { upload.addEventListener(t, function () { upload.classList.add('ist-drueber'); }); });
-    ['dragleave', 'drop'].forEach(function (t) { upload.addEventListener(t, function () { upload.classList.remove('ist-drueber'); }); });
-  }
-  if (dateiFeld) dateiFeld.addEventListener('change', function () {
-    runde++;
-    var meineRunde = runde;
-    dateiListe.innerHTML = '';
-    eintraege = [].map.call(dateiFeld.files, function (f) {
-      var li = document.createElement('li');
-      if (/^image\//.test(f.type)) { var im = document.createElement('img'); im.alt = ''; im.src = URL.createObjectURL(f); li.appendChild(im); }
-      else { var i = document.createElement('i'); i.textContent = (f.name.split('.').pop() || 'Datei').slice(0, 4).toUpperCase(); li.appendChild(i); }
-      li.appendChild(document.createTextNode(f.name + ' · ' + (f.size / 1048576).toFixed(1) + ' MB'));
-      var anzeige = document.createElement('span'); li.appendChild(anzeige);
-      dateiListe.appendChild(li);
-      return { datei: f, name: f.name, url: '', stand: 'laedt', anzeige: anzeige };
-    });
-    eintraege.forEach(function (e) { standSetzen(e, 'laedt'); });
-    /* nacheinander hochladen, damit ein langsames Handynetz nicht alles gleichzeitig stemmen muss */
-    eintraege.reduce(function (kette, e) { return kette.then(function () { return meineRunde === runde ? hochladen(e, meineRunde) : null; }); }, Promise.resolve());
-  });
-
   /* ---- Nachricht & Versand ---- */
   function nachricht() {
     var text = wert('text'), wa = weg() === 'whatsapp';
-    var mitLink = eintraege.filter(function (e) { return e.stand === 'ok'; });
-    var ohneLink = selbstAnhaengen().map(function (e) { return e.name; });
     var z = ['Hallo, ich möchte ein kostenloses Erstgespräch.', '',
       'Name: ' + wert('name'),
       'Antwort per: ' + (wa ? 'WhatsApp' : 'E-Mail'),
@@ -1315,14 +1253,12 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
     var e = aktuell();
     if (e) z.push('', P.anfrageText(e));
     if (text) z.push('', 'Nachricht:', text);
-    if (mitLink.length) z.push('', 'Meine Dateien:', mitLink.map(function (e) { return '• ' + e.name + ': ' + e.url; }).join('\n'));
-    if (ohneLink.length) z.push('', 'Dateien, die ich hier anhänge: ' + ohneLink.join(', '));
-    z.push('', 'Datenschutz: zugestimmt', 'Gesendet über die Website.');
+    z.push('', 'Datenschutz: zugestimmt', 'Anfrage als Unternehmer bestätigt', 'Gesendet über die Website.');
     return z.join('\n');
   }
   function waLink() { return 'https://wa.me/' + WA_NUMMER + '?text=' + encodeURIComponent(nachricht()); }
   function mailLink() {
-    var e = aktuell(), betreff = 'Erstgespräch über ERGUN.' + (e && e.stufe ? ' – Website ' + e.stufe.name : '') + (e && e.mehr.length ? ' + endo' : '');
+    var e = aktuell(), betreff = 'Erstgespräch über ERGUN.' + (e && e.stufe ? ' · Website ' + e.stufe.name : '');
     return 'mailto:' + MAIL + '?subject=' + encodeURIComponent(betreff) + '&body=' + encodeURIComponent(nachricht());
   }
   function oeffnen() {
@@ -1338,7 +1274,7 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
     var vorname = wert('name').split(/\s+/)[0] || '', wa = weg() === 'whatsapp';
     danke.querySelector('[data-danke-titel]').textContent = 'Danke' + (vorname ? ', ' + vorname : '') + '!';
     danke.querySelector('[data-danke-text]').textContent = (wa ? 'WhatsApp ist geöffnet – tippen Sie dort nur noch auf Senden.' : 'Ihr Mailprogramm ist geöffnet – bitte dort nur noch auf Senden tippen.') +
-      ' Wir melden uns persönlich bei Ihnen.' + (selbstAnhaengen().length ? ' Hängen Sie die Dateien, die nicht hochgeladen werden konnten, bitte dort an.' : '');
+      ' Wir melden uns persönlich bei Ihnen.';
     nochmal.textContent = wa ? 'WhatsApp erneut öffnen' : 'E-Mail erneut öffnen';
     nochmal.href = echt ? (wa ? waLink() : mailLink()) : '#';
     if (wa) { nochmal.target = '_blank'; nochmal.rel = 'noopener'; } else { nochmal.removeAttribute('target'); nochmal.removeAttribute('rel'); }
@@ -1357,31 +1293,30 @@ html.endo-zeichen-an .mf-wahl-huelle--endo .mf-endo-link::before, html.endo-zeic
     status.textContent = '';
     if (wert('webseite')) { dankeZeigen(false); return; }   /* Honigtopf: Bots bekommen „Danke“, es wird nichts geöffnet */
     if (!pruefen()) { status.textContent = 'Bitte prüfen Sie die markierten Felder.'; return; }
-    if (laufend()) { status.setAttribute('data-wartet', '1'); status.textContent = 'Ihre Dateien werden noch hochgeladen. Einen Moment, dann bitte erneut auf Senden tippen.'; return; }
     try { oeffnen(); dankeZeigen(true); }
     catch (err) { status.innerHTML = ''; status.append('Das hat leider nicht geklappt. Schreiben Sie uns gern direkt: '); var a = document.createElement('a'); a.href = 'mailto:' + MAIL; a.textContent = MAIL; status.append(a); }
   });
 })();
 </script>
 <script>
-/* Zur endo-Seite (ERGUN., 27.09.): Schriftzug leuchtet kurz auf, die Seite blendet weich in Schwarz, dann öffnet sich endo im selben Tab.
-   Zurück-Taste: die Seite kommt aus dem Cache – pageshow nimmt das Schwarz sofort wieder weg. Bewegung reduziert = sofort wechseln.
-   Seit 27.09. spät nur noch über den Link „endo ↗“ oben rechts (und klein in der Fußzeile). */
+/* So läuft es ab + Beispiele: ruhig einblenden, sobald sie ins Bild kommen (ohne Beobachter alles sofort da); Preise in den Paket-Schildern
+   kommen aus PREISE (die eine Stelle für Zahlen), im HTML steht derselbe Wert für Besucher ohne JavaScript. */
 (function () {
-  var ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches, unterwegs = false;
-  document.addEventListener('click', function (e) {
-    var a = e.target.closest && e.target.closest('[data-endo-link]');
-    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
-    e.preventDefault();
-    if (unterwegs) return; unterwegs = true;
-    var ziel = a.href;
-    if (ruhig) { location.href = ziel; return; }
-    document.documentElement.classList.add('zu-endo');
-    setTimeout(function () { location.href = ziel; }, 520);
+  var P = window.PREISE;
+  if (P) [].forEach.call(document.querySelectorAll('[data-preis-stufe]'), function (b) {
+    var s = P.stufen.filter(function (x) { return x.id === b.getAttribute('data-preis-stufe'); })[0]; if (s) b.textContent = P.betrag(s);
   });
-  window.addEventListener('pageshow', function () { unterwegs = false; document.documentElement.classList.remove('zu-endo'); });
-  var jahr = document.querySelector('[data-jahr]'); if (jahr) jahr.textContent = new Date().getFullYear();
+  var rein = [].slice.call(document.querySelectorAll('.ab-rein'));
+  if (!rein.length || !('IntersectionObserver' in window)) return;
+  document.documentElement.classList.add('ab-bewegung');
+  var io = new IntersectionObserver(function (es) { es.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add('ist-da'); io.unobserve(x.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
+  rein.forEach(function (e) { io.observe(e); });
+  setTimeout(function () { rein.forEach(function (e) { if (e.getBoundingClientRect().top < window.innerHeight) e.classList.add('ist-da'); }); }, 2500);   /* Hintergrund-Tab */
 })();
+</script>
+<script>
+/* Jahr in der Fußzeile (ohne JavaScript steht das Jahr fest im HTML) */
+(function () { var jahr = document.querySelector('[data-jahr]'); if (jahr) jahr.textContent = new Date().getFullYear(); })();
 </script>
 <script>
 /* Kein Zoomen: Zwei-Finger-Zoom (Safari-Gesten) sperren. Doppeltippen und Pinch sperrt CSS (touch-action).

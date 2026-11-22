@@ -4,7 +4,7 @@
    Logik, Hilfsfunktionen, Lite-Modus, Watchdog, IntersectionObserver, visibilitychange, Context-Lost/Restored, fonts.ready-Neuaufbau und
    „Bewegung reduzieren“ sind 1:1 übernommen – nur React-State/Refs wurden zu normalem DOM (data-glass am Abschnitt, Neuaufbau nach Context-Restored
    = start() erneut). Kein three.js. Bündeln:
-     NODE_PATH=C:\Users\emrer\endo-bau\node_modules npx esbuild js/glas.quelle.js --bundle --minify --format=iife --target=es2019 --outfile=js/glas.js
+     npx esbuild js/glas.quelle.js --bundle --minify --format=iife --target=es2019 --outfile=js/glas.js
    Dazu: Leiste, Angebote (Schritt ① aus preise.js #angebote) und Formular im selben Glas-Stil (glas.css), Fußzeile. Prüfgriff: window.__glas. */
 import { FORM_MS, DOME, IDLE_S, SLOW_FRAME_S, SLOW_FRAMES, CRAWL_FRAME_S, VERT, FIELD, BLUR, GLASS } from './glas-vorlage.gen.js';
 
@@ -47,8 +47,8 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   const FEIN = html.classList.contains('glas-fein');
   /* Glas nahtlos (?glas=nahtlos): keine Fläche über dem Verlauf – er wird selbst nach unten weich dunkler (siehe GLASS_FEIN) */
   const NAHTLOS = FEIN && html.classList.contains('glas-nahtlos');
-  /* Blatt im Glas-Look (seit 04.10.2026 – Ausnahme auf ERGUNs Wunsch, html.blatt-glas fest in index.html): Titelbild „Webdesign und
-     Automatisierung“ als Glas-Schriftzug (versteckt bleibt „ERGUN.“ im h1), Fußzeile „ERGUN. · Webdesign und Automatisierung · © Jahr“, hinter dem
+  /* Blatt im Glas-Look (seit 04.10.2026 – Ausnahme auf ERGUNs Wunsch, html.blatt-glas fest in index.html): Titelbild „Webdesign“ als
+     Glas-Schriftzug (versteckt bleibt „ERGUN.“ im h1; bis 22.11.2026 „Webdesign und Automatisierung“), Fußzeile „ERGUN. · Webdesign · © Jahr“, hinter dem
      Riss derselbe Verlauf klar und gezeichnet (Glas-Bühne mit Linien, Lichtkanten, Körnung, Tiefe) */
   const GB = FEIN && html.classList.contains('blatt-glas');
   /* Ruhe (?ruhe=neu, 01.10.2026 – Emre: „Der Schriftzug zittert beim Laden und beim Scrollen“). Ursachen und Lösung:
@@ -67,7 +67,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
      der Vorlage) läuft rückwärts – und baut sich ganz oben wieder auf (Abstand der Schwellen gegen Flackern). Weg = keine Masken-Rechnung, kein
      Verschieben, der Verlauf malt ohne Glas-Rechnung (u_ohne). Unterzeile und Knöpfe scrollen ganz normal mit der Seite (kein transform). */
   const WEG = RUHE && html.classList.contains('schrift-weg');
-  /* Schwellen in Fensterhöhen: runter löst sich „Webdesign und Automatisierung“ ab WEG_AB auf, hoch kommt es ab WEG_ZURUECK zurück.
+  /* Schwellen in Fensterhöhen: runter löst sich „Webdesign“ ab WEG_AB auf, hoch kommt es ab WEG_ZURUECK zurück.
      04.10.2026 (ERGUN: „soll früher zu sehen sein beim Hochscrollen“): 0.08/0.035 → 0.14/0.08 – der Abstand zwischen beiden bleibt,
      damit der Schriftzug an der Schwelle nicht flackert. */
   const WEG_AB = 0.14, WEG_ZURUECK = 0.08, WEG_MS = 600;
@@ -128,11 +128,11 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
     if (NATIV) { titelEbene = el('canvas', 'glas-titel-ebene'); titelEbene.setAttribute('aria-hidden', 'true'); titelEbene.style.visibility = 'hidden'; root.insertBefore(titelEbene, root.firstChild); }
     root.style.background = 'transparent';
     /* je Zeichen ein <span>: die Abstände werden optisch ausgeglichen (abstaende()); der Text bleibt „ERGUN.“ für Suche und Screenreader */
-    if (GB) titleEl.innerHTML = '<span class="glas-versteckt">ERGUN. – </span><span class="ghr-word">Webdesign</span> <span class="ghr-word">und</span> <span class="ghr-word">Automatisierung</span>';   /* am Handy drei Zeilen (glas-marke.css) */
+    if (GB) titleEl.innerHTML = '<span class="glas-versteckt">ERGUN. · </span><span class="ghr-word">Webdesign</span>';
     else titleEl.innerHTML = '<span class="ghr-word">' + 'ERGUN.'.split('').map((z) => '<span class="glas-z">' + z + '</span>').join('') + '</span>';
   }
-  if (NAHTLOS) {   /* Emre (01.10. spät): im Titelbild steht „Websites und Automatisierung“ */
-    const d = root.querySelector('[data-glas-text]'); if (d) { d.textContent = 'Websites und Automatisierung'; d.classList.add('glas-unterzeile'); }
+  if (NAHTLOS) {   /* Unterzeile im Titelbild (seit 22.11.2026): der Satz aus index.html */
+    const d = root.querySelector('[data-glas-text]'); if (d) d.classList.add('glas-unterzeile');
   }
 
   /* ---------- Seite um den Hero: Altlasten raus, Angebote + Formular + Fußzeile im Glas-Stil ---------- */
@@ -140,8 +140,8 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   const haupt = $('main#inhalt'), P = window.PREISE;
   const fuss = el('footer', 'glas-fuss');
   fuss.innerHTML = '<div class="glas-fuss__zeile"><span class="glas-fuss__marke">ERGUN<span>.</span></span>' +
-    (GB ? '<span class="glas-fuss__satz">Webdesign und Automatisierung · © ' + new Date().getFullYear() + '</span>' : '') +
-    '<nav aria-label="Rechtliches"><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></nav></div>' +
+    (GB ? '<span class="glas-fuss__satz">Webdesign · © ' + new Date().getFullYear() + '</span>' : '') +
+    '<nav aria-label="Rechtliches"><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><a href="agb.html">AGB</a></nav></div>' +
     '<p class="glas-fuss__klein" data-glas-klein></p>' +
     ''   /* NASA-/Saturn-Hinweis entfernt (Emre, 02.10.2026): die Glas-Seite zeigt keine Planetenbilder; die Fassung ?titel=all hat ihren eigenen Hinweis */;
   if (haupt) haupt.parentNode.insertBefore(fuss, haupt.nextSibling);
@@ -165,13 +165,13 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   function angeboteHolen() {
     const a = document.getElementById('angebote'); if (!a) return false;
     a.classList.add('glas-angebote', 'glas-rein');
-    const h = a.querySelector('h2'); if (h) { h.className = 'glas-h2'; h.textContent = 'Was brauchen Sie?'; }
+    const h = a.querySelector('h2'); if (h) { h.className = 'glas-h2'; h.textContent = 'Preise'; }
     $$('.k-angebot', a).forEach((b) => {
       const wort = $('.k-angebot__wort', b), info = $('.k-angebot__info', b);
       const preis = info && info.querySelector('b') ? info.querySelector('b').textContent.trim() : '';
       const satz = info ? info.textContent.replace(preis, '').replace(/^\s*·\s*/, '').trim() : '';
       const teile = preis.split(' + ');
-      const behalten = $$('[data-glas-behalten]', b);   /* endo Werkbank (11.10.): Etikett + Lizenz-Hinweis aus preise.js bleiben unter dem Preis */
+      const behalten = $$('[data-glas-behalten]', b);   /* Stichpunkte aus preise.js bleiben unter dem Preis */
       b.classList.add('glas-karte'); b.innerHTML = '';
       b.appendChild(el('span', 'k-angebot__wort glas-karte__titel', wort ? wort.textContent : ''));
       b.appendChild(el('span', 'glas-karte__satz', satz));

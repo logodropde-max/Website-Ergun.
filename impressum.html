@@ -25,6 +25,9 @@ a { color:inherit; }
 a:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
 .zurueck { display:inline-block; margin-bottom:48px; color:var(--muted); text-decoration:none; font-size:.9rem; }
 .zurueck:hover { color:var(--text); }
+.platzhalter { padding:0 4px; border-radius:4px; background:#FFE14D; color:#0E0E0C; font-weight:600; }
+.recht { display:flex; flex-wrap:wrap; gap:4px 20px; margin-top:48px; padding-top:16px; border-top:1px solid var(--line); font-size:.9rem; }
+.recht a { color:var(--muted); text-decoration:none; } .recht a:hover { color:var(--text); }
 .hinweis { margin-top:48px; padding-top:16px; border-top:1px solid var(--line); color:var(--muted); font-size:.9rem; }
 </style>
 </head>
@@ -34,7 +37,7 @@ a:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
   <h1>Impressum</h1>
 
   <h2>Angaben gemäß § 5 DDG</h2>
-  <p>Emre Ergun<br>ERGUN. – Websites, Automatisierung &amp; KI<br>Gerberstraße 13<br>25336 Elmshorn</p>
+  <p>Emre Ergun<br>ERGUN. · Webdesign<br><mark class="platzhalter">[ADRESSE IMPRESSUM-SERVICE]</mark></p>
 
   <h2>Kontakt</h2>
   <p>Telefon: <a href="tel:+4915906344961">+49 1590 6344961</a><br>
@@ -48,6 +51,8 @@ a:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
 
   <h2>Streitbeilegung</h2>
   <p class="stumm">Ich bin nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+
+  <nav class="recht" aria-label="Rechtliches"><a href="datenschutz.html">Datenschutz</a><a href="agb.html">AGB</a></nav>
 </main>
 <script>
 /* Kein Zoomen: iPhone ignoriert user-scalable=no, daher Zwei-Finger-Zoom und Doppeltippen hier sperren */

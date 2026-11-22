@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta content="noindex, nofollow" name="robots">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<style>html{background:#17191C;color-scheme:dark}</style>
+<title>Elektro Rehder: Elektrotechnik für Haus und Betrieb · Beispielseite von ERGUN.</title>
+<meta name="description" content="Beispielseite von ERGUN. Elektrobetrieb mit Notdienst, Zählerschrank, Wallbox und Photovoltaik.">
+
+<style>
+/* Beispielseite von ERGUN. */
+:root{
+  --grund:#17191C; --grund-2:#1E2125; --linie:#2E3238;
+  --text:#F2F3F1; --text-2:#A9AEB3; --leise:#7C838A;
+  --warn:#FFC400; --warn-tief:#3A2E00;
+  --breit:1180px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--grund);color:var(--text);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--breit);margin:0 auto;padding-inline:clamp(18px,5vw,44px)}
+h1,h2,h3{font-family:"Archivo",system-ui,sans-serif;margin:0;
+  text-transform:uppercase;letter-spacing:.01em;line-height:.98}
+a{color:inherit}
+
+/* Hinweisband: das Erste, was man sieht. Ein Beispiel muss sich als
+   Beispiel zu erkennen geben, sonst ist es eine Behauptung. */
+.probe{background:var(--warn-tief);border-bottom:1px solid #5A4700;
+  font-size:13.5px;color:#FFD84D;padding:9px 0}
+.probe .wrap{display:flex;gap:10px 18px;flex-wrap:wrap;align-items:center}
+.probe b{font-variation-settings:"wght" 700}
+.probe a{margin-left:auto;color:#FFD84D}
+
+header{border-bottom:1px solid var(--linie);position:sticky;top:0;z-index:20;
+  background:rgba(23,25,28,.92);backdrop-filter:blur(8px)}
+.bar{display:flex;align-items:center;gap:18px;height:66px}
+.marke{font-family:"Archivo",sans-serif;font-variation-settings:"wdth" 78,"wght" 900;
+  font-size:21px;text-transform:uppercase;letter-spacing:.04em;text-decoration:none;
+  display:flex;align-items:center;gap:9px}
+.marke i{width:13px;height:22px;background:var(--warn);display:block;
+  clip-path:polygon(100% 0,32% 56%,66% 56%,0 100%,58% 44%,26% 44%)}
+nav{margin-left:auto;display:flex;gap:22px;align-items:center;font-size:15px}
+nav a{color:var(--text-2);text-decoration:none}
+nav a:hover{color:var(--text)}
+.notruf{background:var(--warn);color:#17191C;text-decoration:none;
+  font-family:"Archivo",sans-serif;font-variation-settings:"wdth" 82,"wght" 800;
+  text-transform:uppercase;font-size:14px;letter-spacing:.05em;padding:11px 16px}
+.notruf:hover{background:#FFD84D}
+
+/* Hero: eine Zahl trägt ihn, nicht ein Bild. Die Rufnummer ist bei
+   einem Elektrobetrieb das Produkt. */
+.hero{padding-block:clamp(48px,9vw,96px);border-bottom:1px solid var(--linie)}
+.hero h1{font-variation-settings:"wdth" 74,"wght" 900;
+  font-size:clamp(40px,7.2vw,88px);max-width:14ch}
+.hero h1 em{font-style:normal;color:var(--warn)}
+.hero p{max-width:46ch;color:var(--text-2);margin:22px 0 0;font-size:clamp(16px,2vw,19px)}
+.tel{display:inline-flex;align-items:baseline;gap:14px;margin-top:34px;
+  text-decoration:none;border:2px solid var(--warn);padding:14px 22px}
+.tel span{font-family:"Archivo",sans-serif;font-variation-settings:"wdth" 80,"wght" 700;
+  font-size:12px;letter-spacing:.14em;color:var(--warn)}
+.tel b{font-family:"Archivo",sans-serif;font-variation-settings:"wdth" 88,"wght" 800;
+  font-size:clamp(20px,3.4vw,28px);letter-spacing:.01em}
+.tel:hover{background:var(--warn-tief)}
+
+/* Leistungen als Tafel, nicht als Karten. Eine Zeile je Leistung. */
+.tafel{border-bottom:1px solid var(--linie)}
+.tafel .wrap{padding-block:clamp(42px,6vw,72px)}
+.eyebrow{font-family:"Archivo",sans-serif;font-variation-settings:"wdth" 80,"wght" 700;
+  font-size:12px;letter-spacing:.16em;color:var(--leise);margin:0 0 20px}
+.zeilen{border-top:1px solid var(--linie)}
+.zeilen > div{display:grid;grid-template-columns:52px minmax(0,1fr) minmax(0,1.5fr);
+  gap:18px;align-items:baseline;padding:20px 0;border-bottom:1px solid var(--linie)}
+.zeilen .nr{font-family:"Archivo",sans-serif;font-variation-settings:"wdth" 80,"wght" 700;
+  font-size:13px;color:var(--warn);letter-spacing:.06em}
+.zeilen h3{font-variation-settings:"wdth" 84,"wght" 800;font-size:clamp(18px,2.4vw,24px)}
+.zeilen p{margin:0;color:var(--text-2);font-size:15.5px}
+
+/* Notdienst: der eine Kasten, der herausstechen darf. */
+.notdienst{background:var(--warn);color:#17191C}
+.notdienst .wrap{padding-block:clamp(38px,5vw,60px);
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));
+  gap:26px;align-items:center}
+.notdienst h2{font-variation-settings:"wdth" 76,"wght" 900;font-size:clamp(30px,5.5vw,54px)}
+.notdienst p{margin:10px 0 0;font-size:17px;max-width:40ch}
+.notdienst a{justify-self:start;background:#17191C;color:var(--warn);text-decoration:none;
+  font-family:"Archivo",sans-serif;font-variation-settings:"wdth" 82,"wght" 800;
+  text-transform:uppercase;font-size:15px;letter-spacing:.05em;padding:15px 24px}
+
+.gebiet .wrap{padding-block:clamp(42px,6vw,72px);
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:30px}
+.gebiet h2{font-variation-settings:"wdth" 78,"wght" 800;font-size:clamp(24px,3.4vw,34px);
+  margin-bottom:14px}
+.gebiet ul{list-style:none;margin:0;padding:0;columns:2;column-gap:24px;
+  font-size:15.5px;color:var(--text-2)}
+.gebiet li{padding:5px 0}
+.fakten{border:1px solid var(--linie);padding:24px}
+.fakten dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:12px 18px;font-size:15.5px}
+.fakten dt{color:var(--leise)}
+.fakten dd{margin:0}
+
+footer{border-top:1px solid var(--linie);background:var(--grund-2)}
+footer .wrap{padding-block:34px;display:flex;flex-wrap:wrap;gap:12px 26px;
+  font-size:14.5px;color:var(--leise)}
+footer a{color:var(--text-2)}
+
+@media(max-width:620px){
+  .zeilen > div{grid-template-columns:38px minmax(0,1fr);row-gap:6px}
+  .zeilen p{grid-column:2}
+  nav a:not(.notruf){display:none}
+}
+@media(prefers-reduced-motion:no-preference){
+  .hero h1,.hero p,.tel{animation:auf .8s cubic-bezier(.32,.72,0,1) both}
+  .hero p{animation-delay:.08s}
+  .tel{animation-delay:.16s}
+  @keyframes auf{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+}
+
+/* ── Beim Lesen bewegt sich die Seite ──────────────────────
+   Dieselbe Bewegung wie auf der Hauptseite, damit es eine Handschrift
+   bleibt. Ohne Skript bekommt nichts die Klasse "da" - dafuer steht
+   im Kopf ein <noscript>, das alles sofort sichtbar macht. Eine leere
+   Seite ohne Skript waere der schlimmere Fehler. */
+.auf{opacity:0;transform:translateY(22px);filter:blur(5px);
+  transition:opacity .82s cubic-bezier(.32,.72,0,1),
+             transform .82s cubic-bezier(.32,.72,0,1),
+             filter .82s cubic-bezier(.32,.72,0,1);
+  transition-delay:var(--auf-warten,0ms)}
+.auf.da{opacity:1;transform:none;filter:none}
+@media(prefers-reduced-motion:reduce){
+  .auf{opacity:1;transform:none;filter:none;transition:none}
+}
+
+/* -- Die rechte Haelfte des Heros -------------------------
+   Dort stand nichts. Ein Bild waere die bequeme Antwort gewesen; die
+   ehrlichere ist die einzige Frage, die jemanden um 23 Uhr auf diese
+   Seite bringt: erreiche ich jetzt jemanden. Der Kasten rechnet aus der
+   Uhr des Besuchers, er behauptet nichts. */
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);
+  gap:clamp(28px,4vw,54px);align-items:end}
+.lage{border:1px solid var(--linie);background:var(--grund-2);padding:22px 24px;
+  align-self:end}
+.lage__kopf{display:flex;align-items:center;gap:10px;margin:0 0 16px;
+  font-family:"Archivo",sans-serif;font-variation-settings:"wdth" 82,"wght" 800;
+  text-transform:uppercase;font-size:13px;letter-spacing:.09em;color:var(--warn)}
+.lage__kopf i{width:8px;height:8px;border-radius:50%;background:var(--warn);flex:none}
+@media(prefers-reduced-motion:no-preference){
+  .lage__kopf i{animation:wache 2.6s cubic-bezier(.32,.72,0,1) infinite}
+  @keyframes wache{
+    0%{box-shadow:0 0 0 0 rgba(255,196,0,.5)}
+    70%{box-shadow:0 0 0 10px rgba(255,196,0,0)}
+    100%{box-shadow:0 0 0 0 rgba(255,196,0,0)}}
+}
+.lage dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:11px 16px;
+  font-size:15px}
+.lage dt{color:var(--leise)}
+.lage dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+@media(max-width:860px){
+  .hero .wrap{grid-template-columns:minmax(0,1fr)}
+  .lage{margin-top:8px}
+}
+</style>
+<noscript><style>.auf{opacity:1 !important;transform:none !important;filter:none !important}</style></noscript>
+<style>/* Schriften lokal (keine externen Dienste) */
+@font-face{font-family:"Archivo";src:url("schriften/archivo.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"IBM Plex Sans";src:url("schriften/plex-400.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"IBM Plex Sans";src:url("schriften/plex-500.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"IBM Plex Sans";src:url("schriften/plex-600.woff2") format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"IBM Plex Sans";src:url("schriften/plex-700.woff2") format("woff2");font-weight:700;font-display:swap}</style>
+<link href="../beispiel-balken.css" rel="stylesheet"><script defer src="../beispiel-balken.js"></script></head>
+<body>
+
+
+<header>
+  <div class="wrap bar">
+    <a class="marke" href="#top"><i aria-hidden="true"></i>Elektro Rehder</a>
+    <nav>
+      <a href="#leistungen">Leistungen</a>
+      <a href="#gebiet">Einsatzgebiet</a>
+      <a aria-disabled="true" data-nur-beispiel="" class="notruf" href="#">Notdienst</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Strom ist weg.<br><em>Wir sind da.</em></h1>
+        <p>Elektrotechnik für Haus und Betrieb in Elmshorn und im Kreis Pinneberg. Meisterbetrieb seit 1998, zwölf Leute, eigener Notdienst.</p>
+        <a aria-disabled="true" data-nur-beispiel="" class="tel" href="#">
+          <span>Notdienst rund um die Uhr</span>
+          <b>04121 9000</b>
+        </a>
+      </div>
+      <aside class="lage" data-lage="" hidden>
+        <p class="lage__kopf"><i aria-hidden="true"></i>Notdienst besetzt</p>
+        <dl>
+          <dt>Jetzt</dt><dd data-uhr=""></dd>
+          <dt>Büro</dt><dd data-buero=""></dd>
+          <dt>Anfahrt</dt><dd>Elmshorn und Umkreis</dd>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <section class="tafel" id="leistungen">
+    <div class="wrap">
+      <p class="eyebrow">Was wir machen</p>
+      <div class="zeilen">
+        <div class="auf">
+          <span class="nr">01</span>
+          <h3>Zählerschrank</h3>
+          <p>Erneuerung nach aktueller Norm, Anmeldung beim Netzbetreiber übernehmen wir.</p>
+        </div>
+        <div class="auf">
+          <span class="nr">02</span>
+          <h3>Wallbox</h3>
+          <p>Von der Leitungsberechnung bis zur Inbetriebnahme, inklusive Förderantrag.</p>
+        </div>
+        <div class="auf">
+          <span class="nr">03</span>
+          <h3>Photovoltaik</h3>
+          <p>Dachanlage mit Speicher, Planung und Montage aus einer Hand.</p>
+        </div>
+        <div class="auf">
+          <span class="nr">04</span>
+          <h3>Altbausanierung</h3>
+          <p>Neue Leitungen ohne die halbe Wohnung aufzustemmen.</p>
+        </div>
+        <div class="auf">
+          <span class="nr">05</span>
+          <h3>E-Check</h3>
+          <p>Prüfung ortsfester Anlagen und Geräte mit Protokoll für die Versicherung.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="notdienst auf">
+    <div class="wrap">
+      <div>
+        <h2>Nachts um drei geht auch jemand ran</h2>
+        <p>Kein Anrufbeantworter, kein Rückrufversprechen. Ein Monteur aus dem Kreis Pinneberg, meist in unter 60 Minuten vor Ort.</p>
+      </div>
+      <a aria-disabled="true" data-nur-beispiel="" href="#">04121 9000 anrufen</a>
+    </div>
+  </section>
+
+  <section class="gebiet" id="gebiet">
+    <div class="wrap">
+      <div class="auf">
+        <h2>Einsatzgebiet</h2>
+        <ul>
+          <li>Elmshorn</li>
+          <li>Pinneberg</li>
+          <li>Uetersen</li>
+          <li>Tornesch</li>
+          <li>Barmstedt</li>
+          <li>Wedel</li>
+          <li>Horst</li>
+          <li>Kölln-Reisiek</li>
+        </ul>
+      </div>
+      <div class="fakten auf">
+        <dl>
+          <dt>Gegründet</dt><dd>1998</dd>
+          <dt>Mitarbeiter</dt><dd>12, davon 3 Meister</dd>
+          <dt>Ausbildung</dt><dd>2 Lehrstellen je Jahr</dd>
+          <dt>Innung</dt><dd>Elektro-Innung Kreis Pinneberg</dd>
+          <dt>Bürozeiten</dt><dd>Mo bis Fr, 7 bis 16 Uhr</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Elektro Rehder GmbH, Industriestraße 4, 25335 Elmshorn</span>
+    <span>04121 9000</span>
+  </div>
+</footer>
+
+<script>
+/* Der Lagekasten im Hero.
+   Notdienst laeuft rund um die Uhr, das Buero Mo bis Fr von 7 bis 16 -
+   dieselben Zeiten, die weiter unten unter "Buerozeiten" stehen. Die
+   Uhr laeuft mit, damit der Kasten nicht nach Standbild aussieht. */
+(function () {
+  var kasten = document.querySelector('[data-lage]');
+  if (!kasten) return;
+  var uhr = kasten.querySelector('[data-uhr]');
+  var buero = kasten.querySelector('[data-buero]');
+
+  function zeigen() {
+    var n = new Date();
+    uhr.textContent = n.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr';
+    var werktag = n.getDay() >= 1 && n.getDay() <= 5;
+    var stunde = n.getHours() + n.getMinutes() / 60;
+    buero.textContent = (werktag && stunde >= 7 && stunde < 16)
+      ? 'ge\u00F6ffnet'
+      : 'geschlossen';
+    kasten.hidden = false;
+  }
+
+  zeigen();
+  setInterval(zeigen, 30000);
+})();
+</script>
+<script src="probe.js" defer></script>
+</body>
+</html>
