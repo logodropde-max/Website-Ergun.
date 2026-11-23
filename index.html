@@ -875,6 +875,7 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
 .auswahl__leer a[data-auswahl-treffen] { padding: 14px 8px; margin: 0 -8px; border-radius: 12px; }
 </style>
 <link rel="stylesheet" href="ergun-abschnitte.css?v=5">
+<link rel="stylesheet" href="ergun-edel.css?v=2">
 </head>
 <body>
 
@@ -943,7 +944,7 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
   <div class="ghr-content">
     <span class="ghr-eyebrow">Digitalstudio</span>
     <!-- seit 22.11.2026 („ERGUN.-Seite schöner“): ein klarer Verkaufssatz als echte Schrift statt des Glas-Worts „Webdesign“; der Preis kommt aus PREISE -->
-    <h1 class="ghr-title" data-glas-titel><span class="glas-versteckt">ERGUN. Webdesign: </span><span class="glas-klartext">Websites, die Kunden bringen.</span></h1>
+    <h1 class="ghr-title" data-glas-titel><span class="glas-versteckt">ERGUN. Webdesign: </span><span class="glas-klartext">Websites, die <em class="edel-akzent">Kunden bringen.</em></span></h1>
     <p class="ghr-desc" data-glas-text>Für Selbstständige und kleine Betriebe. Festpreis ab&nbsp;<span data-preis-ab>290&nbsp;€</span>.</p>
     <div class="ghr-actions">
       <a class="ghr-btn ghr-primary" href="#kontakt" data-glas-ziel="kontakt">Anfrage starten<svg class="ghr-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
@@ -1082,12 +1083,12 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
 </footer>
 
 <!-- preise.js vor dem Titelbild-Skript: glas.js liest beim Start window.PREISE (Kleingedrucktes in der Fußzeile) – so ist die Reihenfolge immer gleich (07.10.2026) -->
-<script src="js/preise.js?v=45"></script>
+<script src="js/preise.js?v=46"></script>
 <script>
 /* Glas-Startseite (js/glas.js) gleich nach den Preisen */
 (function () {
   function laden(s) { var e = document.createElement('script'); e.src = s; e.async = false; document.body.appendChild(e); }
-  laden('js/glas.js?v=26');
+  laden('js/glas.js?v=27');
 })();
 </script>
 <script>
@@ -1122,17 +1123,9 @@ html.blatt-glas .papier__hinweis i { background: #FFFFFF; }
     if (!e) { auswahlBox.innerHTML = leerHtml; return; }
     var dl = document.createElement('dl'); dl.className = 'auswahl__liste';
     if (e.stufe) dl.appendChild(zeile('Website', e.stufe.name + ' · ' + P.betrag(e.stufe)));
-    e.extras.forEach(function (m) { dl.appendChild(zeile(m.name + (m.anzahl > 1 ? ' × ' + m.anzahl : ''), P.betrag(m))); });
-    if (e.anfrage.length) dl.appendChild(zeile('Auf Anfrage', e.anfrage.map(function (x) { return x.name; }).join(', ')));
-    if (e.betreuung) dl.appendChild(zeile('Betreuung', e.betreuung.name + ' · ' + P.euro(e.betreuungMonat) + M + (e.selbst ? ' (Hosting selbst)' : '')));
-    else if (e.stufe) { var ob = zeile('Betreuung', L.betreuung.ohne); ob.className = 'auswahl__ohne'; var os = document.createElement('small'); os.textContent = L.betreuung.ohneSatz; ob.querySelector('dd').appendChild(os); dl.appendChild(ob); }   /* Auftrag 28: ohne Betreuung + was der Kunde selbst übernimmt */
-    var ab = e.ab ? 'ab ' : '';
     auswahlBox.innerHTML = ''; auswahlBox.appendChild(dl);
-    /* nur zwei Summen (einmalig · monatlich), das erste Jahr klein darunter */
-    var su = document.createElement('div'); su.className = 'auswahl__summen';
-    [['einmalig', ab + P.euro(e.einmalig)], ['monatlich', P.euro(e.monatlich) + M]].forEach(function (x) { var d = document.createElement('p'), t = document.createElement('span'), b = document.createElement('b'); t.textContent = x[0]; b.textContent = x[1]; d.appendChild(t); d.appendChild(b); su.appendChild(d); });
-    auswahlBox.appendChild(su);
-    var j = document.createElement('small'); j.className = 'auswahl__jahr'; j.textContent = 'Im ersten Jahr ' + ab + P.euro(e.jahr) + '. ' + P.klein + ' ' + P.steuer; auswahlBox.appendChild(j);
+    /* seit 23.11.2026: keine Summen mehr – der feste Preis kommt nach dem Erstgespräch */
+    var j = document.createElement('small'); j.className = 'auswahl__jahr'; j.textContent = P.klein + ' ' + P.steuer; auswahlBox.appendChild(j);
   }
   document.addEventListener('preise:auswahl', auswahlZeigen);
   auswahlZeigen();

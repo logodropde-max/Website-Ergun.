@@ -41,19 +41,27 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   const html = document.documentElement, frage = new URLSearchParams(location.search);
   /* Ruhiger Hintergrund (seit 22.11.2026, „langsam fließendes Licht statt Wirbel“): dieselben Farbfamilien wie die Vorlage, aber gedämpft –
      Glut statt grellem Orange, Rosa und Creme nur noch als Hauch (siehe FIELD_RUHIG). Vorher: ['#0D0A14', '#FF5A1F', '#FF9EC1', '#2F4CFF', '#FFE6B8']. */
-  const COLORS = ['#0B0C17', '#D4642F', '#B98CA6', '#2B44B8', '#EAD7B6'];
+  /* Dunkel & edel (23.11.2026): eine ruhige Farbwelt – fast Schwarz, Bronze, gedämpftes Violett, Nachtblau, Champagner. Vorher: ['#0B0C17', '#D4642F', '#B98CA6', '#2B44B8', '#EAD7B6']. */
+  const COLORS = ['#07070C', '#8C6A48', '#5E5279', '#1A2142', '#E9DCC4'];
   const palette = paletteOf(COLORS);
   /* Farbwechsel (seit 22.11.2026, „Hintergrund interessanter, Farbwechsel immer wieder“): der Verlauf wandert langsam und ohne Ende durch fünf
      Farbwelten – je FARB_MS ganz weich (smoothstep) in die nächste. Grund immer dunkel, damit Text und Karten lesbar bleiben.
      Nach der echten Zeit, nicht nach dem Fluss-Tempo; „Bewegung reduzieren“: es wird nicht neu gemalt, die erste Welt bleibt stehen. */
-  const FARBWELTEN = [
-    COLORS,                                                     /* Glut: Orange, Rosa, Blau */
-    ['#06111C', '#1FA6A0', '#6E8BFF', '#1B3F9E', '#CFF4EE'],   /* Ozean: Türkis, Himmelblau */
-    ['#0D0918', '#9B4DFF', '#FF6FB5', '#3A2C9E', '#F3D9FF'],   /* Violett: Lila, Pink */
-    ['#07120F', '#2FBF71', '#7FD8FF', '#14506B', '#E2FFD6'],   /* Aurora: Grün, Eisblau */
-    ['#140A10', '#FF7A45', '#FFB84D', '#8A2C6E', '#FFE9C7']    /* Abendrot: Orange, Gold, Beere */
-  ].map(paletteOf);
-  const FARB_MS = 9000;
+  /* Hintergrund-Varianten (Vorschau 23.11.2026, Emre: „zu schlicht“): #hg-a Mehr Licht · #hg-b Sanfter Wechsel · #hg-c Farbig wie vorher, aber ruhiger */
+  const HG = ((location.hash.match(/hg-([abc])/) || [])[1]) || window.ERGUN_HG || 'b';
+  html.classList.add('hg-' + HG);
+  const HG_WELTEN = {
+    a: [['#0A0910', '#C08A52', '#7D66AE', '#24316E', '#F3E4C6']],
+    b: [COLORS,
+        ['#080A1A', '#5163C2', '#8C70C4', '#1E2A68', '#DDD6F6'],   /* Nachtblau-Violett */
+        ['#110A0F', '#B9727C', '#CFA67F', '#3B2442', '#F4DED3']],  /* Rosé-Gold */
+    c: [['#0B0C17', '#D4642F', '#B98CA6', '#2B44B8', '#EAD7B6'],
+        ['#06111C', '#1FA6A0', '#6E8BFF', '#1B3F9E', '#CFF4EE'],
+        ['#0D0918', '#9B4DFF', '#FF6FB5', '#3A2C9E', '#F3D9FF'],
+        ['#140A10', '#FF7A45', '#FFB84D', '#8A2C6E', '#FFE9C7']]
+  };
+  const FARBWELTEN = HG_WELTEN[HG].map(paletteOf);
+  const FARB_MS = HG === 'c' ? 14000 : 18000;   /* langsamer als vorher (9 s) */
   function farbenJetzt(ms) {
     const x = ms / FARB_MS, i = Math.floor(x) % FARBWELTEN.length, j = (i + 1) % FARBWELTEN.length;
     const f = x - Math.floor(x), t = f * f * (3 - 2 * f);
@@ -188,7 +196,7 @@ function orbit(t) { return [0.5 + 0.32 * Math.sin(t * 0.37), 0.56 + 0.16 * Math.
   function angeboteHolen() {
     const a = document.getElementById('angebote'); if (!a) return false;
     a.classList.add('glas-angebote', 'glas-rein');
-    const h = a.querySelector('h2'); if (h) { h.className = 'glas-h2'; h.textContent = 'Preise'; }
+    const h = a.querySelector('h2'); if (h) { h.className = 'glas-h2'; }   /* Titel kommt aus LEITFADEN.art.titel (seit 23.11.2026) */
     $$('.k-angebot', a).forEach((b) => {
       const wort = $('.k-angebot__wort', b), info = $('.k-angebot__info', b);
       const preis = info && info.querySelector('b') ? info.querySelector('b').textContent.trim() : '';

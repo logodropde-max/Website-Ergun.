@@ -1,0 +1,144 @@
+/* ERGUN. – Richtung „dunkel & edel“ (23.11.2026, Ausnahme auf Emres Wunsch: nur Optik, Inhalt unverändert).
+   Wird als letztes Stylesheet geladen und legt sich über glas.css / glas-fein.css / ergun-abschnitte.css.
+   Idee: fast schwarzer Grund, ruhiges Licht ohne Farbwechsel, Champagner als einzige Akzentfarbe, feine Kanten statt bunter Flächen. */
+
+:root {
+  --e-grund: #07070B;
+  --e-champ: #E9DCC4;
+  --e-champ-tief: #C9B28F;
+  --e-kante: rgba(233, 220, 196, 0.12);
+  --e-kante-stark: rgba(233, 220, 196, 0.42);
+  --e-flaeche: linear-gradient(180deg, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.012) 100%);
+  --e-schatten: 0 1px 0 0 rgba(255, 255, 255, 0.07) inset, 0 40px 80px -40px rgba(0, 0, 0, 0.85);
+  --g-grund: var(--e-grund);
+  --g-creme: var(--e-champ);
+}
+
+html.titel-glas, html.titel-glas body { background: var(--e-grund); }
+
+/* ── Hintergrund: Verlauf bleibt, wird aber tiefer und ruhiger (Vignette + nach unten dunkler) ── */
+.glas-buehne::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(130% 90% at 50% 10%, rgba(7, 7, 11, 0) 35%, rgba(7, 7, 11, 0.6) 100%),
+    linear-gradient(180deg, rgba(7, 7, 11, 0.05) 0%, rgba(7, 7, 11, 0.35) 55%, rgba(7, 7, 11, 0.55) 100%);
+}
+
+/* ── Kopfleiste: dunkleres Glas, feine Champagner-Kante ── */
+html.titel-glas .glas-kopf { background: rgba(7, 7, 11, 0.55); border-color: var(--e-kante);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.05) inset, 0 20px 40px -24px rgba(0, 0, 0, 0.8); }
+.glas-kopf__links a { color: rgba(255, 255, 255, 0.78); transition: color 200ms ease; }
+@media (hover: hover) { .glas-kopf__links a:hover { color: var(--e-champ); } }
+
+/* ── Hero: etwas leichter und luftiger, „Kunden bringen.“ als edler Serifen-Akzent ── */
+html.glas-fein .glas-hero .ghr-title { font-weight: 600; letter-spacing: -0.03em; word-spacing: 0.1em; line-height: 0.98; }
+.glas-hero .edel-akzent {
+  font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; word-spacing: 0;
+  background: linear-gradient(100deg, #F6EEDF 0%, var(--e-champ) 40%, var(--e-champ-tief) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; padding: 0 0.04em 0.06em 0;
+}
+html.glas-fein .glas-hero .ghr-title .edel-akzent { font-size: 1.12em; }
+html.glas-nahtlos .glas-hero .ghr-desc.glas-unterzeile { color: rgba(255, 255, 255, 0.72); font-weight: 400; }
+html.glas-nahtlos .glas-hero .ghr-desc.glas-unterzeile b, html.glas-nahtlos .glas-hero .ghr-desc.glas-unterzeile strong { color: var(--e-champ); font-weight: 600; }
+.glas-hero .ghr-primary { background: #F6F1E8; color: #0B0A08; box-shadow: 0 10px 30px -10px rgba(233, 220, 196, 0.35); }
+@media (hover: hover) and (pointer: fine) { .glas-hero .ghr-primary:hover { background: #FFFFFF; } }
+.glas-hero .ghr-secondary { background: rgba(255, 255, 255, 0.04); border-color: var(--e-kante); }
+
+/* ── Überschriften der Abschnitte: kleine Champagner-Linie darüber, etwas leichter ── */
+html.glas-fein .glas-h2, html.glas-fein .mf-titel { font-weight: 600; letter-spacing: -0.03em; word-spacing: 0.08em; }
+.ab-abschnitt .glas-h2::before, .glas-angebote .glas-h2::before {
+  content: ""; display: block; width: 40px; height: 1px; margin: 0 auto 22px;
+  background: linear-gradient(90deg, transparent, var(--e-champ), transparent);
+}
+
+/* ── Ablauf ── */
+.ab-schritte { background: var(--e-flaeche) !important; border: 1px solid var(--e-kante) !important; box-shadow: var(--e-schatten);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+.ab-schritt__nr { color: var(--e-champ) !important; border-color: rgba(233, 220, 196, 0.35) !important;
+  background: rgba(233, 220, 196, 0.06) !important; font-variant-numeric: tabular-nums; }
+.ab-schritt p { color: rgba(255, 255, 255, 0.62); }
+
+/* ── Preis-Karten ── */
+html.titel-glas .glas-angebote .glas-karte { background: var(--e-flaeche); border: 1px solid var(--e-kante); box-shadow: var(--e-schatten);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); transition: border-color 300ms ease, transform 300ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 300ms ease; }
+@media (hover: hover) and (pointer: fine) {
+  html.titel-glas .glas-angebote .glas-karte:hover { border-color: rgba(233, 220, 196, 0.28); transform: translateY(-3px); }
+}
+html.titel-glas .glas-angebote .ist-empfehlung .glas-karte {
+  border-color: var(--e-kante-stark);
+  background: linear-gradient(180deg, rgba(233, 220, 196, 0.08) 0%, rgba(255, 255, 255, 0.015) 60%);
+  box-shadow: 0 1px 0 0 rgba(233, 220, 196, 0.3) inset, 0 0 0 1px rgba(233, 220, 196, 0.08), 0 50px 100px -40px rgba(201, 178, 143, 0.28);
+}
+.glas-angebote .k-schild { background: var(--e-champ); color: #14110C; border: 0; letter-spacing: 0.04em; }
+.glas-angebote .glas-karte__satz { color: rgba(255, 255, 255, 0.58); }
+.glas-angebote .glas-karte__preis b { color: #FFFFFF; }
+.glas-angebote .ist-empfehlung .glas-karte__preis b { background: linear-gradient(100deg, #FFF8EC, var(--e-champ) 60%, var(--e-champ-tief));
+  -webkit-background-clip: text; background-clip: text; color: transparent; }
+.glas-angebote .k-angebot__punkt { color: rgba(255, 255, 255, 0.78); }
+.glas-angebote .k-angebot__punkt svg, .glas-angebote .k-angebot__punkt::before { color: var(--e-champ); }
+.k-beispiele__link { color: rgba(255, 255, 255, 0.8); text-decoration-color: rgba(233, 220, 196, 0.35); }
+@media (hover: hover) { .k-beispiele__link:hover { color: var(--e-champ); } }
+.glas-angebote .mf-angebote__direkt { border-color: var(--e-kante); background: rgba(255, 255, 255, 0.03); }
+.mf-unternehmen { color: rgba(255, 255, 255, 0.55); }
+
+/* ── Anfrage ── */
+.mf-person img { box-shadow: 0 0 0 1px var(--e-kante-stark), 0 10px 30px -10px rgba(0, 0, 0, 0.8); }
+.mf-satz { color: rgba(255, 255, 255, 0.6); }
+.anfrage .auswahl { background: var(--e-flaeche); border-color: var(--e-kante); }
+.anfrage .field input, .anfrage .field textarea, .anfrage .field select { border-color: var(--e-kante) !important; background-color: rgba(255, 255, 255, 0.025) !important; }
+.anfrage .field input:focus-visible, .anfrage .field textarea:focus-visible, .anfrage .field select:focus-visible {
+  border-color: rgba(233, 220, 196, 0.6) !important; box-shadow: 0 0 0 3px rgba(233, 220, 196, 0.12) !important; background-color: rgba(255, 255, 255, 0.04) !important; }
+.anfrage .weg__option span { border-color: var(--e-kante); background: rgba(255, 255, 255, 0.025); }
+html.titel-glas body .anfrage__senden { background: #F6F1E8; color: #0B0A08; box-shadow: 0 14px 40px -14px rgba(233, 220, 196, 0.35); }
+.form__hint { color: rgba(255, 255, 255, 0.5); }
+
+/* ── Fußzeile: feine Linie oben, kein verwaister Punkt mehr ── */
+.glas-fuss { border-top: 1px solid rgba(233, 220, 196, 0.08); }
+html.blatt-glas .glas-fuss__satz { color: rgba(255, 255, 255, 0.55); }
+html.blatt-glas .glas-fuss__satz::before { content: none; }
+.glas-fuss__klein { color: rgba(255, 255, 255, 0.4); }
+
+/* ── Kopfleiste: der bunte Streifen (Orange/Rosa/Blau) weicht einem neutralen, dunklen Glas ── */
+html.glas-nahtlos.schrift-weg .glas-kopf,
+html.glas-nahtlos.schrift-weg[data-glas-lite="true"] .glas-kopf,
+html.glas-fein .glas-kopf { background: rgba(9, 9, 13, 0.62) !important; border-color: var(--e-kante) !important; }
+/* Logo: kühles Blau → warmes Silber-Champagner, passend zum Akzent */
+html.marke-glas :is(.glas-kopf__marke, .glas-fuss__marke) { filter: grayscale(1) sepia(0.3) brightness(1.45) contrast(1.05) drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.4)); }
+
+/* ── Anfrage ohne Summenspalte: Formular mittig statt links mit leerer rechter Hälfte ── */
+@media (min-width: 1024px) {
+  .mf:not(.mit-summe) .mf__raster { justify-items: center; }
+  .mf:not(.mit-summe) .mf__haupt { width: min(100%, 720px); }
+}
+
+/* ── Schwebender „Anfrage“-Knopf am Handy: Champagner statt Nachtblau ── */
+.anfrage-fix { background: #F6F1E8 !important; color: #0B0A08 !important; border-color: transparent !important;
+  box-shadow: 0 14px 34px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(233, 220, 196, 0.25) !important; }
+
+/* ── Hintergrund-Varianten (Vorschau): a und c mit leichterem Schleier, damit mehr Licht und Farbe durchkommt ── */
+html.hg-a .glas-buehne::after, html.hg-c .glas-buehne::after {
+  background:
+    radial-gradient(140% 100% at 50% 10%, rgba(7, 7, 11, 0) 50%, rgba(7, 7, 11, 0.45) 100%),
+    linear-gradient(180deg, rgba(7, 7, 11, 0) 0%, rgba(7, 7, 11, 0.18) 60%, rgba(7, 7, 11, 0.35) 100%);
+}
+html.hg-b .glas-buehne::after {
+  background:
+    radial-gradient(135% 95% at 50% 10%, rgba(7, 7, 11, 0) 45%, rgba(7, 7, 11, 0.5) 100%),
+    linear-gradient(180deg, rgba(7, 7, 11, 0) 0%, rgba(7, 7, 11, 0.25) 60%, rgba(7, 7, 11, 0.45) 100%);
+}
+
+/* ── Richtungen statt Pakete (23.11.2026): „Bei jeder Website dabei“ über den Karten, Hinweise darunter ── */
+.mf-immer { max-width: 860px; margin: 0 auto 36px; text-align: center; }
+.mf-immer__titel { margin: 0 0 14px; font-size: 14px; color: rgba(255, 255, 255, 0.55); }
+.mf-immer__liste { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.mf-immer__liste li { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px; font-size: 14px; line-height: 1.2;
+  color: rgba(255, 255, 255, 0.82); border: 1px solid var(--e-kante); background: rgba(255, 255, 255, 0.03); }
+.mf-immer__liste svg { width: 14px; height: 14px; flex: none; color: var(--e-champ); }
+.mf-gespraech { max-width: 620px; margin: 28px auto 6px; text-align: center; font-size: 16px; line-height: 1.55; color: rgba(255, 255, 255, 0.8); }
+.mf-betreuung-hinweis { max-width: 620px; margin: 0 auto 6px; text-align: center; font-size: 14px; line-height: 1.5; color: rgba(255, 255, 255, 0.5); }
+@media (max-width: 599px) {
+  .mf-immer__liste { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); text-align: left; }
+  .mf-immer__liste li { font-size: 13px; padding: 8px 12px; }
+}
+/* Handy: jede Karte so hoch wie ihr Inhalt (keine Lücke über dem Preis) */
+@media (max-width: 759px) { .glas-angebote .mf-angebote__liste { grid-auto-rows: auto !important; } }
