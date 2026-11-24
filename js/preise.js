@@ -25,8 +25,11 @@ window.PREISE = {
       punkte: [{ t: 'Alles aus Auftritt' }, { t: 'Video von uns, auch als Reel zum Posten' }, { t: '3D-Element und Online-Terminbuchung' }, { t: '3 Monate Betreuung inklusive' }],
       beispiele: [{ name: 'Orbis', pfad: 'beispiele/orbis/' }, { name: 'Lumora', pfad: 'beispiele/lumora/' }] }
   ],
+  /* Seit 24.11.2026 (Ausnahme auf Emres Wunsch: keine Pakete, alles individuell): nur ein Einstiegspreis + was möglich ist */
+  einstieg: 290,
+  leistungen: ['Kontakt per WhatsApp', 'Fotos und Video', '3D und Bewegung', 'Online-Termine', 'Google-Profil', 'Betreuung'],
   /* bei jeder Website dabei – steht einmal über den Karten */
-  immer: ['Gestaltung nach Ihren Wünschen', 'Texte von uns', 'Für Handy und PC', 'Bei Google auffindbar', 'Impressum und Datenschutz', 'Sie sehen alles vorab', 'Die Website gehört Ihnen'],
+  immer: ['Texte von uns', 'Für Handy und PC', 'Sie sehen alles vorab', 'Die Website gehört Ihnen'],
   /* ② Extras – nur noch vier (seit 22.11.2026; „10 weitere Bilder“ entfällt, Bilder sind in jedem Paket unbegrenzt). Google-Profil: Ausnahme auf ERGUNs Wunsch. */
   extras: [
     { gruppe: 'Inhalte', eintraege: [
@@ -57,7 +60,8 @@ window.BEGRIFFE = {
 
 /* Texte des Ablaufs (Stimme „wir“). Keine Zahlen hier – Preise kommen immer aus PREISE. */
 window.LEITFADEN = {
-  art: { titel: 'Jede Website wird individuell für Sie geplant', immer: 'Bei jeder Website dabei', direkt: 'Lieber gleich schreiben', beispiele: 'Beispiele:',
+  art: { titel: 'Jede Website wird individuell für Sie geplant', satz: 'Sie erzählen uns, was Sie vorhaben. Wir planen Ihre Website und nennen Ihnen danach einen festen Preis, bevor wir anfangen.',
+    moeglich: 'Was möglich ist', knopf: 'Kostenloses Erstgespräch anfragen', immer: 'Bei jeder Website dabei', direkt: 'Lieber gleich schreiben', beispiele: 'Beispiele:',
     betreuung: 'Betreuung auf Wunsch: 25\u00a0€ im Monat für Hosting, Updates, Sicherheit und kleine Textänderungen.' },
   unternehmen: 'Alle Angebote richten sich ausschließlich an Unternehmen und Selbstständige.',
   website: { titel: 'Extras und Betreuung', satz: 'Beides ist optional.', alles: 'Alles, was drin ist', extras: 'Extras hinzufügen (optional)' },
@@ -161,52 +165,27 @@ window.LEITFADEN = {
     angebote.classList.toggle('hat-wahl', !!A.stufe);
   }
   (function () {
-    angebote = el('div', 'mf-angebote'); angebote.id = 'angebote'; angebote.setAttribute('data-mf-angebote', '');
+    /* Seit 24.11.2026: keine Pakete mehr – Titel, Satz, ein Einstiegspreis, was möglich ist, was immer dabei ist, Beispiele, ein Knopf */
+    angebote = el('div', 'mf-angebote mf-individuell'); angebote.id = 'angebote'; angebote.setAttribute('data-mf-angebote', '');
     angebote.appendChild(el('h2', 'hinweis-versteckt', L.art.titel));
+    var pr = el('p', 'mf-ind__preis'); pr.appendChild(el('span', 'mf-ind__ab', 'Websites ab ')); pr.appendChild(el('b', '', P.euro(P.einstieg)));
+    pr.appendChild(el('span', 'mf-ind__gespraech', ' · fester Preis nach dem kostenlosen Erstgespräch')); angebote.appendChild(pr);
+    var mg = el('div', 'mf-ind__moeglich'); mg.appendChild(el('h3', 'mf-ind__titel', L.art.moeglich));
+    var ml = el('ul', 'mf-ind__kacheln'); P.leistungen.forEach(function (t) { var li = el('li'); li.innerHTML = HAKEN; li.appendChild(el('span', '', t)); ml.appendChild(li); });
+    mg.appendChild(ml); angebote.appendChild(mg);
     var immer = el('div', 'mf-immer'); immer.appendChild(el('p', 'mf-immer__titel', L.art.immer));
     var iu = el('ul', 'mf-immer__liste'); P.immer.forEach(function (t) { var li = el('li'); li.innerHTML = HAKEN; li.appendChild(document.createTextNode(t)); iu.appendChild(li); });
     immer.appendChild(iu); angebote.appendChild(immer);
-    var aliste = el('div', 'mf-angebote__liste'); aliste.setAttribute('role', 'group'); aliste.setAttribute('aria-label', L.art.titel);
-    P.stufen.forEach(function (s) {
-      var b = el('button', 'k-angebot'); b.type = 'button'; b.setAttribute('data-angebot', s.id); b.setAttribute('aria-pressed', 'false');
-      b.appendChild(el('span', 'k-angebot__wort', s.name));
-      var info = el('span', 'k-angebot__info k-sans'); info.appendChild(el('b', '', P.betrag(s))); info.appendChild(document.createTextNode(' · ' + s.fuer)); b.appendChild(info);
-      var pu = el('span', 'k-angebot__punkte'); pu.setAttribute('data-glas-behalten', '');
-      s.punkte.map(function (p) { return p.t; }).forEach(function (t) { var z = el('span', 'k-angebot__punkt'); z.innerHTML = HAKEN; z.appendChild(document.createTextNode(t)); pu.appendChild(z); });
-      b.appendChild(pu);
-      b.addEventListener('click', function () { A.stufe = s.id; neu(); gehe('anfrage', 1); });
-      /* Beispiele (seit 22.11.2026): zwei schlichte Text-Links unten in der Karte, neuer Tab. Ein Link darf nicht im Knopf liegen –
-         darum stehen Knopf und Zeile gemeinsam in einer Zelle, die Zeile liegt optisch im unteren Rand der Karte. */
-      var zelle = el('div', 'k-zelle' + (s.empfehlung ? ' ist-empfehlung' : '')); zelle.appendChild(b);
-      /* Schild „Empfehlung“ (Ausnahme auf ERGUNs Wunsch) – liegt in der Zelle über der Kartenkante, für Vorleser im Knopf-Namen */
-      if (s.empfehlung) { var sch = el('span', 'k-schild', 'Empfehlung'); sch.setAttribute('aria-hidden', 'true'); zelle.appendChild(sch); b.setAttribute('aria-label', s.name + ', ' + P.betrag(s) + ', Empfehlung'); }
-      if (s.beispiele && s.beispiele.length) {
-        var bz = el('p', 'k-beispiele'); bz.appendChild(el('span', 'k-beispiele__wort', L.art.beispiele));
-        s.beispiele.forEach(function (x) {
-          var a = el('a', 'k-beispiele__link', x.name); a.href = x.pfad; a.target = '_blank'; a.rel = 'noopener';
-          a.setAttribute('aria-label', x.name + ' ansehen (Beispielseite, neuer Tab)');
-          var pf = el('span', 'k-beispiele__pfeil', '↗'); pf.setAttribute('aria-hidden', 'true'); a.appendChild(pf);
-          bz.appendChild(a);
-        });
-        zelle.appendChild(bz); zelle.classList.add('mit-beispielen');
-        /* Platzhalter im Knopf mit demselben Text: reserviert genau die Höhe der Zeile (auch wenn sie umbricht) – nichts überlappt */
-        var platz = el('span', 'k-beispiele k-beispiele--platz'); platz.setAttribute('aria-hidden', 'true'); platz.setAttribute('data-glas-behalten', '');
-        [].forEach.call(bz.children, function (c) { platz.appendChild(el('span', c.className, c.textContent)); });
-        b.appendChild(platz);
-      }
-      aliste.appendChild(zelle);
-    });
-    angebote.appendChild(aliste);
-    /* darunter: fester Preis nach dem Gespräch, Betreuung als Zeile, nur für Unternehmen */
-    angebote.appendChild(el('p', 'mf-gespraech', P.klein));
-    angebote.appendChild(el('p', 'mf-betreuung-hinweis', L.art.betreuung));
+    var bz = el('p', 'mf-ind__beispiele'); bz.appendChild(el('span', 'mf-ind__bwort', L.art.beispiele));
+    P.stufen.forEach(function (s) { (s.beispiele || []).forEach(function (x) {
+      var a = el('a', 'k-beispiele__link', x.name); a.href = x.pfad; a.target = '_blank'; a.rel = 'noopener';
+      a.setAttribute('aria-label', x.name + ' ansehen (Beispielseite, neuer Tab)');
+      var pf = el('span', 'k-beispiele__pfeil', '↗'); pf.setAttribute('aria-hidden', 'true'); a.appendChild(pf); bz.appendChild(a); }); });
+    angebote.appendChild(bz);
+    var kz = el('div', 'mf-ind__knopfzeile'); var kn = el('button', 'mf-ind__knopf', L.art.knopf + ' →'); kn.type = 'button';
+    kn.addEventListener('click', function () { A.stufe = null; neu(); gehe('anfrage', 1); });
+    kz.appendChild(kn); angebote.appendChild(kz);
     angebote.appendChild(el('p', 'mf-unternehmen', L.unternehmen));
-    /* darunter: „Lieber gleich schreiben“ */
-    var azeile = el('div', 'mf-linkzeile mf-angebote__zeile');
-    var adirekt = el('button', 'mf-link mf-angebote__direkt', L.art.direkt + ' →'); adirekt.type = 'button';
-    adirekt.addEventListener('click', function () { A.stufe = null; neu(); gehe('anfrage', 1); });
-    azeile.appendChild(adirekt);
-    angebote.appendChild(azeile);
     var ainnen = q('.preise__innen'); ainnen.insertBefore(angebote, ainnen.firstChild);
   })();
 

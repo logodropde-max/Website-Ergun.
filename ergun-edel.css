@@ -142,3 +142,40 @@ html.hg-b .glas-buehne::after {
 }
 /* Handy: jede Karte so hoch wie ihr Inhalt (keine Lücke über dem Preis) */
 @media (max-width: 759px) { .glas-angebote .mf-angebote__liste { grid-auto-rows: auto !important; } }
+
+/* ── Individuell statt Pakete (24.11.2026) ── */
+.mf-individuell { text-align: center; }
+.mf-ind__satz { max-width: 620px; margin: 0 auto 20px; font-size: 17px; line-height: 1.55; color: rgba(255, 255, 255, 0.72); }
+.mf-ind__preis { margin: 0 0 44px; font-size: 17px; color: rgba(255, 255, 255, 0.65); }
+.mf-ind__preis b { font-size: clamp(30px, 3.2vw, 40px); font-weight: 600; letter-spacing: -0.03em;
+  background: linear-gradient(100deg, #FFF8EC, var(--e-champ) 60%, var(--e-champ-tief)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.mf-ind__titel { margin: 0 0 16px; font-size: 14px; font-weight: 500; color: rgba(255, 255, 255, 0.55); }
+.mf-ind__moeglich { max-width: 960px; margin: 0 auto 36px; }
+.mf-ind__kacheln { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; text-align: left; }
+.mf-ind__kacheln li { display: flex; gap: 10px; align-items: flex-start; padding: 18px; border-radius: 16px; font-size: 15px; line-height: 1.45; color: rgba(255, 255, 255, 0.86);
+  background: var(--e-flaeche); border: 1px solid var(--e-kante); box-shadow: var(--e-schatten); }
+.mf-ind__kacheln svg { width: 16px; height: 16px; flex: none; margin-top: 2px; color: var(--e-champ); }
+.mf-ind__beispiele { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; margin: 0 auto 28px; }
+.mf-ind__knopfzeile { margin: 0 0 18px; }
+.mf-ind__knopf { min-height: 52px; padding: 0 28px; border: 0; border-radius: 999px; background: #F6F1E8; color: #0B0A08; font: inherit; font-size: 16px; font-weight: 600; cursor: pointer;
+  box-shadow: 0 14px 40px -14px rgba(233, 220, 196, 0.35); transition: background 200ms ease, transform 200ms ease; }
+@media (hover: hover) and (pointer: fine) { .mf-ind__knopf:hover { background: #fff; transform: translateY(-2px); } }
+.mf-ind__knopf:focus-visible { outline: 2px solid var(--e-champ); outline-offset: 3px; }
+@media (max-width: 899px) { .mf-ind__kacheln { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 599px) { .mf-ind__kacheln li { padding: 14px; font-size: 14px; } .mf-ind__knopf { width: 100%; } }
+.mf-ind__bwort { font-size: 13px; color: rgba(255, 255, 255, 0.45); }
+.mf-ind__beispiele .k-beispiele__link { font-size: 14px; }
+.auswahl[hidden] { display: none !important; }
+@media (max-width: 599px) {
+  .mf-ind__kacheln { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .mf-ind__kacheln li { padding: 12px 14px; }
+  .mf-ind__knopf { font-size: 15px; padding: 0 18px; white-space: nowrap; }
+}
+/* kurz und knapp (24.11.2026): kleine Kacheln, am Handy zwei nebeneinander */
+.mf-individuell .glas-h2 { margin-bottom: 18px; }
+.mf-ind__moeglich { max-width: 760px; }
+.mf-ind__kacheln { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 10px !important; }
+.mf-ind__kacheln li { align-items: center; padding: 14px 16px !important; font-size: 15px !important; }
+.mf-ind__kacheln svg { margin-top: 0; }
+@media (max-width: 599px) { .mf-ind__kacheln { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; } .mf-ind__kacheln li { font-size: 14px !important; padding: 12px !important; } }
+.mf-individuell .mf-immer__liste { display: flex !important; }
