@@ -9,11 +9,10 @@ import HalftoneWordmarkFooter from "./ext/halftone-wordmark-footer"
 const MARKE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><path d="M18 14h62v18H38v18h36v18H38v20h44v18H18z"/><circle cx="98" cy="97" r="11"/></svg>`
 
 function Intro() {
-  const [an, setAn] = React.useState(() => { try { return sessionStorage.getItem("ergun-intro") !== "1" && !/[?&]ohne-intro/.test(location.search) } catch { return true } })
+  const [an, setAn] = React.useState(() => !/[?&]ohne-intro/.test(location.search))
   const [weg, setWeg] = React.useState(false)
   const ende = React.useCallback(() => {
     setWeg(true)
-    try { sessionStorage.setItem("ergun-intro", "1") } catch {}
     window.setTimeout(() => setAn(false), 700)
   }, [])
   React.useEffect(() => {
