@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795614154">
+<link rel="stylesheet" href="tw.css?v=1795614440">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -931,18 +931,29 @@ html[data-dt=m] .hj-pdot,html[data-dt=a] .hj-pdot-b,html[data-dt=b] .hj-pdot-a{o
 .hj-ab-bg::after{opacity:calc(1 - var(--abv,0) * .78)!important}
 .hj-ab-img{filter:url(#hj-scharf) contrast(1.05) saturate(1.06)}
 .hj-ab-pin .hj-ab-top,.hj-ab-pin .hj-ab-steps{text-shadow:0 0 34px rgba(246,248,252,.75),0 0 12px rgba(246,248,252,.55)}
-/* Leistungen: Bilder wechseln alle 4 s, dabei schwenkt die Kamera langsam wie im Summit-Teams-Template */
-.hj-root .hj-lx2-still{animation:hjLxPan 12s ease-in-out infinite alternate!important}
-.hj-root .hj-lx2-still[data-k="1"]{animation:hjLxSwap 8s ease-in-out infinite,hjLxPan 12s ease-in-out -6s infinite alternate!important}
-@keyframes hjLxSwap{0%,42%{opacity:0}50%,92%{opacity:1}100%{opacity:0}}
-@keyframes hjLxPan{from{transform:scale(1.1) translate3d(-2%,1%,0)}to{transform:scale(1.1) translate3d(2%,-1%,0)}}
-@media(prefers-reduced-motion:reduce){.hj-root .hj-lx2-still,.hj-root .hj-lx2-still[data-k="1"]{animation:none!important}}
+/* Leistungen: Morph-Gallery-Wechsel über den Fotos */
+.hj-root .hj-lx2-still[data-k]{animation:none!important;opacity:1}
+.hj-root .hj-lx2-still[data-k="1"]{opacity:0!important}
+.hj-lx2 .hj-lx2-bg .hj-lx-morph{position:absolute!important;inset:0!important;z-index:0!important;opacity:1!important}
 @media(prefers-reduced-motion:reduce){.hj-step-media{clip-path:none;transition:none}.hj-step-media img{transform:none;transition:none}}
+/* Ablauf: Wolkenhimmel bleibt als feste Bühne stehen, nach "Betreuung" frei sichtbar, dann Flug in die Wolken bis Weiß */
+.hj-root .hj-steps{padding-bottom:0!important;overflow:visible!important}
+.hj-root .hj-steps-bg{position:sticky!important;inset:auto!important;top:0!important;display:block;height:100lvh!important;width:100%!important;margin:0 0 -100lvh!important;z-index:-1!important;overflow:hidden}
+.hj-root .hj-steps-bg::after{display:none!important}
+.hj-root .hj-steps-bg > .hj-lazy, .hj-root .hj-steps-bg > div:first-child{position:absolute!important;inset:0!important;transform:scale(calc(1 + max(0,var(--sky,0) - .4) * max(0,var(--sky,0) - .4) * 2.6))!important;filter:none!important;transform-origin:50% 60%}
+.hj-sky-fog{position:absolute!important;inset:0!important;z-index:3;pointer-events:none;transform:none!important;filter:none!important;background:#fff;opacity:calc((var(--sky,0) - .55) / .3)}
+.hj-sky-out{position:relative;height:260lvh;margin-top:clamp(40px,8svh,90px)}
+.hj-sky-pin{position:sticky;top:0;height:100lvh;display:grid;place-items:center;padding:0 6vw}
+.hj-sky-line{margin:0;font-size:clamp(40px,7.4vw,112px);line-height:1;letter-spacing:-.03em;font-weight:500;color:#fff;text-shadow:0 2px 30px rgba(40,70,120,.28);opacity:calc(min(1,var(--sky,0) * 4) - max(0,(var(--sky,0) - .45) * 3));filter:blur(calc(max(0,var(--sky,0) - .45) * 30px));transform:scale(calc(.92 + var(--sky,0) * .3))}
+.hj-root .ic-track,.hj-root .ic-hero{background:#fff!important}
+@media(prefers-reduced-motion:reduce){.hj-sky-out{height:100lvh}.hj-sky-line{opacity:1;filter:none;transform:none}}
 </style>
+
+
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795614154"></script>
+<script src="ergun-berg.js?v=1795614440"></script>
 </body>
 </html>
