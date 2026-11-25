@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795620336">
+<link rel="stylesheet" href="tw.css?v=1795620688">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -955,20 +955,16 @@ html[data-dt=m] .hj-pdot,html[data-dt=a] .hj-pdot-b,html[data-dt=b] .hj-pdot-a{o
 .ac-words .ac-word:nth-child(n)[data-gt-none][data-gt-none]{color:#6b7076!important;text-shadow:0 0 30px rgba(255,255,255,.6)!important}
 /* Ende des Intros: keine weiße Ausblendung mehr, die Wolken machen den Übergang */
 .intro-berg .ac-hero,.ac-hero{-webkit-mask-image:none!important;mask-image:none!important}
-.intro-berg .ac-hero{height:calc(var(--h) * 4.6)!important}
+.intro-berg .ac-hero{height:calc(var(--h) * 4.1)!important}
 /* Realistische Wolken: Seitenverhältnis bleibt, Kacheln laufen nahtlos */
 .ac-cloud i{background-size:auto 100%!important;background-position:0 100%}
-/* Wolkenwand für den Wechsel zur nächsten Seite: oben puffig, Mitte geschlossen, unten puffig */
-.ac-wall{position:absolute;left:0;right:0;top:100%;height:260%;z-index:60;pointer-events:none;display:flex;flex-direction:column;will-change:transform}
-.ac-wall i{display:block;flex:none;width:100%}
-.ac-wall-top{height:23%;background:url(bilder/berg/wolke-wand.webp) 50% 100%/auto 100% repeat-x}
-.ac-wall-body{height:54%;margin:-1px 0;background:radial-gradient(60% 40% at 30% 30%,rgba(255,255,255,.55),rgba(255,255,255,0) 70%),radial-gradient(55% 35% at 75% 65%,rgba(255,255,255,.45),rgba(255,255,255,0) 70%),#e2e4e9}
-.ac-wall-bot{height:23%;background:url(bilder/berg/wolke-wand-unten.webp) 50% 0/auto 100% repeat-x}
+/* Wolkenmasse für den Wechsel zur nächsten Seite: eine volle Wolke, oben und unten Quellränder */
+.ac-wall{position:absolute;left:0;right:0;top:100%;height:180%;z-index:60;pointer-events:none;will-change:transform;background:url(bilder/berg/wolke-masse.webp) 50% 50%/auto 100% repeat-x}
 /* "Gipfel Morgenrot" liegt schon bereit, wenn die Wand den Bildschirm deckt */
-.hj-root{margin-top:-192svh!important}
+.hj-root{margin-top:-160svh!important}
 /* der Hero behält trotzdem seine volle Standzeit nach den Wolken */
-.hj-root .hj-tours{margin-top:122svh!important}
-@media(max-width:899px){.hj-root .hj-tours{margin-top:233lvh!important}}
+.hj-root .hj-tours{margin-top:92svh!important}
+@media(max-width:899px){.hj-root .hj-tours{margin-top:203lvh!important}}
 /* Wolkenschrift: weicher Schatten auf hellem Grund */
 .intro-titel .ct-wrap,.hj-mr-word .ct-wrap{filter:drop-shadow(0 3px 14px rgba(60,80,120,.22)) drop-shadow(0 1px 2px rgba(60,80,120,.18))!important}
 /* Glas nur in Titeln: ERGUN. bei Über uns formt sich jedes Mal neu */
@@ -981,6 +977,6 @@ html[data-dt=m] .hj-pdot,html[data-dt=a] .hj-pdot-b,html[data-dt=b] .hj-pdot-a{o
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795620336"></script>
+<script src="ergun-berg.js?v=1795620688"></script>
 </body>
 </html>
