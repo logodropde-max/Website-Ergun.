@@ -665,6 +665,56 @@ html[data-dt=m] .hj-pdot,html[data-dt=a] .hj-pdot-b,html[data-dt=b] .hj-pdot-a{o
 .ac-alt-soil{color:#121418!important}
 @media(prefers-reduced-motion:reduce){.hj-sun-core{animation:none!important}.hj-steps .hj-sgrid{opacity:1;filter:none;translate:none}}
 </style>
+<style>/* v16 */
+/* Prozentanzeige im Stil der Originalvorlage, nur "Ihre Website" */
+.ac-alt-cap{top:0!important;bottom:0!important;justify-content:center!important;color:#6b7076!important}
+.ac-alt-big{font-size:clamp(76px,15cqi,236px)!important;margin:6px 0 10px!important;text-shadow:none!important}
+.ac-alt-label{text-shadow:none!important}
+.ac-alt-soil{display:none!important}
+/* Designs -> ERGUN.: kurzer Himmel, dann direkt ERGUN. */
+.hj-root .hj-dawn{height:30vh!important}
+@media(max-width:899px){.hj-root .hj-dawn{height:25vh!important}}
+/* ERGUN.: mildere Schritte, kürzerer Weg, kein Weiß am Ende */
+.hj-ab.is-pin{height:calc(100vh + 4 * 46vh)!important}
+.hj-ab-hint{opacity:.6;font-size:10px;letter-spacing:.2em}
+.hj-ab-hint em{height:16px}
+.hj-ab-bars i{width:34px;height:2px}
+.hj-ab-bg::before{display:none!important}
+.hj-ab-bg{transform:none!important}
+.hj-ab-bg::after{background:linear-gradient(180deg,#bcd3f2 0,rgba(188,211,242,0) 22%),radial-gradient(70% 46% at 50% 62%,rgba(244,247,252,.7),rgba(244,247,252,0) 80%),linear-gradient(180deg,rgba(220,232,247,0) 70%,#e3ecf8 100%)!important}
+/* Fotos (Zoom Parallax) vor dem Himmel */
+.hj-zp{background:#e3ecf8!important}
+.hj-zp-sky{position:sticky;top:0;height:100vh;margin-bottom:-100vh;overflow:hidden;background:linear-gradient(180deg,#e3ecf8,#f1f5fb)}
+.hj-zp-sky .hj-clouds{position:absolute!important;inset:0;width:100%!important;height:100%!important;min-height:0!important}
+.hj-zp>div:last-child{position:relative;z-index:1}
+/* Leistungen bleibt stehen, dann weich in den Ablauf */
+.hj-lx2-in{position:sticky!important;top:var(--lxt,0px)}
+.hj-lx2-hold{height:70vh;pointer-events:none}
+@media(max-width:899px){.hj-lx2-hold{height:35vh}}
+.hj-lx2-still[data-k]{animation:hjLxFade 18s ease-in-out infinite both}
+.hj-lx2-still[data-k="0"]{animation:none}
+.hj-lx2-still[data-k="1"]{animation-delay:6s}
+.hj-lx2-still[data-k="2"]{animation-delay:12s}
+@keyframes hjLxFade{0%{opacity:0}7%{opacity:1}33%{opacity:1}40%{opacity:0}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.hj-lx2-still[data-k]{animation:none}.hj-lx2-still[data-k="1"],.hj-lx2-still[data-k="2"]{opacity:0}}
+.hj-root .hj-lx.hj-lx2::after{background:linear-gradient(180deg,rgba(244,247,252,0),rgba(244,247,252,.85) 70%,#f4f7fc)!important}
+.hj-root .hj-steps{padding-top:clamp(90px,14vh,150px)!important}
+/* Fußzeile: 24-h-Hinweis raus */
+.ergun-foot .hwf-brand::after{display:none!important;content:none!important}
+.hj-root .hj-lx.hj-lx2{display:flow-root!important}
+/* Übergang nach Stone Bridge (Keystone Crossing): Stadt kommt unscharf und groß rein, Überschrift steigt aus der Unschärfe, Inhalte gleiten von rechts */
+@supports (animation-timeline: view()){
+.hj-steps-bg{animation:kxTown linear both;animation-timeline:view();animation-range:entry 0% cover 35%}
+.hj-steps>.hj-kick,.hj-steps>.hj-rh{animation:kxCopy linear both;animation-timeline:view();animation-range:entry 10% cover 30%}
+.hj-step>*{animation:kxCards linear both;animation-timeline:view();animation-range:entry 0% entry 90%}
+}
+@keyframes kxTown{from{scale:1.12;filter:blur(16px)}to{scale:1;filter:blur(0)}}
+@keyframes kxCopy{from{opacity:0;translate:0 18vh;filter:blur(10px)}to{opacity:1;translate:0 0;filter:blur(0)}}
+@keyframes kxCards{from{opacity:0;translate:26vw 0;filter:blur(8px)}to{opacity:1;translate:0 0;filter:blur(0)}}
+@media(prefers-reduced-motion:reduce){.hj-steps-bg,.hj-steps>.hj-kick,.hj-steps>.hj-rh,.hj-step>*{animation:none!important}}
+.hj-root .hj-zp{position:relative}
+.hj-root .hj-zp::before{content:"";position:absolute;left:0;right:0;top:0;height:32vh;z-index:1;pointer-events:none;background:linear-gradient(180deg,#e3ecf8 0,rgba(227,236,248,.85) 35%,rgba(227,236,248,0) 100%)}
+</style>
 </head>
 <body>
 <div id="root"></div>
