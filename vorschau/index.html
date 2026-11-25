@@ -615,11 +615,11 @@ html[data-dt=m] .hj-pdot,html[data-dt=a] .hj-pdot-b,html[data-dt=b] .hj-pdot-a{o
 .hj-stage{perspective:none!important;cursor:auto!important;user-select:auto!important;-webkit-user-select:auto!important;touch-action:auto!important}
 /* Sonne realistisch */
 .hj-dt .hj-sun-ring,.hj-dt .hj-sun-rays{display:none!important}
-.hj-sun-core{background:radial-gradient(circle at 50% 50%,#fffef9 0,#fff7dc 26%,#ffe394 50%,#ffbb52 72%,#ff9d3e 88%,rgba(255,150,60,.9) 100%)!important;box-shadow:0 0 calc(var(--sz,30px) * .22) calc(var(--sz,30px) * .05) rgba(255,240,200,.95),0 0 calc(var(--sz,30px) * .7) calc(var(--sz,30px) * .14) rgba(255,196,110,.55),0 0 calc(var(--sz,30px) * 1.7) calc(var(--sz,30px) * .3) rgba(255,160,70,.22)!important;animation:hjSunFlicker 3.4s ease-in-out infinite!important}
+.hj-sun-core{background:radial-gradient(circle at 50% 50%,#fffef9 0,#fff8e0 22%,#ffe7a3 40%,rgba(255,200,105,.85) 58%,rgba(255,170,80,.45) 76%,rgba(255,150,60,0) 100%)!important;box-shadow:0 0 calc(var(--sz,30px) * .6) rgba(255,214,150,.45),0 0 calc(var(--sz,30px) * 1.4) rgba(255,175,90,.2)!important;filter:blur(calc(var(--sz,30px) * .03));animation:hjSunFlicker 3.4s ease-in-out infinite!important}
 .hj-dt::before{content:"";position:absolute;inset:-150%;border-radius:50%;background:radial-gradient(circle,rgba(255,228,175,.36) 0,rgba(255,205,135,.15) 28%,rgba(255,185,115,0) 62%);pointer-events:none;opacity:calc(.35 + var(--rg,0) * .65)}
 .hj-dt::after{content:"";position:absolute;left:-190%;right:-190%;top:50%;height:max(2px,calc(var(--sz,30px) * .05));transform:translateY(-50%);background:linear-gradient(90deg,rgba(255,220,170,0),rgba(255,234,200,.5) 44%,rgba(255,255,255,.85) 50%,rgba(255,234,200,.5) 56%,rgba(255,220,170,0));filter:blur(1px);opacity:calc(var(--rg,0) * .6);pointer-events:none}
-@keyframes hjSunFlicker{0%,100%{transform:scale(var(--dz,1));filter:brightness(1)}50%{transform:scale(calc(var(--dz,1) * 1.02));filter:brightness(1.07)}}
-.hj-pdot{background:radial-gradient(circle at 50% 50%,#fffef9 0,#fff3c9 34%,#ffcf6b 66%,#ff9f45 100%)!important;box-shadow:0 0 .14em .03em rgba(255,236,190,.95),0 0 .45em .08em rgba(255,180,90,.45)!important}
+@keyframes hjSunFlicker{0%,100%{transform:scale(var(--dz,1));opacity:1}50%{transform:scale(calc(var(--dz,1) * 1.02));opacity:.94}}
+.hj-pdot{background:radial-gradient(circle at 50% 50%,#fffef9 0,#fff3c9 32%,rgba(255,207,107,.85) 58%,rgba(255,165,70,0) 100%)!important;box-shadow:0 0 .3em rgba(255,214,150,.6)!important}
 /* Designs: Inhalt erst nach dem Hindurch */
 .hj-wh .hj-wh-stage{opacity:min(var(--tin,1),calc(1 - var(--dd,0) * 3));filter:blur(calc((1 - var(--tin,1)) * 16px + var(--dd,0) * 30px));translate:0 calc((1 - var(--tin,1)) * 40px)}
 /* Galerie -> ERGUN.: kurzer Flug */
