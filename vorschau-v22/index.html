@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795647085">
+<link rel="stylesheet" href="tw.css?v=1795647132">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -1237,12 +1237,20 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 .sc-hint{z-index:9600}
 .ic-ball{overflow:hidden}
 .ic-ball::before{content:"";position:absolute;left:50%;top:50%;width:max(100vw,100lvh);height:max(100vw,100lvh);transform:translate(-50%,-50%) scale(calc(1.12 - var(--all,0) * .12));background:linear-gradient(180deg,rgba(14,20,34,.35),rgba(14,20,34,.55)),url(bilder/berg/kosmos.webp) center/cover no-repeat;opacity:var(--all,0);pointer-events:none}
+/* Fußzeile kompakt: nur das Nötigste, alles auf einen Blick unter dem ergun. */
+.ergun-foot .hwf-brand,.ergun-foot .hwf-col h3{display:none!important}
+.ergun-foot .hwf-top{display:flex!important;flex-wrap:wrap;justify-content:center;gap:10px clamp(18px,3vw,34px)!important;padding-top:clamp(16px,2.4vw,26px)!important}
+.ergun-foot .hwf-col ul{display:flex;flex-wrap:wrap;justify-content:center;gap:10px clamp(18px,3vw,34px)}
+.ergun-foot .hwf-col a{font-size:15px!important;opacity:.82!important}
+.ergun-foot .hwf-rule{border-top:0!important;justify-content:center!important;gap:clamp(14px,3vw,30px);margin-top:clamp(12px,2vw,20px)!important;padding-top:0!important;font-size:12.5px!important}
+.ergun-foot .hwf-rule::before{content:"© 2026 ERGUN."!important;opacity:.5}
+.ergun-foot{padding-bottom:calc(clamp(18px,3vw,30px) + env(safe-area-inset-bottom))!important;max-height:100svh}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795647085"></script>
+<script src="ergun-berg.js?v=1795647132"></script>
 </body>
 </html>
