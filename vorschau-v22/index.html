@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795645425">
+<link rel="stylesheet" href="tw.css?v=1795645490">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -1144,7 +1144,7 @@ body[data-schrift="1"] .gf-sub{margin-top:clamp(20px,4vh,48px)}
 .ac-pts::before{opacity:calc(1 - var(--weiss,0))!important}
 .gf-zeichner .atp-pegs{display:none!important}
 .gf-zeichner .atp-word{filter:drop-shadow(0 6px 24px rgba(20,40,90,.35))}
-.ag{margin-top:230svh!important}
+.ag{margin-top:300svh!important}
 .ag-anker{position:absolute;top:46svh;left:0;width:1px;height:1px}
 .ag-sky{height:100lvh;bottom:auto!important}
 .ag-load-link{pointer-events:auto;margin-top:6px;color:#fff;font-size:14px;text-decoration:underline;text-underline-offset:4px;opacity:.9}
@@ -1180,12 +1180,17 @@ body[data-kopf="d"] .alto-voll .ac-head{color:#26365a!important}
 @keyframes ieAtem{0%{transform:none}100%{transform:scale(1.035)}}
 @keyframes ieFlug{0%{transform:scale(1.035);opacity:1}70%{opacity:1}100%{transform:scale(16);opacity:0}}
 @media (prefers-reduced-motion:reduce){.ie-flug,.intro-e.weg .ie-flug{animation:none}}
+.intro-berg .ac-hero{height:calc(var(--h) * 12)!important}
+html{scroll-snap-type:y proximity}
+.halt-box{position:absolute;left:0;top:0;width:1px;height:0;pointer-events:none}
+.halt-box i{position:absolute;left:0;width:1px;height:1px;scroll-snap-align:start;scroll-snap-stop:always}
+.ie-titel .ct-shader{filter:saturate(1.15) contrast(1.05)}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795645425"></script>
+<script src="ergun-berg.js?v=1795645490"></script>
 </body>
 </html>
