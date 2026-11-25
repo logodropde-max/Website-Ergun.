@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795613978">
+<link rel="stylesheet" href="tw.css?v=1795614154">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -927,11 +927,22 @@ html[data-dt=m] .hj-pdot,html[data-dt=a] .hj-pdot-b,html[data-dt=b] .hj-pdot-a{o
 .intro-berg .ac-hero-stage::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:22%;z-index:2;pointer-events:none;opacity:var(--ifog,1);background:linear-gradient(180deg,rgba(236,240,246,0) 0,rgba(236,240,246,.82) 55%,#eef2f7 100%)}
 .intro-berg .ac-hero-cue{position:relative;z-index:3;color:#4b5057!important}
 .ac-word[data-gt-none],.ac-words .ac-word:nth-child(1)[data-gt-none]{color:#6b7076!important}
+/* Über uns: am Anfang weiß (für den Übergang), dann zieht sich der Schleier zurück und das Foto ist klar */
+.hj-ab-bg::after{opacity:calc(1 - var(--abv,0) * .78)!important}
+.hj-ab-img{filter:url(#hj-scharf) contrast(1.05) saturate(1.06)}
+.hj-ab-pin .hj-ab-top,.hj-ab-pin .hj-ab-steps{text-shadow:0 0 34px rgba(246,248,252,.75),0 0 12px rgba(246,248,252,.55)}
+/* Leistungen: Bilder wechseln alle 4 s, dabei schwenkt die Kamera langsam wie im Summit-Teams-Template */
+.hj-root .hj-lx2-still{animation:hjLxPan 12s ease-in-out infinite alternate!important}
+.hj-root .hj-lx2-still[data-k="1"]{animation:hjLxSwap 8s ease-in-out infinite,hjLxPan 12s ease-in-out -6s infinite alternate!important}
+@keyframes hjLxSwap{0%,42%{opacity:0}50%,92%{opacity:1}100%{opacity:0}}
+@keyframes hjLxPan{from{transform:scale(1.1) translate3d(-2%,1%,0)}to{transform:scale(1.1) translate3d(2%,-1%,0)}}
+@media(prefers-reduced-motion:reduce){.hj-root .hj-lx2-still,.hj-root .hj-lx2-still[data-k="1"]{animation:none!important}}
 @media(prefers-reduced-motion:reduce){.hj-step-media{clip-path:none;transition:none}.hj-step-media img{transform:none;transition:none}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795613978"></script>
+<script src="ergun-berg.js?v=1795614154"></script>
 </body>
 </html>
