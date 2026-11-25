@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795646909">
+<link rel="stylesheet" href="tw.css?v=1795647085">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -1211,12 +1211,38 @@ html body{background:transparent!important}
 .ergun-foot .hwf-brand strong{display:none!important}
 .ergun-foot .hwf-brand span{margin-top:0!important}
 .ac-ptbg{position:absolute;left:0;width:100%;top:-9%;height:118%;object-fit:cover;pointer-events:none;visibility:hidden;opacity:0;will-change:transform,opacity;transform-origin:50% 50%}
+.pt-morph{position:absolute;inset:0;visibility:hidden;opacity:0;pointer-events:none}
+.ac-ptbg{display:none!important}
+/* Galerie: schlichte Leiste unten */
+.ag-line .pl-bar{flex-direction:column;gap:10px!important;bottom:clamp(64px,10vh,96px)!important;padding:0!important;width:auto!important;text-align:center}
+.ag-line .pl-cap{flex:none;padding:0}
+.ag-line .pl-title{font:italic 600 clamp(22px,2.4vw,30px)/1.15 HjSerif,"Playfair Display",Georgia,serif!important;letter-spacing:0!important;color:#0e1422}
+.ag-line .pl-sub{display:none}
+.ag-line .pl-count{order:-1;font:500 11px/1 HjSans,"Inter Tight",Inter,system-ui,sans-serif!important;letter-spacing:.3em!important;color:rgba(14,20,34,.55)!important}
+.ag-line .pl-count b{color:#0e1422}
+.ag-line .pl-btn{display:none!important}
+.ag-wisch{position:absolute;left:0;right:0;bottom:clamp(26px,4.5vh,46px);display:flex;align-items:center;justify-content:center;gap:14px;font:500 11px/1 HjSans,"Inter Tight",Inter,system-ui,sans-serif;letter-spacing:.3em;text-transform:uppercase;color:rgba(14,20,34,.62);pointer-events:none;z-index:3}
+.ag-wisch span{margin-right:-.3em}
+.ag-pfeil{position:relative;width:34px;height:1px;background:currentColor;opacity:.7}
+.ag-pfeil::before{content:"";position:absolute;top:-3px;width:7px;height:7px;border-top:1px solid currentColor;border-left:1px solid currentColor}
+.ag-pfeil.l::before{left:0;transform:rotate(-45deg)}
+.ag-pfeil.r::before{right:0;transform:rotate(135deg)}
+.ag-pfeil.l{animation:agWl 2.4s cubic-bezier(.45,0,.2,1) infinite}
+.ag-pfeil.r{animation:agWr 2.4s cubic-bezier(.45,0,.2,1) infinite}
+@keyframes agWl{0%,100%{transform:translateX(0)}50%{transform:translateX(-6px)}}
+@keyframes agWr{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
+/* Scroll-Hinweis auch beim Kontakt */
+body[data-sc="k"] .sc-hint{opacity:1;color:#26365a;text-shadow:none}
+body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,54,90,0))}
+.sc-hint{z-index:9600}
+.ic-ball{overflow:hidden}
+.ic-ball::before{content:"";position:absolute;left:50%;top:50%;width:max(100vw,100lvh);height:max(100vw,100lvh);transform:translate(-50%,-50%) scale(calc(1.12 - var(--all,0) * .12));background:linear-gradient(180deg,rgba(14,20,34,.35),rgba(14,20,34,.55)),url(bilder/berg/kosmos.webp) center/cover no-repeat;opacity:var(--all,0);pointer-events:none}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795646909"></script>
+<script src="ergun-berg.js?v=1795647085"></script>
 </body>
 </html>
