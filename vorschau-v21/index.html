@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795637594">
+<link rel="stylesheet" href="tw.css?v=1795637684">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -991,7 +991,7 @@ html[data-dt=m] .hj-pdot,html[data-dt=a] .hj-pdot-b,html[data-dt=b] .hj-pdot-a{o
 .alto-voll .ac-field-cap{display:block!important}
 .alto-voll .ac-hero-stage::after{display:none!important}
 .alto-voll .ac-wall{display:none!important}
-.alto-voll .intro-berg .ac-hero,.intro-berg.alto-voll .ac-hero{height:calc(var(--h) * 4.7)!important}
+.alto-voll .intro-berg .ac-hero,.intro-berg.alto-voll .ac-hero{height:calc(var(--h) * 4.1)!important}
 .alto-voll .ac-veil{background:radial-gradient(ellipse at 50% 52%,#fff 0 35%,#eef1f6 70%,#e3e7ee 100%)!important}
 .alto-voll .ac-crop-stats{display:none!important}
 /* Vier Punkte nach "Wir machen das." */
@@ -1017,20 +1017,32 @@ html[data-dt=m] .hj-pdot,html[data-dt=a] .hj-pdot-b,html[data-dt=b] .hj-pdot-a{o
 .alto-voll .ac-crop-stage{min-height:min(64vmin,620px)}
 .alto-voll .ac-crop-title{text-shadow:0 4px 40px rgba(8,14,40,.55)}
 .alto-voll .ac-crop-body{max-width:34em;margin-left:auto;margin-right:auto;font-size:clamp(17px,1.5vw,21px);line-height:1.6;color:#dfe7f4;text-shadow:0 2px 20px rgba(8,14,40,.6)}
-/* Übergang: in den Buchstaben M hinein */
-.ac-mz{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);margin:0;text-align:center;white-space:nowrap;font-weight:700;font-size:clamp(64px,11vw,170px);letter-spacing:-.05em;line-height:1;color:#0e1422;opacity:0}
-.ac-mz-m{display:inline-block;transform-origin:22% 62%;will-change:transform}
-.ac-mz-rest{display:inline-block;color:#fff;text-shadow:0 2px 30px rgba(8,14,40,.4)}
-.ic-ball{overflow:hidden}
-.ic-globe{position:absolute;inset:0;border-radius:50%;background:url("https://cdn.21st.dev/assets/mirror/f2/f2fe23d0c6a8406962e4c5ef969e13dc9de3faf37d3e7258a1067173325b254f.jpg") 0 50%/auto 100% repeat-x;animation:icEarth 30s linear infinite;box-shadow:0 0 20px rgba(255,255,255,.2),-5px 0 8px #c3f4ff inset,15px 2px 25px #000 inset,-24px -2px 34px #c3f4ff99 inset,250px 0 44px #00000066 inset,150px 0 38px #000000aa inset}
-@keyframes icEarth{to{background-position:-479px 50%}}
-@media(prefers-reduced-motion:reduce){.ic-globe{animation:none}}
+/* Über uns: Glyph Portal, Kamera fliegt durch ERGUN. in den Shader */
+.alto-voll .ac-crop{display:none!important}
+.ac-uber{position:relative;z-index:2}
+.ac-gp{font-family:HjSans,"Inter Tight",Inter,system-ui,sans-serif}
+.ac-gp .ac-gp-orb{position:absolute;inset:0;width:100%;height:100%;display:block;transform:scale(var(--gp-field-scale,1))}
+.ac-gp-eyebrow{position:absolute;inset:auto 24px calc(100% - var(--gp-word-top,35%) + 30px);margin:0;text-align:center;font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:#5e6369}
+.ac-gp-scroll{position:absolute;inset:auto 24px 7%;text-align:center;color:#7c817b;font-size:12px;letter-spacing:.04em}
+.ac-gp [data-gp-caption]{inset:calc(var(--gp-word-bottom,50%) + 40px) 24px auto!important;justify-content:center!important}
+.ac-gp [data-gp-enter]{min-height:46px;padding:0 22px;gap:18px;background:#0e1422;border-radius:999px;color:#fff!important;font-size:13px;font-weight:500}
+.ac-gp [data-gp-content]{padding:clamp(90px,12vh,140px) clamp(20px,6vw,90px)!important}
+.ac-gp-copy{width:min(100%,72rem);margin:auto;display:flex;flex-direction:column;gap:clamp(18px,3vh,32px);text-shadow:0 2px 24px rgba(8,14,40,.55)}
+.ac-gp-kick{margin:0;font-size:12px;letter-spacing:.22em;text-transform:uppercase;opacity:.8}
+.ac-gp-copy h2{margin:0;max-width:16ch;font-size:clamp(40px,6vw,92px);font-weight:700;line-height:1;letter-spacing:-.045em}
+.ac-gp-lead{margin:0;max-width:34em;font-size:clamp(17px,1.5vw,21px);line-height:1.6;color:#dfe7f4}
+.ac-gp-feats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,48px);margin-top:clamp(10px,3vh,30px)}
+.ac-gp-feats>div{border-top:1px solid rgba(238,242,248,.25);padding-top:16px}
+.ac-gp-feats h3{margin:0;font-size:19px;font-weight:600}
+.ac-gp-feats h3 span{margin-right:10px;font:500 12px ui-monospace,monospace;letter-spacing:.08em;opacity:.75}
+.ac-gp-feats p{margin:8px 0 0;font-size:15px;line-height:1.55;color:#cfd9ea}
+@media(max-width:760px){.ac-gp-feats{grid-template-columns:1fr}}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795637594"></script>
+<script src="ergun-berg.js?v=1795637684"></script>
 </body>
 </html>
