@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795636133">
+<link rel="stylesheet" href="tw.css?v=1795636901">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -991,14 +991,30 @@ html[data-dt=m] .hj-pdot,html[data-dt=a] .hj-pdot-b,html[data-dt=b] .hj-pdot-a{o
 .alto-voll .ac-field-cap{display:block!important}
 .alto-voll .ac-hero-stage::after{display:none!important}
 .alto-voll .ac-wall{display:none!important}
-.alto-voll .intro-berg .ac-hero,.intro-berg.alto-voll .ac-hero{height:calc(var(--h) * 2.8)!important}
+.alto-voll .intro-berg .ac-hero,.intro-berg.alto-voll .ac-hero{height:calc(var(--h) * 4.1)!important}
 .alto-voll .ac-veil{background:radial-gradient(ellipse at 50% 52%,#fff 0 35%,#eef1f6 70%,#e3e7ee 100%)!important}
+.alto-voll .ac-crop-stats{display:none!important}
+/* Vier Punkte nach "Wir machen das." */
+.ac-pts{position:absolute;inset:0;z-index:7;opacity:0;pointer-events:none;color:#fff;font-family:HjSans,"Inter Tight",Inter,system-ui,sans-serif}
+.ac-pts::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 50%,rgba(8,14,40,.5),rgba(8,14,40,.12) 70%,rgba(8,14,40,0))}
+.ac-pts-kick{position:absolute;left:0;right:0;top:calc(50% - clamp(120px,17vh,170px));margin:0;display:flex;justify-content:center;align-items:center;gap:10px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;opacity:.85}
+.ac-pts-kick i{width:28px;height:1px;background:currentColor}
+.ac-pt{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;padding:0 24px}
+.ac-pt-big{margin:0;font-size:clamp(56px,10vw,150px);font-weight:600;letter-spacing:-.05em;line-height:1;overflow:hidden;padding-bottom:.08em;text-shadow:0 2px 30px rgba(8,14,40,.35)}
+.ac-pt-char{display:inline-block;opacity:0;white-space:pre}
+.ac-pt-sub{margin:18px auto 0;max-width:30em;font-family:HjSerif,"Playfair Display",Georgia,serif;font-style:italic;font-size:clamp(19px,2.1vw,30px);line-height:1.3;opacity:0;text-shadow:0 2px 18px rgba(8,14,40,.45)}
+.ac-pts-nav{position:absolute;right:clamp(16px,3vw,44px);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:14px}
+.ac-pts-nav i{position:relative;display:block;width:3px;height:34px;border-radius:2px;background:rgba(255,255,255,.3);transition:background .4s,height .4s}
+.ac-pts-nav i::after{content:attr(data-n);position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;letter-spacing:.12em;font-style:normal;opacity:.45;transition:opacity .4s}
+.ac-pts[data-i="0"] .ac-pts-nav i:nth-child(1),.ac-pts[data-i="1"] .ac-pts-nav i:nth-child(2),.ac-pts[data-i="2"] .ac-pts-nav i:nth-child(3),.ac-pts[data-i="3"] .ac-pts-nav i:nth-child(4){background:#fff;height:54px}
+.ac-pts[data-i="0"] .ac-pts-nav i:nth-child(1)::after,.ac-pts[data-i="1"] .ac-pts-nav i:nth-child(2)::after,.ac-pts[data-i="2"] .ac-pts-nav i:nth-child(3)::after,.ac-pts[data-i="3"] .ac-pts-nav i:nth-child(4)::after{opacity:1}
+@media(max-width:700px){.ac-pts-nav{top:auto;bottom:28px;right:50%;transform:translateX(50%);flex-direction:row}.ac-pts-nav i{width:34px;height:3px}.ac-pts[data-i] .ac-pts-nav i{height:3px!important}.ac-pts[data-i="0"] .ac-pts-nav i:nth-child(1),.ac-pts[data-i="1"] .ac-pts-nav i:nth-child(2),.ac-pts[data-i="2"] .ac-pts-nav i:nth-child(3),.ac-pts[data-i="3"] .ac-pts-nav i:nth-child(4){width:54px}.ac-pts-nav i::after{right:auto;left:50%;top:-16px;transform:translateX(-50%)}}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795636133"></script>
+<script src="ergun-berg.js?v=1795636901"></script>
 </body>
 </html>
