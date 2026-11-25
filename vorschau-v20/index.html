@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795613577">
+<link rel="stylesheet" href="tw.css?v=1795613761">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -908,11 +908,26 @@ html[data-dt=m] .hj-pdot,html[data-dt=a] .hj-pdot-b,html[data-dt=b] .hj-pdot-a{o
   .hj-root .hj-lx2-price strong{font-size:clamp(44px,12vw,58px)!important}
 }
 .intro-berg .ac-hero{-webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 70svh),rgba(0,0,0,0) 100%);mask-image:linear-gradient(180deg,#000 calc(100% - 70svh),rgba(0,0,0,0) 100%)}
+/* Galerie: Karten im Hochformat wie bei Onda */
+.hj-wh.is-wheel .hj-wh-card{aspect-ratio:4/5!important;border-radius:22px}
+.hj-wh.is-wheel .hj-wh-card img{object-position:50% 0}
+.hj-wh.is-wheel .hj-wh-card::after{inset:35% 0 0!important;background:linear-gradient(to top,rgba(7,11,22,.9),rgba(7,11,22,0))!important}
+.hj-wh.is-wheel .hj-wh-txt b{font-size:clamp(24px,2.4vw,36px)!important}
+/* Ablauf: das Foto füllt die ganze Karte, Text liegt darauf */
+.hj-root .hj-steps .hj-step{display:flex!important;flex-direction:column!important;justify-content:space-between!important;color:#fff!important;background:#1a2133!important;padding:clamp(22px,3vw,44px)!important}
+.hj-steps .hj-step > .hj-step-media{position:absolute!important;inset:0!important;height:auto!important;aspect-ratio:auto!important;border-radius:inherit!important;z-index:0;opacity:1!important}
+.hj-steps .hj-step > .hj-step-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,11,22,.5) 0,rgba(7,11,22,0) 30%,rgba(7,11,22,0) 42%,rgba(7,11,22,.82) 100%)}
+.hj-steps .hj-step > .hj-step-n,.hj-steps .hj-step > div{position:relative;z-index:1}
+.hj-steps .hj-step > .hj-step-shade{z-index:2}
+.hj-steps .hj-step > div{max-width:34em}
+.hj-steps .hj-step h3,.hj-steps .hj-step-n{color:#fff!important}
+.hj-steps .hj-step em{color:rgba(255,255,255,.8)!important}
+.hj-steps .hj-step p{color:rgba(255,255,255,.86)!important}
 @media(prefers-reduced-motion:reduce){.hj-step-media{clip-path:none;transition:none}.hj-step-media img{transform:none;transition:none}}
 </style>
 </head>
 <body>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795613577"></script>
+<script src="ergun-berg.js?v=1795613761"></script>
 </body>
 </html>
