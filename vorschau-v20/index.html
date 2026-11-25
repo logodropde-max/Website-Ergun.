@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795614440">
+<link rel="stylesheet" href="tw.css?v=1795616807">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -947,6 +947,19 @@ html[data-dt=m] .hj-pdot,html[data-dt=a] .hj-pdot-b,html[data-dt=b] .hj-pdot-a{o
 .hj-sky-line{margin:0;font-size:clamp(40px,7.4vw,112px);line-height:1;letter-spacing:-.03em;font-weight:500;color:#fff;text-shadow:0 2px 30px rgba(40,70,120,.28);opacity:calc(min(1,var(--sky,0) * 4) - max(0,(var(--sky,0) - .45) * 3));filter:blur(calc(max(0,var(--sky,0) - .45) * 30px));transform:scale(calc(.92 + var(--sky,0) * .3))}
 .hj-root .ic-track,.hj-root .ic-hero{background:#fff!important}
 @media(prefers-reduced-motion:reduce){.hj-sky-out{height:100lvh}.hj-sky-line{opacity:1;filter:none;transform:none}}
+/* Intro passend zur Seite: Everest-Foto, ERGUN. als Glas, Kamera fährt in den Hero */
+.intro-glas.intro-berg2{background:#9fb6d6!important;overflow:hidden;display:grid;place-items:center;transition:opacity .9s cubic-bezier(.23,1,.32,1),filter .9s,transform 1.1s cubic-bezier(.6,0,.2,1)!important}
+.intro-berg2 .intro-foto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;animation:introZoom 5s cubic-bezier(.2,.6,.2,1) both}
+@keyframes introZoom{from{transform:scale(1.12);filter:blur(10px) brightness(.9)}40%{filter:blur(0) brightness(1)}to{transform:scale(1);filter:none}}
+.intro-berg2::after{content:"";position:absolute;inset:0;background:radial-gradient(70% 60% at 50% 45%,rgba(10,18,40,0),rgba(10,18,40,.28));pointer-events:none}
+.intro-titel{position:absolute;left:0;right:0;top:27%;text-align:center;z-index:2;margin:0;font:700 clamp(72px,17vw,250px)/1 HjSans,"Inter Tight",Inter,system-ui,sans-serif;letter-spacing:-.055em;color:#fff;text-shadow:0 6px 40px rgba(8,16,48,.35)}
+.intro-titel[data-gt-on]{color:transparent;text-shadow:none}
+.intro-berg2 .intro-wort{z-index:2;color:#fff!important;bottom:auto!important;top:calc(27% + clamp(88px,18vw,262px));text-shadow:0 2px 16px rgba(8,16,48,.4)}
+.intro-berg2 .intro-skip{z-index:3;background:rgba(255,255,255,.22);color:#fff;backdrop-filter:blur(8px)}
+.intro-glas.intro-berg2.weg{opacity:0;filter:blur(8px);transform:scale(1.18)}
+/* Glas nur in Titeln: ERGUN. bei Über uns formt sich jedes Mal neu */
+.hj-mr-word{position:relative}
+.hj-mr-word[data-gt-on] i{opacity:0!important;animation:none!important;transition:none!important}
 </style>
 
 
@@ -954,6 +967,6 @@ html[data-dt=m] .hj-pdot,html[data-dt=a] .hj-pdot-b,html[data-dt=b] .hj-pdot-a{o
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795614440"></script>
+<script src="ergun-berg.js?v=1795616807"></script>
 </body>
 </html>
