@@ -714,6 +714,9 @@ html[data-dt=m] .hj-pdot,html[data-dt=a] .hj-pdot-b,html[data-dt=b] .hj-pdot-a{o
 @media(prefers-reduced-motion:reduce){.hj-steps-bg,.hj-steps>.hj-kick,.hj-steps>.hj-rh,.hj-step>*{animation:none!important}}
 .hj-root .hj-zp{position:relative}
 .hj-root .hj-zp::before{content:"";position:absolute;left:0;right:0;top:0;height:32vh;z-index:1;pointer-events:none;background:linear-gradient(180deg,#e3ecf8 0,rgba(227,236,248,.85) 35%,rgba(227,236,248,0) 100%)}
+/* Handy wie PC: keine runden Ecken/Überlappung zwischen den Teilen, kein Sonnen-Pop am Punkt */
+@media(max-width:899px){.hj-root .hj-tours,.hj-root .hj-about{margin-top:0!important;border-radius:0!important}}
+.hj-hero[data-go] .hj-pdot-a,.hj-pdot-a{animation:none!important}
 </style>
 </head>
 <body>
