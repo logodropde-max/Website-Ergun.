@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795690353">
+<link rel="stylesheet" href="tw.css?v=1795690671">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -1273,12 +1273,18 @@ html{scroll-snap-type:none!important}
 .ac-pt,.intro-berg .ac-field-cap{will-change:transform,opacity,filter}
 .intro-berg .ac-field{will-change:transform,filter}
 .pt-morph{z-index:1}
+/* v25 */
+.ac-pts::before{display:none!important}
+.intro-berg .ac-field-cap .ac-fc-lin{white-space:normal!important;max-width:12em;margin:0 auto!important;font-size:clamp(46px,7.4vw,116px)!important;line-height:1.02!important}
+@media (max-width:600px){.intro-berg .ac-field-cap .ac-fc-lin{font-size:clamp(38px,11vw,58px)!important;max-width:9em}}
+.ac-pt-big,.intro-berg .ac-field-cap .ac-fc-lin{text-shadow:0 1px 3px rgba(8,14,40,.35),0 6px 26px rgba(8,14,40,.3)!important}
+.ac-pt-sub{text-shadow:0 1px 3px rgba(8,14,40,.45),0 4px 18px rgba(8,14,40,.35)!important}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795690353"></script>
+<script src="ergun-berg.js?v=1795690671"></script>
 </body>
 </html>
