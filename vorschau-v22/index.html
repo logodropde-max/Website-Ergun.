@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795733384">
+<link rel="stylesheet" href="tw.css?v=1795735380">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -1374,12 +1374,64 @@ body[data-gf="1"] .ac-word .ac-rdot-w,body[data-gf="2"] .ac-word .ac-rdot-w{opac
 .mg-karte:focus-visible{outline:2px solid #fff;outline-offset:3px}
 @media (max-width:767px){.mg-karte{left:-36px;top:-23px;width:72px;height:46px;border-radius:6px}}
 .ic-track,.hj-root .ic-hero,.ic-hero{background:#6b8fca!important}
+/* v34: Galerie nur noch als Kreis, danach direkt "Lassen Sie uns reden", Fußzeile nahtlos im Nachthimmel */
+/* keine weiße Fläche mehr, die von unten über das Ende des Hero rutscht: die Kugel deckt, bis die Bühne steht */
+.ergun-schluss{background:transparent!important}
+/* gleiche Einheit für Überlappung und Bühne (lvh): die Bühne steht oben, bevor der Hero sich löst, kein Versatz am iPhone */
+.mg{margin-top:-100vh;margin-top:-100lvh;height:456vh;height:calc(100lvh + 356svh)}
+.mg-anker{top:110vh;top:calc(.31 * 356svh)}
+.mg-karte[data-da="1"]{pointer-events:auto;cursor:pointer}
+.mg-tipp{position:absolute;left:0;right:0;top:calc(50% + var(--mg-r,200px) + 31px + clamp(14px,2.6vh,26px));margin:0;padding:0 16px;text-align:center;font:500 12.5px/1.2 HjSans,"Inter Tight",Inter,system-ui,sans-serif;letter-spacing:.09em;color:rgba(255,255,255,.75);pointer-events:none;opacity:0;visibility:hidden;z-index:1;will-change:transform,opacity}
+.mg-tipp-m{display:none}
+@media (hover:hover) and (pointer:fine){.mg-tipp-h{display:none}.mg-tipp-m{display:inline}}
+@media (max-width:767px){.mg-tipp{top:calc(50% + var(--mg-r,140px) + 23px + clamp(12px,2.4vh,22px));font-size:12px}}
+@media (max-height:500px){.mg-titel{font-size:20px}.mg-karte{left:-36px;top:-23px;width:72px;height:46px;border-radius:6px}.mg-tipp{top:calc(50% + var(--mg-r,120px) + 23px + 10px);font-size:12px}body[data-sc="k"] .sc-hint{opacity:0}}
+.mg-mitte{visibility:hidden}
+.mg-reden{opacity:0;visibility:hidden;will-change:transform,opacity}
+/* Großansicht: wächst nur über transform aus Position, Größe und Neigung der Karte und schrumpft dorthin zurück */
+.mg-view{touch-action:none;overscroll-behavior:contain}
+.mg-view .ag-grow{left:0;top:0;width:100%;height:100%;border-radius:0;transition:none;transform-origin:50% 50%;will-change:transform;backface-visibility:hidden}
+.mg-view .ag-grow img{transform-origin:50% 0;transition:none;filter:none!important;will-change:transform}
+.mg-view .ag-grow::after{content:"";position:absolute;inset:0;background:rgba(10,14,26,.62);opacity:0;transition:opacity .5s ease;pointer-events:none}
+.mg-view.is-laden .ag-grow::after{opacity:1}
+.mg-view.is-da .ag-grow{opacity:0;transition:opacity .5s}
+.mg-view.is-zurueck .ag-grow{opacity:1;transition:none}
+.mg-view.is-zurueck .ag-iframe,.mg-view.is-aus .ag-iframe{opacity:0;transition:opacity .2s ease;pointer-events:none}
+.mg-view.is-zurueck .ag-top,.mg-view.is-aus .ag-top{transition:opacity .2s ease,transform .2s ease}
+.mg-view.is-aus{opacity:0;transition:opacity .36s ease;pointer-events:none}
+@keyframes mgEin{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){.mg-view{animation:mgEin .3s ease both}}
+/* Kontakt liegt mit einem Vorlauf (16svh) schon unter dem Ende der Galerie und zeigt sich erst, wenn er oben steht:
+   gleicher Satz an gleicher Stelle, keine neue Fläche, keine Kante */
+.ic-track,.hj-root .ic-track{margin-top:-116vh!important;margin-top:calc(-100lvh - 16svh)!important;height:266vh!important;height:calc(266svh)!important;background:transparent!important;z-index:5;pointer-events:none}
+.ic-hero{pointer-events:auto}
+.ic-hero[data-an="0"]{visibility:hidden}
+/* Nachthimmel: ein Bild für den dunklen Kreis, das Ende des Kontakts und die ganze Fußzeile. Oben die Sterne, nach unten ein
+   weicher Verlauf in noch dunkleres Navy. Es steht fest im Fenster, darüber scrollen Kontakt und Fußzeile. */
+:root{--nh-bg:linear-gradient(180deg,rgba(7,10,19,0) calc(50% + 4vh),rgba(7,10,19,.55) calc(50% + 34vh),#070a13 calc(50% + 50vh)),linear-gradient(180deg,rgba(14,20,34,.35),rgba(14,20,34,.55)),url(bilder/berg/kosmos.webp) center/cover no-repeat}
+@supports (height:100lvh){:root{--nh-bg:linear-gradient(180deg,rgba(7,10,19,0) calc(50% + 4lvh),rgba(7,10,19,.55) calc(50% + 34lvh),#070a13 calc(50% + 50lvh)),linear-gradient(180deg,rgba(14,20,34,.35),rgba(14,20,34,.55)),url(bilder/berg/kosmos.webp) center/cover no-repeat}}
+.ic-ball::before{background:var(--nh-bg)}
+.nh{position:fixed;left:0;top:0;width:100%;height:100vh;height:100lvh;z-index:0;overflow:hidden;background:#0e1422;pointer-events:none;visibility:hidden;contain:strict}
+.nh[data-an="1"]{visibility:visible}
+.nh-bild{position:absolute;left:50%;top:50%;width:max(100vw,100vh);height:max(100vw,100vh);width:max(100vw,100lvh);height:max(100vw,100lvh);transform:translate(-50%,-50%);background:var(--nh-bg)}
+.nh-funkel{position:absolute;inset:0;opacity:0;transition:opacity 1.4s ease}
+.nh[data-an="1"] .nh-funkel{opacity:1}
+.nh-funkel i{position:absolute;width:var(--g,3px);height:var(--g,3px);margin:calc(var(--g,3px) / -2) 0 0 calc(var(--g,3px) / -2);border-radius:50%;background:radial-gradient(circle,#fff 0,rgba(233,240,250,.8) 28%,rgba(143,176,222,0) 70%);opacity:.2;animation:nhFunkel var(--d,7s) ease-in-out var(--v,0s) infinite;will-change:opacity}
+@keyframes nhFunkel{0%,100%{opacity:.14}50%{opacity:.8}}
+.nh[data-an="0"] .nh-funkel i{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.nh-funkel i{animation:none;opacity:.45}}
+.ic-hero[data-nacht="1"],.hj-root .ic-hero[data-nacht="1"]{background:transparent!important}
+.ic-hero[data-nacht="1"] .ic-ball{visibility:hidden}
+/* Fußzeile ohne eigene Fläche: sie steht im selben Nachthimmel, hinter dem großen "ergun." ein zarter Horizontschein */
+.ergun-foot,.ergun-foot.hwf-root{background:transparent!important;margin-top:0!important;box-shadow:none!important}
+.ergun-foot::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 80% calc(var(--hwf-wort,30vw) * .95) at 50% calc(var(--hwf-wort,30vw) * .62),rgba(107,143,202,.13) 0,rgba(107,143,202,.06) 34%,rgba(107,143,202,0) 62%)}
+.ergun-foot .hwf-top{border-top-color:rgba(233,237,247,.12)}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795733384"></script>
+<script src="ergun-berg.js?v=1795735380"></script>
 </body>
 </html>
