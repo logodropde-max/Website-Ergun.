@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795727583">
+<link rel="stylesheet" href="tw.css?v=1795730809">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -1308,12 +1308,40 @@ html.portal .ac-pt-big,html.portal .intro-berg .ac-field-cap .ac-fc-lin{text-sha
 .intro-berg .ac-pts,.intro-berg .ac-field{display:none!important}
 .ac-word .ac-rdot-w{display:inline-block;width:.2em;height:.2em;margin-left:.06em;border-radius:50%;background:#6b8fca!important;vertical-align:baseline;transform:none!important;opacity:1}
 body[data-gf="1"] .ac-word .ac-rdot-w,body[data-gf="2"] .ac-word .ac-rdot-w{opacity:0!important}
+/* v30: Nebula hinter den drei Wörtern – Stern, 8 Ströme, sammelt sich im Punkt hinter "Schnell online" */
+.nebula-container{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none;contain:strict;opacity:var(--nb-in,0)}
+@property --nb-in{syntax:"<number>";inherits:false;initial-value:0}
+@property --nb-zieh{syntax:"<number>";inherits:false;initial-value:1}
+@property --nb-x{syntax:"<length>";inherits:false;initial-value:0px}
+@property --nb-y{syntax:"<length>";inherits:false;initial-value:0px}
+.nebula-container[data-in="0"]{visibility:hidden}
+.nebula-bg{position:absolute;inset:0;background:radial-gradient(ellipse farthest-side at 50% 50%,#fff 0,#fdfeff 18%,#f8fafe 40%,#f2f6fc 64%,#edf2fb 84%,#e9f0fa 100%)}
+.nebula-hof{position:absolute;left:50%;top:50%;width:min(150vmin,1500px);height:min(150vmin,1500px);margin:calc(min(150vmin,1500px) / -2) 0 0 calc(min(150vmin,1500px) / -2);border-radius:50%;background:radial-gradient(closest-side,rgba(143,176,222,.12) 0,rgba(143,176,222,.07) 40%,rgba(143,176,222,0) 100%);opacity:1}
+.nebula-feld{position:absolute;inset:0;opacity:0}
+.nebula-mitte{position:absolute;left:50%;top:50%;width:0;height:0;transform:translate3d(0,0,0)}
+.nebula-zug{position:absolute;left:0;top:0;width:0;height:0;transform:scale(0);will-change:transform}
+.ejecta-stream{position:absolute;left:0;top:0;width:0;height:0;will-change:transform;animation:stream-rotate 20s linear infinite}
+.particle{position:absolute;left:0;top:0;width:var(--pg,6px);height:var(--pg,6px);margin:calc(var(--pg,6px) / -2) 0 0 calc(var(--pg,6px) / -2);border-radius:50%;background:radial-gradient(circle,var(--pf,#6b8fca) 0,var(--pf,#6b8fca) 50%,rgba(143,176,222,0) 74%);opacity:0;animation-name:particle-travel,particle-fade;animation-timing-function:ease-out;animation-iteration-count:infinite}
+.nebula-rand{position:absolute;inset:0;background:radial-gradient(ellipse farthest-side at 50% 50%,rgba(241,245,252,0) 58%,rgba(239,244,252,.22) 72%,rgba(237,242,251,.58) 85%,rgba(235,241,250,.9) 95%,#e9f0fa 100%)}
+.nebula-schleier{position:absolute;left:50%;top:50%;font-size:clamp(42px,8.4cqi,136px);width:11.5em;height:3.6em;margin:-1.8em 0 0 -5.75em;background:radial-gradient(closest-side,rgba(255,255,255,.62) 0,rgba(255,255,255,.58) 45%,rgba(255,255,255,.3) 72%,rgba(255,255,255,0) 100%);opacity:0}
+.proto-star{position:absolute;left:-14px;top:-14px;width:28px;height:28px;transform:scale(.5);opacity:0;--nb-puls:1}
+.proto-kern{position:absolute;inset:0;border-radius:50%;background:#6b8fca;animation:supernova-pulse 4s ease-in-out infinite}
+.proto-glanz{position:absolute;left:50%;top:50%;width:280px;height:280px;margin:-140px 0 0 -140px;border-radius:50%;background:radial-gradient(closest-side,rgba(107,143,202,.5) 0,rgba(127,159,212,.22) 20%,rgba(143,176,222,.08) 50%,rgba(143,176,222,0) 100%);opacity:.7;animation:supernova-hof 4s ease-in-out infinite}
+@keyframes supernova-pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(calc(1 + .5 * var(--nb-puls,1)));opacity:calc(1 - .2 * var(--nb-puls,1))}}
+@keyframes supernova-hof{0%,100%{transform:scale(1)}50%{transform:scale(calc(1 + .5 * var(--nb-puls,1)))}}
+@keyframes stream-rotate{to{transform:rotate(360deg)}}
+@keyframes particle-travel{from{transform:translate3d(0,0,0)}to{transform:translate3d(var(--dx),var(--dy),0)}}
+@keyframes particle-fade{0%{opacity:0}15%{opacity:.9}100%{opacity:0}}
+.nebula-container[data-an="0"] *,.nebula-container[data-sicht="0"] *{animation-play-state:paused!important}
+.ac-hero[data-nb="1"] .ac-word .ac-rdot-w{opacity:0;transition:none!important}
+.ac-hero[data-nb="1"][data-nb-p="1"] .ac-word .ac-rdot-w{opacity:1}
+@media (prefers-reduced-motion:reduce){.nebula-feld,.nebula-schleier{display:none}.proto-kern,.proto-glanz{animation:none}}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795727583"></script>
+<script src="ergun-berg.js?v=1795730809"></script>
 </body>
 </html>
