@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795731873">
+<link rel="stylesheet" href="tw.css?v=1795732411">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -1353,12 +1353,14 @@ body[data-gf="1"] .ac-word .ac-rdot-w,body[data-gf="2"] .ac-word .ac-rdot-w{opac
 .dk-ohne .dk-cv{display:none}
 .dk[data-an="0"] .dk-atem{animation-play-state:paused}
 @media (prefers-reduced-motion:reduce){.dk-atem{animation:none}}
+/* Schrift dunkelt mit der Kugel nach (Grau → Navy), damit "Schnell online" auf Blau lesbar bleibt */
+.ac-hero[data-nb="1"] .ac-words .ac-word:nth-child(n)[data-gt-none][data-gt-none]{color:var(--dk-wort,#6b7076)!important;text-shadow:0 0 30px rgba(255,255,255,calc(.6 - .45 * var(--dk-fu,0)))!important}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795731873"></script>
+<script src="ergun-berg.js?v=1795732411"></script>
 </body>
 </html>
