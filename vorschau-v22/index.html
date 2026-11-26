@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795730809">
+<link rel="stylesheet" href="tw.css?v=1795731873">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -1336,12 +1336,29 @@ body[data-gf="1"] .ac-word .ac-rdot-w,body[data-gf="2"] .ac-word .ac-rdot-w{opac
 .ac-hero[data-nb="1"] .ac-word .ac-rdot-w{opacity:0;transition:none!important}
 .ac-hero[data-nb="1"][data-nb-p="1"] .ac-word .ac-rdot-w{opacity:1}
 @media (prefers-reduced-motion:reduce){.nebula-feld,.nebula-schleier{display:none}.proto-kern,.proto-glanz{animation:none}}
+/* v31: Dither-Kugel statt Nebula – entsteht aus dem Weiß, färbt sich, wird zum Punkt hinter "Schnell online" */
+.dk{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none;contain:strict;opacity:0}
+.dk[data-in="0"]{visibility:hidden}
+.dk-bg{position:absolute;inset:0;background:radial-gradient(ellipse farthest-side at 50% 50%,#fff 0,#fdfeff 18%,#f8fafe 40%,#f2f6fc 64%,#edf2fb 84%,#e9f0fa 100%)}
+.dk-hof{position:absolute;left:50%;top:50%;width:min(150vmin,1500px);height:min(150vmin,1500px);margin:calc(min(150vmin,1500px) / -2) 0 0 calc(min(150vmin,1500px) / -2);border-radius:50%;background:radial-gradient(closest-side,rgba(143,176,222,.16) 0,rgba(143,176,222,.08) 45%,rgba(143,176,222,0) 100%);opacity:0}
+.dk-mitte{position:absolute;left:50%;top:50%;width:0;height:0}
+.dk-kugel{--dk-d:min(64vmin,600px);position:absolute;left:calc(var(--dk-d) / -2);top:calc(var(--dk-d) / -2);width:var(--dk-d);height:var(--dk-d);transform-origin:50% 50%;will-change:transform}
+@media (max-width:768px),(pointer:coarse){.dk-kugel{--dk-d:min(80vmin,520px)}}
+.dk-atem{position:absolute;inset:0;animation:dk-atem 6s ease-in-out infinite}
+@keyframes dk-atem{0%,100%{transform:scale(1)}50%{transform:scale(calc(1 + .025 * var(--dk-puls,1)))}}
+.dk-cv{position:absolute;inset:0;width:100%;height:100%;image-rendering:crisp-edges;image-rendering:pixelated}
+.dk-kern{position:absolute;inset:0;border-radius:50%;background:#6b8fca;opacity:0}
+.dk-ersatz{display:none;position:absolute;inset:0;border-radius:50%;opacity:0;background:radial-gradient(circle at 36% 30%,#c4d5ef 0,#8fb0de 46%,#6b8fca 100%)}
+.dk-ohne .dk-ersatz{display:block}
+.dk-ohne .dk-cv{display:none}
+.dk[data-an="0"] .dk-atem{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.dk-atem{animation:none}}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795730809"></script>
+<script src="ergun-berg.js?v=1795731873"></script>
 </body>
 </html>
