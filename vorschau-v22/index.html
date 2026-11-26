@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795713850">
+<link rel="stylesheet" href="tw.css?v=1795726367">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -1297,12 +1297,18 @@ html.portal .ac-pt-big,html.portal .intro-berg .ac-field-cap .ac-fc-lin{text-sha
 .pb-seg span{font-size:clamp(11px,1.1vw,13px);letter-spacing:.06em;opacity:.55;transition:opacity .35s}
 .pb-seg[data-an="1"] span,.pb-seg[data-an="1"] b{opacity:1}
 @media (max-width:600px){.pb-seg span{font-size:10.5px}.pb-seg b{display:none}}
+/* v28: 4 Punkte vorerst aus, "Sehen Sie selbst." stark auf dem Gipfel */
+.intro-berg.alto-voll .ac-hero,.intro-berg.alto-voll .ac-hero.ac-hero{height:calc(var(--h) * 4.6)!important}
+.ac-pt,.intro-berg .ac-field-cap,.ptbar,.pt-morph{display:none!important}
+.ac-pts-brand{color:#fff!important;font-size:clamp(52px,9vw,150px)!important;letter-spacing:-.045em;text-shadow:0 2px 6px rgba(8,14,40,.3),0 14px 50px rgba(8,14,40,.35)!important}
+.ac-pts-brand::before{content:"Unsere Arbeiten";display:block;font:500 clamp(11px,1vw,13px)/1 HjSans,"Inter Tight",Inter,system-ui,sans-serif;letter-spacing:.32em;text-transform:uppercase;margin:0 0 clamp(14px,2vh,22px);opacity:.85;text-shadow:0 1px 8px rgba(8,14,40,.45)}
+@media (max-width:600px){.ac-pts-brand{font-size:clamp(40px,12vw,64px)!important}}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795713850"></script>
+<script src="ergun-berg.js?v=1795726367"></script>
 </body>
 </html>
