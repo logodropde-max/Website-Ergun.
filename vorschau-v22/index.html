@@ -265,7 +265,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795706141">
+<link rel="stylesheet" href="tw.css?v=1795713782">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -1287,12 +1287,22 @@ html.portal .ac-pt-big,html.portal .intro-berg .ac-field-cap .ac-fc-lin{text-sha
 .intro-berg .ac-field{will-change:transform!important;filter:none!important}
 .ac-pt,.intro-berg .ac-field-cap{will-change:transform,opacity!important;filter:none!important}
 .ag-clouds canvas{image-rendering:auto}
+/* v27: Fortschrittsleiste */
+.ac-pts-nav{display:none!important}
+.ptbar{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom) + clamp(26px,6vh,56px));transform:translateX(-50%);width:min(720px,calc(100% - 40px));display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(8px,1.6vw,16px);visibility:hidden;opacity:0;pointer-events:none;z-index:8;color:#fff;font-family:HjSans,"Inter Tight",Inter,system-ui,sans-serif;text-shadow:0 1px 8px rgba(8,14,40,.45)}
+.pb-seg{display:flex;flex-direction:column;gap:8px;will-change:transform,opacity}
+.pb-seg b{font-weight:500;font-size:10px;letter-spacing:.24em;opacity:.6}
+.pb-seg i{position:relative;display:block;height:2px;border-radius:2px;background:rgba(255,255,255,.3);overflow:hidden;box-shadow:0 1px 6px rgba(8,14,40,.25)}
+.pb-seg em{position:absolute;inset:0;background:#fff;transform-origin:0 50%;transform:scaleX(0);will-change:transform}
+.pb-seg span{font-size:clamp(11px,1.1vw,13px);letter-spacing:.06em;opacity:.55;transition:opacity .35s}
+.pb-seg[data-an="1"] span,.pb-seg[data-an="1"] b{opacity:1}
+@media (max-width:600px){.pb-seg span{font-size:10.5px}.pb-seg b{display:none}}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795706141"></script>
+<script src="ergun-berg.js?v=1795713782"></script>
 </body>
 </html>
