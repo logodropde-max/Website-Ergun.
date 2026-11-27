@@ -2,6 +2,11 @@
 <html lang="de">
 <head>
 <meta name="robots" content="noindex, nofollow">
+<link rel="preload" as="image" href="bilder/berg/everest.webp">
+<link rel="preload" as="image" href="bilder/berg/wolke-vorn3.webp">
+<link rel="preload" as="image" href="bilder/berg/wolke-mitte2.webp">
+<link rel="preload" as="image" href="bilder/berg/wolke-hinten2.webp">
+<script>["everest","wolke-vorn3","wolke-mitte2","wolke-hinten2"].forEach(function(n){var i=new Image();i.src="bilder/berg/"+n+".webp";if(i.decode)i.decode().catch(function(){})})</script>
 <script>(function(){var m,w=-1,h=0;window.__VH=function(){var W=window.innerWidth;if(W!==w||!h){if(!m){m=document.createElement('div');m.style.cssText='position:fixed;top:0;left:0;width:1px;height:100lvh;pointer-events:none;visibility:hidden;z-index:-1'}if(!m.parentNode&&document.body)document.body.appendChild(m);var v=m.parentNode?m.offsetHeight:0;h=v>200?v:window.innerHeight;w=W}return h}})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -265,7 +270,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795736613">
+<link rel="stylesheet" href="tw.css?v=1795738809">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -1455,12 +1460,51 @@ body[data-gf="1"] .ac-word .ac-rdot-w,body[data-gf="2"] .ac-word .ac-rdot-w{opac
 .mg-ton{position:absolute;inset:0;background:radial-gradient(ellipse 85% 34% at 50% 106%,rgba(195,244,255,.5) 0,rgba(120,160,220,.18) 45%,rgba(107,143,202,0) 75%),linear-gradient(180deg,#2c467f 0,#22376a 55%,#15244a 100%)}
 .mg-weiss{position:absolute;inset:0;background:#fff}
 .mg-view .ag-grow img{position:absolute;top:0;max-width:none;object-fit:fill}
+/* v36: Galerie kürzer, Karten fliegen mit der wachsenden Kugel zur Reihe; Flug in den Satzpunkt; Kontakt auf Wolkenhimmel */
+/* Die Galerie liegt 64lvh früher unter dem Ende des Hero: dort ist ihre Bühne die wachsende Kugel (Kreis-Ausschnitt). */
+.ergun-schluss{pointer-events:none}
+.mg{pointer-events:none;margin-top:-164vh;margin-top:-164lvh;height:394vh;height:calc(164lvh + 230svh)}
+.mg-stage,.mg .ag-view,.ic-hero,.ergun-jagd{pointer-events:auto}
+.mg-anker{top:126vh;top:calc(64lvh + .27 * 230svh)}
+/* Satzpunkt: exakt rund, genau auf der Grundlinie, weiß wie der Satz (er wird zum Fenster) */
+.mg-pt{display:inline-block;width:.15em;height:.15em;margin-left:.045em;border-radius:50%;background:#fff;vertical-align:baseline}
+.mg-mitte{will-change:transform,opacity}
+/* Wolkenhimmel: fest stehende Ebene über der Galerie und unter dem Kontakt. Die Galerie beschneidet ihn auf den Kreis des Punkts. */
+.wh{position:fixed;left:0;top:0;width:100%;height:100vh;height:100lvh;z-index:4;overflow:hidden;pointer-events:none;visibility:hidden;background:linear-gradient(180deg,#3876ba,#8cbfe8);contain:strict}
+.wh[data-g="1"],.wh[data-k="1"]{visibility:visible}
+.wh-zoom{position:absolute;inset:0;transform-origin:50% 50%}
+.wh{font-family:HjSans,"Inter Tight",Inter,system-ui,sans-serif}
+.wh-cv{position:absolute;inset:0;width:100%;height:100%;display:block}
+.wh[data-ic="1"] .wh-vorn{visibility:hidden}
+.wh-weiss{position:absolute;inset:0;background:#fff;opacity:0}
+/* Bergkette im Dunst unten (vor der aufsteigenden Erde), gleiche Stelle im Fenster und im Kontakt */
+.ic-berge{position:absolute;left:0;right:0;bottom:0;height:clamp(120px,24vh,270px);background:url(bilder/berg/kette-dunst.webp) 50% 100%/cover no-repeat;pointer-events:none}
+.ic-hero,.hj-root .ic-hero{background:transparent!important}
+/* heller Saum um die Erde, dahinter der Himmel einen Hauch dunkler: die Erde hebt sich klar von Himmel und Wolken ab */
+.ic-halo{position:absolute;top:50%;left:50%;border-radius:50%;pointer-events:none;background:radial-gradient(closest-side,rgba(18,44,92,.3) 0,rgba(18,44,92,.3) 66%,rgba(246,251,255,.85) 67%,rgba(206,230,255,.38) 72%,rgba(34,74,134,.16) 81%,rgba(34,74,134,0) 100%)}
+.ic-dark p{opacity:.86}
+.ic-dark .ic-k{opacity:.8}
+/* Glasschrift im Sternenkreis: gleiche Stelle und Größe wie die helle Überschrift, die weich in sie übergeht */
+.ic-glas{z-index:4;color:#fff}
+.ic-glas .ic-k,.ic-glas p{visibility:hidden}
+.ic-gh{position:relative;opacity:0;text-shadow:0 2px 26px rgba(4,7,16,.35)}
+.ic-gh[data-gt-on],.ic-gh[data-gt-on] *{color:transparent!important;text-shadow:none!important}
+.ic-gh:not([data-gt-on]) .ic-gz{background:linear-gradient(180deg,#fff 0,#dbe8ff 55%,#fff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* Fußzeile ohne Rand: langer Verlauf aus dem Sternenhimmel ins Navy, Gemälde, Korn und Marken laufen oben weich aus */
+.ergun-jagd{background:linear-gradient(180deg,rgba(14,20,34,0) 0,rgba(14,20,34,.3) 9%,rgba(14,20,34,.72) 19%,#0e1422 31%)!important}
+.ergun-jagd .whf-picture{-webkit-mask-image:linear-gradient(180deg,transparent 0,rgba(0,0,0,.18) 12%,rgba(0,0,0,.6) 30%,#000 50%);mask-image:linear-gradient(180deg,transparent 0,rgba(0,0,0,.18) 12%,rgba(0,0,0,.6) 30%,#000 50%)}
+.ergun-jagd .whf-grain,.ergun-jagd .whf-marks{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 32%);mask-image:linear-gradient(180deg,transparent 0,#000 32%)}
+/* v36: Start mit den Wolken am Handy: Ebenen bleiben als eigene Flächen stehen (nur transform/opacity), keine Unschärfe-Filter
+   beim Scrollen (die Wörter kommen nur über Größe und Deckkraft), am Handy kein Korn über dem bewegten Bild */
+.intro-berg .ac-cloud,.intro-berg .ac-cloud i,.intro-berg .ac-hero-photo{will-change:transform;backface-visibility:hidden}
+.intro-berg .ac-word{filter:none!important}
+@media (pointer:coarse){.intro-berg .ac-grain{display:none!important}}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795736613"></script>
+<script src="ergun-berg.js?v=1795738809"></script>
 </body>
 </html>
