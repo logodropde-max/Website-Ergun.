@@ -270,7 +270,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795791522">
+<link rel="stylesheet" href="tw.css?v=1795791758">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -1581,12 +1581,17 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 /* v40: Glasschrift aus der Galaxie: die Buchstaben zeigen den Sternenhimmel heller und klarer, mit feiner Lichtkante */
 .ic-gh .ic-gz,.ic-gh:not([data-gt-on]) .ic-gz{color:transparent;background:linear-gradient(180deg,rgba(255,255,255,.72) 0,rgba(222,232,255,.4) 48%,rgba(200,214,255,.3) 62%,rgba(255,255,255,.58) 100%),url(bilder/berg/sterne.webp) 0 0/600px 600px repeat,linear-gradient(180deg,rgba(60,80,140,.35),rgba(30,40,80,.35)),url(bilder/berg/kosmos-weich.webp) center/cover no-repeat;background-attachment:scroll,fixed,scroll,fixed;-webkit-background-clip:text;background-clip:text;-webkit-text-stroke:1px rgba(236,243,255,.72);filter:drop-shadow(0 0 22px rgba(140,170,255,.28)) drop-shadow(0 2px 2px rgba(0,0,0,.35))}
 .ic-gh{text-shadow:none}
+/* v41: „Lassen Sie uns reden.“ im Sternenkreis schlicht: helles, leicht durchscheinendes Weiß (die Sterne schimmern ganz zart durch),
+   kein Glas-Effekt, keine Kontur; Kicker ruhig statt orange */
+.ic-gh .ic-gz,.ic-gh:not([data-gt-on]) .ic-gz{background:none!important;-webkit-background-clip:border-box;background-clip:border-box;color:rgba(236,242,252,.9)!important;-webkit-text-stroke:0;filter:none}
+.ic-gh{text-shadow:0 0 40px rgba(120,150,220,.18)}
+.ic-light .ic-k{color:rgba(236,242,252,.6)}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795791522"></script>
+<script src="ergun-berg.js?v=1795791758"></script>
 </body>
 </html>
