@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
 <meta name="robots" content="noindex, nofollow">
+<link rel="preload" as="image" href="https://cdn.21st.dev/assets/mirror/f2/f2fe23d0c6a8406962e4c5ef969e13dc9de3faf37d3e7258a1067173325b254f.jpg" crossorigin="anonymous">
 <link rel="preload" as="image" href="bilder/berg/everest.webp">
 <link rel="preload" as="image" href="bilder/berg/wolke-vorn3.webp">
 <link rel="preload" as="image" href="bilder/berg/wolke-mitte2.webp">
@@ -270,7 +271,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795792262">
+<link rel="stylesheet" href="tw.css?v=1795792517">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -1586,12 +1587,18 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 .ic-gh .ic-gz,.ic-gh:not([data-gt-on]) .ic-gz{background:none!important;-webkit-background-clip:border-box;background-clip:border-box;color:rgba(236,242,252,.9)!important;-webkit-text-stroke:0;filter:none}
 .ic-gh{text-shadow:0 0 40px rgba(120,150,220,.18)}
 .ic-light .ic-k{color:rgba(236,242,252,.6)}
+/* v42: Erde wie in der Vorlage (originale Textur), Drehung per transform auf eigener Ebene, Schattierung als ruhende Ebene darüber */
+.ic-globe{background:none!important;animation:none!important;box-shadow:none!important;overflow:hidden;isolation:isolate}
+.ic-globe::before{content:"";position:absolute;top:0;left:0;width:1500px;height:100%;background:url("https://cdn.21st.dev/assets/mirror/f2/f2fe23d0c6a8406962e4c5ef969e13dc9de3faf37d3e7258a1067173325b254f.jpg") 0 50%/auto 100% repeat-x;animation:icErdeT 30s linear infinite;will-change:transform;backface-visibility:hidden}
+.ic-globe::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 20px rgba(255,255,255,.2),-5px 0 8px #c3f4ff inset,15px 2px 25px #000 inset,-24px -2px 34px #c3f4ff99 inset,250px 0 44px #00000066 inset,150px 0 38px #000000aa inset}
+@keyframes icErdeT{to{transform:translate3d(-479px,0,0)}}
+@media (prefers-reduced-motion:reduce){.ic-globe::before{animation:none}}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795792262"></script>
+<script src="ergun-berg.js?v=1795792517"></script>
 </body>
 </html>
