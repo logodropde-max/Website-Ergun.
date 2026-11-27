@@ -270,7 +270,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795738809">
+<link rel="stylesheet" href="tw.css?v=1795739667">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -1499,12 +1499,66 @@ body[data-gf="1"] .ac-word .ac-rdot-w,body[data-gf="2"] .ac-word .ac-rdot-w{opac
 .intro-berg .ac-cloud,.intro-berg .ac-cloud i,.intro-berg .ac-hero-photo{will-change:transform;backface-visibility:hidden}
 .intro-berg .ac-word{filter:none!important}
 @media (pointer:coarse){.intro-berg .ac-grain{display:none!important}}
+/* v37: Wolkenhimmel nur hinter der Galerie (Kreis und große Reihe); Kontakt auf ruhiger Galaxie; Erde aus eigener Datei */
+.mg-himmel{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;opacity:0;background:linear-gradient(180deg,#3876ba,#8cbfe8);will-change:opacity}
+.mg-himmel[data-g="0"]{visibility:hidden}
+/* in der Mitte ein Hauch dunkler, damit der weiße Satz auch vor einer Wolke lesbar bleibt */
+.mg-himmel::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 62% 40% at 50% 50%,rgba(28,66,132,.34) 0,rgba(28,66,132,.16) 55%,rgba(28,66,132,0) 100%)}
+.mg-titel{text-shadow:0 1px 2px rgba(18,44,96,.28),0 4px 26px rgba(18,44,96,.45)}
+.mg-tipp{text-shadow:0 1px 10px rgba(18,44,96,.5);color:rgba(255,255,255,.9)}
+.mg-karte{box-shadow:0 0 0 calc(var(--mg-kw,96px) * .009) rgba(255,255,255,.45),0 calc(var(--mg-kw,96px) * .1) calc(var(--mg-kw,96px) * .24) calc(var(--mg-kw,96px) * -.08) rgba(12,30,70,.6)}
+/* Galaxie hinter dem Kontakt und im Fenster des Punkts */
+.wh.gx{background:#0e1422}
+.gx-bg{position:absolute;inset:0;background:
+radial-gradient(circle at 12% 17%,rgba(255,255,255,.9) 0,rgba(255,255,255,.9) .6px,transparent 1.5px),
+radial-gradient(circle at 27% 8%,rgba(255,255,255,.7) 0,rgba(255,255,255,.7) .5px,transparent 1.3px),
+radial-gradient(circle at 46% 21%,rgba(255,255,255,.8) 0,rgba(255,255,255,.8) .6px,transparent 1.5px),
+radial-gradient(circle at 58% 6%,rgba(255,255,255,.6) 0,rgba(255,255,255,.6) .5px,transparent 1.3px),
+radial-gradient(circle at 71% 15%,rgba(255,255,255,.85) 0,rgba(255,255,255,.85) .7px,transparent 1.6px),
+radial-gradient(circle at 88% 26%,rgba(255,255,255,.65) 0,rgba(255,255,255,.65) .5px,transparent 1.3px),
+radial-gradient(circle at 7% 41%,rgba(255,255,255,.6) 0,rgba(255,255,255,.6) .5px,transparent 1.3px),
+radial-gradient(circle at 35% 33%,rgba(255,255,255,.55) 0,rgba(255,255,255,.55) .5px,transparent 1.2px),
+radial-gradient(circle at 93% 52%,rgba(255,255,255,.7) 0,rgba(255,255,255,.7) .6px,transparent 1.4px),
+radial-gradient(circle at 16% 63%,rgba(255,255,255,.55) 0,rgba(255,255,255,.55) .5px,transparent 1.3px),
+radial-gradient(circle at 66% 71%,rgba(255,255,255,.5) 0,rgba(255,255,255,.5) .5px,transparent 1.2px),
+radial-gradient(circle at 81% 84%,rgba(255,255,255,.45) 0,rgba(255,255,255,.45) .5px,transparent 1.2px),
+radial-gradient(circle at 39% 88%,rgba(255,255,255,.4) 0,rgba(255,255,255,.4) .5px,transparent 1.2px),
+radial-gradient(ellipse 95% 42% at 62% 36%,rgba(126,152,232,.17) 0,rgba(126,152,232,0) 70%),
+linear-gradient(180deg,#2e4580 0,#263b6d 30%,#1a2850 62%,#0e1422 100%)}
+.gx-milch{position:absolute;inset:0;background:url(bilder/berg/kosmos.webp) center/cover no-repeat;opacity:.13;-webkit-mask-image:linear-gradient(180deg,transparent 4%,#000 38%,#000 72%,transparent 100%);mask-image:linear-gradient(180deg,transparent 4%,#000 38%,#000 72%,transparent 100%)}
+.gx-funkel{position:absolute;inset:0}
+.gx-funkel i{position:absolute;width:var(--g,3px);height:var(--g,3px);margin:calc(var(--g,3px) / -2) 0 0 calc(var(--g,3px) / -2);border-radius:50%;background:radial-gradient(circle,#fff 0,rgba(233,240,250,.8) 28%,rgba(143,176,222,0) 70%);opacity:.2;animation:nhFunkel var(--d,7s) ease-in-out var(--v,0s) infinite;will-change:opacity}
+.wh.gx:not([data-g="1"]):not([data-k="1"]) .gx-funkel i{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.gx-funkel i{animation:none;opacity:.4}}
+/* Kontakt auf der Galaxie: helle Schrift, keine Bergkette mehr */
+.ic-berge{display:none!important}
+.ic-dark{color:#fff}
+.ic-dark p{opacity:.8}
+.ic-dark .ic-k{color:#f3b27a;opacity:1}
+body[data-sc="k"] .sc-hint{color:#e9f0fa;text-shadow:none}
+body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#e9f0fa,rgba(233,240,250,0))}
+/* Erde: eigene Textur statt fremdem Server; heller Atmosphärensaum */
+.ic-globe{background-image:url(bilder/berg/erde.webp)!important;animation-name:icErde}
+@keyframes icErde{to{background-position:-480px 50%}}
+.gf-tex{background-image:none!important;animation:none!important}
+.ic-halo{background:radial-gradient(closest-side,rgba(10,16,34,0) 0,rgba(10,16,34,0) 66%,rgba(214,236,255,.9) 67%,rgba(150,196,255,.42) 71%,rgba(110,160,240,.16) 80%,rgba(110,160,240,0) 100%)}
+/* v37: längerer Flug in den Punkt (Galerie 262svh), Wörter des Satzes als eigene Teile, zwei sanfte Haltepunkte */
+.mg{height:426vh;height:calc(164lvh + 262svh)}
+.mg-anker{top:124vh;top:calc(64lvh + .23 * 262svh)}
+.mg-w{display:inline-block;will-change:transform,opacity;backface-visibility:hidden}
+.mg-titel{max-width:none;text-wrap:nowrap;white-space:nowrap}
+/* Haltepunkte: zwei Marken (ruhiger Moment vor dem Flug, Startbild des Kontakts). Kein CSS-Einrasten (das zöge beim Flug
+   zurück); am Handy hält die Galerie einen schnellen Wisch dort kurz an, sonst scrollt die Seite frei. */
+.mg-halt{position:absolute;left:0;width:1px;height:1px;pointer-events:none}
+.mg-halt-a{top:236vh;top:calc(64lvh + .656 * 262svh)}
+.mg-halt-b{top:310vh;top:calc(64lvh + 246svh + 1px)}
+.mg-kopf2{text-shadow:0 1px 2px rgba(18,44,96,.28),0 4px 26px rgba(18,44,96,.45)}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795738809"></script>
+<script src="ergun-berg.js?v=1795739667"></script>
 </body>
 </html>
