@@ -50,12 +50,13 @@
     var st=document.querySelector('.mg-stage'),kr=null;
     if(st&&(gf==='1'||gf==='2')){var mm=/circle\(([\d.]+)px at ([\d.]+)px ([\d.]+)px\)/.exec(getComputedStyle(st).clipPath);if(mm){var sr=st.getBoundingClientRect();kr={r:+mm[1],x:sr.left+ +mm[2],y:sr.top+ +mm[3]}}}
     if(kr&&kr.r>.5){
+      /* einfacher Übergang in einer Farbe: der gelbe Punkt wächst, bis er den Bildschirm füllt, dann blendet er weg */
       if(!zoomStart)zoomStart={x:P.x||kr.x,y:P.y||kr.y};var diag=Math.hypot(W,H),mz=weich(kr.r/(diag*.2)),x=zoomStart.x+(kr.x-zoomStart.x)*mz,y=zoomStart.y+(kr.y-zoomStart.y)*mz;
-      var aus=Math.min(1,Math.max(0,(kr.r-diag*.25)/(diag*.3))),a=1-aus*aus*(3-2*aus);
-      /* wie ein Fenster: der gelbe Punkt öffnet sich, innen erscheint die Galerie, außen bleibt ein feiner gelber Rand */
-      var R=Math.max(kr.r,P.r||4),voll=1-weich((R-14)/70);
-      if(voll>0){cx.globalAlpha=a*voll;cx.fillStyle=GELB;cx.beginPath();cx.arc(x,y,R,0,6.2832);cx.fill()}
-      cx.globalAlpha=a;cx.strokeStyle=GELB;cx.lineWidth=Math.max(2,Math.min(6,R*.03));cx.beginPath();cx.arc(x,y,R,0,6.2832);cx.stroke();cx.globalAlpha=1;return}
+      var R=Math.max(kr.r*1.08,P.r||4),deckt=Math.hypot(Math.max(x,W-x),Math.max(y,H-y));
+      if(R>=deckt&&!P.weg)P.weg=t;
+      cx.fillStyle=GELB;cx.globalAlpha=P.weg?Math.max(0,1-(t-P.weg)/.55):1;cx.beginPath();cx.arc(x,y,R,0,6.2832);cx.fill();cx.globalAlpha=1;return}
+    if(P.weg&&(gf==='1'||gf==='2')){var fa=1-(t-P.weg)/.55;if(fa>0){cx.globalAlpha=fa;cx.fillStyle=GELB;cx.fillRect(0,0,W,H);cx.globalAlpha=1}return}
+    if(!(gf==='1'||gf==='2'))P.weg=0;
     zoomStart=null;
     if(gf==='1'||gf==='2'||!frei){P.a=0;ziel=-1;return}
     var s=stufe();
