@@ -16,10 +16,8 @@
   ' vec3 c0=vec3(74.,30.,0.)/255.,c1=vec3(201.,158.,72.)/255.;',
   ' float back=(1.-uv.y)+n*(1.-uv.y);float front=(1.08-uv.y)+n*(1.-uv.y);',
   ' float ba=smoothstep(.97,1.01,back);float fa=smoothstep(.97,1.01,front)-ba;',
-  ' vec3 innen=mix(vec3(.93,.45,.12),vec3(.80,.30,.07),uv.y);',
-  ' vec3 c=mix(innen,min(c1*1.3,vec3(1.)),ba);c=mix(c,mix(c0,innen,.35),clamp(fa,0.,1.));',
-  ' c+=c1*.25*pow(1.-N.z,2.5);',
-  ' float edge=smoothstep(1.,.985,sqrt(r2));gl_FragColor=vec4(c*edge,edge);}'].join('\n');
+  ' float A=clamp(ba+fa,0.,1.);vec3 c=mix(c0,min(c1*1.3,vec3(1.)),ba/max(A,.001));',
+  ' float edge=smoothstep(1.,.985,sqrt(r2))*A;gl_FragColor=vec4(c*edge,edge);}'].join('\n');
   var cv,gl,uT,glow,gx,start=performance.now(),kern,kugel,mobil=matchMedia('(pointer: coarse), (max-width: 820px)').matches,ruhig=matchMedia('(prefers-reduced-motion: reduce)').matches;
   function bauen(){
     kugel=document.querySelector('.dk-atem');kern=document.querySelector('.dk-kern');
