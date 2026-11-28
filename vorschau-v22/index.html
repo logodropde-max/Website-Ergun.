@@ -1705,12 +1705,27 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 /* v66: Galerie kürzer (Karussell, dann gleich der Kreis zum Kontakt); weiße Ebene über dem Verlauf */
 .mg{height:420vh;height:calc(164lvh + 200svh)}
 .mg-weiss{position:absolute;inset:0;background:#63e;opacity:0;pointer-events:none;z-index:0;will-change:opacity}
+/* v67: Circle Reveal zum Kontakt: drei Kreise in Violett von hell nach dunkel */
+.mg-welle{position:absolute;inset:0;z-index:6;pointer-events:none;visibility:hidden;clip-path:circle(0px at 50% 0px);-webkit-clip-path:circle(0px at 50% 0px);will-change:clip-path}
+.mg-welle1{background:#b9adff}
+.mg-welle2{background:#63e}
+.mg-welle3{background:#1d1347}
+/* v68: Kontakt: Kreise von unten, der letzte ist der Nachthimmel (gleiches Bild wie dahinter, nahtloser Wechsel); Erde bleibt sichtbar */
+.ic-welle{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;visibility:hidden;clip-path:circle(0px at 50% 100%);-webkit-clip-path:circle(0px at 50% 100%);will-change:clip-path}
+.ic-welle1{background:#b9adff}
+.ic-welle2{background:#63e}
+.ic-welle3{background:#0e1422}
+.ic-welle3 b{position:absolute;left:50%;top:50%;width:max(100vw,100vh);height:max(100vw,100vh);width:max(100vw,100lvh);height:max(100vw,100lvh);transform:translate(-50%,-50%);background:var(--nh-bg)}
+.ic-light2{clip-path:circle(0px at 50% 100%);-webkit-clip-path:circle(0px at 50% 100%)}
+.ic-hero[data-nacht="1"] .ic-ball{visibility:visible!important}
+.ic-halo{z-index:1}
+.ic-ball{z-index:1}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795875388"></script>
+<script src="ergun-berg.js?v=1795875536"></script>
 </body>
 </html>
