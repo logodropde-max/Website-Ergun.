@@ -1628,12 +1628,17 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 /* dunkler weicher Schleier hinter der Schrift, damit sie auf der hellen Scheibe lesbar bleibt */
 .ic-glas::before{content:"";position:absolute;left:50%;top:50%;width:min(1000px,120vw);height:min(620px,78vh);transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(0,0,0,.62),rgba(0,0,0,.35) 55%,rgba(0,0,0,0));opacity:var(--glas,0);z-index:-1;pointer-events:none}
 .ic-glas .ic-k,.ic-glas p{color:rgba(255,255,255,.92)}
+/* v47: auf dem hellen blauen Mesh: Schleier kräftiger und blau getönt, kleine Schrift reinweiß */
+.ic-glas::before{width:min(1100px,130vw);height:min(680px,84vh);background:radial-gradient(closest-side,rgba(2,10,28,.66),rgba(2,10,28,.42) 55%,rgba(2,10,28,0))}
+.ic-glas .ic-k,.ic-glas p{color:#fff!important;opacity:1!important}
+.ic-cta span{text-shadow:0 1px 10px rgba(0,0,0,.6)}
+.ic-light .ic-k,.ic-light p{color:#fff!important;opacity:1!important;text-shadow:0 1px 14px rgba(0,8,24,.75)}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795866468"></script>
+<script src="ergun-berg.js?v=1795867536"></script>
 </body>
 </html>
