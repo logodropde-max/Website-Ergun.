@@ -1706,7 +1706,7 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 .mg{height:420vh;height:calc(164lvh + 200svh)}
 .mg-weiss{position:absolute;inset:0;background:#63e;opacity:0;pointer-events:none;z-index:0;will-change:opacity}
 /* v67: Circle Reveal zum Kontakt: drei Kreise in Violett von hell nach dunkel */
-.mg-welle{position:absolute;inset:0;z-index:6;pointer-events:none;visibility:hidden;clip-path:circle(0px at 50% 0px);-webkit-clip-path:circle(0px at 50% 0px);will-change:clip-path}
+.mg-welle{position:absolute;inset:0;z-index:6;pointer-events:none;visibility:hidden;clip-path:circle(0px at 50% 50%);-webkit-clip-path:circle(0px at 50% 50%);will-change:clip-path}
 .mg-welle1{background:#b9adff}
 .mg-welle2{background:#63e}
 .mg-welle3{background:#1d1347}
@@ -1728,12 +1728,23 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 .nh-bild,.nh-funkel{display:none!important}
 .nh{background:#05030f!important}
 .nh-cv{position:absolute;inset:0;width:100%;height:100%;display:block}
+/* v76: Galerie auf Violet Plasma (dunkel), Schrift und Knöpfe hell; Kontakt: Erde bleibt sichtbar */
+.mg-himmel,.hj-root .mg-himmel{background:#05030f!important}
+.mg-plasma{position:absolute;inset:0;width:100%;height:100%;display:block}
+.mg-kopf2,.hj-root .mg-kopf2{color:#fff!important}
+.lk{color:#fff}
+.lk-hint{opacity:.62}
+.lk-btn{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.28);color:#fff}
+@media (hover:hover){.lk-btn:hover{border-color:rgba(255,255,255,.6)}}
+.lk-auf{background:#fff;color:#0f141c}
+.lk-cap{opacity:.72}
+.ic-hero[data-nacht="1"] .ic-ball{visibility:visible!important}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795876415"></script>
+<script src="ergun-berg.js?v=1795876831"></script>
 </body>
 </html>
