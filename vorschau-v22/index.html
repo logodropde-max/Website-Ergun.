@@ -1617,79 +1617,35 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 .ergun-jagd .whf-sig{justify-content:center}
 .ergun-jagd .whf-legal p:empty{display:none}
 
-/* v44: Schwarzes Loch statt Sternenkreis am Ende des Kontakts (Leinwand erst im Kreis, dann im festen Nachthimmel) */
-.bh-cv{position:absolute;left:50%;top:50%;width:100vw;height:100vh;height:100lvh;display:block;opacity:0;pointer-events:none;background:#000}
-.ic-ball > .bh-cv{transform:translate(-50%,-50%) scale(calc((1.12 - var(--all,0) * .12) * var(--k,1)));z-index:1}
-.ic-ball > .bh-cv.an{opacity:var(--all,0)}
-.nh > .bh-cv{left:0;top:0;transform:none}
-.nh > .bh-cv.an{opacity:1}
-.nh:has(> .bh-cv.an) .nh-funkel{display:none}
-.ic-glas .ic-gh,.ic-glas p,.ic-glas .ic-k{text-shadow:0 2px 18px rgba(0,0,0,.65),0 0 42px rgba(0,0,0,.45)}
-/* dunkler weicher Schleier hinter der Schrift, damit sie auf der hellen Scheibe lesbar bleibt */
-.ic-glas::before{content:"";position:absolute;left:50%;top:50%;width:min(1000px,120vw);height:min(620px,78vh);transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(0,0,0,.62),rgba(0,0,0,.35) 55%,rgba(0,0,0,0));opacity:var(--glas,0);z-index:-1;pointer-events:none}
-.ic-glas .ic-k,.ic-glas p{color:rgba(255,255,255,.92)}
-/* v47: auf dem hellen blauen Mesh: Schleier kräftiger und blau getönt, kleine Schrift reinweiß */
-.ic-glas::before{width:min(1100px,130vw);height:min(680px,84vh);background:radial-gradient(closest-side,rgba(2,10,28,.66),rgba(2,10,28,.42) 55%,rgba(2,10,28,0))}
-.ic-glas .ic-k,.ic-glas p{color:#fff!important;opacity:1!important}
-.ic-cta span{text-shadow:0 1px 10px rgba(0,0,0,.6)}
-.ic-light .ic-k,.ic-light p{color:#fff!important;opacity:1!important;text-shadow:0 1px 14px rgba(0,8,24,.75)}
-
-/* v48: Wolkenflug statt weißem Punkt (Übergang von den Fotos zum Kontakt) */
-.wf{position:fixed;inset:0;z-index:4;pointer-events:none;visibility:hidden;overflow:hidden;contain:strict;--W:max(140vw,150vh)}
-.wf i{position:absolute;bottom:0;display:block;will-change:transform,opacity;opacity:0;backface-visibility:hidden}
-.wf-b,.wf-m{left:calc(50vw - var(--W) / 2);width:var(--W);transform-origin:50% 100%;background:center bottom/100% auto no-repeat}
-.wf-b{aspect-ratio:2400/700;background-image:url(bilder/berg/wolke-hinten2.webp)}
-.wf-m{aspect-ratio:2400/800;background-image:url(bilder/berg/wolke-mitte2.webp)}
-.wf-v{width:calc(var(--W) * .58);aspect-ratio:1392/900;background:url(bilder/berg/wolke-vorn3.webp) 0 100%/calc(100% / .58) auto no-repeat}
-.wf-l{left:calc(50vw - var(--W) / 2);transform-origin:86% 100%;-webkit-mask-image:linear-gradient(90deg,#000 72%,transparent 100%);mask-image:linear-gradient(90deg,#000 72%,transparent 100%)}
-.wf-r{left:calc(50vw - var(--W) * .08);transform-origin:14% 100%;background-position:100% 100%;-webkit-mask-image:linear-gradient(270deg,#000 72%,transparent 100%);mask-image:linear-gradient(270deg,#000 72%,transparent 100%)}
-.wf-n{inset:0;bottom:auto;height:100%;width:100%;background:#fff}
-@media (pointer:coarse),(max-width:820px){
-.wf-b{background-image:url(bilder/berg/wolke-hinten2-m.webp)}
-.wf-m{background-image:url(bilder/berg/wolke-mitte2-m.webp)}
-.wf-v{background-image:url(bilder/berg/wolke-vorn3-m.webp)}
-}
-
-/* v49: Velvet Haze hinter den drei Wörtern statt Weiß */
-.vh-cv{position:absolute;inset:0;width:100%;height:100%;display:block}
-.ac-hero[data-haze="1"] .dk-bg{background:#0c111c}
-.ac-hero[data-haze="1"] .dk-hof{background:radial-gradient(closest-side,rgba(120,156,220,.22) 0,rgba(120,156,220,.09) 45%,rgba(120,156,220,0) 100%)}
-.ac-hero[data-nb="1"][data-haze="1"] .ac-words .ac-word:nth-child(n)[data-gt-none][data-gt-none]{text-shadow:0 2px 34px rgba(4,8,18,.6),0 0 2px rgba(4,8,18,.35)!important}
-
-/* v50: Generative Tree hinter den drei Wörtern; Pixel-Kugel aus (der Lichtsamen aus der Krone führt zum Punkt) */
-.baum-cv{position:absolute;inset:0;width:100%;height:100%;display:block}
-.ac-hero[data-baum="1"] .dk-bg{background:#0a0a0a}
-.ac-hero[data-baum="1"] .dk-mitte,.ac-hero[data-baum="1"] .dk-hof{display:none}
-.ac-hero[data-nb="1"][data-baum="1"] .ac-words .ac-word:nth-child(n)[data-gt-none][data-gt-none]{text-shadow:0 2px 30px rgba(0,0,0,.75),0 0 3px rgba(0,0,0,.5)!important}
 
 /* v52: am Handy kein endloses Driften der Wolkenbänder */
 @media (pointer:coarse){.ac-cloud i{animation:none!important}}
 
-/* v53: Metaballs hinter den drei Wörtern */
-.meta-cv{position:absolute;inset:0;width:100%;height:100%;display:block}
-.ac-hero[data-baum="1"] .dk-bg{background:#0b1426}
-
-/* v54: Fußzeile ohne eigenen Grund: der Nachthimmel läuft durch, das Gemälde liegt weich darin (alle Kanten verlaufen)
-   und ist in die Farben der Nacht getaucht */
-.ergun-jagd,.hj-root .ergun-jagd{background:transparent!important}
-.ergun-jagd .whf-picture{-webkit-mask-image:radial-gradient(ellipse 62% 58% at 50% 36%,#000 38%,rgba(0,0,0,.55) 62%,transparent 100%)!important;mask-image:radial-gradient(ellipse 62% 58% at 50% 36%,#000 38%,rgba(0,0,0,.55) 62%,transparent 100%)!important;isolation:isolate}
-.ergun-jagd .whf-picture img:not(.whf-cutout){filter:saturate(.7) brightness(.8) contrast(1.04)!important}
-.ergun-jagd .whf-tint{display:block!important;position:absolute;inset:0;background:linear-gradient(180deg,rgba(40,60,140,.42),rgba(20,30,80,.5))!important;mix-blend-mode:color;opacity:.55!important}
-.ergun-jagd .whf-grain{opacity:.5}
-.ac-hero[data-baum="1"] .dk-bg{background:#0d1f5c}
-.ergun-jagd .whf-picture{-webkit-mask-image:radial-gradient(ellipse 64% 48% at 50% 45%,#000 40%,rgba(0,0,0,.55) 66%,transparent 100%)!important;mask-image:radial-gradient(ellipse 64% 48% at 50% 45%,#000 40%,rgba(0,0,0,.55) 66%,transparent 100%)!important}
-.ergun-jagd::after{content:"";position:absolute;left:0;right:0;bottom:0;height:40%;pointer-events:none;background:linear-gradient(180deg,rgba(5,8,18,0),rgba(5,8,18,.55));z-index:0}
-
-/* v55: Kamerablende über allem; Galerie-Hintergrund dunkel (Kino) */
-.iris-cv{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:9700;pointer-events:none;visibility:hidden}
-.mg-himmel{background:#0a1236!important}
-.mg-himmel::after{background:radial-gradient(ellipse 62% 40% at 50% 50%,rgba(5,8,24,.38) 0,rgba(5,8,24,.16) 55%,rgba(5,8,24,0) 100%)!important}
+/* v56: alle Abschnitte weiß und ruhig */
+/* Galerie: die große blaue Kugel füllt das Bild, dann wird es weiß (statt Wolkenhimmel); Schrift dunkel */
+.mg-himmel{background:#fff!important}
+.mg-himmel::after{display:none!important}
+.mg-stage{color:#0f141c!important}
+.mg-stage .mg-tipp,.mg-stage [class*="hinweis"],.mg-stage [class*="tipp"]{color:rgba(15,20,28,.55)!important}
+/* Kontakt: nur weiß mit dunkler Schrift, ohne Erde, Saum, dunklen Kreis und Glasschrift */
+.ic-ball,.ic-halo,.ic-light,.ic-glas,.ic-berge,.nh{display:none!important}
+.ic-dark{color:#0f141c!important}
+.ic-cta>span{color:rgba(15,20,28,.55)!important}
+.ic-btn{color:#0f141c!important}
+.ic-hero,.hj-root .ic-hero,.ic-track,.hj-root .ic-track{background:#fff!important}
+/* Fußzeile: weiß, ohne Gemälde, Körnung und Verlauf */
+.ergun-jagd,.hj-root .ergun-jagd{background:#fff!important}
+.ergun-jagd .whf-picture,.ergun-jagd .whf-grain{display:none!important}
+.ergun-jagd,.ergun-jagd a,.ergun-jagd .whf-legal,.ergun-jagd .whf-up{color:#0f141c!important}
+.mg-kopf2,.mg-titel,.mg-h{color:#0f141c!important;text-shadow:none!important}
+.mg-tipp{color:rgba(15,20,28,.55)!important;text-shadow:none!important}
+.ic-cta .ic-btn,.hj-root .ic-cta .ic-btn{color:#0f141c!important;-webkit-text-fill-color:#0f141c;background:none!important;text-shadow:none!important;opacity:1}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795871352"></script>
+<script src="ergun-berg.js?v=1795872824"></script>
 </body>
 </html>
