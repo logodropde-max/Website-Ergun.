@@ -1649,12 +1649,18 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 .wf-m{background-image:url(bilder/berg/wolke-mitte2-m.webp)}
 .wf-v{background-image:url(bilder/berg/wolke-vorn3-m.webp)}
 }
+
+/* v49: Velvet Haze hinter den drei Wörtern statt Weiß */
+.vh-cv{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ac-hero[data-haze="1"] .dk-bg{background:#0c111c}
+.ac-hero[data-haze="1"] .dk-hof{background:radial-gradient(closest-side,rgba(120,156,220,.22) 0,rgba(120,156,220,.09) 45%,rgba(120,156,220,0) 100%)}
+.ac-hero[data-nb="1"][data-haze="1"] .ac-words .ac-word:nth-child(n)[data-gt-none][data-gt-none]{text-shadow:0 2px 34px rgba(4,8,18,.6),0 0 2px rgba(4,8,18,.35)!important}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795868482"></script>
+<script src="ergun-berg.js?v=1795869000"></script>
 </body>
 </html>
