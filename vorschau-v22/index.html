@@ -1739,12 +1739,16 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 .lk-auf{background:#fff;color:#0f141c}
 .lk-cap{opacity:.72}
 .ic-hero[data-nacht="1"] .ic-ball{visibility:visible!important}
+/* v79: Kontakt ohne Kreise von unten; der Kreis der Erde ist durchsichtig (darin der violette Hintergrund) */
+.ic-welle,.ic-light2{display:none!important}
+.ic-ball::before{display:none!important}
+.ic-ball{background:transparent!important}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795876831"></script>
+<script src="ergun-berg.js?v=1795879403"></script>
 </body>
 </html>
