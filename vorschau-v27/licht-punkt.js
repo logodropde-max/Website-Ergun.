@@ -1,4 +1,5 @@
-/* Variante A: der gelbe Punkt ist das Satzzeichen (beginnt erst, wenn „100 %“ ganz weg ist).
+/* Nur am Ende: die Wörter wechseln normal, erst bei „Schnell online“ erscheint der gelbe Punkt mit Abstand dahinter.
+   (Früher Variante A: der gelbe Punkt ist das Satzzeichen (beginnt erst, wenn „100 %“ ganz weg ist).
    „Persönlich geplant.“ und „Klar gestaltet.“: der Satzpunkt ist der gelbe Punkt. Wechselt das Wort, springt er in einem
    kleinen Bogen ans Ende des neuen Worts und federt beim Landen minimal. Bei „Schnell online“ landet er mit Abstand dahinter.
    Danach zoomt er von dort in die Kamera; im wachsenden Kreis erscheint die Galerie (Kreis von .mg-stage). */
@@ -41,7 +42,6 @@
     var W=innerWidth,H=innerHeight,d=Math.min(devicePixelRatio||1,2);
     if(cv.width!==Math.round(W*d)||cv.height!==Math.round(H*d)){cv.width=Math.round(W*d);cv.height=Math.round(H*d)}
     cx.setTransform(d,0,0,d,0,0);cx.clearRect(0,0,W,H);
-    satzpunkt(worte[0]);satzpunkt(worte[1]);
     var zo=zaehler?+getComputedStyle(zaehler).opacity:0,an=parseFloat(dk.style.opacity);if(isNaN(an))an=+getComputedStyle(dk).opacity||0;
     if(zo>.03||an<.985){frei=false;leerSeit=-1}else{if(leerSeit<0)leerSeit=t;if(t-leerSeit>.3)frei=true}
     document.body.classList.toggle('lp-w',frei);
@@ -59,7 +59,7 @@
     zoomStart=null;
     if(gf==='1'||gf==='2'||!frei){P.a=0;ziel=-1;return}
     var s=stufe();
-    if(s<0){P.a+=(0-P.a)*Math.min(1,dt*8);if(P.a>.01)kreis(P.x,P.y,P.r,P.a);return}
+    if(s<2){P.a=0;ziel=-1;return}
     var zs=stelle(s);if(!zs)return;
     if(s!==ziel){if(ziel<0||P.a<.05){P.x=zs.x;P.y=zs.y;P.r=zs.r;sprung=-9;land=t}else{von={x:P.x,y:P.y,r:P.r};sprung=t}ziel=s}
     var f=(t-sprung)/DAUER;
@@ -72,7 +72,7 @@
     /* sanftes Erscheinen beim ersten Wort, kleines Federn beim Landen */
     P.a+=(1-P.a)*Math.min(1,dt*7);
     var lf=(t-land)/.32,sx=1,sy=1;if(lf>=0&&lf<1){var e=Math.sin(lf*Math.PI)*(1-lf);sx=1+.22*e;sy=1-.22*e}
-    var auf=Math.min(1,Math.max(0,(t-land)/.35)),pop=ziel===0&&sprung<0?(auf<1?.4+.6*weich(auf):1):1;
+    var auf=Math.min(1,Math.max(0,(t-land)/.45)),pop=auf<1?.2+.8*weich(auf):1;
     kreis(P.x,P.y+(1-sy)*P.r,P.r*pop,P.a,sx,sy);
   }
   (function warte(){if(bauen())requestAnimationFrame(lauf);else setTimeout(warte,200)})();
