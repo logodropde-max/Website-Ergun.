@@ -236,21 +236,21 @@ void main(){
   vec2 p=vec2(gl_FragCoord.x,u_res.y-gl_FragCoord.y);
   vec2 q=(p-u_k.xy)/u_k.z;
   float d=length(q),ang=atan(q.y,q.x);
-  float lebendig=1.+2.2*u_puls;
-  float rand=1.+(.018*sin(3.*ang+u_t*1.3)+.012*sin(5.*ang-u_t*1.7))*lebendig+.012*sin(u_t*2.)+.06*u_puls;
+  float lebendig=1.+.8*u_puls;
+  float rand=1.+(.0045*sin(3.*ang+u_t*.6)+.003*sin(5.*ang-u_t*.8))*lebendig+.006*sin(u_t*1.1)+.03*u_puls;
   float aa=1.6/u_k.z;
   float innen=1.-smoothstep(rand-aa,rand+aa,d);
   // Aquarell: zwei langsam ziehende Rauschfelder mischen die T\xF6ne
-  float t=u_t*.18;
+  float t=u_t*.1;
   vec2 w=q*1.5;
   float f1=fbm(w+vec2(t,-t*.7)+fbm(w*1.3-t)*.8);
   float f2=fbm(w*1.1-vec2(t*.6,t)+3.1);
   vec3 c=mix(u_low,u_mid,smoothstep(.25,.75,f1));
   c=mix(c,u_main,smoothstep(.35,.85,f2)*.8);
   float licht=clamp(dot(normalize(q+vec2(1e-4)),vec2(-.55,-.65))*.5+.5,0.,1.)*smoothstep(1.,.2,d);
-  c=mix(c,u_high,licht*.55+u_puls*.25);
+  c=mix(c,u_high,licht*.5+u_puls*.12);
   c+=u_high*smoothstep(.75,1.,d/rand)*.18;
-  float glow=exp(-max(d-rand,0.)*7.)*(1.-innen)*(.28+.35*u_puls);
+  float glow=exp(-max(d-rand,0.)*8.)*(1.-innen)*(.24+.12*u_puls);
   vec3 col=c*innen+u_main*glow;
   float al=max(innen,glow)*u_a;
   gl_FragColor=vec4(col*u_a,al);
