@@ -268,7 +268,7 @@ html,body{margin:0;background:#fff}
 .hj-stat>span{color:rgba(233,237,247,.65)!important;font-size:14px!important;margin-top:12px!important}
 @media(max-width:900px){.hj-stats{grid-template-columns:1fr 1fr!important}}
 </style>
-<link rel="stylesheet" href="tw.css?v=1795793747">
+<link rel="stylesheet" href="tw.css">
 
 <style>/* v10b */.hj-about .bt{overflow:clip!important}.hj-stat strong,.hj-stat strong *{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hj-stat strong{text-shadow:0 0 28px rgba(120,160,255,.35)}</style>
 
@@ -1616,12 +1616,21 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 .ergun-jagd .whf-col li{display:block}
 .ergun-jagd .whf-sig{justify-content:center}
 .ergun-jagd .whf-legal p:empty{display:none}
+
+/* v44: Schwarzes Loch statt Sternenkreis am Ende des Kontakts (Leinwand erst im Kreis, dann im festen Nachthimmel) */
+.bh-cv{position:absolute;left:50%;top:50%;width:100vw;height:100vh;height:100lvh;display:block;opacity:0;pointer-events:none;background:#000}
+.ic-ball > .bh-cv{transform:translate(-50%,-50%) scale(calc((1.12 - var(--all,0) * .12) * var(--k,1)));z-index:1}
+.ic-ball > .bh-cv.an{opacity:var(--all,0)}
+.nh > .bh-cv{left:0;top:0;transform:none}
+.nh > .bh-cv.an{opacity:1}
+.nh:has(> .bh-cv.an) .nh-funkel{display:none}
+.ic-glas .ic-gh,.ic-glas p,.ic-glas .ic-k{text-shadow:0 2px 18px rgba(0,0,0,.65),0 0 42px rgba(0,0,0,.45)}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795793747"></script>
+<script src="ergun-berg.js?v=1795865772"></script>
 </body>
 </html>
