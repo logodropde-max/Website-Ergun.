@@ -1724,8 +1724,9 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 /* v71b (28.11. abends, Emres Wunsch): Halbkreise von oben nach der Galerie raus */
 .mg-welle{display:none!important}
 /* v71c (Emres Wunsch): keine Kreise von unten beim Kontakt, Erde ohne Ring außen herum */
-.ic-welle1,.ic-welle2,.ic-light2{display:none!important}
-.ic-welle3{clip-path:none!important;-webkit-clip-path:none!important}
+.ic-welle1,.ic-welle2{display:none!important}
+/* Erde geht auf: der Sternenhimmel wächst als Kreis aus der Erde (wie der Punkt), gesteuert von erde-auf.js */
+.ic-welle3,.ic-light2{clip-path:circle(var(--auf-r,0px) at var(--auf-x,50%) var(--auf-y,50%))!important;-webkit-clip-path:circle(var(--auf-r,0px) at var(--auf-x,50%) var(--auf-y,50%))!important}
 .ic-halo{display:none!important}
 .ic-globe::after{box-shadow:inset 26px 0 40px -6px rgba(0,0,0,.35),inset -150px 0 90px -10px rgba(0,0,0,.72),inset -40px 0 50px rgba(0,0,0,.35)!important}
 .ic-globe{box-shadow:none!important;filter:saturate(1.08) contrast(1.04)}
@@ -1736,5 +1737,6 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
 <script src="ergun-berg.js?v=1795876020"></script>
+<script src="erde-auf.js?v=1"></script>
 </body>
 </html>
