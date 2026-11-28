@@ -1764,7 +1764,6 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 .mg-welle2{background:#2e2470}
 .mg-welle3{background:#07060c}
 /* v80: ohne Kugel steht der Punkt bei „Schnell online“ von Anfang an da (bis die große Kugel übernimmt) */
-body:not([data-gf="1"]):not([data-gf="2"]) .ac-hero[data-nb="1"] .ac-word .ac-rdot-w{opacity:1!important}
 /* v81: ruhiges Violett hinter Wörtern, Galerie und Kontakt-Kreis */
 .dk-plasma{position:absolute;inset:0;width:100%;height:100%;display:block}
 .mg-plasma{display:block!important}
@@ -1777,12 +1776,15 @@ body:not([data-gf="1"]):not([data-gf="2"]) .ac-hero[data-nb="1"] .ac-word .ac-rd
 .mg-himmel,.hj-root .mg-himmel{background:#000!important}
 .nh{background:#000!important}
 .ac-word .ac-rdot-w{background:#fff!important;box-shadow:0 0 18px rgba(255,255,255,.55)}
+/* v83: Bloop-Kugel hinter den Wörtern; Punkt und große Kugel im Blau der Kugel */
+.ac-word .ac-rdot-w{background:#3d8bff!important;box-shadow:0 0 16px rgba(80,160,255,.75)!important}
+.gf-ball,.mg-stage,.mg-portal,.gf-zeichner{background:#1f6fff!important}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795881949"></script>
+<script src="ergun-berg.js?v=1795883113"></script>
 </body>
 </html>
