@@ -1,5 +1,9 @@
 # Agentur-Website ERGUN. · Webdesign
 
+## Zurückgeholte Stände (28.11.2026 abends, auf Emres Wunsch)
+- `vorschau-v24/` = Stand v43 (27.11., 16:35): Punkt in der Mitte, Kugel, echte Erde, noch ohne automatisches Weiterscrollen.
+- `vorschau-v25/` = Stand v71 (28.11., 15:27): letzter Stand vor v72, mit dem die Übergänge von selbst weiterlaufen.
+
 ## Vorschau v89 (28.11.2026) – neues Design aus ALTO + Onda (`vorschau-v23/`)
 - Basis: v88 (`vorschau-v22/`, bleibt unverändert als Rückweg). Alles Neue steckt in `vorschau-v23/neu.css` und `vorschau-v23/neu.js`.
 - Oben ALTO (Coffee Roaster): Everest + Wolken bleiben, fette weiße Schrift (Satoshi 900), Höhenangabe „8.849 m · Mount Everest“, Filmkorn, roter Ring oben rechts (öffnet die Anfrage), roter Punkt im Logo.
