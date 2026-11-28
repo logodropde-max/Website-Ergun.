@@ -1770,12 +1770,19 @@ body:not([data-gf="1"]):not([data-gf="2"]) .ac-hero[data-nb="1"] .ac-word .ac-rd
 .mg-plasma{display:block!important}
 .nh-cv{display:block!important}
 .ac-word .ac-rdot-w{background:#c9bfff!important;box-shadow:0 0 18px rgba(201,191,255,.6)}
+/* v82: Energy Beam (Unicorn Studio) als Hintergrund statt Violett; dunkler Grund darunter, falls die Szene nicht lädt */
+.eb-szene{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#eb-park{position:fixed;left:-200vw;top:0;width:100vw;height:100vh;overflow:hidden;visibility:hidden;pointer-events:none}
+.dk-bg{background:#000!important}
+.mg-himmel,.hj-root .mg-himmel{background:#000!important}
+.nh{background:#000!important}
+.ac-word .ac-rdot-w{background:#fff!important;box-shadow:0 0 18px rgba(255,255,255,.55)}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795881624"></script>
+<script src="ergun-berg.js?v=1795881949"></script>
 </body>
 </html>
