@@ -51,9 +51,11 @@
     if(st&&(gf==='1'||gf==='2')){var mm=/circle\(([\d.]+)px at ([\d.]+)px ([\d.]+)px\)/.exec(getComputedStyle(st).clipPath);if(mm){var sr=st.getBoundingClientRect();kr={r:+mm[1],x:sr.left+ +mm[2],y:sr.top+ +mm[3]}}}
     if(kr&&kr.r>.5){
       /* einfacher Übergang in einer Farbe: der gelbe Punkt wächst, bis er den Bildschirm füllt, dann blendet er weg */
-      if(!zoomStart)zoomStart={x:P.x||kr.x,y:P.y||kr.y};var diag=Math.hypot(W,H),mz=weich(kr.r/(diag*.2)),x=zoomStart.x+(kr.x-zoomStart.x)*mz,y=zoomStart.y+(kr.y-zoomStart.y)*mz;
-      var R=Math.max(kr.r*1.08,P.r||4),deckt=Math.hypot(Math.max(x,W-x),Math.max(y,H-y));
-      if(R>=deckt&&!P.weg)P.weg=t;
+      /* gerade aus dem Punkt heraus: Mitte bleibt genau beim Punkt, wächst gleichmäßig in alle Richtungen */
+      if(!zoomStart)zoomStart={x:P.x||kr.x,y:P.y||kr.y};var x=zoomStart.x,y=zoomStart.y;
+      var mgDeckt=Math.hypot(Math.max(kr.x,W-kr.x),Math.max(kr.y,H-kr.y)),deckt=Math.hypot(Math.max(x,W-x),Math.max(y,H-y));
+      var R=Math.max(kr.r*deckt/mgDeckt,P.r||4);
+      if(kr.r>=mgDeckt*.98&&!P.weg)P.weg=t;
       cx.fillStyle=GELB;cx.globalAlpha=P.weg?Math.max(0,1-(t-P.weg)/.55):1;cx.beginPath();cx.arc(x,y,R,0,6.2832);cx.fill();cx.globalAlpha=1;return}
     if(P.weg&&(gf==='1'||gf==='2')){var fa=1-(t-P.weg)/.55;if(fa>0){cx.globalAlpha=fa;cx.fillStyle=GELB;cx.fillRect(0,0,W,H);cx.globalAlpha=1}return}
     if(!(gf==='1'||gf==='2'))P.weg=0;
