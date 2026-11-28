@@ -50,7 +50,7 @@
     var an=parseFloat(dk.style.opacity);if(isNaN(an))an=+getComputedStyle(dk).opacity||0;
     var gf=document.body.getAttribute('data-gf'),ball=document.querySelector('.gf-ball'),br=ball&&ball.getBoundingClientRect(),bo=ball?+getComputedStyle(ball).opacity:0;
     var ziel={a:0},s=welche();if(s!==stufe){stufe=s;stufeZeit=t}
-    var w=worte[Math.min(2,Math.max(0,stufe-1))],wr=w&&w.getBoundingClientRect(),cx0=W/2,cy0=H/2,wh=40;
+    var w=worte[Math.min(2,Math.max(0,Math.min(stufe,3)-1))],wr=w&&w.getBoundingClientRect(),cx0=W/2,cy0=H/2,wh=40;
     if(wr&&wr.width>0){cx0=wr.left+wr.width/2;cy0=wr.top+wr.height/2;wh=wr.height}
     var st=document.querySelector('.mg-stage'),kr=null;
     if(st&&(gf==='1'||gf==='2')){var mm=/circle\(([\d.]+)px at ([\d.]+)px ([\d.]+)px\)/.exec(getComputedStyle(st).clipPath);if(mm){var sr=st.getBoundingClientRect();kr={r:+mm[1],x:sr.left+ +mm[2],y:sr.top+ +mm[3]}}}
@@ -59,12 +59,11 @@
     else if(an>.985){
       if(stufe<=1){var dd=m*.3;ziel={x:cx0,y:cy0-wh*.5-dd*.62,d:dd,a:1}}
       else if(stufe===2){ziel={x:cx0,y:cy0,d:m*.46,a:1}}
-      else if(stufe===3){var d3=m*.16;ziel={x:cx0,y:cy0-wh*.5-d3*.8,d:d3,a:1}}
       else{var p=document.querySelector('.ac-hero .ac-word .ac-rdot-w'),pr=p&&p.getBoundingClientRect();
-        if(pr&&pr.width>0)ziel={x:pr.left+pr.width/2,y:pr.top+pr.height/2,d:pr.width*1.9,a:1};else ziel={x:cx0,y:cy0,d:12,a:1}}
+        if(pr&&pr.width>0)ziel={x:pr.left+pr.width/2,y:pr.top+pr.height/2,d:pr.width*1.9,a:1};else ziel={x:(wr?wr.right:cx0)+8,y:cy0+wh*.25,d:12,a:1}}
     }
     var folgt=!!(kr&&kr.r>.5);
-    var k=folgt?1:1-Math.exp(-dt*(stufe===4?6:3.2));
+    var k=folgt?1:1-Math.exp(-dt*(stufe>=3?6:3.2));
     if(ziel.x!==undefined){if(P.a<.01){P.x=ziel.x;P.y=ziel.y;P.d=ziel.d*.3}P.x+=(ziel.x-P.x)*k;P.y+=(ziel.y-P.y)*k;P.d+=(ziel.d-P.d)*k}
     P.a+=((ziel.a||0)-P.a)*(folgt?1:1-Math.exp(-dt*4));
     if(P.a<.01){box.style.opacity=0;return}
