@@ -1757,6 +1757,14 @@ body.fp-gross .gf-ball,.gf-ball{background:transparent!important;box-shadow:none
 .lp-box{position:fixed;left:0;top:0;z-index:55;pointer-events:none;opacity:0;border-radius:50%;will-change:transform,width,height;
   background:radial-gradient(circle,#fffdf2 0,#fff3b8 calc(var(--lp-kern,14%) * .6),#ffd84a var(--lp-kern,14%),rgba(255,200,40,.55) calc(var(--lp-kern,14%) + 10%),rgba(255,190,40,.18) 46%,rgba(255,190,40,0) 70%);mix-blend-mode:multiply}
 @media (max-width:520px){.intro-berg .ac-hero .ac-words .ac-word{font-size:clamp(24px,8.2vw,42px)!important}}
+/* Punkt-Story (licht-punkt.js) */
+.lp-cv{position:fixed;inset:0;width:100vw;height:100vh;z-index:55;pointer-events:none}
+.lp-box{display:none!important}
+/* erstes Wort erst, wenn „100 %“ weg ist */
+body:not(.lp-w) .ac-hero .ac-words .ac-word{opacity:0!important}
+.ac-hero .ac-words .ac-word:first-child{transition:opacity .45s ease}
+/* Abstand zwischen „online“ und dem Punkt (der Zoom startet genau dort) */
+.ac-hero .ac-word .ac-rdot-w{margin-left:.3em!important}
 </style>
 
 </head>
@@ -1765,6 +1773,6 @@ body.fp-gross .gf-ball,.gf-ball{background:transparent!important;box-shadow:none
 <div id="root"></div>
 <script src="ergun-berg.js?v=1795876021"></script>
 <script src="erde-auf.js?v=1"></script>
-<script src="licht-punkt.js?v=4"></script>
+<script src="licht-punkt.js?v=6"></script>
 </body>
 </html>
