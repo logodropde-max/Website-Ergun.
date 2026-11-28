@@ -1743,12 +1743,34 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 .ic-welle,.ic-light2{display:none!important}
 .ic-ball::before{display:none!important}
 .ic-ball{background:transparent!important}
+/* v80: ab den Wolken ruhig, edel, dunkel */
+.dk-bg{background:radial-gradient(ellipse 80% 70% at 50% 45%,#16132a 0,#0c0b16 55%,#07060c 100%)!important}
+.ac-hero .dk-kugel,.ac-hero .dk-hof,.ac-hero .tn-cv{visibility:hidden!important}
+.intro-berg .ac-hero[data-nb="1"] .ac-words .ac-word:nth-child(n)[data-gt-none][data-gt-none],.intro-berg .ac-hero .ac-words .ac-word{color:#f3f1fb!important;text-shadow:none!important}
+.ac-alt-big,.ac-alt-big span{color:rgba(243,241,251,.75)!important}
+.alto-voll .ac-logo,.alto-voll .ac-nav a,.ac-logo,.ac-nav a{color:#f3f1fb!important}
+.ac-word .ac-rdot-w{background:#7b6cf0!important}
+/* Galerie und Kontakt: ruhiges Dunkel mit einem Hauch Violett */
+.mg-himmel,.hj-root .mg-himmel{background:radial-gradient(120% 90% at 50% 0%,#1b1733 0,#0c0b16 55%,#07060c 100%)!important}
+.mg-plasma{display:none}
+.ic-weiss{background:#07060c!important}
+.ic-dark,.ic-dark .ic-k,.ic-dark p,.ic-cta>span,.ic-btn{color:#f3f1fb!important;-webkit-text-fill-color:#f3f1fb}
+.ic-cta>span{opacity:.6}
+.nh{background:radial-gradient(90% 80% at 50% 60%,#211a44 0,#0f0c1f 55%,#07060c 100%)!important}
+.nh-cv{display:none}
+.wh.kg,.wh{background:#07060c!important}
+.wh .ic-layer,.wh .ic-layer h2,.wh .ic-layer p,.wh .ic-layer .ic-k{color:#f3f1fb!important;-webkit-text-fill-color:#f3f1fb}
+.mg-welle1{background:#5b4bd6}
+.mg-welle2{background:#2e2470}
+.mg-welle3{background:#07060c}
+/* v80: ohne Kugel steht der Punkt bei „Schnell online“ von Anfang an da (bis die große Kugel übernimmt) */
+body:not([data-gf="1"]):not([data-gf="2"]) .ac-hero[data-nb="1"] .ac-word .ac-rdot-w{opacity:1!important}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795879403"></script>
+<script src="ergun-berg.js?v=1795880802"></script>
 </body>
 </html>
