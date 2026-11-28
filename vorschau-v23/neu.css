@@ -1,0 +1,82 @@
+/* v89 · Neues Design: oben ALTO (Berg, Wolken, Höhenangaben, Rot), ab den Wolken Onda (dunkel, fette Schrift, rote Punkte) */
+@font-face{font-family:NeuSans;src:url(../schriften/Satoshi-Variable.woff2) format("woff2");font-weight:300 900;font-display:swap}
+@font-face{font-family:NeuDisplay;src:url(../schriften/ClashDisplay-Variable.woff2) format("woff2");font-weight:200 700;font-display:swap}
+:root{--rot:#e3261c;--rot-hell:#ff5a4a;--nacht:#0b0b0e;--weiss:#f5f3f0}
+
+/* Kopfzeile: ERGUN. mit rotem Punkt, roter Ring wie bei ALTO */
+.ac-logo{font-family:NeuSans,system-ui,sans-serif!important;font-weight:800!important;letter-spacing:.32em!important}
+.neu-pkt{color:var(--rot)!important;-webkit-text-fill-color:var(--rot)}
+.neu-ring{position:fixed;top:12px;right:62px;z-index:9600;width:40px;height:40px;border-radius:50%;border:0;padding:0;cursor:pointer;
+  background:var(--rot);display:grid;place-items:center;box-shadow:0 6px 22px -6px rgba(227,38,28,.7);transition:transform .25s ease}
+.neu-ring::before{content:"";width:24px;height:24px;border-radius:50%;background:#fff}
+.neu-ring::after{content:"";position:absolute;width:8px;height:8px;border-radius:50%;background:var(--rot)}
+.neu-ring:hover{transform:scale(1.08)}
+.neu-ring span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* Gipfel: fette weiße Schrift, Höhenangabe, Filmkorn */
+.ac-hero-title{font-family:NeuSans,system-ui,sans-serif!important;font-weight:900!important;letter-spacing:-.055em!important;line-height:.9!important;color:#fff!important;text-shadow:0 6px 40px rgba(10,20,40,.35)!important}
+.ac-hero-kicker{font-family:NeuSans,system-ui,sans-serif!important;font-weight:700!important;letter-spacing:.34em!important}
+.neu-alt{position:absolute;z-index:3;top:calc(64px + 9vh);right:clamp(18px,6vw,80px);color:#0f1a2c;font-family:NeuSans,system-ui,sans-serif;pointer-events:none;
+  text-align:left;transition:opacity .4s ease}
+.neu-alt b{display:block;font-weight:500;font-size:clamp(40px,7vw,92px);letter-spacing:-.04em;line-height:1}
+.neu-alt b small{font-size:.32em;letter-spacing:0;margin-left:.15em;font-weight:600}
+.neu-alt span{display:block;margin-top:.9em;font-weight:700;font-size:clamp(11px,1.05vw,14px);letter-spacing:.3em;text-transform:uppercase;opacity:.82}
+.neu-alt span+span{margin-top:.6em}
+.neu-korn{position:fixed;inset:-50%;z-index:9400;pointer-events:none;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:neuKorn .9s steps(4) infinite}
+@keyframes neuKorn{25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}}
+@media (prefers-reduced-motion:reduce){.neu-korn{animation:none}}
+
+/* Ab den Wolken: Onda-Dunkel statt Warp */
+.dk-bg{background:var(--nacht)!important}
+.dk-bg canvas.eb-szene{display:none!important}
+/* die Bloop-Kugel hinter den Wörtern bleibt (sie wird zum Punkt), in ALTO-Rot */
+.dk-bg canvas.dk-plasma{filter:hue-rotate(155deg) saturate(1.6) contrast(1.05)}
+.intro-berg .ac-hero[data-nb="1"] .ac-words .ac-word:nth-child(n)[data-gt-none][data-gt-none],.intro-berg .ac-hero .ac-words .ac-word{
+  font-family:NeuSans,system-ui,sans-serif!important;font-weight:800!important;letter-spacing:-.045em!important;color:var(--weiss)!important;text-shadow:none!important}
+.ac-word .ac-rdot-w,.ac-rdot{background:var(--rot)!important;box-shadow:0 0 22px rgba(227,38,28,.65)!important}
+.ac-alt-big,.ac-alt-big span{color:rgba(245,243,240,.85)!important}
+.ac-alt-label,.ac-alt-soil{color:rgba(245,243,240,.6)!important;letter-spacing:.3em!important}
+
+/* Punkt wird zur Kugel: rot, mit Tiefe wie die Onda-Kugel */
+.gf-ball,.mg-portal,.gf-zeichner{background:radial-gradient(circle at 34% 30%,#ff8a7c 0,var(--rot-hell) 14%,var(--rot) 38%,#8c0f08 72%,#2b0402 100%)!important}
+.mg-stage{background:var(--nacht)!important}
+
+/* Galerie: Onda-Dunkel, fette Schrift, rote Knöpfe */
+.mg-himmel,.hj-root .mg-himmel{background:var(--nacht)!important}
+.mg-plasma{display:none!important}
+.mg-kopf2{font-size:clamp(30px,8.5vw,64px)!important}
+.mg-kopf2,.mg-titel,.lk-titel,.lk-h-t{font-family:NeuSans,system-ui,sans-serif!important;font-weight:800!important;letter-spacing:-.04em!important}
+.lk-hint,.lk-zahl,.lk-cap{font-family:NeuSans,system-ui,sans-serif!important;letter-spacing:.24em!important}
+.lk-auf,.lk-ctl .lk-auf{background:var(--rot)!important;color:#fff!important;border-color:var(--rot)!important}
+.lk-btn{border-color:rgba(245,243,240,.3)!important;color:var(--weiss)!important}
+
+/* Kontakt: schwarz, Erde steigt auf, darunter das große „Hallo.“ */
+.ic-weiss,.wh,.wh.kg,.nh{background:var(--nacht)!important}
+.ic-layer h2,.ic-gh{font-family:NeuSans,system-ui,sans-serif!important;font-weight:800!important;letter-spacing:-.045em!important}
+.ic-layer h2 em,.ic-gh em{font-family:inherit!important;font-style:normal!important;font-weight:800!important}
+.ic-dot{color:var(--rot)!important;-webkit-text-fill-color:var(--rot)!important}
+.ic-k{font-family:NeuSans,system-ui,sans-serif!important;letter-spacing:.3em!important;font-weight:700!important}
+.ic-btn{background:var(--rot)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:var(--rot)!important}
+/* im aufgehenden Kreis: der Warp in Rot (wie die Onda-Kugel, nur in ALTO-Rot) */
+.nh canvas.eb-szene,.nh .nh-cv,.wh canvas{filter:hue-rotate(178deg) saturate(1.35) brightness(.9)}
+.neu-hallo{position:absolute;left:0;right:0;bottom:-.07em;z-index:3;margin:0;pointer-events:none;text-align:center;white-space:nowrap;
+  font-family:NeuDisplay,NeuSans,system-ui,sans-serif;font-weight:700;font-size:min(39vw,50vh);line-height:.8;letter-spacing:-.06em;color:var(--weiss);
+  transform:translateY(calc((1 - var(--neu-h,0)) * 40%));opacity:var(--neu-h,0)}
+.neu-hallo i{display:inline-block;width:.15em;height:.15em;border-radius:50%;background:var(--rot);margin-left:.03em;vertical-align:baseline}
+.neu-hallo b{position:absolute;width:.13em;height:.13em;border-radius:50%;background:var(--rot);top:-.16em;right:calc(50% - 1.2em)}
+.ic-ball,.ic-globe,.ic-halo{z-index:1}
+.ic-layer,.ic-cta{z-index:2}
+
+/* Fußzeile: schwarz, ERGUN. weiß mit rotem Punkt */
+.whf-root,.whf-root.ergun-jagd{background:var(--nacht)!important}
+.whf-word,.whf-sig{font-family:NeuSans,system-ui,sans-serif!important}
+html{background:var(--nacht)!important}
+@media (max-width:760px){
+  .neu-alt{top:auto;bottom:15vh;bottom:15svh;left:22px;right:auto}
+  .neu-alt b{font-size:44px}
+  .neu-alt span{font-size:10px;letter-spacing:.26em}
+}
+@media (max-width:760px){.neu-alt{bottom:23vh;bottom:23svh}}
+@media (min-width:761px){.neu-ring{right:28px;top:14px}}

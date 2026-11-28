@@ -1,5 +1,12 @@
 # Agentur-Website ERGUN. · Webdesign
 
+## Vorschau v89 (28.11.2026) – neues Design aus ALTO + Onda (`vorschau-v23/`)
+- Basis: v88 (`vorschau-v22/`, bleibt unverändert als Rückweg). Alles Neue steckt in `vorschau-v23/neu.css` und `vorschau-v23/neu.js`.
+- Oben ALTO (Coffee Roaster): Everest + Wolken bleiben, fette weiße Schrift (Satoshi 900), Höhenangabe „8.849 m · Mount Everest“, Filmkorn, roter Ring oben rechts (öffnet die Anfrage), roter Punkt im Logo.
+- Ab den Wolken Onda: dunkler Grund (#0b0b0e) statt Warp, fette Schrift, rote Punkte. Die Kugel hinter den Wörtern (wird zum Punkt) bleibt, jetzt rot.
+- Galerie dunkel, „Ansehen“ rot. Kontakt: Erde steigt auf, darunter das große „Hallo.“ (Clash Display) mit roten Punkten; es geht, wenn die Erde aufgeht. Im aufgehenden Kreis der Warp in Rot.
+- Akzentfarbe: ALTO-Rot `#e3261c`.
+
 ## Stand 22.11.2026 – „ERGUN.-Seite startklar“ (reine Webdesign-Seite, Auftrag `08 Projekte/Auftrag ERGUN-Seite startklar.md`)
 - **Aufbau:** Hero „Webdesign“ (Glas) + Unterzeile „Websites, die auffallen und Kunden bringen.“ → **So läuft es ab** (`#ablauf`) → **Beispiele** (`#beispiele`) → **Preise** (`#angebote`, drei Paket-Karten aus `PREISE.stufen`) → Extras und Betreuung → Ihre Anfrage. Aussehen der neuen Teile: `ergun-abschnitte.css`.
 - **Kein endo mehr:** Menü, Knöpfe, Fußzeile, Rechner (`PREISE.endo`, Schritt „endo für Ihre Branche“), `js/empfang.js`, `empfang.css`, `ergun-werkbank.css` entfernt; Weiterleitungen in `vercel.json` raus. Altes endo-Zeichen: `_archiv/Bilder-aufgeraeumt/ergun-website/`.
