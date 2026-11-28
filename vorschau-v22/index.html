@@ -1721,12 +1721,19 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 .ic-ball{z-index:1}
 /* v70: Galerie-Strecke kürzer */
 .mg{height:300vh;height:calc(164lvh + 135svh)}
+/* v74: Violet Plasma statt Sternenhimmel; das Weiß des Kontakts liegt jetzt in .ic-deck (mit Loch für den Hintergrund) */
+.ic-hero,.hj-root .ic-hero{background:transparent!important}
+.ic-deck{position:absolute;inset:0;z-index:0;pointer-events:none}
+.ic-weiss{position:absolute;inset:0;background:#fff}
+.nh-bild,.nh-funkel{display:none!important}
+.nh{background:#05030f!important}
+.nh-cv{position:absolute;inset:0;width:100%;height:100%;display:block}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795876227"></script>
+<script src="ergun-berg.js?v=1795876415"></script>
 </body>
 </html>
