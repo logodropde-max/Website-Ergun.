@@ -1668,12 +1668,23 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 /* v53: Metaballs hinter den drei Wörtern */
 .meta-cv{position:absolute;inset:0;width:100%;height:100%;display:block}
 .ac-hero[data-baum="1"] .dk-bg{background:#0b1426}
+
+/* v54: Fußzeile ohne eigenen Grund: der Nachthimmel läuft durch, das Gemälde liegt weich darin (alle Kanten verlaufen)
+   und ist in die Farben der Nacht getaucht */
+.ergun-jagd,.hj-root .ergun-jagd{background:transparent!important}
+.ergun-jagd .whf-picture{-webkit-mask-image:radial-gradient(ellipse 62% 58% at 50% 36%,#000 38%,rgba(0,0,0,.55) 62%,transparent 100%)!important;mask-image:radial-gradient(ellipse 62% 58% at 50% 36%,#000 38%,rgba(0,0,0,.55) 62%,transparent 100%)!important;isolation:isolate}
+.ergun-jagd .whf-picture img:not(.whf-cutout){filter:saturate(.7) brightness(.8) contrast(1.04)!important}
+.ergun-jagd .whf-tint{display:block!important;position:absolute;inset:0;background:linear-gradient(180deg,rgba(40,60,140,.42),rgba(20,30,80,.5))!important;mix-blend-mode:color;opacity:.55!important}
+.ergun-jagd .whf-grain{opacity:.5}
+.ac-hero[data-baum="1"] .dk-bg{background:#0d1f5c}
+.ergun-jagd .whf-picture{-webkit-mask-image:radial-gradient(ellipse 64% 48% at 50% 45%,#000 40%,rgba(0,0,0,.55) 66%,transparent 100%)!important;mask-image:radial-gradient(ellipse 64% 48% at 50% 45%,#000 40%,rgba(0,0,0,.55) 66%,transparent 100%)!important}
+.ergun-jagd::after{content:"";position:absolute;left:0;right:0;bottom:0;height:40%;pointer-events:none;background:linear-gradient(180deg,rgba(5,8,18,0),rgba(5,8,18,.55));z-index:0}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795870485"></script>
+<script src="ergun-berg.js?v=1795870885"></script>
 </body>
 </html>
