@@ -1655,12 +1655,16 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 .gf-ball,.dk-kern,.mg-stage,.mg-portal,.gf-zeichner{background:#5b4bd6!important}
 .ac-word .ac-rdot-w,.ac-pts-brand .ac-rdot,.ag-dot{background:#5b4bd6!important}
 .dk-hof{background:radial-gradient(closest-side,rgba(143,124,255,.14) 0,rgba(143,124,255,.06) 45%,rgba(143,124,255,0) 100%)!important}
+
+/* v60: anklickbare Karten zeigen beim Darüberfahren einen feinen Rand */
+.mg-karte[data-da="1"]{transition:box-shadow .3s,filter .3s}
+@media (hover:hover){.mg-karte[data-da="1"]:hover{box-shadow:0 0 0 2px #5b4bd6,0 18px 40px -14px rgba(14,20,34,.45)!important;filter:brightness(1.04)}}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795873541"></script>
+<script src="ergun-berg.js?v=1795873600"></script>
 </body>
 </html>
