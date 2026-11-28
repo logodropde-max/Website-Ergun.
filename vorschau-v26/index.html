@@ -1749,10 +1749,13 @@ body.ls-an .ac-burger span,body.ls-an .ac-burger i{background:#fff!important}
 .dk{opacity:1!important;clip-path:circle(var(--ls-r,0px) at 50% 50%);-webkit-clip-path:circle(var(--ls-r,0px) at 50% 50%)}
 /* Kugel raus (Emres Wunsch): Teilchen schweben frei bis "Schnell online", keine Kugel, keine Sonne; der Punkt bleibt */
 .ac-hero .dk-kugel,.ac-hero .dk-hof{visibility:hidden!important}
-.ac-hero[data-nb="1"][data-nb-p="1"] .ac-word .ac-rdot-w{animation:lsPkt .6s ease-out both}
-@keyframes lsPkt{from{transform:scale(0)!important;opacity:0}to{opacity:1}}
 /* Teilchen raus (Emres Wunsch): nur Light Speed hinter den Wörtern */
 .tn-cv,.dk-plasma{display:none!important}
+/* Schrift in der Farbe der Lichtstreifen (aufgehellt), Punkt von Anfang an bei "Schnell online" in derselben Farbe */
+.ac-hero[data-nb="1"] .ac-words .ac-word:nth-child(n)[data-gt-none][data-gt-none],.intro-berg .ac-hero[data-nb="1"] .ac-words .ac-word{color:var(--ls-farbe,#fff)!important;text-shadow:0 0 18px var(--ls-glut,transparent),0 2px 20px rgba(0,0,0,.6)!important}
+body:not([data-gf="1"]):not([data-gf="2"]) .ac-hero[data-nb="1"] .ac-word .ac-rdot-w{opacity:1!important}
+.ac-hero[data-nb="1"] .ac-word .ac-rdot-w{background:var(--ls-farbe,#f07a2a)!important;box-shadow:0 0 14px var(--ls-glut,transparent)!important}
+@media (max-width:520px){.intro-berg .ac-hero .ac-words .ac-word{font-size:clamp(24px,8.2vw,42px)!important}}
 </style>
 
 </head>
@@ -1761,6 +1764,6 @@ body.ls-an .ac-burger span,body.ls-an .ac-burger i{background:#fff!important}
 <div id="root"></div>
 <script src="ergun-berg.js?v=1795876040"></script>
 <script src="erde-auf.js?v=1"></script>
-<script src="lichtspeed.js?v=2"></script>
+<script src="lichtspeed.js?v=3"></script>
 </body>
 </html>
