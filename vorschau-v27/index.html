@@ -1740,6 +1740,14 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 body .ac-word .ac-rdot-w,body .ac-pts-brand .ac-rdot,body .ag-dot{background:#ffb347!important}
 /* Hintergrund einheitlich weiß (Emres Wunsch): nur Schrift und Licht */
 .dk .dk-bg{background:#fff!important}
+/* Gooey: Punkt tropft aus „online“ heraus, sobald das letzte Wort steht */
+.ac-hero[data-nb="1"] .ac-word .ac-rdot-w{transform-origin:0 50%}
+.ac-hero[data-nb="1"][data-nb-p="1"] .ac-word .ac-rdot-w{animation:gooTropfen .9s cubic-bezier(.2,.9,.25,1.25) both}
+@keyframes gooTropfen{0%{transform:translateX(-.35em) scale(.25,.6)!important;filter:blur(6px)}55%{transform:translateX(.05em) scale(1.15,.9)!important;filter:blur(1px)}100%{transform:none!important;filter:blur(0)}}
+/* Gooey-Lage über den Wörtern; die Original-Wörter werden durchsichtig, der Punkt bleibt sichtbar */
+.goo-lage{position:fixed;z-index:60;transform:translate(-50%,-50%);pointer-events:none;white-space:nowrap;color:#0f1830}
+.goo-lage span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap}
+body.goo-an .ac-hero .ac-words .ac-word,body.goo-an .intro-berg .ac-hero[data-nb="1"] .ac-words .ac-word:nth-child(n)[data-gt-none][data-gt-none]{color:transparent!important;text-shadow:none!important;-webkit-text-fill-color:transparent!important}
 </style>
 
 </head>
@@ -1748,6 +1756,6 @@ body .ac-word .ac-rdot-w,body .ac-pts-brand .ac-rdot,body .ag-dot{background:#ff
 <div id="root"></div>
 <script src="ergun-berg.js?v=1795876021"></script>
 <script src="erde-auf.js?v=1"></script>
-<script src="licht.js?v=3"></script>
+<script src="gooey.js?v=2"></script>
 </body>
 </html>
