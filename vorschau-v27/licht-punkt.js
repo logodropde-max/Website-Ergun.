@@ -29,8 +29,8 @@
     else if(gf==='1'||gf==='2'||an<.985||stufe<1){ziel={a:0}}
     else{
       /* sichtbares Wort: bei Stufe 3 das letzte, auch wenn das Original-Wort gerade ausgeblendet ist */
-      var w=worte[stufe-1],l=document.querySelector('.goo-lage .goo-b'),r=(l&&l.textContent?l:w).getBoundingClientRect();
-      var hh=r.height||40,y=r.top+hh*.72,x0=r.left-hh*.15,x1=r.right+hh*.12,f=t-start;
+      var w=worte[stufe-1],r=w.getBoundingClientRect();
+      var hh=r.height||40,y=r.bottom-hh*.08,x0=r.left-hh*.15,x1=r.right+hh*.12,f=t-start;
       var letztes=stufe===3,p=document.querySelector('.ac-hero .ac-word .ac-rdot-w'),pr=p&&p.getBoundingClientRect();
       if(letztes&&pr&&pr.width>0){x1=pr.left+pr.width/2;}
       var y1=letztes&&pr&&pr.width>0?pr.top+pr.height/2:y;

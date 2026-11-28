@@ -1744,10 +1744,6 @@ body .ac-word .ac-rdot-w,body .ac-pts-brand .ac-rdot,body .ag-dot{background:#ff
 .ac-hero[data-nb="1"] .ac-word .ac-rdot-w{transform-origin:0 50%}
 .ac-hero[data-nb="1"][data-nb-p="1"] .ac-word .ac-rdot-w{animation:gooTropfen .9s cubic-bezier(.2,.9,.25,1.25) both}
 @keyframes gooTropfen{0%{transform:translateX(-.35em) scale(.25,.6)!important;filter:blur(6px)}55%{transform:translateX(.05em) scale(1.15,.9)!important;filter:blur(1px)}100%{transform:none!important;filter:blur(0)}}
-/* Gooey-Lage über den Wörtern; die Original-Wörter werden durchsichtig, der Punkt bleibt sichtbar */
-.goo-lage{position:fixed;z-index:60;transform:translate(-50%,-50%);pointer-events:none;white-space:nowrap;color:#0f1830}
-.goo-lage span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap}
-body.goo-an .ac-hero .ac-words .ac-word,body.goo-an .intro-berg .ac-hero[data-nb="1"] .ac-words .ac-word:nth-child(n)[data-gt-none][data-gt-none]{color:transparent!important;text-shadow:none!important;-webkit-text-fill-color:transparent!important}
 /* Fire Sphere als sichtbarer Punkt (feuerpunkt.js) */
 .fp-box{position:fixed;left:0;top:0;z-index:55;pointer-events:none;opacity:0;will-change:transform,width,height}
 .fp-cv{position:absolute;inset:0;width:100%;height:100%;border-radius:50%}
@@ -1760,9 +1756,7 @@ body.fp-gross .gf-ball,.gf-ball{background:transparent!important;box-shadow:none
 /* Gelbes Licht statt Feuerkugel (licht-punkt.js) */
 .lp-box{position:fixed;left:0;top:0;z-index:55;pointer-events:none;opacity:0;border-radius:50%;will-change:transform,width,height;
   background:radial-gradient(circle,#fffdf2 0,#fff3b8 calc(var(--lp-kern,14%) * .6),#ffd84a var(--lp-kern,14%),rgba(255,200,40,.55) calc(var(--lp-kern,14%) + 10%),rgba(255,190,40,.18) 46%,rgba(255,190,40,0) 70%);mix-blend-mode:multiply}
-/* die Schrift wird im Lichtkegel golden */
-.goo-lage span{background:radial-gradient(circle var(--lp-r,80px) at var(--lp-x,-999px) var(--lp-y,-999px),rgba(214,140,10,var(--lp-a,0)) 0,rgba(214,140,10,calc(var(--lp-a,0) * .6)) 45%,transparent 100%),linear-gradient(#0f1830,#0f1830);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+@media (max-width:520px){.intro-berg .ac-hero .ac-words .ac-word{font-size:clamp(24px,8.2vw,42px)!important}}
 </style>
 
 </head>
@@ -1771,7 +1765,6 @@ body.fp-gross .gf-ball,.gf-ball{background:transparent!important;box-shadow:none
 <div id="root"></div>
 <script src="ergun-berg.js?v=1795876021"></script>
 <script src="erde-auf.js?v=1"></script>
-<script src="gooey.js?v=3"></script>
-<script src="licht-punkt.js?v=3"></script>
+<script src="licht-punkt.js?v=4"></script>
 </body>
 </html>
