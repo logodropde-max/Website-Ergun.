@@ -1702,12 +1702,15 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 .ergun-jagd,.ergun-jagd a,.ergun-jagd .whf-legal,.ergun-jagd .whf-up{color:#fff!important}
 /* v63: Galerie-Hintergrund: weißer Verlauf, der unten ins Violett läuft (Vorlage „Radial Background“) */
 .mg-himmel,.hj-root .mg-himmel{background:radial-gradient(125% 125% at 50% 10%,#fff 40%,#63e 100%)!important}
+/* v66: Galerie kürzer (Karussell, dann gleich der Kreis zum Kontakt); weiße Ebene über dem Verlauf */
+.mg{height:420vh;height:calc(164lvh + 200svh)}
+.mg-weiss{position:absolute;inset:0;background:#63e;opacity:0;pointer-events:none;z-index:0;will-change:opacity}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795875244"></script>
+<script src="ergun-berg.js?v=1795875388"></script>
 </body>
 </html>
