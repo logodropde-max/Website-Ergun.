@@ -1723,6 +1723,12 @@ body[data-sc="k"] .sc-hint i{background:linear-gradient(180deg,#26365a,rgba(38,5
 .mg{height:300vh;height:calc(164lvh + 135svh)}
 /* v71b (28.11. abends, Emres Wunsch): Halbkreise von oben nach der Galerie raus */
 .mg-welle{display:none!important}
+/* v71c (Emres Wunsch): keine Kreise von unten beim Kontakt, Erde ohne Ring außen herum */
+.ic-welle1,.ic-welle2,.ic-light2{display:none!important}
+.ic-welle3{clip-path:none!important;-webkit-clip-path:none!important}
+.ic-halo{display:none!important}
+.ic-globe::after{box-shadow:inset 26px 0 40px -6px rgba(0,0,0,.35),inset -150px 0 90px -10px rgba(0,0,0,.72),inset -40px 0 50px rgba(0,0,0,.35)!important}
+.ic-globe{box-shadow:none!important;filter:saturate(1.08) contrast(1.04)}
 </style>
 
 </head>
