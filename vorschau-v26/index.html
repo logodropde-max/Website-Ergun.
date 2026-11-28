@@ -1747,15 +1747,18 @@ body.ls-an .ac-logo,body.ls-an .ac-nav a,body.ls-an .ac-burger{color:#fff!import
 body.ls-an .ac-burger span,body.ls-an .ac-burger i{background:#fff!important}
 /* aus den Wolken direkt hinein: Kreis öffnet sich aus der Mitte (Radius aus lichtspeed.js) */
 .dk{opacity:1!important;clip-path:circle(var(--ls-r,0px) at 50% 50%);-webkit-clip-path:circle(var(--ls-r,0px) at 50% 50%)}
+/* Kugel raus (Emres Wunsch): Teilchen schweben frei bis "Schnell online", keine Kugel, keine Sonne; der Punkt bleibt */
+.ac-hero .dk-kugel,.ac-hero .dk-hof{visibility:hidden!important}
+.ac-hero[data-nb="1"][data-nb-p="1"] .ac-word .ac-rdot-w{animation:lsPkt .6s ease-out both}
+@keyframes lsPkt{from{transform:scale(0)!important;opacity:0}to{opacity:1}}
 </style>
 
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hj-scharf" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" kernelMatrix="0 -0.55 0 -0.55 3.2 -0.55 0 -0.55 0" preserveAlpha="true"/></filter></svg>
 <div id="root"></div>
-<script src="ergun-berg.js?v=1795876030"></script>
+<script src="ergun-berg.js?v=1795876040"></script>
 <script src="erde-auf.js?v=1"></script>
-<script src="sonne.js?v=4"></script>
 <script src="lichtspeed.js?v=2"></script>
 </body>
 </html>
