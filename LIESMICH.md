@@ -2,7 +2,7 @@
 
 ## Zurückgeholte Stände (28.11.2026 abends, auf Emres Wunsch)
 - `vorschau-v24/` = Stand v43 (27.11., 16:35): Punkt in der Mitte, Kugel, echte Erde, noch ohne automatisches Weiterscrollen.
-- `vorschau-v25/` = Stand v71 (28.11., 15:27): letzter Stand vor v72 (ohne automatisches Weiterscrollen). Auf Emres Wunsch ohne die Halbkreise von oben nach der Galerie (`.mg-welle` aus), ohne die Kreise von unten beim Kontakt (`.ic-welle1/2` aus, `.ic-welle3` ohne Kreis) und die Erde ohne Ring außen herum (`.ic-halo` aus, ruhigere Schattierung). Die Erde geht auf wie der Punkt: `erde-auf.js` lässt den Sternenhimmel als Kreis aus der Erde wachsen (`--auf-r/x/y` auf `.ic-welle3` und `.ic-light2`), die Erde blendet dabei aus.
+- `vorschau-v25/` = Stand v71 (28.11., 15:27): letzter Stand vor v72 (ohne automatisches Weiterscrollen). Auf Emres Wunsch ohne die Halbkreise von oben nach der Galerie (`.mg-welle` aus), ohne die Kreise von unten beim Kontakt (`.ic-welle1/2` aus, `.ic-welle3` ohne Kreis) und die Erde ohne Ring außen herum (`.ic-halo` aus, ruhigere Schattierung). Die Erde geht auf wie der Punkt: `erde-auf.js` lässt den Sternenhimmel als Kreis aus der Erde wachsen (`--auf-r/x/y` auf `.ic-welle3` und `.ic-light2`), die Erde blendet dabei aus. Teilchen nach den Wolken länger sichtbar, die Kugel bildet sich langsam aus ihnen (in `ergun-berg.js`: Formen 2.75–4.2 statt 2.2–3.5, Verdichten 3.85–4.45, Teilchen weg 4.25–4.65, fester Kern 4.1–4.6).
 
 ## Vorschau v89 (28.11.2026) – neues Design aus ALTO + Onda (`vorschau-v23/`)
 - Basis: v88 (`vorschau-v22/`, bleibt unverändert als Rückweg). Alles Neue steckt in `vorschau-v23/neu.css` und `vorschau-v23/neu.js`.
