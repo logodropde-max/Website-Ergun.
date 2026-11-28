@@ -1757,6 +1757,12 @@ body.goo-an .ac-hero .ac-words .ac-word,body.goo-an .intro-berg .ac-hero[data-nb
 body .ac-hero .ac-word .ac-rdot-w{background:transparent!important;box-shadow:none!important}
 body.fp-gross .gf-ball,.gf-ball{background:transparent!important;box-shadow:none!important}
 .mg-stage{background:#fff!important}
+/* Gelbes Licht statt Feuerkugel (licht-punkt.js) */
+.lp-box{position:fixed;left:0;top:0;z-index:55;pointer-events:none;opacity:0;border-radius:50%;will-change:transform,width,height;
+  background:radial-gradient(circle,#fffdf2 0,#fff3b8 calc(var(--lp-kern,14%) * .6),#ffd84a var(--lp-kern,14%),rgba(255,200,40,.55) calc(var(--lp-kern,14%) + 10%),rgba(255,190,40,.18) 46%,rgba(255,190,40,0) 70%);mix-blend-mode:multiply}
+/* die Schrift wird im Lichtkegel golden */
+.goo-lage span{background:radial-gradient(circle var(--lp-r,80px) at var(--lp-x,-999px) var(--lp-y,-999px),rgba(214,140,10,var(--lp-a,0)) 0,rgba(214,140,10,calc(var(--lp-a,0) * .6)) 45%,transparent 100%),linear-gradient(#0f1830,#0f1830);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
 </style>
 
 </head>
@@ -1766,6 +1772,6 @@ body.fp-gross .gf-ball,.gf-ball{background:transparent!important;box-shadow:none
 <script src="ergun-berg.js?v=1795876021"></script>
 <script src="erde-auf.js?v=1"></script>
 <script src="gooey.js?v=3"></script>
-<script src="feuerpunkt.js?v=4"></script>
+<script src="licht-punkt.js?v=2"></script>
 </body>
 </html>
